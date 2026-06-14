@@ -44,26 +44,29 @@ Tài liệu nên đọc trước khi làm việc:
 
 ## Chạy local
 
-Chưa có Next.js project trong repo ở thời điểm tạo tài liệu nên phần này là placeholder.
-
-Dự kiến sau khi tạo app:
+Sau Phase 1, repo đã có Next.js App Router foundation. Tạo `.env` cục bộ từ `.env.example` nếu cần kết nối Supabase thật, sau đó chạy:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Cần bổ sung biến môi trường Supabase và cấu hình Cloudflare ở phase sau.
+Các route nền hiện có:
+
+- `/`: public home placeholder.
+- `/admin`: admin placeholder.
+- `/auth/login`: login placeholder.
 
 ## Deploy
 
-Cloudflare là mục tiêu deploy chính. Chi tiết deploy sẽ được bổ sung khi có Next.js project, cấu hình Supabase và cấu hình Cloudflare Pages/Workers.
+Cloudflare là mục tiêu deploy chính. Phase 1 đã tạo `wrangler.toml` placeholder an toàn, chưa deploy và chưa cấu hình secret thật.
 
 ## Lệnh kiểm tra tiêu chuẩn
 
 Khi dự án có code, chạy:
 
 ```bash
+npm run check:foundation
 npm run typecheck
 npm run lint
 npm run build
@@ -75,4 +78,3 @@ Task tài liệu có thể chỉ cần:
 git diff --check
 git status --short
 ```
-

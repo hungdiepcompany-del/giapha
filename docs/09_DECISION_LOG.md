@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 005 - Dùng cấu trúc App Router ở root `app/`
+
+Chọn:
+
+Giữ Next.js App Router tại root `app/`, không dùng `src/`.
+
+Lý do:
+
+- Khớp trực tiếp với prompt Phase 1 và cấu trúc thư mục đã yêu cầu.
+- Dễ đọc cho AI trong các phase tiếp theo.
+- Giảm một lớp đường dẫn khi tra route public/admin/auth.
+
+## Decision 006 - Dùng `@supabase/ssr` cho helper client/server
+
+Chọn:
+
+Sử dụng `@supabase/ssr` cùng `@supabase/supabase-js`.
+
+Lý do:
+
+- Phù hợp App Router và cookie-based auth ở server.
+- Tách rõ client anon key, server client và admin service role.
+- Giữ `SUPABASE_SERVICE_ROLE_KEY` trong helper server-only, không đưa ra client.
+
 ## Decision 001 - Chọn stack chính thức
 
 Chọn:
@@ -38,4 +62,3 @@ Lý do:
 - Gia phả dễ bị sửa/xóa nhầm.
 - Cần khôi phục.
 - Cần lưu lịch sử thay đổi.
-

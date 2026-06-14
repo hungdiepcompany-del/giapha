@@ -1,0 +1,5 @@
+name = "web-gia-pha"
+compatibility_date = "2026-06-14"
+
+# Placeholder Cloudflare config for Phase 1.
+# Deploy wiring will be finalized after runtime target and secrets are configured.
