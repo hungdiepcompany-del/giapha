@@ -1,0 +1,146 @@
+# Database model
+
+## Nguyên tắc
+
+Không dùng model đơn giản `parent_id`/`spouse_id` trực tiếp trong `people` vì không đủ cho gia phả thật.
+
+Lý do:
+
+- Nhiều vợ/chồng.
+- Con riêng.
+- Con nuôi.
+- Không rõ cha/mẹ.
+- Tái hôn.
+- Quan hệ cần nguồn xác minh.
+- Cần lịch sử chỉnh sửa.
+
+## Bảng nền
+
+### profiles
+
+- Mục đích: Lưu hồ sơ người dùng đăng nhập và liên kết với Supabase Auth.
+- Trường chính dự kiến: `id`, `auth_user_id`, `display_name`, `email`, `avatar_url`, `status`, `created_at`, `updated_at`.
+- Bảo mật/RLS: Chỉ chủ tài khoản và role được cấp quyền mới xem/sửa thông tin nhạy cảm.
+
+### roles
+
+- Mục đích: Định nghĩa vai trò hệ thống như OWNER, ADMIN, EDITOR.
+- Trường chính dự kiến: `id`, `code`, `name`, `description`, `created_at`.
+- Bảo mật/RLS: Chỉ OWNER/ADMIN được quản lý.
+
+### permissions
+
+- Mục đích: Định nghĩa quyền chi tiết theo hành động.
+- Trường chính dự kiến: `id`, `code`, `name`, `description`, `created_at`.
+- Bảo mật/RLS: Chỉ OWNER/ADMIN được quản lý.
+
+### role_permissions
+
+- Mục đích: Gán permissions vào roles.
+- Trường chính dự kiến: `id`, `role_id`, `permission_id`, `created_at`.
+- Bảo mật/RLS: Chỉ OWNER/ADMIN được cập nhật.
+
+### profile_roles
+
+- Mục đích: Gán roles cho profile.
+- Trường chính dự kiến: `id`, `profile_id`, `role_id`, `created_at`, `created_by`.
+- Bảo mật/RLS: Chỉ người có `permissions.manage` được cập nhật.
+
+## Bảng gia phả
+
+### people
+
+- Mục đích: Lưu hồ sơ cá nhân của thành viên gia phả.
+- Trường chính dự kiến: `id`, `stable_id`, `full_name`, `display_name`, `gender`, `birth_date`, `death_date`, `living_status`, `branch`, `generation`, `privacy_level`, `is_deleted`, `created_at`, `updated_at`.
+- Bảo mật/RLS: Người còn sống và trường nhạy cảm phải được lọc theo privacy/permission; không xóa cứng.
+
+### families
+
+- Mục đích: Gom nhóm đơn vị gia đình để biểu diễn cha/mẹ/con và nguồn xác minh.
+- Trường chính dự kiến: `id`, `stable_id`, `name`, `notes`, `source_id`, `created_at`, `updated_at`.
+- Bảo mật/RLS: Xem/sửa theo quyền quan hệ gia phả.
+
+### family_parents
+
+- Mục đích: Lưu cha/mẹ hoặc người nuôi trong một family.
+- Trường chính dự kiến: `id`, `family_id`, `person_id`, `parent_type`, `certainty`, `source_id`, `created_at`.
+- Bảo mật/RLS: Cần quyền `relationships.view` để xem và `relationships.update` để sửa.
+
+### family_children
+
+- Mục đích: Lưu con trong một family, bao gồm con ruột, con nuôi, con riêng.
+- Trường chính dự kiến: `id`, `family_id`, `person_id`, `child_type`, `certainty`, `source_id`, `created_at`.
+- Bảo mật/RLS: Cần quyền quan hệ; không xóa cứng nếu đã có revision.
+
+### couple_relationships
+
+- Mục đích: Lưu quan hệ vợ/chồng, hôn nhân, tái hôn hoặc quan hệ bạn đời có nguồn xác minh.
+- Trường chính dự kiến: `id`, `person1_id`, `person2_id`, `relationship_type`, `start_date`, `end_date`, `status`, `source_id`, `created_at`, `updated_at`.
+- Bảo mật/RLS: Public chỉ xem thông tin đã được phép hiện.
+
+### events
+
+- Mục đích: Lưu sự kiện gia phả như sinh, mất, kết hôn, ly hôn, di cư, giỗ tổ.
+- Trường chính dự kiến: `id`, `person_id`, `family_id`, `event_type`, `event_date`, `place`, `description`, `privacy_level`, `source_id`, `created_at`.
+- Bảo mật/RLS: Sự kiện nhạy cảm phải lọc theo privacy.
+
+### media_assets
+
+- Mục đích: Lưu metadata ảnh, tài liệu và file liên quan thành viên/nguồn.
+- Trường chính dự kiến: `id`, `storage_path`, `file_name`, `mime_type`, `size_bytes`, `owner_person_id`, `privacy_level`, `created_at`, `created_by`.
+- Bảo mật/RLS: Storage và metadata phải có policy; file riêng tư không được public URL tùy tiện.
+
+### sources
+
+- Mục đích: Lưu nguồn xác minh cho thông tin gia phả.
+- Trường chính dự kiến: `id`, `title`, `source_type`, `description`, `citation`, `media_asset_id`, `created_at`.
+- Bảo mật/RLS: Nguồn có tài liệu cá nhân phải lọc theo privacy.
+
+## Bảng cây UI
+
+### tree_layouts
+
+- Mục đích: Lưu cấu hình layout cây theo chế độ hoặc nhánh.
+- Trường chính dự kiến: `id`, `name`, `layout_type`, `scope`, `created_by`, `created_at`, `updated_at`.
+- Bảo mật/RLS: Chỉ người có `tree.edit_layout` được sửa.
+
+### tree_layout_nodes
+
+- Mục đích: Lưu vị trí, trạng thái thu gọn và metadata UI của node.
+- Trường chính dự kiến: `id`, `layout_id`, `person_id`, `x`, `y`, `collapsed`, `style_json`, `updated_at`.
+- Bảo mật/RLS: Không chứa dữ liệu gia phả nhạy cảm; chỉ chứa dữ liệu UI.
+
+### tree_layout_edges
+
+- Mục đích: Lưu tùy chỉnh UI cho edge nếu cần.
+- Trường chính dự kiến: `id`, `layout_id`, `relationship_ref`, `edge_type`, `style_json`, `updated_at`.
+- Bảo mật/RLS: Không thay thế bảng quan hệ thật; chỉ bổ sung hiển thị.
+
+## Bảng lịch sử
+
+### revisions
+
+- Mục đích: Ghi nhận một đợt thay đổi dữ liệu.
+- Trường chính dự kiến: `id`, `actor_profile_id`, `action`, `entity_type`, `entity_id`, `summary`, `created_at`.
+- Bảo mật/RLS: Cần quyền `revisions.view`; restore cần `revisions.restore`.
+
+### revision_items
+
+- Mục đích: Lưu trước/sau của từng trường hoặc entity trong một revision.
+- Trường chính dự kiến: `id`, `revision_id`, `field_name`, `old_value`, `new_value`, `metadata_json`.
+- Bảo mật/RLS: Có thể chứa dữ liệu nhạy cảm nên không public.
+
+## Bảng export/backup
+
+### export_jobs
+
+- Mục đích: Theo dõi job export JSON/GEDCOM/ZIP.
+- Trường chính dự kiến: `id`, `requested_by`, `export_type`, `status`, `file_path`, `error_message`, `created_at`, `completed_at`.
+- Bảo mật/RLS: Chỉ người có `exports.create`/`exports.download` được thao tác.
+
+### backup_records
+
+- Mục đích: Lưu lịch sử backup, manifest và checksum.
+- Trường chính dự kiến: `id`, `backup_type`, `file_path`, `manifest_json`, `checksum`, `created_by`, `created_at`.
+- Bảo mật/RLS: Backup có thể chứa toàn bộ dữ liệu nên chỉ OWNER/ADMIN được tải.
+

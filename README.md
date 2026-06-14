@@ -1,0 +1,78 @@
+# WEB GIA PHẢ
+
+WEB GIA PHẢ là dự án xây dựng hệ thống web gia phả dùng lâu dài, chi phí thấp, có khả năng vận hành bền vững nhiều năm và ưu tiên bảo vệ dữ liệu gia phả trong dài hạn.
+
+## Mục tiêu dự án
+
+- Quản lý thông tin thành viên gia đình, dòng họ, chi nhánh và đời thứ.
+- Hỗ trợ thêm, sửa, xóa mềm và khôi phục dữ liệu gia phả.
+- Hiển thị cây gia phả tương tác, có thể mở rộng thành chế độ chỉnh sửa trực tiếp.
+- Có phân quyền, lịch sử chỉnh sửa và chế độ public/private.
+- Bắt buộc có export JSON/GEDCOM/ZIP từ đầu để bảo vệ dữ liệu lâu dài.
+
+## Stack chính thức
+
+- Next.js
+- Supabase Auth
+- Supabase Postgres
+- Supabase Storage
+- Cloudflare Pages/Workers
+- React Flow
+- ELK.js
+- Role permission
+- Revision history
+- Public/private mode
+- JSON/GEDCOM/ZIP export
+
+## Nguyên tắc dữ liệu sống lâu dài
+
+Supabase là hệ thống vận hành. JSON/GEDCOM/ZIP là lớp bảo vệ dữ liệu lâu dài.
+
+Dự án không được thiết kế để khóa dữ liệu trong Supabase. Dữ liệu phải luôn xuất được ra JSON/GEDCOM/ZIP.
+
+Không được khóa dữ liệu gia phả trong database, UI hoặc dịch vụ cloud. Khi cần chuyển hệ thống, phục hồi, kiểm tra hoặc lưu trữ độc lập, dữ liệu phải có thể xuất ra định dạng mở và gói backup đầy đủ.
+
+## Cách đọc tài liệu dự án
+
+Bắt đầu từ [docs/00_INDEX.md](docs/00_INDEX.md). AI và lập trình viên chỉ cần đọc file liên quan đến task, không cần đọc toàn bộ tài liệu mỗi lần.
+
+Tài liệu nên đọc trước khi làm việc:
+
+- [AGENTS.md](AGENTS.md): quy tắc làm việc cho AI coding.
+- [docs/99_NEXT_AI_HANDOFF.md](docs/99_NEXT_AI_HANDOFF.md): trạng thái mới nhất và việc tiếp theo.
+- File trong `docs/` liên quan trực tiếp đến task.
+
+## Chạy local
+
+Chưa có Next.js project trong repo ở thời điểm tạo tài liệu nên phần này là placeholder.
+
+Dự kiến sau khi tạo app:
+
+```bash
+npm install
+npm run dev
+```
+
+Cần bổ sung biến môi trường Supabase và cấu hình Cloudflare ở phase sau.
+
+## Deploy
+
+Cloudflare là mục tiêu deploy chính. Chi tiết deploy sẽ được bổ sung khi có Next.js project, cấu hình Supabase và cấu hình Cloudflare Pages/Workers.
+
+## Lệnh kiểm tra tiêu chuẩn
+
+Khi dự án có code, chạy:
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Task tài liệu có thể chỉ cần:
+
+```bash
+git diff --check
+git status --short
+```
+
