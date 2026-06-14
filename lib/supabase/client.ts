@@ -1,20 +1,29 @@
 import { createBrowserClient } from "@supabase/ssr";
 
-function getPublicSupabaseConfig() {
+export type PublicSupabaseConfig = {
+  supabaseUrl: string;
+  supabaseAnonKey: string;
+};
+
+export function getPublicSupabaseConfig(): PublicSupabaseConfig | null {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-    );
+    return null;
   }
 
   return { supabaseUrl, supabaseAnonKey };
 }
 
 export function createClientSupabaseClient() {
-  const { supabaseUrl, supabaseAnonKey } = getPublicSupabaseConfig();
+  const config = getPublicSupabaseConfig();
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  if (!config) {
+    throw new Error(
+      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+    );
+  }
+
+  return createBrowserClient(config.supabaseUrl, config.supabaseAnonKey);
 }

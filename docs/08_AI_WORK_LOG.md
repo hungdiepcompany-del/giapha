@@ -1,5 +1,112 @@
 # AI Work Log
 
+## 2026-06-14 - Phase 2 Auth + Role Permission hardening
+
+### Phase
+
+Phase 2 - Auth + Role Permission hardening
+
+### Việc đã làm
+
+- Chọn auth flow nền bằng Supabase magic link.
+- Tạo UI đăng nhập email tối giản tại `/auth/login`.
+- Tạo auth callback route `/auth/callback`.
+- Cập nhật logout route `/auth/logout` để hỗ trợ GET/POST và không crash khi thiếu session.
+- Tạo profile bootstrap service server-side.
+- Tạo permission service server-side.
+- Tạo `requirePermission()` cho route guard.
+- Guard `/admin` bằng quyền `people.view`.
+- Tạo page `/unauthorized` có reason và link điều hướng.
+- Hiển thị email, roles và permission summary trong admin shell.
+- Tạo migration hardening RLS/policies Phase 2.
+- Tạo SQL snippet gán OWNER thủ công.
+- Tạo script `check:auth-permissions`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- app/(admin)/admin/page.tsx
+- app/auth/login/page.tsx
+- app/auth/callback/route.ts
+- app/auth/logout/route.ts
+- app/unauthorized/page.tsx
+- components/auth/login-form.tsx
+- components/layout/admin-shell.tsx
+- lib/auth/profile-service.ts
+- lib/permissions/permission-service.ts
+- lib/permissions/require-permission.ts
+- lib/supabase/client.ts
+- lib/supabase/server.ts
+- lib/supabase/admin.ts
+- db/migrations/20260614_0002_auth_permission_hardening.sql
+- db/snippets/assign-owner-role.sql
+- scripts/check-auth-permissions.cjs
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Package đã thêm
+
+- Không thêm package mới trong Phase 2.
+
+### Migration đã tạo
+
+- db/migrations/20260614_0002_auth_permission_hardening.sql
+
+### Script check đã tạo
+
+- `check:auth-permissions`: chạy `node scripts/check-auth-permissions.cjs`
+
+### Quyết định kỹ thuật
+
+- Auth flow: Supabase magic link theo email.
+- OWNER bootstrap: không auto OWNER; gán thủ công bằng SQL/admin context.
+- Quyền tối thiểu vào `/admin`: `people.view`.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm run check:auth-permissions
+- Browser route check `/auth/login`
+- Browser route check `/auth/logout`
+- Browser route check `/unauthorized`
+- Browser route check `/admin`
+
+### Kết quả
+
+- PASS: baseline `npm run check:foundation`
+- PASS: baseline `npm run typecheck`
+- PASS: baseline `npm run lint`
+- PASS: baseline `npm run build`
+- PASS: `npm run check:auth-permissions`
+- PASS: Phase 2 `npm run typecheck`
+- PASS: Phase 2 `npm run lint`
+- PASS: Phase 2 `npm run build`
+- PASS: Browser route check cho `/auth/login`, `/auth/logout`, `/unauthorized`, `/admin`
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa tạo `.env` thật.
+- Chưa kết nối Supabase project thật.
+- Chưa chạy migration trên database thật.
+- Chưa làm People CRUD.
+- Chưa làm Relationship CRUD.
+- Chưa làm cây gia phả.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 3 - People CRUD foundation.
+
 ## 2026-06-14 - Phase 1 Project foundation
 
 ### Phase

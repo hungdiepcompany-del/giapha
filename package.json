@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "check:foundation": "node scripts/check-project-foundation.cjs"
+    "check:foundation": "node scripts/check-project-foundation.cjs",
+    "check:auth-permissions": "node scripts/check-auth-permissions.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

@@ -66,3 +66,14 @@ Public chỉ nên hiện an toàn:
 - Server/API phải lọc đúng quyền.
 - Không dựa vào UI để ẩn dữ liệu private.
 
+## Phase 2 auth/permission hardening
+
+- Auth flow nền dùng Supabase magic link theo email.
+- Auth callback tạo profile server-side nếu user đã đăng nhập nhưng chưa có profile.
+- Không tự động cấp OWNER cho user đầu tiên.
+- OWNER được gán thủ công bằng SQL/admin context sau khi xác minh danh tính.
+- User mới không được cấp quyền admin mặc định.
+- Quyền tối thiểu để vào `/admin` là `people.view`.
+- Nếu thiếu cấu hình Supabase, helper phải fail an toàn và không cấp quyền mặc định.
+- Admin guard kiểm tra quyền server-side, không chỉ ẩn bằng UI.
+- Phase 2 chưa làm People CRUD, Relationship CRUD, cây gia phả hoặc export thật.

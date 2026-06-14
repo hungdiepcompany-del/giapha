@@ -1,4 +1,7 @@
 import { AdminShell } from "@/components/layout/admin-shell";
+import { requirePermission } from "@/lib/permissions/require-permission";
+
+export const dynamic = "force-dynamic";
 
 const futureModules = [
   "Thành viên",
@@ -8,13 +11,19 @@ const futureModules = [
   "Backup/Export",
 ];
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const context = await requirePermission("people.view");
+
   return (
-    <AdminShell>
+    <AdminShell
+      userEmail={context.user?.email}
+      roles={context.roles.map((role) => role.code)}
+      permissions={context.permissions}
+    >
       <section className="mx-auto w-full max-w-5xl px-6 py-12">
         <div className="space-y-3 border-b border-slate-200 pb-6">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Phase 1 foundation
+            Phase 2 auth + permission foundation
           </p>
           <h1 className="text-3xl font-bold text-slate-950">
             Quản trị GIA PHẢ

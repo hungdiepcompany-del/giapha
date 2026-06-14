@@ -1,5 +1,94 @@
 # Next AI Handoff
 
+## 2026-06-14 - Phase 2 Auth + Role Permission hardening completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có auth/permission foundation server-side. Route `/admin` không còn là placeholder mở; route này yêu cầu user đăng nhập và có permission `people.view`.
+
+### Auth flow đã chọn
+
+- Supabase magic link theo email.
+- Login UI tối giản tại `/auth/login`.
+- Callback tại `/auth/callback`.
+- Logout tại `/auth/logout`.
+- Nếu thiếu cấu hình Supabase, login page hiển thị cảnh báo thay vì crash trắng.
+
+### OWNER bootstrap đã chọn
+
+- Không auto OWNER.
+- User mới chỉ được bootstrap profile, không tự động có role admin.
+- OWNER cần gán thủ công bằng SQL/admin context.
+- Snippet: `db/snippets/assign-owner-role.sql`.
+
+### Permission/admin guard
+
+- Permission service server-side:
+  - `lib/permissions/permission-service.ts`
+  - `lib/permissions/require-permission.ts`
+- Profile bootstrap:
+  - `lib/auth/profile-service.ts`
+- Quyền tối thiểu vào `/admin`: `people.view`.
+- Nếu chưa đăng nhập: redirect `/auth/login`.
+- Nếu đăng nhập nhưng thiếu quyền: redirect `/unauthorized`.
+
+### Migration đã tạo
+
+- `db/migrations/20260614_0002_auth_permission_hardening.sql`
+
+Migration bổ sung:
+
+- Bật lại RLS cho bảng nền.
+- Recreate helper functions `current_profile_id()` và `has_permission(permission_code text)`.
+- Cho authenticated user insert/update profile của chính mình.
+- Cho user đọc role assignment và role permissions của chính mình.
+- Thêm policy quản lý roles/permissions cho người có `permissions.manage`.
+- Không mở public rộng cho bảng nhạy cảm.
+
+### Script check đã tạo
+
+- `npm run check:auth-permissions`
+
+### Lệnh đã chạy
+
+- `npm run check:foundation` - PASS
+- `npm run check:auth-permissions` - PASS
+- `npm run typecheck` - PASS
+- `npm run lint` - PASS
+- `npm run build` - PASS
+- Browser route check `/auth/login`, `/auth/logout`, `/unauthorized`, `/admin` trên `http://127.0.0.1:3001` - PASS
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa tạo `.env` thật.
+- Chưa kết nối Supabase project thật.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử magic link với Supabase project thật.
+- Chưa làm People CRUD.
+- Chưa làm Relationship CRUD.
+- Chưa làm cây gia phả.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Lưu ý cho AI tiếp theo
+
+- Không đưa `SUPABASE_SERVICE_ROLE_KEY` vào client.
+- Không tự động cấp OWNER nếu chưa có quyết định mới.
+- `/admin` đang dùng `people.view` làm quyền vào cổng quản trị.
+- Nếu cần OWNER đầu tiên, dùng `db/snippets/assign-owner-role.sql` sau khi profile đã tồn tại.
+- Route guard và permission helper là server-side; không thay bằng kiểm tra UI.
+
+### Task tiếp theo đề xuất
+
+Phase 3 - People CRUD foundation:
+
+- Tạo schema people theo docs.
+- Xóa mềm/khôi phục, không xóa cứng.
+- List/profile/search/filter thành viên.
+- Gắn permission `people.*` vào service layer và UI.
+- Không làm quan hệ/cây nếu chưa sang phase sau.
+
 ## 2026-06-14 - Phase 1 Project foundation completed
 
 ### Trạng thái hiện tại

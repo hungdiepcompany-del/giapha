@@ -3,24 +3,34 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-function getServerSupabaseConfig() {
+type ServerSupabaseConfig = {
+  supabaseUrl: string;
+  supabaseAnonKey: string;
+};
+
+export function getServerSupabaseConfig(): ServerSupabaseConfig | null {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-    );
+    return null;
   }
 
   return { supabaseUrl, supabaseAnonKey };
 }
 
 export async function createServerSupabaseClient() {
-  const { supabaseUrl, supabaseAnonKey } = getServerSupabaseConfig();
+  const config = getServerSupabaseConfig();
+
+  if (!config) {
+    throw new Error(
+      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+    );
+  }
+
   const cookieStore = await cookies();
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createServerClient(config.supabaseUrl, config.supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -36,4 +46,12 @@ export async function createServerSupabaseClient() {
       },
     },
   });
+}
+
+export async function maybeCreateServerSupabaseClient() {
+  if (!getServerSupabaseConfig()) {
+    return null;
+  }
+
+  return createServerSupabaseClient();
 }

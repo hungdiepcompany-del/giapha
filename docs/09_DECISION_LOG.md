@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 007 - Dùng magic link cho auth foundation
+
+Chọn:
+
+Supabase magic link theo email cho Phase 2.
+
+Lý do:
+
+- Không cần hardcode tài khoản hoặc mật khẩu.
+- Phù hợp foundation khi chưa có signup/admin onboarding UI hoàn chỉnh.
+- Callback `/auth/callback` có thể bootstrap profile và kiểm tra quyền server-side.
+- Nếu thiếu env Supabase, login page hiển thị trạng thái thiếu cấu hình thay vì crash trắng.
+
+## Decision 008 - Không tự động cấp OWNER
+
+Chọn:
+
+Không auto OWNER cho user đầu tiên. OWNER được gán thủ công bằng SQL/admin context sau khi xác minh danh tính.
+
+Lý do:
+
+- Tránh tự cấp quyền cao chỉ vì thứ tự đăng nhập.
+- Phù hợp nguyên tắc không mở quyền rộng trong phase foundation.
+- Có SQL snippet `db/snippets/assign-owner-role.sql` để vận hành thủ công khi cần.
+
+## Decision 009 - Quyền tối thiểu vào `/admin` là `people.view`
+
+Chọn:
+
+Route `/admin` yêu cầu permission `people.view`.
+
+Lý do:
+
+- Admin foundation là cổng vào các module vận hành gia phả, không phải trang settings hệ thống thuần túy.
+- `people.view` đủ hẹp để chặn user chưa có role, nhưng không yêu cầu quyền quản trị cao như `settings.manage`.
+- Các hành động nhạy cảm hơn sẽ cần permission riêng ở phase sau.
+
 ## Decision 005 - Dùng cấu trúc App Router ở root `app/`
 
 Chọn:

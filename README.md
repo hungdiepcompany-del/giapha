@@ -54,8 +54,11 @@ npm run dev
 Các route nền hiện có:
 
 - `/`: public home placeholder.
-- `/admin`: admin placeholder.
-- `/auth/login`: login placeholder.
+- `/admin`: admin placeholder có guard `people.view`.
+- `/auth/login`: magic link login foundation.
+- `/auth/callback`: Supabase Auth callback.
+- `/auth/logout`: logout route.
+- `/unauthorized`: permission denied page.
 
 ## Deploy
 
@@ -67,6 +70,7 @@ Khi dự án có code, chạy:
 
 ```bash
 npm run check:foundation
+npm run check:auth-permissions
 npm run typecheck
 npm run lint
 npm run build
