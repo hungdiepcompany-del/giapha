@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-06-14 - Git baseline completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Git repo cục bộ và baseline tài liệu đã được commit.
+
+### Đã hoàn thành
+
+- Khởi tạo Git repo tại `D:\CODE\GIA PHẢ`.
+- Tạo `.gitignore` cho Next.js, Supabase và Cloudflare.
+- Kiểm tra bộ docs bằng `rg --files`.
+- Kiểm tra trailing whitespace.
+- Kiểm tra conflict markers.
+- Commit baseline docs.
+
+### Commit baseline
+
+- `dd911c9` - docs: initialize gia pha project knowledge base
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa tạo Next.js project.
+- Chưa có `package.json`.
+- Chưa kết nối Supabase.
+- Chưa tạo migration.
+- Chưa triển khai code app.
+
+### Task tiếp theo đề xuất
+
+Phase 1 - Project foundation:
+
+- Next.js App Router
+- Tailwind/TypeScript/ESLint
+- Supabase helper
+- Auth cơ bản
+- profiles/roles/permissions migration
+- RLS nền
+- script check schema
+
 ## 2026-06-14 - Documentation foundation created
 
 ### Trạng thái hiện tại
@@ -65,4 +105,3 @@ Phase 1 - Project foundation:
 - Chỉ đọc thêm docs liên quan task
 - Không đọc toàn bộ .md nếu task nhỏ
 - Không bỏ export/backup khỏi thiết kế
-
