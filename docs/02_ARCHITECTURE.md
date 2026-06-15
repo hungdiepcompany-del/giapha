@@ -1,5 +1,13 @@
 # Kiến trúc hệ thống
 
+## Phase 10 import JSON preview layer
+
+- `lib/family/import-types.ts`: type cho summary, issues, conflicts và preview result.
+- `lib/family/json-import-validator.ts`: parse/validate `family.json` schema `1.0.0`, references và vòng tổ tiên, không dùng DB.
+- `lib/family/json-import-preview-service.ts`: kiểm quyền, gọi validator và kiểm conflict DB server-side nếu có config.
+- `/admin/exports/import`: form upload/paste JSON, validation và conflict report an toàn, chưa import thật.
+- Import validator là pure TypeScript để có thể kiểm cấu trúc file ngay cả khi Supabase thiếu cấu hình.
+
 ## Stack
 
 - Next.js App Router

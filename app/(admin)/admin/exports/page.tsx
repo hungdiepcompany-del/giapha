@@ -88,10 +88,15 @@ export default async function AdminExportsPage() {
         <div className="mt-6 border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-700">
           <h2 className="font-bold text-slate-950">Import foundation</h2>
           <p className="mt-2">
-            Phase 8 chưa bật import đầy đủ. Import chỉ được làm sau khi có kiểm
-            tra schema_version, preview thay đổi và xác nhận không ghi đè dữ liệu
-            đang chạy.
+            Phase 10 chỉ bật kiểm tra family.json an toàn: đọc schema_version,
+            preview dữ liệu, phát hiện conflict và không ghi đè dữ liệu đang chạy.
           </p>
+          <Link
+            href="/admin/exports/import"
+            className="mt-3 inline-flex font-semibold text-emerald-700 underline"
+          >
+            Import / kiểm tra backup JSON
+          </Link>
         </div>
       </section>
     </AdminShell>

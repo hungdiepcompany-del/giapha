@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 026 - Phase 10 chỉ preview import JSON, không ghi DB
+
+Chọn:
+
+Phase 10 tạo validator và preview UI cho `family.json`, nhưng không bật import thật, không lưu file upload và không ghi đè dữ liệu hiện tại.
+
+Lý do:
+
+- Import thật có nguy cơ phá hỏng dữ liệu gia phả nếu chưa có transaction, conflict resolution, rollback và revision/import log.
+- Preview giúp kiểm tra sớm schema, reference và vòng tổ tiên mà không cần mở bề mặt ghi dữ liệu.
+- `family.json` là bản bảo toàn dữ liệu chính nên đường import phải đi từng bước, không dùng generic overwrite.
+
+## Decision 027 - Conflict check import chạy server-side sau permission
+
+Chọn:
+
+Conflict check DB cho import JSON chỉ chạy trong server service sau khi user có `imports.create` và admin Supabase config khả dụng.
+
+Lý do:
+
+- Service role key không được đưa ra client.
+- Client chỉ cần summary/issues/conflicts đã được server tính.
+- Khi thiếu Supabase config, validator vẫn hoạt động độc lập và báo conflict DB unavailable thay vì crash.
+
 ## Decision 025 - Phase 9 chỉ bật restore placeholder
 
 Chọn:

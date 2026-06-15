@@ -1,5 +1,14 @@
 # Export & Backup model
 
+## Phase 10 import JSON foundation status
+
+- `/admin/exports/import` cho upload hoặc paste `family.json` để preview an toàn.
+- `json-import-validator` kiểm JSON parse, `schema_version = 1.0.0`, arrays bắt buộc, duplicate IDs, `full_name`, references giữa person/family/layout và vòng tổ tiên.
+- `json-import-preview-service` kiểm `imports.create` khi auth/config đã có và chỉ chạy conflict check server-side.
+- Conflict check hiện chỉ báo existing person IDs, duplicate person slugs, existing family IDs và existing tree layout IDs.
+- Nếu thiếu Supabase config, vẫn có thể kiểm cấu trúc file; conflict DB được báo unavailable.
+- Phase 10 không ghi DB, không lưu file upload, không restore, không overwrite dữ liệu hiện tại.
+
 ## Nguyên tắc
 
 Export/backup là bắt buộc từ đầu.

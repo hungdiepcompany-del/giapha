@@ -1,5 +1,94 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 10 Import JSON Foundation
+
+### Phase
+
+Phase 10 - Import JSON Foundation
+
+### Việc đã làm
+
+- Tạo import types và hằng số schema/size limit.
+- Tạo validator thuần cho `family.json`, không dùng Supabase và không ghi DB.
+- Validate JSON parse, schema version, arrays, duplicate IDs, full_name, references và vòng tổ tiên.
+- Tạo preview service server-side có kiểm `imports.create` và conflict check DB nếu khả dụng.
+- Tạo route `/admin/exports/import`.
+- Tạo server action `previewImportAction` để đọc upload/paste JSON tối đa 5MB.
+- Tạo client form preview summary/issues/conflicts và khóa nút xác nhận import.
+- Thêm link từ `/admin/exports` sang import preview.
+- Tạo script `check:import-json`.
+
+### File đã tạo/cập nhật
+
+- package.json
+- app/(admin)/admin/exports/page.tsx
+- app/(admin)/admin/exports/import/page.tsx
+- app/(admin)/admin/exports/import/actions.ts
+- components/imports/json-import-preview-form.tsx
+- lib/family/import-types.ts
+- lib/family/json-import-validator.ts
+- lib/family/json-import-preview-service.ts
+- scripts/check-import-json-foundation.cjs
+- docs/02_ARCHITECTURE.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/06_EXPORT_BACKUP_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration trong Phase 10.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Script check đã tạo
+
+- `check:import-json`: chạy `node scripts/check-import-json-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- Import preview: chỉ đọc file và trả summary/issues/conflicts, không ghi DB.
+- Validator: thuần, chạy được ngay cả khi Supabase thiếu cấu hình.
+- Conflict check: server-side bằng admin Supabase client nếu permission/config đầy đủ.
+- Permission: `imports.create` là quyền mở trang/preview khi auth đã cấu hình.
+- Restore/import thật: chưa bật, nút xác nhận import disabled.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run check:relationships
+- npm run check:tree-viewer
+- npm run check:tree-editor
+- npm run check:public-privacy
+- npm run check:export-backup
+- npm run check:revisions
+- npm run check:import-json
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm audit --audit-level=moderate
+- git diff --check
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa làm import thật.
+- Chưa có transaction/rollback import.
+- Chưa ghi import job/revision log.
+- Chưa kiểm thử với Supabase data thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 11 - Import transaction/restore planning hoặc UI polish foundation.
+
 ## 2026-06-15 - Phase 9 Revision History UI Foundation
 
 ### Phase

@@ -16,7 +16,8 @@
     "check:tree-editor": "node scripts/check-tree-editor-foundation.cjs",
     "check:public-privacy": "node scripts/check-public-privacy-foundation.cjs",
     "check:export-backup": "node scripts/check-export-backup-foundation.cjs",
-    "check:revisions": "node scripts/check-revision-history-foundation.cjs"
+    "check:revisions": "node scripts/check-revision-history-foundation.cjs",
+    "check:import-json": "node scripts/check-import-json-foundation.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

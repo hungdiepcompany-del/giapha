@@ -1,5 +1,13 @@
 # Permission & Privacy model
 
+## Phase 10 import JSON permission model
+
+- `/admin/exports/import` yêu cầu `imports.create` khi Supabase/auth đã cấu hình.
+- Nếu thiếu Supabase config, route được phép hiển thị validator cấu trúc file nhưng báo conflict DB unavailable.
+- Server action import preview không ghi DB, không lưu upload và không chạy import thật.
+- Conflict check DB dùng admin helper server-side; service role key không đi xuống client.
+- Nút xác nhận import bị disabled cho đến khi có transaction, validation final và revision/import log.
+
 ## Roles
 
 - OWNER

@@ -1,5 +1,59 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 10 Import JSON Foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Import JSON foundation dạng preview an toàn. Admin có route `/admin/exports/import` để upload hoặc paste `family.json`, kiểm tra schema, quan hệ, vòng tổ tiên và conflict cơ bản với DB hiện tại.
+
+### Import service/UI đã có
+
+- `lib/family/import-types.ts`
+- `lib/family/json-import-validator.ts`
+- `lib/family/json-import-preview-service.ts`
+- `app/(admin)/admin/exports/import/page.tsx`
+- `app/(admin)/admin/exports/import/actions.ts`
+- `components/imports/json-import-preview-form.tsx`
+
+### Import behavior
+
+- Hỗ trợ preview schema `1.0.0`.
+- Validate JSON parse được, `schema_version`, `people`, `full_name`, duplicate person/family IDs, reference giữa family/person/layout và vòng tổ tiên.
+- Conflict check DB nếu có Supabase/admin config và user có `imports.create`: existing person IDs, duplicate slugs, family IDs, tree layout IDs.
+- Nếu thiếu Supabase config, route vẫn cho kiểm tra cấu trúc file và báo conflict DB unavailable an toàn.
+- File/input giới hạn 5MB.
+- Nút xác nhận import bị disabled; Phase 10 không ghi DB, không lưu file, không restore dữ liệu.
+
+### Permission/privacy status
+
+- Route import yêu cầu `imports.create` khi Supabase/auth đã cấu hình.
+- Service role chỉ dùng server-side trong conflict check.
+- Client form chỉ gọi server action, không nhận secret.
+- Không tạo mock data, không ghi đè dữ liệu hiện tại.
+
+### Script check đã tạo
+
+- `npm run check:import-json`
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa làm import thật.
+- Chưa ghi import job/revision log cho thao tác import.
+- Chưa có transaction import/rollback.
+- Chưa kiểm thử với Supabase data thật.
+
+### Lưu ý cho AI tiếp theo
+
+- Không bật import thật nếu chưa có transaction, validation final, conflict resolution và revision/import log.
+- Không overwrite person/family/layout theo ID cũ nếu chưa có chế độ xác nhận rõ ràng.
+- `family.json` vẫn là bản bảo toàn dữ liệu chính; GEDCOM không thay thế được JSON.
+
+### Task tiếp theo đề xuất
+
+Phase 11 - Import transaction/restore planning hoặc UI polish foundation.
+
 ## 2026-06-15 - Phase 9 Revision History UI Foundation completed
 
 ### Trạng thái hiện tại
