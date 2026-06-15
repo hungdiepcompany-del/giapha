@@ -59,6 +59,9 @@ Các route nền hiện có:
 - `/auth/callback`: Supabase Auth callback.
 - `/auth/logout`: logout route.
 - `/unauthorized`: permission denied page.
+- `/admin/people`: danh sách thành viên.
+- `/admin/people/new`: thêm thành viên.
+- `/admin/people/[id]`: chi tiết/sửa thành viên.
 
 ## Deploy
 
@@ -71,6 +74,7 @@ Khi dự án có code, chạy:
 ```bash
 npm run check:foundation
 npm run check:auth-permissions
+npm run check:people
 npm run typecheck
 npm run lint
 npm run build

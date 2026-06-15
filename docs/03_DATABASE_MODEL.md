@@ -51,8 +51,9 @@ Lý do:
 ### people
 
 - Mục đích: Lưu hồ sơ cá nhân của thành viên gia phả.
-- Trường chính dự kiến: `id`, `stable_id`, `full_name`, `display_name`, `gender`, `birth_date`, `death_date`, `living_status`, `branch`, `generation`, `privacy_level`, `is_deleted`, `created_at`, `updated_at`.
-- Bảo mật/RLS: Người còn sống và trường nhạy cảm phải được lọc theo privacy/permission; không xóa cứng.
+- Trường chính hiện có Phase 3: `id`, `slug`, `full_name`, `display_name`, `gender`, `birth_date`, `birth_date_precision`, `death_date`, `death_date_precision`, `is_living`, `birth_place`, `home_town`, `branch_name`, `generation_number`, `short_bio`, `notes_private`, `visibility`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`, `delete_reason`.
+- Bảo mật/RLS: Bật RLS. Người có `people.view` xem bản ghi chưa xóa mềm. Mutations đi qua server service và kiểm tra `people.create`, `people.update`, `people.delete`, `people.restore`. Không xóa cứng.
+- Ghi chú: `visibility` hỗ trợ `public`, `family`, `private`; `gender` hỗ trợ `male`, `female`, `other`, `unknown`; date precision hỗ trợ `exact`, `year_month`, `year`, `approximate`, `unknown`.
 
 ### families
 
@@ -121,13 +122,13 @@ Lý do:
 ### revisions
 
 - Mục đích: Ghi nhận một đợt thay đổi dữ liệu.
-- Trường chính dự kiến: `id`, `actor_profile_id`, `action`, `entity_type`, `entity_id`, `summary`, `created_at`.
+- Trường chính Phase 3: `id`, `entity_type`, `entity_id`, `action`, `before_json`, `after_json`, `changed_by`, `changed_at`, `change_reason`.
 - Bảo mật/RLS: Cần quyền `revisions.view`; restore cần `revisions.restore`.
 
 ### revision_items
 
 - Mục đích: Lưu trước/sau của từng trường hoặc entity trong một revision.
-- Trường chính dự kiến: `id`, `revision_id`, `field_name`, `old_value`, `new_value`, `metadata_json`.
+- Trường chính Phase 3: `id`, `revision_id`, `field_name`, `before_json`, `after_json`, `created_at`.
 - Bảo mật/RLS: Có thể chứa dữ liệu nhạy cảm nên không public.
 
 ## Bảng export/backup
@@ -143,4 +144,3 @@ Lý do:
 - Mục đích: Lưu lịch sử backup, manifest và checksum.
 - Trường chính dự kiến: `id`, `backup_type`, `file_path`, `manifest_json`, `checksum`, `created_by`, `created_at`.
 - Bảo mật/RLS: Backup có thể chứa toàn bộ dữ liệu nên chỉ OWNER/ADMIN được tải.
-

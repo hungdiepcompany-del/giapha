@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check:foundation": "node scripts/check-project-foundation.cjs",
-    "check:auth-permissions": "node scripts/check-auth-permissions.cjs"
+    "check:auth-permissions": "node scripts/check-auth-permissions.cjs",
+    "check:people": "node scripts/check-people-foundation.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

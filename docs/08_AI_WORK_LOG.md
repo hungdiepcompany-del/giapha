@@ -1,5 +1,107 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 3 People CRUD foundation
+
+### Phase
+
+Phase 3 - People CRUD foundation
+
+### Việc đã làm
+
+- Tạo migration bảng `people`.
+- Tạo revision foundation tối thiểu cho people với `revisions` và `revision_items`.
+- Bật RLS cho `people`, `revisions`, `revision_items`.
+- Tạo TypeScript types cho people.
+- Tạo validator thủ công cho people input.
+- Tạo people service server-side.
+- Tạo server actions cho create/update/soft delete/restore.
+- Tạo route `/admin/people`.
+- Tạo route `/admin/people/new`.
+- Tạo route `/admin/people/[id]`.
+- Tạo component `PersonForm` và `PersonList`.
+- Thêm menu admin tối giản: Tổng quan, Thành viên.
+- Tạo script `check:people`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- app/(admin)/admin/page.tsx
+- app/(admin)/admin/people/actions.ts
+- app/(admin)/admin/people/page.tsx
+- app/(admin)/admin/people/new/page.tsx
+- app/(admin)/admin/people/[id]/page.tsx
+- components/layout/admin-shell.tsx
+- components/people/person-form.tsx
+- components/people/person-list.tsx
+- lib/family/people-types.ts
+- lib/family/people-validation.ts
+- lib/family/people-service.ts
+- db/migrations/20260614_0003_people_foundation.sql
+- scripts/check-people-foundation.cjs
+- docs/03_DATABASE_MODEL.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- db/migrations/20260614_0003_people_foundation.sql
+
+### Script check đã tạo
+
+- `check:people`: chạy `node scripts/check-people-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- People schema: một bảng `people` độc lập, chưa tạo relationship tables.
+- Soft delete: dùng `deleted_at`, `deleted_by`, `delete_reason`; không xóa cứng.
+- Revision: ghi tối thiểu vào `revisions` với before/after JSON cho people actions.
+- RLS: bật từ đầu; service layer enforce action-specific permissions.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm run check:people
+- Browser route check `/admin/people`
+- Browser route check `/admin/people/new`
+- Browser route check `/admin/people/00000000-0000-0000-0000-000000000000`
+
+### Kết quả
+
+- PASS: baseline `npm run check:foundation`
+- PASS: baseline `npm run check:auth-permissions`
+- PASS: baseline `npm run typecheck` sau khi build tái tạo `.next/types`
+- PASS: baseline `npm run lint`
+- PASS: baseline `npm run build`
+- PASS: `npm run check:people`
+- PASS: Phase 3 `npm run typecheck`
+- PASS: Phase 3 `npm run lint`
+- PASS: Phase 3 `npm run build`
+- PASS: Browser route check cho `/admin/people`, `/admin/people/new`, `/admin/people/[id]`
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử CRUD với Supabase project thật.
+- Chưa làm Relationship CRUD.
+- Chưa làm cây gia phả.
+- Chưa làm media upload thật.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 4 - Relationship CRUD foundation.
+
 ## 2026-06-14 - Phase 2 Auth + Role Permission hardening
 
 ### Phase

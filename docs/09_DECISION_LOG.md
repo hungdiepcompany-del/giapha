@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 010 - People CRUD dùng soft delete bắt buộc
+
+Chọn:
+
+Bảng `people` không xóa cứng. Xóa thành viên chỉ cập nhật `deleted_at`, `deleted_by`, `delete_reason`.
+
+Lý do:
+
+- Gia phả dễ bị sửa/xóa nhầm và cần khả năng khôi phục.
+- Phù hợp nguyên tắc dữ liệu sống lâu dài.
+- Cho phép ghi revision delete/restore rõ ràng.
+
+## Decision 011 - Revision people ghi before/after JSON tối thiểu
+
+Chọn:
+
+Tạo `revisions` và `revision_items` foundation trong Phase 3, service people ghi `before_json` và `after_json` ở mức entity.
+
+Lý do:
+
+- Đủ để truy vết create/update/delete/restore ở Phase 3.
+- Chưa cần diff từng field hoàn chỉnh trước khi có workflow review/restore nâng cao.
+- Không bỏ qua thiết kế revision history đã chốt từ đầu.
+
+## Decision 012 - Chưa tạo relationship tables trong People CRUD
+
+Chọn:
+
+Phase 3 chỉ tạo `people`, không tạo `families`, `family_parents`, `family_children` hoặc `couple_relationships`.
+
+Lý do:
+
+- Giữ đúng scope People CRUD.
+- Tránh trộn hồ sơ cá nhân với quan hệ gia phả thật.
+- Relationship CRUD sẽ có phase riêng để xử lý cha/mẹ/con/vợ/chồng đúng mô hình.
+
 ## Decision 007 - Dùng magic link cho auth foundation
 
 Chọn:

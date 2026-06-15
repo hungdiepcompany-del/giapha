@@ -77,3 +77,14 @@ Public chỉ nên hiện an toàn:
 - Nếu thiếu cấu hình Supabase, helper phải fail an toàn và không cấp quyền mặc định.
 - Admin guard kiểm tra quyền server-side, không chỉ ẩn bằng UI.
 - Phase 2 chưa làm People CRUD, Relationship CRUD, cây gia phả hoặc export thật.
+
+## Phase 3 people permission model
+
+- `/admin/people` yêu cầu `people.view`.
+- `/admin/people/new` yêu cầu `people.create`.
+- `/admin/people/[id]` yêu cầu `people.view`; form sửa chỉ hoạt động khi có `people.update`.
+- Soft delete yêu cầu `people.delete`.
+- Restore yêu cầu `people.restore`.
+- Service layer kiểm tra permission server-side trước mọi mutation.
+- RLS bảng `people` không mở public rộng; public people profile sẽ là phase sau.
+- Trường `notes_private` không được dùng cho public output.

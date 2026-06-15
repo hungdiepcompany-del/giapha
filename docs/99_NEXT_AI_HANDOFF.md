@@ -1,5 +1,89 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 3 People CRUD foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có nền quản lý thành viên trong admin. Các route People CRUD foundation đã được tạo, dùng permission server-side và soft delete, chưa làm quan hệ gia đình hoặc cây gia phả.
+
+### People schema đã tạo
+
+- Migration: `db/migrations/20260614_0003_people_foundation.sql`
+- Bảng `people` gồm identity, birth/death, place/branch, content/privacy, audit và soft delete fields.
+- `visibility`: `public`, `family`, `private`.
+- `gender`: `male`, `female`, `other`, `unknown`.
+- Date precision: `exact`, `year_month`, `year`, `approximate`, `unknown`.
+
+### Soft delete rule
+
+- Không xóa cứng.
+- Soft delete dùng `deleted_at`, `deleted_by`, `delete_reason`.
+- Restore xóa các field soft-delete và ghi revision restore.
+
+### Revision status
+
+- Tạo foundation `revisions` và `revision_items`.
+- People service ghi revision tối thiểu cho create/update/delete/restore với `before_json`, `after_json`, `changed_by`, `change_reason`.
+- Chưa làm UI revision history hoặc restore revision nâng cao.
+
+### RLS status
+
+- Bật RLS cho `people`, `revisions`, `revision_items`.
+- `people.view` xem bản ghi chưa xóa mềm.
+- `people.create` insert.
+- Update policy cho người có `people.update`, `people.delete`, hoặc `people.restore`.
+- Service layer vẫn enforce action-specific permission trước từng mutation.
+- Không mở public-wide policy cho `people`.
+
+### CRUD route đã có
+
+- `/admin/people`: danh sách, search, filter visibility/is_living.
+- `/admin/people/new`: form thêm thành viên.
+- `/admin/people/[id]`: xem/sửa, soft delete, restore.
+
+### Script check đã tạo
+
+- `npm run check:people`
+
+### Lệnh đã chạy
+
+- `npm run check:foundation` - PASS
+- `npm run check:auth-permissions` - PASS
+- `npm run check:people` - PASS
+- `npm run typecheck` - PASS
+- `npm run lint` - PASS
+- `npm run build` - PASS
+- Browser route check `/admin/people`, `/admin/people/new`, `/admin/people/[id]` trên `http://127.0.0.1:3001` - PASS
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử CRUD với Supabase project thật.
+- Chưa làm Relationship CRUD.
+- Chưa tạo `families`, `family_parents`, `family_children`, `couple_relationships`.
+- Chưa làm cây gia phả.
+- Chưa làm media upload thật.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Lưu ý cho AI tiếp theo
+
+- Không xóa cứng people.
+- Không thêm relationship vào `people`.
+- Relationship CRUD phải dùng bảng quan hệ riêng ở phase sau.
+- Service role vẫn chỉ dùng server-side.
+- Nếu chưa có Supabase env thật, People UI phải fail an toàn, không dùng mock data.
+
+### Task tiếp theo đề xuất
+
+Phase 4 - Relationship CRUD foundation:
+
+- Tạo `families`, `family_parents`, `family_children`, `couple_relationships`.
+- Gắn permissions `relationships.*`.
+- Kiểm tra vòng lặp dữ liệu cơ bản.
+- Không làm React Flow/ELK tree viewer nếu chưa sang phase cây.
+
 ## 2026-06-14 - Phase 2 Auth + Role Permission hardening completed
 
 ### Trạng thái hiện tại

@@ -22,6 +22,12 @@ export function AdminShell({
             Quản trị GIA PHẢ
           </Link>
           <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold">
+            <Link href="/admin" className="underline">
+              Tổng quan
+            </Link>
+            <Link href="/admin/people" className="underline">
+              Thành viên
+            </Link>
             <Link href="/" className="underline">
               Public
             </Link>
