@@ -77,3 +77,23 @@ Khi click node:
 - Chưa lưu layout thủ công.
 - Chưa làm public tree.
 - Chưa export ảnh cây/PDF.
+
+## Phase 6 tree editor foundation
+
+- Route editor: `/admin/tree/edit`.
+- Migration layout: `db/migrations/20260614_0005_tree_layout_foundation.sql`.
+- Layout persistence: `tree_layouts` và `tree_layout_nodes`.
+- Layout service: `lib/family/tree-layout-service.ts`.
+- Editor component: `components/tree/family-tree-editor.tsx`.
+- Side panel: `components/tree/tree-editor-side-panel.tsx`.
+- Toolbar editor: `components/tree/tree-editor-toolbar.tsx`.
+- Click person node mở side panel.
+- Kéo node được và nút `Lưu layout` lưu vị trí vào `tree_layout_nodes`.
+- `Reset layout` soft-delete saved layout nodes để quay về auto layout.
+- `Auto layout` chỉ áp dụng lại ELK trong UI, không ghi DB cho tới khi bấm lưu.
+- Side panel có action thêm cha/mẹ, vợ/chồng/bạn đời, con bằng UUID người đã tồn tại.
+- Add relationship từ cây đi qua relationship service thật, không tạo mock.
+- Không sửa trực tiếp family node trong Phase 6.
+- Chưa làm public tree.
+- Chưa export ảnh/PDF.
+- Chưa làm JSON/GEDCOM/ZIP export thật.

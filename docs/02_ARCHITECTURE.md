@@ -20,6 +20,7 @@
 - Privacy layer
 - Tree graph builder
 - Tree viewer layout layer
+- Tree editor layout persistence layer
 - Export/backup layer
 
 ## Server/client boundary
@@ -32,6 +33,8 @@
 - Tree service chạy server-side và chỉ trả graph đã lọc quyền/privacy cho client viewer.
 - React Flow viewer là client component; không import service role/admin helper.
 - ELK layout trong Phase 5 chạy ở client helper để phục vụ auto layout/reset layout của viewer.
+- Tree editor action gửi dữ liệu lên server action; layout service server-side ghi `tree_layouts`/`tree_layout_nodes`.
+- Kéo node trên React Flow chỉ thay đổi layout UI, không sửa relationship tables.
 
 ## Deploy
 

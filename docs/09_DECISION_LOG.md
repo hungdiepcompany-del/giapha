@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 019 - Layout cây lưu riêng với dữ liệu gia phả thật
+
+Chọn:
+
+Phase 6 tạo `tree_layouts` và `tree_layout_nodes` để lưu vị trí node thủ công.
+
+Lý do:
+
+- Kéo node là thao tác UI, không phải thay đổi quan hệ cha/mẹ/con/vợ/chồng.
+- Giữ nguyên nguyên tắc không trộn dữ liệu layout cây với dữ liệu gia phả thật.
+- Cho phép reset layout về auto layout mà không ảnh hưởng dữ liệu quan hệ.
+
+## Decision 020 - Tree Editor add relationship đi qua service thật
+
+Chọn:
+
+Side panel editor gọi server actions rồi dùng relationship service hiện có để thêm cha/mẹ, vợ/chồng hoặc con.
+
+Lý do:
+
+- Không tạo edge React Flow giả che lỗi.
+- Giữ permission, validation, cycle check và revision ở service layer.
+- Phase 6 chưa tạo người mới từ cây; chỉ nối người đã tồn tại bằng UUID.
+
 ## Decision 016 - Chọn `@xyflow/react` cho Tree Viewer
 
 Chọn:

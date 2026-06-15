@@ -1,5 +1,83 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 6 Tree Editor foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Tree Editor foundation trong admin. Editor dùng React Flow, side panel và server actions để lưu layout UI riêng hoặc thêm quan hệ qua service thật.
+
+### Migration/layout persistence đã tạo
+
+- Migration: `db/migrations/20260614_0005_tree_layout_foundation.sql`
+- Bảng `tree_layouts`: lưu layout tree theo scope.
+- Bảng `tree_layout_nodes`: lưu vị trí node thủ công.
+- RLS: `tree.view` đọc layout chưa xóa mềm, `tree.edit_layout` tạo/sửa/xóa mềm layout.
+- Layout là dữ liệu UI, không thay thế relationship tables.
+
+### Tree editor đã có
+
+- Route: `/admin/tree/edit`
+- Actions: `app/(admin)/admin/tree/edit/actions.ts`
+- Layout service: `lib/family/tree-layout-service.ts`
+- Components:
+  - `components/tree/family-tree-editor.tsx`
+  - `components/tree/tree-editor-side-panel.tsx`
+  - `components/tree/tree-editor-toolbar.tsx`
+- `/admin/tree` vẫn readonly và chỉ thêm link `Chỉnh sửa cây` khi có `tree.edit_layout`.
+
+### Side panel/action status
+
+- Click person node mở side panel.
+- Side panel hiển thị họ tên, năm sinh/mất, đời, chi/nhánh, link hồ sơ và quan hệ tóm tắt.
+- Có form thêm cha/mẹ, vợ/chồng/bạn đời, con bằng UUID người đã tồn tại.
+- Add relationship từ cây dùng relationship service thật.
+- Không tạo người mới từ cây trong Phase 6.
+
+### Permission/privacy status
+
+- `/admin/tree/edit` yêu cầu `tree.view` và `tree.edit_layout`.
+- Save/reset layout yêu cầu `tree.edit_layout`.
+- Add relationship yêu cầu `relationships.create` trong relationship service.
+- Client editor không import service role/admin helper.
+- Public tree chưa làm.
+
+### Script check đã tạo
+
+- `npm run check:tree-editor`
+
+### Lệnh đã chạy
+
+- Baseline: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run check:relationships`, `npm run check:tree-viewer`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 6: `npm run check:tree-editor`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Browser route check `/admin/tree` trên `http://127.0.0.1:3001` - PASS, hiển thị thiếu cấu hình an toàn khi chưa có Supabase env thật.
+- Browser route check `/admin/tree/edit` trên `http://127.0.0.1:3001` - PASS, hiển thị thiếu cấu hình an toàn khi chưa có Supabase env thật.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử editor với Supabase data thật.
+- Chưa làm public tree.
+- Chưa export ảnh cây/PDF.
+- Chưa làm JSON/GEDCOM/ZIP export thật.
+- NPM audit còn 2 moderate warnings từ `next`/`postcss`.
+
+### Lưu ý cho AI tiếp theo
+
+- Không trộn layout tree với relationship data.
+- Kéo node và lưu layout chỉ ghi `tree_layout_nodes`.
+- Add relationship từ cây hiện tạo family unit nền rồi nối người đã tồn tại bằng UUID.
+- Nếu thiếu Supabase env thật, `/admin/tree` và `/admin/tree/edit` phải fail an toàn, không dùng mock data.
+
+### Task tiếp theo đề xuất
+
+Phase 7 - Public/private mode foundation:
+
+- Tạo public/internal surfaces.
+- Lọc dữ liệu người còn sống và visibility server-side.
+- Không chỉ ẩn dữ liệu private bằng UI.
+
 ## 2026-06-15 - Phase 5 Tree Viewer foundation completed
 
 ### Trạng thái hiện tại

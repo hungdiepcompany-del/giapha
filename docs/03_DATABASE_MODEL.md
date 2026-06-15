@@ -106,14 +106,16 @@ Lý do:
 ### tree_layouts
 
 - Mục đích: Lưu cấu hình layout cây theo chế độ hoặc nhánh.
-- Trường chính dự kiến: `id`, `name`, `layout_type`, `scope`, `created_by`, `created_at`, `updated_at`.
-- Bảo mật/RLS: Chỉ người có `tree.edit_layout` được sửa.
+- Trường chính hiện có Phase 6: `id`, `layout_code`, `layout_name`, `layout_scope`, `is_default`, `description`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`, `delete_reason`.
+- Bảo mật/RLS: Người có `tree.view` xem layout chưa xóa mềm. Người có `tree.edit_layout` tạo/sửa/xóa mềm layout.
+- Ghi chú: `layout_scope` hỗ trợ `admin`, `family`, `public`, `custom`. Layout là dữ liệu UI, không phải dữ liệu quan hệ gia phả.
 
 ### tree_layout_nodes
 
 - Mục đích: Lưu vị trí, trạng thái thu gọn và metadata UI của node.
-- Trường chính dự kiến: `id`, `layout_id`, `person_id`, `x`, `y`, `collapsed`, `style_json`, `updated_at`.
-- Bảo mật/RLS: Không chứa dữ liệu gia phả nhạy cảm; chỉ chứa dữ liệu UI.
+- Trường chính hiện có Phase 6: `id`, `layout_id`, `node_id`, `node_kind`, `person_id`, `family_id`, `x`, `y`, `is_locked`, `is_collapsed`, `style_json`, audit fields và soft delete fields.
+- Bảo mật/RLS: Không chứa dữ liệu gia phả nhạy cảm; chỉ chứa dữ liệu UI. Đọc cần `tree.view`; ghi cần `tree.edit_layout`.
+- Ghi chú: Có unique index partial trên `(layout_id, node_id)` cho bản ghi chưa xóa mềm.
 
 ### tree_layout_edges
 

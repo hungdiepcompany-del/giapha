@@ -34,6 +34,9 @@ export function AdminShell({
             <Link href="/admin/tree" className="underline">
               Cây gia phả
             </Link>
+            <Link href="/admin/tree/edit" className="underline">
+              Chỉnh sửa cây
+            </Link>
             <Link href="/" className="underline">
               Public
             </Link>

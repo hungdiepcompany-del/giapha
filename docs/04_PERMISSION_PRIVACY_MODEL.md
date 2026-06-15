@@ -107,3 +107,13 @@ Public chỉ nên hiện an toàn:
 - Tree node không chứa `notes_private`.
 - Phase 5 chỉ có viewer, không có mutation trên cây nên không dùng `tree.edit_layout`.
 - Public tree chưa làm; builder chỉ chuẩn bị option `public` để phase sau lọc visibility server-side.
+
+## Phase 6 tree editor permission model
+
+- `/admin/tree/edit` yêu cầu cả `tree.view` và `tree.edit_layout`.
+- Lưu/reset vị trí node yêu cầu `tree.edit_layout`.
+- Thêm cha/mẹ/vợ/chồng/con từ side panel dùng relationship service thật và yêu cầu `relationships.create`.
+- Editor không tạo người mới; chỉ nhận UUID người đã tồn tại.
+- Kéo node chỉ thay đổi `tree_layout_nodes`, không sửa quan hệ thật.
+- Layout persistence không chứa `notes_private` hoặc dữ liệu hồ sơ nhạy cảm.
+- Public tree vẫn chưa làm trong Phase 6.

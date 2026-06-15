@@ -12,7 +12,8 @@
     "check:auth-permissions": "node scripts/check-auth-permissions.cjs",
     "check:people": "node scripts/check-people-foundation.cjs",
     "check:relationships": "node scripts/check-relationship-foundation.cjs",
-    "check:tree-viewer": "node scripts/check-tree-viewer-foundation.cjs"
+    "check:tree-viewer": "node scripts/check-tree-viewer-foundation.cjs",
+    "check:tree-editor": "node scripts/check-tree-editor-foundation.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

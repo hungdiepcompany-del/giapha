@@ -64,6 +64,7 @@ Các route nền hiện có:
 - `/admin/people/[id]`: chi tiết/sửa thành viên.
 - `/admin/relationships`: quản lý family, cha/mẹ/con và quan hệ đôi nền.
 - `/admin/tree`: xem cây gia phả bằng dữ liệu people và relationship tables.
+- `/admin/tree/edit`: chỉnh sửa layout cây và thêm quan hệ từ cây.
 
 ## Deploy
 
@@ -79,6 +80,7 @@ npm run check:auth-permissions
 npm run check:people
 npm run check:relationships
 npm run check:tree-viewer
+npm run check:tree-editor
 npm run typecheck
 npm run lint
 npm run build

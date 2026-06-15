@@ -34,7 +34,7 @@ export default async function AdminPage() {
           <p className="mt-3 text-sm text-slate-600">
             Module Thành viên đã có route nền tại /admin/people. Module Quan hệ
             gia đình đã có route nền tại /admin/relationships. Module Cây gia
-            phả đã có route nền tại /admin/tree.
+            phả đã có route nền tại /admin/tree và editor tại /admin/tree/edit.
           </p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {futureModules.map((moduleName) => (
