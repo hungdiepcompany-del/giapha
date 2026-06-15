@@ -1,5 +1,107 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 9 Revision History UI Foundation
+
+### Phase
+
+Phase 9 - Revision History UI Foundation
+
+### Việc đã làm
+
+- Tạo revision types.
+- Mở rộng revision service để đọc list/detail/entity revisions.
+- Tạo diff helper so sánh `before_json` và `after_json`.
+- Tạo route `/admin/revisions`.
+- Tạo route `/admin/revisions/[id]`.
+- Thêm filter theo entity_type, action, entity_id, changed_by và ngày.
+- Thêm link từ `/admin/people/[id]` sang lịch sử revision của người đó.
+- Thêm admin nav `Lịch sử chỉnh sửa`.
+- Tạo restore placeholder disabled, chưa làm restore thật.
+- Tạo script `check:revisions`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- app/(admin)/admin/revisions/page.tsx
+- app/(admin)/admin/revisions/[id]/page.tsx
+- app/(admin)/admin/people/[id]/page.tsx
+- components/layout/admin-shell.tsx
+- lib/family/revision-types.ts
+- lib/family/revision-service.ts
+- lib/family/revision-diff.ts
+- scripts/check-revision-history-foundation.cjs
+- docs/02_ARCHITECTURE.md
+- docs/03_DATABASE_MODEL.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration trong Phase 9.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Script check đã tạo
+
+- `check:revisions`: chạy `node scripts/check-revision-history-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- Revision list: server-side list với filter cơ bản, giới hạn 100 bản ghi mới nhất.
+- Revision detail: server-side detail theo UUID, hiển thị metadata, revision_items nếu có và raw JSON.
+- Diff viewer: so sánh field top-level từ `before_json`/`after_json`, fallback an toàn cho JSON phức tạp.
+- Restore: chỉ placeholder disabled, không ghi đè dữ liệu hiện tại.
+- Permission: route/service kiểm `revisions.view`; `revisions.restore` chỉ ảnh hưởng ghi chú placeholder.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run check:relationships
+- npm run check:tree-viewer
+- npm run check:tree-editor
+- npm run check:public-privacy
+- npm run check:export-backup
+- npm run check:revisions
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm audit --audit-level=moderate
+- git diff --check
+- Browser route check `http://127.0.0.1:3000/admin/revisions`
+- Browser route check `http://127.0.0.1:3000/admin/revisions/fake-id`
+
+### Kết quả hiện tại
+
+- PASS: baseline trước khi sửa.
+- PASS: `npm run check:revisions`
+- PASS: `npm run typecheck`
+- PASS: `npm run lint`
+- PASS: `npm run build`
+- PASS: `git diff --check`
+- PASS: Browser route check cho `/admin/revisions` và `/admin/revisions/fake-id`; routes render nội dung an toàn, không crash trắng.
+- WARN: `npm audit --audit-level=moderate` còn 2 moderate warnings từ `next`/`postcss`; không chạy `npm audit fix --force` vì breaking change ngoài scope.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa làm restore thật.
+- Chưa có transaction/validation restore.
+- Chưa kiểm thử với dữ liệu Supabase thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 10 - Import JSON foundation hoặc UI polish foundation.
+
 ## 2026-06-15 - Phase 8 Export/backup foundation
 
 ### Phase

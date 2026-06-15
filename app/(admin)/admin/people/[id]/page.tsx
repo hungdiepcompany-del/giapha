@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { AdminShell } from "@/components/layout/admin-shell";
 import { PersonForm } from "@/components/people/person-form";
 import { CoupleForm } from "@/components/relationships/couple-form";
@@ -38,6 +40,7 @@ export default async function PersonDetailPage({
   const canUpdate = context.permissions.includes("people.update");
   const canDelete = context.permissions.includes("people.delete");
   const canRestore = context.permissions.includes("people.restore");
+  const canViewRevisions = context.permissions.includes("revisions.view");
   const canViewRelationships = context.permissions.includes("relationships.view");
   const canCreateRelationships = context.permissions.includes(
     "relationships.create",
@@ -88,6 +91,23 @@ export default async function PersonDetailPage({
                 saved={query.saved}
                 submitLabel="Lưu thay đổi"
               />
+
+              {canViewRevisions ? (
+                <div className="border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                  <div className="font-bold text-slate-950">
+                    Lịch sử chỉnh sửa
+                  </div>
+                  <p className="mt-1">
+                    Xem các revision đã ghi cho thành viên này.
+                  </p>
+                  <Link
+                    href={`/admin/revisions?entity_type=people&entity_id=${personResult.data.id}`}
+                    className="mt-3 inline-flex min-h-11 items-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
+                  >
+                    Mở lịch sử chỉnh sửa
+                  </Link>
+                </div>
+              ) : null}
 
               <div className="border-t border-slate-200 pt-6">
                 {!personResult.data.deleted_at && canDelete ? (

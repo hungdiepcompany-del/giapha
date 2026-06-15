@@ -37,6 +37,9 @@ export function AdminShell({
             <Link href="/admin/tree/edit" className="underline">
               Chỉnh sửa cây
             </Link>
+            <Link href="/admin/revisions" className="underline">
+              Lịch sử chỉnh sửa
+            </Link>
             <Link href="/admin/exports" className="underline">
               Backup / Export
             </Link>

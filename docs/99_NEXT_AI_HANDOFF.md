@@ -1,5 +1,68 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 9 Revision History UI Foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Revision History UI foundation. Admin có thể xem danh sách revision, lọc cơ bản và mở chi tiết để xem before/after JSON cùng diff field.
+
+### Revision service/UI đã có
+
+- `lib/family/revision-types.ts`
+- `lib/family/revision-service.ts`
+- `lib/family/revision-diff.ts`
+- `/admin/revisions`
+- `/admin/revisions/[id]`
+
+### Revision behavior
+
+- `/admin/revisions` hiển thị thời gian, action, entity_type, entity_id, changed_by và reason.
+- Filter hỗ trợ `entity_type`, `action`, `entity_id`, `changed_by`, `changed_from`, `changed_to`.
+- `/admin/revisions/[id]` hiển thị metadata, diff field, `revision_items` nếu có và raw before/after JSON.
+- `/admin/people/[id]` có link nhanh tới `/admin/revisions?entity_type=people&entity_id=<id>` nếu user có `revisions.view`.
+
+### Restore status
+
+- Phase 9 chưa làm restore thật.
+- Nút restore là placeholder disabled.
+- Người có `revisions.restore` chỉ thấy ghi chú rằng restore thật cần transaction, validation và revision mới.
+
+### Permission/privacy status
+
+- Service và route kiểm `revisions.view` server-side.
+- Revision có thể chứa dữ liệu nhạy cảm trong `before_json`/`after_json`, không public.
+- Không đưa service role key ra client.
+
+### Script check đã tạo
+
+- `npm run check:revisions`
+
+### Lệnh đã chạy
+
+- Baseline trước khi sửa: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run check:relationships`, `npm run check:tree-viewer`, `npm run check:tree-editor`, `npm run check:public-privacy`, `npm run check:export-backup`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 9: `npm run check:revisions`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` - PASS
+- Browser route check `/admin/revisions`, `/admin/revisions/fake-id` trên `http://127.0.0.1:3000` - PASS; routes render nội dung an toàn, không crash trắng.
+- `npm audit --audit-level=moderate` - WARN, còn 2 moderate warnings từ `next`/`postcss`; không chạy force fix vì breaking change ngoài scope.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa làm restore thật.
+- Chưa có transaction/validation restore.
+- Chưa kiểm thử với dữ liệu Supabase thật.
+- NPM audit còn 2 moderate warnings từ `next`/`postcss`.
+
+### Lưu ý cho AI tiếp theo
+
+- Không bật restore thật nếu chưa có validation, transaction và revision log cho hành động restore.
+- Revision detail có thể hiển thị dữ liệu nhạy cảm nên không đưa ra public route.
+- Nếu mở restore, phải xử lý từng `entity_type` riêng, không dùng generic overwrite mù.
+
+### Task tiếp theo đề xuất
+
+Phase 10 - Import JSON foundation hoặc UI polish foundation.
+
 ## 2026-06-15 - Phase 8 Export/backup foundation completed
 
 ### Trạng thái hiện tại

@@ -138,3 +138,11 @@ Public chỉ nên hiện an toàn:
 - Public export không được tự động lộ `notes_private`; nếu cần public export riêng sau này phải dùng privacy service và DTO public-safe.
 - `export_jobs` và `backup_records` bật RLS, chỉ người có `exports.download` được đọc và `exports.create` được tạo record.
 - `imports.create` chỉ là quyền nền; Phase 8 chưa bật import ghi dữ liệu.
+
+## Phase 9 revision history permission model
+
+- `/admin/revisions` yêu cầu `revisions.view`.
+- `/admin/revisions/[id]` yêu cầu `revisions.view`.
+- Revision có thể chứa dữ liệu nhạy cảm trong `before_json` và `after_json`, không public.
+- Người có `revisions.restore` chỉ thấy placeholder restore disabled trong Phase 9.
+- Phase 9 chưa làm restore thật, chưa ghi đè dữ liệu hiện tại từ revision cũ và chưa xóa revision.

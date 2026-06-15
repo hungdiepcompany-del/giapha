@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 025 - Phase 9 chỉ bật restore placeholder
+
+Chọn:
+
+Phase 9 tạo UI xem revision list/detail và diff before/after, nhưng nút khôi phục chỉ disabled placeholder.
+
+Lý do:
+
+- Restore thật có nguy cơ ghi đè dữ liệu hiện tại nếu chưa có transaction và validation rõ.
+- Cần ghi revision mới cho hành động restore, kiểm entity_type/action và xử lý quan hệ liên bảng trước khi bật.
+- Mục tiêu Phase 9 là audit trail có thể xem được trước, không phải phục hồi tự động.
+
 ## Decision 023 - family.json là bản bảo toàn dữ liệu chính
 
 Chọn:

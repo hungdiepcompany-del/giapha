@@ -69,6 +69,8 @@ Các route nền hiện có:
 - `/admin/tree/edit`: chỉnh sửa layout cây và thêm quan hệ từ cây.
 - `/admin/preview/public`: preview public mode cho admin.
 - `/admin/exports`: tải family.json, family.ged và full-backup.zip.
+- `/admin/revisions`: xem lịch sử chỉnh sửa.
+- `/admin/revisions/[id]`: xem diff trước/sau của một revision.
 
 ## Deploy
 
@@ -87,6 +89,7 @@ npm run check:tree-viewer
 npm run check:tree-editor
 npm run check:public-privacy
 npm run check:export-backup
+npm run check:revisions
 npm run typecheck
 npm run lint
 npm run build

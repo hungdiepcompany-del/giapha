@@ -131,12 +131,14 @@ Lý do:
 - Trường chính Phase 3/4: `id`, `entity_type`, `entity_id`, `action`, `before_json`, `after_json`, `changed_by`, `changed_at`, `change_reason`.
 - Bảo mật/RLS: Cần quyền `revisions.view`; restore cần `revisions.restore`.
 - Ghi chú Phase 4: revision helper dùng chung ghi before/after JSON cho `people`, `families`, `family_parents`, `family_children`, `couple_relationships`.
+- Ghi chú Phase 9: đã có UI đọc list/detail và diff cơ bản tại `/admin/revisions`; không tạo migration mới và chưa bật restore thật.
 
 ### revision_items
 
 - Mục đích: Lưu trước/sau của từng trường hoặc entity trong một revision.
 - Trường chính Phase 3: `id`, `revision_id`, `field_name`, `before_json`, `after_json`, `created_at`.
 - Bảo mật/RLS: Có thể chứa dữ liệu nhạy cảm nên không public.
+- Ghi chú Phase 9: detail page hiển thị `revision_items` nếu có; hiện các service ghi revision chủ yếu dùng `before_json`/`after_json` ở bảng `revisions`.
 
 ## Bảng export/backup
 

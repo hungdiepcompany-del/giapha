@@ -22,6 +22,7 @@
 - Tree graph builder
 - Tree viewer layout layer
 - Tree editor layout persistence layer
+- Revision history UI layer
 - Export/backup layer
 
 ## Server/client boundary
@@ -38,6 +39,8 @@
 - Tree editor action gửi dữ liệu lên server action; layout service server-side ghi `tree_layouts`/`tree_layout_nodes`.
 - Kéo node trên React Flow chỉ thay đổi layout UI, không sửa relationship tables.
 - Public pages không nhận `notes_private` hoặc dữ liệu admin chưa lọc.
+- Revision pages chạy server-side, kiểm `revisions.view` trước khi đọc audit trail.
+- Revision restore trong Phase 9 chỉ là placeholder disabled, không ghi đè dữ liệu.
 - Export/backup service chạy server-side, kiểm `exports.download` hoặc `exports.create` trước khi query dữ liệu.
 - Route download export trả attachment server-side; không ghi file tạm xuống disk và không đưa service role ra client.
 
@@ -49,6 +52,14 @@
 - `lib/family/zip-backup-exporter.ts`: build `full-backup.zip` gồm JSON, GEDCOM, manifest và checksums.
 - `lib/family/checksum.ts`: SHA-256 helper cho file export/backup.
 - `/admin/exports`: UI admin tải backup.
+
+## Revision history layer
+
+- `lib/family/revision-service.ts`: ghi revision và đọc list/detail cho UI.
+- `lib/family/revision-types.ts`: type nền cho revision list/detail/filter.
+- `lib/family/revision-diff.ts`: so sánh JSON before/after ở mức field cơ bản.
+- `/admin/revisions`: danh sách lịch sử chỉnh sửa có filter.
+- `/admin/revisions/[id]`: chi tiết revision, before/after JSON và diff field.
 
 ## Deploy
 
