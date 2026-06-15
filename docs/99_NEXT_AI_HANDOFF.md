@@ -1,5 +1,82 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 5 Tree Viewer foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Tree Viewer foundation trong admin. Viewer dùng graph được build từ dữ liệu thật trong `people` và relationship tables, chưa có tree editor hoặc layout persistence.
+
+### Package đã thêm
+
+- `@xyflow/react`
+- `elkjs`
+
+### Tree graph/viewer đã có
+
+- Types: `lib/family/tree-types.ts`
+- Graph builder: `lib/family/tree-graph-builder.ts`
+- Tree service: `lib/family/tree-service.ts`
+- ELK layout helper: `lib/family/tree-layout-elk.ts`
+- Route: `/admin/tree`
+- Components:
+  - `components/tree/family-tree-viewer.tsx`
+  - `components/tree/family-node-card.tsx`
+  - `components/tree/family-tree-toolbar.tsx`
+  - `components/tree/family-tree-empty-state.tsx`
+  - `components/tree/family-tree-error-state.tsx`
+
+### Graph model
+
+- Node kind: `person`, `family`.
+- Edge kind: `family_unit`, `parent_child`, `couple`.
+- Family node trung gian gom cha/mẹ và con.
+- Node person không chứa `notes_private`.
+- Builder có mode `admin`, `internal`, `public`; Phase 5 chỉ dùng admin route.
+
+### Permission/privacy status
+
+- `/admin/tree` yêu cầu `tree.view`.
+- Tree service query server-side và trả graph đã build cho client viewer.
+- Client viewer không import service role/admin helper.
+- Public tree chưa làm trong Phase 5.
+
+### Script check đã tạo
+
+- `npm run check:tree-viewer`
+
+### Lệnh đã chạy
+
+- Baseline: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run check:relationships`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 5: `npm run check:tree-viewer`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Browser route check `/admin/tree` trên `http://127.0.0.1:3001` - PASS, hiển thị thiếu cấu hình an toàn khi chưa có Supabase env thật.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa kiểm thử viewer với Supabase data thật.
+- Chưa làm Tree Editor.
+- Chưa lưu layout thủ công.
+- Chưa làm public tree.
+- Chưa export ảnh cây/PDF.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+- NPM audit còn 2 moderate warnings sau khi cài package.
+
+### Lưu ý cho AI tiếp theo
+
+- Không trộn dữ liệu layout cây với dữ liệu quan hệ thật.
+- Tree editor/mutation từ cây là Phase 6, chưa có trong viewer.
+- Nếu thiếu Supabase env thật, `/admin/tree` phải fail an toàn, không dùng mock data.
+- Public tree cần lọc visibility server-side, không chỉ ẩn bằng UI.
+
+### Task tiếp theo đề xuất
+
+Phase 6 - Tree Editor foundation:
+
+- Thêm edit interactions qua service/action có permission rõ ràng.
+- Nếu lưu layout, dùng bảng `tree_layouts`, `tree_layout_nodes`, `tree_layout_edges` riêng.
+- Không coi kéo node là sửa quan hệ gia phả thật.
+
 ## 2026-06-15 - Phase 4 Relationship CRUD foundation completed
 
 ### Trạng thái hiện tại

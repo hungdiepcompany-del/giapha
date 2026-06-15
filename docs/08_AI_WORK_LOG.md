@@ -1,5 +1,116 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 5 Tree Viewer foundation
+
+### Phase
+
+Phase 5 - Tree Viewer foundation
+
+### Việc đã làm
+
+- Cài `@xyflow/react` và `elkjs`.
+- Tạo tree graph types.
+- Tạo graph builder từ `people` và relationship tables.
+- Tạo tree service server-side kiểm quyền `tree.view`.
+- Tạo ELK auto layout helper.
+- Tạo route `/admin/tree`.
+- Tạo React Flow viewer client component.
+- Tạo custom person/family node card.
+- Tạo toolbar tìm người, fit view, reset layout.
+- Tạo empty/error state an toàn.
+- Thêm menu admin `Cây gia phả`.
+- Tạo script `check:tree-viewer`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- package-lock.json
+- app/layout.tsx
+- app/(admin)/admin/page.tsx
+- app/(admin)/admin/tree/page.tsx
+- components/layout/admin-shell.tsx
+- components/tree/family-tree-viewer.tsx
+- components/tree/family-node-card.tsx
+- components/tree/family-tree-toolbar.tsx
+- components/tree/family-tree-empty-state.tsx
+- components/tree/family-tree-error-state.tsx
+- lib/family/tree-types.ts
+- lib/family/tree-graph-builder.ts
+- lib/family/tree-service.ts
+- lib/family/tree-layout-elk.ts
+- scripts/check-tree-viewer-foundation.cjs
+- docs/02_ARCHITECTURE.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/05_TREE_UI_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Package đã thêm
+
+- `@xyflow/react`
+- `elkjs`
+
+### Script check đã tạo
+
+- `check:tree-viewer`: chạy `node scripts/check-tree-viewer-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- React Flow package: `@xyflow/react`.
+- ELK layout: `elkjs`, chạy trong client viewer helper và fail mềm.
+- Graph builder: tạo `person` node và `family` node trung gian; edge gồm `family_unit`, `parent_child`, `couple`.
+- Public/private handling: service admin kiểm `tree.view`; builder có mode `admin`, `internal`, `public`; node không chứa `notes_private`.
+- Tree editor status: chưa làm mutation/edit trên cây.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run check:relationships
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm install @xyflow/react elkjs
+- npm run check:tree-viewer
+- Browser route check `/admin/tree`
+
+### Kết quả
+
+- PASS: baseline `npm run check:foundation`
+- PASS: baseline `npm run check:auth-permissions`
+- PASS: baseline `npm run check:people`
+- PASS: baseline `npm run check:relationships`
+- PASS: baseline `npm run typecheck`
+- PASS: baseline `npm run lint`
+- PASS: baseline `npm run build`
+- PASS: `npm run check:tree-viewer`
+- PASS: Phase 5 `npm run typecheck`
+- PASS: Phase 5 `npm run lint`
+- PASS: Phase 5 `npm run build`
+- PASS: Browser route check cho `/admin/tree` khi thiếu Supabase config
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử viewer với Supabase data thật.
+- Chưa làm Tree Editor.
+- Chưa lưu layout thủ công.
+- Chưa làm public tree.
+- Chưa export ảnh cây/PDF.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+- NPM audit còn 2 moderate warnings sau khi cài package.
+
+### Task tiếp theo đề xuất
+
+- Phase 6 - Tree Editor foundation.
+
 ## 2026-06-15 - Phase 4 Relationship CRUD foundation
 
 ### Phase

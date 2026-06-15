@@ -99,3 +99,11 @@ Public chỉ nên hiện an toàn:
 - Cycle check cha-con chạy trong service trước khi thêm parent/child edge.
 - RLS các bảng relationship không mở public rộng trong Phase 4.
 - Public tree/viewer sẽ là phase riêng và phải lọc `visibility` server-side.
+
+## Phase 5 tree viewer permission model
+
+- `/admin/tree` yêu cầu `tree.view`.
+- Tree service query server-side bằng admin helper, sau đó build graph đã lọc trước khi trả cho client viewer.
+- Tree node không chứa `notes_private`.
+- Phase 5 chỉ có viewer, không có mutation trên cây nên không dùng `tree.edit_layout`.
+- Public tree chưa làm; builder chỉ chuẩn bị option `public` để phase sau lọc visibility server-side.

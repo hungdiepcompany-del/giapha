@@ -3,7 +3,9 @@
 ## Công nghệ
 
 - React Flow để hiển thị/chỉnh sửa cây.
+- Phase 5 chọn package `@xyflow/react`.
 - ELK.js để auto layout.
+- Phase 5 chọn package `elkjs`.
 - Custom node card.
 - Custom edge.
 
@@ -60,3 +62,18 @@ Khi click node:
 - Family internal mode
 - Public mode
 
+## Phase 5 tree viewer foundation
+
+- Route admin viewer: `/admin/tree`.
+- Service: `getAdminFamilyTreeGraph()` kiểm quyền `tree.view` và query dữ liệu thật từ `people`, `families`, `family_parents`, `family_children`, `couple_relationships`.
+- Graph builder: `lib/family/tree-graph-builder.ts`, không phụ thuộc React component và không gọi browser API.
+- Layout helper: `lib/family/tree-layout-elk.ts`, chạy ELK hướng trên xuống dưới ở client viewer và fail mềm nếu layout lỗi.
+- Viewer: `components/tree/family-tree-viewer.tsx` dùng React Flow với zoom/pan/fit view, reset layout và search/focus node theo tên.
+- Node model: có `person` node và `family` node trung gian để gom cha/mẹ/con.
+- Edge model: `family_unit`, `parent_child`, `couple`.
+- Node card không hiển thị `notes_private`.
+- Public mode chưa có route riêng, nhưng builder đã có option `admin`, `internal`, `public` để lọc visibility tối thiểu.
+- Chưa làm Tree Editor.
+- Chưa lưu layout thủ công.
+- Chưa làm public tree.
+- Chưa export ảnh cây/PDF.

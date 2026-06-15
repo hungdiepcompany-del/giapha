@@ -31,6 +31,9 @@ export function AdminShell({
             <Link href="/admin/relationships" className="underline">
               Quan hệ gia đình
             </Link>
+            <Link href="/admin/tree" className="underline">
+              Cây gia phả
+            </Link>
             <Link href="/" className="underline">
               Public
             </Link>

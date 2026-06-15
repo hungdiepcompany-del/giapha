@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 016 - Chọn `@xyflow/react` cho Tree Viewer
+
+Chọn:
+
+Phase 5 dùng `@xyflow/react` thay vì package `reactflow` cũ.
+
+Lý do:
+
+- `@xyflow/react` là package hiện đại của React Flow.
+- Phù hợp yêu cầu viewer có zoom, pan, fit view, custom node và toolbar.
+- Không cần thêm package UI nặng ngoài scope.
+
+## Decision 017 - ELK layout chạy trong client viewer ở Phase 5
+
+Chọn:
+
+`lib/family/tree-layout-elk.ts` dùng `elkjs` để layout graph trong client viewer.
+
+Lý do:
+
+- Viewer cần reset layout/fit view tương tác mà không tạo persistence layout.
+- Không đưa service role/admin helper vào client; client chỉ nhận graph đã lọc từ tree service.
+- Nếu ELK lỗi, helper trả graph gốc để route không crash trắng.
+
+## Decision 018 - Tree viewer dùng family node trung gian
+
+Chọn:
+
+Graph builder tạo node `family` trung gian để nối cha/mẹ với con, bên cạnh node `person`.
+
+Lý do:
+
+- Gia phả thật có thể có nhiều cha/mẹ và nhiều con trong một family.
+- Tránh render quá nhiều edge person-to-person gây rối khi có tái hôn, con nuôi hoặc con riêng.
+- Giữ dữ liệu quan hệ thật tách khỏi dữ liệu layout UI.
+
 ## Decision 013 - Relationship CRUD dùng bảng quan hệ riêng
 
 Chọn:
