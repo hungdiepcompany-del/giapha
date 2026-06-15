@@ -1,11 +1,11 @@
 -- Manual OWNER bootstrap snippet for WEB GIA PHA.
--- Replace owner@example.com with the email of the authenticated profile.
+-- Review the email literal below before running this snippet.
 -- Run only from a trusted SQL console/admin context after verifying identity.
 
 with target_profile as (
   select id
   from public.profiles
-  where lower(email) = lower('owner@example.com')
+  where lower(email) = lower('hungdiepcompany@gmail.com')
   limit 1
 ),
 owner_role as (
