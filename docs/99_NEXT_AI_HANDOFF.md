@@ -1,5 +1,76 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 4 Relationship CRUD foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có Relationship CRUD foundation trong admin. Relationship data được lưu trong bảng riêng, có permission server-side, RLS, soft delete, revision và cycle check cơ bản.
+
+### Relationship schema đã tạo
+
+- Migration: `db/migrations/20260614_0004_relationship_foundation.sql`
+- Bảng `families`: nhóm family với `family_code`, `family_label`, `visibility`, notes, audit và soft delete fields.
+- Bảng `family_parents`: nối family với cha/mẹ/người nuôi bằng `parent_role` và `relationship_type`.
+- Bảng `family_children`: nối family với con bằng `child_relationship_type`.
+- Bảng `couple_relationships`: lưu quan hệ đôi với `relationship_status`, ngày bắt đầu/kết thúc, `visibility`, notes, audit và soft delete fields.
+
+### Service/UI đã có
+
+- `lib/family/relationship-service.ts`: list, summary theo person, create family, add parent/child, create/update couple, soft delete relationship records.
+- `lib/family/relationship-graph.ts`: cycle check cha-con cơ bản.
+- `lib/family/revision-service.ts`: helper revision dùng chung.
+- `/admin/relationships`: danh sách family/couple, form tạo family, thêm cha/mẹ/con, tạo quan hệ đôi.
+- `/admin/people/[id]`: có section Quan hệ gia đình.
+- Admin nav có link `Quan hệ gia đình`.
+
+### RLS/permission status
+
+- Bật RLS cho `families`, `family_parents`, `family_children`, `couple_relationships`.
+- `relationships.view` xem bản ghi chưa xóa mềm.
+- `relationships.create` insert.
+- `relationships.update`/`relationships.delete` update hoặc xóa mềm.
+- Service layer vẫn enforce action-specific permission trước từng mutation.
+- Không mở public-wide policy cho relationship tables.
+
+### Script check đã tạo
+
+- `npm run check:relationships`
+
+### Lệnh đã chạy
+
+- Baseline: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 4: `npm run check:relationships`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Browser route check `/admin/relationships` trên `http://127.0.0.1:3001` - PASS
+- Browser route check `/admin/people/00000000-0000-0000-0000-000000000000` trên `http://127.0.0.1:3001` - PASS
+- `git diff --check` - PASS
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử Relationship CRUD với Supabase project thật.
+- Chưa làm tree viewer/editor.
+- Chưa cài React Flow/ELK trong Phase 4.
+- Chưa làm public family tree.
+- Chưa làm media upload thật.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Lưu ý cho AI tiếp theo
+
+- Không thêm `father_id`, `mother_id`, `spouse_id` vào `people`.
+- Relationship UI hiện nhập UUID trực tiếp, chưa có autocomplete.
+- Nếu thiếu Supabase env thật, relationship routes phải fail an toàn, không dùng mock data.
+- Tree viewer/editor và layout graph là phase sau, không nằm trong Phase 4.
+
+### Task tiếp theo đề xuất
+
+Phase 5 - Tree viewer foundation:
+
+- Đọc relationship tables để dựng dữ liệu cây.
+- Chỉ cài React Flow/ELK khi phase tree cho phép.
+- Không trộn dữ liệu layout cây với dữ liệu quan hệ thật.
+
 ## 2026-06-15 - Phase 3 People CRUD foundation completed
 
 ### Trạng thái hiện tại

@@ -28,6 +28,9 @@ export function AdminShell({
             <Link href="/admin/people" className="underline">
               Thành viên
             </Link>
+            <Link href="/admin/relationships" className="underline">
+              Quan hệ gia đình
+            </Link>
             <Link href="/" className="underline">
               Public
             </Link>

@@ -1,5 +1,109 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 4 Relationship CRUD foundation
+
+### Phase
+
+Phase 4 - Relationship CRUD foundation
+
+### Việc đã làm
+
+- Tạo migration `families`, `family_parents`, `family_children`, `couple_relationships`.
+- Bật RLS cho các bảng relationship và policy theo `relationships.*`.
+- Tách revision helper dùng chung tại `lib/family/revision-service.ts`.
+- Tạo relationship types, validation, graph cycle helper và service server-side.
+- Tạo server actions cho create family, add parent/child, create couple và soft delete.
+- Tạo route `/admin/relationships`.
+- Tích hợp section quan hệ gia đình vào `/admin/people/[id]`.
+- Tạo components `RelationshipForm`, `CoupleForm`, `RelationshipSummary`.
+- Thêm menu admin `Quan hệ gia đình`.
+- Tạo script `check:relationships`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- app/(admin)/admin/page.tsx
+- app/(admin)/admin/people/[id]/page.tsx
+- app/(admin)/admin/relationships/actions.ts
+- app/(admin)/admin/relationships/page.tsx
+- components/layout/admin-shell.tsx
+- components/relationships/relationship-form.tsx
+- components/relationships/couple-form.tsx
+- components/relationships/relationship-summary.tsx
+- lib/family/revision-service.ts
+- lib/family/relationship-types.ts
+- lib/family/relationship-validation.ts
+- lib/family/relationship-graph.ts
+- lib/family/relationship-service.ts
+- lib/family/people-service.ts
+- db/migrations/20260614_0004_relationship_foundation.sql
+- scripts/check-relationship-foundation.cjs
+- docs/03_DATABASE_MODEL.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- db/migrations/20260614_0004_relationship_foundation.sql
+
+### Script check đã tạo
+
+- `check:relationships`: chạy `node scripts/check-relationship-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- Relationship schema dùng bảng riêng, không thêm `father_id`, `mother_id`, `spouse_id` vào `people`.
+- Soft delete relationship bằng `deleted_at`, `deleted_by`, `delete_reason`.
+- Revision helper dùng chung cho people và relationship entities.
+- Cycle check cha-con chạy ở service layer trước khi thêm edge.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm run check:relationships
+- Browser route check `/admin/relationships`
+- Browser route check `/admin/people/00000000-0000-0000-0000-000000000000`
+
+### Kết quả
+
+- PASS: baseline `npm run check:foundation`
+- PASS: baseline `npm run check:auth-permissions`
+- PASS: baseline `npm run check:people`
+- PASS: baseline `npm run typecheck`
+- PASS: baseline `npm run lint`
+- PASS: baseline `npm run build`
+- PASS: `npm run check:relationships`
+- PASS: Phase 4 `npm run typecheck`
+- PASS: Phase 4 `npm run lint`
+- PASS: Phase 4 `npm run build`
+- PASS: Browser route check cho `/admin/relationships`
+- PASS: Browser route check cho `/admin/people/[id]` giả
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên database thật.
+- Chưa kiểm thử CRUD relationship với Supabase project thật.
+- Chưa làm tree viewer/editor.
+- Chưa thêm React Flow/ELK vào Phase 4.
+- Chưa làm media upload thật.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 5 - Tree viewer foundation.
+
 ## 2026-06-15 - Phase 3 People CRUD foundation
 
 ### Phase

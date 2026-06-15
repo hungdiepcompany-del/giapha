@@ -1,11 +1,18 @@
 import { AdminShell } from "@/components/layout/admin-shell";
 import { PersonForm } from "@/components/people/person-form";
+import { CoupleForm } from "@/components/relationships/couple-form";
+import { RelationshipForm } from "@/components/relationships/relationship-form";
+import { RelationshipSummary } from "@/components/relationships/relationship-summary";
 import {
   restorePersonAction,
   softDeletePersonAction,
   updatePersonAction,
 } from "@/app/(admin)/admin/people/actions";
 import { getPersonById } from "@/lib/family/people-service";
+import {
+  getPersonRelationshipSummary,
+  listRelationships,
+} from "@/lib/family/relationship-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +38,13 @@ export default async function PersonDetailPage({
   const canUpdate = context.permissions.includes("people.update");
   const canDelete = context.permissions.includes("people.delete");
   const canRestore = context.permissions.includes("people.restore");
+  const canViewRelationships = context.permissions.includes("relationships.view");
+  const canCreateRelationships = context.permissions.includes(
+    "relationships.create",
+  );
+  const canDeleteRelationships = context.permissions.includes(
+    "relationships.delete",
+  );
   const personResult = canView
     ? await getPersonById(id)
     : {
@@ -40,6 +54,12 @@ export default async function PersonDetailPage({
             ? "Chưa cấu hình Supabase."
             : "Bạn chưa có quyền xem thành viên.",
       };
+  const relationshipResult =
+    personResult.ok && canViewRelationships
+      ? await getPersonRelationshipSummary(id)
+      : null;
+  const relationshipListResult =
+    personResult.ok && canCreateRelationships ? await listRelationships() : null;
 
   return (
     <AdminShell
@@ -103,6 +123,47 @@ export default async function PersonDetailPage({
                   </form>
                 ) : null}
               </div>
+
+              <div className="border-t border-slate-200 pt-6">
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-slate-950">
+                    Quan hệ gia đình
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Phase 4 lưu quan hệ ở bảng riêng, không ghi cha/mẹ/vợ/chồng
+                    trực tiếp vào bảng people.
+                  </p>
+                </div>
+
+                {relationshipResult?.ok ? (
+                  <RelationshipSummary
+                    data={relationshipResult.data}
+                    canDelete={canDeleteRelationships}
+                    returnTo={`/admin/people/${personResult.data.id}`}
+                    contextPersonId={personResult.data.id}
+                  />
+                ) : (
+                  <div className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                    {relationshipResult?.error ??
+                      "Bạn chưa có quyền xem quan hệ gia đình."}
+                  </div>
+                )}
+
+                {canCreateRelationships && relationshipListResult?.ok ? (
+                  <div className="mt-6 space-y-6">
+                    <RelationshipForm
+                      families={relationshipListResult.data.families}
+                      contextPersonId={personResult.data.id}
+                      returnTo={`/admin/people/${personResult.data.id}`}
+                      mode="person"
+                    />
+                    <CoupleForm
+                      contextPersonId={personResult.data.id}
+                      returnTo={`/admin/people/${personResult.data.id}`}
+                    />
+                  </div>
+                ) : null}
+              </div>
             </div>
           ) : (
             <div className="border border-amber-200 bg-amber-50 p-6 text-amber-900">
@@ -114,4 +175,3 @@ export default async function PersonDetailPage({
     </AdminShell>
   );
 }
-

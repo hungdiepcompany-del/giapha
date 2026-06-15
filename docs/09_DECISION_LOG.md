@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 013 - Relationship CRUD dùng bảng quan hệ riêng
+
+Chọn:
+
+Phase 4 tạo `families`, `family_parents`, `family_children`, `couple_relationships` thay vì thêm `father_id`, `mother_id`, `spouse_id` vào `people`.
+
+Lý do:
+
+- Giữ đúng mô hình gia phả thật có nhiều cha/mẹ nuôi, con riêng, tái hôn và nhiều quan hệ đôi.
+- Không trộn hồ sơ cá nhân với cấu trúc quan hệ.
+- Chuẩn bị tốt hơn cho tree viewer/layout ở phase sau.
+
+## Decision 014 - Relationship dùng soft delete và revision chung
+
+Chọn:
+
+Relationship records dùng `deleted_at`, `deleted_by`, `delete_reason` và ghi revision before/after JSON qua helper `logRevision()`.
+
+Lý do:
+
+- Phù hợp quyết định không xóa cứng dữ liệu gia phả.
+- Cho phép truy vết ai đã thêm/xóa family edge hoặc couple relationship.
+- Tách revision helper khỏi people service để dùng chung lâu dài.
+
+## Decision 015 - Cycle check cha-con ở service layer Phase 4
+
+Chọn:
+
+Phase 4 kiểm vòng lặp tổ tiên trong `relationship-service` trước khi thêm parent/child edge.
+
+Lý do:
+
+- Chặn lỗi dữ liệu cơ bản trước khi có graph/tree UI phức tạp.
+- Không cần thêm package ngoài scope Phase 4.
+- Có thể nâng cấp sang constraint hoặc graph validation sâu hơn ở phase cây.
+
 ## Decision 010 - People CRUD dùng soft delete bắt buộc
 
 Chọn:

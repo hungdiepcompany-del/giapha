@@ -88,3 +88,14 @@ Public chỉ nên hiện an toàn:
 - Service layer kiểm tra permission server-side trước mọi mutation.
 - RLS bảng `people` không mở public rộng; public people profile sẽ là phase sau.
 - Trường `notes_private` không được dùng cho public output.
+
+## Phase 4 relationship permission model
+
+- `/admin/relationships` yêu cầu `relationships.view`.
+- Relationship forms chỉ hiển thị khi có `relationships.create`.
+- Soft delete family, parent edge, child edge và couple relationship yêu cầu `relationships.delete`.
+- Service layer kiểm tra permission server-side trước mọi mutation.
+- Relationship data nằm trong `families`, `family_parents`, `family_children`, `couple_relationships`; không thêm `father_id`, `mother_id`, `spouse_id` vào `people`.
+- Cycle check cha-con chạy trong service trước khi thêm parent/child edge.
+- RLS các bảng relationship không mở public rộng trong Phase 4.
+- Public tree/viewer sẽ là phase riêng và phải lọc `visibility` server-side.

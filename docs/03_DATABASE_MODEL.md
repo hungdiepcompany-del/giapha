@@ -58,26 +58,30 @@ Lý do:
 ### families
 
 - Mục đích: Gom nhóm đơn vị gia đình để biểu diễn cha/mẹ/con và nguồn xác minh.
-- Trường chính dự kiến: `id`, `stable_id`, `name`, `notes`, `source_id`, `created_at`, `updated_at`.
-- Bảo mật/RLS: Xem/sửa theo quyền quan hệ gia phả.
+- Trường chính hiện có Phase 4: `id`, `family_code`, `family_label`, `visibility`, `notes`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`, `delete_reason`.
+- Bảo mật/RLS: Bật RLS. Người có `relationships.view` xem bản ghi chưa xóa mềm. Insert cần `relationships.create`; update/delete mềm cần `relationships.update` hoặc `relationships.delete`.
+- Ghi chú: Đây là đơn vị gia đình dùng để nối nhiều cha/mẹ với nhiều con, không thay thế bảng `people`.
 
 ### family_parents
 
 - Mục đích: Lưu cha/mẹ hoặc người nuôi trong một family.
-- Trường chính dự kiến: `id`, `family_id`, `person_id`, `parent_type`, `certainty`, `source_id`, `created_at`.
-- Bảo mật/RLS: Cần quyền `relationships.view` để xem và `relationships.update` để sửa.
+- Trường chính hiện có Phase 4: `id`, `family_id`, `person_id`, `parent_role`, `relationship_type`, `sort_order`, `notes`, audit fields và soft delete fields.
+- Bảo mật/RLS: Cần quyền `relationships.view` để xem, `relationships.create` để thêm, `relationships.update`/`relationships.delete` để cập nhật hoặc xóa mềm.
+- Ghi chú: `parent_role` hỗ trợ `father`, `mother`, `parent`, `unknown`; `relationship_type` hỗ trợ `biological`, `adoptive`, `step`, `guardian`, `unknown`.
 
 ### family_children
 
 - Mục đích: Lưu con trong một family, bao gồm con ruột, con nuôi, con riêng.
-- Trường chính dự kiến: `id`, `family_id`, `person_id`, `child_type`, `certainty`, `source_id`, `created_at`.
-- Bảo mật/RLS: Cần quyền quan hệ; không xóa cứng nếu đã có revision.
+- Trường chính hiện có Phase 4: `id`, `family_id`, `person_id`, `child_relationship_type`, `sort_order`, `notes`, audit fields và soft delete fields.
+- Bảo mật/RLS: Cần quyền quan hệ; không xóa cứng.
+- Ghi chú: `child_relationship_type` hỗ trợ `biological`, `adoptive`, `step`, `foster`, `unknown`.
 
 ### couple_relationships
 
 - Mục đích: Lưu quan hệ vợ/chồng, hôn nhân, tái hôn hoặc quan hệ bạn đời có nguồn xác minh.
-- Trường chính dự kiến: `id`, `person1_id`, `person2_id`, `relationship_type`, `start_date`, `end_date`, `status`, `source_id`, `created_at`, `updated_at`.
-- Bảo mật/RLS: Public chỉ xem thông tin đã được phép hiện.
+- Trường chính hiện có Phase 4: `id`, `person1_id`, `person2_id`, `relationship_status`, `start_date`, `start_date_precision`, `end_date`, `end_date_precision`, `family_id`, `visibility`, `notes`, audit fields và soft delete fields.
+- Bảo mật/RLS: Public chưa được mở trong Phase 4; admin service kiểm quyền `relationships.*`.
+- Ghi chú: Có constraint không cho một người tự tạo quan hệ đôi với chính mình; active unique index dùng cặp `least/person1`, `greatest/person2` và `relationship_status`.
 
 ### events
 
@@ -122,8 +126,9 @@ Lý do:
 ### revisions
 
 - Mục đích: Ghi nhận một đợt thay đổi dữ liệu.
-- Trường chính Phase 3: `id`, `entity_type`, `entity_id`, `action`, `before_json`, `after_json`, `changed_by`, `changed_at`, `change_reason`.
+- Trường chính Phase 3/4: `id`, `entity_type`, `entity_id`, `action`, `before_json`, `after_json`, `changed_by`, `changed_at`, `change_reason`.
 - Bảo mật/RLS: Cần quyền `revisions.view`; restore cần `revisions.restore`.
+- Ghi chú Phase 4: revision helper dùng chung ghi before/after JSON cho `people`, `families`, `family_parents`, `family_children`, `couple_relationships`.
 
 ### revision_items
 

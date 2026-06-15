@@ -4,7 +4,6 @@ import { requirePermission } from "@/lib/permissions/require-permission";
 export const dynamic = "force-dynamic";
 
 const futureModules = [
-  "Quan hệ gia đình",
   "Cây gia phả",
   "Lịch sử chỉnh sửa",
   "Backup/Export",
@@ -34,7 +33,8 @@ export default async function AdminPage() {
             Các module tương lai
           </h2>
           <p className="mt-3 text-sm text-slate-600">
-            Module Thành viên đã có route nền tại /admin/people.
+            Module Thành viên đã có route nền tại /admin/people. Module Quan hệ
+            gia đình đã có route nền tại /admin/relationships.
           </p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {futureModules.map((moduleName) => (

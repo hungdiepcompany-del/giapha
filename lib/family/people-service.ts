@@ -7,6 +7,7 @@ import {
   validatePersonInput,
   type ValidationResult,
 } from "@/lib/family/people-validation";
+import { logRevision, type RevisionAction } from "@/lib/family/revision-service";
 import type {
   CreatePersonInput,
   PeopleServiceResult,
@@ -14,8 +15,6 @@ import type {
   PersonListFilter,
   UpdatePersonInput,
 } from "@/lib/family/people-types";
-
-type RevisionAction = "create" | "update" | "delete" | "restore";
 
 const PEOPLE_SELECT = `
   id,
@@ -117,20 +116,14 @@ async function logPeopleRevision(params: {
   changedBy: string | null;
   reason?: string | null;
 }) {
-  const supabase = maybeCreateAdminSupabaseClient();
-
-  if (!supabase) {
-    return;
-  }
-
-  await supabase.from("revisions").insert({
-    entity_type: "people",
-    entity_id: params.entityId,
+  await logRevision({
+    entityType: "people",
+    entityId: params.entityId,
     action: params.action,
-    before_json: params.before,
-    after_json: params.after,
-    changed_by: params.changedBy,
-    change_reason: params.reason ?? null,
+    before: params.before,
+    after: params.after,
+    changedBy: params.changedBy,
+    reason: params.reason,
   });
 }
 
@@ -456,4 +449,3 @@ export async function restorePerson(
     data,
   };
 }
-
