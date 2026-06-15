@@ -97,3 +97,16 @@ Khi click node:
 - Chưa làm public tree.
 - Chưa export ảnh/PDF.
 - Chưa làm JSON/GEDCOM/ZIP export thật.
+
+## Phase 7 public tree foundation
+
+- Public tree route: `/tree`.
+- Public profile route: `/people/[slug]`.
+- Admin preview route: `/admin/preview/public`.
+- Public tree dùng readonly `FamilyTreeViewer`.
+- Dữ liệu public được sanitize ở server trước khi vào client component.
+- Người còn sống không có năm sinh/năm mất trong public node.
+- Public route không có nút edit và không dùng layout admin private.
+- Chưa làm public tree editor.
+- Chưa export ảnh/PDF.
+- Chưa làm JSON/GEDCOM/ZIP export thật.

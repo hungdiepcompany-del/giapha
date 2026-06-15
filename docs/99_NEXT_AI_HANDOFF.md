@@ -1,5 +1,84 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 7 Public/private mode foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có public/private foundation. Public routes dùng privacy service và public-safe DTO, không đưa dữ liệu admin/private thẳng ra client.
+
+### Public/privacy service đã có
+
+- `lib/privacy/privacy-types.ts`
+- `lib/privacy/privacy-service.ts`
+- `lib/family/public-family-service.ts`
+
+Privacy service có:
+
+- `canShowPersonInMode`
+- `toPublicPerson`
+- `toFamilyPerson`
+- `toAdminPerson`
+- `sanitizePersonForMode`
+- `sanitizeTreeGraphForMode`
+
+### Public routes đã có
+
+- `/`: public homepage.
+- `/tree`: public readonly tree.
+- `/people/[slug]`: public-safe person profile.
+- `/admin/preview/public`: admin preview mô phỏng public tree.
+
+### Public privacy behavior
+
+- Public mode chỉ hiện người `visibility = public` và chưa xóa mềm.
+- `PublicPerson` không có `notes_private`.
+- Người còn sống public không hiện ngày sinh đầy đủ, ngày mất, nơi sinh, quê quán, ghi chú riêng tư hoặc dữ liệu nội bộ.
+- Public tree được sanitize server-side trước khi truyền vào React Flow viewer.
+- Admin preview dùng cùng public service với `/tree`.
+
+### RLS/public query limitation
+
+- Phase 7 không mở RLS public rộng.
+- Public service dùng server-side anon Supabase client với query/filter `visibility = public`, `deleted_at is null`.
+- Nếu database thật chưa có public-safe RLS policy, public routes có thể empty hoặc báo lỗi an toàn.
+- Không dùng service role để build public pages trong Phase 7.
+
+### Script check đã tạo
+
+- `npm run check:public-privacy`
+
+### Lệnh đã chạy
+
+- Baseline: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run check:relationships`, `npm run check:tree-viewer`, `npm run check:tree-editor`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 7: `npm run check:public-privacy`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Browser route check `/`, `/tree`, `/people/test-slug`, `/admin/preview/public` trên `http://127.0.0.1:3001` - PASS; các route render nội dung an toàn khi thiếu Supabase config.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa kiểm thử public routes với Supabase data thật.
+- Chưa tạo public RLS policy/view/function riêng.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+- Chưa làm export ảnh/PDF.
+- Chưa làm media upload thật.
+- NPM audit còn 2 moderate warnings từ `next`/`postcss`.
+
+### Lưu ý cho AI tiếp theo
+
+- Không đưa `notes_private` vào public DTO.
+- Không dựa vào CSS/UI để ẩn dữ liệu riêng tư.
+- Nếu mở RLS public sau này, phải audit rất kỹ chỉ public-safe fields.
+- Public tree/profile hiện dùng anon client; nếu DB policy chưa mở, fail/empty là expected-safe behavior.
+
+### Task tiếp theo đề xuất
+
+Phase 8 - Export/backup foundation:
+
+- JSON export/import foundation.
+- GEDCOM/ZIP planning hoặc export foundation.
+- Không bỏ qua privacy/permission khi export.
+
 ## 2026-06-15 - Phase 6 Tree Editor foundation completed
 
 ### Trạng thái hiện tại

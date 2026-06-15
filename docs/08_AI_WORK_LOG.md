@@ -1,5 +1,116 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 7 Public/private mode foundation
+
+### Phase
+
+Phase 7 - Public/private mode foundation
+
+### Việc đã làm
+
+- Tạo privacy types và privacy service dùng chung.
+- Tạo `PublicPerson`, `FamilyPerson`, `AdminPerson`.
+- Tạo public-safe mapper cho person.
+- Tạo sanitize tree graph theo mode public/family/admin.
+- Tạo public family service.
+- Cập nhật public homepage `/`.
+- Tạo public tree route `/tree`.
+- Tạo public person profile route `/people/[slug]`.
+- Tạo admin public preview route `/admin/preview/public`.
+- Tạo public components `PublicHome`, `PublicTreeShell`, `PublicPersonProfile`.
+- Tạo script `check:public-privacy`.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- app/(public)/page.tsx
+- app/(public)/tree/page.tsx
+- app/(public)/people/[slug]/page.tsx
+- app/(admin)/admin/preview/public/page.tsx
+- components/layout/public-shell.tsx
+- components/public/public-home.tsx
+- components/public/public-tree-shell.tsx
+- components/public/public-person-profile.tsx
+- lib/privacy/privacy-types.ts
+- lib/privacy/privacy-service.ts
+- lib/family/public-family-service.ts
+- scripts/check-public-privacy-foundation.cjs
+- docs/02_ARCHITECTURE.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/05_TREE_UI_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration trong Phase 7.
+
+### Script check đã tạo
+
+- `check:public-privacy`: chạy `node scripts/check-public-privacy-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- Privacy service: sanitize server-side trước khi render.
+- Public tree: readonly `/tree`, dùng graph public đã lọc.
+- Public person profile: `/people/[slug]`, dùng DTO public-safe.
+- Public preview: `/admin/preview/public`, dùng cùng public service với `/tree`.
+- RLS/public query: không mở public RLS rộng; dùng server-side anon client với filter chặt, fail/empty an toàn nếu policy DB chưa cho phép.
+- Living person privacy: public mode không hiện ngày sinh/mất đầy đủ, nơi sinh, quê quán, ghi chú riêng tư hoặc dữ liệu nội bộ.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run check:relationships
+- npm run check:tree-viewer
+- npm run check:tree-editor
+- npm run check:public-privacy
+- npm run typecheck
+- npm run lint
+- npm run build
+- Browser route check `http://127.0.0.1:3001/`
+- Browser route check `http://127.0.0.1:3001/tree`
+- Browser route check `http://127.0.0.1:3001/people/test-slug`
+- Browser route check `http://127.0.0.1:3001/admin/preview/public`
+
+### Kết quả
+
+- PASS: baseline `npm run check:foundation`
+- PASS: baseline `npm run check:auth-permissions`
+- PASS: baseline `npm run check:people`
+- PASS: baseline `npm run check:relationships`
+- PASS: baseline `npm run check:tree-viewer`
+- PASS: baseline `npm run check:tree-editor`
+- PASS: baseline `npm run typecheck`
+- PASS: baseline `npm run lint`
+- PASS: baseline `npm run build`
+- PASS: `npm run check:public-privacy`
+- PASS: Phase 7 `npm run typecheck`
+- PASS: Phase 7 `npm run lint`
+- PASS: Phase 7 `npm run build`
+- PASS: Browser route check cho `/`, `/tree`, `/people/test-slug`, `/admin/preview/public`; các route render nội dung an toàn khi thiếu Supabase config.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy public RLS policy trên database thật.
+- Chưa kiểm thử public routes với Supabase data thật.
+- Chưa làm export JSON/GEDCOM/ZIP thật.
+- Chưa làm export ảnh/PDF.
+- Chưa làm media upload thật.
+- NPM audit vẫn còn 2 moderate warnings từ `next`/`postcss`.
+
+### Task tiếp theo đề xuất
+
+- Phase 8 - Export/backup foundation.
+
 ## 2026-06-15 - Phase 6 Tree Editor foundation
 
 ### Phase

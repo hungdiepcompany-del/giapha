@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 021 - Public pages dùng DTO public-safe
+
+Chọn:
+
+Phase 7 tạo `PublicPerson` và privacy service để sanitize dữ liệu trước khi render public pages.
+
+Lý do:
+
+- Không dựa vào CSS/UI để ẩn dữ liệu nhạy cảm.
+- Đảm bảo `notes_private` không xuất hiện trong DTO public.
+- Người còn sống được bảo vệ mặc định ở public mode.
+
+## Decision 022 - Chưa mở RLS public rộng trong Phase 7
+
+Chọn:
+
+Public service dùng server-side anon Supabase client với query/filter `visibility = public`, `deleted_at is null`, nhưng không tạo policy public rộng mới trong Phase 7.
+
+Lý do:
+
+- Tránh mở nhầm dữ liệu private trước khi có audit RLS public đầy đủ.
+- Nếu database thật chưa có public-safe policy, public route fail hoặc empty an toàn.
+- Không dùng service role để lách RLS cho public pages.
+
 ## Decision 019 - Layout cây lưu riêng với dữ liệu gia phả thật
 
 Chọn:

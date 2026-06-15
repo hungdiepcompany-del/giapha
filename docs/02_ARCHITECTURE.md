@@ -18,6 +18,7 @@
 - Database service layer
 - Permission layer
 - Privacy layer
+- Public-safe family service
 - Tree graph builder
 - Tree viewer layout layer
 - Tree editor layout persistence layer
@@ -30,11 +31,13 @@
 - Query private phải lọc ở server/RLS, không chỉ ẩn bằng UI.
 - Không hardcode secret trong client bundle.
 - API server phải áp dụng permission và privacy filter trước khi trả dữ liệu.
+- Public routes dùng server-side anon Supabase client và privacy service để sanitize trước khi render.
 - Tree service chạy server-side và chỉ trả graph đã lọc quyền/privacy cho client viewer.
 - React Flow viewer là client component; không import service role/admin helper.
 - ELK layout trong Phase 5 chạy ở client helper để phục vụ auto layout/reset layout của viewer.
 - Tree editor action gửi dữ liệu lên server action; layout service server-side ghi `tree_layouts`/`tree_layout_nodes`.
 - Kéo node trên React Flow chỉ thay đổi layout UI, không sửa relationship tables.
+- Public pages không nhận `notes_private` hoặc dữ liệu admin chưa lọc.
 
 ## Deploy
 

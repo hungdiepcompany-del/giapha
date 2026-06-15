@@ -13,9 +13,14 @@ export function PublicShell({ children }: PublicShellProps) {
           <Link href="/" className="text-sm font-bold uppercase tracking-[0.16em]">
             WEB GIA PHẢ
           </Link>
-          <Link href="/auth/login" className="text-sm font-semibold underline">
-            Đăng nhập
-          </Link>
+          <nav className="flex items-center gap-4">
+            <Link href="/tree" className="text-sm font-semibold underline">
+              Cây gia phả
+            </Link>
+            <Link href="/auth/login" className="text-sm font-semibold underline">
+              Đăng nhập
+            </Link>
+          </nav>
         </div>
       </header>
       <main>{children}</main>

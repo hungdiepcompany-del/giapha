@@ -117,3 +117,15 @@ Public chỉ nên hiện an toàn:
 - Kéo node chỉ thay đổi `tree_layout_nodes`, không sửa quan hệ thật.
 - Layout persistence không chứa `notes_private` hoặc dữ liệu hồ sơ nhạy cảm.
 - Public tree vẫn chưa làm trong Phase 6.
+
+## Phase 7 public/private foundation
+
+- Public mode dùng `lib/privacy/privacy-service.ts`.
+- `PublicPerson` không có `notes_private`.
+- Người còn sống ở public mode không hiện `birth_date` đầy đủ, `death_date`, `birth_place`, `home_town`, ghi chú riêng tư hoặc dữ liệu nội bộ.
+- Public mode chỉ hiện người có `visibility = public` và chưa bị xóa mềm.
+- Public tree `/tree` dùng graph đã sanitize trước khi truyền vào client component.
+- Public profile `/people/[slug]` dùng DTO public-safe.
+- Admin preview `/admin/preview/public` dùng cùng public service với `/tree`.
+- Phase 7 không mở RLS public rộng. Public service dùng server-side anon client và query/filter chặt `visibility = public`, `deleted_at is null`; nếu database chưa có public-safe RLS policy thì route fail/empty an toàn.
+- Không dùng service role để build public pages trong Phase 7.

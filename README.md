@@ -53,7 +53,9 @@ npm run dev
 
 Các route nền hiện có:
 
-- `/`: public home placeholder.
+- `/`: public home an toàn cho chế độ public/private.
+- `/tree`: cây gia phả public readonly.
+- `/people/[slug]`: hồ sơ public đã lọc riêng tư.
 - `/admin`: admin placeholder có guard `people.view`.
 - `/auth/login`: magic link login foundation.
 - `/auth/callback`: Supabase Auth callback.
@@ -65,6 +67,7 @@ Các route nền hiện có:
 - `/admin/relationships`: quản lý family, cha/mẹ/con và quan hệ đôi nền.
 - `/admin/tree`: xem cây gia phả bằng dữ liệu people và relationship tables.
 - `/admin/tree/edit`: chỉnh sửa layout cây và thêm quan hệ từ cây.
+- `/admin/preview/public`: preview public mode cho admin.
 
 ## Deploy
 
@@ -81,6 +84,7 @@ npm run check:people
 npm run check:relationships
 npm run check:tree-viewer
 npm run check:tree-editor
+npm run check:public-privacy
 npm run typecheck
 npm run lint
 npm run build
