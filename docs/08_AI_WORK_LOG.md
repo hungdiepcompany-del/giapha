@@ -1,5 +1,119 @@
 # AI Work Log
 
+## 2026-06-15 - Phase 8 Export/backup foundation
+
+### Phase
+
+Phase 8 - Export/backup foundation
+
+### Việc đã làm
+
+- Tạo migration `export_jobs` và `backup_records`.
+- Tạo export types, collector, JSON exporter, GEDCOM exporter, checksum helper và ZIP backup exporter.
+- Tạo route admin `/admin/exports`.
+- Tạo route download `/admin/exports/download/json`.
+- Tạo route download `/admin/exports/download/gedcom`.
+- Tạo route download `/admin/exports/download/zip`.
+- Thêm admin nav `Backup / Export`.
+- Thêm package `jszip`.
+- Tạo script `check:export-backup`.
+- Cập nhật docs export/backup, database, architecture, permission/privacy, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- README.md
+- package.json
+- package-lock.json
+- db/migrations/20260614_0006_export_backup_foundation.sql
+- app/(admin)/admin/exports/page.tsx
+- app/(admin)/admin/exports/download/json/route.ts
+- app/(admin)/admin/exports/download/gedcom/route.ts
+- app/(admin)/admin/exports/download/zip/route.ts
+- components/layout/admin-shell.tsx
+- lib/family/export-types.ts
+- lib/family/export-collector.ts
+- lib/family/json-exporter.ts
+- lib/family/gedcom-exporter.ts
+- lib/family/checksum.ts
+- lib/family/zip-backup-exporter.ts
+- scripts/check-export-backup-foundation.cjs
+- docs/02_ARCHITECTURE.md
+- docs/03_DATABASE_MODEL.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/06_EXPORT_BACKUP_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- `db/migrations/20260614_0006_export_backup_foundation.sql`
+
+### Package đã thêm
+
+- `jszip`
+
+### Script check đã tạo
+
+- `check:export-backup`: chạy `node scripts/check-export-backup-foundation.cjs`
+
+### Quyết định kỹ thuật
+
+- family.json export: bản bảo toàn dữ liệu chính, giữ ID ổn định, quan hệ và layout.
+- GEDCOM export: foundation chuyển đổi, không cố map dữ liệu ngoài chuẩn bằng mọi giá.
+- ZIP backup: gói `family.json`, `family.ged`, `manifest.json`, `checksums.json`.
+- Manifest/checksum: SHA-256 trong `checksums.json`, tránh checksum tự tham chiếu vòng tròn.
+- Import: chưa bật import ghi dữ liệu trong Phase 8.
+- Media backup: chưa có media upload thật, `media_count = 0`.
+- Permission: route admin/download kiểm `exports.download` server-side.
+
+### Lệnh đã chạy
+
+- git status --short
+- git log --oneline -5
+- npm run check:foundation
+- npm run check:auth-permissions
+- npm run check:people
+- npm run check:relationships
+- npm run check:tree-viewer
+- npm run check:tree-editor
+- npm run check:public-privacy
+- npm run check:export-backup
+- npm run typecheck
+- npm run lint
+- npm run build
+- npm audit --audit-level=moderate
+- git diff --check
+- Browser route check `http://127.0.0.1:3001/admin/exports`
+- Browser route check `http://127.0.0.1:3001/admin/exports/download/json`
+- Browser route check `http://127.0.0.1:3001/admin/exports/download/gedcom`
+- Browser route check `http://127.0.0.1:3001/admin/exports/download/zip`
+
+### Kết quả hiện tại
+
+- PASS: baseline trước khi sửa.
+- PASS: `npm run check:export-backup`
+- PASS: `npm run typecheck`
+- PASS: `npm run lint`
+- PASS: `npm run build`
+- PASS: `git diff --check`
+- PASS: Browser route check cho `/admin/exports`, `/admin/exports/download/json`, `/admin/exports/download/gedcom`, `/admin/exports/download/zip`; download routes trả lỗi cấu hình an toàn khi thiếu Supabase config.
+- WARN: `npm audit --audit-level=moderate` còn 2 moderate warnings từ `next`/`postcss`; không chạy `npm audit fix --force` vì breaking change ngoài scope.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên Supabase thật.
+- Chưa làm import đầy đủ.
+- Chưa làm media upload thật.
+- Chưa làm export ảnh/PDF.
+- Chưa kiểm thử với dữ liệu Supabase thật.
+
+### Task tiếp theo đề xuất
+
+- Phase 9 - Revision history UI foundation.
+
 ## 2026-06-15 - Phase 7 Public/private mode foundation
 
 ### Phase

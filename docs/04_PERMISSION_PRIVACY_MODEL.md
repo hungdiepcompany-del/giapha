@@ -129,3 +129,12 @@ Public chỉ nên hiện an toàn:
 - Admin preview `/admin/preview/public` dùng cùng public service với `/tree`.
 - Phase 7 không mở RLS public rộng. Public service dùng server-side anon client và query/filter chặt `visibility = public`, `deleted_at is null`; nếu database chưa có public-safe RLS policy thì route fail/empty an toàn.
 - Không dùng service role để build public pages trong Phase 7.
+
+## Phase 8 export/backup permission model
+
+- `/admin/exports` yêu cầu `exports.download` để hiển thị file backup.
+- Route download `/admin/exports/download/json`, `/admin/exports/download/gedcom` và `/admin/exports/download/zip` kiểm quyền server-side.
+- Full admin export có thể chứa dữ liệu đầy đủ theo quyền admin; không được dùng làm public export.
+- Public export không được tự động lộ `notes_private`; nếu cần public export riêng sau này phải dùng privacy service và DTO public-safe.
+- `export_jobs` và `backup_records` bật RLS, chỉ người có `exports.download` được đọc và `exports.create` được tạo record.
+- `imports.create` chỉ là quyền nền; Phase 8 chưa bật import ghi dữ liệu.

@@ -143,11 +143,13 @@ Lý do:
 ### export_jobs
 
 - Mục đích: Theo dõi job export JSON/GEDCOM/ZIP.
-- Trường chính dự kiến: `id`, `requested_by`, `export_type`, `status`, `file_path`, `error_message`, `created_at`, `completed_at`.
+- Trường chính Phase 8: `id`, `export_type`, `status`, `file_name`, `file_mime_type`, `file_size_bytes`, `checksum`, `record_count`, `media_count`, `created_at`, `created_by`, `error_message`, `metadata_json`.
 - Bảo mật/RLS: Chỉ người có `exports.create`/`exports.download` được thao tác.
+- Ghi chú: `export_type` hỗ trợ `family_json`, `gedcom`, `media_zip`, `full_backup_zip`, `manifest`. `status` hỗ trợ `pending`, `running`, `completed`, `failed`.
 
 ### backup_records
 
 - Mục đích: Lưu lịch sử backup, manifest và checksum.
-- Trường chính dự kiến: `id`, `backup_type`, `file_path`, `manifest_json`, `checksum`, `created_by`, `created_at`.
+- Trường chính Phase 8: `id`, `backup_type`, `schema_version`, `app_version`, `file_name`, `checksum`, `people_count`, `relationship_count`, `media_count`, `created_at`, `created_by`, `notes`, `metadata_json`.
 - Bảo mật/RLS: Backup có thể chứa toàn bộ dữ liệu nên chỉ OWNER/ADMIN được tải.
+- Ghi chú: Migration `20260614_0006_export_backup_foundation.sql` đã tạo bảng và RLS nền, chưa chạy trên Supabase thật trong Phase 8.

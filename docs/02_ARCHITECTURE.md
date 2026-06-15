@@ -38,6 +38,17 @@
 - Tree editor action gửi dữ liệu lên server action; layout service server-side ghi `tree_layouts`/`tree_layout_nodes`.
 - Kéo node trên React Flow chỉ thay đổi layout UI, không sửa relationship tables.
 - Public pages không nhận `notes_private` hoặc dữ liệu admin chưa lọc.
+- Export/backup service chạy server-side, kiểm `exports.download` hoặc `exports.create` trước khi query dữ liệu.
+- Route download export trả attachment server-side; không ghi file tạm xuống disk và không đưa service role ra client.
+
+## Export/backup layer
+
+- `lib/family/export-collector.ts`: thu thập dữ liệu thật từ people, relationships và tree layouts.
+- `lib/family/json-exporter.ts`: build `family.json` với manifest schema version `1.0.0`.
+- `lib/family/gedcom-exporter.ts`: build GEDCOM foundation để chuyển dữ liệu sang phần mềm gia phả khác.
+- `lib/family/zip-backup-exporter.ts`: build `full-backup.zip` gồm JSON, GEDCOM, manifest và checksums.
+- `lib/family/checksum.ts`: SHA-256 helper cho file export/backup.
+- `/admin/exports`: UI admin tải backup.
 
 ## Deploy
 

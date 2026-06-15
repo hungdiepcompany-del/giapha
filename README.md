@@ -68,6 +68,7 @@ Các route nền hiện có:
 - `/admin/tree`: xem cây gia phả bằng dữ liệu people và relationship tables.
 - `/admin/tree/edit`: chỉnh sửa layout cây và thêm quan hệ từ cây.
 - `/admin/preview/public`: preview public mode cho admin.
+- `/admin/exports`: tải family.json, family.ged và full-backup.zip.
 
 ## Deploy
 
@@ -85,6 +86,7 @@ npm run check:relationships
 npm run check:tree-viewer
 npm run check:tree-editor
 npm run check:public-privacy
+npm run check:export-backup
 npm run typecheck
 npm run lint
 npm run build

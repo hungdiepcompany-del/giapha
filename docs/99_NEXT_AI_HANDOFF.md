@@ -1,5 +1,84 @@
 # Next AI Handoff
 
+## 2026-06-15 - Phase 8 Export/backup foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có export/backup foundation. Admin có route `/admin/exports` để tải `family.json`, `family.ged` và `full-backup.zip`.
+
+### Export/backup service đã có
+
+- `lib/family/export-types.ts`
+- `lib/family/export-collector.ts`
+- `lib/family/json-exporter.ts`
+- `lib/family/gedcom-exporter.ts`
+- `lib/family/checksum.ts`
+- `lib/family/zip-backup-exporter.ts`
+
+### Route đã có
+
+- `/admin/exports`: trang admin backup/export.
+- `/admin/exports/download/json`: tải `family.json`.
+- `/admin/exports/download/gedcom`: tải `family.ged`.
+- `/admin/exports/download/zip`: tải `full-backup.zip`.
+
+### Database migration đã có
+
+- `db/migrations/20260614_0006_export_backup_foundation.sql`
+- Bảng `export_jobs`: metadata job export.
+- Bảng `backup_records`: metadata backup dài hạn.
+- RLS: `exports.download` đọc record, `exports.create` tạo record.
+- Chưa chạy migration trên Supabase thật.
+
+### Export status
+
+- `family.json`: đã build từ people, families, family_parents, family_children, couple_relationships, tree_layouts và tree_layout_nodes.
+- `family.ged`: foundation GEDCOM với HEAD/INDI/FAM/TRLR.
+- `full-backup.zip`: dùng `jszip`, gồm `family.json`, `family.ged`, `manifest.json`, `checksums.json`.
+- Manifest/checksum: schema version `1.0.0`, app version `0.1.0`, SHA-256.
+- Media: chưa có media upload thật, `media_count = 0`.
+- Import: chưa bật import ghi dữ liệu; chỉ giữ nguyên tắc docs.
+
+### Permission/privacy status
+
+- Download routes kiểm `exports.download` server-side.
+- Export admin/internal có thể chứa dữ liệu đầy đủ theo quyền; không dùng làm public export.
+- Nếu sau này cần public export, phải dùng privacy service/DTO public-safe.
+- Không đưa service role key ra client.
+
+### Script check đã tạo
+
+- `npm run check:export-backup`
+
+### Lệnh đã chạy
+
+- Baseline trước khi sửa: `npm run check:foundation`, `npm run check:auth-permissions`, `npm run check:people`, `npm run check:relationships`, `npm run check:tree-viewer`, `npm run check:tree-editor`, `npm run check:public-privacy`, `npm run typecheck`, `npm run lint`, `npm run build` - PASS
+- Phase 8: `npm run check:export-backup`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` - PASS
+- Browser route check `/admin/exports`, `/admin/exports/download/json`, `/admin/exports/download/gedcom`, `/admin/exports/download/zip` trên `http://127.0.0.1:3001` - PASS; download routes trả lỗi cấu hình an toàn khi thiếu Supabase config.
+- `npm audit --audit-level=moderate` - WARN, còn 2 moderate warnings từ `next`/`postcss`; không chạy force fix vì breaking change ngoài scope.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration trên Supabase thật.
+- Chưa ghi `export_jobs`/`backup_records` vào DB runtime.
+- Chưa làm import đầy đủ.
+- Chưa làm media upload thật.
+- Chưa làm export ảnh cây/PDF.
+- Chưa kiểm thử với dữ liệu Supabase thật.
+- NPM audit còn 2 moderate warnings từ `next`/`postcss`.
+
+### Lưu ý cho AI tiếp theo
+
+- Không bật import ghi dữ liệu nếu chưa có validation, preview, xác nhận và revision/import log.
+- Không dùng admin export làm public export.
+- Không bỏ `family.json`; GEDCOM không thay thế được JSON vì không giữ đủ dữ liệu riêng của hệ thống.
+
+### Task tiếp theo đề xuất
+
+Phase 9 - Revision history UI foundation.
+
 ## 2026-06-15 - Phase 7 Public/private mode foundation completed
 
 ### Trạng thái hiện tại

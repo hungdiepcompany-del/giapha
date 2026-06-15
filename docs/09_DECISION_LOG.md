@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 023 - family.json là bản bảo toàn dữ liệu chính
+
+Chọn:
+
+Phase 8 dùng `family.json` làm bản export chính giữ ID ổn định, quan hệ thật và layout cây. GEDCOM là định dạng chuyển đổi phụ.
+
+Lý do:
+
+- GEDCOM không map hết dữ liệu riêng của hệ thống như layout, visibility, audit field hoặc quan hệ không chuẩn.
+- JSON giúp bảo toàn dữ liệu khi cần phục hồi hoặc chuyển hệ thống.
+- Không làm mất dữ liệu chỉ vì phần mềm GEDCOM không hỗ trợ đủ.
+
+## Decision 024 - ZIP backup tách manifest và checksums
+
+Chọn:
+
+`full-backup.zip` chứa `family.json`, `family.ged`, `manifest.json` và `checksums.json`. Checksum SHA-256 được ghi trong `checksums.json` để tránh tự tham chiếu vòng tròn trong manifest.
+
+Lý do:
+
+- Manifest mô tả backup và limitation.
+- Checksums là nguồn kiểm tra toàn vẹn file.
+- Cấu trúc này đơn giản, dễ đọc và đủ cho foundation trước khi có media thật.
+
 ## Decision 021 - Public pages dùng DTO public-safe
 
 Chọn:
