@@ -15,5 +15,6 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 07_PHASE_PLAN.md | Kế hoạch theo phase, scope, nghiệm thu và lệnh test. | Khi lập kế hoạch, chọn task tiếp theo hoặc kiểm tra task có đúng phase không. |
 | 08_AI_WORK_LOG.md | Nhật ký việc AI đã làm. | Sau mỗi task để cập nhật lịch sử làm việc và bằng chứng kiểm tra. |
 | 09_DECISION_LOG.md | Các quyết định kiến trúc/sản phẩm quan trọng. | Khi có quyết định mới hoặc cần kiểm tra lý do của quyết định cũ. |
+| 10_SUPABASE_SETUP.md | Hướng dẫn cấu hình Supabase thật, migration order, OWNER bootstrap và smoke gate. | Khi cần kết nối Supabase thật hoặc chuẩn bị smoke test production-like. |
+| 11_SMOKE_TEST_CHECKLIST.md | Checklist smoke test thủ công cho auth, OWNER, CRUD, tree, export/import và revision. | Sau khi đã cấu hình `.env.local`, chạy migration thật và gán OWNER. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
-

@@ -1,5 +1,12 @@
 # Kiến trúc hệ thống
 
+## Phase 11 Supabase integration gate
+
+- `scripts/check-env-safe.cjs`: kiểm `.env.example` và `.env.local` theo trạng thái present/missing, không in giá trị secret.
+- `scripts/check-migrations-order.cjs`: kiểm migration order/prefix/conflict marker trước khi chạy Supabase thật.
+- `/admin/system/status`: status route server-side, yêu cầu `settings.manage` hoặc `permissions.manage`, chỉ hiển thị yes/no cho env config.
+- Phase 11 không chạy migration production, không deploy và không push.
+
 ## Phase 10 import JSON preview layer
 
 - `lib/family/import-types.ts`: type cho summary, issues, conflicts và preview result.

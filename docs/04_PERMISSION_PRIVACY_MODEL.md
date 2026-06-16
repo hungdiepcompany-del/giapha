@@ -1,5 +1,12 @@
 # Permission & Privacy model
 
+## Phase 11 system status permission model
+
+- `/admin/system/status` yêu cầu `settings.manage` hoặc `permissions.manage`.
+- Route chỉ hiển thị trạng thái cấu hình dạng yes/no, không hiển thị secret.
+- Route không query dữ liệu gia phả, revision, backup hoặc profile nhạy cảm.
+- Service role key chỉ được kiểm tra sự tồn tại server-side.
+
 ## Phase 10 import JSON permission model
 
 - `/admin/exports/import` yêu cầu `imports.create` khi Supabase/auth đã cấu hình.

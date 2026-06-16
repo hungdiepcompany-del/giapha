@@ -1,5 +1,71 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 11 Supabase Integration & Real Smoke Test Gate
+
+### Phase
+
+Phase 11 - Supabase Integration & Real Smoke Test Gate
+
+### Việc đã làm
+
+- Tạo `scripts/check-env-safe.cjs` để kiểm `.env.example` và trạng thái key trong `.env.local` mà không in secret.
+- Tạo `scripts/check-migrations-order.cjs` để kiểm migration order/prefix/conflict marker.
+- Thêm package scripts `check:env:safe` và `check:migrations`.
+- Tạo `docs/10_SUPABASE_SETUP.md`.
+- Tạo `docs/11_SMOKE_TEST_CHECKLIST.md`.
+- Cập nhật `docs/00_INDEX.md`.
+- Tạo route `/admin/system/status` có permission guard và chỉ hiển thị trạng thái yes/no.
+- Thêm link `System` vào admin nav.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-env-safe.cjs
+- scripts/check-migrations-order.cjs
+- app/(admin)/admin/system/status/page.tsx
+- components/layout/admin-shell.tsx
+- docs/00_INDEX.md
+- docs/02_ARCHITECTURE.md
+- docs/04_PERMISSION_PRIVACY_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/10_SUPABASE_SETUP.md
+- docs/11_SMOKE_TEST_CHECKLIST.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration trong Phase 11.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Script check đã tạo
+
+- `check:env:safe`: chạy `node scripts/check-env-safe.cjs`
+- `check:migrations`: chạy `node scripts/check-migrations-order.cjs`
+
+### Quyết định kỹ thuật
+
+- Env handling: `.env.local` nếu có thì chỉ kiểm present/missing, không in value.
+- Migration gate: kiểm đủ migration `0001` đến `0006`, thứ tự tên file, duplicate prefix và conflict marker.
+- OWNER assignment: giữ thủ công bằng `db/snippets/assign-owner-role.sql`, không auto OWNER.
+- Smoke test: checklist thủ công sau khi user cấu hình Supabase thật.
+- Secret policy: không commit secret, không đưa service role key ra client.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration thật.
+- Chưa test login thật.
+- Chưa gán OWNER thật.
+
+### Task tiếp theo đề xuất
+
+- User cấu hình `.env.local`, chạy migrations thật, gán OWNER và smoke test thật.
+
 ## 2026-06-15 - Phase 10 Import JSON Foundation
 
 ### Phase

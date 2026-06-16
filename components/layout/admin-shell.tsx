@@ -43,6 +43,9 @@ export function AdminShell({
             <Link href="/admin/exports" className="underline">
               Backup / Export
             </Link>
+            <Link href="/admin/system/status" className="underline">
+              System
+            </Link>
             <Link href="/" className="underline">
               Public
             </Link>

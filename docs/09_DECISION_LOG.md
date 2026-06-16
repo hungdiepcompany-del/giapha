@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 028 - Phase 11 là integration gate, không chạy Supabase thật tự động
+
+Chọn:
+
+Phase 11 chỉ tạo docs, script gate và status route an toàn để chuẩn bị tích hợp Supabase thật. Không tự động chạy migration, không deploy và không push.
+
+Lý do:
+
+- Migration production cần user xác nhận project/env/quyền rõ ràng.
+- Secret thật không được ghi vào repo hoặc log.
+- Gate kiểm tra giúp giảm rủi ro trước khi smoke test bằng user thật.
+
+## Decision 029 - System status chỉ hiển thị boolean config
+
+Chọn:
+
+`/admin/system/status` chỉ hiển thị yes/no cho env config và danh sách checks, yêu cầu `settings.manage` hoặc `permissions.manage`.
+
+Lý do:
+
+- Không lộ secret ra client.
+- Không cần query dữ liệu nhạy cảm để biết cấu hình đã sẵn sàng chưa.
+- Người không có quyền quản trị hệ thống không cần xem trạng thái service role.
+
 ## Decision 026 - Phase 10 chỉ preview import JSON, không ghi DB
 
 Chọn:

@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 11 Supabase Integration & Real Smoke Test Gate completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có gate chuẩn bị tích hợp Supabase thật. Phase này không chạy migration thật, không deploy, không push và không commit secret.
+
+### File/route/script đã có
+
+- `docs/10_SUPABASE_SETUP.md`
+- `docs/11_SMOKE_TEST_CHECKLIST.md`
+- `scripts/check-env-safe.cjs`
+- `scripts/check-migrations-order.cjs`
+- `/admin/system/status`
+- `npm run check:env:safe`
+- `npm run check:migrations`
+
+### Supabase integration behavior
+
+- `.env.local` vẫn chỉ là file local, không commit.
+- `check:env:safe` chỉ in trạng thái present/missing, không in giá trị secret.
+- `check:migrations` kiểm migration folder, thứ tự tên file, đủ prefix `0001` đến `0006`, không duplicate prefix và không conflict marker.
+- `/admin/system/status` yêu cầu `settings.manage` hoặc `permissions.manage`, chỉ hiển thị trạng thái env dạng yes/no và danh sách foundation checks.
+
+### Chưa làm
+
+- Chưa push remote.
+- Chưa deploy Cloudflare.
+- Chưa chạy migration thật trên Supabase.
+- Chưa test login Supabase thật.
+- Chưa gán OWNER thật.
+- Chưa smoke test CRUD/export/import preview bằng user thật.
+
+### Task tiếp theo đề xuất
+
+User cấu hình `.env.local`, chạy migrations thật, đăng nhập lần đầu, gán OWNER bằng `db/snippets/assign-owner-role.sql`, rồi chạy checklist `docs/11_SMOKE_TEST_CHECKLIST.md`.
+
 ## 2026-06-15 - Phase 10 Import JSON Foundation completed
 
 ### Trạng thái hiện tại
