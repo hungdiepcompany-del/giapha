@@ -1,4 +1,5 @@
 ﻿#Requires -Version 5.1
+# Version: 2.0 - Fix remote branch missing / first push detection
 param(
   [ValidateSet("menu","check","pull","push","status","open","config")]
   [string]$Action = "menu"
@@ -309,23 +310,61 @@ function Test-WorkingTreeClean {
   return [string]::IsNullOrWhiteSpace(($changes -join "`n"))
 }
 
+function Get-GitFirstLineOrNull {
+  param([string[]]$GitArgs)
+
+  $output = & git @GitArgs 2>$null
+  if ($LASTEXITCODE -ne 0) {
+    return $null
+  }
+
+  if ($null -eq $output) {
+    return $null
+  }
+
+  $line = ($output | Select-Object -First 1)
+  if ($null -eq $line) {
+    return $null
+  }
+
+  $text = "$line".Trim()
+  if ([string]::IsNullOrWhiteSpace($text)) {
+    return $null
+  }
+
+  return $text
+}
+
 function Get-RemoteBranchExists {
-  & git rev-parse --verify "origin/$Script:Branch" *> $null
+  # Không dùng `git rev-parse origin/main` trực tiếp vì repo mới/remote rỗng
+  # sẽ báo "fatal: Needed a single revision".
+  $remoteRef = "refs/remotes/origin/$($Script:Branch)"
+  & git show-ref --verify --quiet "$remoteRef"
   return ($LASTEXITCODE -eq 0)
 }
 
 function Get-BranchRelation {
-  # Return: no_remote, same, local_ahead, local_behind, diverged, unknown
+  # Return: no_local_commit, no_remote, same, local_ahead, local_behind, diverged, unknown
+  $local = Get-GitFirstLineOrNull -GitArgs @("rev-parse", "--verify", "HEAD")
+  if ($null -eq $local) {
+    return "no_local_commit"
+  }
+
   $remoteExists = Get-RemoteBranchExists
-  if (-not $remoteExists) { return "no_remote" }
+  if (-not $remoteExists) {
+    return "no_remote"
+  }
 
-  $local = ""
-  $remote = ""
-  $base = ""
+  $remoteRef = "refs/remotes/origin/$($Script:Branch)^{commit}"
+  $remote = Get-GitFirstLineOrNull -GitArgs @("rev-parse", "--verify", "$remoteRef")
+  if ($null -eq $remote) {
+    return "no_remote"
+  }
 
-  try { $local = (& git rev-parse "$Script:Branch").Trim() } catch { return "unknown" }
-  try { $remote = (& git rev-parse "origin/$Script:Branch").Trim() } catch { return "unknown" }
-  try { $base = (& git merge-base "$Script:Branch" "origin/$Script:Branch").Trim() } catch { return "unknown" }
+  $base = Get-GitFirstLineOrNull -GitArgs @("merge-base", "HEAD", "refs/remotes/origin/$($Script:Branch)")
+  if ($null -eq $base) {
+    return "unknown"
+  }
 
   if ($local -eq $remote) { return "same" }
   if ($base -eq $remote) { return "local_ahead" }
@@ -385,6 +424,9 @@ function Safe-Pull {
     Write-Info "Quan hệ local/remote: $relation"
 
     switch ($relation) {
+      "no_local_commit" {
+        Write-Warn "Local chưa có commit nào. Không có gì để pull."
+      }
       "no_remote" {
         Write-Warn "Remote chưa có branch $Script:Branch. Không có gì để pull."
       }
@@ -466,6 +508,10 @@ function Sync-RemoteBeforePush {
   Write-Info "Quan hệ local/remote: $relation"
 
   switch ($relation) {
+    "no_local_commit" {
+      Write-Warn "Local chưa có commit nào. Hãy commit trước khi push."
+      return $false
+    }
     "no_remote" {
       Write-Ok "Remote chưa có branch $Script:Branch. Có thể push lần đầu."
       return $true
@@ -628,3 +674,4 @@ switch ($Action) {
   "open"   { Open-Repo }
   "config" { Open-Config }
 }
+
