@@ -24,4 +24,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md | GitHub Actions/Linux build gate cho OpenNext Cloudflare build. | Khi cần xác nhận lỗi OpenNext build là Windows-local trước khi deploy thật. |
 | 15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md | Báo cáo retry deploy Cloudflare đầu tiên. | Khi cần biết kết quả deploy thật, production URL, smoke test hoặc blocker Windows/OpenNext. |
 | 15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md | Workflow deploy Cloudflare thủ công bằng GitHub Actions/Linux. | Khi cần deploy qua GitHub Actions sau khi Windows local deploy bị blocker. |
+| 16_PRODUCTION_STABILIZATION.md | Checklist ổn định production sau deploy đầu tiên. | Khi cần smoke test production, auth/privacy/export/logs checklist hoặc quy trình sau deploy. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

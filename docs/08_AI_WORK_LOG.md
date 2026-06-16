@@ -1,5 +1,73 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 16 Production Stabilization
+
+### Phase
+
+Phase 16 - Production Stabilization
+
+### Việc đã làm
+
+- Tạo `docs/16_PRODUCTION_STABILIZATION.md`.
+- Ghi production URL, Worker name và deploy workflow đang dùng.
+- Ghi Supabase Auth checklist, Google OAuth checklist, route smoke checklist và auth/login checklist.
+- Ghi public/private privacy checklist.
+- Ghi export backup production checklist an toàn, không import ngược, không restore.
+- Ghi logs/observability checklist và các lỗi cần theo dõi.
+- Ghi known non-blocking warnings và blocking conditions.
+- Ghi quy trình sau mỗi deploy.
+- Tạo `scripts/check-production-stabilization.cjs`.
+- Thêm `npm run check:production-stabilization`.
+- Cập nhật docs index, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-production-stabilization.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/16_PRODUCTION_STABILIZATION.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Kiểm tra
+
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:deploy-readiness` - PASS
+- `npm.cmd run check:opennext-cloudflare` - PASS
+- `npm.cmd run check:service-boundary` - PASS
+- `npm.cmd run check:github-actions-opennext` - PASS
+- `npm.cmd run check:github-actions-deploy` - PASS
+- `npm.cmd run check:production-stabilization` - PASS, optional network smoke skipped vì `PROD_SMOKE_BASE_URL` chưa set.
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `npm.cmd audit --audit-level=moderate` - PASS_WITH_KNOWN_AUDIT_ADVISORIES, còn known advisories trong Next/OpenNext/Wrangler/PostCSS/esbuild/ws chain.
+- `git diff --check` - PASS
+- `git status --short` - chỉ có thay đổi Phase 16 trước commit
+
+### Ghi chú
+
+- Không deploy lại.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không đổi privacy/business logic.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+- Optional network smoke chỉ chạy khi set `PROD_SMOKE_BASE_URL`, không login tự động và không mutate data.
+
 ## 2026-06-17 - Production deploy success recorded
 
 ### Phase

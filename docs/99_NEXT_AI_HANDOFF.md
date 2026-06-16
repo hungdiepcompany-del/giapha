@@ -1,5 +1,58 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 16 Production Stabilization checklist added
+
+### Trạng thái hiện tại
+
+Production deploy đang PASS tại `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 16 đã thêm checklist vận hành production sau deploy đầu tiên, tập trung route smoke, Auth/OAuth, privacy, export backup và logs/observability. Phase này không deploy lại và không mở tính năng lớn.
+
+### File/script mới
+
+- `docs/16_PRODUCTION_STABILIZATION.md`
+- `scripts/check-production-stabilization.cjs`
+- `npm run check:production-stabilization`
+
+### Local validation
+
+- `npm run check:production-stabilization`: PASS.
+- Optional production smoke: skipped because `PROD_SMOKE_BASE_URL` was not set.
+- `npm run check:env:safe`: PASS.
+- `npm run check:migrations`: PASS.
+- `npm run check:deploy-readiness`: PASS.
+- `npm run check:opennext-cloudflare`: PASS.
+- `npm run check:service-boundary`: PASS.
+- `npm run check:github-actions-opennext`: PASS.
+- `npm run check:github-actions-deploy`: PASS.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm run build`: PASS.
+- `npm audit --audit-level=moderate`: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+- `git diff --check`: PASS.
+
+### Production baseline
+
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Deploy workflow: `.github/workflows/cloudflare-deploy.yml`
+- Deploy status: PASS
+- Google OAuth login: PASS by manual production test
+- Basic production route smoke: PASS by manual user test
+
+### Boundary giữ nguyên
+
+- Không sửa schema.
+- Không tạo/chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không đổi privacy/business logic.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+
+### Task tiếp theo đề xuất
+
+Run production stabilization checklist after each deploy. Next likely phase: Phase 17 - Production Operations & Monitoring, or a focused fix phase only if production smoke/logs reveal an issue.
+
 ## 2026-06-17 - Production deploy PASS
 
 ### Trạng thái hiện tại

@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 039 - Phase 16 chỉ ổn định production, không mở tính năng lớn
+
+Chọn:
+
+Phase 16 tập trung checklist vận hành production sau deploy đầu tiên: route smoke, Auth/OAuth, privacy, export backup, logs/observability và quy trình sau mỗi deploy. Không sửa schema, không chạy migration, không thay đổi privacy/business logic, không import confirm và không revision restore.
+
+Lý do:
+
+- Production vừa PASS, nên ưu tiên ổn định vận hành và phát hiện regression trước khi mở tính năng mới.
+- Dữ liệu thật đang tồn tại, mọi thay đổi ghi dữ liệu hoặc schema cần phase riêng.
+- Checklist production giúp deploy sau có quy trình rõ và giảm rủi ro lộ dữ liệu riêng tư.
+
 ## Decision 038 - Production deploy đầu tiên PASS qua GitHub Actions Cloudflare Deploy
 
 Chọn:
