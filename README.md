@@ -77,6 +77,10 @@ Các route nền hiện có:
 
 Cloudflare là mục tiêu deploy chính. Phase 1 đã tạo `wrangler.toml` placeholder an toàn, chưa deploy và chưa cấu hình secret thật.
 
+## Deployment readiness
+
+Phase 14 chuẩn bị checklist deploy đầu tiên tại [docs/13_DEPLOY_READINESS.md](docs/13_DEPLOY_READINESS.md). Repo chưa deploy, chưa push remote và không lưu secret trong file cấu hình. Trước deploy cần cấu hình env production trong Cloudflare, cập nhật Supabase redirect URL, cập nhật Google OAuth domain và tải backup `family.json`/`full-backup.zip`.
+
 ## Lệnh kiểm tra tiêu chuẩn
 
 Khi dự án có code, chạy:

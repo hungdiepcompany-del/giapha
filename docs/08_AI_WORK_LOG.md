@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 14 Deploy Readiness
+
+### Phase
+
+Phase 14 - Deploy Readiness
+
+### Việc đã làm
+
+- Tạo `docs/13_DEPLOY_READINESS.md`.
+- Tạo `scripts/check-deploy-readiness.cjs`.
+- Thêm script `check:deploy-readiness`.
+- Cập nhật `.env.example` để tất cả env là placeholder rỗng.
+- Cập nhật Supabase setup docs cho local `127.0.0.1`, production callback và Google OAuth redirect boundary.
+- Cập nhật README, docs index, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- README.md
+- .env.example
+- package.json
+- scripts/check-deploy-readiness.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/10_SUPABASE_SETUP.md
+- docs/13_DEPLOY_READINESS.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package thay đổi
+
+- Không thêm package.
+
+### Ghi chú
+
+- Phase 14 chỉ chuẩn bị deploy readiness.
+- Không deploy thật.
+- Không push remote.
+- Không sửa `.env.local`, không đọc/in secret.
+- Không sửa schema/auth/business logic/import confirm/revision restore.
+
 ## 2026-06-16 - Phase 13 UI Polish Foundation
 
 ### Phase

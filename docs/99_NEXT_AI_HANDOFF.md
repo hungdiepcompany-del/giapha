@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 14 Deploy Readiness completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có deploy readiness baseline cho first Cloudflare deploy. Phase này chỉ tạo docs/check/script, không deploy thật, không push remote, không tạo Cloudflare project, không sửa schema/auth/business logic và không đọc/in `.env.local`.
+
+### File/script mới
+
+- `docs/13_DEPLOY_READINESS.md`
+- `scripts/check-deploy-readiness.cjs`
+- `npm run check:deploy-readiness`
+
+### Deploy readiness policy
+
+- Target deploy: Cloudflare, nhưng Pages versus Workers wiring cần xác nhận ở Phase 15.
+- Production env bắt buộc: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_APP_URL`.
+- `.env.example` chỉ giữ placeholder rỗng.
+- `SUPABASE_SERVICE_ROLE_KEY` chỉ server-side, không dùng `NEXT_PUBLIC_`.
+- Trước deploy cần cập nhật Supabase Site URL/Redirect URLs và Google OAuth Authorized JavaScript origin.
+- Trước deploy có rủi ro dữ liệu cần tải `family.json` và `full-backup.zip`.
+
+### Boundary giữ nguyên
+
+- Không chạy lại migrations 0001-0006.
+- Không tạo migration mới.
+- Không bật import confirm thật.
+- Không bật revision restore thật.
+- Không deploy hoặc push remote.
+
+### Task tiếp theo đề xuất
+
+Phase 15 - First Cloudflare Deploy.
+
 ## 2026-06-16 - Phase 13 UI Polish Foundation completed
 
 ### Trạng thái hiện tại

@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 032 - Phase 14 chỉ chuẩn bị deploy, chưa deploy
+
+Chọn:
+
+Phase 14 tạo deploy readiness docs/checklist/script và giữ Cloudflare deploy ở trạng thái chuẩn bị. Không deploy thật, không push remote, không tạo Cloudflare project, không ghi secret vào repo.
+
+Lý do:
+
+- Production env, Supabase redirect URL và Google OAuth domain cần được kiểm tra thủ công trước first deploy.
+- Dữ liệu thật đã tồn tại, nên deploy phải đi kèm backup JSON/ZIP và rollback plan.
+- `SUPABASE_SERVICE_ROLE_KEY` phải cấu hình ở deploy platform/server-side, không xuất hiện trong client hoặc file tracked.
+- Mốc tiếp theo là Phase 15 First Cloudflare Deploy.
+
 ## Decision 031 - Phase 13 polish UI, không đổi luồng dữ liệu
 
 Chọn:

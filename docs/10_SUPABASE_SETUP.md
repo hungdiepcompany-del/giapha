@@ -47,11 +47,23 @@ Trong Supabase Dashboard:
   - Redirect URLs local:
     - `http://localhost:3000/**`
     - `http://localhost:3000/auth/callback`
+    - `http://127.0.0.1:3000/auth/callback` nếu test bằng `127.0.0.1`
   - Khi deploy Cloudflare Pages, thêm:
     - `https://<pages-project>.pages.dev/**`
     - `https://<pages-project>.pages.dev/auth/callback`
+  - Khi có domain production, thêm:
+    - Site URL: `https://<production-domain>`
+    - Redirect URL: `https://<production-domain>/auth/callback`
 
 App vẫn giữ magic link. Nút Google ở `/auth/login` gọi `signInWithOAuth({ provider: "google" })` và quay về `/auth/callback`. Callback dùng `exchangeCodeForSession(code)` cho cả magic link và OAuth, đồng thời ưu tiên xử lý `error`/`error_code` trước khi kiểm tra thiếu `code`.
+
+Google Cloud OAuth Client trỏ Authorized redirect URI về Supabase callback:
+
+```txt
+https://<project-ref>.supabase.co/auth/v1/callback
+```
+
+App callback `/auth/callback` nằm trong Supabase Redirect URLs, không phải Google Cloud redirect URI trực tiếp.
 
 ## Thứ tự chạy migration
 
