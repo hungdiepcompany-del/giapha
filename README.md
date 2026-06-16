@@ -40,6 +40,7 @@ Tài liệu nên đọc trước khi làm việc:
 
 - [AGENTS.md](AGENTS.md): quy tắc làm việc cho AI coding.
 - [docs/99_NEXT_AI_HANDOFF.md](docs/99_NEXT_AI_HANDOFF.md): trạng thái mới nhất và việc tiếp theo.
+- [docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md](docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md): baseline sau smoke test Supabase thật.
 - File trong `docs/` liên quan trực tiếp đến task.
 
 ## Chạy local

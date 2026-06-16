@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 12 Real Supabase Smoke Test Baseline completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có mốc baseline ổn định sau real Supabase smoke test. Phase 12 chỉ cập nhật tài liệu và report, không sửa code app, không tạo migration, không deploy và không push remote.
+
+### File/report mới
+
+- `docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md`
+
+### User-confirmed smoke status
+
+- Google OAuth login: PASS.
+- User đã thêm người thật vào database thật: PASS.
+- Main routes/functions smoke test chính: OK theo xác nhận của user.
+- PKCE issue trước đó: tự hết, xem như transient browser/cookie/origin issue nếu không tái diễn.
+
+### Baseline policy
+
+- Đây là baseline ổn định trước UI polish.
+- Không chạy lại toàn bộ migration 0001-0006 sau khi đã có dữ liệu thật nếu chưa review schema/data state.
+- Không bật import confirm thật nếu chưa có transaction, final validation, conflict resolution và log an toàn.
+- Không bật revision restore thật nếu chưa có transaction, validation và revision mới cho hành động restore.
+
+### Chưa làm
+
+- Chưa deploy Cloudflare.
+- Chưa push remote.
+- Chưa làm import confirm thật.
+- Chưa làm revision restore thật.
+- Chưa ghi nhận per-route evidence độc lập từ Codex trong Phase 12; report dùng `PASS_USER_CONFIRMED` hoặc `NOT_CONFIRMED` đúng mức xác nhận.
+
+### Task tiếp theo đề xuất
+
+Phase 13 - UI Polish Foundation. Không ưu tiên import confirm thật ở bước kế tiếp.
+
 ## 2026-06-16 - Google OAuth login added
 
 ### Trạng thái hiện tại

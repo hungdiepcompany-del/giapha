@@ -1,5 +1,72 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 12 Real Supabase Smoke Test Report & Stable Baseline
+
+### Phase
+
+Phase 12 - Real Supabase Smoke Test Report & Stable Baseline
+
+### Việc đã làm
+
+- Tạo `docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md`.
+- Ghi nhận user-confirmed real Supabase smoke test PASS ở mức chính.
+- Ghi nhận Google OAuth login đã hoạt động.
+- Ghi nhận user đã thêm người thật vào database thật.
+- Ghi nhận main routes/functions smoke test chính OK theo xác nhận của user.
+- Ghi nhận PKCE issue trước đó là transient nếu không tái diễn.
+- Ghi rõ không chạy lại toàn bộ migration 0001-0006 sau khi đã có dữ liệu thật nếu chưa review.
+- Ghi rõ import confirm thật và revision restore thật vẫn chưa làm.
+- Cập nhật index, setup, checklist, handoff và decision log cho baseline trước UI polish.
+
+### File đã tạo/cập nhật
+
+- README.md
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/10_SUPABASE_SETUP.md
+- docs/11_SMOKE_TEST_CHECKLIST.md
+- docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package/script thay đổi
+
+- Không thay đổi package hoặc script.
+
+### Kiểm tra
+
+- `npm.cmd run check:env:safe`
+- `npm.cmd run check:migrations`
+- `npm.cmd run check:foundation`
+- `npm.cmd run check:auth-permissions`
+- `npm.cmd run check:people`
+- `npm.cmd run check:relationships`
+- `npm.cmd run check:tree-viewer`
+- `npm.cmd run check:tree-editor`
+- `npm.cmd run check:public-privacy`
+- `npm.cmd run check:export-backup`
+- `npm.cmd run check:revisions`
+- `npm.cmd run check:import-json`
+- `npm.cmd run typecheck`
+- `npm.cmd run lint`
+- `npm.cmd run build`
+- `npm.cmd audit --audit-level=moderate`
+- `git diff --check`
+- `git status --short`
+
+### Ghi chú
+
+- Phase 12 là docs/stability phase.
+- Không sửa code app.
+- Không đọc/in `.env.local`.
+- Không in secret.
+- Không push remote.
+- Phase tiếp theo đề xuất: Phase 13 - UI Polish Foundation.
+
 ## 2026-06-16 - Google OAuth login via Supabase Auth
 
 ### Phase

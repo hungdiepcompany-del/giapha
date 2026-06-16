@@ -102,6 +102,18 @@ Sau đó kiểm tra bằng browser thật:
 - `/admin/revisions`
 - `/tree`
 
+## Phase 12 stable baseline
+
+Phase 12 đã ghi nhận baseline ổn định sau smoke test Supabase thật trong `docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md`.
+
+- Google OAuth login: user confirmed PASS.
+- Real database write: user confirmed add person PASS.
+- Main routes/functions: user confirmed OK.
+- PKCE issue trước đó: xem như transient browser/cookie/origin issue nếu không tái diễn.
+- Không chạy lại toàn bộ migration 0001-0006 sau khi đã có dữ liệu thật nếu chưa review schema/data state.
+- Import confirm thật và revision restore thật vẫn chưa bật.
+- Phase tiếp theo đề xuất: UI Polish Foundation.
+
 ## Admin system status
 
 Route `/admin/system/status` chỉ hiển thị trạng thái cấu hình dạng yes/no:

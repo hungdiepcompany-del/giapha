@@ -17,4 +17,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 09_DECISION_LOG.md | Các quyết định kiến trúc/sản phẩm quan trọng. | Khi có quyết định mới hoặc cần kiểm tra lý do của quyết định cũ. |
 | 10_SUPABASE_SETUP.md | Hướng dẫn cấu hình Supabase thật, migration order, OWNER bootstrap và smoke gate. | Khi cần kết nối Supabase thật hoặc chuẩn bị smoke test production-like. |
 | 11_SMOKE_TEST_CHECKLIST.md | Checklist smoke test thủ công cho auth, OWNER, CRUD, tree, export/import và revision. | Sau khi đã cấu hình `.env.local`, chạy migration thật và gán OWNER. |
+| 12_REAL_SUPABASE_SMOKE_TEST_REPORT.md | Báo cáo Phase 12 ghi nhận baseline ổn định sau smoke test Supabase thật. | Khi cần biết mốc ổn định trước UI polish, deploy hoặc import/restore thật. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

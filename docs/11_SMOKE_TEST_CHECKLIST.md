@@ -2,6 +2,18 @@
 
 Checklist này dùng sau khi user đã cấu hình `.env.local`, chạy migration thật và gán OWNER thủ công. Không dùng checklist này để thay thế test tự động.
 
+## Phase 12 snapshot
+
+Real Supabase smoke test đã được user xác nhận PASS ở mức chính:
+
+- Google OAuth login hoạt động.
+- User đã thêm người thật vào database thật.
+- Các route/chức năng smoke test chính OK.
+- PKCE issue trước đó tự hết, xem như transient browser/cookie/origin issue nếu không tái diễn.
+- Chi tiết mốc baseline nằm ở `docs/12_REAL_SUPABASE_SMOKE_TEST_REPORT.md`.
+
+Các mục chưa có bằng chứng chi tiết trong Phase 12 vẫn để `NOT_CONFIRMED` trong report thay vì tự đánh dấu PASS.
+
 ## Auth
 
 - [ ] `/auth/login` mở được

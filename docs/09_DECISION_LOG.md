@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 030 - Phase 12 khóa baseline sau real Supabase smoke test
+
+Chọn:
+
+Phase 12 là docs/stability phase sau khi user xác nhận real Supabase smoke test chính đã PASS. Baseline hiện tại được xem là mốc ổn định trước UI polish.
+
+Lý do:
+
+- Dự án đã có dữ liệu thật trong Supabase, nên không chạy lại toàn bộ migration 0001-0006 nếu chưa review schema/data state.
+- Google OAuth đã hoạt động và PKCE issue trước đó tự hết, nên không sửa thêm auth nếu lỗi không tái diễn.
+- Import confirm thật và revision restore thật vẫn có rủi ro ghi dữ liệu, nên chưa bật trước khi có transaction, validation và log đầy đủ.
+- Phase tiếp theo nên là UI Polish Foundation thay vì mở bề mặt ghi dữ liệu lớn.
+
 ## Decision 028 - Phase 11 là integration gate, không chạy Supabase thật tự động
 
 Chọn:
