@@ -1,7 +1,8 @@
-import Link from "next/link";
-
 import { AdminShell } from "@/components/layout/admin-shell";
 import { PersonList } from "@/components/people/person-list";
+import { ActionLink } from "@/components/ui/action-link";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusCallout } from "@/components/ui/status-callout";
 import { listPeople } from "@/lib/family/people-service";
 import type { PersonListFilter, PersonVisibility } from "@/lib/family/people-types";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
@@ -52,32 +53,26 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
-        <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-              People CRUD foundation
-            </p>
-            <h1 className="mt-2 text-3xl font-bold text-slate-950">
-              Thành viên
-            </h1>
-          </div>
-          {canCreate ? (
-            <Link
-              href="/admin/people/new"
-              className="inline-flex min-h-11 items-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
-            >
-              Thêm thành viên
-            </Link>
-          ) : null}
-        </div>
+        <PageHeader
+          eyebrow="People CRUD foundation"
+          title="Thành viên"
+          description="Tra cứu, lọc và mở hồ sơ từng người. Dữ liệu riêng tư vẫn nằm sau permission."
+          actions={
+            canCreate ? (
+              <ActionLink href="/admin/people/new" variant="primary">
+                Thêm thành viên
+              </ActionLink>
+            ) : null
+          }
+        />
 
-        <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 md:grid-cols-4">
+        <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
           <label className="block md:col-span-2">
             <span className="text-sm font-semibold text-slate-800">Tìm kiếm</span>
             <input
               name="q"
               defaultValue={params.q ?? ""}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
               placeholder="Nhập họ tên hoặc tên hiển thị"
             />
           </label>
@@ -86,7 +81,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
             <select
               name="visibility"
               defaultValue={params.visibility ?? "all"}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
             >
               <option value="all">Tất cả</option>
               <option value="public">Public</option>
@@ -99,7 +94,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
             <select
               name="is_living"
               defaultValue={params.is_living ?? "all"}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
             >
               <option value="all">Tất cả</option>
               <option value="living">Còn sống</option>
@@ -109,17 +104,17 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
           <div className="md:col-span-4">
             <button
               type="submit"
-              className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
+              className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
             >
-              Lọc
+              Lọc danh sách
             </button>
           </div>
         </form>
 
         {params.error ? (
-          <div className="mt-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <StatusCallout tone="danger" className="mt-6">
             {params.error}
-          </div>
+          </StatusCallout>
         ) : null}
 
         <div className="mt-6">
@@ -131,13 +126,10 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
               canDelete={canDelete}
             />
           ) : (
-            <div className="border border-amber-200 bg-amber-50 p-6 text-amber-900">
-              {peopleResult.error}
-            </div>
+            <StatusCallout tone="warning">{peopleResult.error}</StatusCallout>
           )}
         </div>
       </section>
     </AdminShell>
   );
 }
-

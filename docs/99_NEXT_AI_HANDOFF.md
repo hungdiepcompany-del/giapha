@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 13 UI Polish Foundation completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có UI polish foundation trên các bề mặt chính. Phase này chỉ sửa giao diện/copy/layout và thêm checker, không sửa schema, RLS, auth callback, business logic dữ liệu, import confirm hoặc revision restore.
+
+### UI primitives mới
+
+- `components/ui/page-header.tsx`
+- `components/ui/section-card.tsx`
+- `components/ui/status-callout.tsx`
+- `components/ui/empty-state.tsx`
+- `components/ui/action-link.tsx`
+
+### UI đã polish
+
+- Admin shell: nav rõ hơn, active route rõ hơn, user/role/permission context gọn hơn.
+- Public homepage/tree/profile: hero, CTA, readonly/public privacy copy.
+- Login page: Google OAuth và magic link phân biệt rõ hơn.
+- People list/form: bảng dễ đọc hơn, form chia nhóm thông tin.
+- Relationships: giải thích family, cha mẹ/con, quan hệ đôi và UUID.
+- Tree viewer/editor: toolbar rõ hơn, hướng dẫn click/kéo/lưu layout, empty state rõ hơn.
+- Export/import: nhấn mạnh `family.json` là backup chính, import preview chưa ghi DB.
+
+### Script check mới
+
+- `npm run check:ui-polish`
+
+### Boundary giữ nguyên
+
+- Không tạo migration.
+- Không chạy lại migrations 0001-0006.
+- Không sửa auth callback/PKCE.
+- Không bật import confirm thật.
+- Không bật revision restore thật.
+- Không deploy hoặc push remote.
+
+### Task tiếp theo đề xuất
+
+Phase 14 - Deploy Readiness hoặc Phase 14 - Import Confirm Planning, tùy ưu tiên.
+
 ## 2026-06-16 - Phase 12 Real Supabase Smoke Test Baseline completed
 
 ### Trạng thái hiện tại

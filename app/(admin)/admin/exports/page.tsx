@@ -1,6 +1,8 @@
-import Link from "next/link";
-
 import { AdminShell } from "@/components/layout/admin-shell";
+import { ActionLink } from "@/components/ui/action-link";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionCard } from "@/components/ui/section-card";
+import { StatusCallout } from "@/components/ui/status-callout";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -8,21 +10,21 @@ export const dynamic = "force-dynamic";
 const downloads = [
   {
     href: "/admin/exports/download/json",
-    title: "Tải family.json",
+    title: "family.json",
     description:
-      "Bản JSON đầy đủ để giữ ID ổn định, quan hệ, layout cây và manifest.",
+      "Backup chính: giữ ID ổn định, quan hệ thật, layout cây và metadata để phục hồi dài hạn.",
   },
   {
     href: "/admin/exports/download/gedcom",
-    title: "Tải family.ged",
+    title: "family.ged",
     description:
-      "GEDCOM cơ bản để chuyển sang phần mềm gia phả khác khi cần.",
+      "Bản tương thích để mở bằng phần mềm gia phả khác. GEDCOM không thay thế JSON.",
   },
   {
     href: "/admin/exports/download/zip",
-    title: "Tải full-backup.zip",
+    title: "full-backup.zip",
     description:
-      "Gói backup gồm family.json, family.ged, manifest.json và checksums.json.",
+      "Gói đầy đủ gồm family.json, family.ged, manifest.json và checksums.json.",
   },
 ];
 
@@ -42,29 +44,27 @@ export default async function AdminExportsPage() {
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
-        <div className="border-b border-slate-200 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Export/backup foundation
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Backup / Export
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
-            Supabase là hệ thống vận hành, không phải nơi khóa dữ liệu vĩnh viễn.
-            Hãy tải backup định kỳ và lưu ở nhiều nơi độc lập.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Export/backup foundation"
+          title="Backup / Export"
+          description="Supabase là hệ thống vận hành, nhưng JSON/GEDCOM/ZIP là lớp bảo vệ dữ liệu lâu dài."
+        />
+
+        <StatusCallout tone="info" className="mt-6">
+          Ưu tiên lưu `family.json` định kỳ. GEDCOM dùng để tương thích, ZIP dùng
+          khi cần một gói có manifest và checksum.
+        </StatusCallout>
 
         {!canDownload ? (
-          <div className="mt-6 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <StatusCallout tone="warning" className="mt-6">
             {message}
-          </div>
+          </StatusCallout>
         ) : (
           <div className="mt-6 grid gap-4">
             {downloads.map((download) => (
-              <div
+              <SectionCard
                 key={download.href}
-                className="flex flex-col gap-4 border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <h2 className="text-base font-bold text-slate-950">
@@ -74,30 +74,24 @@ export default async function AdminExportsPage() {
                     {download.description}
                   </p>
                 </div>
-                <Link
-                  href={download.href}
-                  className="inline-flex min-h-11 items-center justify-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
-                >
+                <ActionLink href={download.href} variant="primary">
                   Tải xuống
-                </Link>
-              </div>
+                </ActionLink>
+              </SectionCard>
             ))}
           </div>
         )}
 
-        <div className="mt-6 border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-700">
+        <SectionCard className="mt-6 text-sm leading-6 text-slate-700">
           <h2 className="font-bold text-slate-950">Import foundation</h2>
           <p className="mt-2">
-            Phase 10 chỉ bật kiểm tra family.json an toàn: đọc schema_version,
-            preview dữ liệu, phát hiện conflict và không ghi đè dữ liệu đang chạy.
+            Import hiện chỉ preview: đọc schema_version, kiểm tra dữ liệu và
+            conflict. Chưa ghi database, chưa overwrite dữ liệu thật.
           </p>
-          <Link
-            href="/admin/exports/import"
-            className="mt-3 inline-flex font-semibold text-emerald-700 underline"
-          >
+          <ActionLink href="/admin/exports/import" className="mt-3">
             Import / kiểm tra backup JSON
-          </Link>
-        </div>
+          </ActionLink>
+        </SectionCard>
       </section>
     </AdminShell>
   );

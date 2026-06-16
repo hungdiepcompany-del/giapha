@@ -18,6 +18,7 @@
     "check:export-backup": "node scripts/check-export-backup-foundation.cjs",
     "check:revisions": "node scripts/check-revision-history-foundation.cjs",
     "check:import-json": "node scripts/check-import-json-foundation.cjs",
+    "check:ui-polish": "node scripts/check-ui-polish-foundation.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

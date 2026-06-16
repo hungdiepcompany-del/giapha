@@ -1,8 +1,9 @@
-import Link from "next/link";
-
 import { AdminShell } from "@/components/layout/admin-shell";
 import { FamilyTreeErrorState } from "@/components/tree/family-tree-error-state";
 import { FamilyTreeViewer } from "@/components/tree/family-tree-viewer";
+import { ActionLink } from "@/components/ui/action-link";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusCallout } from "@/components/ui/status-callout";
 import { getAdminFamilyTreeGraph } from "@/lib/family/tree-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
@@ -29,24 +30,23 @@ export default async function AdminTreePage() {
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
-        <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-              Tree viewer foundation
-            </p>
-            <h1 className="mt-2 text-3xl font-bold text-slate-950">
-              Cây gia phả
-            </h1>
-          </div>
-          {canEditLayout ? (
-            <Link
-              href="/admin/tree/edit"
-              className="inline-flex min-h-11 items-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
-            >
-              Chỉnh sửa cây
-            </Link>
-          ) : null}
-        </div>
+        <PageHeader
+          eyebrow="Tree viewer foundation"
+          title="Cây gia phả"
+          description="Viewer chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, fit view và reset layout để xem nhanh toàn bộ cây."
+          actions={
+            canEditLayout ? (
+              <ActionLink href="/admin/tree/edit" variant="primary">
+                Chỉnh sửa cây
+              </ActionLink>
+            ) : null
+          }
+        />
+
+        <StatusCallout tone="info" className="mt-6">
+          Trang này không sửa quan hệ. Nếu cần kéo node hoặc lưu layout, vào
+          chế độ chỉnh sửa cây.
+        </StatusCallout>
 
         <div className="mt-6">
           {result.ok ? (

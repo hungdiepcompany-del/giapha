@@ -1,5 +1,14 @@
 # Tree UI model
 
+## Phase 13 UI polish foundation
+
+- Viewer toolbar cần đọc rõ là chế độ xem: tìm người, fit view, reset layout tự động.
+- Editor toolbar cần nhắc rõ kéo node chỉ lưu layout UI, không sửa quan hệ thật.
+- Editor side panel là nơi xem nhanh cha/mẹ, vợ/chồng/bạn đời, con và mở hồ sơ.
+- Empty state cây phải hướng người dùng về `Thành viên` và `Quan hệ gia đình`.
+- Phase 13 không đổi thuật toán ELK, graph data model, relationship model hoặc layout persistence.
+- Public tree vẫn readonly và lọc riêng tư trước khi render.
+
 ## Công nghệ
 
 - React Flow để hiển thị/chỉnh sửa cây.

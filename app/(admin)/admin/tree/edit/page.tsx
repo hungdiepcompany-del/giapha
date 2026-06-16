@@ -1,13 +1,9 @@
+import { addChildFromTreeAction, addParentFromTreeAction, addSpouseFromTreeAction, resetTreeLayoutAction, saveTreeLayoutAction } from "@/app/(admin)/admin/tree/edit/actions";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { FamilyTreeEditor } from "@/components/tree/family-tree-editor";
 import { FamilyTreeErrorState } from "@/components/tree/family-tree-error-state";
-import {
-  addChildFromTreeAction,
-  addParentFromTreeAction,
-  addSpouseFromTreeAction,
-  resetTreeLayoutAction,
-  saveTreeLayoutAction,
-} from "@/app/(admin)/admin/tree/edit/actions";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusCallout } from "@/components/ui/status-callout";
 import { applySavedLayoutToGraph } from "@/lib/family/tree-layout-service";
 import { getAdminFamilyTreeGraph } from "@/lib/family/tree-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
@@ -54,25 +50,22 @@ export default async function AdminTreeEditPage({
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
-        <div className="border-b border-slate-200 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Tree editor foundation
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Chỉnh sửa cây
-          </h1>
-        </div>
+        <PageHeader
+          eyebrow="Tree editor foundation"
+          title="Chỉnh sửa cây"
+          description="Click một person node để mở side panel, kéo node để chỉnh layout UI, rồi bấm lưu layout. Quan hệ thật chỉ đổi qua form có chủ đích."
+        />
 
         {query.error ? (
-          <div className="mt-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <StatusCallout tone="danger" className="mt-6">
             {query.error}
-          </div>
+          </StatusCallout>
         ) : null}
 
         {query.saved ? (
-          <div className="mt-6 border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          <StatusCallout tone="success" className="mt-6">
             Đã lưu thay đổi: {query.saved}
-          </div>
+          </StatusCallout>
         ) : null}
 
         <div className="mt-6">

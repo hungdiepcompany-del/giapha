@@ -1,5 +1,71 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 13 UI Polish Foundation
+
+### Phase
+
+Phase 13 - UI Polish Foundation
+
+### Việc đã làm
+
+- Tạo UI primitives nhẹ: page header, section card, empty state, status callout và action link.
+- Polish admin shell: nav rõ hơn, active route rõ hơn, user/role/permission context gọn hơn.
+- Polish public shell và homepage: hero rõ hơn, CTA xem cây/đăng nhập, giải thích public/private.
+- Polish login page: phân biệt Google OAuth và magic link, không đổi callback/auth logic.
+- Polish people list và person form: bảng dễ đọc hơn, form chia nhóm thông tin.
+- Polish relationship page: giải thích family, cha mẹ/con, quan hệ đôi và hướng dẫn UUID.
+- Polish tree viewer/editor: header hướng dẫn, toolbar rõ hơn, empty state thân thiện.
+- Polish export/import: nhấn mạnh `family.json` là backup chính, GEDCOM là tương thích, ZIP có manifest/checksum, import preview chưa ghi DB.
+- Tạo `scripts/check-ui-polish-foundation.cjs` và script `check:ui-polish`.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-ui-polish-foundation.cjs
+- components/ui/action-link.tsx
+- components/ui/empty-state.tsx
+- components/ui/page-header.tsx
+- components/ui/section-card.tsx
+- components/ui/status-callout.tsx
+- components/layout/admin-shell.tsx
+- components/layout/public-shell.tsx
+- components/public/public-home.tsx
+- components/public/public-tree-shell.tsx
+- components/public/public-person-profile.tsx
+- components/people/person-list.tsx
+- components/people/person-form.tsx
+- components/tree/family-tree-toolbar.tsx
+- components/tree/tree-editor-toolbar.tsx
+- components/tree/family-tree-empty-state.tsx
+- app/auth/login/page.tsx
+- app/(admin)/admin/page.tsx
+- app/(admin)/admin/people/page.tsx
+- app/(admin)/admin/people/new/page.tsx
+- app/(admin)/admin/relationships/page.tsx
+- app/(admin)/admin/tree/page.tsx
+- app/(admin)/admin/tree/edit/page.tsx
+- app/(admin)/admin/exports/page.tsx
+- app/(admin)/admin/exports/import/page.tsx
+- docs/05_TREE_UI_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Ghi chú
+
+- Không sửa schema, RLS, auth callback, import confirm hoặc revision restore.
+- Không chạy lại migrations 0001-0006.
+- Không push remote.
+- Baseline Supabase thật từ Phase 12 vẫn giữ nguyên.
+
 ## 2026-06-16 - Phase 12 Real Supabase Smoke Test Report & Stable Baseline
 
 ### Phase

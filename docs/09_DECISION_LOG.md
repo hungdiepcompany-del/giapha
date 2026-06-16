@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 031 - Phase 13 polish UI, không đổi luồng dữ liệu
+
+Chọn:
+
+Phase 13 chỉ chuẩn hóa giao diện nền bằng UI primitives nhẹ, copywriting tiếng Việt, spacing và trạng thái empty/error. Không đổi schema, RLS, auth callback, relationship model, import confirm hoặc revision restore.
+
+Lý do:
+
+- Phase 12 đã là baseline ổn định sau smoke test Supabase thật, nên UI polish không được làm trôi business logic.
+- Import confirm và revision restore vẫn là bề mặt ghi dữ liệu lớn, cần planning riêng trước khi bật.
+- Reusable primitives giúp các trang đọc nhất quán mà không kéo thêm UI package.
+- Phase kế tiếp nên là Deploy Readiness hoặc Import Confirm Planning tùy ưu tiên.
+
 ## Decision 030 - Phase 12 khóa baseline sau real Supabase smoke test
 
 Chọn:

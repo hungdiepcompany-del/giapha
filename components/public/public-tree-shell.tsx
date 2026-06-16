@@ -1,7 +1,9 @@
+import { PublicShell } from "@/components/layout/public-shell";
+import { FamilyTreeEmptyState } from "@/components/tree/family-tree-empty-state";
 import { FamilyTreeErrorState } from "@/components/tree/family-tree-error-state";
 import { FamilyTreeViewer } from "@/components/tree/family-tree-viewer";
-import { FamilyTreeEmptyState } from "@/components/tree/family-tree-empty-state";
-import { PublicShell } from "@/components/layout/public-shell";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusCallout } from "@/components/ui/status-callout";
 import type { FamilyTreeGraph } from "@/lib/family/tree-types";
 
 type PublicTreeShellProps = {
@@ -20,14 +22,16 @@ export function PublicTreeShell({ result }: PublicTreeShellProps) {
   return (
     <PublicShell>
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
-        <div className="border-b border-slate-200 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Public tree
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Cây gia phả public
-          </h1>
-        </div>
+        <PageHeader
+          eyebrow="Public tree"
+          title="Cây gia phả public"
+          description="Chế độ public chỉ đọc và đã lọc dữ liệu riêng tư. Người còn sống không hiển thị thông tin nhạy cảm."
+        />
+
+        <StatusCallout tone="info" className="mt-6">
+          Dùng ô tìm kiếm trong toolbar để tập trung vào một người. Trang này
+          không cho chỉnh sửa cây hoặc lưu layout.
+        </StatusCallout>
 
         <div className="mt-6">
           {result.ok ? (

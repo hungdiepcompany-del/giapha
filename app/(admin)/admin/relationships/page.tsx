@@ -2,8 +2,11 @@ import { AdminShell } from "@/components/layout/admin-shell";
 import { CoupleForm } from "@/components/relationships/couple-form";
 import { RelationshipForm } from "@/components/relationships/relationship-form";
 import { RelationshipSummary } from "@/components/relationships/relationship-summary";
-import { getPermissionContext } from "@/lib/permissions/permission-service";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionCard } from "@/components/ui/section-card";
+import { StatusCallout } from "@/components/ui/status-callout";
 import { listRelationships } from "@/lib/family/relationship-service";
+import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
 
@@ -39,25 +42,37 @@ export default async function RelationshipsPage({
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
-        <div className="border-b border-slate-200 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Relationship CRUD foundation
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Quan hệ gia đình
-          </h1>
+        <PageHeader
+          eyebrow="Relationship CRUD foundation"
+          title="Quan hệ gia đình"
+          description="Family là đơn vị nối cha/mẹ với con; quan hệ đôi lưu vợ/chồng/bạn đời riêng để giữ model rõ ràng."
+        />
+
+        <div className="mt-6 grid gap-4 text-sm leading-6 text-slate-700 md:grid-cols-3">
+          <SectionCard>
+            <h2 className="font-bold text-slate-950">Family</h2>
+            <p className="mt-2">Một family gom cha/mẹ và danh sách con.</p>
+          </SectionCard>
+          <SectionCard>
+            <h2 className="font-bold text-slate-950">Cha mẹ / con</h2>
+            <p className="mt-2">Chọn family rồi nhập UUID người đã tồn tại.</p>
+          </SectionCard>
+          <SectionCard>
+            <h2 className="font-bold text-slate-950">Quan hệ đôi</h2>
+            <p className="mt-2">Vợ/chồng/bạn đời được lưu độc lập với family.</p>
+          </SectionCard>
         </div>
 
         {query.error ? (
-          <div className="mt-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <StatusCallout tone="danger" className="mt-6">
             {query.error}
-          </div>
+          </StatusCallout>
         ) : null}
 
         {query.saved ? (
-          <div className="mt-6 border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          <StatusCallout tone="success" className="mt-6">
             Đã lưu thay đổi: {query.saved}
-          </div>
+          </StatusCallout>
         ) : null}
 
         <div className="mt-6">
@@ -70,6 +85,10 @@ export default async function RelationshipsPage({
               />
               {canCreate ? (
                 <div className="space-y-6">
+                  <StatusCallout tone="info">
+                    Khi form còn yêu cầu UUID, hãy mở trang thành viên để copy ID
+                    người liên quan. Phase này chỉ polish UI, chưa đổi model chọn người.
+                  </StatusCallout>
                   <RelationshipForm
                     families={result.data.families}
                     returnTo="/admin/relationships"
@@ -79,9 +98,7 @@ export default async function RelationshipsPage({
               ) : null}
             </div>
           ) : (
-            <div className="border border-amber-200 bg-amber-50 p-6 text-amber-900">
-              {result.error}
-            </div>
+            <StatusCallout tone="warning">{result.error}</StatusCallout>
           )}
         </div>
       </section>
