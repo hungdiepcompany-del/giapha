@@ -1,5 +1,55 @@
 # AI Work Log
 
+## 2026-06-16 - Google OAuth login via Supabase Auth
+
+### Phase
+
+Auth usability hardening after Phase 11
+
+### Việc đã làm
+
+- Thêm nút `Đăng nhập với Google` tại `/auth/login`.
+- Giữ nguyên form magic link hiện có.
+- Google OAuth dùng Supabase browser client và redirect về `/auth/callback`.
+- Callback ưu tiên xử lý `error`/`error_code` trước khi kiểm tra thiếu `code`.
+- Callback vẫn dùng `exchangeCodeForSession(code)` cho cả magic link và Google OAuth.
+- Bổ sung mapping lỗi đăng nhập dễ hiểu cho `otp_expired`, `missing_auth_code`, `auth_callback_failed`, `access_denied`, `provider_disabled` và fallback unknown.
+- Cập nhật hướng dẫn cấu hình Google OAuth trong `docs/10_SUPABASE_SETUP.md`.
+
+### File đã tạo/cập nhật
+
+- app/auth/callback/route.ts
+- app/auth/login/page.tsx
+- components/auth/login-form.tsx
+- docs/08_AI_WORK_LOG.md
+- docs/10_SUPABASE_SETUP.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Kiểm tra
+
+- `npm run check:foundation`
+- `npm run check:auth-permissions`
+- `npm run typecheck`
+- `npm run lint`
+- `npm run build`
+- `git diff --check`
+- `git status --short`
+
+### Ghi chú
+
+- Không sửa schema, permission model, OWNER logic hoặc dữ liệu Supabase.
+- Không hard-code email đăng nhập.
+- Không commit `.env.local`.
+- Chưa push remote.
+
 ## 2026-06-16 - Phase 11 Supabase Integration & Real Smoke Test Gate
 
 ### Phase

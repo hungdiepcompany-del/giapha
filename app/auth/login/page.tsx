@@ -6,6 +6,7 @@ import { getPublicSupabaseConfig } from "@/lib/supabase/client";
 type LoginPageProps = {
   searchParams: Promise<{
     error?: string;
+    error_code?: string;
     reason?: string;
   }>;
 };
@@ -14,7 +15,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const isConfigured = Boolean(getPublicSupabaseConfig());
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const reason = params.error ?? params.reason;
+  const reason = params.error_code ?? params.error ?? params.reason;
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center px-6 py-12">

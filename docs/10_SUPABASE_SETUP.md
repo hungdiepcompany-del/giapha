@@ -28,6 +28,31 @@ Gợi ý thao tác local:
 
 Nếu `.env.local` thiếu key, script chỉ báo `missing` và kết luận smoke test Supabase thật chưa sẵn sàng. Script không in giá trị secret.
 
+## Google OAuth
+
+Google OAuth dùng Supabase Auth provider, không lưu Client Secret trong repo và không đưa service role key ra client.
+
+Trong Google Cloud OAuth Client, Authorized redirect URI phải là:
+
+```txt
+https://<SUPABASE_PROJECT_REF>.supabase.co/auth/v1/callback
+```
+
+Trong Supabase Dashboard:
+
+- Authentication -> Providers -> Google: bật Enabled.
+- Client ID và Client Secret được cấu hình thủ công trong Dashboard.
+- Authentication -> URL Configuration:
+  - Site URL local: `http://localhost:3000`
+  - Redirect URLs local:
+    - `http://localhost:3000/**`
+    - `http://localhost:3000/auth/callback`
+  - Khi deploy Cloudflare Pages, thêm:
+    - `https://<pages-project>.pages.dev/**`
+    - `https://<pages-project>.pages.dev/auth/callback`
+
+App vẫn giữ magic link. Nút Google ở `/auth/login` gọi `signInWithOAuth({ provider: "google" })` và quay về `/auth/callback`. Callback dùng `exchangeCodeForSession(code)` cho cả magic link và OAuth, đồng thời ưu tiên xử lý `error`/`error_code` trước khi kiểm tra thiếu `code`.
+
 ## Thứ tự chạy migration
 
 Chạy trên Supabase SQL Editor hoặc CLI đã xác thực đúng project, theo đúng thứ tự:

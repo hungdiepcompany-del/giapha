@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-06-16 - Google OAuth login added
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có thêm đăng nhập Google OAuth qua Supabase Auth để tránh phụ thuộc hoàn toàn vào magic link khi gặp `email rate limit exceeded` hoặc `otp_expired`.
+
+### File/route đã cập nhật
+
+- `components/auth/login-form.tsx`
+- `app/auth/login/page.tsx`
+- `app/auth/callback/route.ts`
+- `docs/10_SUPABASE_SETUP.md`
+
+### Auth behavior
+
+- `/auth/login` vẫn giữ form magic link.
+- `/auth/login` có thêm nút `Đăng nhập với Google`, gọi Supabase `signInWithOAuth` với `redirectTo` là `${window.location.origin}/auth/callback`.
+- `/auth/callback` xử lý cả magic link và Google OAuth bằng `exchangeCodeForSession(code)`.
+- `/auth/callback` ưu tiên `error_code`/`error` trước khi kiểm tra thiếu `code`.
+- Exchange lỗi redirect về `/auth/login?reason=auth_callback_failed` và chỉ log metadata an toàn: name, message, status/code.
+- Callback thành công vẫn ưu tiên `/admin` khi user có `people.view`.
+
+### Cấu hình thủ công còn cần user kiểm tra
+
+- Google Cloud OAuth Client có Authorized redirect URI: `https://<SUPABASE_PROJECT_REF>.supabase.co/auth/v1/callback`.
+- Supabase Dashboard -> Authentication -> Providers -> Google đã Enabled và có Client ID/Secret.
+- Supabase URL Configuration local có:
+  - `http://localhost:3000/**`
+  - `http://localhost:3000/auth/callback`
+- Khi deploy Cloudflare Pages, thêm redirect URL tương ứng cho `https://<pages-project>.pages.dev/**` và `/auth/callback`.
+
+### Chưa làm
+
+- Chưa tạo migration.
+- Chưa sửa schema/role/OWNER.
+- Chưa commit secret.
+- Chưa push remote.
+- Chưa deploy.
+
+### Task tiếp theo đề xuất
+
+User kiểm tra cấu hình Google Cloud/Supabase Dashboard rồi smoke test `/auth/login` bằng Google OAuth với tài khoản OWNER thật.
+
 ## 2026-06-16 - Phase 11 Supabase Integration & Real Smoke Test Gate completed
 
 ### Trạng thái hiện tại
