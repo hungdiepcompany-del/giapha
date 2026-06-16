@@ -1,5 +1,74 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 15E GitHub Actions Cloudflare Deploy Workflow
+
+### Phase
+
+Phase 15E - GitHub Actions Cloudflare Deploy Workflow
+
+### Việc đã làm
+
+- User xác nhận GitHub Actions secrets `CLOUDFLARE_API_TOKEN` và `CLOUDFLARE_ACCOUNT_ID` đã cấu hình.
+- Tạo workflow `.github/workflows/cloudflare-deploy.yml`.
+- Workflow chỉ chạy thủ công bằng `workflow_dispatch`, không auto deploy khi push/pull request.
+- Workflow chạy trên `ubuntu-latest`, dùng Node 24, `npm ci`, safety checks, typecheck, lint, build và `npm run deploy`.
+- Workflow đọc env/secrets từ GitHub `vars.*` và `secrets.*`, không hardcode token/key/secret.
+- Tạo `scripts/check-github-actions-cloudflare-deploy.cjs`.
+- Thêm `npm run check:github-actions-deploy`.
+- Tạo docs `docs/15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md`.
+- Cập nhật docs index, decision log, handoff và Phase 15D report.
+
+### File đã tạo/cập nhật
+
+- .github/workflows/cloudflare-deploy.yml
+- package.json
+- scripts/check-github-actions-cloudflare-deploy.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md
+- docs/15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Kiểm tra
+
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:deploy-readiness` - PASS
+- `npm.cmd run check:opennext-cloudflare` - PASS
+- `npm.cmd run check:service-boundary` - PASS
+- `npm.cmd run check:github-actions-opennext` - PASS
+- `npm.cmd run check:github-actions-deploy` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `npm.cmd audit --audit-level=moderate` - PASS_WITH_KNOWN_AUDIT_ADVISORIES
+- `git diff --check` - PASS
+- `git status --short` - chỉ có thay đổi Phase 15E trước commit
+- Secret scan - PASS, chỉ match GitHub `secrets.*` references, placeholder/docs policy và checker patterns; không có secret thật.
+- `git ls-files .env .env.local .dev.vars` - rỗng
+
+### Ghi chú
+
+- Không deploy từ Windows local.
+- Không chạy deploy trong Phase 15E local validation.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không commit `.env.local` hoặc `.dev.vars`.
+- Không hardcode secret/token/key.
+- Không chạy `npm audit fix --force`.
+
 ## 2026-06-16 - Phase 15D First Cloudflare Deploy Retry
 
 ### Phase

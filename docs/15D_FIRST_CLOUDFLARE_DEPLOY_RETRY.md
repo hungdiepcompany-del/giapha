@@ -108,3 +108,7 @@ Google redirect URI is the Supabase callback, not the app `/auth/callback`. The 
 ## Next Step
 
 Use WSL/Linux or create a dedicated GitHub Actions deploy workflow after explicit user confirmation. Do not change app logic to work around the Windows/OpenNext local blocker.
+
+## Phase 15E Follow-Up
+
+User confirmed GitHub Actions secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are configured. Phase 15E adds a manual-only GitHub Actions Cloudflare deploy workflow so deploy can run from Linux without using Windows local OpenNext deploy.

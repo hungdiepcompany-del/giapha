@@ -1,5 +1,68 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 15E GitHub Actions Cloudflare Deploy Workflow ready
+
+### Trạng thái hiện tại
+
+Dự án đã có workflow deploy Cloudflare thủ công qua GitHub Actions/Linux để tránh blocker Windows/OpenNext local. Phase này chỉ tạo workflow/checker/docs, chưa chạy workflow deploy, chưa deploy thật, không sửa schema, không chạy migration và không đổi business logic.
+
+### Workflow mới
+
+- `.github/workflows/cloudflare-deploy.yml`
+- Trigger: `workflow_dispatch` only
+- Runner: `ubuntu-latest`
+- Node: `24`
+- Cài dependency bằng `npm ci`
+- Chạy safety checks, typecheck, lint, build
+- Chạy deploy bằng `npm run deploy`
+- Không chạy khi push hoặc pull request
+
+### Required GitHub Actions config
+
+- Variables:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `NEXT_PUBLIC_APP_URL`
+- Secrets:
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `CLOUDFLARE_API_TOKEN`
+  - `CLOUDFLARE_ACCOUNT_ID`
+
+### Script/docs mới
+
+- `scripts/check-github-actions-cloudflare-deploy.cjs`
+- `npm run check:github-actions-deploy`
+- `docs/15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md`
+
+### Local validation
+
+- `npm run check:github-actions-deploy`: PASS.
+- `npm run check:github-actions-opennext`: PASS.
+- `npm run check:opennext-cloudflare`: PASS.
+- `npm run check:service-boundary`: PASS.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm run build`: PASS.
+- `npm audit --audit-level=moderate`: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+- `git diff --check`: PASS.
+- Secret scan: PASS, no real secret value found.
+
+### Boundary giữ nguyên
+
+- Không deploy từ Windows local.
+- Không auto deploy on push.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+
+### Task tiếp theo đề xuất
+
+Push commit Phase 15E lên GitHub, sau đó chạy thủ công GitHub Actions -> Cloudflare Deploy -> Run workflow trên branch `main`. Nếu deploy PASS, ghi production URL và tiếp tục smoke test/Phase 16 - Production Stabilization.
+
 ## 2026-06-16 - Phase 15D First Cloudflare Deploy Retry blocked on Windows
 
 ### Trạng thái hiện tại

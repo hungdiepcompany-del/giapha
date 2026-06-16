@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 037 - Phase 15E deploy thật chuyển sang GitHub Actions thủ công
+
+Chọn:
+
+Tạo workflow `.github/workflows/cloudflare-deploy.yml` chạy thủ công bằng `workflow_dispatch` trên `ubuntu-latest`, dùng Node 24, GitHub Actions variables/secrets và `npm run deploy`. Workflow không chạy khi push/pull request và không hardcode token/secret trong repo.
+
+Lý do:
+
+- Windows local deploy đã bị chặn bởi OpenNext compatibility, trong khi Linux build gate đã PASS.
+- Deploy thật cần chạy trong môi trường Linux/Cloudflare-compatible nhưng vẫn phải giữ kiểm soát thủ công.
+- Không đưa Cloudflare/Supabase secret vào repo hoặc log.
+
 ## Decision 036 - Phase 15D không vá app logic cho OpenNext Windows deploy blocker
 
 Chọn:
