@@ -32,7 +32,9 @@ Thumbs.db
 next-env.d.ts
 
 # cloudflare
+.open-next
 .wrangler/
+cloudflare-env.d.ts
 .dev.vars
 wrangler.toml.bak
 

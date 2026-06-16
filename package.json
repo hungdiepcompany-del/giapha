@@ -6,6 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check:foundation": "node scripts/check-project-foundation.cjs",
@@ -20,10 +24,12 @@
     "check:import-json": "node scripts/check-import-json-foundation.cjs",
     "check:ui-polish": "node scripts/check-ui-polish-foundation.cjs",
     "check:deploy-readiness": "node scripts/check-deploy-readiness.cjs",
+    "check:opennext-cloudflare": "node scripts/check-opennext-cloudflare-wiring.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.19.11",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "@xyflow/react": "^12.11.0",
@@ -41,6 +47,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.100.0"
   }
 }

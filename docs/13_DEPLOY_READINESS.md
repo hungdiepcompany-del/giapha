@@ -19,8 +19,9 @@ This report prepares the project for first deploy only. Phase 14 did not deploy,
 
 - Cloudflare
 - First deploy has not been executed in Phase 14
-- Existing `wrangler.toml` is a placeholder with project name and compatibility date only
-- Final Cloudflare Pages versus Workers wiring must be confirmed during first deploy
+- Phase 15A selected Cloudflare Workers via OpenNext for the Next.js SSR/server-route app
+- `wrangler.toml` points to `.open-next/worker.js` and `.open-next/assets`
+- `open-next.config.ts` uses the minimal Cloudflare config
 
 ## Required production environment variables
 
@@ -80,6 +81,7 @@ The app callback `/auth/callback` belongs in Supabase Redirect URLs, while Googl
 - [ ] `npm.cmd run lint` PASS
 - [ ] `npm.cmd run build` PASS
 - [ ] `npm.cmd run check:deploy-readiness` PASS
+- [ ] `npm.cmd run check:opennext-cloudflare` PASS
 - [ ] Supabase production env configured
 - [ ] Supabase redirect URL configured for production domain
 - [ ] Google OAuth has production domain in authorized origins
@@ -91,13 +93,13 @@ The app callback `/auth/callback` belongs in Supabase Redirect URLs, while Googl
 
 Checklist only; do not execute in Phase 14.
 
-1. Confirm deploy target: Cloudflare Pages or Workers.
+1. Confirm deploy target: Cloudflare Workers via OpenNext.
 2. Configure production environment variables in Cloudflare.
 3. Configure Supabase Site URL and Redirect URLs for the production domain.
 4. Configure Google OAuth authorized origin and confirm Supabase callback URI.
 5. Run all local checks again.
 6. Create/download backup files before first production deploy.
-7. Deploy through the chosen Cloudflare workflow.
+7. Deploy through `npm.cmd run deploy`.
 8. Smoke test `/`, `/auth/login`, `/auth/callback`, `/admin`, `/tree`, export, import preview, and revision routes.
 
 ## Rollback plan
@@ -113,4 +115,4 @@ Checklist only; do not execute in Phase 14.
 - Revision restore is not implemented
 - Media backup has no real media coverage yet
 - Audit warnings may remain for Next/PostCSS with no available fix
-- Production Cloudflare target is not finalized in this phase
+- Production deploy has not been executed yet

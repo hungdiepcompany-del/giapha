@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 15A OpenNext Cloudflare Workers Wiring
+
+### Phase
+
+Phase 15A - OpenNext Cloudflare Workers Wiring
+
+### Việc đã làm
+
+- Cài `@opennextjs/cloudflare` và `wrangler`.
+- Cập nhật `package.json` scripts `preview`, `deploy`, `upload`, `cf-typegen` và `check:opennext-cloudflare`.
+- Cập nhật `wrangler.toml` cho Cloudflare Workers qua OpenNext.
+- Tạo `open-next.config.ts`.
+- Cập nhật `.gitignore` cho `.open-next`, `cloudflare-env.d.ts` và `.dev.vars`.
+- Tạo `scripts/check-opennext-cloudflare-wiring.cjs`.
+- Tạo `docs/14_OPENNEXT_CLOUDFLARE_WIRING.md`.
+- Cập nhật deploy readiness, docs index, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- package.json
+- package-lock.json
+- wrangler.toml
+- open-next.config.ts
+- .gitignore
+- eslint.config.mjs
+- scripts/check-opennext-cloudflare-wiring.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/13_DEPLOY_READINESS.md
+- docs/14_OPENNEXT_CLOUDFLARE_WIRING.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Ghi chú
+
+- Không deploy thật.
+- Không push remote.
+- Không chạy `npm run deploy`, `npm run upload` hoặc `npx wrangler deploy`.
+- Không đọc/in `.env.local`.
+- Không hardcode secret hoặc Supabase key vào `wrangler.toml`.
+- Không sửa schema/auth/business logic/import confirm/revision restore.
+
 ## 2026-06-16 - Phase 14 Deploy Readiness
 
 ### Phase

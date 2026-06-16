@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 15A OpenNext Cloudflare Workers Wiring completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có wiring deploy rõ ràng cho Cloudflare Workers qua OpenNext. Phase này chỉ cài/cấu hình deploy adapter và docs/checker, chưa deploy thật, chưa upload, chưa push remote, không chạy migration, không sửa schema/auth/business logic và không đọc/in `.env.local`.
+
+### File/script mới hoặc cập nhật
+
+- `@opennextjs/cloudflare`
+- `wrangler`
+- `open-next.config.ts`
+- `wrangler.toml`
+- `eslint.config.mjs` ignores generated `.open-next` output
+- `scripts/check-opennext-cloudflare-wiring.cjs`
+- `docs/14_OPENNEXT_CLOUDFLARE_WIRING.md`
+- `npm run check:opennext-cloudflare`
+- `npm run preview`
+- `npm run deploy`
+- `npm run upload`
+- `npm run cf-typegen`
+
+### Deploy boundary
+
+- Target: Cloudflare Workers via OpenNext.
+- `npm run deploy`, `npm run upload` và `npx wrangler deploy` vẫn chưa được chạy.
+- Trước khi retry Phase 15, cần backup `family.json` và `full-backup.zip`.
+- Cần cấu hình Cloudflare variables/secrets: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
+- `SUPABASE_SERVICE_ROLE_KEY` phải là secret/server-side, không dùng `NEXT_PUBLIC_`.
+
+### Task tiếp theo đề xuất
+
+Chạy lại Phase 15 - First Cloudflare Deploy.
+
 ## 2026-06-16 - Phase 14 Deploy Readiness completed
 
 ### Trạng thái hiện tại

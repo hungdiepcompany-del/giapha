@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 033 - Deploy target là Cloudflare Workers via OpenNext
+
+Chọn:
+
+Phase 15A dùng Cloudflare Workers qua `@opennextjs/cloudflare` cho app Next.js SSR/server routes. `wrangler.toml` trỏ `.open-next/worker.js`, assets trỏ `.open-next/assets`, và deploy command chuẩn là `npm run deploy` sau khi production env/secrets và backup đã sẵn sàng.
+
+Lý do:
+
+- App dùng App Router, route handlers và server-side admin/auth flow nên không chọn static-only deploy.
+- OpenNext là adapter phù hợp để build Next.js SSR lên Cloudflare Workers.
+- `SUPABASE_SERVICE_ROLE_KEY` vẫn chỉ là Cloudflare secret/server-side, không hardcode vào repo.
+- Phase 15A chỉ wiring, chưa deploy thật.
+
 ## Decision 032 - Phase 14 chỉ chuẩn bị deploy, chưa deploy
 
 Chọn:
