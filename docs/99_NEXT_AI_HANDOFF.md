@@ -1,5 +1,53 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 15D First Cloudflare Deploy Retry blocked on Windows
+
+### Trạng thái hiện tại
+
+Phase 15D đã chạy gate đầy đủ và thử deploy thật bằng `npm.cmd run deploy`, nhưng deploy bị BLOCKED bởi known OpenNext/Windows local blocker trước khi upload/deploy lên Cloudflare. Không có production URL mới, không có Cloudflare deployment mới và chưa smoke test production.
+
+### Gate đã PASS
+
+- Repo sạch trước deploy.
+- Branch: `main`.
+- Local commit: `b04657535a94378df0a6811a15fff247131d5cac`.
+- `origin/main`: `b04657535a94378df0a6811a15fff247131d5cac`.
+- GitHub Actions OpenNext Cloudflare Build Gate: PASS.
+- Run URL: https://github.com/hungdiepcompany-del/giapha/actions/runs/27631937702
+- Local checks/build: PASS.
+- Audit: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+
+### User confirmations before deploy
+
+- Backup `family.json`: DONE, outside repo.
+- Backup `full-backup.zip`: DONE, outside repo.
+- `NEXT_PUBLIC_SUPABASE_URL`: configured as Text.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: configured as Text.
+- `NEXT_PUBLIC_APP_URL`: configured as Text.
+- `SUPABASE_SERVICE_ROLE_KEY`: configured as Secret.
+
+### Deploy attempt
+
+- Command: `npm.cmd run deploy`.
+- Next build: PASS.
+- OpenNext bundle on Windows: FAIL.
+- Error summary: `ENOENT` copying `.open-next/.build/open-next.config.edge.mjs` to `.open-next/middleware/open-next.config.mjs`.
+- Cloudflare upload/deploy reached: No.
+
+### Boundary giữ nguyên
+
+- Không sửa schema.
+- Không tạo/chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không in secret.
+- Không commit `.env.local` hoặc `.dev.vars`.
+
+### Task tiếp theo đề xuất
+
+Use WSL/Linux for deploy, or create a dedicated GitHub Actions deploy workflow only after explicit user confirmation. If deploy later PASS, continue Phase 16 - Production Stabilization.
+
 ## 2026-06-16 - Phase 15C Linux/GitHub Actions OpenNext Build Gate completed
 
 ### Trạng thái hiện tại

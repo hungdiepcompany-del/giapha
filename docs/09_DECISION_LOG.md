@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 036 - Phase 15D không vá app logic cho OpenNext Windows deploy blocker
+
+Chọn:
+
+Khi `npm.cmd run deploy` trên Windows fail ở bước OpenNext bundle với lỗi thiếu `.open-next/.build/open-next.config.edge.mjs`, dừng deploy và ghi report BLOCKED. Không sửa app logic để né lỗi Windows/OpenNext; deploy thật phải chuyển sang WSL/Linux hoặc GitHub Actions deploy path.
+
+Lý do:
+
+- GitHub Actions Linux build gate đã PASS, nên vấn đề là Windows-local compatibility.
+- Vá app logic cho lỗi build tool theo môi trường có thể làm lệch business logic và tăng rủi ro deploy.
+- Production deploy cần chạy trong môi trường Cloudflare-compatible đã được gate bằng Linux.
+
 ## Decision 035 - Phase 15C dùng GitHub Actions/Linux làm OpenNext build gate
 
 Chọn:

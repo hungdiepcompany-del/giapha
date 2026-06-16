@@ -13,6 +13,7 @@ Phase 15A configures the Cloudflare Workers deployment target for the existing N
 - `npx.cmd opennextjs-cloudflare build` can be blocked on pure Windows by OpenNext compatibility, including missing `.open-next/.build/open-next.config.edge.mjs`.
 - Do not change app business logic only to work around that Windows/OpenNext local issue.
 - Real OpenNext build/deploy should be retried from WSL/Linux/GitHub Actions or another Cloudflare-compatible environment.
+- Phase 15D confirmed this blocker again during `npm.cmd run deploy` on Windows: Next build passed, OpenNext bundle failed before deployment/upload.
 
 ## Linux build gate
 
@@ -20,6 +21,7 @@ Phase 15A configures the Cloudflare Workers deployment target for the existing N
 - The workflow runs on `ubuntu-latest`, installs with `npm ci`, runs local checks, runs `npm run build`, then runs `npx opennextjs-cloudflare build`.
 - This workflow is a build gate only; it does not deploy, upload or run `wrangler deploy`.
 - Placeholder GitHub Actions env can be used for build only. Production Cloudflare secrets/env are configured later for deploy.
+- Phase 15C GitHub Actions run `27631937702` passed on commit `b04657535a94378df0a6811a15fff247131d5cac`.
 
 ## Deploy target
 

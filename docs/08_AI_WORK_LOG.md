@@ -1,5 +1,90 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 15D First Cloudflare Deploy Retry
+
+### Phase
+
+Phase 15D - First Cloudflare Deploy Retry
+
+### Việc đã làm
+
+- Xác nhận repo sạch, branch `main`, commit Phase 15B và Phase 15C đã có ở local.
+- Xác nhận `origin/main` đang ở commit `b04657535a94378df0a6811a15fff247131d5cac`.
+- Xác nhận GitHub Actions OpenNext Cloudflare Build Gate PASS: run `27631937702`.
+- Chạy local gates trước deploy: checks/build PASS, audit ở trạng thái known advisories.
+- User xác nhận đã backup `family.json` và `full-backup.zip` ngoài repo.
+- User xác nhận Cloudflare production variables/secrets đã cấu hình đúng loại.
+- Chạy `npm.cmd run deploy`.
+- Deploy bị BLOCKED ở bước OpenNext bundle trên Windows trước khi upload/deploy Cloudflare.
+- Tạo report `docs/15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md`.
+
+### File đã tạo/cập nhật
+
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/14_OPENNEXT_CLOUDFLARE_WIRING.md
+- docs/15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md
+- docs/15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Kiểm tra
+
+- `git status --short` - sạch trước deploy
+- `git log --oneline -10`
+- `git branch --show-current` - `main`
+- `git remote -v`
+- `gh run view 27631937702 --json ...` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:foundation` - PASS
+- `npm.cmd run check:auth-permissions` - PASS
+- `npm.cmd run check:people` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:export-backup` - PASS
+- `npm.cmd run check:revisions` - PASS
+- `npm.cmd run check:import-json` - PASS
+- `npm.cmd run check:deploy-readiness` - PASS
+- `npm.cmd run check:opennext-cloudflare` - PASS
+- `npm.cmd run check:service-boundary` - PASS
+- `npm.cmd run check:github-actions-opennext` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `npm.cmd audit --audit-level=moderate` - PASS_WITH_KNOWN_AUDIT_ADVISORIES
+- `git diff --check` - PASS
+
+### Deploy result
+
+- `npm.cmd run deploy` - BLOCKED
+- Next build inside deploy - PASS
+- OpenNext bundle on Windows - FAIL with known `open-next.config.edge.mjs` copyfile ENOENT
+- Cloudflare upload/deploy reached - No
+- Production URL - Not created
+
+### Ghi chú
+
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không in secret.
+- Không commit `.env.local` hoặc `.dev.vars`.
+- Không push remote trong phase này.
+- Việc tiếp theo: deploy bằng WSL/Linux hoặc tạo GitHub Actions deploy workflow khi user xác nhận rõ.
+
 ## 2026-06-16 - Phase 15C Linux/GitHub Actions OpenNext Build Gate
 
 ### Phase

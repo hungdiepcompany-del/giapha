@@ -22,4 +22,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 14_OPENNEXT_CLOUDFLARE_WIRING.md | Cấu hình Cloudflare Workers qua OpenNext, scripts deploy/preview/upload và chính sách secret. | Khi chạy lại Phase 15 First Cloudflare Deploy hoặc kiểm tra wiring deploy. |
 | 15_SERVICE_BOUNDARY_WORKER_SPLIT.md | Kế hoạch boundary cho main worker và các service worker ứng viên. | Khi task liên quan OpenNext Worker size, export/import/media/PDF nặng hoặc chuẩn bị split service. |
 | 15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md | GitHub Actions/Linux build gate cho OpenNext Cloudflare build. | Khi cần xác nhận lỗi OpenNext build là Windows-local trước khi deploy thật. |
+| 15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md | Báo cáo retry deploy Cloudflare đầu tiên. | Khi cần biết kết quả deploy thật, production URL, smoke test hoặc blocker Windows/OpenNext. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
