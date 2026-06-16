@@ -26,6 +26,7 @@
     "check:deploy-readiness": "node scripts/check-deploy-readiness.cjs",
     "check:opennext-cloudflare": "node scripts/check-opennext-cloudflare-wiring.cjs",
     "check:service-boundary": "node scripts/check-service-boundary-readiness.cjs",
+    "check:github-actions-opennext": "node scripts/check-github-actions-opennext-gate.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

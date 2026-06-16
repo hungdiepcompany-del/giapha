@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 035 - Phase 15C dùng GitHub Actions/Linux làm OpenNext build gate
+
+Chọn:
+
+Tạo GitHub Actions workflow chạy trên `ubuntu-latest` để kiểm tra `npm ci`, foundation checks, Next build và `npx opennextjs-cloudflare build` trước khi retry deploy thật.
+
+Lý do:
+
+- OpenNext build trên Windows local có compatibility issue đã biết, không nên sửa app logic để né lỗi môi trường.
+- Linux gate giúp xác nhận OpenNext build có PASS trên môi trường Cloudflare-compatible trước khi deploy.
+- Workflow không deploy, không upload, không chạy migration và không yêu cầu production secret thật.
+
 ## Decision 034 - Phase 15B chỉ chuẩn bị service boundary, chưa tách Worker
 
 Chọn:

@@ -1,5 +1,57 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 15C Linux/GitHub Actions OpenNext Build Gate completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có GitHub Actions/Linux build gate cho OpenNext Cloudflare build. Phase này chỉ thêm workflow/checker/docs, chưa deploy thật, chưa upload, chưa push remote, không tạo Cloudflare deployment, không chạy migration, không sửa schema và không đổi business logic.
+
+### Workflow mới
+
+- `.github/workflows/opennext-build-gate.yml`
+- Trigger: `workflow_dispatch`, `pull_request` vào `main`, `push` vào `main`
+- Runner: `ubuntu-latest`
+- Node: `24`
+- Cài dependency bằng `npm ci`
+- Chạy check scripts, typecheck, lint, `npm run build` và `npx opennextjs-cloudflare build`
+- Không chạy `npm run deploy`, `npm run upload` hoặc `wrangler deploy`
+
+### Script/docs mới
+
+- `scripts/check-github-actions-opennext-gate.cjs`
+- `npm run check:github-actions-opennext`
+- `docs/15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md`
+
+### Env/secrets policy
+
+- Workflow là build gate, không phải deploy.
+- Workflow có placeholder env để build khi chưa cấu hình production secrets thật.
+- Không dùng workflow này để smoke test Supabase thật.
+- Production deploy phase sau mới cấu hình Cloudflare/GitHub secrets/env thật.
+
+### Audit status
+
+- `npm audit --audit-level=moderate` vẫn có advisory trong Next/OpenNext/Wrangler/PostCSS/esbuild/ws chain.
+- Không chạy `npm audit fix --force`.
+- Nếu checks/build PASS, Phase 15C được xem là READY_TO_RUN_ON_GITHUB với known audit advisories.
+
+### Local validation
+
+- Gate Phase 15B signs: PASS.
+- `npm run check:github-actions-opennext`: PASS.
+- `npm run check:opennext-cloudflare`: PASS.
+- `npm run check:service-boundary`: PASS.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- `npm audit --audit-level=moderate`: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+- Phase 15C status: READY_TO_RUN_ON_GITHUB.
+
+### Task tiếp theo đề xuất
+
+Push commit lên GitHub để chạy OpenNext Cloudflare Build Gate. Nếu GitHub Actions PASS, tiếp tục Phase 15D - First Cloudflare Deploy Retry.
+
 ## 2026-06-16 - Phase 15B Service Boundary & Worker Split Readiness completed
 
 ### Trạng thái hiện tại

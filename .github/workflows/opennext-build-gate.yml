@@ -1,0 +1,89 @@
+name: OpenNext Cloudflare Build Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: opennext-build-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  opennext-build-gate:
+    name: OpenNext build gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role-key' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check environment placeholders
+        run: npm run check:env:safe
+
+      - name: Check migrations order
+        run: npm run check:migrations
+
+      - name: Check project foundations
+        run: |
+          npm run check:foundation
+          npm run check:auth-permissions
+          npm run check:people
+          npm run check:relationships
+          npm run check:tree-viewer
+          npm run check:tree-editor
+          npm run check:public-privacy
+          npm run check:export-backup
+          npm run check:revisions
+          npm run check:import-json
+          npm run check:service-boundary
+
+      - name: Check deploy readiness
+        run: npm run check:deploy-readiness
+
+      - name: Check OpenNext Cloudflare wiring
+        run: npm run check:opennext-cloudflare
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Next build
+        run: npm run build
+
+      - name: OpenNext Cloudflare build
+        run: npx opennextjs-cloudflare build
+
+      - name: OpenNext output summary
+        if: always()
+        run: |
+          echo "OpenNext build gate completed."
+          if [ -d ".open-next" ]; then
+            du -sh .open-next || true
+            find .open-next -maxdepth 2 -type f | head -100 || true
+          fi

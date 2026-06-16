@@ -14,6 +14,13 @@ Phase 15A configures the Cloudflare Workers deployment target for the existing N
 - Do not change app business logic only to work around that Windows/OpenNext local issue.
 - Real OpenNext build/deploy should be retried from WSL/Linux/GitHub Actions or another Cloudflare-compatible environment.
 
+## Linux build gate
+
+- Phase 15C adds `.github/workflows/opennext-build-gate.yml`.
+- The workflow runs on `ubuntu-latest`, installs with `npm ci`, runs local checks, runs `npm run build`, then runs `npx opennextjs-cloudflare build`.
+- This workflow is a build gate only; it does not deploy, upload or run `wrangler deploy`.
+- Placeholder GitHub Actions env can be used for build only. Production Cloudflare secrets/env are configured later for deploy.
+
 ## Deploy target
 
 Cloudflare Workers via OpenNext.

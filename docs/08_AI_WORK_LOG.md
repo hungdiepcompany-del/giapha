@@ -1,5 +1,79 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 15C Linux/GitHub Actions OpenNext Build Gate
+
+### Phase
+
+Phase 15C - Linux/GitHub Actions OpenNext Build Gate
+
+### Việc đã làm
+
+- Xác nhận gate Phase 15B đã đủ: service boundary docs, template worker, checker và handoff PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+- Tạo workflow `.github/workflows/opennext-build-gate.yml` chạy trên `ubuntu-latest`.
+- Workflow chạy `npm ci`, check scripts, typecheck, lint, Next build và `npx opennextjs-cloudflare build`.
+- Workflow không deploy, không upload, không chạy `wrangler deploy`, không chạy migration và không smoke test Supabase thật.
+- Tạo `scripts/check-github-actions-opennext-gate.cjs`.
+- Thêm `npm run check:github-actions-opennext`.
+- Tạo docs `docs/15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md`.
+- Cập nhật docs index, OpenNext wiring, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- .github/workflows/opennext-build-gate.yml
+- package.json
+- scripts/check-github-actions-opennext-gate.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/14_OPENNEXT_CLOUDFLARE_WIRING.md
+- docs/15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Kiểm tra
+
+- `git status --short` trước sửa - sạch
+- Gate Phase 15B signs - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:foundation` - PASS
+- `npm.cmd run check:auth-permissions` - PASS
+- `npm.cmd run check:people` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:export-backup` - PASS
+- `npm.cmd run check:revisions` - PASS
+- `npm.cmd run check:import-json` - PASS
+- `npm.cmd run check:deploy-readiness` - PASS
+- `npm.cmd run check:opennext-cloudflare` - PASS
+- `npm.cmd run check:service-boundary` - PASS
+- `npm.cmd run check:github-actions-opennext` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `npm.cmd audit --audit-level=moderate` - PASS_WITH_KNOWN_AUDIT_ADVISORIES, còn advisory trong Next/OpenNext/Wrangler/PostCSS/esbuild/ws chain.
+- `git diff --check` - PASS
+
+### Ghi chú
+
+- Không deploy thật.
+- Không push remote.
+- Không tách Worker thật.
+- Không sửa schema hoặc business logic.
+- Không chạy migration.
+- Không hardcode secret hoặc thêm GitHub secret thật vào workflow.
+- Audit advisory của Next/OpenNext/Wrangler/PostCSS/esbuild/ws tiếp tục là known deploy-toolchain risk; không chạy `npm audit fix --force`.
+- Kết luận local: READY_TO_RUN_ON_GITHUB.
+
 ## 2026-06-16 - Phase 15B Service Boundary & Worker Split Readiness
 
 ### Phase
