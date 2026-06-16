@@ -1,5 +1,12 @@
 # Export & Backup model
 
+## Phase 15B worker boundary readiness
+
+- Export/backup hiện vẫn chạy trong app hiện tại, chưa tách Worker thật.
+- `export-backup-worker` là ứng viên split service tương lai cho `family.json`, GEDCOM, ZIP backup, checksum và scheduled/manual backup.
+- Main Web Worker không nên giữ lâu dài ZIP lớn, backup automation hoặc tác vụ export nặng nếu bundle size, timeout hoặc memory bắt đầu gây rủi ro.
+- Template worker mẫu nằm ở `services/_template-worker/` và chưa được liên kết vào app chính.
+
 ## Phase 10 import JSON foundation status
 
 - `/admin/exports/import` cho upload hoặc paste `family.json` để preview an toàn.

@@ -6,9 +6,23 @@ READY_FOR_FIRST_DEPLOY
 
 Phase 15A configures the Cloudflare Workers deployment target for the existing Next.js SSR app through OpenNext. This phase does not deploy, upload, push remote, run migrations, change schema, change business logic, enable import confirm, or enable revision restore.
 
+## Windows local build note
+
+- `npm run check:opennext-cloudflare` verifies wiring and is expected to pass on Windows.
+- `npm run build` verifies the Next.js app and is expected to pass on Windows.
+- `npx.cmd opennextjs-cloudflare build` can be blocked on pure Windows by OpenNext compatibility, including missing `.open-next/.build/open-next.config.edge.mjs`.
+- Do not change app business logic only to work around that Windows/OpenNext local issue.
+- Real OpenNext build/deploy should be retried from WSL/Linux/GitHub Actions or another Cloudflare-compatible environment.
+
 ## Deploy target
 
 Cloudflare Workers via OpenNext.
+
+## Audit policy note
+
+- Audit advisories are currently tracked as deploy-toolchain risk, not app business-logic change.
+- `npm audit --audit-level=moderate` can report advisories through `next`/`postcss`, `@opennextjs/cloudflare`, `wrangler`, `esbuild` and `ws`.
+- Do not run `npm audit fix --force`; track upstream package updates and avoid breaking the Next/OpenNext deploy wiring for a forced audit remediation.
 
 ## Files
 

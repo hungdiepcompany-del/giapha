@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-06-16 - Phase 15B Service Boundary & Worker Split Readiness completed
+
+### Trạng thái hiện tại
+
+Dự án WEB GIA PHẢ đã có service boundary readiness để tránh main Worker phình to về sau. Phase này chỉ tạo docs, template worker và checker; chưa tách Worker thật, chưa tạo Cloudflare service thật, chưa deploy, chưa upload, chưa push remote, không chạy migration và không đổi business logic.
+
+### Boundary đã ghi nhận
+
+- Main Web Worker giữ UI public/admin, auth callback, people CRUD nhẹ, relationship CRUD nhẹ, tree viewer/editor nhẹ và gọi service phụ khi cần.
+- `export-backup-worker` tương lai xử lý `family.json`, GEDCOM, ZIP backup, checksum và scheduled/manual backup.
+- `import-validate-worker` tương lai xử lý JSON parse, schema validation, missing reference validation, cycle check và conflict report; phase đầu không ghi DB.
+- `media-worker` tương lai xử lý upload ảnh, resize/compress, metadata và media backup.
+- `pdf-image-export-worker` tương lai xử lý xuất ảnh cây và PDF.
+
+### File/script mới
+
+- `docs/15_SERVICE_BOUNDARY_WORKER_SPLIT.md`
+- `services/_template-worker/`
+- `scripts/check-service-boundary-readiness.cjs`
+- `npm run check:service-boundary`
+
+### OpenNext/Windows note
+
+- OpenNext wiring check PASS bằng `npm run check:opennext-cloudflare`.
+- Next build PASS bằng `npm run build`.
+- `npx.cmd opennextjs-cloudflare build` trên Windows thuần có thể bị BLOCKED bởi compatibility issue của OpenNext.
+- Build/deploy thật nên chạy bằng WSL/Linux/GitHub Actions hoặc môi trường Cloudflare-compatible.
+
+### Check status
+
+- All project readiness/type/lint/build checks PASS.
+- `npm.cmd audit --audit-level=moderate` FAIL vì advisory còn trong `next`/`postcss`, `@opennextjs/cloudflare`/`wrangler`/`esbuild`/`ws`.
+- Không chạy `npm audit fix --force` vì ngoài scope, có advisory no-fix và force path có thể gây breaking downgrade.
+- Phase 15B technical status: PASS.
+- Commit status: allowed with audit exception.
+- Audit status: npm audit still reports advisories in dependency/toolchain chain.
+- Policy: no `npm audit fix --force`; track upstream package updates.
+- Reason: current advisory remediation may require force/breaking changes and could destabilize Next/OpenNext deploy wiring.
+- Kết luận validation: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+
+### Task tiếp theo đề xuất
+
+Phase 15C - GitHub Actions/WSL OpenNext Build Gate hoặc retry first Cloudflare deploy bằng môi trường Linux sau khi backup và production env/secrets đã sẵn sàng.
+
 ## 2026-06-16 - Phase 15A OpenNext Cloudflare Workers Wiring completed
 
 ### Trạng thái hiện tại

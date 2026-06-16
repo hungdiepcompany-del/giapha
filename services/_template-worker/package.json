@@ -1,0 +1,15 @@
+{
+  "name": "@web-gia-pha/template-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface Env worker-env.d.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "wrangler": "^4.100.0"
+  }
+}

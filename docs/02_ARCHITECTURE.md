@@ -1,5 +1,13 @@
 # Kiến trúc hệ thống
 
+## Phase 15B service boundary readiness
+
+- Main Web Worker giữ UI public/admin, auth callback, people CRUD nhẹ, relationship CRUD nhẹ và tree viewer/editor nhẹ.
+- Export/import/media/PDF/image/backup nặng là ứng viên tách service worker sau này, không nhét lâu dài vào main app.
+- Phase 15B chưa tách Worker thật, chưa tạo Cloudflare service thật và chưa deploy.
+- Boundary chi tiết nằm ở `docs/15_SERVICE_BOUNDARY_WORKER_SPLIT.md`.
+- UI nên đi qua adapter/client layer khi gọi tác vụ nặng để sau này đổi từ local function sang HTTP/service binding.
+
 ## Phase 11 Supabase integration gate
 
 - `scripts/check-env-safe.cjs`: kiểm `.env.example` và `.env.local` theo trạng thái present/missing, không in giá trị secret.

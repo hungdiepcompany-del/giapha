@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 034 - Phase 15B chỉ chuẩn bị service boundary, chưa tách Worker
+
+Chọn:
+
+Giữ main Web Worker cho UI public/admin, auth callback, CRUD nhẹ và tree nhẹ. Ghi nhận export/import/media/PDF/image/backup nặng là ứng viên split service sau này, tạo template worker và checker readiness nhưng chưa tạo service Cloudflare thật.
+
+Lý do:
+
+- App còn nhỏ và cần đo bundle/deploy thật trước khi tách service.
+- Tránh main Worker phình to khi export/import/media/PDF tăng độ nặng.
+- Giữ business logic hiện tại ổn định, không đổi behavior chỉ vì lỗi OpenNext local trên Windows.
+
 ## Decision 033 - Deploy target là Cloudflare Workers via OpenNext
 
 Chọn:

@@ -1,5 +1,83 @@
 # AI Work Log
 
+## 2026-06-16 - Phase 15B Service Boundary & Worker Split Readiness
+
+### Phase
+
+Phase 15B - Service Boundary & Worker Split Readiness
+
+### Việc đã làm
+
+- Tạo tài liệu `docs/15_SERVICE_BOUNDARY_WORKER_SPLIT.md` ghi boundary giữa Main Web Worker và các service worker ứng viên.
+- Tạo template worker độc lập tại `services/_template-worker/` với `GET /health` và `POST /internal/example`.
+- Internal route trong template yêu cầu `Authorization: Bearer <SERVICE_INTERNAL_TOKEN>` qua binding placeholder, không có secret thật trong repo.
+- Tạo `scripts/check-service-boundary-readiness.cjs`.
+- Thêm `npm run check:service-boundary`.
+- Cập nhật docs index, architecture, export/backup model, OpenNext note, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-service-boundary-readiness.cjs
+- docs/00_INDEX.md
+- docs/02_ARCHITECTURE.md
+- docs/06_EXPORT_BACKUP_MODEL.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/14_OPENNEXT_CLOUDFLARE_WIRING.md
+- docs/15_SERVICE_BOUNDARY_WORKER_SPLIT.md
+- docs/99_NEXT_AI_HANDOFF.md
+- services/_template-worker/README.md
+- services/_template-worker/package.json
+- services/_template-worker/wrangler.toml
+- services/_template-worker/src/index.ts
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package vào app chính.
+
+### Kiểm tra
+
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:foundation` - PASS
+- `npm.cmd run check:auth-permissions` - PASS
+- `npm.cmd run check:people` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:export-backup` - PASS
+- `npm.cmd run check:revisions` - PASS
+- `npm.cmd run check:import-json` - PASS
+- `npm.cmd run check:deploy-readiness` - PASS
+- `npm.cmd run check:opennext-cloudflare` - PASS
+- `npm.cmd run check:service-boundary` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `npm.cmd audit --audit-level=moderate` - FAIL, còn advisory trong `next`/`postcss`, `@opennextjs/cloudflare`/`wrangler`/`esbuild`/`ws`; không chạy `npm audit fix --force` vì ngoài scope và có breaking/no-fix advisory.
+- `git diff --check` - PASS
+
+### Ghi chú
+
+- Không tách Worker thật.
+- Không tạo Cloudflare service thật.
+- Không deploy, không upload, không push remote.
+- Không chạy migration.
+- Không sửa schema, dữ liệu thật hoặc business logic export/import hiện có.
+- Không đọc/in secret và không hardcode secret.
+- Phase 15B technical status: PASS.
+- Commit status: allowed with audit exception.
+- Audit status: `npm audit --audit-level=moderate` vẫn report advisory trong dependency/toolchain chain: `next`/`postcss`, `@opennextjs/cloudflare`, `wrangler`, `esbuild` và `ws`.
+- Policy: không chạy `npm audit fix --force`; theo dõi upstream package updates.
+- Reason: remediation hiện tại có thể cần force/breaking changes và có thể làm mất ổn định Next/OpenNext deploy wiring.
+- Kết luận validation: PASS_WITH_KNOWN_AUDIT_ADVISORIES.
+
 ## 2026-06-16 - Phase 15A OpenNext Cloudflare Workers Wiring
 
 ### Phase
