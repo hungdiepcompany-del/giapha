@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 038 - Production deploy đầu tiên PASS qua GitHub Actions Cloudflare Deploy
+
+Chọn:
+
+Ghi nhận deploy production đầu tiên chạy bằng GitHub Actions Cloudflare Deploy thay vì Windows local. Worker `web-gia-pha` chạy tại `https://web-gia-pha.hungdiepcompany.workers.dev/`.
+
+Lý do:
+
+- Windows local deploy bị blocker OpenNext compatibility.
+- GitHub Actions/Linux deploy path đã PASS và phù hợp môi trường Cloudflare-compatible.
+- Supabase URL/Redirect URLs và Google OAuth đã được cấu hình theo production URL, Google OAuth login PASS.
+
 ## Decision 037 - Phase 15E deploy thật chuyển sang GitHub Actions thủ công
 
 Chọn:

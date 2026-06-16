@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-06-17 - Production deploy PASS
+
+### Trạng thái hiện tại
+
+Production deploy cho WEB GIA PHẢ đã PASS qua GitHub Actions Cloudflare Deploy theo xác nhận của user. Worker production đang chạy tại URL Cloudflare Workers thật.
+
+### Production
+
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Deploy path: GitHub Actions Cloudflare Deploy
+- Deploy status: PASS
+- `NEXT_PUBLIC_APP_URL`: đã cập nhật theo URL thật
+
+### Auth/OAuth
+
+- Supabase Site URL: đã cấu hình theo production URL.
+- Supabase Redirect URLs: đã cấu hình theo production URL và `/auth/callback`.
+- Google OAuth: đã sửa lỗi `deleted_client`.
+- Login Google OAuth production: PASS theo test thủ công.
+
+### Smoke test
+
+- Các route smoke cơ bản: PASS theo test thủ công.
+- Import confirm: vẫn disabled.
+- Revision restore: vẫn disabled.
+
+### Boundary giữ nguyên
+
+- Không sửa schema.
+- Không tạo/chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+
+### Task tiếp theo đề xuất
+
+Phase 16 - Production Stabilization: theo dõi logs/observability, smoke test chi tiết production, xác nhận export backup production, và ghi checklist vận hành.
+
 ## 2026-06-17 - Phase 15E GitHub Actions Cloudflare Deploy Workflow ready
 
 ### Trạng thái hiện tại

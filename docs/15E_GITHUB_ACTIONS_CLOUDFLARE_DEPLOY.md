@@ -2,7 +2,7 @@
 
 ## Status
 
-READY_TO_RUN_MANUALLY
+PASS
 
 ## Purpose
 
@@ -98,6 +98,28 @@ After this commit is pushed:
 ## Expected Result
 
 If the workflow passes, the app is deployed to Cloudflare Workers via OpenNext from Linux.
+
+## Production Deploy Result
+
+- GitHub Actions Cloudflare Deploy: PASS
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- `NEXT_PUBLIC_APP_URL`: updated to the production URL
+- Supabase Site URL: configured for the production URL
+- Supabase Redirect URLs: configured for the production `/auth/callback`
+- Google OAuth: fixed `deleted_client` issue and login PASS
+- Basic production route smoke test: PASS by manual user test
+
+## Production Smoke Summary
+
+- Homepage: PASS
+- Public tree: PASS
+- Login page: PASS
+- Google OAuth: PASS after OAuth client fix
+- Admin/basic protected routes: PASS by manual user test
+- Export/import/revision surfaces: basic smoke PASS by manual user test
+- Import confirm: still disabled
+- Revision restore: still disabled
 
 ## Local Validation
 

@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-17 - Production deploy success recorded
+
+### Phase
+
+Post Phase 15E - Production deploy result
+
+### Việc đã làm
+
+- Ghi nhận GitHub Actions Cloudflare Deploy đã PASS theo xác nhận của user.
+- Ghi nhận Worker production: `web-gia-pha`.
+- Ghi nhận Production URL: `https://web-gia-pha.hungdiepcompany.workers.dev/`.
+- Ghi nhận `NEXT_PUBLIC_APP_URL` đã cập nhật theo URL thật.
+- Ghi nhận Supabase Site URL và Redirect URLs đã cấu hình theo URL thật.
+- Ghi nhận Google OAuth đã sửa lỗi `deleted_client` và login PASS.
+- Ghi nhận các route smoke cơ bản đã PASS theo test thủ công.
+- Cập nhật docs deploy/handoff/work log.
+
+### File đã tạo/cập nhật
+
+- docs/08_AI_WORK_LOG.md
+- docs/15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Ghi chú
+
+- Không deploy lại.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không commit `.env.local` hoặc `.dev.vars`.
+- Không hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 15E GitHub Actions Cloudflare Deploy Workflow
 
 ### Phase
