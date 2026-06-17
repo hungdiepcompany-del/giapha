@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 065 - Worker split readiness is a handoff baseline, not deploy approval
+
+Chon:
+
+Phase 42 tong hop worker split va backup readiness Phase 37-42 thanh handoff baseline, khong xem day la approval de deploy backup service worker hoac chay production backup.
+
+Ly do:
+
+- Backup service worker da co scaffold va local/static contract checks nhung chua co deploy readiness gate.
+- Main app integration van chua duoc implement va chua co service binding/token/env that.
+- Production backup can approval rieng ve owner, storage target, privacy, retention, restore drill va rollback.
+
+He qua:
+
+- Phase tiep theo nen la deploy readiness gate hoac service binding design rieng.
+- Handoff nay chi khoa tai lieu/checks va boundary, khong mo duong runtime production.
+
 ## Decision 064 - Main app integration needs a separate approval phase
 
 Chon:

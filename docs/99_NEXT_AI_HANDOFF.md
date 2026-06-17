@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 42 Worker Split Backup Readiness Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 42 da tong hop worker split va backup readiness Phase 37-42 thanh handoff baseline. Backup service worker van chua deploy, chua co production route, chua co real storage, chua co main app integration va chua duoc approval de chay production backup.
+
+### File/script moi
+
+- `docs/42_WORKER_SPLIT_BACKUP_READINESS_HANDOFF.md`
+- `scripts/check-worker-split-backup-readiness-handoff.cjs`
+- `npm run check:worker-split-backup-readiness-handoff`
+
+### Worker split baseline
+
+- Service path: `services/backup-service`
+- Worker endpoints: `GET /health`, `POST /internal/backup/dry-run`, `POST /internal/backup/fixture-verify`
+- Auth boundary: `Authorization: Bearer BACKUP_SERVICE_INTERNAL_TOKEN` placeholder only
+- Contract checks: available
+- Main app integration: not implemented
+- Deploy: not run
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tich hop main app that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 43 - Backup Service Worker Deploy Readiness Gate.
+
 ## 2026-06-17 - Phase 41 Backup Service Worker Integration Readiness completed
 
 ### Trang thai hien tai
