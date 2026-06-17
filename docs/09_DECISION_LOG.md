@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 076 - Main app backup service client starts as dry-run-only server adapter
+
+Chon:
+
+Phase 53 tao `server/services/backup-service-client.ts` lam server-side dry-run adapter thay vi goi backup service worker that.
+
+Ly do:
+
+- Main app chua co binding, URL hay secret that.
+- Dry-run adapter cho phep khoa response envelope va action contract truoc khi co network path.
+- Tao `server/services` giup phan biet future server-only caller voi UI/client code.
+
+He qua:
+
+- Adapter tra envelope local cho `health`, `dryRun`, `fixtureVerify`.
+- Network path bi chan bang `backup_service_network_disabled` cho den phase approval/integration rieng.
+
 ## Decision 075 - Pre-deploy handoff keeps real deploy blocked until explicit approval
 
 Chon:
