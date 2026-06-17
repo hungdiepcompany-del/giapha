@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 46 Backup Service Worker Main App Binding Contract completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 46 da tao main app binding contract cho backup service worker. Main app runtime chua duoc sua, chua them Cloudflare service binding, chua them internal URL/token that, chua goi service va chua deploy.
+
+### File/script moi
+
+- `docs/46_BACKUP_SERVICE_WORKER_MAIN_APP_BINDING_CONTRACT.md`
+- `scripts/check-backup-service-worker-main-app-binding-contract.cjs`
+- `npm run check:backup-service-worker-main-app-binding-contract`
+
+### Binding contract baseline
+
+- Option A: Cloudflare service binding
+- Option B: internal URL + Bearer token
+- Auth header: `Authorization: Bearer BACKUP_SERVICE_INTERNAL_TOKEN`
+- Request/response envelope: documented
+- Permission boundary: documented as future approval item
+- Runtime integration: not implemented
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong sua main app runtime.
+- Khong them binding/secret that.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB khi thieu explicit smoke URL.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 47 - Backup Service Worker Deploy Readiness Handoff.
+
 ## 2026-06-17 - Phase 45 Backup Service Worker Post-Deploy Smoke Plan completed
 
 ### Trang thai hien tai

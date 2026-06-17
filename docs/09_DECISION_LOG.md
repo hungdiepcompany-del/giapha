@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 069 - Main app binding remains contract-only
+
+Chon:
+
+Phase 46 chi thiet ke contract de main app goi backup service worker sau nay, khong sua main app runtime va khong them binding/secret that.
+
+Ly do:
+
+- Main app -> backup service worker la duong runtime co the dan toi production backup, can approval va permission boundary rieng.
+- Can quyet dinh giua Cloudflare service binding va internal URL + Bearer token truoc khi code.
+- Permission model hien co khong duoc bypass boi backup service integration.
+
+He qua:
+
+- Contract da ghi request/response envelope, error mapping, timeout/retry/logging va permission boundary.
+- Future implementation phai la phase rieng, server-only va dry-run first.
+
 ## Decision 068 - Post-deploy smoke must safe-skip without explicit env
 
 Chon:

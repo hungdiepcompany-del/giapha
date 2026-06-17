@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 46 Backup Service Worker Main App Binding Contract
+
+### Phase
+
+Phase 46 - Backup Service Worker Main App Binding Contract
+
+### Viec da lam
+
+- Tao `docs/46_BACKUP_SERVICE_WORKER_MAIN_APP_BINDING_CONTRACT.md`.
+- Tao `scripts/check-backup-service-worker-main-app-binding-contract.cjs`.
+- Them `npm run check:backup-service-worker-main-app-binding-contract`.
+- Ghi hai huong tich hop tuong lai: Cloudflare service binding hoac internal URL + Bearer token.
+- Ghi auth header contract, request/response envelope, error mapping, timeout/retry/logging policy va permission boundary.
+- Ghi future implementation checklist nhung khong sua main app runtime.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-main-app-binding-contract.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/46_BACKUP_SERVICE_WORKER_MAIN_APP_BINDING_CONTRACT.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong sua main app runtime.
+- Khong them binding that.
+- Khong them internal URL/token that.
+- Khong deploy worker.
+- Khong goi service that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-17 - Phase 45 Backup Service Worker Post-Deploy Smoke Plan
 
 ### Phase
