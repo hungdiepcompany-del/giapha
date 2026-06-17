@@ -59,4 +59,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 48_BACKUP_SERVICE_WORKER_GITHUB_ACTIONS_DEPLOY_WORKFLOW_READINESS.md | Readiness workflow GitHub Actions manual-only cho backup service worker deploy, chua chay deploy. | Khi can chuan bi workflow deploy rieng cho backup service worker ma khong auto trigger. |
 | 49_BACKUP_SERVICE_WORKER_MANUAL_DEPLOY_RUNBOOK.md | Runbook deploy thu cong backup service worker voi secret, validation, smoke va rollback placeholders. | Khi owner sap cho phep deploy that va can quy trinh thao tac an toan. |
 | 50_BACKUP_SERVICE_WORKER_SECRETS_PREFLIGHT_CHECKLIST.md | Checklist preflight secret readiness truoc deploy backup service worker, khong doc/tao secret that. | Khi can xac nhan owner, token, smoke env va no-go conditions truoc deploy. |
+| 51_BACKUP_SERVICE_WORKER_DEPLOY_APPROVAL_GATE.md | Gate owner approval bat buoc truoc deploy backup service worker that. | Khi can xac nhan deploy target, secret readiness, smoke, rollback va no-go conditions. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

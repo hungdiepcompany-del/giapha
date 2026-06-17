@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 074 - Owner approval gate is required before real backup service deploy
+
+Chon:
+
+Phase 51 tao deploy approval gate voi `OWNER_APPROVAL_REQUIRED_BEFORE_REAL_DEPLOY=true`, nhung khong ghi rang deploy da duoc approve.
+
+Ly do:
+
+- Backup service worker deploy co the mo runtime surface moi va can owner chot target, secret, smoke, rollback va deployment window.
+- Approval gate can tach khoi secrets preflight va manual runbook de tranh nham lan giua "san sang" va "duoc phep".
+- Production backup van khong duoc chay chi vi worker duoc deploy.
+
+He qua:
+
+- Phase 52 co the handoff trang thai pre-deploy voi blocker ro rang.
+- Phase deploy that sau nay phai co approval ngoai repo truoc khi chay.
+
 ## Decision 073 - Secret preflight is checklist-only
 
 Chon:

@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 51 Backup Service Worker Deploy Approval Gate
+
+### Phase
+
+Phase 51 - Backup Service Worker Deploy Approval Gate
+
+### Viec da lam
+
+- Tao `docs/51_BACKUP_SERVICE_WORKER_DEPLOY_APPROVAL_GATE.md`.
+- Tao `scripts/check-backup-service-worker-deploy-approval-gate.cjs`.
+- Them `npm run check:backup-service-worker-deploy-approval-gate`.
+- Ghi `OWNER_APPROVAL_REQUIRED_BEFORE_REAL_DEPLOY=true`.
+- Ghi approval checklist, required validation, required secrets, rollback owner, smoke owner, deployment window va no-go conditions.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-deploy-approval-gate.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/51_BACKUP_SERVICE_WORKER_DEPLOY_APPROVAL_GATE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy worker.
+- Khong doc/tao secret that.
+- Khong goi API.
+- Approval statement la yeu cau bat buoc, khong phai owner da approve.
+- Khong tao/upload backup production that.
+
 ## 2026-06-17 - Phase 50 Backup Service Worker Secrets Preflight Checklist
 
 ### Phase
