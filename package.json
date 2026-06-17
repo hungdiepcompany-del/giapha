@@ -81,6 +81,8 @@
     "check:main-app-backup-service-client-dry-run-adapter": "node scripts/check-main-app-backup-service-client-dry-run-adapter.cjs",
     "check:backup-service-binding-guardrails": "node scripts/check-backup-service-binding-guardrails.cjs",
     "check:backup-operator-api-dry-run-contract": "node scripts/check-backup-operator-api-dry-run-contract.cjs",
+    "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
+    "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },
