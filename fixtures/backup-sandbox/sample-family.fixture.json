@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "project": "gia-pha",
+    "environment": "fixture",
+    "fixture_marker": "SAMPLE_FIXTURE_ONLY",
+    "schema_version": "fixture-1.0.0",
+    "created_at": "2026-06-17T08:30:00+07:00",
+    "contains_real_data": false,
+    "contains_secret": false,
+    "notes": "Static sample fixture for backup automation readiness checks."
+  },
+  "people": [
+    {
+      "id": "sample-root",
+      "display_name": "Sample Root",
+      "gender": "unknown",
+      "visibility": "private",
+      "is_living": false
+    },
+    {
+      "id": "sample-parent",
+      "display_name": "Sample Parent",
+      "gender": "unknown",
+      "visibility": "family",
+      "is_living": true
+    },
+    {
+      "id": "sample-child",
+      "display_name": "Sample Child",
+      "gender": "unknown",
+      "visibility": "family",
+      "is_living": true
+    },
+    {
+      "id": "sample-relative",
+      "display_name": "Sample Relative",
+      "gender": "unknown",
+      "visibility": "public",
+      "is_living": true
+    }
+  ],
+  "families": [
+    {
+      "id": "sample-family-1",
+      "family_label": "Sample Fixture Family",
+      "visibility": "family"
+    }
+  ],
+  "family_parents": [
+    {
+      "family_id": "sample-family-1",
+      "person_id": "sample-parent",
+      "parent_role": "parent"
+    }
+  ],
+  "family_children": [
+    {
+      "family_id": "sample-family-1",
+      "person_id": "sample-child",
+      "child_relationship_type": "biological"
+    },
+    {
+      "family_id": "sample-family-1",
+      "person_id": "sample-relative",
+      "child_relationship_type": "adopted"
+    }
+  ],
+  "privacy_flags": {
+    "has_private_records": true,
+    "has_family_records": true,
+    "has_public_records": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "project": "gia-pha",
+  "environment": "fixture",
+  "backup_type": "sample_fixture",
+  "fixture_marker": "SAMPLE_FIXTURE_ONLY",
+  "created_at": "2026-06-17T08:30:00+07:00",
+  "schema_version": "fixture-1.0.0",
+  "contains_real_data": false,
+  "contains_secret": false,
+  "fixture_file": "sample-family.fixture.json",
+  "people_count": 4,
+  "relationship_count": 3,
+  "checksum_algorithm": "sha256",
+  "fixture_checksum_sha256": "cd811bce7d5732f478e01ce40650fd01cbd4c78f220b74d3b611a5dba9de6786"
+}

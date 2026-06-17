@@ -45,6 +45,8 @@
     "check:backup-pipeline-readiness-gate": "node scripts/check-backup-pipeline-readiness-gate.cjs",
     "backup:pipeline:readiness": "node scripts/backup-pipeline-readiness.cjs",
     "check:backup-ci-gate-integration": "node scripts/check-backup-ci-gate-integration.cjs",
+    "check:local-sandbox-backup-storage-simulation": "node scripts/check-local-sandbox-backup-storage-simulation.cjs",
+    "backup:storage:sandbox": "node scripts/backup-storage-sandbox-simulate.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

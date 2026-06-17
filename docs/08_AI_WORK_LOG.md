@@ -1,5 +1,54 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 28 Local Sandbox Backup Storage Simulation
+
+### Phase
+
+Phase 28 - Local Sandbox Backup Storage Simulation
+
+### Viec da lam
+
+- Tao `docs/28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md`.
+- Tao `scripts/backup-storage-sandbox-simulate.cjs`.
+- Tao `scripts/check-local-sandbox-backup-storage-simulation.cjs`.
+- Them `npm run backup:storage:sandbox`.
+- Them `npm run check:local-sandbox-backup-storage-simulation`.
+- Sandbox script copy fixture va manifest mau vao `fixtures/backup-sandbox/` va tao `storage-index.fixture.json`.
+- Sandbox chi local fixture data, khong cloud storage, khong network/API/DB, khong upload/restore that.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/backup-storage-sandbox-simulate.cjs
+- scripts/check-local-sandbox-backup-storage-simulation.cjs
+- fixtures/backup-sandbox/
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung cloud storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 27 Backup CI Gate Integration
 
 ### Phase

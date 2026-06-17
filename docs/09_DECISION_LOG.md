@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 051 - Backup storage simulation stays local sandbox only
+
+Chon:
+
+Phase 28 tao command `backup:storage:sandbox` copy fixture va manifest sample vao `fixtures/backup-sandbox/`, kem local index `storage-index.fixture.json`.
+
+Ly do:
+
+- Can mo phong artifact staging truoc khi chon storage target that.
+- Storage cloud that can credential, access policy va retention approval rieng.
+- Fixture sandbox giup kiem file/index contract ma khong cham production data.
+
+He qua:
+
+- `fixtures/backup-sandbox/` chi chua du lieu mau va co the commit an toan.
+- R2/Google Drive/Supabase Storage hoac storage target that van la phase rieng sau approval.
+
 ## Decision 050 - Backup readiness CI stays local-only
 
 Chon:

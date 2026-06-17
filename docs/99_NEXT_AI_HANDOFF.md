@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 28 Local Sandbox Backup Storage Simulation completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 28 them local sandbox storage simulation. Script chi copy fixture/manifest sample vao `fixtures/backup-sandbox/` va tao local index; khong dung cloud storage, khong upload backup that, khong goi network/API/DB va khong restore.
+
+### File/script moi
+
+- `docs/28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md`
+- `scripts/backup-storage-sandbox-simulate.cjs`
+- `scripts/check-local-sandbox-backup-storage-simulation.cjs`
+- `fixtures/backup-sandbox/`
+- `npm run backup:storage:sandbox`
+- `npm run check:local-sandbox-backup-storage-simulation`
+
+### Sandbox baseline
+
+- Marker: `LOCAL_SANDBOX_ONLY`
+- Fixture copy: `fixtures/backup-sandbox/sample-family.fixture.json`
+- Manifest copy: `fixtures/backup-sandbox/sample-family.manifest.fixture.json`
+- Index: `fixtures/backup-sandbox/storage-index.fixture.json`
+- Contains real data: false
+- Contains secret: false
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung cloud storage that.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 29 - Backup Artifact Retention Policy Gate.
+
 ## 2026-06-17 - Phase 27 Backup CI Gate Integration completed
 
 ### Trang thai hien tai

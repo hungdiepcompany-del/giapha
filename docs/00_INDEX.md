@@ -36,4 +36,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 25_RESTORE_DRY_RUN_VALIDATOR.md | Restore dry-run validator chi kiem graph/privacy/readiness tren fixture mau, khong restore that. | Khi can kiem tra payload co san sang cho restore validator truoc pipeline gate. |
 | 26_BACKUP_PIPELINE_READINESS_GATE.md | Gate tong hop chay cac command backup dry-run, fixture generate/verify va restore dry-run an toan. | Khi can mot lenh local de xac nhan backup automation readiness bundle. |
 | 27_BACKUP_CI_GATE_INTEGRATION.md | GitHub Actions backup readiness gate cho PR/manual, chi chay local dry-run va fixture checks. | Khi can kiem tra backup readiness tren CI ma khong dung secret, schedule hay deploy. |
+| 28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md | Mo phong storage local bang fixture sandbox va index mau, khong dung cloud/storage that. | Khi can staging backup fixture vao sandbox truoc khi chon storage target. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
