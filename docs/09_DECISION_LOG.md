@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 067 - Backup service secrets stay placeholder-only until approved runtime setup
+
+Chon:
+
+Phase 44 chi ghi env/secret contract cho backup service worker bang placeholder, khong tao secret that, khong doc secret file va khong goi Wrangler/API.
+
+Ly do:
+
+- `BACKUP_SERVICE_INTERNAL_TOKEN` se la runtime secret nhay cam khi worker duoc deploy va co caller that.
+- Secret provisioning/rotation can approval va thao tac van hanh rieng ngoai repo.
+- Docs/checker can khoa chinh sach no-secret-in-docs truoc khi them post-deploy smoke.
+
+He qua:
+
+- Repo chi luu ten placeholder, khong luu gia tri.
+- Phase 45 co the them smoke plan voi safe-skip neu khong co env explicit.
+
 ## Decision 066 - Backup service deploy readiness remains no-deploy
 
 Chon:

@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 44 Backup Service Worker Env Secret Contract completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 44 da tao env/secret contract runbook cho backup service worker. Repo chi co placeholder names, khong co secret that, khong doc `.env.local`/`.dev.vars`, khong goi Wrangler/API va khong deploy.
+
+### File/script moi
+
+- `docs/44_BACKUP_SERVICE_WORKER_ENV_SECRET_CONTRACT.md`
+- `scripts/check-backup-service-worker-env-secret-contract.cjs`
+- `npm run check:backup-service-worker-env-secret-contract`
+
+### Env/secret baseline
+
+- Required future secret placeholder: `BACKUP_SERVICE_INTERNAL_TOKEN`
+- Optional placeholders: `BACKUP_STORAGE_PROVIDER`, `BACKUP_STORAGE_DRY_RUN`, `BACKUP_STORAGE_PREFIX`, `BACKUP_RETENTION_POLICY`
+- Provisioning/rotation: documented only
+- Real secret value: not present
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 45 - Backup Service Worker Post-Deploy Smoke Plan.
+
 ## 2026-06-17 - Phase 43 Backup Service Worker Deploy Readiness Gate completed
 
 ### Trang thai hien tai

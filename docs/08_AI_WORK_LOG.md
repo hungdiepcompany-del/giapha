@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 44 Backup Service Worker Env Secret Contract
+
+### Phase
+
+Phase 44 - Backup Service Worker Env & Secret Contract Runbook
+
+### Viec da lam
+
+- Tao `docs/44_BACKUP_SERVICE_WORKER_ENV_SECRET_CONTRACT.md`.
+- Tao `scripts/check-backup-service-worker-env-secret-contract.cjs`.
+- Them `npm run check:backup-service-worker-env-secret-contract`.
+- Ghi required secret placeholder `BACKUP_SERVICE_INTERNAL_TOKEN`.
+- Ghi optional placeholders `BACKUP_STORAGE_PROVIDER`, `BACKUP_STORAGE_DRY_RUN`, `BACKUP_STORAGE_PREFIX`, `BACKUP_RETENTION_POLICY`.
+- Ghi provisioning checklist, rotation checklist, local/CI boundary, logging safety va no-secret-in-docs policy.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-env-secret-contract.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/44_BACKUP_SERVICE_WORKER_ENV_SECRET_CONTRACT.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong tao secret that.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Wrangler/API.
+- Khong deploy worker.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 43 Backup Service Worker Deploy Readiness Gate
 
 ### Phase
