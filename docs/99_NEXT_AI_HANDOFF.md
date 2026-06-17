@@ -1,5 +1,50 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 20 Custom Domain Cutover Readiness completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 20 bo sung runbook san sang doi custom domain. Phase nay khong deploy lai, khong chot/doi domain that, khong doi DNS, khong cau hinh Cloudflare custom domain/route, khong doi Supabase/Auth/OAuth config that, khong goi API mutate config, khong sua schema va khong mutate du lieu.
+
+### File/script moi
+
+- `docs/20_CUSTOM_DOMAIN_CUTOVER_READINESS.md`
+- `scripts/check-custom-domain-cutover-readiness.cjs`
+- `npm run check:custom-domain-cutover-readiness`
+
+### Domain readiness baseline
+
+- Worker: `web-gia-pha`
+- Current production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Candidate custom domain: `<TO_BE_CONFIRMED>`
+- Deploy workflow: `.github/workflows/cloudflare-deploy.yml`
+- Cloudflare config: `wrangler.toml`
+- App canonical env: `NEXT_PUBLIC_APP_URL`
+- Smoke env: `PROD_SMOKE_BASE_URL`
+- Google OAuth login: PASS by manual user test on current production URL.
+- Custom domain smoke: not run because no real domain was configured in this phase.
+
+### Boundary giu nguyen
+
+- Khong deploy lai.
+- Khong push.
+- Khong doi domain/DNS that.
+- Khong doi Cloudflare custom domain/route that.
+- Khong doi Supabase/Auth/OAuth config that.
+- Khong goi Cloudflare/Supabase/Google/DNS API mutate config.
+- Khong tao backup that.
+- Khong restore production.
+- Khong sua schema.
+- Khong tao/chay migration.
+- Khong sua du lieu that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local` hoac `.dev.vars`.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 21 co the la Custom Domain Cutover Execution neu user da chot domain va co quyen Cloudflare/Supabase/Google, hoac Automated Backup Job Design neu domain cutover can cho.
+
 ## 2026-06-17 - Phase 19 Scheduled Backup & Restore Drill completed
 
 ### Trang thai hien tai

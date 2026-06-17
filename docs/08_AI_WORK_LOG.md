@@ -1,5 +1,58 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 20 Custom Domain Cutover Readiness
+
+### Phase
+
+Phase 20 - Custom Domain Cutover Readiness
+
+### Viec da lam
+
+- Tao `docs/20_CUSTOM_DOMAIN_CUTOVER_READINESS.md`.
+- Ghi production baseline hien tai: Worker, workers.dev URL, workflow deploy, wrangler config, Phase 16/17/18/19 status va known issues.
+- Ghi candidate custom domain la `<TO_BE_CONFIRMED>`, khong tu chot domain that.
+- Ghi Cloudflare readiness checklist cho DNS, route/custom domain binding, SSL/TLS, HTTPS va fallback workers.dev.
+- Ghi Supabase Auth readiness checklist cho Site URL, Redirect URLs, callback/login/logout/unauthorized smoke.
+- Ghi Google OAuth readiness checklist cho JavaScript origins, redirect URI alignment va consent status.
+- Ghi app configuration readiness cho `NEXT_PUBLIC_APP_URL`, Supabase env, `PROD_SMOKE_BASE_URL`, `window.location.origin` va hardcoded workers.dev gap.
+- Ghi smoke test plan, rollback plan, pre-cutover approval checklist, risk matrix, gaps va Phase 20 boundary.
+- Tao `scripts/check-custom-domain-cutover-readiness.cjs`.
+- Them `npm run check:custom-domain-cutover-readiness`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-custom-domain-cutover-readiness.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/20_CUSTOM_DOMAIN_CUTOVER_READINESS.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong sua schema.
+- Khong chay migration.
+- Khong sua du lieu that.
+- Khong doi domain/DNS/Cloudflare route that.
+- Khong doi Supabase/Auth/OAuth config that.
+- Khong tao backup/export that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local`, `.dev.vars` hoac backup/export du lieu that.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 19 Scheduled Backup & Restore Drill
 
 ### Phase

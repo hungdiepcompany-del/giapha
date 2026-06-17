@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 043 - Phase 20 keeps custom domain cutover as readiness only
+
+Chon:
+
+Phase 20 chi tao runbook custom domain cutover readiness. Khong chot domain that, khong doi DNS, khong cau hinh Cloudflare custom domain/route, khong doi Supabase Auth, khong doi Google OAuth, khong deploy va khong goi API mutate config.
+
+Ly do:
+
+- Domain cutover co the lam hong login/OAuth, Supabase session va canonical production URL neu Cloudflare, Supabase va Google OAuth khong doi dong bo.
+- Repo chua co custom domain chinh thuc, nen ghi `<TO_BE_CONFIRMED>` thay vi tu doan.
+- `workers.dev` can duoc giu lam fallback cho toi khi custom domain smoke PASS.
+- File `GIA_PHA_GITHUB_MENU.bat` dang modified ngoai scope phai tiep tuc de ngoai stage/commit.
+
 ## Decision 042 - Phase 19 keeps backup and restore drill procedural before automation
 
 Chon:
