@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 32 Sandbox Storage Target Selection completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 32 da so sanh cac storage candidate cho backup tuong lai va recommend sandbox/prototype tiep tuc dung local sandbox. Production storage target chua duoc chot.
+
+### File/script moi
+
+- `docs/32_SANDBOX_STORAGE_TARGET_SELECTION.md`
+- `scripts/check-sandbox-storage-target-selection.cjs`
+- `npm run check:sandbox-storage-target-selection`
+
+### Storage recommendation
+
+- Sandbox target: local sandbox trong `fixtures/backup-sandbox/`.
+- Production target: chua chot.
+- Cloudflare R2: candidate ky thuat tot neu sau nay muon Cloudflare-native, nhung chua cau hinh that.
+- Google Drive, Supabase Storage va offline storage: van la candidate can approval rieng.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 33 - Storage Adapter Contract & Safety Guardrails.
+
 ## 2026-06-17 - Phase 31 Backup Readiness Handoff completed
 
 ### Trang thai hien tai

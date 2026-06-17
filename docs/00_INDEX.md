@@ -40,4 +40,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md | Retention policy gate tren fixture/sandbox metadata, khong xoa backup that. | Khi can kiem weekly/monthly/pre-deploy retention rule truoc storage/job that. |
 | 30_RESTORE_DRILL_REPORT_GENERATOR.md | Generator report restore dry-run bang fixture only, ghi report mau khong production mutation. | Khi can bang chung report cho restore drill truoc handoff backup readiness. |
 | 31_BACKUP_READINESS_HANDOFF.md | Handoff tong hop backup readiness Phase 18-31, lenh local, CI gate, fixtures va boundary chua production backup. | Khi can resume backup readiness hoac chon buoc tiep theo ve storage/domain/approval. |
+| 32_SANDBOX_STORAGE_TARGET_SELECTION.md | So sanh Cloudflare R2, Google Drive, Supabase Storage va local/offline storage; recommend tiep tuc local sandbox. | Khi can chon huong sandbox storage truoc khi thiet ke adapter hoac storage that. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

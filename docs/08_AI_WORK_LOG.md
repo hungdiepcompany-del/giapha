@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 32 Sandbox Storage Target Selection
+
+### Phase
+
+Phase 32 - Sandbox Storage Target Selection
+
+### Viec da lam
+
+- Tao `docs/32_SANDBOX_STORAGE_TARGET_SELECTION.md`.
+- Tao `scripts/check-sandbox-storage-target-selection.cjs`.
+- Them `npm run check:sandbox-storage-target-selection`.
+- So sanh Cloudflare R2, Google Drive, Supabase Storage, Local/NAS/offline operator storage va Manual encrypted offline backup.
+- Recommend sandbox/prototype tiep tuc local sandbox; production storage target chua chot va can approval rieng.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-sandbox-storage-target-selection.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/32_SANDBOX_STORAGE_TARGET_SELECTION.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 31 Backup Readiness Handoff
 
 ### Phase

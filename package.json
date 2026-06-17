@@ -52,6 +52,7 @@
     "check:restore-drill-report-generator": "node scripts/check-restore-drill-report-generator.cjs",
     "restore:drill:report": "node scripts/generate-restore-drill-report.cjs",
     "check:backup-readiness-handoff": "node scripts/check-backup-readiness-handoff.cjs",
+    "check:sandbox-storage-target-selection": "node scripts/check-sandbox-storage-target-selection.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 055 - Phase 32 keeps sandbox storage local
+
+Chon:
+
+Phase 32 recommend tiep tuc dung local sandbox trong `fixtures/backup-sandbox/` cho prototype tiep theo. Cloudflare R2, Google Drive, Supabase Storage va local/offline storage duoc so sanh, nhung production storage target chua duoc chot.
+
+Ly do:
+
+- Local sandbox giu validation deterministic va khong can secret/provider setup.
+- Production backup storage can approval, credential handling, retention, restore drill va incident owner rieng.
+- Cloudflare R2 co the la candidate ky thuat tot sau nay, nhung khong duoc cau hinh that trong Phase 32.
+
+He qua:
+
+- Phase 33 co the thiet ke adapter contract ma chua can cloud provider.
+- Bat ky storage production nao sau nay phai la phase rieng voi approval ro rang.
+
 ## Decision 054 - Backup readiness handoff is not production backup approval
 
 Chon:
