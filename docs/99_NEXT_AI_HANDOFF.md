@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 24 Backup Manifest Integrity Checker completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 24 them manifest integrity checker chi doc fixture sample local, tinh lai checksum SHA-256 va validate shape/count/flag. Phase nay khong doc env, khong goi network/API/DB, khong dung du lieu gia pha that, khong tao/upload backup production that va khong restore.
+
+### File/script moi
+
+- `docs/24_BACKUP_MANIFEST_INTEGRITY_CHECKER.md`
+- `scripts/verify-sample-backup-integrity.cjs`
+- `scripts/check-backup-manifest-integrity.cjs`
+- `npm run backup:fixture:verify`
+- `npm run check:backup-manifest-integrity`
+
+### Integrity baseline
+
+- Marker: `FIXTURE_ONLY`
+- Manifest shape: checked
+- Fixture shape: checked
+- SHA-256 checksum: recomputed from `fixtures/backup/sample-family.fixture.json`
+- Secret scan: checked against fixture and manifest data
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 25 - Restore Dry-Run Validator.
+
 ## 2026-06-17 - Phase 23 Sample Fixture Backup Generator completed
 
 ### Trang thai hien tai

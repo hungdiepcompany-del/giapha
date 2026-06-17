@@ -1,5 +1,52 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 24 Backup Manifest Integrity Checker
+
+### Phase
+
+Phase 24 - Backup Manifest & Integrity Checker
+
+### Viec da lam
+
+- Tao `docs/24_BACKUP_MANIFEST_INTEGRITY_CHECKER.md`.
+- Tao `scripts/verify-sample-backup-integrity.cjs`.
+- Tao `scripts/check-backup-manifest-integrity.cjs`.
+- Them `npm run backup:fixture:verify`.
+- Them `npm run check:backup-manifest-integrity`.
+- Verify command doc fixture va manifest sample, validate shape/count/flag va tinh lai checksum SHA-256.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/verify-sample-backup-integrity.cjs
+- scripts/check-backup-manifest-integrity.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/24_BACKUP_MANIFEST_INTEGRITY_CHECKER.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 23 Sample Fixture Backup Generator
 
 ### Phase

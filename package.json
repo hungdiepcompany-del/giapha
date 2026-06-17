@@ -38,6 +38,8 @@
     "backup:dry-run": "node scripts/backup-dry-run.cjs",
     "check:sample-fixture-backup-generator": "node scripts/check-sample-fixture-backup-generator.cjs",
     "backup:fixture:generate": "node scripts/generate-sample-backup-fixture.cjs",
+    "check:backup-manifest-integrity": "node scripts/check-backup-manifest-integrity.cjs",
+    "backup:fixture:verify": "node scripts/verify-sample-backup-integrity.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

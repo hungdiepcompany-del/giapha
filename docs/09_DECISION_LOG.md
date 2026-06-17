@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 047 - Backup manifest integrity stays fixture-only
+
+Chon:
+
+Phase 24 tao command `backup:fixture:verify` de verify manifest va fixture sample local, tinh lai checksum SHA-256 va validate count/flag/shape truoc khi co automation backup that.
+
+Ly do:
+
+- Can co gate kiem checksum va manifest drift truoc restore dry-run.
+- Giu an toan: chi doc fixture mau, khong doc env, khong goi API/DB/network va khong restore.
+- Khong can package moi vi Node `crypto` du de tinh SHA-256.
+
+He qua:
+
+- Backup pipeline sau nay co the goi `backup:fixture:verify` nhu mot readiness gate local.
+- Neu manifest schema thay doi, checker Phase 24 phai duoc cap nhat cung fixture generator.
+
 ## Decision 046 - Phase 23 uses generated sample fixtures only
 
 Chon:
