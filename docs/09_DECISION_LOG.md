@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 040 - Phase 17 ưu tiên runbook vận hành production
+
+Chọn:
+
+Phase 17 chỉ bổ sung runbook vận hành production, monitoring checklist, smoke guide, incident triage và rollback guidance. Không deploy lại, không mở tính năng lớn và không sửa runtime/data.
+
+Lý do:
+
+- Production đã có Worker thật và Google OAuth production PASS, nên cần quy trình kiểm tra sau deploy rõ ràng.
+- Sự cố production nên được xử lý theo logs, deploy history, auth redirect config và rollback trước khi chạm schema hoặc dữ liệu.
+- Optional smoke bằng `PROD_SMOKE_BASE_URL` phải skip an toàn khi thiếu env, không làm local validation phụ thuộc network.
+- Boundary giữ nguyên: không deploy lại, không migration, không sửa dữ liệu thật, không hardcode secret/token/key.
+
 ## Decision 039 - Phase 16 chỉ ổn định production, không mở tính năng lớn
 
 Chọn:

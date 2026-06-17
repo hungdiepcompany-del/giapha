@@ -1,5 +1,57 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 17 Production Operations & Monitoring
+
+### Phase
+
+Phase 17 - Production Operations & Monitoring
+
+### Việc đã làm
+
+- Tạo `docs/17_PRODUCTION_OPERATIONS_MONITORING.md`.
+- Ghi production baseline: Worker `web-gia-pha`, production URL, workflow deploy và Phase 16 PASS.
+- Ghi post-deploy operations checklist.
+- Ghi Cloudflare monitoring checklist.
+- Ghi GitHub Actions monitoring checklist.
+- Ghi Supabase/Auth monitoring checklist.
+- Ghi smoke testing guide, bao gồm optional smoke bằng `PROD_SMOKE_BASE_URL`.
+- Ghi incident triage runbook và rollback guidance.
+- Tạo `scripts/check-production-ops-monitoring.cjs`.
+- Thêm `npm run check:production-ops-monitoring`.
+- Cập nhật docs index, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-production-ops-monitoring.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/17_PRODUCTION_OPERATIONS_MONITORING.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Ghi chú
+
+- Không deploy lại.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không đổi privacy/business logic.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+- Optional production smoke with `PROD_SMOKE_BASE_URL=https://web-gia-pha.hungdiepcompany.workers.dev` PASS.
+- `npm run build` PASS trong clean temp copy; build trực tiếp tại repo bị chặn bởi ACL cũ trên generated `.next` artifact.
+
 ## 2026-06-17 - Phase 16 Production Stabilization
 
 ### Phase

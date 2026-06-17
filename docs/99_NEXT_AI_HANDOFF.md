@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 17 Production Operations & Monitoring completed
+
+### Trạng thái hiện tại
+
+Production đang PASS tại `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 17 bổ sung runbook vận hành production, monitoring checklist, smoke guide, incident triage và rollback guidance. Phase này không deploy lại, không mở tính năng lớn, không sửa schema, không chạy migration và không sửa dữ liệu thật.
+
+### File/script mới
+
+- `docs/17_PRODUCTION_OPERATIONS_MONITORING.md`
+- `scripts/check-production-ops-monitoring.cjs`
+- `npm run check:production-ops-monitoring`
+
+### Operations baseline
+
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Deploy workflow: `.github/workflows/cloudflare-deploy.yml`
+- Phase 16 baseline: PASS
+- Google OAuth production login: PASS by manual user test
+- Basic production route smoke: PASS by manual user test
+- Optional automated smoke with `PROD_SMOKE_BASE_URL=https://web-gia-pha.hungdiepcompany.workers.dev`: PASS
+
+### Boundary giữ nguyên
+
+- Không deploy lại.
+- Không sửa schema.
+- Không tạo/chạy migration.
+- Không sửa dữ liệu thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không đổi privacy/business logic.
+- Không hardcode secret/token/key.
+- Không commit `.env.local` hoặc `.dev.vars`.
+
+### Task tiếp theo đề xuất
+
+Use `docs/17_PRODUCTION_OPERATIONS_MONITORING.md` after each deploy. Next phase can be a focused production bugfix only if monitoring/smoke finds an issue, or backup/domain/alerting hardening.
+
 ## 2026-06-17 - Phase 16 Production Stabilization checklist added
 
 ### Trạng thái hiện tại
