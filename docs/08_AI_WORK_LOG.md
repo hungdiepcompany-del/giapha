@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 36 Production Backup Approval Checklist
+
+### Phase
+
+Phase 36 - Production Backup Approval Checklist
+
+### Viec da lam
+
+- Tao `docs/36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md`.
+- Tao `scripts/check-production-backup-approval-checklist.cjs`.
+- Them `npm run check:production-backup-approval-checklist`.
+- Ghi required approvals, storage target decision, secret handling, privacy, retention, restore drill, operator checklist va explicit no-go conditions.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-production-backup-approval-checklist.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 35 Storage Upload Verification Dry-Run
 
 ### Phase

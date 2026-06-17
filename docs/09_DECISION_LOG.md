@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 059 - Production backup requires explicit approval gate
+
+Chon:
+
+Phase 36 tao approval/no-go checklist truoc khi bat ky phase sau nao duoc tao backup production that hoac upload vao storage that.
+
+Ly do:
+
+- Backup production co the chua du lieu gia dinh rieng tu va can storage/secret/privacy/retention/restore drill approval ro rang.
+- Cac phase 32-35 moi chung minh local sandbox va dry-run, khong phai approval backup that.
+- No-go list giup AI/operator dung lai khi thieu owner, storage target, secret plan hoac privacy review.
+
+He qua:
+
+- Phase sau chi duoc chuyen sang sandbox cloud prototype hoac production runbook neu co approval ro rang.
+- Phase 36 khong tao backup, khong upload, khong restore va khong deploy.
+
 ## Decision 058 - Upload verification remains a local dry-run
 
 Chon:

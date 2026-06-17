@@ -59,6 +59,7 @@
     "backup:storage:adapter:local": "node scripts/local-sandbox-storage-adapter.cjs",
     "check:storage-upload-verification-dry-run": "node scripts/check-storage-upload-verification-dry-run.cjs",
     "backup:storage:verify-upload:dry-run": "node scripts/verify-storage-upload-dry-run.cjs",
+    "check:production-backup-approval-checklist": "node scripts/check-production-backup-approval-checklist.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

@@ -44,4 +44,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 33_STORAGE_ADAPTER_CONTRACT_GUARDRAILS.md | Contract va guardrail cho storage adapter backup tuong lai, chua co provider/cloud upload that. | Khi can thiet ke adapter truoc khi prototype local sandbox hoac storage provider that. |
 | 34_LOCAL_SANDBOX_STORAGE_ADAPTER_PROTOTYPE.md | Prototype adapter local sandbox dung fixture backup, put/list/metadata/verify trong fixtures only. | Khi can chay adapter local truoc upload verification dry-run hoac cloud prototype. |
 | 35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md | Verify dry-run cho artifact trong local adapter sandbox: manifest, checksum, marker va secret scan. | Khi can kiem artifact sau mo phong upload local truoc approval backup production. |
+| 36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md | Checklist approval/no-go truoc khi bat ky phase nao tao backup production that. | Khi can go/no-go cho production backup, storage target, secret, privacy, retention va restore drill. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 36 Production Backup Approval Checklist completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 36 da tao approval/no-go checklist cho production backup tuong lai. Phase nay van khong tao backup that, khong upload storage that, khong restore production va khong deploy.
+
+### File/script moi
+
+- `docs/36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md`
+- `scripts/check-production-backup-approval-checklist.cjs`
+- `npm run check:production-backup-approval-checklist`
+
+### Approval baseline
+
+- Storage target: chua chot
+- Production backup: not enabled
+- Restore production: not implemented
+- Required approvals: owner, technical operator, privacy reviewer, restore drill reviewer, incident/rollback owner
+- No-go list: recorded in Phase 36 doc
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 37 - Sandbox Cloud Storage Prototype neu da chot target sandbox that, hoac Production Backup Manual Execution Runbook neu da co approval.
+
 ## 2026-06-17 - Phase 35 Storage Upload Verification Dry-Run completed
 
 ### Trang thai hien tai
