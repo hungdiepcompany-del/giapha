@@ -65,6 +65,7 @@
     "check:backup-service-worker-scaffold": "node scripts/check-backup-service-worker-scaffold.cjs",
     "check:backup-service-worker-local-contract": "node scripts/check-backup-service-worker-local-contract.cjs",
     "smoke:backup-service-worker:contract": "node scripts/smoke-backup-service-worker-contract.cjs",
+    "check:backup-service-worker-integration-readiness": "node scripts/check-backup-service-worker-integration-readiness.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

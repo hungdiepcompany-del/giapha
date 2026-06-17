@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 064 - Main app integration needs a separate approval phase
+
+Chon:
+
+Phase 41 chi thiet ke readiness cho main app goi backup service worker qua service binding hoac internal URL + Bearer token, khong implement integration that.
+
+Ly do:
+
+- Main app integration co the tao duong goi production backup nen can approval va deploy-readiness rieng.
+- Binding/token/env that la secret/config van hanh, khong nen them trong docs/check phase.
+- Request/response envelope va error mapping can duoc khoa truoc khi code tich hop.
+
+He qua:
+
+- Main app van chua goi backup service.
+- Phase sau co the lam deploy readiness hoac binding design chi tiet hon.
+
 ## Decision 063 - Worker contract smoke stays static before deploy readiness
 
 Chon:

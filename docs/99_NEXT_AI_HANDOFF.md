@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 41 Backup Service Worker Integration Readiness completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 41 da tao integration readiness doc/check cho future main app -> backup service worker. Chua them service binding, chua them internal URL/token that, chua goi service tu main app va chua deploy.
+
+### File/script moi
+
+- `docs/41_BACKUP_SERVICE_WORKER_INTEGRATION_READINESS.md`
+- `scripts/check-backup-service-worker-integration-readiness.cjs`
+- `npm run check:backup-service-worker-integration-readiness`
+
+### Integration baseline
+
+- Option A: Cloudflare service binding
+- Option B: internal URL + Bearer token
+- Request/response envelope: documented
+- Timeout/retry/logging policy: documented
+- Real integration: not implemented
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tich hop main app that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 42 - Worker Split & Backup Readiness Handoff.
+
 ## 2026-06-17 - Phase 40 Backup Service Worker Local Contract Checks completed
 
 ### Trang thai hien tai
