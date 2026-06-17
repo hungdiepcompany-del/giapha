@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 47 Backup Service Worker Deploy Readiness Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 47 da tong hop deploy readiness cho backup service worker sau Phase 43-47. Worker van chua deploy, chua co production route, chua co real storage, chua co secret that, chua co main app integration va chua tao/upload backup production that.
+
+### File/script moi
+
+- `docs/47_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_HANDOFF.md`
+- `scripts/check-backup-service-worker-deploy-readiness-handoff.cjs`
+- `npm run check:backup-service-worker-deploy-readiness-handoff`
+
+### Deploy readiness baseline
+
+- Service path: `services/backup-service`
+- Endpoints: `/health`, `/internal/backup/dry-run`, `/internal/backup/fixture-verify`
+- Internal token placeholder: `BACKUP_SERVICE_INTERNAL_TOKEN`
+- Smoke placeholders: `BACKUP_SERVICE_SMOKE_BASE_URL`, `BACKUP_SERVICE_SMOKE_TOKEN`
+- Deploy readiness checks: available
+- Post-deploy smoke script: safe-skip by default
+- Main app binding: contract-only
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB khi thieu explicit smoke URL.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong cron/schedule.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 48 options:
+
+- Backup Service Worker Manual Deploy Execution, chi neu owner cho phep deploy that va secret da san sang.
+- Backup Service Worker GitHub Actions Deploy Workflow Readiness, neu muon chuan bi workflow nhung chua deploy.
+- Main App Backup Service Binding Implementation, neu muon noi main app voi worker theo dry-run/internal.
+
 ## 2026-06-17 - Phase 46 Backup Service Worker Main App Binding Contract completed
 
 ### Trang thai hien tai

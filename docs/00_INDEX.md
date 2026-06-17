@@ -55,4 +55,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 44_BACKUP_SERVICE_WORKER_ENV_SECRET_CONTRACT.md | Runbook env/secret contract cho backup service worker, chi placeholder va khong secret that. | Khi can chuan bi secret provisioning/rotation an toan truoc deploy hoac smoke. |
 | 45_BACKUP_SERVICE_WORKER_POST_DEPLOY_SMOKE_PLAN.md | Plan va smoke script safe-skip cho backup service worker sau deploy tuong lai. | Khi can chuan bi smoke /health va internal dry-run sau khi co URL/token explicit. |
 | 46_BACKUP_SERVICE_WORKER_MAIN_APP_BINDING_CONTRACT.md | Contract main app goi backup service worker qua service binding hoac internal URL, chua implement runtime. | Khi can thiet ke integration boundary truoc khi sua main app hoac them binding. |
+| 47_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_HANDOFF.md | Handoff tong hop deploy readiness Phase 43-47 cho backup service worker, chua deploy. | Khi can quyet dinh Phase 48 deploy/manual workflow/binding implementation. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

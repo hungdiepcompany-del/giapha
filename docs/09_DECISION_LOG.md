@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 070 - Deploy readiness handoff is not deploy approval
+
+Chon:
+
+Phase 47 tong hop backup service worker deploy readiness thanh handoff, nhung khong xem day la approval de deploy, push, cau hinh secret, storage hoac main app integration.
+
+Ly do:
+
+- Phase 43-46 moi khoa tai lieu, checker va smoke safe-skip.
+- Real deploy can owner approval, runtime secret, route decision, smoke plan va rollback.
+- Production backup van can approval rieng va khong duoc kich hoat boi handoff nay.
+
+He qua:
+
+- Phase 48 co the chon manual deploy execution, GitHub Actions deploy workflow readiness, hoac main app binding implementation.
+- Bat ky huong nao cung phai giu no-secret/no-production-backup boundary cho den khi co approval ro rang.
+
 ## Decision 069 - Main app binding remains contract-only
 
 Chon:

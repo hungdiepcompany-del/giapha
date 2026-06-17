@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 47 Backup Service Worker Deploy Readiness Handoff
+
+### Phase
+
+Phase 47 - Backup Service Worker Deploy Readiness Handoff
+
+### Viec da lam
+
+- Tao `docs/47_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_HANDOFF.md`.
+- Tao `scripts/check-backup-service-worker-deploy-readiness-handoff.cjs`.
+- Them `npm run check:backup-service-worker-deploy-readiness-handoff`.
+- Tong hop Phase 43-47: deploy readiness gate, env/secret contract, post-deploy smoke plan, main app binding contract va handoff.
+- Ghi service files, endpoints, auth/env placeholders, deploy readiness status, post-deploy smoke readiness, binding contract status, approvals/secrets can co truoc deploy va known notes.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-deploy-readiness-handoff.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/47_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_HANDOFF.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy worker.
+- Khong push remote.
+- Khong them route production.
+- Khong them secret that.
+- Khong sua main app runtime.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-17 - Phase 46 Backup Service Worker Main App Binding Contract
 
 ### Phase
