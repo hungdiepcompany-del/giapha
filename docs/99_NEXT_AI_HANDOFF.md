@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 33 Storage Adapter Contract Guardrails completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 33 da tao contract provider-neutral cho backup storage adapter, van la local/docs/check only va chua co cloud provider implementation.
+
+### File/script moi
+
+- `docs/33_STORAGE_ADAPTER_CONTRACT_GUARDRAILS.md`
+- `scripts/backup-storage-adapter-contract.cjs`
+- `scripts/check-storage-adapter-contract-guardrails.cjs`
+- `npm run backup:storage:contract`
+- `npm run check:storage-adapter-contract-guardrails`
+
+### Contract baseline
+
+- Marker: `STORAGE_ADAPTER_CONTRACT_ONLY`
+- Methods: `putBackupArtifact`, `getBackupArtifactMetadata`, `listBackupArtifacts`, `verifyBackupArtifact`, `deleteBackupArtifact`
+- Provider policy: no cloud provider implementation in Phase 33
+- Network/API/env policy: forbidden
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung provider SDK.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong delete backup production.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 34 - Local Sandbox Storage Adapter Prototype.
+
 ## 2026-06-17 - Phase 32 Sandbox Storage Target Selection completed
 
 ### Trang thai hien tai

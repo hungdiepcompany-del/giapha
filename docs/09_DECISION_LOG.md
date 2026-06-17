@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 056 - Storage adapter contract is provider-neutral and no-network
+
+Chon:
+
+Phase 33 tao contract provider-neutral cho storage adapter va script `backup:storage:contract` chi validate shape local voi marker `STORAGE_ADAPTER_CONTRACT_ONLY`.
+
+Ly do:
+
+- Can thong nhat method/manifest/verify/delete safety truoc khi prototype local adapter.
+- Provider cloud that can credential va policy rieng, khong nen dua vao contract phase.
+- Contract provider-neutral giup so sanh R2, Google Drive, Supabase Storage va offline storage sau nay ma khong khoa vao mot SDK.
+
+He qua:
+
+- Phase 34 co the implement local sandbox adapter theo contract.
+- Cloud provider adapter van can phase rieng va approval rieng.
+
 ## Decision 055 - Phase 32 keeps sandbox storage local
 
 Chon:
