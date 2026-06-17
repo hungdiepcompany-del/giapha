@@ -44,6 +44,7 @@
     "restore:dry-run": "node scripts/restore-dry-run-validate.cjs",
     "check:backup-pipeline-readiness-gate": "node scripts/check-backup-pipeline-readiness-gate.cjs",
     "backup:pipeline:readiness": "node scripts/backup-pipeline-readiness.cjs",
+    "check:backup-ci-gate-integration": "node scripts/check-backup-ci-gate-integration.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

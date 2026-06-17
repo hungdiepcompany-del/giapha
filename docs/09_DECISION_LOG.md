@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 050 - Backup readiness CI stays local-only
+
+Chon:
+
+Phase 27 tao workflow `.github/workflows/backup-readiness.yml` cho `pull_request` va `workflow_dispatch`, chi chay local backup readiness scripts va checker.
+
+Ly do:
+
+- Can CI gate de bat drift trong dry-run/fixture/restore validator truoc khi mo automation that.
+- Workflow backup readiness khong can production secret, storage target hay deploy permission.
+- Khong them `schedule:` de tranh bien no thanh backup job that khi chua co approval.
+
+He qua:
+
+- PR/manual gate co the chay `backup:pipeline:readiness` an toan.
+- Real backup, storage upload, cron va restore production van la phase rieng.
+
 ## Decision 049 - Backup readiness pipeline coordinates local safe gates only
 
 Chon:

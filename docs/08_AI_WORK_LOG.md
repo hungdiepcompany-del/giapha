@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 27 Backup CI Gate Integration
+
+### Phase
+
+Phase 27 - Backup CI Gate Integration
+
+### Viec da lam
+
+- Tao `docs/27_BACKUP_CI_GATE_INTEGRATION.md`.
+- Tao `.github/workflows/backup-readiness.yml`.
+- Tao `scripts/check-backup-ci-gate-integration.cjs`.
+- Them `npm run check:backup-ci-gate-integration`.
+- Workflow chi chay `pull_request` va `workflow_dispatch`.
+- Workflow chi chay local backup readiness commands, khong dung `secrets.*`, khong schedule, khong deploy va khong upload/restore.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- .github/workflows/backup-readiness.yml
+- scripts/check-backup-ci-gate-integration.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/27_BACKUP_CI_GATE_INTEGRATION.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung GitHub secrets trong workflow moi.
+- Khong them `schedule:`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 26 Backup Pipeline Readiness Gate
 
 ### Phase

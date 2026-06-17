@@ -1,0 +1,52 @@
+name: Backup Readiness
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backup-readiness:
+    name: Backup readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run backup pipeline readiness
+        run: npm run backup:pipeline:readiness
+
+      - name: Check backup pipeline readiness gate
+        run: npm run check:backup-pipeline-readiness-gate
+
+      - name: Check restore dry-run validator
+        run: npm run check:restore-dry-run-validator
+
+      - name: Check backup manifest integrity
+        run: npm run check:backup-manifest-integrity
+
+      - name: Check sample fixture backup generator
+        run: npm run check:sample-fixture-backup-generator
+
+      - name: Check backup dry-run command design
+        run: npm run check:backup-dry-run-command-design
+
+      - name: Check backup CI gate integration
+        run: npm run check:backup-ci-gate-integration

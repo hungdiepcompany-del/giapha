@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 27 Backup CI Gate Integration completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 27 them GitHub Actions backup readiness gate cho PR/manual. Workflow moi chi chay local backup readiness scripts, khong dung GitHub secrets, khong schedule, khong deploy, khong upload backup va khong restore.
+
+### File/script moi
+
+- `docs/27_BACKUP_CI_GATE_INTEGRATION.md`
+- `.github/workflows/backup-readiness.yml`
+- `scripts/check-backup-ci-gate-integration.cjs`
+- `npm run check:backup-ci-gate-integration`
+
+### CI baseline
+
+- Trigger: `pull_request`, `workflow_dispatch`
+- Local gate: `backup:pipeline:readiness`
+- No `schedule:`
+- No `secrets.*`
+- No deploy/push/upload/restore behavior
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 28 - Local Sandbox Backup Storage Simulation.
+
 ## 2026-06-17 - Phase 26 Backup Pipeline Readiness Gate completed
 
 ### Trang thai hien tai
