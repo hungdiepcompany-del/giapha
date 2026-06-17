@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 26 Backup Pipeline Readiness Gate
+
+### Phase
+
+Phase 26 - Backup Pipeline Readiness Gate
+
+### Viec da lam
+
+- Tao `docs/26_BACKUP_PIPELINE_READINESS_GATE.md`.
+- Tao `scripts/backup-pipeline-readiness.cjs`.
+- Tao `scripts/check-backup-pipeline-readiness-gate.cjs`.
+- Them `npm run backup:pipeline:readiness`.
+- Them `npm run check:backup-pipeline-readiness-gate`.
+- Pipeline gate chay `backup:dry-run`, `backup:fixture:generate`, `backup:fixture:verify`, `restore:dry-run` theo thu tu.
+- Gate chi local readiness, khong tao job/cron, khong upload backup va khong restore that.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/backup-pipeline-readiness.cjs
+- scripts/check-backup-pipeline-readiness-gate.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/26_BACKUP_PIPELINE_READINESS_GATE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 25 Restore Dry-Run Validator
 
 ### Phase

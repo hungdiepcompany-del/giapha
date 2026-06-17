@@ -34,4 +34,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 23_SAMPLE_FIXTURE_BACKUP_GENERATOR.md | Generator fixture backup mau, manifest fixture va guardrail khong dung du lieu that. | Khi can tao sample fixture cho manifest integrity, restore dry-run hoac pipeline readiness. |
 | 24_BACKUP_MANIFEST_INTEGRITY_CHECKER.md | Checker fixture-only de verify manifest shape, fixture shape va checksum integrity. | Khi can xac nhan fixture/manifest backup mau khong bi drift truoc restore dry-run. |
 | 25_RESTORE_DRY_RUN_VALIDATOR.md | Restore dry-run validator chi kiem graph/privacy/readiness tren fixture mau, khong restore that. | Khi can kiem tra payload co san sang cho restore validator truoc pipeline gate. |
+| 26_BACKUP_PIPELINE_READINESS_GATE.md | Gate tong hop chay cac command backup dry-run, fixture generate/verify va restore dry-run an toan. | Khi can mot lenh local de xac nhan backup automation readiness bundle. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

@@ -42,6 +42,8 @@
     "backup:fixture:verify": "node scripts/verify-sample-backup-integrity.cjs",
     "check:restore-dry-run-validator": "node scripts/check-restore-dry-run-validator.cjs",
     "restore:dry-run": "node scripts/restore-dry-run-validate.cjs",
+    "check:backup-pipeline-readiness-gate": "node scripts/check-backup-pipeline-readiness-gate.cjs",
+    "backup:pipeline:readiness": "node scripts/backup-pipeline-readiness.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

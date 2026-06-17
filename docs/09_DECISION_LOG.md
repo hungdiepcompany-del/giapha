@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 049 - Backup readiness pipeline coordinates local safe gates only
+
+Chon:
+
+Phase 26 tao command `backup:pipeline:readiness` de chay lan luot `backup:dry-run`, `backup:fixture:generate`, `backup:fixture:verify` va `restore:dry-run`.
+
+Ly do:
+
+- Can mot lenh tong hop de xac nhan bundle backup readiness nhung van chua tao automation production.
+- Cac buoc con deu chi dung mock/static fixture va restore dry-run, nen phu hop lam local gate.
+- Giu ranh gioi an toan truoc khi them CI gate, storage sandbox hoac scheduled job that.
+
+He qua:
+
+- Phase sau co the dua `backup:pipeline:readiness` vao CI/manual checklist.
+- Pipeline nay khong thay the real backup smoke test khi co storage/job that.
+
 ## Decision 048 - Restore validator remains dry-run only
 
 Chon:
