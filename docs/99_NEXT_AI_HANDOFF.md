@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 49 Backup Service Worker Manual Deploy Runbook completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 49 da tao manual deploy runbook cho backup service worker. Chua chay `wrangler secret put`, chua chay `wrangler deploy`, chua deploy worker va chua tao production backup.
+
+### File/script moi
+
+- `docs/49_BACKUP_SERVICE_WORKER_MANUAL_DEPLOY_RUNBOOK.md`
+- `scripts/check-backup-service-worker-manual-deploy-runbook.cjs`
+- `npm run check:backup-service-worker-manual-deploy-runbook`
+
+### Manual deploy baseline
+
+- Required future secret: `BACKUP_SERVICE_INTERNAL_TOKEN`
+- Future commands: documented only
+- Post-deploy smoke: documented
+- Rollback procedure: documented
+- Real execution: not run
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay `wrangler secret put`.
+- Khong chay `wrangler deploy`.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 50 - Backup Service Worker Secrets Preflight Checklist.
+
 ## 2026-06-17 - Phase 48 Backup Service Worker GitHub Actions Deploy Workflow Readiness completed
 
 ### Trang thai hien tai

@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 49 Backup Service Worker Manual Deploy Runbook
+
+### Phase
+
+Phase 49 - Backup Service Worker Manual Deploy Runbook
+
+### Viec da lam
+
+- Tao `docs/49_BACKUP_SERVICE_WORKER_MANUAL_DEPLOY_RUNBOOK.md`.
+- Tao `scripts/check-backup-service-worker-manual-deploy-runbook.cjs`.
+- Them `npm run check:backup-service-worker-manual-deploy-runbook`.
+- Ghi pre-deploy checklist, required secrets/vars, local validation commands, manual deploy command placeholders, post-deploy smoke, rollback va failure handling.
+- Ghi ro `npx wrangler secret put BACKUP_SERVICE_INTERNAL_TOKEN` va `npx wrangler deploy` chi la future commands, khong chay trong Phase 49.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-manual-deploy-runbook.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/49_BACKUP_SERVICE_WORKER_MANUAL_DEPLOY_RUNBOOK.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong chay `wrangler secret put`.
+- Khong chay `wrangler deploy`.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-17 - Phase 48 Backup Service Worker GitHub Actions Deploy Workflow Readiness
 
 ### Phase

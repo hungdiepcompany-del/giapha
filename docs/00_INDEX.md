@@ -57,4 +57,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 46_BACKUP_SERVICE_WORKER_MAIN_APP_BINDING_CONTRACT.md | Contract main app goi backup service worker qua service binding hoac internal URL, chua implement runtime. | Khi can thiet ke integration boundary truoc khi sua main app hoac them binding. |
 | 47_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_HANDOFF.md | Handoff tong hop deploy readiness Phase 43-47 cho backup service worker, chua deploy. | Khi can quyet dinh Phase 48 deploy/manual workflow/binding implementation. |
 | 48_BACKUP_SERVICE_WORKER_GITHUB_ACTIONS_DEPLOY_WORKFLOW_READINESS.md | Readiness workflow GitHub Actions manual-only cho backup service worker deploy, chua chay deploy. | Khi can chuan bi workflow deploy rieng cho backup service worker ma khong auto trigger. |
+| 49_BACKUP_SERVICE_WORKER_MANUAL_DEPLOY_RUNBOOK.md | Runbook deploy thu cong backup service worker voi secret, validation, smoke va rollback placeholders. | Khi owner sap cho phep deploy that va can quy trinh thao tac an toan. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 072 - Manual deploy remains a runbook until owner approval
+
+Chon:
+
+Phase 49 ghi manual deploy runbook voi `wrangler secret put` va `wrangler deploy` nhu placeholder commands, nhung khong chay bat ky command deploy/secret nao.
+
+Ly do:
+
+- Deploy that can secret runtime, smoke owner va rollback owner.
+- Command can duoc ghi ro de van hanh sau nay, nhung khong duoc thuc thi khi chua owner approval.
+- Runbook phai giu production backup disabled rieng voi worker deploy.
+
+He qua:
+
+- Phase 50 co the kiem secrets preflight ma van khong doc/tao secret that.
+- Manual deploy future se phai di qua approval gate truoc.
+
 ## Decision 071 - Backup service deploy workflow is manual-only
 
 Chon:
