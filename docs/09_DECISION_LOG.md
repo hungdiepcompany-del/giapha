@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 075 - Pre-deploy handoff keeps real deploy blocked until explicit approval
+
+Chon:
+
+Phase 52 tong hop pre-deploy readiness cho backup service worker, nhung van giu trang thai no-deploy cho den khi owner approve that va secrets san sang.
+
+Ly do:
+
+- Phase 48-51 da chuan bi workflow, runbook, secrets preflight va approval gate nhung chua co approval/execution.
+- Handoff can noi ro cai gi da ready va cai gi van blocked de tranh agent sau tu y deploy.
+- Production backup, real storage va main app integration van la boundary rieng.
+
+He qua:
+
+- Phase 53 co the chon manual deploy execution, main app binding dry-run, hoac tam dung ha tang.
+- Bat ky deploy that nao van can owner approval ngoai repo.
+
 ## Decision 074 - Owner approval gate is required before real backup service deploy
 
 Chon:

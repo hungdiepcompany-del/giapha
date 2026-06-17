@@ -77,6 +77,7 @@
     "check:backup-service-worker-manual-deploy-runbook": "node scripts/check-backup-service-worker-manual-deploy-runbook.cjs",
     "check:backup-service-worker-secrets-preflight-checklist": "node scripts/check-backup-service-worker-secrets-preflight-checklist.cjs",
     "check:backup-service-worker-deploy-approval-gate": "node scripts/check-backup-service-worker-deploy-approval-gate.cjs",
+    "check:backup-service-worker-pre-deploy-handoff": "node scripts/check-backup-service-worker-pre-deploy-handoff.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },
