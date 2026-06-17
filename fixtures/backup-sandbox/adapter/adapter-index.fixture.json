@@ -1,0 +1,28 @@
+{
+  "marker": "LOCAL_STORAGE_ADAPTER_ONLY",
+  "environment": "fixture",
+  "adapter": "local-sandbox",
+  "adapterRoot": "fixtures/backup-sandbox/adapter",
+  "created_at": "2026-06-17T08:30:00+07:00",
+  "contains_real_data": false,
+  "contains_secret": false,
+  "operations": {
+    "putBackupArtifact": "PASS",
+    "listBackupArtifacts": "PASS",
+    "getBackupArtifactMetadata": "PASS",
+    "verifyBackupArtifact": "PASS",
+    "deleteBackupArtifact": "SKIPPED"
+  },
+  "artifacts": [
+    {
+      "name": "sample-family.fixture.json",
+      "manifest": "sample-family.manifest.fixture.json",
+      "storage_key": "local-sandbox/adapter/sample-family.fixture.json",
+      "sandbox_path": "fixtures/backup-sandbox/adapter/sample-family.fixture.json",
+      "fixture_checksum_sha256": "cd811bce7d5732f478e01ce40650fd01cbd4c78f220b74d3b611a5dba9de6786",
+      "manifest_checksum_sha256": "eaf6ebd6491388f37516ddde912e679ea62fc30c24856b4897bc84e4b35ad79a",
+      "verification_status": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

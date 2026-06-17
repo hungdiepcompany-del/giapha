@@ -55,6 +55,8 @@
     "check:sandbox-storage-target-selection": "node scripts/check-sandbox-storage-target-selection.cjs",
     "check:storage-adapter-contract-guardrails": "node scripts/check-storage-adapter-contract-guardrails.cjs",
     "backup:storage:contract": "node scripts/backup-storage-adapter-contract.cjs",
+    "check:local-sandbox-storage-adapter-prototype": "node scripts/check-local-sandbox-storage-adapter-prototype.cjs",
+    "backup:storage:adapter:local": "node scripts/local-sandbox-storage-adapter.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

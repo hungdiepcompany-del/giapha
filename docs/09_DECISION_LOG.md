@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 057 - Local storage adapter writes only fixture sandbox output
+
+Chon:
+
+Phase 34 implement `backup:storage:adapter:local` chi copy fixture/manifest mau vao `fixtures/backup-sandbox/adapter/`, tao index local va verify checksum.
+
+Ly do:
+
+- Can prototype adapter behavior that hon contract nhung van khong cham cloud/storage provider.
+- Fixture-only output giup Phase 35 verify upload dry-run co artifact on dinh de doc.
+- Khong implement delete de tranh tao pattern nguy hiem truoc retention/approval that.
+
+He qua:
+
+- Adapter local co the duoc dung nhu input cho upload verification dry-run.
+- Cloud adapter va production upload van la phase rieng sau approval.
+
 ## Decision 056 - Storage adapter contract is provider-neutral and no-network
 
 Chon:

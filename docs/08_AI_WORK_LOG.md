@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 34 Local Sandbox Storage Adapter Prototype
+
+### Phase
+
+Phase 34 - Local Sandbox Storage Adapter Prototype
+
+### Viec da lam
+
+- Tao `docs/34_LOCAL_SANDBOX_STORAGE_ADAPTER_PROTOTYPE.md`.
+- Tao `scripts/local-sandbox-storage-adapter.cjs`.
+- Tao `scripts/check-local-sandbox-storage-adapter-prototype.cjs`.
+- Them `npm run backup:storage:adapter:local`.
+- Them `npm run check:local-sandbox-storage-adapter-prototype`.
+- Adapter local copy fixture/manifest vao `fixtures/backup-sandbox/adapter/`, tao index, list metadata va verify checksum.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/local-sandbox-storage-adapter.cjs
+- scripts/check-local-sandbox-storage-adapter-prototype.cjs
+- fixtures/backup-sandbox/adapter/
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/34_LOCAL_SANDBOX_STORAGE_ADAPTER_PROTOTYPE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong upload cloud.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 33 Storage Adapter Contract Guardrails
 
 ### Phase

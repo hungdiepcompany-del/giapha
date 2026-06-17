@@ -42,4 +42,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 31_BACKUP_READINESS_HANDOFF.md | Handoff tong hop backup readiness Phase 18-31, lenh local, CI gate, fixtures va boundary chua production backup. | Khi can resume backup readiness hoac chon buoc tiep theo ve storage/domain/approval. |
 | 32_SANDBOX_STORAGE_TARGET_SELECTION.md | So sanh Cloudflare R2, Google Drive, Supabase Storage va local/offline storage; recommend tiep tuc local sandbox. | Khi can chon huong sandbox storage truoc khi thiet ke adapter hoac storage that. |
 | 33_STORAGE_ADAPTER_CONTRACT_GUARDRAILS.md | Contract va guardrail cho storage adapter backup tuong lai, chua co provider/cloud upload that. | Khi can thiet ke adapter truoc khi prototype local sandbox hoac storage provider that. |
+| 34_LOCAL_SANDBOX_STORAGE_ADAPTER_PROTOTYPE.md | Prototype adapter local sandbox dung fixture backup, put/list/metadata/verify trong fixtures only. | Khi can chay adapter local truoc upload verification dry-run hoac cloud prototype. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
