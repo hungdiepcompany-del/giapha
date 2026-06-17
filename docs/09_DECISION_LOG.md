@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 052 - Retention policy gate does not remove artifacts
+
+Chon:
+
+Phase 29 tao command `backup:retention:check` chi validate retention policy bang fixture/sandbox metadata va khong xoa file.
+
+Ly do:
+
+- Backup retention co rui ro mat du lieu neu ap dung vao storage that khi chua co manifest/verification/approval.
+- Can co policy gate truoc khi chon storage target hoac bat job that.
+- Weekly/monthly/pre-deploy rules can duoc document va test bang data mau truoc.
+
+He qua:
+
+- Retention command chi bao `keep`, `review_later`, `blocked_manifest_invalid`.
+- Bat ky cleanup that nao sau nay phai la phase rieng voi approval va rollback notes.
+
 ## Decision 051 - Backup storage simulation stays local sandbox only
 
 Chon:

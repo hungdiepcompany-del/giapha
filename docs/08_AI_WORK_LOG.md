@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 29 Backup Artifact Retention Policy Gate
+
+### Phase
+
+Phase 29 - Backup Artifact Retention Policy Gate
+
+### Viec da lam
+
+- Tao `docs/29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md`.
+- Tao `scripts/backup-retention-policy-check.cjs`.
+- Tao `scripts/check-backup-artifact-retention-policy-gate.cjs`.
+- Them `npm run backup:retention:check`.
+- Them `npm run check:backup-artifact-retention-policy-gate`.
+- Retention gate validate weekly keep 8, monthly keep 12, pre-deploy release marker, newest unverified guard va invalid manifest guard.
+- Script chi tinh policy tren fixture/sandbox metadata, khong xoa file va khong cham production.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/backup-retention-policy-check.cjs
+- scripts/check-backup-artifact-retention-policy-gate.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong xoa backup production that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 28 Local Sandbox Backup Storage Simulation
 
 ### Phase

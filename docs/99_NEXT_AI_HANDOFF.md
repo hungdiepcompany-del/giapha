@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 29 Backup Artifact Retention Policy Gate completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 29 them retention policy gate tren fixture/sandbox metadata. Command chi tinh policy, khong xoa file, khong goi storage/API/DB va khong cham backup production.
+
+### File/script moi
+
+- `docs/29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md`
+- `scripts/backup-retention-policy-check.cjs`
+- `scripts/check-backup-artifact-retention-policy-gate.cjs`
+- `npm run backup:retention:check`
+- `npm run check:backup-artifact-retention-policy-gate`
+
+### Retention baseline
+
+- Marker: `RETENTION_POLICY_CHECK_ONLY`
+- Weekly keep: 8
+- Monthly keep: 12
+- Pre-deploy requires release marker
+- Newest unverified artifact kept for review
+- Invalid manifest blocks removal
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung cloud storage that.
+- Khong xoa backup production that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 30 - Restore Drill Report Generator.
+
 ## 2026-06-17 - Phase 28 Local Sandbox Backup Storage Simulation completed
 
 ### Trang thai hien tai
