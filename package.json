@@ -34,6 +34,8 @@
     "check:scheduled-backup-restore-drill": "node scripts/check-scheduled-backup-restore-drill.cjs",
     "check:custom-domain-cutover-readiness": "node scripts/check-custom-domain-cutover-readiness.cjs",
     "check:automated-backup-job-design": "node scripts/check-automated-backup-job-design.cjs",
+    "check:backup-dry-run-command-design": "node scripts/check-backup-dry-run-command-design.cjs",
+    "backup:dry-run": "node scripts/backup-dry-run.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

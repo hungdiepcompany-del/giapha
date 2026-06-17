@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 045 - Phase 22 starts backup automation with mock dry-run only
+
+Chon:
+
+Phase 22 tao command `backup:dry-run` chi dung mock/static data trong bo nho. Command validate manifest shape, naming convention, secret pattern scan va restore compatibility checklist nhung khong doc env, khong goi network/API/DB, khong tao file backup that va khong restore.
+
+Ly do:
+
+- Backup automation can co buoc dry-run cuc nho de khoa contract truoc khi tao fixture hoac job that.
+- Mock dry-run giup validate guardrail ma khong cham du lieu gia dinh production.
+- Phase 22 van giu `GIA_PHA_GITHUB_MENU.bat` ngoai stage/commit vi day la thay doi ton dong ngoai scope.
+
 ## Decision 044 - Phase 21 designs automated backup without enabling automation
 
 Chon:

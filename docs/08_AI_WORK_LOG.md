@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 22 Backup Dry-Run Command Design
+
+### Phase
+
+Phase 22 - Backup Dry-Run Command Design
+
+### Viec da lam
+
+- Tao `docs/22_BACKUP_DRY_RUN_COMMAND_DESIGN.md`.
+- Tao `scripts/backup-dry-run.cjs` dung mock/static data trong bo nho.
+- Tao `scripts/check-backup-dry-run-command-design.cjs`.
+- Them `npm run check:backup-dry-run-command-design`.
+- Them `npm run backup:dry-run`.
+- Dry-run validate manifest shape, naming convention, secret pattern scan va restore compatibility checklist.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/backup-dry-run.cjs
+- scripts/check-backup-dry-run-command-design.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/22_BACKUP_DRY_RUN_COMMAND_DESIGN.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao backup/export that.
+- Khong upload file.
+- Khong restore production.
+- Khong tao scheduled job/cron that.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 21 Automated Backup Job Design
 
 ### Phase

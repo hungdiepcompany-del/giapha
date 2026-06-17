@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 22 Backup Dry-Run Command Design completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 22 them command backup dry-run an toan bang mock/static data. Phase nay khong deploy, khong push, khong doc `.env.local`/`.dev.vars`, khong goi network/API/DB, khong tao backup/export that, khong upload file, khong restore va khong tao scheduled job/cron that.
+
+### File/script moi
+
+- `docs/22_BACKUP_DRY_RUN_COMMAND_DESIGN.md`
+- `scripts/backup-dry-run.cjs`
+- `scripts/check-backup-dry-run-command-design.cjs`
+- `npm run backup:dry-run`
+- `npm run check:backup-dry-run-command-design`
+
+### Dry-run baseline
+
+- Output marker: `DRY_RUN_ONLY`
+- Uses mock/static data in memory only.
+- Validates manifest shape, naming convention, secret pattern scan and restore compatibility checklist.
+- Does not write backup files.
+- Does not call production services.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup that.
+- Khong restore production.
+- Khong tao scheduled job/cron that.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 23 - Sample Fixture Backup Generator.
+
 ## 2026-06-17 - Phase 21 Automated Backup Job Design completed
 
 ### Trang thai hien tai
