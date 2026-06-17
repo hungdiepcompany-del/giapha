@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 078 - Backup operator API remains contract-only until API auth boundary is clear
+
+Chon:
+
+Phase 55 chi tao docs/check cho operator API dry-run, khong tao `app/api/admin/backups/service-dry-run/route.ts`.
+
+Ly do:
+
+- Repo hien chua co pattern `app/api/admin` auth/permission route ro rang.
+- Tu che API auth co the bypass permission model hoac tao route admin khong duoc bao ve dung.
+- Dry-run adapter va guardrails da du de khoa contract truoc khi implement runtime route.
+
+He qua:
+
+- Proposed route duoc document de phase sau implement khi co auth/permission boundary ro.
+- Checker se kiem route neu route xuat hien sau nay.
+
 ## Decision 077 - Backup service binding guardrails stay source-static and narrow
 
 Chon:
