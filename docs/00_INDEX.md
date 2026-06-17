@@ -46,4 +46,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md | Verify dry-run cho artifact trong local adapter sandbox: manifest, checksum, marker va secret scan. | Khi can kiem artifact sau mo phong upload local truoc approval backup production. |
 | 36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md | Checklist approval/no-go truoc khi bat ky phase nao tao backup production that. | Khi can go/no-go cho production backup, storage target, secret, privacy, retention va restore drill. |
 | 37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md | Review va xu ly dirty state cua GIA_PHA_GITHUB_MENU.bat truoc worker split. | Khi can biet vi sao file menu duoc restore ve HEAD va repo hygiene sach hon. |
+| 38_BACKUP_SERVICE_WORKER_BOUNDARY_DESIGN.md | Thiet ke boundary cho backup service worker nho rieng, internal endpoint va JSON envelope. | Khi can chuan bi tach backup/storage khoi main OpenNext worker nhung chua scaffold code. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

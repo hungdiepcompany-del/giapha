@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 38 Backup Service Worker Boundary Design completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 38 da thiet ke boundary cho backup service worker nho rieng tai `services/backup-service/`. Chua scaffold code worker va chua deploy.
+
+### File/script moi
+
+- `docs/38_BACKUP_SERVICE_WORKER_BOUNDARY_DESIGN.md`
+- `scripts/check-backup-service-worker-boundary-design.cjs`
+- `npm run check:backup-service-worker-boundary-design`
+
+### Worker boundary baseline
+
+- Service path: `services/backup-service/`
+- Public endpoint: `GET /health`
+- Internal endpoints: `POST /internal/backup/dry-run`, `POST /internal/backup/fixture-verify`
+- Auth placeholder: `Authorization: Bearer BACKUP_SERVICE_INTERNAL_TOKEN`
+- Response shape: JSON envelope
+- Production backup/deploy: not implemented
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 39 - Backup Service Worker Scaffold.
+
 ## 2026-06-17 - Phase 37 Repository Hygiene GitHub Menu Review completed
 
 ### Trang thai hien tai

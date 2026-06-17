@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 061 - Backup service should be a small separate worker
+
+Chon:
+
+Phase 38 thiet ke `services/backup-service/` nhu mot worker nho rieng cho backup/storage readiness thay vi nhhoi logic backup vao main Next/OpenNext worker.
+
+Ly do:
+
+- Backup/storage co the tang bundle/startup va can internal auth/logging/retry rieng.
+- Main app nen giu vai tro UI/auth/family data route nhe.
+- Worker rieng giup sau nay tich hop bang service binding hoac internal URL + Bearer token co boundary ro rang.
+
+He qua:
+
+- Phase 39 co the scaffold worker toi thieu nhung khong deploy.
+- Main app integration van can phase readiness/approval rieng.
+
 ## Decision 060 - Restore GitHub menu script dirty state to HEAD
 
 Chon:

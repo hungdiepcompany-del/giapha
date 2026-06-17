@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 38 Backup Service Worker Boundary Design
+
+### Phase
+
+Phase 38 - Backup Service Worker Boundary Design
+
+### Viec da lam
+
+- Tao `docs/38_BACKUP_SERVICE_WORKER_BOUNDARY_DESIGN.md`.
+- Tao `scripts/check-backup-service-worker-boundary-design.cjs`.
+- Them `npm run check:backup-service-worker-boundary-design`.
+- Thiet ke service path `services/backup-service/`, endpoints `GET /health`, `POST /internal/backup/dry-run`, `POST /internal/backup/fixture-verify`.
+- Ghi auth placeholder `Authorization: Bearer BACKUP_SERVICE_INTERNAL_TOKEN`, JSON envelope, logging policy va no-production-backup boundary.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-boundary-design.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/38_BACKUP_SERVICE_WORKER_BOUNDARY_DESIGN.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Chua scaffold worker code that.
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 37 Repository Hygiene GitHub Menu Review
 
 ### Phase
