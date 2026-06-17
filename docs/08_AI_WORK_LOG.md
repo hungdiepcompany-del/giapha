@@ -1,5 +1,58 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 18 Backup, Domain & Alerting Hardening
+
+### Phase
+
+Phase 18 - Backup, Domain & Alerting Hardening
+
+### Việc đã làm
+
+- Tạo `docs/18_BACKUP_DOMAIN_ALERTING_HARDENING.md`.
+- Ghi production baseline hiện tại: Worker, production URL, workflow deploy, Phase 16/17 PASS, smoke/OAuth PASS.
+- Ghi backup hardening checklist cho JSON/GEDCOM/ZIP, trước/sau deploy và trước thao tác dữ liệu thật.
+- Ghi restore readiness checklist và boundary restore thật là high-risk phase riêng.
+- Ghi domain hardening checklist cho custom domain tương lai, DNS, SSL/TLS, Supabase/Auth và Google OAuth URL alignment.
+- Ghi alerting hardening checklist và recommended future setup.
+- Ghi incident response matrix.
+- Ghi backup naming convention.
+- Ghi environment/secret safety và Phase 18 boundary.
+- Tạo `scripts/check-backup-domain-alerting-hardening.cjs`.
+- Thêm `npm run check:backup-domain-alerting-hardening`.
+- Cập nhật docs index, decision log và handoff.
+
+### File đã tạo/cập nhật
+
+- package.json
+- scripts/check-backup-domain-alerting-hardening.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/18_BACKUP_DOMAIN_ALERTING_HARDENING.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration đã tạo
+
+- Không tạo migration.
+
+### Package đã thêm
+
+- Không thêm package.
+
+### Ghi chú
+
+- Không deploy lại.
+- Không sửa schema.
+- Không chạy migration.
+- Không sửa dữ liệu thật.
+- Không tạo backup/export thật.
+- Không làm import confirm thật.
+- Không làm revision restore thật.
+- Không đổi domain thật.
+- Không đổi Supabase/Auth/OAuth config thật.
+- Không hardcode secret/token/key.
+- Không commit `.env.local`, `.dev.vars` hoặc backup/export dữ liệu thật.
+
 ## 2026-06-17 - Phase 17 Production Operations & Monitoring
 
 ### Phase

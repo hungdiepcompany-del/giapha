@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 18 Backup, Domain & Alerting Hardening completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 18 bo sung runbook hardening cho backup, restore readiness, domain cutover, alerting va incident matrix. Phase nay khong deploy lai, khong tao backup that, khong doi domain/Auth/OAuth config that, khong sua schema, khong chay migration va khong mutate du lieu.
+
+### File/script moi
+
+- `docs/18_BACKUP_DOMAIN_ALERTING_HARDENING.md`
+- `scripts/check-backup-domain-alerting-hardening.cjs`
+- `npm run check:backup-domain-alerting-hardening`
+
+### Hardening baseline
+
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Deploy workflow: `.github/workflows/cloudflare-deploy.yml`
+- Backup naming convention: `web-gia-pha_<env>_<YYYYMMDD-HHMMSS>_<scope>.<ext>`
+- Restore readiness: documented only, no restore drill executed in this phase.
+- Alerting: checklist documented only, no dashboard or external alert destination configured in this phase.
+
+### Boundary giu nguyen
+
+- Khong deploy lai.
+- Khong tao backup that.
+- Khong commit backup/export artifact.
+- Khong sua schema.
+- Khong tao/chay migration.
+- Khong sua du lieu that.
+- Khong doi domain/Auth/OAuth config that.
+- Khong lam import confirm that.
+- Khong lam revision restore that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local` hoac `.dev.vars`.
+
+### Task tiep theo de xuat
+
+Phase 19 co the la Scheduled Backup & Restore Drill, Custom Domain Cutover, hoac focused production bugfix neu monitoring/smoke phat hien loi that.
+
 ## 2026-06-17 - Phase 17 Production Operations & Monitoring completed
 
 ### Trạng thái hiện tại

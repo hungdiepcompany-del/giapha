@@ -26,4 +26,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md | Workflow deploy Cloudflare thủ công bằng GitHub Actions/Linux. | Khi cần deploy qua GitHub Actions sau khi Windows local deploy bị blocker. |
 | 16_PRODUCTION_STABILIZATION.md | Checklist ổn định production sau deploy đầu tiên. | Khi cần smoke test production, auth/privacy/export/logs checklist hoặc quy trình sau deploy. |
 | 17_PRODUCTION_OPERATIONS_MONITORING.md | Runbook vận hành production, monitoring, smoke test, incident triage và rollback. | Sau mỗi deploy production hoặc khi cần điều tra lỗi production an toàn. |
+| 18_BACKUP_DOMAIN_ALERTING_HARDENING.md | Runbook hardening backup, domain, alerting, incident matrix và quy tắc đặt tên backup. | Khi chuẩn bị backup drill, custom domain, cảnh báo vận hành hoặc xử lý incident production. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

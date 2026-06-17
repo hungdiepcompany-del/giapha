@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 041 - Phase 18 hardens backup, domain and alerting before automation
+
+Chon:
+
+Phase 18 chi bo sung runbook hardening cho backup, domain va alerting/incident readiness. Khong deploy lai, khong tao backup that, khong doi domain/Auth/OAuth config that, khong sua schema va khong mutate du lieu.
+
+Ly do:
+
+- Production da PASS, nen can ky luat backup/restore/domain/alerting truoc cac thay doi van hanh rui ro hon.
+- Restore, import confirm, revision restore va custom domain cutover deu la thao tac high-risk can phase rieng.
+- Backup that co the chua du lieu gia pha production, nen khong duoc commit hoac paste vao docs/logs/chat.
+- Alerting tu dong can cau hinh dashboard/tai khoan rieng; Phase 18 chi ghi checklist va future setup, khong gia vo da cau hinh.
+
 ## Decision 040 - Phase 17 ưu tiên runbook vận hành production
 
 Chọn:
