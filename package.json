@@ -33,6 +33,7 @@
     "check:backup-domain-alerting-hardening": "node scripts/check-backup-domain-alerting-hardening.cjs",
     "check:scheduled-backup-restore-drill": "node scripts/check-scheduled-backup-restore-drill.cjs",
     "check:custom-domain-cutover-readiness": "node scripts/check-custom-domain-cutover-readiness.cjs",
+    "check:automated-backup-job-design": "node scripts/check-automated-backup-job-design.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

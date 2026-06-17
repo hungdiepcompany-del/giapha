@@ -1,5 +1,58 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 21 Automated Backup Job Design
+
+### Phase
+
+Phase 21 - Automated Backup Job Design
+
+### Viec da lam
+
+- Tao `docs/21_AUTOMATED_BACKUP_JOB_DESIGN.md`.
+- Ghi production baseline hien tai: Worker, production URL, workflow deploy, Phase 16/17/18/19/20 status va known notes.
+- Ghi design goal: chi thiet ke automated backup job, khong bat job/cron that, khong tao/upload backup that, khong restore that.
+- Ghi candidate architecture: GitHub Actions scheduled workflow, Cloudflare Worker Cron Trigger, manual operator-triggered backup, Supabase/manual export flow va external storage later.
+- Ghi recommended safe architecture theo tung stage tu manual checklist den dry-run, storage sandbox va scheduled job disabled-by-default.
+- Ghi trigger/output/storage/retention design.
+- Ghi security and privacy guardrails, job failure handling, restore compatibility requirement va future implementation stages.
+- Ghi configuration variables design bang placeholder an toan, khong cap nhat `.env.local`.
+- Tao `scripts/check-automated-backup-job-design.cjs`.
+- Them `npm run check:automated-backup-job-design`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-automated-backup-job-design.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/21_AUTOMATED_BACKUP_JOB_DESIGN.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong sua schema.
+- Khong chay migration.
+- Khong sua du lieu that.
+- Khong tao scheduled job/cron that.
+- Khong tao/upload backup/export that.
+- Khong restore production.
+- Khong doi domain/Auth/OAuth config that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local`, `.dev.vars` hoac backup/export du lieu that.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 20 Custom Domain Cutover Readiness
 
 ### Phase

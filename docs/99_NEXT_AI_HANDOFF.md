@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 21 Automated Backup Job Design completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 21 bo sung design automated backup job. Phase nay khong deploy lai, khong push, khong tao scheduled job/cron that, khong tao/upload backup production that, khong restore production, khong them storage credential, khong sua schema, khong chay migration va khong mutate du lieu.
+
+### File/script moi
+
+- `docs/21_AUTOMATED_BACKUP_JOB_DESIGN.md`
+- `scripts/check-automated-backup-job-design.cjs`
+- `npm run check:automated-backup-job-design`
+
+### Backup automation baseline
+
+- Current export outputs: JSON, GEDCOM, ZIP.
+- Existing builders referenced by design: `buildFamilyJsonFile`, `buildGedcomExport`, `buildFullBackupZip`.
+- Recommended path: manual checklist -> sample dry-run -> manifest generator -> sandbox storage -> disabled-by-default schedule -> approved production schedule.
+- Storage candidates: local operator storage, Cloudflare R2, Google Drive, Supabase Storage, private NAS/offline backup.
+- No real storage/bucket/job/cron configured in Phase 21.
+
+### Boundary giu nguyen
+
+- Khong deploy lai.
+- Khong push.
+- Khong tao scheduled job/cron that.
+- Khong tao/upload backup that.
+- Khong restore production.
+- Khong them storage secret/credential.
+- Khong doi domain/Auth/OAuth config that.
+- Khong sua schema.
+- Khong tao/chay migration.
+- Khong sua du lieu that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local` hoac `.dev.vars`.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 22 co the la Backup Dry-Run Command Design neu tiep tuc backup automation, hoac Custom Domain Cutover Execution neu domain that da chot va co quyen cau hinh.
+
 ## 2026-06-17 - Phase 20 Custom Domain Cutover Readiness completed
 
 ### Trang thai hien tai

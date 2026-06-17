@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 044 - Phase 21 designs automated backup without enabling automation
+
+Chon:
+
+Phase 21 chi tao automated backup job design. Khong tao scheduled job that, khong bat cron, khong tao/upload backup production that, khong restore, khong them storage credential, khong deploy va khong mutate du lieu.
+
+Ly do:
+
+- Backup automation co the di chuyen du lieu gia dinh that ra ngoai app, nen can storage, retention, manifest, checksum, restore drill va monitoring truoc khi bat that.
+- Current export layer da co JSON/GEDCOM/ZIP output, nhung chua co job identity, storage target hay retention policy duoc approval.
+- Job production can disabled-by-default va phai di qua dry-run/sample data truoc.
+- File `GIA_PHA_GITHUB_MENU.bat` dang modified ngoai scope phai tiep tuc de ngoai stage/commit.
+
 ## Decision 043 - Phase 20 keeps custom domain cutover as readiness only
 
 Chon:
