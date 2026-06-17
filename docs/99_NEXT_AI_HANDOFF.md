@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 37 Repository Hygiene GitHub Menu Review completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 37 da xu ly dirty state cua `GIA_PHA_GITHUB_MENU.bat`. Diff khong co content change huu ich, chi co line-ending warning, nen file da duoc restore ve HEAD.
+
+### File/script moi
+
+- `docs/37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md`
+- `scripts/check-repository-hygiene-github-menu-review.cjs`
+- `npm run check:repository-hygiene-github-menu-review`
+
+### Repository hygiene decision
+
+- Decision: `REVERT_TO_HEAD`
+- File reviewed: `GIA_PHA_GITHUB_MENU.bat`
+- Reason: no meaningful content diff, line-ending/touched-file noise only
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 38 - Backup Service Worker Boundary Design.
+
 ## 2026-06-17 - Phase 36 Production Backup Approval Checklist completed
 
 ### Trang thai hien tai

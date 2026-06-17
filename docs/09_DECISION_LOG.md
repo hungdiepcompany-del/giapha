@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 060 - Restore GitHub menu script dirty state to HEAD
+
+Chon:
+
+Phase 37 chon `REVERT_TO_HEAD` cho `GIA_PHA_GITHUB_MENU.bat`.
+
+Ly do:
+
+- `git diff -- GIA_PHA_GITHUB_MENU.bat` khong co content diff huu ich.
+- Dirty state chi la line-ending/touched-file noise.
+- Commit file .bat trong trang thai nay se tao nhieu hon gia tri van hanh.
+
+He qua:
+
+- Repo hygiene sach hon truoc khi scaffold backup service worker.
+- File menu khong duoc stage/commit trong phase sau tru khi co yeu cau rieng.
+
 ## Decision 059 - Production backup requires explicit approval gate
 
 Chon:

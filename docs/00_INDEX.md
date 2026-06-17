@@ -45,4 +45,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 34_LOCAL_SANDBOX_STORAGE_ADAPTER_PROTOTYPE.md | Prototype adapter local sandbox dung fixture backup, put/list/metadata/verify trong fixtures only. | Khi can chay adapter local truoc upload verification dry-run hoac cloud prototype. |
 | 35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md | Verify dry-run cho artifact trong local adapter sandbox: manifest, checksum, marker va secret scan. | Khi can kiem artifact sau mo phong upload local truoc approval backup production. |
 | 36_PRODUCTION_BACKUP_APPROVAL_CHECKLIST.md | Checklist approval/no-go truoc khi bat ky phase nao tao backup production that. | Khi can go/no-go cho production backup, storage target, secret, privacy, retention va restore drill. |
+| 37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md | Review va xu ly dirty state cua GIA_PHA_GITHUB_MENU.bat truoc worker split. | Khi can biet vi sao file menu duoc restore ve HEAD va repo hygiene sach hon. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

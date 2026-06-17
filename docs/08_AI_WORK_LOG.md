@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 37 Repository Hygiene GitHub Menu Review
+
+### Phase
+
+Phase 37 - Repository Hygiene & GitHub Menu Script Review
+
+### Viec da lam
+
+- Review dirty state cua `GIA_PHA_GITHUB_MENU.bat`.
+- Xac nhan `git diff -- GIA_PHA_GITHUB_MENU.bat` khong co content diff, chi co line-ending warning.
+- Chon decision `REVERT_TO_HEAD` va restore file ve HEAD.
+- Tao `docs/37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md`.
+- Tao `scripts/check-repository-hygiene-github-menu-review.cjs`.
+- Them `npm run check:repository-hygiene-github-menu-review`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-repository-hygiene-github-menu-review.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- `GIA_PHA_GITHUB_MENU.bat` da restore ve HEAD, khong commit noi dung .bat.
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 36 Production Backup Approval Checklist
 
 ### Phase
