@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 40 Backup Service Worker Local Contract Checks completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 40 da them static/local contract checks cho backup service worker scaffold. Khong deploy, khong runtime smoke Cloudflare, khong goi network.
+
+### File/script moi
+
+- `docs/40_BACKUP_SERVICE_WORKER_LOCAL_CONTRACT_CHECKS.md`
+- `scripts/check-backup-service-worker-local-contract.cjs`
+- `scripts/smoke-backup-service-worker-contract.cjs`
+- `npm run check:backup-service-worker-local-contract`
+- `npm run smoke:backup-service-worker:contract`
+
+### Contract baseline
+
+- Smoke marker: `BACKUP_SERVICE_CONTRACT_SMOKE_ONLY`
+- Worker dry-run marker: `BACKUP_SERVICE_DRY_RUN_ONLY`
+- Checks: routes, bearer auth, 401, JSON envelope, no outbound API patterns
+- Runtime execution: skipped by design
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 41 - Backup Service Worker Integration Readiness.
+
 ## 2026-06-17 - Phase 39 Backup Service Worker Scaffold completed
 
 ### Trang thai hien tai

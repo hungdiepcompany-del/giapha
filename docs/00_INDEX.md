@@ -48,4 +48,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 37_REPOSITORY_HYGIENE_GITHUB_MENU_REVIEW.md | Review va xu ly dirty state cua GIA_PHA_GITHUB_MENU.bat truoc worker split. | Khi can biet vi sao file menu duoc restore ve HEAD va repo hygiene sach hon. |
 | 38_BACKUP_SERVICE_WORKER_BOUNDARY_DESIGN.md | Thiet ke boundary cho backup service worker nho rieng, internal endpoint va JSON envelope. | Khi can chuan bi tach backup/storage khoi main OpenNext worker nhung chua scaffold code. |
 | 39_BACKUP_SERVICE_WORKER_SCAFFOLD.md | Scaffold backup service worker toi thieu trong services/backup-service, chua deploy va chua storage that. | Khi can xem endpoint, auth placeholder, wrangler config va scaffold worker local. |
+| 40_BACKUP_SERVICE_WORKER_LOCAL_CONTRACT_CHECKS.md | Static/local contract checks cho backup service worker scaffold, gom auth, envelope, endpoint va no-deploy policy. | Khi can kiem worker source/config truoc integration readiness hoac deploy readiness. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

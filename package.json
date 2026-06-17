@@ -63,6 +63,8 @@
     "check:repository-hygiene-github-menu-review": "node scripts/check-repository-hygiene-github-menu-review.cjs",
     "check:backup-service-worker-boundary-design": "node scripts/check-backup-service-worker-boundary-design.cjs",
     "check:backup-service-worker-scaffold": "node scripts/check-backup-service-worker-scaffold.cjs",
+    "check:backup-service-worker-local-contract": "node scripts/check-backup-service-worker-local-contract.cjs",
+    "smoke:backup-service-worker:contract": "node scripts/smoke-backup-service-worker-contract.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

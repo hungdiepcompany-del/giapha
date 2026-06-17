@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 40 Backup Service Worker Local Contract Checks
+
+### Phase
+
+Phase 40 - Backup Service Worker Local Contract Checks
+
+### Viec da lam
+
+- Tao `docs/40_BACKUP_SERVICE_WORKER_LOCAL_CONTRACT_CHECKS.md`.
+- Tao `scripts/check-backup-service-worker-local-contract.cjs`.
+- Tao `scripts/smoke-backup-service-worker-contract.cjs`.
+- Them `npm run check:backup-service-worker-local-contract`.
+- Them `npm run smoke:backup-service-worker:contract`.
+- Static/source contract check xac nhan health route, internal routes, bearer auth, 401, JSON envelope va dry-run marker.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-local-contract.cjs
+- scripts/smoke-backup-service-worker-contract.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/40_BACKUP_SERVICE_WORKER_LOCAL_CONTRACT_CHECKS.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy worker.
+- Khong runtime smoke Cloudflare.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 39 Backup Service Worker Scaffold
 
 ### Phase

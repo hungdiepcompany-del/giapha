@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 063 - Worker contract smoke stays static before deploy readiness
+
+Chon:
+
+Phase 40 dung static/source contract checker va smoke marker thay vi import/chay Cloudflare Worker runtime.
+
+Ly do:
+
+- Chua co build/runtime harness rieng cho worker service.
+- Static checks du de khoa endpoint/auth/envelope/no-outbound contract o phase nay.
+- Runtime smoke nen la phase deploy-readiness rieng sau khi co config ro rang.
+
+He qua:
+
+- `smoke:backup-service-worker:contract` khong goi network va khong deploy.
+- Phase 41 co the thiet ke integration readiness dua tren contract da khoa.
+
 ## Decision 062 - Backup service scaffold has internal-only mutation endpoints
 
 Chon:
