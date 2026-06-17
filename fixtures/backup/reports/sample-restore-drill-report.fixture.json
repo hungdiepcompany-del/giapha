@@ -1,0 +1,18 @@
+{
+  "marker": "RESTORE_DRILL_REPORT_ONLY",
+  "timestamp": "2026-06-17T08:30:00+07:00",
+  "environment": "fixture-dry-run",
+  "fixtureFilename": "sample-family.fixture.json",
+  "manifestFilename": "sample-family.manifest.fixture.json",
+  "manifestStatus": "PASS",
+  "memberGraphStatus": "PASS",
+  "privacyStatus": "PASS",
+  "secretScanStatus": "PASS",
+  "result": "PASS",
+  "noProductionMutation": true,
+  "restoreExecution": "SKIPPED",
+  "noProductionBackupCreated": true,
+  "fixtureChecksum": "cd811bce7d5732f478e01ce40650fd01cbd4c78f220b74d3b611a5dba9de6786",
+  "manifestChecksum": "eaf6ebd6491388f37516ddde912e679ea62fc30c24856b4897bc84e4b35ad79a",
+  "notes": "Fixture-only restore drill report. No production mutation."
+}

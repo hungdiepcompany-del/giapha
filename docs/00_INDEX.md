@@ -38,4 +38,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 27_BACKUP_CI_GATE_INTEGRATION.md | GitHub Actions backup readiness gate cho PR/manual, chi chay local dry-run va fixture checks. | Khi can kiem tra backup readiness tren CI ma khong dung secret, schedule hay deploy. |
 | 28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md | Mo phong storage local bang fixture sandbox va index mau, khong dung cloud/storage that. | Khi can staging backup fixture vao sandbox truoc khi chon storage target. |
 | 29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md | Retention policy gate tren fixture/sandbox metadata, khong xoa backup that. | Khi can kiem weekly/monthly/pre-deploy retention rule truoc storage/job that. |
+| 30_RESTORE_DRILL_REPORT_GENERATOR.md | Generator report restore dry-run bang fixture only, ghi report mau khong production mutation. | Khi can bang chung report cho restore drill truoc handoff backup readiness. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

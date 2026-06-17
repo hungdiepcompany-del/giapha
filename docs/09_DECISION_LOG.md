@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 053 - Restore drill report is fixture evidence only
+
+Chon:
+
+Phase 30 tao command `restore:drill:report` sinh report JSON tu fixture va manifest sample, khong restore that.
+
+Ly do:
+
+- Can co artifact report de handoff va CI/local review ma khong cham production.
+- Report restore that se co rui ro neu bi hieu nham la da phuc hoi production.
+- Fixture report giu bang chung manifest/graph/privacy/secret scan o muc an toan.
+
+He qua:
+
+- Report co `noProductionMutation: true` va `restoreExecution: SKIPPED`.
+- Report production that van can phase rieng sau khi co backup/storage/approval.
+
 ## Decision 052 - Retention policy gate does not remove artifacts
 
 Chon:

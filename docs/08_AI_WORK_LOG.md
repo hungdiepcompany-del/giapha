@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 30 Restore Drill Report Generator
+
+### Phase
+
+Phase 30 - Restore Drill Report Generator
+
+### Viec da lam
+
+- Tao `docs/30_RESTORE_DRILL_REPORT_GENERATOR.md`.
+- Tao `scripts/generate-restore-drill-report.cjs`.
+- Tao `scripts/check-restore-drill-report-generator.cjs`.
+- Them `npm run restore:drill:report`.
+- Them `npm run check:restore-drill-report-generator`.
+- Report generator doc fixture va manifest sample, validate manifest/graph/privacy/secret scan va tao report fixture JSON.
+- Report ghi `noProductionMutation: true` va `restoreExecution: SKIPPED`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/generate-restore-drill-report.cjs
+- scripts/check-restore-drill-report-generator.cjs
+- fixtures/backup/reports/
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/30_RESTORE_DRILL_REPORT_GENERATOR.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 29 Backup Artifact Retention Policy Gate
 
 ### Phase
