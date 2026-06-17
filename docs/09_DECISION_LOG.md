@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 077 - Backup service binding guardrails stay source-static and narrow
+
+Chon:
+
+Phase 54 them static guardrail scanner cho cac vung source lien quan main app, nhung khong scan docs/workflow va khong goi runtime.
+
+Ly do:
+
+- Can phat hien som viec hardcode token, URL worker that, hoac bat backup/restore/storage that.
+- Scanner qua rong se gay false positive voi docs placeholder va worker scaffold hop le.
+- Main app binding van dang dry-run, nen guardrail phai khoa nhung duong runtime that.
+
+He qua:
+
+- `check:backup-service-binding-guardrails` tro thanh gate bat buoc cho cac phase binding/API/smoke sau.
+- Cac placeholder hop le van duoc chap nhan khi khong co gia tri that.
+
 ## Decision 076 - Main app backup service client starts as dry-run-only server adapter
 
 Chon:
