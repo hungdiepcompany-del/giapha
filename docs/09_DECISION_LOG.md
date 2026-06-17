@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 042 - Phase 19 keeps backup and restore drill procedural before automation
+
+Chon:
+
+Phase 19 chi tao runbook scheduled backup va restore drill o muc quy trinh. Khong tao backup production that, khong restore production, khong them cron/job that, khong doi schema/data va khong doi domain/Auth/OAuth config.
+
+Ly do:
+
+- Backup production co the chua du lieu gia dinh that, nen can quy tac luu tru, manifest, PASS/FAIL va incident response truoc khi tu dong hoa.
+- Restore production la thao tac high-risk; drill phai chay tren local/test/staging/sandbox truoc.
+- Scheduled automation can thiet ke storage, retention, alerting va secret policy rieng; Phase 19 chi chuan hoa manual schedule va checklist.
+- File `GIA_PHA_GITHUB_MENU.bat` dang modified ngoai scope phai tiep tuc de ngoai stage/commit.
+
 ## Decision 041 - Phase 18 hardens backup, domain and alerting before automation
 
 Chon:

@@ -1,5 +1,50 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 19 Scheduled Backup & Restore Drill completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 19 bo sung runbook scheduled backup va restore drill an toan. Phase nay khong deploy lai, khong tao backup production that, khong restore production, khong them cron/job that, khong sua schema, khong chay migration, khong mutate du lieu va khong doi domain/Auth/OAuth config that.
+
+### File/script moi
+
+- `docs/19_SCHEDULED_BACKUP_RESTORE_DRILL.md`
+- `scripts/check-scheduled-backup-restore-drill.cjs`
+- `npm run check:scheduled-backup-restore-drill`
+
+### Drill baseline
+
+- Worker: `web-gia-pha`
+- Production URL: https://web-gia-pha.hungdiepcompany.workers.dev/
+- Deploy workflow: `.github/workflows/cloudflare-deploy.yml`
+- Phase 16/17: PASS
+- Phase 18: PASS_WITH_NOTES
+- Google OAuth production login: PASS by manual user test
+- Basic production route smoke: PASS by manual user test
+- Backup schedule: documented manual runbook only, no cron/job configured.
+- Restore drill: documented for non-production only, no production restore executed.
+
+### Boundary giu nguyen
+
+- Khong deploy lai.
+- Khong push.
+- Khong tao backup that.
+- Khong restore production.
+- Khong commit backup/export artifact.
+- Khong sua schema.
+- Khong tao/chay migration.
+- Khong sua du lieu that.
+- Khong doi domain/Auth/OAuth config that.
+- Khong lam import confirm that.
+- Khong lam revision restore that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local` hoac `.dev.vars`.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 20 co the la Custom Domain Cutover Readiness, Automated Backup Job Design, hoac focused production bugfix neu monitoring/smoke phat hien loi that.
+
 ## 2026-06-17 - Phase 18 Backup, Domain & Alerting Hardening completed
 
 ### Trang thai hien tai

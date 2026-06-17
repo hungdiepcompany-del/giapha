@@ -1,5 +1,60 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 19 Scheduled Backup & Restore Drill
+
+### Phase
+
+Phase 19 - Scheduled Backup & Restore Drill
+
+### Viec da lam
+
+- Tao `docs/19_SCHEDULED_BACKUP_RESTORE_DRILL.md`.
+- Ghi production baseline hien tai: Worker, production URL, workflow deploy, Phase 16/17/18 status, smoke/OAuth status va known issues.
+- Ghi drill goal: manual runbook, khong backup that, khong restore production, khong cron/job that.
+- Ghi recommended backup schedule cho pre/post deploy, weekly, monthly, import/restore/revision restore va future migration.
+- Ghi backup scope, naming convention, manifest template va privacy/secret safety.
+- Ghi restore drill scope, restore verification checklist va PASS/FAIL criteria.
+- Ghi drill log template, scheduled reminder strategy va incident response matrix cho backup/restore.
+- Ghi gaps/future work va Phase 19 boundary.
+- Tao `scripts/check-scheduled-backup-restore-drill.cjs`.
+- Them `npm run check:scheduled-backup-restore-drill`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-scheduled-backup-restore-drill.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/19_SCHEDULED_BACKUP_RESTORE_DRILL.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong sua schema.
+- Khong chay migration.
+- Khong sua du lieu that.
+- Khong tao backup/export that.
+- Khong restore production.
+- Khong lam import confirm that.
+- Khong lam revision restore that.
+- Khong doi domain that.
+- Khong doi Supabase/Auth/OAuth config that.
+- Khong hardcode secret/token/key.
+- Khong commit `.env.local`, `.dev.vars` hoac backup/export du lieu that.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 18 Backup, Domain & Alerting Hardening
 
 ### Phase

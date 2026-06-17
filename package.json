@@ -31,6 +31,7 @@
     "check:production-stabilization": "node scripts/check-production-stabilization.cjs",
     "check:production-ops-monitoring": "node scripts/check-production-ops-monitoring.cjs",
     "check:backup-domain-alerting-hardening": "node scripts/check-backup-domain-alerting-hardening.cjs",
+    "check:scheduled-backup-restore-drill": "node scripts/check-scheduled-backup-restore-drill.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },
