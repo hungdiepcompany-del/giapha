@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 35 Storage Upload Verification Dry-Run completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 35 da tao verify dry-run cho artifact trong local adapter sandbox. Script chi doc `fixtures/backup-sandbox/adapter/`, verify checksum/manifest/marker va khong upload cloud.
+
+### File/script moi
+
+- `docs/35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md`
+- `scripts/verify-storage-upload-dry-run.cjs`
+- `scripts/check-storage-upload-verification-dry-run.cjs`
+- `npm run backup:storage:verify-upload:dry-run`
+- `npm run check:storage-upload-verification-dry-run`
+
+### Verification baseline
+
+- Marker: `STORAGE_UPLOAD_VERIFY_DRY_RUN_ONLY`
+- Source: `fixtures/backup-sandbox/adapter/`
+- Manifest checksum: PASS
+- Fixture marker: PASS
+- Secret scan: PASS
+- Cloud upload: SKIPPED
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong upload cloud.
+- Khong tao bucket/folder/storage that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 36 - Production Backup Approval Checklist.
+
 ## 2026-06-17 - Phase 34 Local Sandbox Storage Adapter Prototype completed
 
 ### Trang thai hien tai

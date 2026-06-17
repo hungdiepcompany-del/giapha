@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 058 - Upload verification remains a local dry-run
+
+Chon:
+
+Phase 35 tao `backup:storage:verify-upload:dry-run` chi doc artifact da tao boi local sandbox adapter va verify manifest/checksum/secret flags. Khong upload cloud that.
+
+Ly do:
+
+- Can kiem artifact sau buoc put local truoc khi chuyen sang provider sandbox.
+- Upload cloud that can storage target, credential va approval rieng.
+- Dry-run verification giup bat checksum/manifest drift ma khong cham network.
+
+He qua:
+
+- Phase 36 co the dua upload verification dry-run vao approval checklist.
+- Provider upload van la phase rieng sau khi co storage target va approval.
+
 ## Decision 057 - Local storage adapter writes only fixture sandbox output
 
 Chon:

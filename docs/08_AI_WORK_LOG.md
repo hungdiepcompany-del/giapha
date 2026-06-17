@@ -1,5 +1,52 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 35 Storage Upload Verification Dry-Run
+
+### Phase
+
+Phase 35 - Storage Upload Verification Dry-Run
+
+### Viec da lam
+
+- Tao `docs/35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md`.
+- Tao `scripts/verify-storage-upload-dry-run.cjs`.
+- Tao `scripts/check-storage-upload-verification-dry-run.cjs`.
+- Them `npm run backup:storage:verify-upload:dry-run`.
+- Them `npm run check:storage-upload-verification-dry-run`.
+- Verify artifact trong `fixtures/backup-sandbox/adapter/` bang manifest/checksum/fixture marker/secret scan.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/verify-storage-upload-dry-run.cjs
+- scripts/check-storage-upload-verification-dry-run.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/35_STORAGE_UPLOAD_VERIFICATION_DRY_RUN.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong upload cloud.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 34 Local Sandbox Storage Adapter Prototype
 
 ### Phase
