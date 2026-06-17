@@ -62,6 +62,7 @@
     "check:production-backup-approval-checklist": "node scripts/check-production-backup-approval-checklist.cjs",
     "check:repository-hygiene-github-menu-review": "node scripts/check-repository-hygiene-github-menu-review.cjs",
     "check:backup-service-worker-boundary-design": "node scripts/check-backup-service-worker-boundary-design.cjs",
+    "check:backup-service-worker-scaffold": "node scripts/check-backup-service-worker-scaffold.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

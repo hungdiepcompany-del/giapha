@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 39 Backup Service Worker Scaffold completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 39 da scaffold backup service worker toi thieu trong `services/backup-service/`. Worker chua deploy, chua co production route, chua co real storage va chua tich hop main app.
+
+### File/script moi
+
+- `services/backup-service/src/index.ts`
+- `services/backup-service/wrangler.jsonc`
+- `services/backup-service/README.md`
+- `docs/39_BACKUP_SERVICE_WORKER_SCAFFOLD.md`
+- `scripts/check-backup-service-worker-scaffold.cjs`
+- `npm run check:backup-service-worker-scaffold`
+
+### Worker scaffold baseline
+
+- `GET /health`: public non-sensitive
+- `POST /internal/backup/dry-run`: bearer auth required
+- `POST /internal/backup/fixture-verify`: bearer auth required
+- Internal marker: `BACKUP_SERVICE_DRY_RUN_ONLY`
+- Auth placeholder: `BACKUP_SERVICE_INTERNAL_TOKEN`
+- Deploy: not run
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 40 - Backup Service Worker Local Contract Checks.
+
 ## 2026-06-17 - Phase 38 Backup Service Worker Boundary Design completed
 
 ### Trang thai hien tai

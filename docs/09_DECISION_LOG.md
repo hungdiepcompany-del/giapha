@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 062 - Backup service scaffold has internal-only mutation endpoints
+
+Chon:
+
+Phase 39 scaffold `services/backup-service` voi `GET /health` public va cac endpoint `/internal/*` yeu cau bearer token placeholder.
+
+Ly do:
+
+- Health check can non-sensitive va public de future deploy smoke don gian.
+- Dry-run/fixture verify la internal behavior, khong nen public mutation.
+- Scaffold can typecheck duoc nhung khong can Cloudflare runtime/deploy that.
+
+He qua:
+
+- Worker source co JSON envelope va marker `BACKUP_SERVICE_DRY_RUN_ONLY`.
+- Token that va route production van chua duoc cau hinh.
+
 ## Decision 061 - Backup service should be a small separate worker
 
 Chon:

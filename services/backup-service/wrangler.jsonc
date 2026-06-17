@@ -1,0 +1,9 @@
+{
+  "name": "web-gia-pha-backup-service",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-17",
+  "workers_dev": false,
+  "vars": {
+    "BACKUP_SERVICE_MODE": "scaffold"
+  }
+}
