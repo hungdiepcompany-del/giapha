@@ -40,6 +40,8 @@
     "backup:fixture:generate": "node scripts/generate-sample-backup-fixture.cjs",
     "check:backup-manifest-integrity": "node scripts/check-backup-manifest-integrity.cjs",
     "backup:fixture:verify": "node scripts/verify-sample-backup-integrity.cjs",
+    "check:restore-dry-run-validator": "node scripts/check-restore-dry-run-validator.cjs",
+    "restore:dry-run": "node scripts/restore-dry-run-validate.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

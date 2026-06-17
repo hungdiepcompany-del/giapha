@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 25 Restore Dry-Run Validator completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 25 them restore dry-run validator chi doc fixture sample local, validate manifest integrity, graph, privacy flags va secret scan. Restore execution luon la `SKIPPED`; phase nay khong restore that.
+
+### File/script moi
+
+- `docs/25_RESTORE_DRY_RUN_VALIDATOR.md`
+- `scripts/restore-dry-run-validate.cjs`
+- `scripts/check-restore-dry-run-validator.cjs`
+- `npm run restore:dry-run`
+- `npm run check:restore-dry-run-validator`
+
+### Restore dry-run baseline
+
+- Marker: `RESTORE_DRY_RUN_ONLY`
+- Manifest integrity: checked
+- Graph validation: checked
+- Privacy validation: checked
+- Restore execution: `SKIPPED`
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 26 - Backup Pipeline Readiness Gate.
+
 ## 2026-06-17 - Phase 24 Backup Manifest Integrity Checker completed
 
 ### Trang thai hien tai

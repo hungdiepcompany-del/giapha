@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 25 Restore Dry-Run Validator
+
+### Phase
+
+Phase 25 - Restore Dry-Run Validator
+
+### Viec da lam
+
+- Tao `docs/25_RESTORE_DRY_RUN_VALIDATOR.md`.
+- Tao `scripts/restore-dry-run-validate.cjs`.
+- Tao `scripts/check-restore-dry-run-validator.cjs`.
+- Them `npm run restore:dry-run`.
+- Them `npm run check:restore-dry-run-validator`.
+- Validator doc fixture va manifest sample, kiem manifest integrity, graph, privacy flags va secret scan.
+- Restore execution duoc danh dau `SKIPPED`, khong co restore that.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/restore-dry-run-validate.cjs
+- scripts/check-restore-dry-run-validator.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/25_RESTORE_DRY_RUN_VALIDATOR.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 24 Backup Manifest Integrity Checker
 
 ### Phase

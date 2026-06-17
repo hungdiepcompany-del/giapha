@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 048 - Restore validator remains dry-run only
+
+Chon:
+
+Phase 25 tao command `restore:dry-run` de validate fixture restore readiness bang in-memory plan, nhung restore execution luon la `SKIPPED`.
+
+Ly do:
+
+- Can kiem graph/privacy/manifest truoc khi thiet ke restore that.
+- Restore that co rui ro ghi de du lieu gia pha, nen khong duoc lam khi chua co transaction/validation/approval rieng.
+- Fixture-only validator giup pipeline sau nay co gate an toan ma khong cham production.
+
+He qua:
+
+- `restore:dry-run` co the dung trong readiness pipeline.
+- Bat ky restore that nao sau nay phai la phase rieng voi rollback, transaction va approval ro rang.
+
 ## Decision 047 - Backup manifest integrity stays fixture-only
 
 Chon:
