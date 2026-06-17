@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 073 - Secret preflight is checklist-only
+
+Chon:
+
+Phase 50 tao secrets preflight checklist bang placeholder va no-go conditions, khong doc, tao, verify gia tri, hay goi GitHub/Cloudflare API.
+
+Ly do:
+
+- Secret readiness can duoc xac nhan boi owner/operator trong approved secret stores, khong phai bang cach in gia tri vao repo/log.
+- Deploy backup service worker can Cloudflare token/account id, internal token va smoke env nhung tat ca phai o ngoai repo.
+- No-go list giup dung deploy khi thieu approval, rollback, local checks hoac post-deploy tester.
+
+He qua:
+
+- Phase 51 co the them deploy approval gate dua tren checklist nay.
+- Repo van khong co secret that.
+
 ## Decision 072 - Manual deploy remains a runbook until owner approval
 
 Chon:

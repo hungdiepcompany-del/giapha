@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 50 Backup Service Worker Secrets Preflight Checklist completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 50 da tao secrets preflight checklist cho backup service worker. Chua doc/tao secret that, chua goi GitHub/Cloudflare API, chua deploy va chua tao production backup.
+
+### File/script moi
+
+- `docs/50_BACKUP_SERVICE_WORKER_SECRETS_PREFLIGHT_CHECKLIST.md`
+- `scripts/check-backup-service-worker-secrets-preflight-checklist.cjs`
+- `npm run check:backup-service-worker-secrets-preflight-checklist`
+
+### Secrets preflight baseline
+
+- Required GitHub placeholders: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+- Required runtime placeholder: `BACKUP_SERVICE_INTERNAL_TOKEN`
+- Required smoke placeholders: `BACKUP_SERVICE_SMOKE_BASE_URL`, `BACKUP_SERVICE_SMOKE_TOKEN`
+- No-go conditions: documented
+- Real secret values: not present
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong doc/tao secret that.
+- Khong goi GitHub/Cloudflare API.
+- Khong goi production API/DB/network.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 51 - Backup Service Worker Deploy Approval Gate.
+
 ## 2026-06-17 - Phase 49 Backup Service Worker Manual Deploy Runbook completed
 
 ### Trang thai hien tai

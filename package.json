@@ -75,6 +75,7 @@
     "check:backup-service-worker-deploy-readiness-handoff": "node scripts/check-backup-service-worker-deploy-readiness-handoff.cjs",
     "check:backup-service-worker-github-actions-deploy-readiness": "node scripts/check-backup-service-worker-github-actions-deploy-readiness.cjs",
     "check:backup-service-worker-manual-deploy-runbook": "node scripts/check-backup-service-worker-manual-deploy-runbook.cjs",
+    "check:backup-service-worker-secrets-preflight-checklist": "node scripts/check-backup-service-worker-secrets-preflight-checklist.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

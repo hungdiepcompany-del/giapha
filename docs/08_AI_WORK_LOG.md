@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 50 Backup Service Worker Secrets Preflight Checklist
+
+### Phase
+
+Phase 50 - Backup Service Worker Secrets Preflight Checklist
+
+### Viec da lam
+
+- Tao `docs/50_BACKUP_SERVICE_WORKER_SECRETS_PREFLIGHT_CHECKLIST.md`.
+- Tao `scripts/check-backup-service-worker-secrets-preflight-checklist.cjs`.
+- Them `npm run check:backup-service-worker-secrets-preflight-checklist`.
+- Ghi required placeholders: `BACKUP_SERVICE_INTERNAL_TOKEN`, `BACKUP_SERVICE_SMOKE_BASE_URL`, `BACKUP_SERVICE_SMOKE_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+- Ghi secret ownership, rotation, verification without printing values, no-secret-logging policy va no-go conditions.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-secrets-preflight-checklist.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/50_BACKUP_SERVICE_WORKER_SECRETS_PREFLIGHT_CHECKLIST.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong doc secret that.
+- Khong tao secret that.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi GitHub/Cloudflare API.
+- Khong deploy worker.
+- Khong tao/upload backup production that.
+
 ## 2026-06-17 - Phase 49 Backup Service Worker Manual Deploy Runbook
 
 ### Phase
