@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 43 Backup Service Worker Deploy Readiness Gate completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 43 da tao deploy readiness gate cho backup service worker bang static/local checks. Worker van chua deploy, chua co production route, chua co secret that, chua co real storage va chua tao production backup.
+
+### File/script moi
+
+- `docs/43_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_GATE.md`
+- `scripts/check-backup-service-worker-deploy-readiness.cjs`
+- `npm run check:backup-service-worker-deploy-readiness`
+
+### Deploy readiness baseline
+
+- Service path: `services/backup-service`
+- Wrangler name: `web-gia-pha-backup-service`
+- Future deploy command: documented as placeholder only
+- Production route: not configured
+- Deploy: not run
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 44 - Backup Service Worker Env & Secret Contract Runbook.
+
 ## 2026-06-17 - Phase 42 Worker Split Backup Readiness Handoff completed
 
 ### Trang thai hien tai

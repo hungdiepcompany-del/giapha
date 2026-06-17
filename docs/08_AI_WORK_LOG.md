@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 43 Backup Service Worker Deploy Readiness Gate
+
+### Phase
+
+Phase 43 - Backup Service Worker Deploy Readiness Gate
+
+### Viec da lam
+
+- Tao `docs/43_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_GATE.md`.
+- Tao `scripts/check-backup-service-worker-deploy-readiness.cjs`.
+- Them `npm run check:backup-service-worker-deploy-readiness`.
+- Khoa deploy readiness bang static checks: source, wrangler config, endpoints, auth placeholder, JSON envelope va secret safety.
+- Ghi future deploy command placeholder nhung noi ro khong chay trong Phase 43.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-deploy-readiness.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/43_BACKUP_SERVICE_WORKER_DEPLOY_READINESS_GATE.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy worker.
+- Khong them route production.
+- Khong them deploy workflow.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
 ## 2026-06-17 - Phase 42 Worker Split Backup Readiness Handoff
 
 ### Phase

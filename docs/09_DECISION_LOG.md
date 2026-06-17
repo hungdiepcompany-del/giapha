@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 066 - Backup service deploy readiness remains no-deploy
+
+Chon:
+
+Phase 43 tao deploy readiness gate cho backup service worker bang static/local checks, nhung khong deploy that va khong them production route.
+
+Ly do:
+
+- Backup service worker moi o muc scaffold va chua co secret/storage/main-app integration.
+- Deploy command can duoc document nhu placeholder de phase sau biet huong, nhung khong nen chay khi chua approval.
+- Wrangler config can duoc khoa o muc no-route/no-secret truoc khi bat ky deploy phase nao.
+
+He qua:
+
+- `check:backup-service-worker-deploy-readiness` xac nhan source/config/endpoints/auth/envelope/secret safety.
+- Phase 44 co the tap trung vao env/secret contract runbook.
+
 ## Decision 065 - Worker split readiness is a handoff baseline, not deploy approval
 
 Chon:
