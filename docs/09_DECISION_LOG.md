@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 046 - Phase 23 uses generated sample fixtures only
+
+Chon:
+
+Phase 23 tao sample fixture generator ghi file vao `fixtures/backup/` voi du lieu gia, khong dung du lieu gia pha that. Fixture va manifest deu danh dau `environment: fixture`, `contains_real_data: false`, `contains_secret: false`.
+
+Ly do:
+
+- Cac buoc manifest integrity va restore dry-run can input on dinh de kiem tra ma khong cham production.
+- Fixture trong repo phai la du lieu mau ro rang, khong phai backup that.
+- Generator giup tao lai fixture deterministic thay vi copy thu cong.
+- File `GIA_PHA_GITHUB_MENU.bat` van la thay doi ton dong ngoai scope, khong stage/commit.
+
 ## Decision 045 - Phase 22 starts backup automation with mock dry-run only
 
 Chon:

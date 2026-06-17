@@ -1,5 +1,55 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 23 Sample Fixture Backup Generator
+
+### Phase
+
+Phase 23 - Sample Fixture Backup Generator
+
+### Viec da lam
+
+- Tao `docs/23_SAMPLE_FIXTURE_BACKUP_GENERATOR.md`.
+- Tao `scripts/generate-sample-backup-fixture.cjs`.
+- Tao `scripts/check-sample-fixture-backup-generator.cjs`.
+- Them `npm run backup:fixture:generate`.
+- Them `npm run check:sample-fixture-backup-generator`.
+- Generator tao fixture JSON va manifest JSON trong `fixtures/backup/` bang static sample data.
+- Fixture danh dau `environment: fixture`, `contains_real_data: false`, `contains_secret: false`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/generate-sample-backup-fixture.cjs
+- scripts/check-sample-fixture-backup-generator.cjs
+- fixtures/backup/sample-family.fixture.json
+- fixtures/backup/sample-family.manifest.fixture.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/23_SAMPLE_FIXTURE_BACKUP_GENERATOR.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong dung du lieu gia pha that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 22 Backup Dry-Run Command Design
 
 ### Phase

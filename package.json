@@ -36,6 +36,8 @@
     "check:automated-backup-job-design": "node scripts/check-automated-backup-job-design.cjs",
     "check:backup-dry-run-command-design": "node scripts/check-backup-dry-run-command-design.cjs",
     "backup:dry-run": "node scripts/backup-dry-run.cjs",
+    "check:sample-fixture-backup-generator": "node scripts/check-sample-fixture-backup-generator.cjs",
+    "backup:fixture:generate": "node scripts/generate-sample-backup-fixture.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs"
   },

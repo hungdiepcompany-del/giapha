@@ -31,4 +31,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 20_CUSTOM_DOMAIN_CUTOVER_READINESS.md | Runbook san sang doi custom domain: Cloudflare, Supabase Auth, Google OAuth, smoke va rollback. | Khi chuan bi chot domain, doi canonical URL hoac lap ke hoach cutover domain production. |
 | 21_AUTOMATED_BACKUP_JOB_DESIGN.md | Thiet ke automated backup job, trigger, storage, retention, guardrail va roadmap dry-run. | Khi chuan bi tu dong hoa backup nhung chua bat cron/job hoac upload backup that. |
 | 22_BACKUP_DRY_RUN_COMMAND_DESIGN.md | Thiet ke command backup dry-run dung mock data, manifest shape, naming convention va secret scan. | Khi can kiem tra backup automation an toan truoc khi tao fixture hoac job that. |
+| 23_SAMPLE_FIXTURE_BACKUP_GENERATOR.md | Generator fixture backup mau, manifest fixture va guardrail khong dung du lieu that. | Khi can tao sample fixture cho manifest integrity, restore dry-run hoac pipeline readiness. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
