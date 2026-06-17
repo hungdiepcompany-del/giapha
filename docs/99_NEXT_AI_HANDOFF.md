@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 31 Backup Readiness Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 31 da tong hop backup readiness Phase 18-31 vao mot handoff. Bundle hien tai van la docs/local fixture/dry-run/CI readiness only, khong phai production backup approval.
+
+### File/script moi
+
+- `docs/31_BACKUP_READINESS_HANDOFF.md`
+- `scripts/check-backup-readiness-handoff.cjs`
+- `npm run check:backup-readiness-handoff`
+
+### Backup readiness baseline
+
+- CI gate: `.github/workflows/backup-readiness.yml`
+- Local pipeline: `npm run backup:pipeline:readiness`
+- Sandbox storage simulation: `npm run backup:storage:sandbox`
+- Retention policy gate: `npm run backup:retention:check`
+- Restore drill report: `npm run restore:drill:report`
+- Production backup/storage/cron/restore: not enabled
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong dung cloud storage that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
+### Task tiep theo de xuat
+
+Phase 32 - Sandbox Storage Target Selection, hoac Production Backup Approval Checklist neu can go/no-go truoc khi dung storage that.
+
 ## 2026-06-17 - Phase 30 Restore Drill Report Generator completed
 
 ### Trang thai hien tai

@@ -39,4 +39,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 28_LOCAL_SANDBOX_BACKUP_STORAGE_SIMULATION.md | Mo phong storage local bang fixture sandbox va index mau, khong dung cloud/storage that. | Khi can staging backup fixture vao sandbox truoc khi chon storage target. |
 | 29_BACKUP_ARTIFACT_RETENTION_POLICY_GATE.md | Retention policy gate tren fixture/sandbox metadata, khong xoa backup that. | Khi can kiem weekly/monthly/pre-deploy retention rule truoc storage/job that. |
 | 30_RESTORE_DRILL_REPORT_GENERATOR.md | Generator report restore dry-run bang fixture only, ghi report mau khong production mutation. | Khi can bang chung report cho restore drill truoc handoff backup readiness. |
+| 31_BACKUP_READINESS_HANDOFF.md | Handoff tong hop backup readiness Phase 18-31, lenh local, CI gate, fixtures va boundary chua production backup. | Khi can resume backup readiness hoac chon buoc tiep theo ve storage/domain/approval. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

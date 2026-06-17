@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 054 - Backup readiness handoff is not production backup approval
+
+Chon:
+
+Phase 31 tao `docs/31_BACKUP_READINESS_HANDOFF.md` va checker de tong hop Phase 18-31, nhung khong bien bundle nay thanh approval cho backup production.
+
+Ly do:
+
+- Cac phase backup gan day moi tao runbook, fixture, dry-run, local CI va report mau.
+- Production backup can storage target, credential handling, approval, smoke evidence va rollback rieng.
+- Handoff can ro rang de AI sau khong hieu nham fixture/report la backup that.
+
+He qua:
+
+- Next phase nen chon storage target sandbox hoac approval checklist truoc khi tao backup that.
+- Khong bat cron, khong upload, khong restore va khong deploy tu Phase 31.
+
 ## Decision 053 - Restore drill report is fixture evidence only
 
 Chon:

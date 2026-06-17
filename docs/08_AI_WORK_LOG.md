@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 31 Backup Readiness Handoff
+
+### Phase
+
+Phase 31 - Backup Readiness Handoff Consolidation
+
+### Viec da lam
+
+- Tao `docs/31_BACKUP_READINESS_HANDOFF.md`.
+- Tao `scripts/check-backup-readiness-handoff.cjs`.
+- Them `npm run check:backup-readiness-handoff`.
+- Tong hop baseline Phase 18-31, command local, CI workflow, fixture files, safe scope va nhung viec van chua phai production backup.
+- Ghi ro next phase de xuat va boundary khong deploy/push/network/secret/restore/schedule.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-readiness-handoff.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/31_BACKUP_READINESS_HANDOFF.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy lai.
+- Khong push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong bat cron/schedule.
+- Khong hardcode secret/token/key.
+- Khong stage/commit `GIA_PHA_GITHUB_MENU.bat`.
+
 ## 2026-06-17 - Phase 30 Restore Drill Report Generator
 
 ### Phase
