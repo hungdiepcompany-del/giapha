@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 45 Backup Service Worker Post-Deploy Smoke Plan completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 45 da them post-deploy smoke plan va smoke script safe-skip cho backup service worker. Mac dinh smoke khong goi network vi `BACKUP_SERVICE_SMOKE_BASE_URL` chua duoc set explicit.
+
+### File/script moi
+
+- `docs/45_BACKUP_SERVICE_WORKER_POST_DEPLOY_SMOKE_PLAN.md`
+- `scripts/check-backup-service-worker-post-deploy-smoke-plan.cjs`
+- `scripts/smoke-backup-service-worker-post-deploy.cjs`
+- `npm run check:backup-service-worker-post-deploy-smoke-plan`
+- `npm run smoke:backup-service-worker:post-deploy`
+
+### Smoke baseline
+
+- Marker: `POST_DEPLOY_SMOKE_ONLY`
+- Required explicit URL env: `BACKUP_SERVICE_SMOKE_BASE_URL`
+- Optional internal endpoint token env: `BACKUP_SERVICE_SMOKE_TOKEN`
+- Default result without URL env: SKIPPED
+- Token logging: forbidden
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB khi thieu explicit smoke URL.
+- Khong goi Cloudflare/Supabase/Google API.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 46 - Backup Service Worker Main App Binding Contract.
+
 ## 2026-06-17 - Phase 44 Backup Service Worker Env Secret Contract completed
 
 ### Trang thai hien tai

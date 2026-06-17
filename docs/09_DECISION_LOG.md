@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 068 - Post-deploy smoke must safe-skip without explicit env
+
+Chon:
+
+Phase 45 them smoke script cho backup service worker nhung script phai skip neu thieu `BACKUP_SERVICE_SMOKE_BASE_URL` va chi goi internal endpoints khi co `BACKUP_SERVICE_SMOKE_TOKEN`.
+
+Ly do:
+
+- Backup service worker chua deploy va chua co production route.
+- Smoke script co the huu ich sau deploy, nhung khong duoc tu y goi production hoac in token.
+- Safe-skip giup validation local/CI khong can secret va khong cham network.
+
+He qua:
+
+- `smoke:backup-service-worker:post-deploy` mac dinh SKIPPED trong repo hien tai.
+- Future operator phai set env explicit neu muon smoke sau deploy that.
+
 ## Decision 067 - Backup service secrets stay placeholder-only until approved runtime setup
 
 Chon:

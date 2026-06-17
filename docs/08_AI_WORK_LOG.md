@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-17 - Phase 45 Backup Service Worker Post-Deploy Smoke Plan
+
+### Phase
+
+Phase 45 - Backup Service Worker Post-Deploy Smoke Plan
+
+### Viec da lam
+
+- Tao `docs/45_BACKUP_SERVICE_WORKER_POST_DEPLOY_SMOKE_PLAN.md`.
+- Tao `scripts/check-backup-service-worker-post-deploy-smoke-plan.cjs`.
+- Tao `scripts/smoke-backup-service-worker-post-deploy.cjs`.
+- Them `npm run check:backup-service-worker-post-deploy-smoke-plan`.
+- Them `npm run smoke:backup-service-worker:post-deploy`.
+- Smoke script co marker `POST_DEPLOY_SMOKE_ONLY` va safe skip khi thieu `BACKUP_SERVICE_SMOKE_BASE_URL`.
+- Noi ro neu thieu `BACKUP_SERVICE_SMOKE_TOKEN` thi chi `/health` duoc chay, internal endpoint bi skip.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- package.json
+- scripts/check-backup-service-worker-post-deploy-smoke-plan.cjs
+- scripts/smoke-backup-service-worker-post-deploy.cjs
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/45_BACKUP_SERVICE_WORKER_POST_DEPLOY_SMOKE_PLAN.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy worker.
+- Khong hardcode URL.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network vi khong co `BACKUP_SERVICE_SMOKE_BASE_URL` explicit.
+- Khong in token.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-17 - Phase 44 Backup Service Worker Env Secret Contract
 
 ### Phase
