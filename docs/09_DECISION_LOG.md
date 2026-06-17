@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 071 - Backup service deploy workflow is manual-only
+
+Chon:
+
+Phase 48 tao `.github/workflows/backup-service-deploy.yml` chi voi `workflow_dispatch`, khong co push, pull_request hoac schedule trigger.
+
+Ly do:
+
+- Backup service worker deploy can owner chu dong bam workflow sau khi secret/approval san sang.
+- Auto deploy tu code change co the mo production route khi chua smoke/rollback.
+- Workflow rieng giup khong tron deploy main app voi backup service worker.
+
+He qua:
+
+- Workflow co deploy step cho tuong lai nhung khong duoc chay trong Phase 48.
+- Checker khoa manual-only trigger va secret reference dang `secrets.*`.
+
 ## Decision 070 - Deploy readiness handoff is not deploy approval
 
 Chon:

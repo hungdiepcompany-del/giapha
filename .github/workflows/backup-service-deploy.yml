@@ -1,0 +1,64 @@
+name: Backup Service Deploy
+
+# Manual only. Do not add push, pull_request, or schedule triggers.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-service-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  backup-service-deploy:
+    name: Backup service deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify deploy environment
+        shell: bash
+        run: |
+          test -n "${CLOUDFLARE_API_TOKEN}" || (echo "CLOUDFLARE_API_TOKEN is missing" && exit 1)
+          test -n "${CLOUDFLARE_ACCOUNT_ID}" || (echo "CLOUDFLARE_ACCOUNT_ID is missing" && exit 1)
+          echo "Required backup service deploy environment is configured."
+
+      - name: Check backup service deploy readiness
+        run: npm run check:backup-service-worker-deploy-readiness
+
+      - name: Check backup service env secret contract
+        run: npm run check:backup-service-worker-env-secret-contract
+
+      - name: Check backup service post-deploy smoke plan
+        run: npm run check:backup-service-worker-post-deploy-smoke-plan
+
+      - name: Check backup service main app binding contract
+        run: npm run check:backup-service-worker-main-app-binding-contract
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Deploy backup service worker
+        working-directory: services/backup-service
+        run: npx wrangler deploy

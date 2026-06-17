@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-17 - Phase 48 Backup Service Worker GitHub Actions Deploy Workflow Readiness completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 48 da tao GitHub Actions workflow readiness cho backup service worker deploy. Workflow moi la manual-only qua `workflow_dispatch`; chua chay workflow, chua push, chua deploy va chua them schedule.
+
+### File/script moi
+
+- `.github/workflows/backup-service-deploy.yml`
+- `docs/48_BACKUP_SERVICE_WORKER_GITHUB_ACTIONS_DEPLOY_WORKFLOW_READINESS.md`
+- `scripts/check-backup-service-worker-github-actions-deploy-readiness.cjs`
+- `npm run check:backup-service-worker-github-actions-deploy-readiness`
+
+### Workflow baseline
+
+- Name: `Backup Service Deploy`
+- Trigger: `workflow_dispatch` only
+- Forbidden triggers: no `push`, no `pull_request`, no `schedule`
+- Secrets references: `secrets.CLOUDFLARE_API_TOKEN`, `secrets.CLOUDFLARE_ACCOUNT_ID`
+- Deploy scope: `services/backup-service`
+- Local deploy in phase: not run
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi network/API/DB tu local workspace.
+- Khong goi Cloudflare/Supabase/Google API tu local workspace.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 49 - Backup Service Worker Manual Deploy Runbook.
+
 ## 2026-06-17 - Phase 47 Backup Service Worker Deploy Readiness Handoff completed
 
 ### Trang thai hien tai
