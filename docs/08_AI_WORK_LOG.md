@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 88 Backup Permission Real Migration Apply Execution
+
+### Phase
+
+Phase 88 - Backup Permission Real Migration Apply Execution
+
+### Viec da lam
+
+- Ghi nhan owner da chay SQL migration qua Supabase Dashboard SQL Editor.
+- Ghi target project ref `frkyeuxrlcflmsxxsolp`.
+- Ghi migration path `db/migrations/20260618_0007_backup_operator_permissions.sql`.
+- Ghi DB mutation owner-confirmed va gioi han trong backup operator permission metadata/role assignments.
+- Ghi ro Codex khong co Supabase CLI/link/credential local de tu query DB trong Phase 88.
+- Tao checker local cho apply execution record.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/88_BACKUP_PERMISSION_REAL_MIGRATION_APPLY_EXECUTION.md
+- scripts/check-backup-permission-real-migration-apply-execution.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+- Migration 0007 da duoc owner-confirmed apply tren Supabase Dashboard.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong go fallback `permissions.manage`.
+- Khong bat execute/restore runtime.
+- Khong in secret/token/key/connection string.
+
 ## 2026-06-18 - Phase 87 Backup Permission Execution Readiness Handoff
 
 ### Phase

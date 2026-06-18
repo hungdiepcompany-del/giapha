@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 111 - Record manual Dashboard migration apply as owner-confirmed execution
+
+Chon:
+
+Phase 88 ghi nhan migration `db/migrations/20260618_0007_backup_operator_permissions.sql` da duoc owner chay thu cong bang Supabase Dashboard SQL Editor tren project ref `frkyeuxrlcflmsxxsolp`.
+
+Ly do:
+
+- Owner da xac nhan apply thanh cong tren dung project.
+- Local workspace khong co Supabase CLI, project link hoac DB credential de tai hien CLI apply.
+- Phase 89 se tach post-apply verification khoi execution record va khong suy dien qua muc bang chung hien co.
+- Fallback `permissions.manage` va runtime execute/restore van giu nguyen.
+
 ## Decision 110 - Execution readiness is not permission to apply DB
 
 Chon:

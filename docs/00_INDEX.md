@@ -96,4 +96,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 85_BACKUP_PERMISSION_ROLLBACK_DRILL_PLAN.md | Rollback drill plan cho migration backup permission, gom failure scenarios, restore snapshot va fallback `permissions.manage`. | Khi can chuan bi rollback truoc khi apply migration that. |
 | 86_BACKUP_PERMISSION_APPLY_APPROVAL_GATE.md | Approval gate cuoi truoc khi apply migration backup permission that, gom marker owner approval va no-go conditions. | Khi can xin phep owner truoc execution phase that. |
 | 87_BACKUP_PERMISSION_EXECUTION_READINESS_HANDOFF.md | Handoff tong hop execution readiness Phase 83-87 cho migration backup permission, van blocked den khi owner approve apply that. | Khi can quyet dinh Phase 88 apply migration, deploy worker hoac tam dung ha tang. |
+| 88_BACKUP_PERMISSION_REAL_MIGRATION_APPLY_EXECUTION.md | Ghi nhan owner-confirmed manual apply migration backup permission tren Supabase Dashboard dung project. | Khi can biet apply method, mutation scope va boundary sau migration. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

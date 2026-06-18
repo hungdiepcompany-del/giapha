@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 88 Backup Permission Real Migration Apply Execution completed
+
+### Trang thai hien tai
+
+Owner da xac nhan chay SQL migration `db/migrations/20260618_0007_backup_operator_permissions.sql` bang Supabase Dashboard SQL Editor tren project ref `frkyeuxrlcflmsxxsolp`. DB mutation da xay ra trong migration scope. Khong deploy, khong push, khong go fallback va khong bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/88_BACKUP_PERMISSION_REAL_MIGRATION_APPLY_EXECUTION.md`
+- `scripts/check-backup-permission-real-migration-apply-execution.cjs`
+- `npm run check:backup-permission-real-migration-apply-execution`
+
+### Apply baseline
+
+- Apply method: Supabase Dashboard SQL Editor manual execution.
+- Apply result: owner-confirmed successful.
+- Target project ref: `frkyeuxrlcflmsxxsolp`.
+- Local Supabase CLI/link/DB credentials: unavailable to Codex.
+- Phase 89 must separate owner confirmation from automated DB verification.
+- Runtime fallback `permissions.manage` still remains.
+- Execute/restore runtime still disabled.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong goi backup worker.
+- Khong tao/upload backup production.
+- Khong restore production.
+- Khong hardcode hoac in secret/token/key/connection string.
+
+### Task tiep theo de xuat
+
+Phase 89 - Backup Permission Post-Apply Verification.
+
 ## 2026-06-18 - Phase 87 Backup Permission Execution Readiness Handoff completed
 
 ### Trang thai hien tai
