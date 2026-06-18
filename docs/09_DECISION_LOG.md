@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 113 - Runtime smoke remains local/static without explicit env
+
+Chon:
+
+Phase 90 chap nhan post-migration endpoint smoke safe-skip khi thieu `BACKUP_PERMISSION_SMOKE_BASE_URL` va `BACKUP_PERMISSION_SMOKE_EXPECTED_USER`; permission guard va dry-run smoke van chay local/static.
+
+Ly do:
+
+- Khong tu doan production URL, user identity hoac authentication context.
+- Local/static smoke van xac nhan fallback, dry-run boundary va no-worker-call markers.
+- Runtime smoke chua du bang chung de go fallback `permissions.manage`.
+
 ## Decision 112 - Post-apply verification must safe-skip without admin credentials
 
 Chon:

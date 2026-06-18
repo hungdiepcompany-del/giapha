@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 90 Backup Operator Permission Runtime Smoke completed
+
+### Trang thai hien tai
+
+Phase 90 da chay runtime smoke an toan. Post-migration endpoint smoke safe-skip vi thieu explicit env; permission guard va dry-run smoke local/static PASS. Khong goi worker, khong tao backup, khong upload storage va khong restore.
+
+### File/script moi
+
+- `docs/90_BACKUP_OPERATOR_PERMISSION_RUNTIME_SMOKE.md`
+- `scripts/check-backup-operator-permission-runtime-smoke.cjs`
+- `npm run check:backup-operator-permission-runtime-smoke`
+
+### Smoke baseline
+
+- `smoke:backup-permission:post-migration`: SKIPPED_NO_EXPLICIT_ENV.
+- `smoke:backup-operator:permission-guard`: PASS_LOCAL_STATIC.
+- `smoke:backup-operator:dry-run`: PASS_LOCAL_STATIC.
+- Network execution: skipped.
+- Worker call/production backup/storage upload/restore: no.
+- Runtime fallback `permissions.manage` still remains.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong DB mutation.
+- Khong worker call/production backup/restore.
+- Khong hardcode hoac in secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 91 - Backup Permission Fallback Removal Readiness.
+
 ## 2026-06-18 - Phase 89 Backup Permission Post-Apply Verification completed
 
 ### Trang thai hien tai

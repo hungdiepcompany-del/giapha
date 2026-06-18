@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 90 Backup Operator Permission Runtime Smoke
+
+### Phase
+
+Phase 90 - Backup Operator Permission Runtime Smoke
+
+### Viec da lam
+
+- Chay `smoke:backup-permission:post-migration`: SKIPPED do thieu explicit smoke env.
+- Chay `smoke:backup-operator:permission-guard`: PASS local/static.
+- Chay `smoke:backup-operator:dry-run`: PASS local/static.
+- Xac nhan khong worker call, khong production backup, khong storage upload va khong restore.
+- Tao docs/checker tong hop runtime smoke result.
+- Khong sua existing smoke scripts vi safe-skip/guardrails da dung.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/90_BACKUP_OPERATOR_PERMISSION_RUNTIME_SMOKE.md
+- scripts/check-backup-operator-permission-runtime-smoke.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong network endpoint smoke do thieu explicit env.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong goi worker/backup/restore that.
+
 ## 2026-06-18 - Phase 89 Backup Permission Post-Apply Verification
 
 ### Phase
