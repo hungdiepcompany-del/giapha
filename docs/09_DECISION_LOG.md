@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 101 - Backup operator permission migration file is created but not run
+
+Chon:
+
+Phase 78 tao real migration file trong `supabase/migrations/` cho `backup.operator.*`, nhung khong chay migration va khong apply DB.
+
+Ly do:
+
+- Owner chi approve file creation trong prompt nay.
+- DB mutation, fallback removal va execute/restore runtime activation van can approval rieng.
+- Migration can idempotent va static-checkable truoc khi co bat ky apply that nao.
+
+He qua:
+
+- Migration file la `supabase/migrations/20260618_0007_backup_operator_permissions.sql`.
+- File co marker `DO_NOT_RUN_WITHOUT_SEPARATE_OWNER_APPROVAL`.
+- Runtime fallback `permissions.manage` van giu nguyen.
+
 ## Decision 100 - Migration candidate handoff stops before real DB change
 
 Chon:
