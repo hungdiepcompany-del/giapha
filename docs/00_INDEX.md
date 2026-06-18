@@ -76,4 +76,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 65_BACKUP_OPERATOR_UI_PERMISSION_GUARD.md | Server-side permission guard cho `/admin/backups`, dung backup.operator.view hoac fallback permissions.manage. | Khi can dam bao UI operator chi hien voi user phu hop va van dry-run only. |
 | 66_BACKUP_OPERATOR_PERMISSION_SMOKE_GUARDRAILS.md | Smoke va guardrail static tong hop cho API/UI backup operator permission guard va dry-run boundary. | Khi can kiem marker permission guard va chan drift sang worker/storage/backup/restore that. |
 | 67_BACKUP_OPERATOR_PERMISSION_HANDOFF.md | Handoff tong hop Phase 63-67 cho backup operator permission hardening va dry-run boundary. | Khi can chon migration/seed permission, deploy worker co approval, hoac quay lai domain model. |
+| 68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md | Design migration/seed cho `backup.operator.*` theo role hien co, khong tao/chay migration. | Khi can chuan bi permission seed truoc dry-run checker hoac migration that co approval. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

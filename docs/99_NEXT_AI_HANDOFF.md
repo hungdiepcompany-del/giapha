@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 68 Backup Permission Migration/Seed Design completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 68 da thiet ke strategy future migration/seed cho `backup.operator.*`, nhung chua tao migration that, chua chay migration va chua mutate DB.
+
+### File/script moi
+
+- `docs/68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md`
+- `scripts/check-backup-permission-migration-seed-design.cjs`
+- `npm run check:backup-permission-migration-seed-design`
+
+### Seed design baseline
+
+- Future permission rows: `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`.
+- Repo roles hien co: `OWNER`, `ADMIN`, `EDITOR`, `CONTRIBUTOR`, `FAMILY_VIEWER`, `PUBLIC_VIEWER`.
+- Recommendation: `OWNER` gets all four, `ADMIN` gets view/dry_run only, other roles none by default.
+- Recommended future migration: new idempotent `0007`, not editing old migrations.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 69 - Backup Permission Seed Dry-Run Checker.
+
 ## 2026-06-18 - Phase 67 Backup Operator Permission Handoff completed
 
 ### Trang thai hien tai

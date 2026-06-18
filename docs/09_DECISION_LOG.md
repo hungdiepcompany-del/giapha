@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 091 - Backup permission seed should be a future idempotent migration
+
+Chon:
+
+Phase 68 chi design future migration/seed cho `backup.operator.*`, khong tao migration trong phase nay. Future implementation nen tao migration moi `0007` thay vi sua migration cu.
+
+Ly do:
+
+- Existing migration pattern seed roles/permissions bang `insert ... on conflict`.
+- Existing roles la `OWNER`, `ADMIN`, `EDITOR`, `CONTRIBUTOR`, `FAMILY_VIEWER`, `PUBLIC_VIEWER`; repo chua co `SYSTEM_ADMIN`.
+- Migration/seed that can approval rieng de tranh cap execute/restore qua rong.
+
+He qua:
+
+- `OWNER` duoc de xuat co view/dry_run/execute/restore trong future seed.
+- `ADMIN` chi duoc de xuat view/dry_run.
+- Runtime fallback `permissions.manage` van giu cho den khi co migration/seed that.
+
 ## Decision 090 - Permission hardening stops before permission seed and real backup
 
 Chon:

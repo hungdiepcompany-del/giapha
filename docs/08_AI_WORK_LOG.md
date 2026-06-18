@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 68 Backup Permission Migration/Seed Design
+
+### Phase
+
+Phase 68 - Backup Permission Migration/Seed Design
+
+### Viec da lam
+
+- Tao `docs/68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md`.
+- Tao `scripts/check-backup-permission-migration-seed-design.cjs`.
+- Them `npm run check:backup-permission-migration-seed-design`.
+- Tong hop permission/migration pattern hien co trong `db/migrations`.
+- De xuat future permission rows `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`.
+- De xuat mapping theo role hien co: `OWNER` co view/dry_run/execute/restore, `ADMIN` co view/dry_run, cac role khac none by default.
+- Ghi ro Phase 68 chi design, khong tao/chay migration, khong mutate DB.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md
+- scripts/check-backup-permission-migration-seed-design.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+
 ## 2026-06-18 - Phase 67 Backup Operator Permission Handoff
 
 ### Phase
