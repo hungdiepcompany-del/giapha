@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 081 - Operator API route starts as dry-run contract without DB auth
+
+Chon:
+
+Phase 58 tao `/api/admin/backups/service-dry-run` de tra dry-run envelope local, nhung chua them Supabase permission guard trong route.
+
+Ly do:
+
+- Boundary Phase 58 cam goi DB/network va cam doc secret/env, trong khi permission context hien tai dua vao Supabase.
+- Route khong tao backup, khong doc du lieu that va khong goi worker, nen co the dong vai tro contract route cho UI dry-run.
+- Auth/permission hardening can phase rieng voi API server-side pattern ro rang.
+
+He qua:
+
+- UI operator co the goi route dry-run noi bo ma khong cham worker that.
+- Phase sau phai them guard quyen ro rang truoc khi route duoc dung cho van hanh that.
+
 ## Decision 080 - Main app binding remains dry-run until real worker approval
 
 Chon:
