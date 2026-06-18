@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 135 - Phase 113B safe-skip does not unblock Phase 114-117
+
+Chon:
+
+Record Phase 113B as `PASS_WITH_SAFE_SKIP` because explicit shell-only verification env was missing, while keeping independent DB verification for required tables, RLS, policies, excluded scope, no seed/backfill and existing table safety incomplete.
+
+Ly do:
+
+- The verifier safe-skipped before creating a Supabase client, as required by the shell-only credential contract.
+- No `.env.local`, `.dev.vars`, credential file or secret value was read.
+- A safe-skip proves the verifier guardrail works, but does not prove the applied database state.
+- Phase 114-117 should wait for credential-assisted read-only verification unless the owner explicitly accepts proceeding with owner-confirmation-only evidence and the limitation recorded.
+
 ## Decision 134 - Owner manual apply confirmation is not independent DB verification
 
 Chon:

@@ -1,5 +1,20 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 113B Vietnamese Genealogy Credential Verification
+
+- Ran Phase 113B as credential-assisted read-only post-apply verification attempt.
+- Explicit verification env was missing: `VIET_GENEALOGY_VERIFY_SUPABASE_URL`, `VIET_GENEALOGY_VERIFY_SUPABASE_SERVER_KEY` and `VIET_GENEALOGY_VERIFY_MODE=read_only`.
+- Verifier result: `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS`.
+- Final verification status recorded as `PASS_WITH_SAFE_SKIP`.
+- Created `docs/113B_VIETNAMESE_GENEALOGY_CREDENTIAL_VERIFICATION.md`.
+- Added checker `scripts/check-vietnamese-genealogy-credential-verification.cjs` and `npm run check:vietnamese-genealogy-credential-verification`.
+- Required tables, RLS, policies, excluded scope, no seed/backfill and existing table safety were not independently DB-verified in this phase.
+- Static source review remains unchanged: migration creates only `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`, enables RLS, uses existing permissions and includes no seed/backfill.
+- No DB apply, no migration rerun, no SQL mutation, no seed/backfill, no migration file modification, no new migration, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: verifier PASS_WITH_SAFE_SKIP, Phase 113B checker PASS, Phase 103-113A checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Recommended next phase: provide shell-only verification env and rerun credential-assisted verification before Phase 114-117.
+
 ## 2026-06-18 - Phase 113A Vietnamese Genealogy Manual Apply Verification
 
 - Owner/operator confirmation received: `OWNER CONFIRMED MANUAL APPLY SUCCESS`.
