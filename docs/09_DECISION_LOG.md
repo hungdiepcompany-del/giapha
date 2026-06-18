@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 125 - Next phase remains verification environment completion
+
+Chon:
+
+De xuat Phase 103 la Verification Environment Completion.
+
+Ly do:
+
+- DB verification van thieu shell-only credential.
+- Authenticated smoke van thieu explicit base URL/auth material.
+- Fallback removal khong du dieu kien va can approval rieng.
+
 ## Decision 124 - Fallback removal remains blocked after consolidation
 
 Chon:
