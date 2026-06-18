@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 087 - Backup operator API guard uses future permission with admin fallback
+
+Chon:
+
+Phase 64 guard route `/api/admin/backups/service-dry-run` bang `backup.operator.dry_run` truoc, fallback fail-closed bang `permissions.manage` khi permission backup chua duoc seed that.
+
+Ly do:
+
+- Phase nay khong duoc migration/schema/seed nen `backup.operator.dry_run` co the chua ton tai trong DB.
+- `permissions.manage` da la permission admin hien co va phu hop lam fallback tam thoi cho operator permission hardening.
+- API route can tra JSON 401/403 thay vi redirect page guard.
+
+He qua:
+
+- Route khong con la public dry-run contract nua; no can permission context server-side.
+- Backup that, storage upload, worker call va restore van bi chan.
+- Phase sau co the them UI guard va smoke/guardrail cho permission markers.
+
 ## Decision 086 - Backup operator permissions are proposed before DB seed
 
 Chon:

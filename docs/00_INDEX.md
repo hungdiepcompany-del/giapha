@@ -72,4 +72,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 61_BACKUP_OPERATOR_LOCAL_SMOKE.md | Smoke local/static cho operator API/UI dry-run, khong can server va khong goi network/env. | Khi can xac nhan route, UI, guardrail va package scripts van dry-run. |
 | 62_BACKUP_OPERATOR_DRY_RUN_HANDOFF.md | Handoff tong hop Phase 58-62 cho operator API/UI dry-run backup. | Khi can chon permission hardening, deploy worker that, hoac quay lai domain model. |
 | 63_BACKUP_OPERATOR_PERMISSION_MODEL_REVIEW.md | Review permission model cho backup operator, de xuat backup.operator.* nhung khong migration/schema. | Khi can chot UI/API permission boundary truoc khi guard runtime. |
+| 64_BACKUP_OPERATOR_API_PERMISSION_GUARD.md | Server-side permission guard cho API backup operator dry-run, fail-closed va van dry-run only. | Khi can kiem API `/api/admin/backups/service-dry-run` truoc UI permission guard. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

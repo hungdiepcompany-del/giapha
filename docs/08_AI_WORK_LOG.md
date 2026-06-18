@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 64 Backup Operator API Permission Guard
+
+### Phase
+
+Phase 64 - Backup Operator API Permission Guard
+
+### Viec da lam
+
+- Cap nhat `app/api/admin/backups/service-dry-run/route.ts` voi marker `BACKUP_OPERATOR_API_PERMISSION_GUARD`.
+- Dung `getPermissionContext` hien co de guard route server-side.
+- Check `backup.operator.dry_run` truoc, fallback fail-closed bang `permissions.manage` vi chua co migration/seed permission backup.
+- Tra JSON 401/403 khi thieu login/quyen, van giu dry-run envelope voi `worker_call: false`, `production_backup: false`, `storage_upload: false`, `restore: false`.
+- Tao `docs/64_BACKUP_OPERATOR_API_PERMISSION_GUARD.md`.
+- Tao `scripts/check-backup-operator-api-permission-guard.cjs`.
+- Them `npm run check:backup-operator-api-permission-guard`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- app/api/admin/backups/service-dry-run/route.ts
+- docs/64_BACKUP_OPERATOR_API_PERMISSION_GUARD.md
+- scripts/check-backup-operator-api-permission-guard.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-18 - Phase 63 Backup Operator Permission Model Review
 
 ### Phase
