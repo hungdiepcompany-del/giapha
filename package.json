@@ -111,6 +111,8 @@
     "smoke:backup-permission:post-migration": "node scripts/smoke-backup-permission-post-migration.cjs",
     "check:backup-permission-post-migration-smoke-plan": "node scripts/check-backup-permission-post-migration-smoke-plan.cjs",
     "check:backup-permission-real-migration-handoff": "node scripts/check-backup-permission-real-migration-handoff.cjs",
+    "check:backup-permission-migration-canonical-path": "node scripts/check-backup-permission-migration-canonical-path.cjs",
+    "check:backup-permission-migration-execution-runbook": "node scripts/check-backup-permission-migration-execution-runbook.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

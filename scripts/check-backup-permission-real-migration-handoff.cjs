@@ -3,7 +3,7 @@ const path = require("node:path");
 
 const root = process.cwd();
 const failures = [];
-const migrationPath = "supabase/migrations/20260618_0007_backup_operator_permissions.sql";
+const migrationPath = "db/migrations/20260618_0007_backup_operator_permissions.sql";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -59,7 +59,7 @@ for (const section of [
 
 for (const token of [
   "Phase 78-82",
-  "Migration file exists in `supabase/migrations/`",
+  "Migration file exists in `db/migrations/`",
   "Migration has not been run",
   "No DB mutation",
   "fallback `permissions.manage` still remains",

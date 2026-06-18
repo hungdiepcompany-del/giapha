@@ -3,7 +3,7 @@ const path = require("node:path");
 
 const root = process.cwd();
 const failures = [];
-const migrationPath = "supabase/migrations/20260618_0007_backup_operator_permissions.sql";
+const migrationPath = "db/migrations/20260618_0007_backup_operator_permissions.sql";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -53,7 +53,7 @@ for (const section of [
   requireIncludes(doc, section, `doc section ${section}`);
 }
 
-if (!/^supabase\/migrations\/\d{8}_\d{4}_[a-z0-9_]+\.sql$/.test(migrationPath)) {
+if (!/^db\/migrations\/\d{8}_\d{4}_[a-z0-9_]+\.sql$/.test(migrationPath)) {
   failures.push("migration filename does not match YYYYMMDD_000N_name.sql pattern");
 }
 

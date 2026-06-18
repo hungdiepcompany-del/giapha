@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 83 Backup Permission Migration Path Canonicalization completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 83 da sua canonical path cua backup permission migration ve `db/migrations/20260618_0007_backup_operator_permissions.sql` va tao execution runbook. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/83_BACKUP_PERMISSION_MIGRATION_EXECUTION_RUNBOOK.md`
+- `scripts/check-backup-permission-migration-canonical-path.cjs`
+- `scripts/check-backup-permission-migration-execution-runbook.cjs`
+- `npm run check:backup-permission-migration-canonical-path`
+- `npm run check:backup-permission-migration-execution-runbook`
+
+### Migration path baseline
+
+- Canonical path: `db/migrations/20260618_0007_backup_operator_permissions.sql`
+- Wrong old path: `supabase/migrations/20260618_0007_backup_operator_permissions.sql`
+- Wrong old path must not exist after Phase 83.
+- Migration content behavior was not changed.
+- Migration has not been run.
+- No DB mutation.
+- Runtime fallback `permissions.manage` still remains.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 84 - Backup Permission Pre-Apply Verification Checklist.
+
 ## 2026-06-18 - Phase 82 Backup Permission Real Migration Handoff completed
 
 ### Trang thai hien tai

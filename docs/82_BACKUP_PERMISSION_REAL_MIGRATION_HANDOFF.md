@@ -20,7 +20,7 @@ Current runtime status remains unchanged:
 
 Phase 78-82 completed the real migration file bundle:
 
-- Phase 78 created the migration file in `supabase/migrations/`.
+- Phase 78 created the migration file, and Phase 83 corrected it to the canonical `db/migrations/` directory.
 - Phase 79 added static verification for the migration file.
 - Phase 80 documented fallback removal plan.
 - Phase 81 added post-migration smoke plan/script with safe-skip.
@@ -28,10 +28,10 @@ Phase 78-82 completed the real migration file bundle:
 
 ## Real Migration File Status
 
-Migration file exists in `supabase/migrations/`:
+Migration file exists in `db/migrations/`:
 
 ```txt
-supabase/migrations/20260618_0007_backup_operator_permissions.sql
+db/migrations/20260618_0007_backup_operator_permissions.sql
 ```
 
 Migration has not been run.
@@ -98,7 +98,7 @@ SKIPPED because BACKUP_PERMISSION_SMOKE_BASE_URL is not set
 
 ## What Is Implemented
 
-- Real migration file in `supabase/migrations/`.
+- Real migration file in `db/migrations/`.
 - Migration file checker.
 - Static verification checker.
 - Runtime fallback removal plan.
@@ -160,7 +160,7 @@ Phase 82 keeps the full bundle boundary:
 - No deploy.
 - No push.
 - No package added.
-- Migration file exists in `supabase/migrations/`.
+- Migration file exists in `db/migrations/`.
 - Migration has not been run.
 - No DB apply/mutation.
 - No `.env.local` read.

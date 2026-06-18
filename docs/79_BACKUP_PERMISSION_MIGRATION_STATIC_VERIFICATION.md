@@ -15,10 +15,12 @@ This verification reads the migration source only. It does not run SQL and does 
 ## Migration File Under Review
 
 ```txt
-supabase/migrations/20260618_0007_backup_operator_permissions.sql
+db/migrations/20260618_0007_backup_operator_permissions.sql
 ```
 
 The filename follows the repo pattern `YYYYMMDD_000N_name.sql`.
+
+Phase 83 corrected the repository path. The canonical migration directory is `db/migrations/`.
 
 ## Required Markers
 

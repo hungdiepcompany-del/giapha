@@ -1,5 +1,20 @@
 # Decision Log
 
+## Decision 106 - Canonical backup permission migration path is db/migrations
+
+Chon:
+
+Backup permission migration file source of truth la `db/migrations/20260618_0007_backup_operator_permissions.sql`.
+
+`supabase/migrations/20260618_0007_backup_operator_permissions.sql` la wrong old path va khong duoc giu duplicate sau Phase 83.
+
+Ly do:
+
+- Repo GIA PHA dung `db/migrations/` lam canonical migration directory.
+- `check:migrations` doc va tooling hien co doc tu `db/migrations/`.
+- Tranh hai source of truth cho cung mot migration.
+- Van khong chay migration/apply DB neu chua co owner approval rieng, DB backup/snapshot va rollback gate.
+
 ## Decision 105 - Real migration handoff keeps execution blocked
 
 Chon:

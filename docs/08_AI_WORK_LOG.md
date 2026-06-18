@@ -1,5 +1,56 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 83 Backup Permission Migration Path Canonicalization & Execution Runbook
+
+### Phase
+
+Phase 83 - Backup Permission Migration Path Canonicalization & Execution Runbook
+
+### Viec da lam
+
+- Chuyen canonical migration path ve `db/migrations/20260618_0007_backup_operator_permissions.sql`.
+- Xoa wrong old path `supabase/migrations/20260618_0007_backup_operator_permissions.sql` khoi tracked files.
+- Cap nhat Phase 78-82 docs/check scripts de doc migration tu `db/migrations/`.
+- Tao execution runbook cho future apply, yeu cau owner approval, DB backup/snapshot, pre-apply checks, post-apply verification va rollback notes.
+- Tao canonical path checker de chan duplicate/sai thu muc.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- db/migrations/20260618_0007_backup_operator_permissions.sql
+- docs/83_BACKUP_PERMISSION_MIGRATION_EXECUTION_RUNBOOK.md
+- scripts/check-backup-permission-migration-canonical-path.cjs
+- scripts/check-backup-permission-migration-execution-runbook.cjs
+- docs/78_BACKUP_PERMISSION_REAL_MIGRATION_FILE_IMPLEMENTATION.md
+- docs/79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md
+- docs/82_BACKUP_PERMISSION_REAL_MIGRATION_HANDOFF.md
+- scripts/check-backup-permission-real-migration-file.cjs
+- scripts/check-backup-permission-real-migration-static-verification.cjs
+- scripts/check-backup-permission-real-migration-handoff.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi; move file da co ve canonical path `db/migrations/`.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 82 Backup Permission Real Migration Handoff
 
 ### Phase

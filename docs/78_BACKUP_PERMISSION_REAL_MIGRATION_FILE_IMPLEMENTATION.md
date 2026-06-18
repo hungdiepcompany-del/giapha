@@ -25,10 +25,12 @@ This phase only creates the file. It does not run or apply the migration.
 ## Migration File Path
 
 ```txt
-supabase/migrations/20260618_0007_backup_operator_permissions.sql
+db/migrations/20260618_0007_backup_operator_permissions.sql
 ```
 
 The file follows the repo migration naming pattern `YYYYMMDD_000N_name.sql`.
+
+Phase 83 corrected the repository path. The canonical migration directory is `db/migrations/`.
 
 ## Owner Approval Scope
 
