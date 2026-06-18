@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 128 - Vietnamese genealogy schema candidate stays additive and gated
+
+Chon:
+
+Phase 108-110 stays candidate-only. The preferred schema direction is normalized metadata for clan, branch, generation rules, branch memberships and person names first; life events and burials are recommended next; media remains later until media/storage boundary design is approved.
+
+Ly do:
+
+- Normalized metadata preserves compatibility with `people`, relationship tables, tree layout, revisions, public/private filtering and export foundation.
+- Candidate review must prove additive-only migration strategy before any real migration file exists.
+- Heavy export/import/media/GEDCOM/ZIP work must remain governed by runtime worker guardrail and service-boundary roadmap.
+- Phase 110 is only an approval gate; Phase 111 needs owner approval to create a real migration file, and Phase 113 needs separate approval before DB apply.
+
 ## Decision 127 - Domain roadmap is not runtime or schema authorization
 
 Chon:

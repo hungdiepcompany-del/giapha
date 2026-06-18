@@ -1,5 +1,14 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 108-110 Vietnamese Genealogy Schema Candidate Gate completed
+
+- Created `docs/108_110_VIETNAMESE_GENEALOGY_SCHEMA_CANDIDATE.md` for schema strategy, candidate tables/fields, compatibility, worker boundary notes and real migration approval gate.
+- Added `scripts/check-vietnamese-genealogy-schema-candidate.cjs` and `npm run check:vietnamese-genealogy-schema-candidate`.
+- Candidate recommendation: normalize `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships` and `person_names` first; defer `person_life_events` and `person_burials` to recommended next; keep `person_media` later until Phase 118A media/storage boundary design.
+- Phase 110 remains approval-only: no real migration file, no DB apply and no SQL execution.
+- Boundary: no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not committed.
+- Recommended next phase: review schema candidate; start Phase 111 only if owner approves real migration file creation.
+
 ## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Guardrail Hardening completed
 
 - Phase 103-107 docs were hardened so `Required Now` cannot be mistaken for authorization to create schema, migration, DB apply, runtime, UI, service Worker or production changes.

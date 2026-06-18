@@ -138,7 +138,8 @@
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs",
-    "check:vietnamese-genealogy-domain": "node scripts/check-vietnamese-genealogy-domain-readiness.cjs"
+    "check:vietnamese-genealogy-domain": "node scripts/check-vietnamese-genealogy-domain-readiness.cjs",
+    "check:vietnamese-genealogy-schema-candidate": "node scripts/check-vietnamese-genealogy-schema-candidate.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

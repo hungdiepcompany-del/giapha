@@ -1,5 +1,16 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 108-110 Vietnamese Genealogy Schema Candidate Gate
+
+- Created `docs/108_110_VIETNAMESE_GENEALOGY_SCHEMA_CANDIDATE.md` as a candidate-only schema design, static safety and approval gate bundle.
+- Recommended normalized metadata first: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships` and `person_names`.
+- Marked `person_life_events` and `person_burials` as recommended next, and `person_media` as later after media/storage boundary design.
+- Added `scripts/check-vietnamese-genealogy-schema-candidate.cjs` and `npm run check:vietnamese-genealogy-schema-candidate`.
+- The checker is local/static only: no network, no `.env.local`, no Supabase client, no SQL execution and no file mutation.
+- No real migration file in `db/migrations/`, no DB apply, no SQL executed, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked and was not committed in this phase.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:vietnamese-genealogy-schema-candidate` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `npm run typecheck` PASS, `npm run lint` PASS, `git diff --check` PASS, `git status --short` completed with `PLANNING.MD` still untracked outside scope.
+
 ## 2026-06-18 - Phase 103-107 Domain Guardrail Hardening
 
 - Hardened `docs/103_107_VIETNAMESE_GENEALOGY_DOMAIN_MODEL_READINESS.md` wording so `Required Now` is explicit specification/readiness language only.
