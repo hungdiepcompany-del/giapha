@@ -1,5 +1,14 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 103-107 Domain Guardrail Hardening
+
+- Hardened `docs/103_107_VIETNAMESE_GENEALOGY_DOMAIN_MODEL_READINESS.md` wording so `Required Now` is explicit specification/readiness language only.
+- Renamed the Phase 104 priority label to `Specification Required Now` and added a note that it does not authorize schema, migration, DB apply, runtime, UI, service Worker or production changes.
+- Added cross-reference text requiring large export/import/media/GEDCOM/ZIP work to follow `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md`.
+- Added runtime and Worker boundary status checklist: main Worker untouched, no runtime dependency, no service Worker, no OpenNext/Wrangler config change and no Worker size risk.
+- No migration, no DB apply, no deploy, no runtime app change, no Worker created, no package added and no push.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `git diff --check` PASS, `git status --short` completed with expected pre-existing dirty docs plus this patch.
+
 ## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Model Readiness
 
 - Created Bundle 1 docs/checker artifact for Vietnamese genealogy domain readiness.

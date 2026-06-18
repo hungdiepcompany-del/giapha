@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 127 - Domain roadmap is not runtime or schema authorization
+
+Chon:
+
+Domain roadmap must not be interpreted as runtime/schema authorization. Heavy export/import/media/GEDCOM/ZIP work must follow worker guardrail and service-boundary roadmap.
+
+Ly do:
+
+- Phase 103-107 is specification/readiness only.
+- `Required Now` means required for the documentation bundle, not permission to create schema, migration, DB apply, runtime, UI, service Worker or production changes.
+- Future heavy processing needs explicit boundary-governed phases before implementation.
+
 ## Decision 126 - Vietnamese genealogy Bundle 1 stays docs/checker only
 
 Chon:

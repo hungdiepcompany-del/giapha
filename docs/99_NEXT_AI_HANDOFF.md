@@ -1,5 +1,14 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Guardrail Hardening completed
+
+- Phase 103-107 docs were hardened so `Required Now` cannot be mistaken for authorization to create schema, migration, DB apply, runtime, UI, service Worker or production changes.
+- Phase 104 priority wording now uses `Specification Required Now`, with a nearby note clarifying it means specification/readiness only.
+- Added cross-references to `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md` for large export/import/media/GEDCOM/ZIP processing.
+- Added runtime and Worker boundary status checklist to the Phase 103-107 bundle.
+- Boundary: no migration, no DB apply, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no package added, no push.
+- Recommended next phase: Phase 108-110 Vietnamese Genealogy Schema Candidate Design / Static Safety Check / Approval Gate.
+
 ## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Model Readiness completed
 
 - Bundle 1 completed as docs/checker only.

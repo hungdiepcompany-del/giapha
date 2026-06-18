@@ -62,18 +62,20 @@ The current app already avoids the simple `parent_id` and `spouse_id` model. It 
 
 | Area | Current state | Gap | Priority |
 | --- | --- | --- | --- |
-| Clan/branch model | `people.branch_name` is free text | No normalized clan/branch table, representative, founder or sort order | Required Now |
-| Generation rules | `people.generation_number` exists | No documented generation reference, numbering rule or override reason | Required Now |
-| Person names | `full_name` and `display_name` exist | No structured birth name, common name, taboo name, courtesy name or dharma name | Required Now |
-| Lunar dates | Gregorian date and precision exist | No lunar date fields or calendar metadata for birth/death/anniversary | Required Now |
+| Clan/branch model | `people.branch_name` is free text | No normalized clan/branch table, representative, founder or sort order | Specification Required Now |
+| Generation rules | `people.generation_number` exists | No documented generation reference, numbering rule or override reason | Specification Required Now |
+| Person names | `full_name` and `display_name` exist | No structured birth name, common name, taboo name, courtesy name or dharma name | Specification Required Now |
+| Lunar dates | Gregorian date and precision exist | No lunar date fields or calendar metadata for birth/death/anniversary | Specification Required Now |
 | Burial and memorial | Not modeled directly | No burial location, cemetery, grave note, death anniversary or memorial privacy | Recommended Next |
 | Life events | `events` is planned, not implemented | No structured events for marriage, migration, career, death anniversary or clan ceremonies | Recommended Next |
 | Media | `media_assets` is planned, not implemented | No portrait/grave/document attachment model | Recommended Next |
 | Relationship conflicts | Cycle check exists | Need richer warnings for duplicate biological parents, impossible dates and unclear relationships | Recommended Next |
-| Branch filtering | Tree toolbar mentions filters | No normalized branch filter source | Required Now |
-| Export compatibility | JSON/GEDCOM/ZIP foundation exists | New domain fields must be added to JSON first and GEDCOM where mappable | Required Now |
+| Branch filtering | Tree toolbar mentions filters | No normalized branch filter source | Specification Required Now |
+| Export compatibility | JSON/GEDCOM/ZIP foundation exists | New domain fields must be added to JSON first and GEDCOM where mappable | Specification Required Now |
 
-### Required Now
+Note: `Required Now` means required for specification/readiness in this documentation bundle only. It does not authorize schema, migration, DB apply, runtime, UI, service Worker or production changes in Phase 103-107.
+
+### Specification Required Now
 
 - Normalize the specification for clan, branch, sub-branch and generation.
 - Specify person profile fields before adding schema.
@@ -212,6 +214,8 @@ This bundle does not create these tables. It only defines the vocabulary and rul
 - ZIP backup should include media and branch metadata once those models exist.
 - Import preview must validate branch references, generation rule references and privacy flags before any future DB write.
 
+Large export/import/media/GEDCOM/ZIP processing must follow `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md`. This domain bundle does not authorize adding runtime dependencies, moving heavy processing into the main Cloudflare/OpenNext Worker, changing OpenNext/Wrangler config, or creating new service Workers.
+
 ## Recommendation For Phase 108-110
 
 Proceed with a schema candidate only after this specification is accepted:
@@ -222,3 +226,13 @@ Proceed with a schema candidate only after this specification is accepted:
 
 Do not create or apply migrations until a later phase explicitly authorizes it.
 
+Large export/import/media/GEDCOM/ZIP processing must follow `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md`. Phase 108-110 should stay candidate-design/static-safety/approval-gate oriented unless a later prompt explicitly authorizes runtime or service-boundary implementation.
+
+## Runtime And Worker Boundary Status
+
+- Main Worker touched: NO
+- Runtime dependency added: NO
+- New service Worker created: NO
+- OpenNext/Wrangler config changed: NO
+- Worker size risk introduced by this bundle: NO
+- Heavy export/import/media work: deferred to boundary-governed future phases
