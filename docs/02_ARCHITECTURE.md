@@ -8,6 +8,15 @@
 - Boundary chi tiết nằm ở `docs/15_SERVICE_BOUNDARY_WORKER_SPLIT.md`.
 - UI nên đi qua adapter/client layer khi gọi tác vụ nặng để sau này đổi từ local function sang HTTP/service binding.
 
+
+## Runtime Worker guardrail and service-boundary roadmap
+
+- `docs/RUNTIME_WORKER_GUARDRAIL.md` là luật cố định để tránh main Cloudflare/OpenNext Worker phình to.
+- `docs/SERVICE_BOUNDARY_ROADMAP.md` là roadmap chia trách nhiệm giữa main app Worker, backup service, export service, import service, media service và data-quality service candidate.
+- Main app Worker mặc định chỉ giữ UI, auth, CRUD nhẹ, permission/privacy filter, tree viewer/editor nhẹ và API coordination nhẹ.
+- ZIP/GEDCOM/export lớn, import validation lớn, media processing, backup/restore production và data-quality scan lớn phải được đánh giá service boundary trước khi triển khai.
+- Không tạo service Worker mới nếu chưa có boundary doc, route contract, env/secret contract, smoke plan, rollback/deploy plan và owner approval.
+
 ## Phase 11 Supabase integration gate
 
 - `scripts/check-env-safe.cjs`: kiểm `.env.example` và `.env.local` theo trạng thái present/missing, không in giá trị secret.

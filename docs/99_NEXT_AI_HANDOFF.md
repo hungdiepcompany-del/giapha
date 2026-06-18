@@ -9,6 +9,17 @@
 - Boundary: no migration, no DB apply, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no package added, no push.
 - Recommended next phase: Phase 108-110 Vietnamese Genealogy Schema Candidate Design / Static Safety Check / Approval Gate.
 
+## 2026-06-18 - Runtime Worker Guardrail and Service Boundary Roadmap docs prepared
+
+- Created `docs/RUNTIME_WORKER_GUARDRAIL.md` to keep the main Cloudflare/OpenNext Worker small and prevent heavy runtime/dependency drift.
+- Created `docs/SERVICE_BOUNDARY_ROADMAP.md` to map main app, backup service, export service, import service, media service and data-quality service candidates.
+- Updated `AGENTS.md` reading rules so AI only reads these guardrail docs when the task touches runtime/export/import/media/backup/dependency/Worker concerns.
+- Updated `docs/00_INDEX.md` with the two new docs.
+- Updated `docs/02_ARCHITECTURE.md` with a short cross-reference and main Worker responsibility boundary.
+- Updated `docs/07_PHASE_PLAN.md` with Phase 102B plus A/B boundary checkpoints for media/export/import/data-quality phases.
+- Boundary: docs only, no migration, no DB apply, no deploy, no runtime code change, no Worker created, no package added, no push.
+- Recommended next phase: apply these docs into the repo, then continue Phase 108-110 schema candidate design / static safety / approval gate.
+
 ## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Model Readiness completed
 
 - Bundle 1 completed as docs/checker only.

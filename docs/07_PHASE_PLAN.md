@@ -305,3 +305,249 @@ npm run lint
 npm run build
 ```
 
+## Phase 102B - Runtime Worker Guardrail and Service Boundary Roadmap
+
+### Mục tiêu
+
+Chốt luật tránh main Cloudflare/OpenNext Worker phình to và đưa service-boundary roadmap vào repo trước khi tiếp tục các phase nghiệp vụ gia phả Việt Nam.
+
+### Scope
+
+- Tạo `docs/RUNTIME_WORKER_GUARDRAIL.md`.
+- Tạo `docs/SERVICE_BOUNDARY_ROADMAP.md`.
+- Cập nhật `AGENTS.md`, `docs/00_INDEX.md`, `docs/02_ARCHITECTURE.md`, `docs/07_PHASE_PLAN.md`, `docs/99_NEXT_AI_HANDOFF.md`.
+- Định nghĩa khi nào phải đọc 2 file guardrail/boundary.
+- Đưa các checkpoint boundary vào Phase 118, 127, 128 và 129.
+
+### Không làm gì
+
+- Không tạo Worker mới.
+- Không deploy.
+- Không sửa runtime code.
+- Không sửa OpenNext/Wrangler config.
+- Không thêm package.
+- Không migration.
+- Không apply DB.
+- Không push.
+
+### Nghiệm thu
+
+- Có guardrail rõ ràng cho main Worker.
+- Có service-boundary roadmap cho backup/export/import/media/data quality.
+- AI sau này biết khi nào phải đọc guardrail docs, không cần nhắc lại trong mọi prompt.
+- Các phase nặng có checkpoint design/boundary trước implementation.
+
+### Lệnh test
+
+```bash
+npm run check:env:safe
+npm run check:migrations
+git diff --check
+git status --short
+```
+
+## Phase 103-107 - Vietnamese Genealogy Domain Model Bundle
+
+### Mục tiêu
+
+Chốt nghiệp vụ gia phả Việt Nam trước khi thiết kế schema thật.
+
+### Scope
+
+- Phase 103: Vietnamese Genealogy Domain Model Readiness.
+- Phase 104: Existing Data Model Gap Analysis.
+- Phase 105: Person Profile Field Specification.
+- Phase 106: Relationship Rule Specification.
+- Phase 107: Branch, Generation, Clan Structure Specification.
+
+### Không làm gì
+
+- Không migration.
+- Không apply DB.
+- Không deploy.
+- Không sửa runtime lớn.
+- Không tạo Worker mới.
+
+### Nghiệm thu
+
+- Có domain docs rõ về dòng họ, chi, nhánh, đời/thế hệ.
+- Có gap analysis giữa database hiện tại và nghiệp vụ cần có.
+- Có field specification cho hồ sơ cá nhân Việt Nam.
+- Có relationship rule specification.
+- Có branch/generation/clan structure specification.
+
+## Phase 108-110 - Schema Candidate and Approval Gate
+
+### Mục tiêu
+
+Thiết kế schema candidate cho nghiệp vụ gia phả Việt Nam nhưng chưa apply DB.
+
+### Scope
+
+- Phase 108: Vietnamese Genealogy Schema Candidate Design.
+- Phase 109: Schema Candidate Static Safety Check.
+- Phase 110: Real Migration File Approval Gate.
+
+### Không làm gì
+
+- Không apply DB.
+- Không mutate production data.
+- Không tạo migration thật nếu chưa được owner duyệt.
+- Không đổi auth/permission/runtime nếu không cần.
+
+### Nghiệm thu
+
+- Schema candidate additive.
+- Có static safety check.
+- Có owner approval checklist trước migration thật.
+
+## Phase 111-113 - Real Migration and Apply Execution
+
+### Mục tiêu
+
+Tạo và apply migration thật chỉ khi owner xác nhận riêng.
+
+### Scope
+
+- Phase 111: Vietnamese Genealogy Real Migration File.
+- Phase 112: Domain Migration Apply Readiness.
+- Phase 113: Domain Migration Apply Execution.
+
+### Không làm gì
+
+- Không apply DB nếu thiếu owner approval, backup/snapshot, project ref confirmation và rollback plan.
+- Không deploy kèm migration nếu chưa có kế hoạch riêng.
+
+### Nghiệm thu
+
+- Migration additive.
+- Dữ liệu cũ không mất.
+- Verify field/table mới tồn tại.
+- App typecheck/lint/build vẫn PASS.
+
+## Phase 118A - Media Domain and Storage Boundary Design
+
+### Mục tiêu
+
+Chốt media/storage boundary trước khi làm UI upload tài liệu/ảnh.
+
+### Scope
+
+- Xác định metadata media.
+- Xác định storage candidate.
+- Xác định public/private media rule.
+- Xác định thumbnail/resize có cần service riêng không.
+- Xác định export/backup media manifest.
+
+### Không làm gì
+
+- Không upload media thật.
+- Không xử lý ảnh nặng trong main Worker.
+- Không thêm package xử lý ảnh nếu chưa được duyệt.
+- Không tạo media service Worker thật.
+
+## Phase 118B - Media and Document Attachment UI
+
+### Mục tiêu
+
+Triển khai UI gắn ảnh/tài liệu sau khi boundary đã rõ.
+
+### Điều kiện trước
+
+- Phase 118A PASS.
+- Storage/privacy/export boundary đã rõ.
+- Worker/runtime size risk đã được đánh giá.
+
+## Phase 127A - Export Service Boundary Design
+
+### Mục tiêu
+
+Chốt export boundary trước khi nâng cấp JSON/GEDCOM/ZIP/media manifest.
+
+### Scope
+
+- Phân loại export nhỏ/lớn.
+- Đánh giá timeout/memory/bundle risk.
+- Chốt export chạy main Worker, service Worker, browser flow hay offline tooling.
+- Smoke/safe-skip plan.
+
+### Không làm gì
+
+- Không thêm export dependency nặng vào main app.
+- Không tạo export service Worker thật nếu chưa có approval.
+- Không deploy.
+
+## Phase 127B - Vietnamese Genealogy Export Upgrade
+
+### Mục tiêu
+
+Nâng export sau khi boundary đã rõ.
+
+### Điều kiện trước
+
+- Phase 127A PASS.
+- Main Worker risk được đánh giá.
+- Nếu cần service riêng, phải có owner approval và contract riêng.
+
+## Phase 128A - Import Service Boundary Design
+
+### Mục tiêu
+
+Chốt import preview/conflict boundary trước khi nâng cấp import.
+
+### Scope
+
+- Preview không ghi DB.
+- Large validation strategy.
+- Conflict detection strategy.
+- Transaction/rollback/revision/import log plan cho confirm thật.
+
+### Không làm gì
+
+- Không import ghi DB.
+- Không ghi đè dữ liệu.
+- Không đưa large import validation vào main Worker nếu rủi ro lớn.
+
+## Phase 128B - Import Upgrade and Conflict Preview
+
+### Mục tiêu
+
+Nâng import preview/conflict sau khi boundary đã rõ.
+
+### Điều kiện trước
+
+- Phase 128A PASS.
+- Backup/snapshot/no-go rule rõ nếu có confirm thật ở phase sau.
+
+## Phase 129A - Data Quality Checker Design
+
+### Mục tiêu
+
+Chốt data-quality checker boundary trước khi làm test suite lớn.
+
+### Scope
+
+- Relationship cycle scan.
+- Invalid birth/death order scan.
+- Duplicate people candidate scan.
+- Missing branch/generation scan.
+- Public privacy leak scan.
+- Phân loại static/local, DB read-only, service riêng hoặc offline tooling.
+
+### Không làm gì
+
+- Không quét dữ liệu production nếu thiếu explicit read-only env.
+- Không in dữ liệu nhạy cảm.
+- Không tạo service Worker thật.
+
+## Phase 129B - Genealogy Data Quality Test Suite
+
+### Mục tiêu
+
+Triển khai data quality test suite sau khi boundary đã rõ.
+
+### Điều kiện trước
+
+- Phase 129A PASS.
+- Read-only/privacy/logging rule rõ.
+- Worker/runtime risk đã được đánh giá.

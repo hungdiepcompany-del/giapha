@@ -21,6 +21,8 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 13_DEPLOY_READINESS.md | Checklist và chính sách sẵn sàng deploy Cloudflare lần đầu. | Khi chuẩn bị production env, Supabase redirect URL, Google OAuth domain, backup và rollback. |
 | 14_OPENNEXT_CLOUDFLARE_WIRING.md | Cấu hình Cloudflare Workers qua OpenNext, scripts deploy/preview/upload và chính sách secret. | Khi chạy lại Phase 15 First Cloudflare Deploy hoặc kiểm tra wiring deploy. |
 | 15_SERVICE_BOUNDARY_WORKER_SPLIT.md | Kế hoạch boundary cho main worker và các service worker ứng viên. | Khi task liên quan OpenNext Worker size, export/import/media/PDF nặng hoặc chuẩn bị split service. |
+| RUNTIME_WORKER_GUARDRAIL.md | Luật tránh main Cloudflare/OpenNext Worker phình to, dependency/runtime guardrail và report field bắt buộc. | Khi task liên quan Worker, OpenNext, Wrangler, runtime, deploy, dependency, bundle size hoặc nghi ngờ ảnh hưởng main Worker. |
+| SERVICE_BOUNDARY_ROADMAP.md | Bản đồ chia service/Worker cho backup, export, import, media và data quality trong các phase gia phả Việt Nam. | Khi task liên quan export/import/media/backup/GEDCOM/ZIP/large validation/data quality scan hoặc chuẩn bị tạo service Worker mới. |
 | 15C_GITHUB_ACTIONS_OPENNEXT_BUILD_GATE.md | GitHub Actions/Linux build gate cho OpenNext Cloudflare build. | Khi cần xác nhận lỗi OpenNext build là Windows-local trước khi deploy thật. |
 | 15D_FIRST_CLOUDFLARE_DEPLOY_RETRY.md | Báo cáo retry deploy Cloudflare đầu tiên. | Khi cần biết kết quả deploy thật, production URL, smoke test hoặc blocker Windows/OpenNext. |
 | 15E_GITHUB_ACTIONS_CLOUDFLARE_DEPLOY.md | Workflow deploy Cloudflare thủ công bằng GitHub Actions/Linux. | Khi cần deploy qua GitHub Actions sau khi Windows local deploy bị blocker. |
