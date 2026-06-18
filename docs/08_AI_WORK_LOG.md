@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 110B Vietnamese Genealogy First Migration Scope
+
+- Created `docs/110B_VIETNAMESE_GENEALOGY_FIRST_MIGRATION_SCOPE.md` to narrow the first Vietnamese genealogy migration scope before any Phase 111 real migration file.
+- Current status: `PHASE_111_NOT_APPROVED`.
+- Required marker recorded: `OWNER_APPROVAL_REQUIRED_BEFORE_PHASE_111_REAL_MIGRATION_FILE=true`.
+- Final proposed first migration scope: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships`.
+- `person_names` remains optional and needs explicit owner decision before inclusion.
+- Deferred from first migration: `person_life_events`, `person_burials`, `person_media`, media processing, large export/import/GEDCOM/ZIP work, runtime app changes, Worker/service creation, DB apply and automatic backfill from `people.branch_name`.
+- Added `scripts/check-vietnamese-genealogy-first-migration-scope.cjs` and `npm run check:vietnamese-genealogy-first-migration-scope`.
+- The checker is local/static only: no network, no `.env.local`, no Supabase client, no SQL execution and no file mutation.
+- No real migration file, no DB apply, no SQL executed, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:vietnamese-genealogy-schema-candidate` PASS, `npm run check:vietnamese-genealogy-first-migration-scope` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `npm run typecheck` PASS, `npm run lint` PASS, `git diff --check` PASS, `git status --short` completed with `PLANNING.MD` still untracked outside scope.
+
 ## 2026-06-18 - Phase 108-110 Schema Candidate Owner Review
 
 - Created `docs/108_110_SCHEMA_CANDIDATE_OWNER_REVIEW.md` to review the Phase 108-110 candidate before any Phase 111 migration-file decision.

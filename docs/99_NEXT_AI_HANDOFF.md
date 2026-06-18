@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 110B Vietnamese Genealogy First Migration Scope completed
+
+- Created `docs/110B_VIETNAMESE_GENEALOGY_FIRST_MIGRATION_SCOPE.md`.
+- Added `scripts/check-vietnamese-genealogy-first-migration-scope.cjs` and `npm run check:vietnamese-genealogy-first-migration-scope`.
+- Current status: `PHASE_111_NOT_APPROVED`.
+- Required marker: `OWNER_APPROVAL_REQUIRED_BEFORE_PHASE_111_REAL_MIGRATION_FILE=true`.
+- Final proposed first migration scope if owner approves later: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships`.
+- Optional owner decision: include or defer `person_names`.
+- Deferred from first migration: `person_life_events`, `person_burials`, `person_media`, media processing, large export/import/GEDCOM/ZIP work, runtime app changes, Worker/service creation, DB apply and automatic backfill from `people.branch_name`.
+- Privacy/RLS: all allowed first-migration tables must have RLS enabled; public output must remain filtered through server-side privacy rules.
+- Export/import: allowed tables must eventually be preserved in `family.json`; GEDCOM remains partial and JSON-first for clan/branch/generation metadata.
+- Worker/runtime: no main Worker touch, no runtime dependency, no service Worker, no OpenNext/Wrangler config change and no Worker size risk.
+- Boundary: no real migration file, no DB apply, no SQL executed, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not read or committed.
+- Recommended next phase: Phase 111 only if owner explicitly approves real migration file creation and answers the open scope questions.
+
 ## 2026-06-18 - Phase 108-110 Schema Candidate Owner Review completed
 
 - Created `docs/108_110_SCHEMA_CANDIDATE_OWNER_REVIEW.md`.

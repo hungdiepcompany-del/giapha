@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 130 - First Vietnamese genealogy migration scope is narrowed and owner-gated
+
+Chon:
+
+Phase 111 must not start until the owner explicitly approves real migration file creation. The proposed first migration scope is limited to `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`; `person_names` is optional and requires owner decision.
+
+Ly do:
+
+- The Phase 108-110 owner review found the broader candidate direction sound but too broad for a first migration.
+- `person_life_events`, `person_burials`, `person_media`, media processing and large export/import/GEDCOM/ZIP work add privacy, workflow or service-boundary risk and stay deferred.
+- First migration design must stay additive-only, RLS-enabled and compatible with existing `people`, relationship truth, tree layout, revisions and export/backup foundations.
+- Phase 110B remains docs/checker only; no migration file, SQL execution, DB apply, runtime app change, Worker creation or dependency change is authorized.
+
 ## Decision 129 - Schema candidate needs owner changes before Phase 111
 
 Chon:

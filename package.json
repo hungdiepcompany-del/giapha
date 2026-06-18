@@ -139,7 +139,8 @@
     "check:env:safe": "node scripts/check-env-safe.cjs",
     "check:migrations": "node scripts/check-migrations-order.cjs",
     "check:vietnamese-genealogy-domain": "node scripts/check-vietnamese-genealogy-domain-readiness.cjs",
-    "check:vietnamese-genealogy-schema-candidate": "node scripts/check-vietnamese-genealogy-schema-candidate.cjs"
+    "check:vietnamese-genealogy-schema-candidate": "node scripts/check-vietnamese-genealogy-schema-candidate.cjs",
+    "check:vietnamese-genealogy-first-migration-scope": "node scripts/check-vietnamese-genealogy-first-migration-scope.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
