@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 108 - Backup permission rollback drill stays documented before execution
+
+Chon:
+
+Rollback cho backup permission migration phai duoc drill bang docs/check truoc khi apply that, nhung Phase 85 khong chay rollback va khong mutate DB.
+
+Ly do:
+
+- Permission migration co the lam sai access UI/API neu role mapping hoac project target sai.
+- Fallback `permissions.manage` la safety bridge va khong duoc go bo som.
+- Restore-from-snapshot va permission-assignment rollback can co owner/rollback owner truoc khi execution phase bat dau.
+
 ## Decision 107 - Pre-apply backup permission migration requires explicit no-go gate
 
 Chon:

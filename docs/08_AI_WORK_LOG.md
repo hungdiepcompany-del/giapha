@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 85 Backup Permission Rollback Drill Plan
+
+### Phase
+
+Phase 85 - Backup Permission Rollback Drill Plan
+
+### Viec da lam
+
+- Tao rollback drill plan cho future backup permission migration execution.
+- Ghi failure scenarios bat buoc: owner/admin mat `/admin/backups`, API dry-run 403 nham, thieu permission seed, role assignment sai, wrong project, fallback removal qua som.
+- Ghi rollback options: restore from snapshot, sua role_permissions, giu permission rows, giu fallback `permissions.manage`.
+- Tao checker local cho rollback drill plan.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/85_BACKUP_PERMISSION_ROLLBACK_DRILL_PLAN.md
+- scripts/check-backup-permission-rollback-drill-plan.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong chay rollback that.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 84 Backup Permission Pre-Apply Verification Checklist
 
 ### Phase

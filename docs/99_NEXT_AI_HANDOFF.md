@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 85 Backup Permission Rollback Drill Plan completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 85 da tao rollback drill plan cho backup permission migration. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy, chua rollback that va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/85_BACKUP_PERMISSION_ROLLBACK_DRILL_PLAN.md`
+- `scripts/check-backup-permission-rollback-drill-plan.cjs`
+- `npm run check:backup-permission-rollback-drill-plan`
+
+### Rollback readiness baseline
+
+- Canonical migration path: `db/migrations/20260618_0007_backup_operator_permissions.sql`
+- Rollback options documented: restore from snapshot, correct role mappings, keep permission rows if appropriate, keep fallback `permissions.manage`.
+- Failure scenarios documented for `/admin/backups`, API dry-run, missing permissions, wrong assignments, wrong project and premature fallback removal.
+- Migration has not been run.
+- No DB mutation.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong chay rollback that.
+- Khong goi Supabase/API/DB/network.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 86 - Backup Permission Apply Approval Gate.
+
 ## 2026-06-18 - Phase 84 Backup Permission Pre-Apply Verification Checklist completed
 
 ### Trang thai hien tai
