@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 131 - Phase 111 creates only the approved lineage migration file
+
+Chon:
+
+Owner approval for Phase 111 authorizes only real migration file creation for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`. `person_names`, life events, burials, media, heavy export/import/GEDCOM/ZIP work, runtime changes, Worker/service creation and DB apply stay excluded.
+
+Ly do:
+
+- Phase 110B narrowed the first migration to the smallest useful Vietnamese lineage metadata layer.
+- The owner explicitly excluded `person_names`, event, burial and media tables from this migration.
+- RLS must be enabled from table creation and must use existing permissions instead of introducing a new permission seed in Phase 111.
+- Phase 111 is file creation only; Phase 112 must prepare apply readiness and Phase 113 needs separate owner approval before DB apply.
+
 ## Decision 130 - First Vietnamese genealogy migration scope is narrowed and owner-gated
 
 Chon:

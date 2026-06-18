@@ -59,6 +59,24 @@ function gitShowHead(relativePath) {
   }
 }
 
+function allowsOnlyApprovedPhase111Migration(status) {
+  const lines = status.trim().split(/\r?\n/).filter(Boolean);
+  if (lines.length === 0) return true;
+
+  const allowedPath = "db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql";
+  return lines.every((line) => {
+    const statusPath = line.slice(3).replaceAll("\\", "/");
+    if (statusPath !== allowedPath) return false;
+
+    const content = readFile(allowedPath);
+    return (
+      content.includes("VIETNAMESE_GENEALOGY_PHASE_111_REAL_MIGRATION") &&
+      content.includes("OWNER_APPROVED_FILE_CREATION_ONLY") &&
+      content.includes("DO_NOT_APPLY_WITHOUT_SEPARATE_PHASE_113_APPROVAL")
+    );
+  });
+}
+
 function listFiles(dir, predicate) {
   const absoluteDir = path.join(root, dir);
   if (!fs.existsSync(absoluteDir)) return [];
@@ -199,7 +217,7 @@ if (packageHead) {
 }
 
 const migrationStatus = gitStatus("db/migrations");
-if (migrationStatus.trim()) {
+if (!allowsOnlyApprovedPhase111Migration(migrationStatus)) {
   failures.push(`db/migrations changed in schema candidate phase: ${migrationStatus.trim()}`);
 }
 

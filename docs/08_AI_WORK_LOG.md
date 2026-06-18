@@ -1,5 +1,20 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 111 Vietnamese Genealogy Real Migration File
+
+- Owner approved Phase 111 real migration file creation only.
+- Created `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Created `docs/111_VIETNAMESE_GENEALOGY_REAL_MIGRATION_FILE.md`.
+- Added `scripts/check-vietnamese-genealogy-real-migration-file.cjs` and `npm run check:vietnamese-genealogy-real-migration-file`.
+- Approved tables included: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships`.
+- Explicitly excluded: `person_names`, `person_life_events`, `person_burials`, `person_media`, media processing, large export/import/GEDCOM/ZIP work, runtime app changes, Worker/service creation, DB apply, seed data and automatic backfill from `people.branch_name` or `people.generation_number`.
+- Migration is additive-only and creates tables, indexes, constraints, update triggers and RLS policies.
+- RLS is enabled for all new tables and uses existing permissions only; no new permission rows were created.
+- Apply status: `NOT_APPLIED`.
+- No DB apply, no SQL executed, no production data mutation, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:vietnamese-genealogy-schema-candidate` PASS, `npm run check:vietnamese-genealogy-first-migration-scope` PASS, `npm run check:vietnamese-genealogy-real-migration-file` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `npm run typecheck` PASS, `npm run lint` PASS, `git diff --check` PASS, `git status --short` completed with `PLANNING.MD` still untracked outside scope.
+
 ## 2026-06-18 - Phase 110B Vietnamese Genealogy First Migration Scope
 
 - Created `docs/110B_VIETNAMESE_GENEALOGY_FIRST_MIGRATION_SCOPE.md` to narrow the first Vietnamese genealogy migration scope before any Phase 111 real migration file.
