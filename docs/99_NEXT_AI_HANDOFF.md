@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 75 Backup Permission Seed Candidate Smoke completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 75 da them smoke local cho SQL candidate + seed dry-run. Smoke chi doc source local, khong chay SQL, khong goi Supabase/API/DB/network, khong doc env va khong mutate file.
+
+### File/script moi
+
+- `docs/75_BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE.md`
+- `scripts/smoke-backup-permission-seed-candidate.cjs`
+- `scripts/check-backup-permission-seed-candidate-smoke.cjs`
+- `npm run smoke:backup-permission:seed-candidate`
+- `npm run check:backup-permission-seed-candidate-smoke`
+
+### Smoke baseline
+
+- Marker: `BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE_ONLY`
+- Inputs: SQL candidate draft and seed dry-run script.
+- Checks: 4 permission names consistent, SQL candidate marker present, no-production marker present.
+- Output: safe JSON with `db_call: false`, `network_call: false`, `file_mutation: false`.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong tao file trong `supabase/migrations/`.
+
+### Task tiep theo de xuat
+
+Phase 76 - Backup Permission Real Migration Approval Checklist.
+
 ## 2026-06-18 - Phase 74 Backup Permission SQL Static Safety Check completed
 
 ### Trang thai hien tai

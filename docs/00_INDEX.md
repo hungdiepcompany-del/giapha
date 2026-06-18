@@ -83,4 +83,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 72_BACKUP_PERMISSION_SEED_READINESS_HANDOFF.md | Handoff tong hop readiness seed permission backup Phase 68-72, chua migration/schema/DB mutation va chua bat execute/restore. | Khi can quyet dinh migration/seed that hoac tam dung ha tang backup permission. |
 | 73_BACKUP_PERMISSION_SQL_CANDIDATE_DRAFT.md | SQL candidate draft cho backup permissions trong `scripts/`, khong phai migration that va khong chay DB. | Khi can review permission seed SQL truoc khi owner approve migration that. |
 | 74_BACKUP_PERMISSION_SQL_STATIC_SAFETY_CHECK.md | Static safety check cho SQL candidate draft, chan destructive SQL, network URL, service-role/JWT wording va thieu marker approval. | Khi can gate SQL candidate truoc smoke hoac approval checklist. |
+| 75_BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE.md | Smoke local so sanh SQL candidate draft voi seed dry-run script, khong chay SQL/DB/network/env. | Khi can xac nhan candidate va dry-run dong nhat truoc approval checklist. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

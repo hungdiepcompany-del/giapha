@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 098 - Backup permission seed candidate smoke stays source-static
+
+Chon:
+
+Phase 75 them smoke local de so sanh SQL candidate draft voi seed dry-run script, khong execute SQL va khong goi DB/network/env.
+
+Ly do:
+
+- Candidate SQL va dry-run plan can dong nhat truoc khi owner review approval checklist.
+- Smoke source-static phat hien permission drift ma khong can Supabase secret hay database.
+- Chua co approval migration/schema/DB mutation that.
+
+He qua:
+
+- `smoke:backup-permission:seed-candidate` chi doc file local va in JSON marker `BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE_ONLY`.
+- Candidate van khong phai migration that va van nam ngoai `supabase/migrations/`.
+- Future real migration van can approval checklist.
+
 ## Decision 097 - Backup permission SQL candidate needs static safety gate
 
 Chon:

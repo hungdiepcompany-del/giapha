@@ -101,6 +101,8 @@
     "check:backup-permission-seed-readiness-handoff": "node scripts/check-backup-permission-seed-readiness-handoff.cjs",
     "check:backup-permission-sql-candidate-draft": "node scripts/check-backup-permission-sql-candidate-draft.cjs",
     "check:backup-permission-sql-static-safety": "node scripts/check-backup-permission-sql-static-safety.cjs",
+    "smoke:backup-permission:seed-candidate": "node scripts/smoke-backup-permission-seed-candidate.cjs",
+    "check:backup-permission-seed-candidate-smoke": "node scripts/check-backup-permission-seed-candidate-smoke.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

@@ -1,5 +1,52 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 75 Backup Permission Seed Candidate Smoke
+
+### Phase
+
+Phase 75 - Backup Permission Seed Candidate Smoke
+
+### Viec da lam
+
+- Tao `docs/75_BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE.md`.
+- Tao `scripts/smoke-backup-permission-seed-candidate.cjs`.
+- Tao `scripts/check-backup-permission-seed-candidate-smoke.cjs`.
+- Them `npm run smoke:backup-permission:seed-candidate`.
+- Them `npm run check:backup-permission-seed-candidate-smoke`.
+- Smoke local so sanh SQL candidate draft voi seed dry-run script.
+- Smoke xac nhan 4 permission names va no-production marker dong nhat.
+- Smoke khong chay SQL, khong goi DB/network, khong doc env va khong mutate file.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/75_BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE.md
+- scripts/smoke-backup-permission-seed-candidate.cjs
+- scripts/check-backup-permission-seed-candidate-smoke.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 74 Backup Permission SQL Static Safety Check
 
 ### Phase
