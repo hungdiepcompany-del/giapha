@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 118 - Authenticated smoke accepts shell-only cookie or bearer
+
+Chon:
+
+Authenticated smoke Phase 95 nhan cookie hoac bearer token tu explicit shell env, uu tien cookie neu ca hai co mat. Script chi gui auth material den `/admin/backups` va `/api/admin/backups/service-dry-run`.
+
+Ly do:
+
+- Khong hardcode va khong doc env file.
+- Co the smoke session trinh duyet hoac token-based session ma khong doi Auth config.
+- Safe-skip truoc network neu thieu base URL, expected user hoac auth material.
+- Output chi ghi auth method name va status, khong ghi value/header/body.
+
 ## Decision 117 - DB verifier uses confirmed permission schema and sanitized failures
 
 Chon:

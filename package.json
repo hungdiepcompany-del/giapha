@@ -125,6 +125,7 @@
     "check:backup-permission-apply-handoff": "node scripts/check-backup-permission-apply-handoff.cjs",
     "check:backup-permission-read-only-verification-credential-contract": "node scripts/check-backup-permission-read-only-verification-credential-contract.cjs",
     "check:backup-permission-db-verification-query": "node scripts/check-backup-permission-db-verification-query.cjs",
+    "check:backup-operator-authenticated-smoke-env-contract": "node scripts/check-backup-operator-authenticated-smoke-env-contract.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

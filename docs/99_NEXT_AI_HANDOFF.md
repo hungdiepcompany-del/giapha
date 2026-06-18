@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 95 Backup Operator Authenticated Smoke Env Contract completed
+
+### Trang thai hien tai
+
+Phase 95 da chot shell-only auth contract va harden smoke script de gui cookie hoac bearer den UI/API backup operator. Script chi kiem authenticated access va dry-run safety envelope.
+
+### Current run
+
+- Smoke env: missing.
+- Authenticated smoke: `SKIPPED_MISSING_EXPLICIT_ENV`.
+- Network call: no.
+- Khong log cookie/token/header/base URL/response body.
+
+### Boundary
+
+- Khong deploy/push.
+- Khong DB mutation/migration apply.
+- Fallback `permissions.manage` van con.
+- Execute/restore runtime van disabled.
+- Khong worker call/production backup/upload/restore.
+- Khong doc `.env.local`/`.dev.vars`.
+
+### Validation
+
+- Phase 95 checker: PASS.
+- Authenticated smoke: `SKIPPED_MISSING_EXPLICIT_ENV`, no network.
+- Typecheck/lint: PASS.
+- Direct build: known `.next` EPERM; clean temp build PASS.
+- Audit: `FAIL_WITH_KNOWN_ADVISORIES`.
+- `git diff --check`: PASS.
+
+Phase 95 status: `PASS_WITH_SAFE_SKIP`.
+
+### Task tiep theo
+
+Phase 96 - Backup Permission Verification Completion Run.
+
 ## 2026-06-18 - Phase 94 Backup Permission DB Verification Query completed
 
 ### Trang thai hien tai

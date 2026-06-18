@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 95 Backup Operator Authenticated Smoke Env Contract
+
+### Viec da lam
+
+- Chot 4 placeholder shell-only cho authenticated smoke.
+- Sua smoke script de gui cookie hoac bearer token den dung 2 route main app.
+- Safe-skip truoc `fetch` neu thieu base URL, expected user hoac auth material.
+- Khong log auth value, request header, base URL value hoac response body.
+- Verify API dry-run safety envelope va UI khong redirect login/unauthorized.
+- Tao docs/checker/package script Phase 95.
+
+### Current run
+
+- Ca 4 smoke env deu missing.
+- Expected smoke result: `SKIPPED_MISSING_EXPLICIT_ENV`.
+- Network call: khong.
+
+### Boundary
+
+- Khong deploy/push.
+- Khong mutation/apply migration.
+- Khong go fallback.
+- Khong bat execute/restore.
+- Khong backup worker/production backup/upload/restore.
+- Khong doc env file hoac commit secret.
+
+### Validation
+
+- Phase 95 checker - PASS.
+- Authenticated smoke - `SKIPPED_MISSING_EXPLICIT_ENV`, no network.
+- Phase 81 smoke-plan checker - PASS compatibility.
+- Phase 94 DB query checker - PASS.
+- Typecheck/lint - PASS.
+- Direct build - FAIL do known `.next` EPERM.
+- Clean temp build - PASS.
+- Audit - `FAIL_WITH_KNOWN_ADVISORIES` trong `esbuild`, `postcss`, `ws`.
+- `git diff --check` - PASS.
+
+### Ket qua
+
+`PASS_WITH_SAFE_SKIP`.
+
 ## 2026-06-18 - Phase 94 Backup Permission DB Verification Query
 
 ### Phase
