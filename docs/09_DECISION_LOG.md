@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 117 - DB verifier uses confirmed permission schema and sanitized failures
+
+Chon:
+
+Phase 94 query truc tiep ba bang da duoc migration xac nhan: `permissions`, `roles`, `role_permissions`. Verifier chi dung shell-only env Phase 93 va chi SELECT.
+
+Ly do:
+
+- Foundation migration da xac nhan cac cot can thiet, nen khong fake schema limitation.
+- Permission va role assignment co the verify doc lap trong mot lan read-only.
+- Raw provider error message co the chua endpoint hoac metadata nhay cam; output chi co query stage va non-secret error code.
+- Thieu env hoac mode khong dung `read_only` thi return truoc client creation, khong network.
+
 ## Decision 116 - Verification credentials are shell-only and SELECT-only
 
 Chon:

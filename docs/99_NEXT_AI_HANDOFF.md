@@ -1,5 +1,53 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 94 Backup Permission DB Verification Query completed
+
+### Trang thai hien tai
+
+Phase 94 da sua verifier thanh shell-only, SELECT-only theo contract Phase 93. Schema `permissions`, `roles`, `role_permissions` duoc xac nhan tu migration repo; verifier co the kiem 4 permission va OWNER/ADMIN assignments khi co env explicit.
+
+### Current run result
+
+- DB verification: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Permission verification: `NOT_RUN`.
+- Role assignment verification: `NOT_RUN`.
+- Ca 3 shell env deu missing.
+- Verifier return truoc client creation; khong network/DB query.
+
+### File/script
+
+- `docs/94_BACKUP_PERMISSION_DB_VERIFICATION_QUERY.md`
+- `scripts/verify-backup-permissions-post-apply.cjs`
+- `scripts/check-backup-permission-db-verification-query.cjs`
+- `npm run check:backup-permission-db-verification-query`
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong rerun/apply migration, khong mutate DB.
+- Fallback `permissions.manage` van con.
+- Execute/restore runtime van disabled.
+- Khong worker call/production backup/upload/restore.
+- Khong doc `.env.local`/`.dev.vars`.
+- Khong in/commit credential.
+
+### Validation
+
+- Verifier: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`, no network.
+- Phase 94 checker, Phase 93 contract, apply handoff, fallback readiness: PASS.
+- Legacy Phase 89 checker compatibility: PASS.
+- Typecheck/lint: PASS.
+- Direct build: FAIL do known Windows `.next` EPERM artifact lock.
+- Clean temp build: PASS.
+- Audit: `FAIL_WITH_KNOWN_ADVISORIES` trong `esbuild`, `postcss`, `ws`; khong force-fix.
+- `git diff --check`: PASS.
+
+Phase 94 status: `PASS_WITH_SAFE_SKIP`.
+
+### Task tiep theo de xuat
+
+Phase 95 - ghi nhan credentialed read-only verification khi approved shell-only env san sang. Khong go fallback hoac bat execute/restore neu chua co approval rieng.
+
 ## 2026-06-18 - Phase 93 Backup Permission Read-Only Verification Credential Contract completed
 
 ### Trang thai hien tai

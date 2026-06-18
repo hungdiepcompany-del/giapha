@@ -1,5 +1,64 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 94 Backup Permission DB Verification Query
+
+### Phase
+
+Phase 94 - Backup Permission DB Verification Query
+
+### Viec da lam
+
+- Sua verifier cu de chi dung shell-only env Phase 93.
+- Bo doc env file va bo legacy `NEXT_PUBLIC_SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`.
+- Them mode gate `BACKUP_PERMISSION_VERIFY_MODE=read_only`.
+- Query SELECT-only tren `permissions`, `roles`, `role_permissions`.
+- Verify 4 permission va OWNER/ADMIN assignment theo migration da review.
+- Khong in raw provider error message; chi output query stage va non-secret error code.
+- Tao docs/checker Phase 94 va package script.
+
+### Current run
+
+- Shell env: thieu ca URL, server key va mode.
+- DB verification: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Permission verification: `NOT_RUN`.
+- Role assignment verification: `NOT_RUN`.
+- Network call: khong.
+- DB mutation: khong.
+
+### Package da them
+
+- Khong them package.
+
+### Boundary
+
+- Khong deploy/push.
+- Khong rerun/apply migration.
+- Khong go fallback `permissions.manage`.
+- Khong bat execute/restore runtime.
+- Khong worker call/production backup/upload/restore.
+- Khong doc `.env.local`/`.dev.vars`.
+- Khong in/commit credential.
+
+### Kiem thu
+
+- `npm run verify:backup-permissions:post-apply` - `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`, no network.
+- Mode gate voi placeholder va mode khong hop le - `SKIPPED_VERIFICATION_MODE_NOT_READ_ONLY`, no network.
+- `npm run check:backup-permission-db-verification-query` - PASS.
+- `npm run check:backup-permission-read-only-verification-credential-contract` - PASS.
+- `npm run check:backup-permission-post-apply-verification` - PASS compatibility.
+- `npm run check:backup-permission-apply-handoff` - PASS.
+- `npm run check:backup-permission-fallback-removal-readiness` - PASS.
+- `npm run typecheck` - PASS.
+- `npm run lint` - PASS.
+- Direct `npm run build` - FAIL do known Windows `.next` EPERM artifact lock.
+- Clean temp `npm run build` - PASS.
+- `npm audit --audit-level=moderate` - `FAIL_WITH_KNOWN_ADVISORIES`: 7 vulnerabilities trong `esbuild`, `postcss`, `ws`; khong force-fix.
+- `git diff --check` - PASS.
+
+### Ket qua
+
+`PASS_WITH_SAFE_SKIP`.
+
 ## 2026-06-18 - Phase 93 Backup Permission Read-Only Verification Credential Contract
 
 ### Phase
