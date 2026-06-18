@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 76 Backup Permission Real Migration Approval Checklist completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 76 da them approval checklist cho future real backup permission migration. Checklist chi la gate review, chua tao migration that, chua chay SQL va chua mutate DB.
+
+### File/script moi
+
+- `docs/76_BACKUP_PERMISSION_REAL_MIGRATION_APPROVAL_CHECKLIST.md`
+- `scripts/check-backup-permission-real-migration-approval-checklist.cjs`
+- `npm run check:backup-permission-real-migration-approval-checklist`
+
+### Approval baseline
+
+- Marker: `OWNER_APPROVAL_REQUIRED_BEFORE_BACKUP_PERMISSION_REAL_MIGRATION=true`
+- Required before real migration: owner approval, SQL candidate checks, seed dry-run/smoke checks, DB backup/snapshot, rollback plan, production window, post-migration validation.
+- No-go if assignment, fallback removal plan, or execute/restore boundary is not confirmed.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao migration that.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong tao file trong `supabase/migrations/`.
+
+### Task tiep theo de xuat
+
+Phase 77 - Backup Permission Migration Candidate Handoff.
+
 ## 2026-06-18 - Phase 75 Backup Permission Seed Candidate Smoke completed
 
 ### Trang thai hien tai

@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 76 Backup Permission Real Migration Approval Checklist
+
+### Phase
+
+Phase 76 - Backup Permission Real Migration Approval Checklist
+
+### Viec da lam
+
+- Tao `docs/76_BACKUP_PERMISSION_REAL_MIGRATION_APPROVAL_CHECKLIST.md`.
+- Tao `scripts/check-backup-permission-real-migration-approval-checklist.cjs`.
+- Them `npm run check:backup-permission-real-migration-approval-checklist`.
+- Ghi marker approval `OWNER_APPROVAL_REQUIRED_BEFORE_BACKUP_PERMISSION_REAL_MIGRATION=true`.
+- Ghi required SQL candidate checks, seed dry-run checks, DB backup/snapshot, rollback plan, production window va post-migration validation.
+- Ghi explicit no-go conditions truoc khi tao/apply migration that.
+- Ghi ro Phase 76 khong tao migration that, khong chay SQL, khong mutate DB.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/76_BACKUP_PERMISSION_REAL_MIGRATION_APPROVAL_CHECKLIST.md
+- scripts/check-backup-permission-real-migration-approval-checklist.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong tao migration that.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 75 Backup Permission Seed Candidate Smoke
 
 ### Phase

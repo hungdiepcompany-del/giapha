@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 099 - Real backup permission migration requires explicit approval gate
+
+Chon:
+
+Phase 76 tao approval checklist bat buoc truoc khi bat ky phase sau nao duoc tao migration that hoac apply DB cho `backup.operator.*`.
+
+Ly do:
+
+- Real migration se cham permission rows va role-permission mappings.
+- Execute/restore la high-risk permission va khong duoc bat ngoai y muon.
+- Can owner approval, DB backup/snapshot, rollback plan, production window va post-migration validation truoc khi thao tac DB.
+
+He qua:
+
+- Approval marker la `OWNER_APPROVAL_REQUIRED_BEFORE_BACKUP_PERMISSION_REAL_MIGRATION=true`.
+- Neu thieu owner approval, SQL review, rollback, DB backup, production window, local checks, assignment confirmation, fallback plan hoac execute/restore boundary thi no-go.
+- Phase 76 van khong tao migration that va khong mutate DB.
+
 ## Decision 098 - Backup permission seed candidate smoke stays source-static
 
 Chon:
