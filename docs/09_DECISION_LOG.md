@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 080 - Main app binding remains dry-run until real worker approval
+
+Chon:
+
+Ket thuc Phase 53-57 voi main app binding dry-run-only, chua tao runtime route va chua goi backup service worker that.
+
+Ly do:
+
+- Backup service worker chua deploy that va chua co owner approval cho runtime integration.
+- Route operator admin can auth/permission boundary ro rang truoc khi mo API surface.
+- Handoff can dong goi trang thai adapter, guardrail, operator contract va smoke de agent sau khong tu y vuot scope.
+
+He qua:
+
+- Phase tiep theo co the lam UI dry-run panel, deploy worker that co approval, hoac quay lai domain model readiness.
+- Bat ky real worker call, secret, storage, production backup hoac restore nao van can phase rieng va approval ro rang.
+
 ## Decision 079 - Binding smoke remains source-static
 
 Chon:

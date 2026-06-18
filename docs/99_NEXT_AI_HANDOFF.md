@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 57 Main App Binding Dry-Run Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 57 da tong hop handoff Phase 53-57 cho main app backup service binding dry-run. Integration van dry-run-only: chua deploy backup service worker, chua tao route runtime, chua goi worker/network/API/DB va chua tao production backup.
+
+### File/script moi
+
+- `docs/57_MAIN_APP_BINDING_DRY_RUN_HANDOFF.md`
+- `scripts/check-main-app-binding-dry-run-handoff.cjs`
+- `npm run check:main-app-binding-dry-run-handoff`
+
+### Phase 53-57 baseline
+
+- Adapter: `server/services/backup-service-client.ts`
+- Adapter marker: `MAIN_APP_BACKUP_SERVICE_CLIENT_DRY_RUN_ONLY`
+- Guardrail: `npm run check:backup-service-binding-guardrails`
+- Operator contract: `npm run check:backup-operator-api-dry-run-contract`
+- Binding smoke: `npm run smoke:main-app-backup-service-binding`
+- Binding smoke checker: `npm run check:main-app-backup-service-binding-smoke`
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong tao route runtime.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong goi network/API/DB.
+- Khong hardcode URL/token/key.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+- Phase 58 - Backup Operator UI Dry-Run Panel.
+- Hoac Backup Service Worker Manual Deploy Execution neu co owner approval va secret readiness that.
+- Hoac Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 56 Main App Backup Service Binding Smoke completed
 
 ### Trang thai hien tai
