@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 095 - Backup permission seed readiness stops before real migration
+
+Chon:
+
+Phase 72 tong hop readiness cho `backup.operator.*` permission seed nhung van dung truoc migration/schema/DB mutation that.
+
+Ly do:
+
+- Phase 68-72 da co du design, dry-run, assignment runbook va activation guardrail de owner review.
+- Real seed se cham permission table va role mappings nen can approval rieng.
+- Execute/restore van la high-risk surface va chua nen bat runtime.
+
+He qua:
+
+- Runtime fallback `permissions.manage` van con den khi co migration/seed that.
+- Future Phase 73 co the tao migration/seed that neu owner approve.
+- Khong co deploy, DB mutation, worker call, production backup, storage upload, restore hoac secret commit trong bundle nay.
+
 ## Decision 094 - Backup permission activation stays blocked by guardrails
 
 Chon:

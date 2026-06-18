@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 72 Backup Permission Seed Readiness Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 68-72 da hoan tat readiness bundle cho backup permission seed: migration/seed design, dry-run seed checker, assignment runbook, activation guardrails va handoff. Chua co migration/schema, chua mutate DB, chua deploy, chua worker real call va chua bat execute/restore.
+
+### File/script moi
+
+- `docs/72_BACKUP_PERMISSION_SEED_READINESS_HANDOFF.md`
+- `scripts/check-backup-permission-seed-readiness-handoff.cjs`
+- `npm run check:backup-permission-seed-readiness-handoff`
+
+### Seed readiness baseline
+
+- Future permission rows: `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`.
+- Seed dry-run: local simulation only, no DB/Supabase/env/network.
+- Assignment runbook: documented only, owner approval required.
+- Activation guardrail: source-static, blocks runtime execute/restore and real backup/storage/worker drift.
+- Runtime fallback `permissions.manage` remains until approved migration/seed.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+- Phase 73 - Backup Permission Real Migration/Seed Implementation, chi khi owner approve migration/schema/seed.
+- Hoac Phase 73 - Backup Service Worker Manual Deploy Execution, chi khi owner explicitly approve deploy that va secrets da san sang.
+- Hoac Phase 73 - Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 71 Backup Permission Activation Guardrails completed
 
 ### Trang thai hien tai
