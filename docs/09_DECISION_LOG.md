@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 107 - Pre-apply backup permission migration requires explicit no-go gate
+
+Chon:
+
+Khong apply backup permission migration neu thieu owner approval, DB backup/snapshot, dung Supabase project, static checks, canonical path check, rollback owner, smoke owner, expected role confirmation hoac fallback removal understanding.
+
+Ly do:
+
+- Permission migration la DB mutation that nen can gate truoc khi chay.
+- Runtime fallback `permissions.manage` van phai con cho den khi post-migration smoke pass.
+- Checklist giup phase apply sau khong phai doan lai dieu kien an toan.
+
 ## Decision 106 - Canonical backup permission migration path is db/migrations
 
 Chon:

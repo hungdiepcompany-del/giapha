@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 84 Backup Permission Pre-Apply Verification Checklist
+
+### Phase
+
+Phase 84 - Backup Permission Pre-Apply Verification Checklist
+
+### Viec da lam
+
+- Tao checklist pre-apply cho future migration execution.
+- Ghi ro canonical path `db/migrations/20260618_0007_backup_operator_permissions.sql`.
+- Ghi no-go conditions: owner approval, DB backup/snapshot, dung Supabase project, static checks, canonical path, rollback owner, smoke owner, expected roles va fallback plan.
+- Tao checker local cho checklist.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/84_BACKUP_PERMISSION_PRE_APPLY_VERIFICATION_CHECKLIST.md
+- scripts/check-backup-permission-pre-apply-verification-checklist.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 83 Backup Permission Migration Path Canonicalization & Execution Runbook
 
 ### Phase

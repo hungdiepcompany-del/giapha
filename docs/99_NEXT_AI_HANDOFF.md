@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 84 Backup Permission Pre-Apply Verification Checklist completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 84 da tao pre-apply verification checklist cho backup permission migration. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/84_BACKUP_PERMISSION_PRE_APPLY_VERIFICATION_CHECKLIST.md`
+- `scripts/check-backup-permission-pre-apply-verification-checklist.cjs`
+- `npm run check:backup-permission-pre-apply-verification-checklist`
+
+### Checklist baseline
+
+- Canonical migration path: `db/migrations/20260618_0007_backup_operator_permissions.sql`
+- No-go neu thieu owner approval, DB backup/snapshot, dung Supabase project, static checks, canonical path check, rollback owner, smoke owner, expected roles hoac fallback plan understanding.
+- Runtime fallback `permissions.manage` still remains.
+- Migration has not been run.
+- No DB mutation.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 85 - Backup Permission Rollback Drill Plan.
+
 ## 2026-06-18 - Phase 83 Backup Permission Migration Path Canonicalization completed
 
 ### Trang thai hien tai
