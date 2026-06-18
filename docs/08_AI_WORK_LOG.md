@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 80 Backup Permission Runtime Fallback Removal Plan
+
+### Phase
+
+Phase 80 - Backup Permission Runtime Fallback Removal Plan
+
+### Viec da lam
+
+- Tao `docs/80_BACKUP_PERMISSION_RUNTIME_FALLBACK_REMOVAL_PLAN.md`.
+- Tao `scripts/check-backup-permission-runtime-fallback-removal-plan.cjs`.
+- Them `npm run check:backup-permission-runtime-fallback-removal-plan`.
+- Ghi current fallback `permissions.manage` va preconditions truoc khi bo fallback.
+- Ghi API fallback removal plan, UI fallback removal plan, post-removal smoke plan va rollback plan.
+- Checker xac nhan runtime API/UI van con `permissions.manage` trong Phase 80.
+- Khong sua runtime fallback, khong chay migration va khong mutate DB.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/80_BACKUP_PERMISSION_RUNTIME_FALLBACK_REMOVAL_PLAN.md
+- scripts/check-backup-permission-runtime-fallback-removal-plan.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi trong Phase 80.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong sua runtime fallback.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 79 Backup Permission Migration Static Verification
 
 ### Phase

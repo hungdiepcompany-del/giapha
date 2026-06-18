@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 103 - Runtime fallback removal waits for applied migration and real smoke
+
+Chon:
+
+Phase 80 chi tao plan bo fallback `permissions.manage`, khong sua runtime fallback trong API/UI.
+
+Ly do:
+
+- Migration file da duoc tao nhung chua apply DB.
+- Neu bo fallback truoc khi DB co `backup.operator.view` va `backup.operator.dry_run`, operator access co the bi chan sai.
+- Can smoke voi real user va rollback plan truoc khi thay runtime guard.
+
+He qua:
+
+- API/UI van giu fallback `permissions.manage`.
+- Future fallback removal can migration applied confirmation, assignment confirmation, real-user smoke va owner approval.
+
 ## Decision 102 - Real migration file requires static verification before execution planning
 
 Chon:

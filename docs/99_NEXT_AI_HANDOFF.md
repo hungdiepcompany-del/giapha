@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 80 Backup Permission Runtime Fallback Removal Plan completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 80 da them plan bo fallback `permissions.manage` sau khi migration duoc apply trong tuong lai. Phase nay khong sua runtime fallback, khong chay migration va khong mutate DB.
+
+### File/script moi
+
+- `docs/80_BACKUP_PERMISSION_RUNTIME_FALLBACK_REMOVAL_PLAN.md`
+- `scripts/check-backup-permission-runtime-fallback-removal-plan.cjs`
+- `npm run check:backup-permission-runtime-fallback-removal-plan`
+
+### Fallback baseline
+
+- Current fallback: `permissions.manage`
+- API/UI runtime still contain fallback.
+- Do not remove fallback until migration has been applied, backup permissions exist in DB, expected roles have assignments, smoke test passes with real user, rollback is ready and owner approves.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong sua runtime fallback.
+- Khong goi Supabase/API/DB/network.
+
+### Task tiep theo de xuat
+
+Phase 81 - Backup Permission Post-Migration Smoke Plan.
+
 ## 2026-06-18 - Phase 79 Backup Permission Migration Static Verification completed
 
 ### Trang thai hien tai
