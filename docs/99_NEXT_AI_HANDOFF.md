@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 66 Backup Operator Permission Smoke & Guardrails completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 66 da them smoke va guardrail source-static cho backup operator permission guard. Check xac nhan API/UI permission markers, permission names, dry-run markers va adapter dry-run boundary.
+
+### File/script moi
+
+- `docs/66_BACKUP_OPERATOR_PERMISSION_SMOKE_GUARDRAILS.md`
+- `scripts/smoke-backup-operator-permission-guard.cjs`
+- `scripts/check-backup-operator-permission-guardrails.cjs`
+- `npm run smoke:backup-operator:permission-guard`
+- `npm run check:backup-operator-permission-guardrails`
+
+### Guardrail baseline
+
+- Scan `app/api/admin/backups`
+- Scan `app/(admin)/admin/backups`
+- Scan `components/admin/backup-operator-dry-run-panel.tsx`
+- Scan `server/services/backup-service-client.ts`
+- Khoa worker URL, secret, production backup, storage upload, restore, cron va env file read.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong tao migration/schema/seed.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 67 - Backup Operator Permission Handoff.
+
 ## 2026-06-18 - Phase 65 Backup Operator UI Permission Guard completed
 
 ### Trang thai hien tai

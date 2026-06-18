@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 66 Backup Operator Permission Smoke & Guardrails
+
+### Phase
+
+Phase 66 - Backup Operator Permission Smoke & Guardrails
+
+### Viec da lam
+
+- Tao `docs/66_BACKUP_OPERATOR_PERMISSION_SMOKE_GUARDRAILS.md`.
+- Tao `scripts/smoke-backup-operator-permission-guard.cjs`.
+- Tao `scripts/check-backup-operator-permission-guardrails.cjs`.
+- Them `npm run smoke:backup-operator:permission-guard`.
+- Them `npm run check:backup-operator-permission-guardrails`.
+- Smoke xac nhan API/UI markers, permission names, adapter dry-run marker va no-real-backup fields.
+- Guardrail scan operator route/page/component va dry-run adapter de chan worker URL, secret, production backup, storage upload, restore, cron va env file read.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/66_BACKUP_OPERATOR_PERMISSION_SMOKE_GUARDRAILS.md
+- scripts/smoke-backup-operator-permission-guard.cjs
+- scripts/check-backup-operator-permission-guardrails.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-18 - Phase 65 Backup Operator UI Permission Guard
 
 ### Phase

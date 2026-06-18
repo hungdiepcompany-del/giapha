@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 089 - Backup operator permission guardrails stay source-static
+
+Chon:
+
+Phase 66 tao smoke va guardrail source-static cho backup operator permission guard, khong chay server/browser/network.
+
+Ly do:
+
+- API/UI permission hardening can gate nhanh tren source de bat marker drift truoc khi co worker deploy that.
+- Chua co approval cho deploy worker, storage, backup production hay restore.
+- Static guardrail co the chay local/CI ma khong can secret hoac env.
+
+He qua:
+
+- `smoke:backup-operator:permission-guard` xac nhan API/UI guard markers va dry-run boundary.
+- `check:backup-operator-permission-guardrails` chan route/page/component/adapter drift sang worker URL, secret, backup, storage, restore hoac cron.
+
 ## Decision 088 - Backup operator UI guard mirrors API permission fallback
 
 Chon:

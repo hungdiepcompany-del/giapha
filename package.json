@@ -90,6 +90,8 @@
     "check:backup-operator-permission-model-review": "node scripts/check-backup-operator-permission-model-review.cjs",
     "check:backup-operator-api-permission-guard": "node scripts/check-backup-operator-api-permission-guard.cjs",
     "check:backup-operator-ui-permission-guard": "node scripts/check-backup-operator-ui-permission-guard.cjs",
+    "smoke:backup-operator:permission-guard": "node scripts/smoke-backup-operator-permission-guard.cjs",
+    "check:backup-operator-permission-guardrails": "node scripts/check-backup-operator-permission-guardrails.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",
