@@ -1,5 +1,50 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 87 Backup Permission Execution Readiness Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 83-87 da hoan tat execution readiness bundle cho backup permission migration. Migration file nam o canonical path `db/migrations/20260618_0007_backup_operator_permissions.sql`; wrong old path trong `supabase/migrations/` khong con. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/87_BACKUP_PERMISSION_EXECUTION_READINESS_HANDOFF.md`
+- `scripts/check-backup-permission-execution-readiness-handoff.cjs`
+- `npm run check:backup-permission-execution-readiness-handoff`
+
+### Execution readiness baseline
+
+- Canonical migration path: `db/migrations/20260618_0007_backup_operator_permissions.sql`
+- Wrong old path no longer exists: `supabase/migrations/20260618_0007_backup_operator_permissions.sql`
+- Execution runbook: ready as docs/check.
+- Pre-apply checklist: ready as docs/check.
+- Rollback drill: ready as docs/check.
+- Approval gate: ready as docs/check.
+- Migration has not been run.
+- No DB mutation.
+- Runtime fallback `permissions.manage` still remains.
+- `backup.operator.execute` and `backup.operator.restore` still not enabled in runtime.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong cron/schedule.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+- Phase 88 - Backup Permission Real Migration Apply Execution, chi khi owner explicitly approve chay migration/apply DB that.
+- Hoac Phase 88 - Backup Service Worker Manual Deploy Execution, chi khi owner approve deploy that va secrets da san sang.
+- Hoac Phase 88 - Vietnamese Genealogy Domain Model Readiness, neu muon tam dung ha tang.
+
 ## 2026-06-18 - Phase 86 Backup Permission Apply Approval Gate completed
 
 ### Trang thai hien tai

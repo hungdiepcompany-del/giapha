@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 110 - Execution readiness is not permission to apply DB
+
+Chon:
+
+Phase 87 danh dau backup permission migration execution readiness ve docs/check only, nhung van blocked cho den khi owner explicitly approve real apply.
+
+Ly do:
+
+- Runbook, checklist, rollback plan va approval gate chi la readiness artifact.
+- Migration has not been run va no DB mutation.
+- Fallback `permissions.manage` phai giu lai den khi post-migration smoke that pass va owner approve removal.
+
 ## Decision 109 - Backup permission apply requires explicit owner approval marker
 
 Chon:
