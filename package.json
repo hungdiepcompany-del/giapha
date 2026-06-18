@@ -94,6 +94,8 @@
     "check:backup-operator-permission-guardrails": "node scripts/check-backup-operator-permission-guardrails.cjs",
     "check:backup-operator-permission-handoff": "node scripts/check-backup-operator-permission-handoff.cjs",
     "check:backup-permission-migration-seed-design": "node scripts/check-backup-permission-migration-seed-design.cjs",
+    "backup:permission:seed:dry-run": "node scripts/backup-permission-seed-dry-run.cjs",
+    "check:backup-permission-seed-dry-run": "node scripts/check-backup-permission-seed-dry-run.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

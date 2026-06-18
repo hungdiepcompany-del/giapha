@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 092 - Backup permission seed proof stays dry-run only
+
+Chon:
+
+Phase 69 tao local dry-run script mo phong `backup.operator.*` permission seed va role assignment, khong goi Supabase, khong doc env va khong ghi migration.
+
+Ly do:
+
+- Can co bang chung seed plan truoc khi tao migration that.
+- Permission execute/restore co rui ro cao nen phai thay ro `would_assign` truoc khi owner approve.
+- Dry-run local giu validation chay duoc tren may khong co secret hoac DB.
+
+He qua:
+
+- `backup:permission:seed:dry-run` chi in JSON an toan voi `dry_run: true`.
+- Migration/seed that van can phase rieng va approval.
+
 ## Decision 091 - Backup permission seed should be a future idempotent migration
 
 Chon:
