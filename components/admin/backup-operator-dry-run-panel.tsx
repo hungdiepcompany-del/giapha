@@ -5,6 +5,8 @@ import { useState } from "react";
 type DryRunResult = {
   ok?: boolean;
   marker?: string;
+  permission_guard?: string;
+  permission_source?: string | null;
   mode?: string;
   worker_call?: boolean;
   production_backup?: boolean;
@@ -12,6 +14,14 @@ type DryRunResult = {
   restore?: boolean;
   request_id?: string;
 };
+
+type BackupOperatorDryRunPanelProps = {
+  permissionGuard: "BACKUP_OPERATOR_UI_PERMISSION_GUARD";
+  permissionSource: "backup.operator.view" | "permissions.manage";
+};
+
+export const BACKUP_OPERATOR_UI_PERMISSION_GUARD =
+  "BACKUP_OPERATOR_UI_PERMISSION_GUARD";
 
 const safetyItems = [
   "Dry-run only",
@@ -21,7 +31,10 @@ const safetyItems = [
   "No real worker call",
 ];
 
-export function BackupOperatorDryRunPanel() {
+export function BackupOperatorDryRunPanel({
+  permissionGuard,
+  permissionSource,
+}: BackupOperatorDryRunPanelProps) {
   const [result, setResult] = useState<DryRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -51,7 +64,11 @@ export function BackupOperatorDryRunPanel() {
   }
 
   return (
-    <div className="grid gap-5">
+    <div
+      className="grid gap-5"
+      data-permission-guard={permissionGuard}
+      data-permission-source={permissionSource}
+    >
       <div className="border border-emerald-200 bg-emerald-50 p-4">
         <h2 className="text-base font-bold text-emerald-950">
           Operator dry-run status
@@ -102,6 +119,18 @@ export function BackupOperatorDryRunPanel() {
               <div className="font-semibold text-slate-950">Request ID</div>
               <div className="mt-1 break-all font-mono">
                 {String(result.request_id ?? "unknown")}
+              </div>
+            </div>
+            <div className="border border-slate-200 p-3">
+              <div className="font-semibold text-slate-950">Permission guard</div>
+              <div className="mt-1 break-all font-mono">
+                {String(result.permission_guard ?? permissionGuard)}
+              </div>
+            </div>
+            <div className="border border-slate-200 p-3">
+              <div className="font-semibold text-slate-950">Permission source</div>
+              <div className="mt-1 break-all font-mono">
+                {String(result.permission_source ?? permissionSource)}
               </div>
             </div>
             <div className="border border-slate-200 p-3">

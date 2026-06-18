@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 65 Backup Operator UI Permission Guard
+
+### Phase
+
+Phase 65 - Backup Operator UI Permission Guard
+
+### Viec da lam
+
+- Cap nhat `app/(admin)/admin/backups/page.tsx` voi marker `BACKUP_OPERATOR_UI_PERMISSION_GUARD`.
+- Dung `getPermissionContext` de guard `/admin/backups` server-side.
+- Check `backup.operator.view` truoc, fallback fail-closed bang `permissions.manage` vi chua co migration/seed permission backup.
+- Redirect anonymous user ve login va unauthorized user ve `/unauthorized?reason=missing_backup_operator_view`.
+- Cap nhat `components/admin/backup-operator-dry-run-panel.tsx` de nhan permission guard/source va van chi goi route noi bo dry-run.
+- Tao `docs/65_BACKUP_OPERATOR_UI_PERMISSION_GUARD.md`.
+- Tao `scripts/check-backup-operator-ui-permission-guard.cjs`.
+- Them `npm run check:backup-operator-ui-permission-guard`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- app/(admin)/admin/backups/page.tsx
+- components/admin/backup-operator-dry-run-panel.tsx
+- docs/65_BACKUP_OPERATOR_UI_PERMISSION_GUARD.md
+- scripts/check-backup-operator-ui-permission-guard.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-18 - Phase 64 Backup Operator API Permission Guard
 
 ### Phase

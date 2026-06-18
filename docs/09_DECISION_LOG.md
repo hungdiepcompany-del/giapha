@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 088 - Backup operator UI guard mirrors API permission fallback
+
+Chon:
+
+Phase 65 guard `/admin/backups` bang `backup.operator.view` truoc, fallback fail-closed bang `permissions.manage` khi permission backup chua duoc seed that.
+
+Ly do:
+
+- UI operator khong nen tiep tuc dung `exports.download` vi backup operator la boundary rieng.
+- Phase nay khong duoc migration/schema/seed nen can fallback tren permission admin hien co.
+- Server-side page guard ngan panel render truoc khi user du quyen.
+
+He qua:
+
+- UI va API cung theo model `backup.operator.*` future permission voi fallback `permissions.manage`.
+- Panel van chi goi local dry-run route va khong mo backup/storage/restore that.
+
 ## Decision 087 - Backup operator API guard uses future permission with admin fallback
 
 Chon:

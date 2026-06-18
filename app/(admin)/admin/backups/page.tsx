@@ -1,13 +1,45 @@
+import { redirect } from "next/navigation";
+
 import { BackupOperatorDryRunPanel } from "@/components/admin/backup-operator-dry-run-panel";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
-import { requirePermission } from "@/lib/permissions/require-permission";
+import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
 
+export const BACKUP_OPERATOR_UI_PERMISSION_GUARD =
+  "BACKUP_OPERATOR_UI_PERMISSION_GUARD";
+
+const REQUIRED_VIEW_PERMISSION = "backup.operator.view";
+const FALLBACK_VIEW_PERMISSION = "permissions.manage";
+
+type BackupOperatorViewPermission =
+  | typeof REQUIRED_VIEW_PERMISSION
+  | typeof FALLBACK_VIEW_PERMISSION;
+
+function encodeReason(reason: string) {
+  return encodeURIComponent(reason.replace(/\s+/g, "_").toLowerCase());
+}
+
 export default async function AdminBackupsPage() {
-  const context = await requirePermission("exports.download");
+  const context = await getPermissionContext();
+
+  if (!context.user) {
+    redirect(`/auth/login?reason=${encodeReason(context.reason ?? "login_required")}`);
+  }
+
+  const permissions = context.permissions as readonly string[];
+  const hasRequiredPermission = permissions.includes(REQUIRED_VIEW_PERMISSION);
+  const hasFallbackPermission = permissions.includes(FALLBACK_VIEW_PERMISSION);
+
+  if (!hasRequiredPermission && !hasFallbackPermission) {
+    redirect("/unauthorized?reason=missing_backup_operator_view");
+  }
+
+  const permissionSource: BackupOperatorViewPermission = hasRequiredPermission
+    ? REQUIRED_VIEW_PERMISSION
+    : FALLBACK_VIEW_PERMISSION;
 
   return (
     <AdminShell
@@ -28,7 +60,10 @@ export default async function AdminBackupsPage() {
         </StatusCallout>
 
         <div className="mt-6">
-          <BackupOperatorDryRunPanel />
+          <BackupOperatorDryRunPanel
+            permissionGuard={BACKUP_OPERATOR_UI_PERMISSION_GUARD}
+            permissionSource={permissionSource}
+          />
         </div>
       </section>
     </AdminShell>

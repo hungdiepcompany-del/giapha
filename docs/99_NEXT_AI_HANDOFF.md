@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 65 Backup Operator UI Permission Guard completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 65 da guard `/admin/backups` server-side bang `backup.operator.view` hoac fallback documented `permissions.manage`. Panel operator van dry-run-only va chi goi route noi bo `/api/admin/backups/service-dry-run`.
+
+### File/script moi
+
+- `docs/65_BACKUP_OPERATOR_UI_PERMISSION_GUARD.md`
+- `scripts/check-backup-operator-ui-permission-guard.cjs`
+- `npm run check:backup-operator-ui-permission-guard`
+
+### Runtime source cap nhat
+
+- `app/(admin)/admin/backups/page.tsx`
+- `components/admin/backup-operator-dry-run-panel.tsx`
+- Marker moi: `BACKUP_OPERATOR_UI_PERMISSION_GUARD`
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong tao migration/schema/seed.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 66 - Backup Operator Permission Smoke & Guardrails.
+
 ## 2026-06-18 - Phase 64 Backup Operator API Permission Guard completed
 
 ### Trang thai hien tai
