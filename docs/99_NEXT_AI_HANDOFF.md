@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 67 Backup Operator Permission Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 63-67 da hoan tat backup operator permission hardening bundle: permission model review, API guard, UI guard, permission smoke/guardrails va handoff. Tat ca van dry-run-only.
+
+### File/script moi
+
+- `docs/67_BACKUP_OPERATOR_PERMISSION_HANDOFF.md`
+- `scripts/check-backup-operator-permission-handoff.cjs`
+- `npm run check:backup-operator-permission-handoff`
+
+### Permission hardening baseline
+
+- UI permission target: `backup.operator.view`
+- API permission target: `backup.operator.dry_run`
+- Future backup permission: `backup.operator.execute`
+- Future restore permission: `backup.operator.restore`
+- Current fallback until migration/seed: `permissions.manage`
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong tao migration/schema/seed.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong tao cron/schedule.
+
+### Task tiep theo de xuat
+
+- Phase 68 - Backup Permission Migration/Seed Design.
+- Hoac Phase 68 - Backup Service Worker Manual Deploy Execution neu co explicit owner approval va secret readiness.
+- Hoac Phase 68 - Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 66 Backup Operator Permission Smoke & Guardrails completed
 
 ### Trang thai hien tai

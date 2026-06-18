@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 67 Backup Operator Permission Handoff
+
+### Phase
+
+Phase 67 - Backup Operator Permission Handoff
+
+### Viec da lam
+
+- Tao `docs/67_BACKUP_OPERATOR_PERMISSION_HANDOFF.md`.
+- Tao `scripts/check-backup-operator-permission-handoff.cjs`.
+- Them `npm run check:backup-operator-permission-handoff`.
+- Tong hop Phase 63-67: permission model review, API guard, UI guard, smoke va guardrail status.
+- Ghi ro permission names proposed/used: `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`.
+- Ghi ro fallback hien tai la `permissions.manage` cho den khi co migration/seed permission that.
+- Ghi ro chua co real worker call, chua deploy, chua production backup, chua real storage, chua secret committed, chua migration/schema trong Phase 63-67.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/67_BACKUP_OPERATOR_PERMISSION_HANDOFF.md
+- scripts/check-backup-operator-permission-handoff.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-18 - Phase 66 Backup Operator Permission Smoke & Guardrails
 
 ### Phase

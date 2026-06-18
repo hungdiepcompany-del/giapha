@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 090 - Permission hardening stops before permission seed and real backup
+
+Chon:
+
+Ket thuc Phase 63-67 voi backup operator permission model, API/UI guards, smoke, guardrails va handoff, nhung khong them migration/seed va khong bat real backup worker.
+
+Ly do:
+
+- `backup.operator.*` can duoc seed/map role trong phase rieng co owner approval.
+- Worker deploy, storage target, production backup va restore van la surface rui ro cao.
+- Handoff can khoa ro fallback hien tai `permissions.manage` de agent sau khong tu y cap quyen hoac deploy.
+
+He qua:
+
+- Phase tiep theo co the la permission migration/seed design, worker manual deploy co approval, hoac quay lai domain model gia pha.
+- Bat ky real worker call, storage upload, production backup, restore, cron, deploy hoac secret setup that nao van can phase rieng.
+
 ## Decision 089 - Backup operator permission guardrails stay source-static
 
 Chon:
