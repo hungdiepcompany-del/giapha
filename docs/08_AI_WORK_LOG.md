@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 86 Backup Permission Apply Approval Gate
+
+### Phase
+
+Phase 86 - Backup Permission Apply Approval Gate
+
+### Viec da lam
+
+- Tao approval gate cuoi truoc future migration apply.
+- Them marker `OWNER_APPROVAL_REQUIRED_BEFORE_APPLYING_BACKUP_PERMISSION_MIGRATION=true`.
+- Ghi required Supabase project confirmation, DB backup/snapshot, local validation, rollback owner, smoke owner va apply window.
+- Ghi no-go conditions de chan apply neu thieu approval hoac bundle fallback removal/execute/restore runtime.
+- Tao checker local cho approval gate.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/86_BACKUP_PERMISSION_APPLY_APPROVAL_GATE.md
+- scripts/check-backup-permission-apply-approval-gate.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 85 Backup Permission Rollback Drill Plan
 
 ### Phase

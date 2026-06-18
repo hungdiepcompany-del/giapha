@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 86 Backup Permission Apply Approval Gate completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 86 da tao approval gate cuoi truoc future backup permission migration apply. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/86_BACKUP_PERMISSION_APPLY_APPROVAL_GATE.md`
+- `scripts/check-backup-permission-apply-approval-gate.cjs`
+- `npm run check:backup-permission-apply-approval-gate`
+
+### Approval gate baseline
+
+- Required marker: `OWNER_APPROVAL_REQUIRED_BEFORE_APPLYING_BACKUP_PERMISSION_MIGRATION=true`
+- Canonical migration path: `db/migrations/20260618_0007_backup_operator_permissions.sql`
+- Required before future apply: Supabase project confirmation, DB backup/snapshot, local validation, rollback owner, smoke owner va apply window.
+- Migration has not been run.
+- No DB mutation.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 87 - Backup Permission Execution Readiness Handoff.
+
 ## 2026-06-18 - Phase 85 Backup Permission Rollback Drill Plan completed
 
 ### Trang thai hien tai

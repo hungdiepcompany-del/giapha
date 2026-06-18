@@ -115,6 +115,7 @@
     "check:backup-permission-migration-execution-runbook": "node scripts/check-backup-permission-migration-execution-runbook.cjs",
     "check:backup-permission-pre-apply-verification-checklist": "node scripts/check-backup-permission-pre-apply-verification-checklist.cjs",
     "check:backup-permission-rollback-drill-plan": "node scripts/check-backup-permission-rollback-drill-plan.cjs",
+    "check:backup-permission-apply-approval-gate": "node scripts/check-backup-permission-apply-approval-gate.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

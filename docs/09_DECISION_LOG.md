@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 109 - Backup permission apply requires explicit owner approval marker
+
+Chon:
+
+Future apply phase cho backup permission migration phai co marker `OWNER_APPROVAL_REQUIRED_BEFORE_APPLYING_BACKUP_PERMISSION_MIGRATION=true` va owner approval rieng truoc khi chay migration.
+
+Ly do:
+
+- Migration file ton tai khong dong nghia voi duoc phep apply DB.
+- Apply phai tach khoi fallback removal va runtime execute/restore enablement.
+- Supabase project, DB backup/snapshot, rollback owner, smoke owner va apply window phai duoc xac nhan truoc.
+
 ## Decision 108 - Backup permission rollback drill stays documented before execution
 
 Chon:

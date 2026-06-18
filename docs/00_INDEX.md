@@ -94,4 +94,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 83_BACKUP_PERMISSION_MIGRATION_EXECUTION_RUNBOOK.md | Sua canonical path cua migration backup permission ve `db/migrations/` va tao execution runbook, chua chay/apply DB. | Khi can chuan bi apply migration that nhung van can approval, backup va rollback gate. |
 | 84_BACKUP_PERMISSION_PRE_APPLY_VERIFICATION_CHECKLIST.md | Checklist pre-apply cho migration backup permission that, yeu cau owner approval, DB backup, identity va no-go gate. | Khi can xac nhan dieu kien truoc khi apply migration that. |
 | 85_BACKUP_PERMISSION_ROLLBACK_DRILL_PLAN.md | Rollback drill plan cho migration backup permission, gom failure scenarios, restore snapshot va fallback `permissions.manage`. | Khi can chuan bi rollback truoc khi apply migration that. |
+| 86_BACKUP_PERMISSION_APPLY_APPROVAL_GATE.md | Approval gate cuoi truoc khi apply migration backup permission that, gom marker owner approval va no-go conditions. | Khi can xin phep owner truoc execution phase that. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
