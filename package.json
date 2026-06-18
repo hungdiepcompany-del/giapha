@@ -108,6 +108,8 @@
     "check:backup-permission-real-migration-file": "node scripts/check-backup-permission-real-migration-file.cjs",
     "check:backup-permission-real-migration-static-verification": "node scripts/check-backup-permission-real-migration-static-verification.cjs",
     "check:backup-permission-runtime-fallback-removal-plan": "node scripts/check-backup-permission-runtime-fallback-removal-plan.cjs",
+    "smoke:backup-permission:post-migration": "node scripts/smoke-backup-permission-post-migration.cjs",
+    "check:backup-permission-post-migration-smoke-plan": "node scripts/check-backup-permission-post-migration-smoke-plan.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

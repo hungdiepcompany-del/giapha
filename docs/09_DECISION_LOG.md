@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 104 - Post-migration smoke is safe-skip unless explicit env is set
+
+Chon:
+
+Phase 81 them smoke plan/script cho sau khi migration duoc apply, nhung script safe-skip neu thieu `BACKUP_PERMISSION_SMOKE_BASE_URL` hoac `BACKUP_PERMISSION_SMOKE_EXPECTED_USER`.
+
+Ly do:
+
+- Phase nay chua duoc phep goi production/network mac dinh.
+- Post-migration smoke can duoc chuan bi truoc nhung chi chay route khi operator set explicit env.
+- Smoke khong can token va khong duoc trigger backup/restore/storage.
+
+He qua:
+
+- `npm run smoke:backup-permission:post-migration` mac dinh SKIPPED trong local validation.
+- Future execution phase co the set env explicit de smoke API/UI route an toan.
+
 ## Decision 103 - Runtime fallback removal waits for applied migration and real smoke
 
 Chon:

@@ -1,5 +1,53 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 81 Backup Permission Post-Migration Smoke Plan
+
+### Phase
+
+Phase 81 - Backup Permission Post-Migration Smoke Plan
+
+### Viec da lam
+
+- Tao `docs/81_BACKUP_PERMISSION_POST_MIGRATION_SMOKE_PLAN.md`.
+- Tao `scripts/smoke-backup-permission-post-migration.cjs`.
+- Tao `scripts/check-backup-permission-post-migration-smoke-plan.cjs`.
+- Them `npm run smoke:backup-permission:post-migration`.
+- Them `npm run check:backup-permission-post-migration-smoke-plan`.
+- Smoke script safe-skip khi thieu `BACKUP_PERMISSION_SMOKE_BASE_URL` hoac `BACKUP_PERMISSION_SMOKE_EXPECTED_USER`.
+- Smoke script khong doc `.env.local`/`.dev.vars`, khong dung token va khong goi URL khi thieu env explicit.
+- Ghi no-real-backup policy va failure handling.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/81_BACKUP_PERMISSION_POST_MIGRATION_SMOKE_PLAN.md
+- scripts/smoke-backup-permission-post-migration.cjs
+- scripts/check-backup-permission-post-migration-smoke-plan.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi trong Phase 81.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB truc tiep.
+- Smoke mac dinh SKIPPED khi thieu explicit env.
+
 ## 2026-06-18 - Phase 80 Backup Permission Runtime Fallback Removal Plan
 
 ### Phase

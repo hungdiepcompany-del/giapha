@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 81 Backup Permission Post-Migration Smoke Plan completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 81 da them post-migration smoke plan va smoke script safe-skip. Script khong goi URL khi thieu explicit env va khong doc `.env.local`/`.dev.vars`.
+
+### File/script moi
+
+- `docs/81_BACKUP_PERMISSION_POST_MIGRATION_SMOKE_PLAN.md`
+- `scripts/smoke-backup-permission-post-migration.cjs`
+- `scripts/check-backup-permission-post-migration-smoke-plan.cjs`
+- `npm run smoke:backup-permission:post-migration`
+- `npm run check:backup-permission-post-migration-smoke-plan`
+
+### Smoke baseline
+
+- Marker: `BACKUP_PERMISSION_POST_MIGRATION_SMOKE_ONLY`
+- Env placeholders: `BACKUP_PERMISSION_SMOKE_BASE_URL`, `BACKUP_PERMISSION_SMOKE_EXPECTED_USER`
+- Default result without env: SKIPPED
+- Scope with explicit env: `/api/admin/backups/service-dry-run` and `/admin/backups`
+- No backup worker call, production backup, storage upload or restore.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB truc tiep.
+- Khong goi backup service worker that.
+
+### Task tiep theo de xuat
+
+Phase 82 - Backup Permission Real Migration Handoff.
+
 ## 2026-06-18 - Phase 80 Backup Permission Runtime Fallback Removal Plan completed
 
 ### Trang thai hien tai
