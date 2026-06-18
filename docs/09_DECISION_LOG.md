@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 115 - Apply handoff preserves evidence limitations
+
+Chon:
+
+Phase 92 ghi migration apply la `OWNER_CONFIRMED_APPLIED`, DB verification la `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`, runtime smoke la `PARTIAL_LOCAL_STATIC_ONLY`, va fallback readiness la `NOT_READY_FOR_FALLBACK_REMOVAL`.
+
+Ly do:
+
+- Khong nang cap owner confirmation thanh automated DB proof.
+- Khong nang cap local/static smoke thanh authenticated production smoke.
+- Future fallback removal can verification completion va separate owner approval.
+
 ## Decision 114 - Fallback removal is not ready after partial verification
 
 Chon:

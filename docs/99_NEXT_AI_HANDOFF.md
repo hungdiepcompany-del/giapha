@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 92 Backup Permission Apply Handoff completed
+
+### Trang thai hien tai
+
+Phase 88-92 da hoan tat apply handoff bundle. Migration apply la owner-confirmed tren project ref `frkyeuxrlcflmsxxsolp`. DB verification read-only va authenticated endpoint smoke chua hoan tat do thieu local credentials/explicit env. Fallback removal status la `NOT_READY_FOR_FALLBACK_REMOVAL`.
+
+### File/script moi
+
+- `docs/92_BACKUP_PERMISSION_APPLY_HANDOFF.md`
+- `scripts/check-backup-permission-apply-handoff.cjs`
+- `npm run check:backup-permission-apply-handoff`
+
+### Final baseline
+
+- Migration apply: OWNER_CONFIRMED_APPLIED.
+- Permission verification: SKIPPED_MISSING_VERIFICATION_CREDENTIALS.
+- Runtime smoke: PARTIAL_LOCAL_STATIC_ONLY.
+- Fallback removal readiness: NOT_READY_FOR_FALLBACK_REMOVAL.
+- Fallback `permissions.manage` still remains.
+- Execute/restore runtime still disabled.
+- No deploy/push.
+- No worker call/production backup/restore/storage operation.
+
+### Task tiep theo de xuat
+
+- Phase 93 - Backup Permission Verification Completion, khi co safe read-only credentials va explicit authenticated smoke env.
+- Hoac Phase 93 - Backup Permission Runtime Fallback Removal, chi sau verification completion va owner approval rieng.
+- Hoac Phase 93 - Backup Service Worker Manual Deploy Execution, chi khi owner approve deploy va secrets san sang.
+- Hoac Phase 93 - Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 91 Backup Permission Fallback Removal Readiness completed
 
 ### Trang thai hien tai

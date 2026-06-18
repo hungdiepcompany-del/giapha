@@ -100,4 +100,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 89_BACKUP_PERMISSION_POST_APPLY_VERIFICATION.md | Post-apply verification read-only cho permission rows va OWNER/ADMIN mappings, safe-skip khi thieu credential. | Khi can xac minh DB sau apply ma khong in secret hoac mutate DB. |
 | 90_BACKUP_OPERATOR_PERMISSION_RUNTIME_SMOKE.md | Runtime smoke an toan sau apply: endpoint smoke safe-skip, permission guard va dry-run smoke local/static. | Khi can danh gia route guard ma khong goi worker hay tao backup that. |
 | 91_BACKUP_PERMISSION_FALLBACK_REMOVAL_READINESS.md | Danh gia fallback removal sau apply; ket luan not ready khi DB verify va endpoint smoke chua pass. | Khi can quyet dinh co du dieu kien xin approval go `permissions.manage` hay chua. |
+| 92_BACKUP_PERMISSION_APPLY_HANDOFF.md | Handoff tong hop apply, verification, smoke va fallback readiness Phase 88-92. | Khi can tiep tuc verification completion, fallback removal approval hoac tam dung ha tang. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
