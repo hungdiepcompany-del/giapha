@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 083 - Operator UI guardrails scan only runtime-relevant source
+
+Chon:
+
+Phase 60 tao guardrail scan cho operator UI/API source va dry-run adapter, khong scan toan bo docs.
+
+Ly do:
+
+- Can chan drift runtime nhu worker URL, token, storage upload, restore, cron hoac production backup trigger.
+- Scan docs qua rong se false positive voi runbook va placeholder secret policy.
+- Runtime-relevant source la noi co nguy co bien dry-run thanh thao tac that.
+
+He qua:
+
+- `check:backup-operator-ui-guardrails` tro thanh gate cho cac phase UI/API/smoke tiep theo.
+- Docs van co the ghi warning va placeholder neu khong dua gia tri secret that vao source.
+
 ## Decision 082 - Operator UI calls only the local dry-run route
 
 Chon:

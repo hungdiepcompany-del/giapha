@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 60 Backup Operator UI Guardrails completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 60 da them guardrail static cho operator UI/API dry-run. Checker scan cac path runtime lien quan va chan worker URL, hardcoded token/key, direct wrangler, direct Cloudflare/Supabase/Google API, production backup, storage upload, restore va cron/schedule.
+
+### File/script moi
+
+- `docs/60_BACKUP_OPERATOR_UI_GUARDRAILS.md`
+- `scripts/check-backup-operator-ui-guardrails.cjs`
+- `npm run check:backup-operator-ui-guardrails`
+
+### Guardrail baseline
+
+- Scan `app/(admin)/admin/backups`
+- Scan `components/admin`
+- Scan `app/api/admin/backups`
+- Scan `server/services/backup-service-client.ts`
+- Cho phep dry-run marker, placeholder names va local route dry-run.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong hardcode URL/token/key.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong tao cron/schedule.
+
+### Task tiep theo de xuat
+
+Phase 61 - Backup Operator Local Smoke.
+
 ## 2026-06-18 - Phase 59 Backup Operator UI Dry-Run Panel completed
 
 ### Trang thai hien tai

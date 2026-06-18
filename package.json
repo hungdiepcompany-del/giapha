@@ -83,6 +83,7 @@
     "check:backup-operator-api-dry-run-contract": "node scripts/check-backup-operator-api-dry-run-contract.cjs",
     "check:backup-operator-api-dry-run-route": "node scripts/check-backup-operator-api-dry-run-route.cjs",
     "check:backup-operator-ui-dry-run-panel": "node scripts/check-backup-operator-ui-dry-run-panel.cjs",
+    "check:backup-operator-ui-guardrails": "node scripts/check-backup-operator-ui-guardrails.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",
