@@ -128,6 +128,7 @@
     "check:backup-operator-authenticated-smoke-env-contract": "node scripts/check-backup-operator-authenticated-smoke-env-contract.cjs",
     "check:backup-permission-verification-completion-run": "node scripts/check-backup-permission-verification-completion-run.cjs",
     "check:backup-permission-verification-completion-handoff": "node scripts/check-backup-permission-verification-completion-handoff.cjs",
+    "check:verification-credential-completion-runbook": "node scripts/check-verification-credential-completion-runbook.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

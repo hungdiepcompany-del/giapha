@@ -1,5 +1,14 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 98 Verification Credential Completion Runbook completed
+
+- Da tao CMD/PowerShell shell-only runbook cho DB verification va authenticated smoke.
+- Chi co placeholder, khong co credential value.
+- Khong doc `.env.local`/`.dev.vars`.
+- Phase 98 khong query DB/network, deploy/push, mutation, fallback removal hoac execute/restore enablement.
+- Validation: checker/typecheck/lint/clean temp build PASS; direct build known `.next` EPERM; audit known advisories.
+- Task tiep theo: Phase 99 DB Verification Credential Assisted Run.
+
 ## 2026-06-18 - Phase 97 Backup Permission Verification Completion Handoff completed
 
 ### Final verification baseline

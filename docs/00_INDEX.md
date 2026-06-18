@@ -106,4 +106,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 95_BACKUP_OPERATOR_AUTHENTICATED_SMOKE_ENV_CONTRACT.md | Contract shell-only cho authenticated smoke UI/API backup operator, khong log auth material va khong goi worker. | Khi can chuan bi smoke route co auth ma van giu dry-run boundary. |
 | 96_BACKUP_PERMISSION_VERIFICATION_COMPLETION_RUN.md | Ket qua bundle DB verify, authenticated smoke va local/static smoke; ghi limitation trung thuc. | Khi can danh gia evidence verification completion truoc handoff/fallback readiness. |
 | 97_BACKUP_PERMISSION_VERIFICATION_COMPLETION_HANDOFF.md | Handoff Phase 95-97, phan tach verified/unverified va ket luan fallback removal NOT_READY. | Khi can chon verification credential completion hoac phase tiep theo. |
+| 98_VERIFICATION_CREDENTIAL_COMPLETION_RUNBOOK.md | Runbook CMD/PowerShell set va clear shell-only verification env bang placeholder, khong luu secret vao file. | Khi owner san sang cung cap credential trong shell de chay DB verify/smoke. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

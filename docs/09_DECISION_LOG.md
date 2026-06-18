@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 121 - Verification credentials are owner-operated shell state
+
+Chon:
+
+Phase 98 chi huong dan set/clear credential trong current CMD/PowerShell bang placeholder. Khong luu vao repo env file va khong yeu cau paste value vao chat.
+
+Ly do:
+
+- Giu secret ngoai source/docs/log.
+- Cho phep verifier/smoke dung process env hien co va safe-skip neu thieu.
+- Clear-shell procedure giam rui ro credential ton tai sau verification.
+
 ## Decision 120 - Fallback removal remains blocked after Phase 97
 
 Chon:

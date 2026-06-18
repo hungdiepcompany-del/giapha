@@ -1,5 +1,15 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 98 Verification Credential Completion Runbook
+
+- Tao runbook CMD/PowerShell bang placeholder cho 7 shell env.
+- Ghi no-env-file, no-secret-logging, safe-skip va clear-shell procedure.
+- Khong tu set credential, khong query DB, khong authenticated network smoke.
+- Khong deploy/push, mutation, fallback removal hoac execute/restore enablement.
+- Checker/dependency checkers/typecheck/lint - PASS.
+- Direct build - known `.next` EPERM; clean temp build - PASS.
+- Audit - `FAIL_WITH_KNOWN_ADVISORIES`; `git diff --check` - PASS.
+
 ## 2026-06-18 - Phase 97 Backup Permission Verification Completion Handoff
 
 ### Handoff
