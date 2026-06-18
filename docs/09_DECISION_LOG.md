@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 116 - Verification credentials are shell-only and SELECT-only
+
+Chon:
+
+Backup permission DB verifier chi dung `BACKUP_PERMISSION_VERIFY_SUPABASE_URL`, `BACKUP_PERMISSION_VERIFY_SUPABASE_SERVER_KEY` va `BACKUP_PERMISSION_VERIFY_MODE=read_only` tu environment variables da set truc tiep trong shell/CI secret.
+
+Ly do:
+
+- Boundary Phase 93-97 cam doc `.env.local` va `.dev.vars`.
+- Supabase khong co generic read-only key; server key co the co quyen rong nen script phai bi gioi han SELECT/read-only.
+- Script chi SELECT permissions, roles va role_permissions.
+- Cam insert/update/delete/upsert/RPC mutation va khong in credential/connection string.
+- Thieu env thi safe-skip, khong network call va khong doan ket qua.
+
 ## Decision 115 - Apply handoff preserves evidence limitations
 
 Chon:

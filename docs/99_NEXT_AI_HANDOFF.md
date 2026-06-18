@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 93 Backup Permission Read-Only Verification Credential Contract completed
+
+### Trang thai hien tai
+
+Phase 93 da chot credential contract shell-only cho DB verification. Contract dung `BACKUP_PERMISSION_VERIFY_SUPABASE_URL`, `BACKUP_PERMISSION_VERIFY_SUPABASE_SERVER_KEY`, `BACKUP_PERMISSION_VERIFY_MODE=read_only`. Server key co the co quyen rong, nhung verifier phase sau chi duoc SELECT/read-only, khong doc `.env.local`/`.dev.vars`, khong in secret va safe-skip khi thieu env.
+
+### File/script moi
+
+- `docs/93_BACKUP_PERMISSION_READ_ONLY_VERIFICATION_CREDENTIAL_CONTRACT.md`
+- `scripts/check-backup-permission-read-only-verification-credential-contract.cjs`
+- `npm run check:backup-permission-read-only-verification-credential-contract`
+
+### Boundary giu nguyen
+
+- Khong query/mutate DB trong Phase 93.
+- Khong deploy/push.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong doc env file hoac in credential.
+- Phase 89 limitation van la `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Phase 94 tro di phai dung shell-only env va khong doc `.env.local`/`.dev.vars`.
+
+### Validation
+
+- Contract checker, apply handoff, fallback readiness, post-apply verification, migration apply execution: PASS.
+- Typecheck/lint: PASS.
+- Direct build: FAIL do known Windows `.next` EPERM artifact lock.
+- Clean temp build: PASS.
+- Audit: `FAIL_WITH_KNOWN_ADVISORIES` trong `esbuild`, `postcss`, `ws`; khong force-fix.
+- `git diff --check`: PASS.
+
+Phase 93 status: `PASS_WITH_KNOWN_NOTES`.
+
+### Task tiep theo de xuat
+
+Phase 94 - Backup Permission DB Verification Query.
+
 ## 2026-06-18 - Phase 92 Backup Permission Apply Handoff completed
 
 ### Trang thai hien tai

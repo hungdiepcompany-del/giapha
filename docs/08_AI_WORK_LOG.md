@@ -1,5 +1,52 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 93 Backup Permission Read-Only Verification Credential Contract
+
+### Phase
+
+Phase 93 - Backup Permission Read-Only Verification Credential Contract
+
+### Viec da lam
+
+- Tao shell-only credential contract cho post-apply DB verification.
+- Chon env placeholders `BACKUP_PERMISSION_VERIFY_SUPABASE_URL`, `BACKUP_PERMISSION_VERIFY_SUPABASE_SERVER_KEY`, `BACKUP_PERMISSION_VERIFY_MODE=read_only`.
+- Ghi ro Supabase server key co the co quyen rong, nhung verifier chi duoc SELECT/read-only.
+- Cam verification script doc `.env.local` hoac `.dev.vars`.
+- Ghi cam insert/update/delete/upsert/RPC mutation, no-secret-logging, safe-skip va no-DB-mutation policy.
+- Tao checker local cho credential contract va chan legacy readonly-key name, network, env-secret access, DB mutation trong checker.
+- Cap nhat docs index, decision log va handoff.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Phase 93 khong query DB.
+- Phase 89 van co limitation `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Khong deploy/push.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong in/commit credential.
+
+### Kiem thu
+
+- `npm run check:backup-permission-read-only-verification-credential-contract` - PASS.
+- `npm run check:backup-permission-apply-handoff` - PASS.
+- `npm run check:backup-permission-fallback-removal-readiness` - PASS.
+- `npm run check:backup-permission-post-apply-verification` - PASS.
+- `npm run check:backup-permission-real-migration-apply-execution` - PASS.
+- `npm run typecheck` - PASS.
+- `npm run lint` - PASS.
+- Direct `npm run build` - FAIL do known Windows `.next` EPERM artifact lock.
+- Clean temp `npm run build` - PASS.
+- `npm audit --audit-level=moderate` - `FAIL_WITH_KNOWN_ADVISORIES`: 7 vulnerabilities trong `esbuild`, `postcss`, `ws`; khong chay `npm audit fix --force`.
+- `git diff --check` - PASS.
+
+### Ket qua
+
+PASS_WITH_KNOWN_NOTES.
+
 ## 2026-06-18 - Phase 92 Backup Permission Apply Handoff
 
 ### Phase
