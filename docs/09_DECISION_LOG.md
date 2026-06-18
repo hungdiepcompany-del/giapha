@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 097 - Backup permission SQL candidate needs static safety gate
+
+Chon:
+
+Phase 74 them static safety checker rieng cho `scripts/backup-permission-sql-candidate.sql.draft`, khong chay SQL va khong cham DB.
+
+Ly do:
+
+- SQL candidate co the bi drift thanh destructive migration neu khong co guardrail.
+- Static check can khoa destructive SQL, network URL, service-role/JWT wording va thieu marker owner approval.
+- Check local giu an toan tren may khong co secret hoac Supabase env.
+
+He qua:
+
+- Candidate phai co `BACKUP_PERMISSION_SQL_CANDIDATE_ONLY` va `DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL`.
+- Candidate phai co idempotency concept va 4 permission names.
+- Real migration van can approval checklist rieng truoc khi tao file/applied DB.
+
 ## Decision 096 - Backup permission SQL remains a draft candidate
 
 Chon:

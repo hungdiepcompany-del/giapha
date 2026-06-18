@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 74 Backup Permission SQL Static Safety Check completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 74 da them static safety checker cho SQL candidate draft. Checker chi doc source local, khong chay SQL, khong goi Supabase/API/DB/network va khong mutate DB.
+
+### File/script moi
+
+- `docs/74_BACKUP_PERMISSION_SQL_STATIC_SAFETY_CHECK.md`
+- `scripts/check-backup-permission-sql-static-safety.cjs`
+- `npm run check:backup-permission-sql-static-safety`
+
+### Safety baseline
+
+- Scan: `scripts/backup-permission-sql-candidate.sql.draft`
+- Required markers: `BACKUP_PERMISSION_SQL_CANDIDATE_ONLY`, `DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL`
+- Required permissions: `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`
+- Required idempotency concept: `on conflict`, `where not exists`, or explicit idempotency review comment.
+- Forbidden: destructive SQL, network URL, `service_role`, `anon key`, `jwt secret`, `security definer`.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong tao file trong `supabase/migrations/`.
+
+### Task tiep theo de xuat
+
+Phase 75 - Backup Permission Seed Candidate Smoke.
+
 ## 2026-06-18 - Phase 73 Backup Permission SQL Candidate Draft completed
 
 ### Trang thai hien tai

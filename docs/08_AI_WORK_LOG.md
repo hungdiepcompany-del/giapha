@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 74 Backup Permission SQL Static Safety Check
+
+### Phase
+
+Phase 74 - Backup Permission SQL Static Safety Check
+
+### Viec da lam
+
+- Tao `docs/74_BACKUP_PERMISSION_SQL_STATIC_SAFETY_CHECK.md`.
+- Tao `scripts/check-backup-permission-sql-static-safety.cjs`.
+- Them `npm run check:backup-permission-sql-static-safety`.
+- Static checker scan `scripts/backup-permission-sql-candidate.sql.draft`.
+- Checker yeu cau marker `BACKUP_PERMISSION_SQL_CANDIDATE_ONLY` va `DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL`.
+- Checker yeu cau 4 permission names va idempotency concept.
+- Checker chan destructive SQL, network URL, `service_role`, `anon key`, `jwt secret` va `security definer`.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/74_BACKUP_PERMISSION_SQL_STATIC_SAFETY_CHECK.md
+- scripts/check-backup-permission-sql-static-safety.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 73 Backup Permission SQL Candidate Draft
 
 ### Phase
