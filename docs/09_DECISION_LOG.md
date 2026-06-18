@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 120 - Fallback removal remains blocked after Phase 97
+
+Chon:
+
+Ket luan `NOT_READY_FOR_FALLBACK_REMOVAL` va de xuat Phase 98 Verification Credential Completion.
+
+Ly do:
+
+- DB verification va role assignments chua co independent PASS.
+- Authenticated endpoint smoke chua co PASS.
+- Local/static PASS khong thay the hai evidence tren.
+- Fallback removal va execute/restore can approval rieng sau verification completion.
+
 ## Decision 119 - Verification completion preserves external skips
 
 Chon:

@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 97 Backup Permission Verification Completion Handoff completed
+
+### Final verification baseline
+
+- Migration apply: `OWNER_CONFIRMED_APPLIED`.
+- DB verification: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Four permissions independently verified: no.
+- Role assignments independently verified: no, `NOT_RUN`.
+- Authenticated endpoint smoke: `SKIPPED_MISSING_EXPLICIT_ENV`.
+- Local/static permission guard and dry-run smoke: PASS.
+
+### Readiness
+
+- Fallback `permissions.manage`: still remains.
+- Fallback removal: `NOT_READY_FOR_FALLBACK_REMOVAL`.
+- Execute/restore runtime: still disabled.
+- No deploy/push or new DB mutation.
+- No secret committed.
+
+### Recommended next phase
+
+Phase 98 - Verification Credential Completion.
+
+### Validation
+
+- Phase 97/96/95/94 checkers: PASS.
+- DB/authenticated smoke: safe-skip.
+- Local/static smoke: PASS.
+- Migration, backup pipeline, service boundary, OpenNext wiring: PASS.
+- Typecheck/lint: PASS.
+- Direct build: known `.next` EPERM; clean temp build PASS.
+- Audit: `FAIL_WITH_KNOWN_ADVISORIES`.
+- `git diff --check`: PASS.
+
+Phase 97 status: `PASS_WITH_LIMITATIONS_AND_SAFE_SKIP`.
+
 ## 2026-06-18 - Phase 96 Backup Permission Verification Completion Run completed
 
 ### Verification result

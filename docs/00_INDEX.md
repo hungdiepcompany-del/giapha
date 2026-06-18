@@ -105,4 +105,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 94_BACKUP_PERMISSION_DB_VERIFICATION_QUERY.md | Query verifier SELECT-only cho backup permissions va OWNER/ADMIN assignments, safe-skip khi thieu shell env. | Khi can chay hoac danh gia DB verification sau migration ma khong mutate DB. |
 | 95_BACKUP_OPERATOR_AUTHENTICATED_SMOKE_ENV_CONTRACT.md | Contract shell-only cho authenticated smoke UI/API backup operator, khong log auth material va khong goi worker. | Khi can chuan bi smoke route co auth ma van giu dry-run boundary. |
 | 96_BACKUP_PERMISSION_VERIFICATION_COMPLETION_RUN.md | Ket qua bundle DB verify, authenticated smoke va local/static smoke; ghi limitation trung thuc. | Khi can danh gia evidence verification completion truoc handoff/fallback readiness. |
+| 97_BACKUP_PERMISSION_VERIFICATION_COMPLETION_HANDOFF.md | Handoff Phase 95-97, phan tach verified/unverified va ket luan fallback removal NOT_READY. | Khi can chon verification credential completion hoac phase tiep theo. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
