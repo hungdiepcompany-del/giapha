@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 084 - Operator smoke stays source-static
+
+Chon:
+
+Phase 61 tao smoke local/static chi doc source files cho operator API/UI dry-run.
+
+Ly do:
+
+- Chua co worker deploy that va khong can server dang chay de kiem contract.
+- Smoke source-static giup chay local/CI an toan, khong can secret va khong cham network.
+- Runtime browser click/integration can phase rieng khi permission va worker approval ro rang.
+
+He qua:
+
+- `smoke:backup-operator:dry-run` xac nhan marker, UI warnings, guardrail va package scripts.
+- Smoke khong thay the permission hardening hay deploy smoke that.
+
 ## Decision 083 - Operator UI guardrails scan only runtime-relevant source
 
 Chon:

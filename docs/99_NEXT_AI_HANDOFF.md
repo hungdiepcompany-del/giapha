@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 61 Backup Operator Local Smoke completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 61 da them smoke local/static cho operator API/UI dry-run. Smoke chi doc source files, khong can server dang chay, khong doc env va khong goi network/API/DB.
+
+### File/script moi
+
+- `docs/61_BACKUP_OPERATOR_LOCAL_SMOKE.md`
+- `scripts/smoke-backup-operator-dry-run.cjs`
+- `scripts/check-backup-operator-local-smoke.cjs`
+- `npm run smoke:backup-operator:dry-run`
+- `npm run check:backup-operator-local-smoke`
+
+### Smoke baseline
+
+- Marker: `BACKUP_OPERATOR_DRY_RUN_SMOKE_ONLY`
+- API route: `app/api/admin/backups/service-dry-run/route.ts`
+- UI page: `app/(admin)/admin/backups/page.tsx`
+- UI component: `components/admin/backup-operator-dry-run-panel.tsx`
+- Guardrail: `scripts/check-backup-operator-ui-guardrails.cjs`
+- Network execution: skipped
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong goi network/API/DB.
+- Khong hardcode URL/token/key.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 62 - Backup Operator Dry-Run Handoff.
+
 ## 2026-06-18 - Phase 60 Backup Operator UI Guardrails completed
 
 ### Trang thai hien tai

@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 61 Backup Operator Local Smoke
+
+### Phase
+
+Phase 61 - Backup Operator Local Smoke
+
+### Viec da lam
+
+- Tao `docs/61_BACKUP_OPERATOR_LOCAL_SMOKE.md`.
+- Tao `scripts/smoke-backup-operator-dry-run.cjs`.
+- Tao `scripts/check-backup-operator-local-smoke.cjs`.
+- Them `npm run smoke:backup-operator:dry-run`.
+- Them `npm run check:backup-operator-local-smoke`.
+- Smoke chi doc source files va package scripts, khong goi network/env/DB.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/61_BACKUP_OPERATOR_LOCAL_SMOKE.md
+- scripts/smoke-backup-operator-dry-run.cjs
+- scripts/check-backup-operator-local-smoke.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong can server dang chay.
+- Khong goi backup service worker that.
+- Khong goi network/API/DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
 ## 2026-06-18 - Phase 60 Backup Operator UI Guardrails
 
 ### Phase

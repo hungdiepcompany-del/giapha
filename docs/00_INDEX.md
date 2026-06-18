@@ -69,4 +69,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 58_BACKUP_OPERATOR_API_DRY_RUN_ROUTE.md | Runtime route dry-run cho operator backup API, chi tra envelope noi bo va khong goi worker/DB/network. | Khi can UI/operator panel goi dry-run route truoc permission hardening that. |
 | 59_BACKUP_OPERATOR_UI_DRY_RUN_PANEL.md | Admin UI panel cho backup operator dry-run, chi goi route noi bo va hien canh bao no-real-backup. | Khi can operator xem dry-run status ma chua deploy/goi worker that. |
 | 60_BACKUP_OPERATOR_UI_GUARDRAILS.md | Guardrail static cho UI/operator route de chan worker URL, token, storage upload, restore, cron va backup that. | Khi can kiem UI/API dry-run khong drift thanh production backup execution. |
+| 61_BACKUP_OPERATOR_LOCAL_SMOKE.md | Smoke local/static cho operator API/UI dry-run, khong can server va khong goi network/env. | Khi can xac nhan route, UI, guardrail va package scripts van dry-run. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
