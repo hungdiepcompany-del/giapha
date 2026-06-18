@@ -1,5 +1,43 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 96 Backup Permission Verification Completion Run
+
+### Ket qua run
+
+- DB verification: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Permission verification: `NOT_RUN`.
+- Role assignment verification: `NOT_RUN`.
+- Authenticated endpoint smoke: `SKIPPED_MISSING_EXPLICIT_ENV`.
+- Permission guard local/static smoke: PASS.
+- Backup operator dry-run local/static smoke: PASS.
+
+### Ket luan
+
+- Status: `PASS_WITH_LIMITATIONS_AND_SAFE_SKIP`.
+- Fallback removal: `NOT_READY_FOR_FALLBACK_REMOVAL`.
+- Fallback `permissions.manage` van con.
+- Execute/restore runtime van disabled.
+
+### Boundary
+
+- Khong deploy/push.
+- Khong migration/DB mutation.
+- Khong worker call/production backup/upload/restore.
+- Khong doc env file hoac commit secret.
+
+### Validation
+
+- Phase 96 checker - PASS.
+- DB verifier - safe-skip.
+- Authenticated endpoint smoke - safe-skip.
+- Permission guard/dry-run local static smoke - PASS.
+- Phase 95/94/fallback readiness checkers - PASS.
+- Typecheck/lint - PASS.
+- Direct build - known `.next` EPERM.
+- Clean temp build - PASS.
+- Audit - `FAIL_WITH_KNOWN_ADVISORIES`.
+- `git diff --check` - PASS.
+
 ## 2026-06-18 - Phase 95 Backup Operator Authenticated Smoke Env Contract
 
 ### Viec da lam

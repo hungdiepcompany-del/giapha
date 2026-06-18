@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 96 Backup Permission Verification Completion Run completed
+
+### Verification result
+
+- DB verification: `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Four permissions independently verified: no.
+- Role assignments independently verified: no, `NOT_RUN`.
+- Authenticated endpoint smoke: `SKIPPED_MISSING_EXPLICIT_ENV`.
+- Permission guard local/static smoke: PASS.
+- Dry-run local/static smoke: PASS.
+
+### Readiness
+
+- Phase 96: `PASS_WITH_LIMITATIONS_AND_SAFE_SKIP`.
+- Fallback `permissions.manage`: still remains.
+- Fallback removal: `NOT_READY_FOR_FALLBACK_REMOVAL`.
+- Execute/restore runtime: still disabled.
+
+### Boundary
+
+- No deploy/push.
+- No migration/DB mutation.
+- No worker call/production backup/upload/restore.
+- No env-file read or secret commit.
+
+### Validation
+
+- Phase 96 checker and dependency checkers: PASS.
+- DB/authenticated smoke: safe-skip.
+- Local/static smoke: PASS.
+- Typecheck/lint: PASS.
+- Direct build: known `.next` EPERM; clean temp build PASS.
+- Audit: `FAIL_WITH_KNOWN_ADVISORIES`.
+- `git diff --check`: PASS.
+
+### Task tiep theo
+
+Phase 97 - Backup Permission Verification Completion Handoff.
+
 ## 2026-06-18 - Phase 95 Backup Operator Authenticated Smoke Env Contract completed
 
 ### Trang thai hien tai

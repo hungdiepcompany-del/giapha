@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 119 - Verification completion preserves external skips
+
+Chon:
+
+Phase 96 chi ghi PASS cho hai local/static smoke. DB verifier va authenticated endpoint smoke giu nguyen SKIP vi shell env thieu; khong suy dien PASS tu owner-confirmed migration apply.
+
+Ly do:
+
+- Local/static evidence khong chung minh database rows hoac authenticated production access.
+- Khong fake PASS khi credential/auth material khong co.
+- Fallback removal van NOT_READY cho den khi ca DB verify va authenticated smoke PASS.
+
 ## Decision 118 - Authenticated smoke accepts shell-only cookie or bearer
 
 Chon:
