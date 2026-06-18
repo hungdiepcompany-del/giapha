@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 124 - Fallback removal remains blocked after consolidation
+
+Chon:
+
+Ghi fallback removal readiness la `NOT_READY_FOR_FALLBACK_REMOVAL`.
+
+Ly do:
+
+- DB verification van la skip, khong phai PASS.
+- Authenticated endpoint smoke van la skip, khong phai PASS.
+- Local/static PASS la can thiet nhung khong du de go fallback.
+
 ## Decision 123 - Local smoke PASS does not upgrade authenticated smoke SKIP
 
 Chon:

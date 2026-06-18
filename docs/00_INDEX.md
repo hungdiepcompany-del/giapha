@@ -109,4 +109,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 98_VERIFICATION_CREDENTIAL_COMPLETION_RUNBOOK.md | Runbook CMD/PowerShell set va clear shell-only verification env bang placeholder, khong luu secret vao file. | Khi owner san sang cung cap credential trong shell de chay DB verify/smoke. |
 | 99_DB_VERIFICATION_CREDENTIAL_ASSISTED_RUN.md | Ket qua assisted DB verifier; safe-skip khi shell credential chua duoc set. | Khi can ghi bang chung DB verification PASS/FAIL/SKIP trung thuc. |
 | 100_AUTHENTICATED_SMOKE_CREDENTIAL_ASSISTED_RUN.md | Ket qua authenticated endpoint smoke va local/static smoke, khong goi worker/backup that. | Khi can ghi bang chung authenticated smoke PASS/FAIL/SKIP. |
+| 101_VERIFICATION_RESULT_CONSOLIDATION.md | Tong hop ket qua DB verify, authenticated smoke, local smoke va fallback readiness. | Khi can quyet dinh fallback removal co du dieu kien hay chua. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
