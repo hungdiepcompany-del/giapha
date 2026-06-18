@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 105 - Real migration handoff keeps execution blocked
+
+Chon:
+
+Phase 82 tong hop trang thai migration file backup permission da tao trong repo, nhung van chan execution cho den khi co owner approval rieng.
+
+Ly do:
+
+- File migration ton tai khong dong nghia voi da apply DB.
+- Runtime fallback va execute/restore boundary can duoc giu cho den khi migration duoc apply va smoke that pass.
+- Future execution can DB backup/snapshot va rollback plan.
+
+He qua:
+
+- Migration file path duoc ghi la `supabase/migrations/20260618_0007_backup_operator_permissions.sql`.
+- Migration has not been run va no DB mutation.
+- Fallback `permissions.manage` still remains until post-migration phase.
+
 ## Decision 104 - Post-migration smoke is safe-skip unless explicit env is set
 
 Chon:

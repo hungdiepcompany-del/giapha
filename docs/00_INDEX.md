@@ -90,4 +90,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md | Static verification cho migration file backup permission that, khong chay migration/DB. | Khi can gate migration file truoc fallback removal plan hoac execution runbook. |
 | 80_BACKUP_PERMISSION_RUNTIME_FALLBACK_REMOVAL_PLAN.md | Plan bo fallback `permissions.manage` sau khi migration backup permission duoc apply, chua sua runtime. | Khi can chuan bi remove fallback sau migration va smoke that. |
 | 81_BACKUP_PERMISSION_POST_MIGRATION_SMOKE_PLAN.md | Smoke plan/script safe-skip cho sau khi migration backup permission duoc apply, khong goi URL neu thieu env explicit. | Khi can chuan bi smoke post-migration truoc handoff hoac execution runbook. |
+| 82_BACKUP_PERMISSION_REAL_MIGRATION_HANDOFF.md | Handoff tong hop migration file backup permission da tao trong `supabase/migrations/` nhung chua chay/apply DB. | Khi can chon execution runbook, apply migration that, deploy worker, hoac quay lai domain model. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

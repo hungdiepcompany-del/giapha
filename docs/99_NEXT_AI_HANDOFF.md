@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 82 Backup Permission Real Migration Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 78-82 da hoan tat real migration file bundle cho backup permissions: migration file da co trong `supabase/migrations/`, static verification, fallback removal plan, post-migration smoke plan va handoff. Migration chua duoc chay, chua apply DB, chua mutate DB, chua deploy va chua bat execute/restore runtime.
+
+### File/script moi
+
+- `docs/82_BACKUP_PERMISSION_REAL_MIGRATION_HANDOFF.md`
+- `scripts/check-backup-permission-real-migration-handoff.cjs`
+- `npm run check:backup-permission-real-migration-handoff`
+
+### Real migration baseline
+
+- Migration file: `supabase/migrations/20260618_0007_backup_operator_permissions.sql`
+- Migration has not been run.
+- No DB mutation.
+- Static verification: `npm run check:backup-permission-real-migration-static-verification`
+- Fallback removal plan: documented only.
+- Post-migration smoke: safe-skip unless explicit env is set.
+- Runtime fallback `permissions.manage` still remains.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+- Phase 83 - Backup Permission Migration Execution Runbook, neu owner chuan bi cho apply DB nhung van chua chay.
+- Hoac Phase 83 - Backup Permission Real Migration Apply Execution, chi khi owner explicitly approve chay migration/apply DB that.
+- Hoac Phase 83 - Backup Service Worker Manual Deploy Execution, chi khi owner approve deploy that va secrets da san sang.
+- Hoac Phase 83 - Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 81 Backup Permission Post-Migration Smoke Plan completed
 
 ### Trang thai hien tai
