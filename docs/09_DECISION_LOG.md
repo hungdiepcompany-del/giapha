@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 079 - Binding smoke remains source-static
+
+Chon:
+
+Phase 56 chi them smoke static/local doc source files va package scripts, khong import runtime app code va khong goi worker/network/env.
+
+Ly do:
+
+- Main app binding van chua co worker deploy, URL, service binding hoac secret that.
+- Smoke can bat drift cua adapter/guardrail/operator API contract ma khong bien thanh integration test that.
+- Doc source-only giup smoke an toan tren may local va CI khong co secret.
+
+He qua:
+
+- `smoke:main-app-backup-service-binding` la gate local cho contract hien tai.
+- `check:main-app-backup-service-binding-smoke` khoa viec doc env, hardcode secret va goi network trong smoke.
+- Integration that voi backup service worker van can phase approval/deploy rieng.
+
 ## Decision 078 - Backup operator API remains contract-only until API auth boundary is clear
 
 Chon:

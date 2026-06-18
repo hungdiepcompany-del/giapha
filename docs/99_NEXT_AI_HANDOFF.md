@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 56 Main App Backup Service Binding Smoke completed
+
+### Trang thai hien tai
+
+Production van chay tai `https://web-gia-pha.hungdiepcompany.workers.dev/`. Phase 56 da co smoke static/local cho main app backup service binding dry-run. Smoke chi doc source files trong repo, khong doc env, khong goi network/API/DB va khong goi backup service worker that.
+
+### File/script moi
+
+- `docs/56_MAIN_APP_BACKUP_SERVICE_BINDING_SMOKE.md`
+- `scripts/smoke-main-app-backup-service-binding.cjs`
+- `scripts/check-main-app-backup-service-binding-smoke.cjs`
+- `npm run smoke:main-app-backup-service-binding`
+- `npm run check:main-app-backup-service-binding-smoke`
+
+### Binding smoke baseline
+
+- Marker: `MAIN_APP_BACKUP_SERVICE_BINDING_SMOKE_ONLY`
+- Adapter contract: `server/services/backup-service-client.ts`
+- Guardrail checker: `scripts/check-backup-service-binding-guardrails.cjs`
+- Operator API checker: `scripts/check-backup-operator-api-dry-run-contract.cjs`
+- Network execution: skipped
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong goi network/API/DB.
+- Khong hardcode URL/token/key.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 57 - Main App Binding Dry-Run Handoff.
+
 ## 2026-06-17 - Phase 55 Backup Operator API Dry-Run Contract completed
 
 ### Trang thai hien tai

@@ -64,4 +64,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 53_MAIN_APP_BACKUP_SERVICE_CLIENT_DRY_RUN_ADAPTER.md | Adapter dry-run phia main app cho backup service worker, khong goi worker/network that. | Khi can chuan bi server-side client boundary truoc binding/API/UI operator. |
 | 54_BACKUP_SERVICE_BINDING_GUARDRAIL_CHECKS.md | Guardrail static scan de chan main app goi backup worker that, hardcode secret hoac trigger backup/restore/storage that. | Khi can dam bao binding dry-run khong vo tinh thanh runtime production. |
 | 55_BACKUP_OPERATOR_API_DRY_RUN_CONTRACT.md | Contract docs/check cho API operator dry-run backup service, chua tao route runtime. | Khi can thiet ke admin/operator API truoc khi co auth/permission boundary ro rang. |
+| 56_MAIN_APP_BACKUP_SERVICE_BINDING_SMOKE.md | Smoke static/local cho main app backup service binding dry-run, khong goi network/env. | Khi can xac nhan adapter/guardrail/operator contract van dry-run truoc handoff. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
