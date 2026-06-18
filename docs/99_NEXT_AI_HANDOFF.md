@@ -1,5 +1,26 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 113A Vietnamese Genealogy Manual Apply Verification recorded
+
+- Owner/operator confirmation received: `OWNER CONFIRMED MANUAL APPLY SUCCESS`.
+- Manual apply method: Supabase Dashboard SQL Editor.
+- Apply result from owner/operator: `SUCCESS`.
+- Apply status recorded: `OWNER_CONFIRMED_APPLIED`.
+- Target Supabase project ref: `frkyeuxrlcflmsxxsolp`.
+- Migration file: `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Expected SHA256: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Actual SHA256: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Created `docs/113A_VIETNAMESE_GENEALOGY_MANUAL_APPLY_VERIFICATION.md`.
+- Added `scripts/verify-vietnamese-genealogy-migration-post-apply.cjs` and `npm run verify:vietnamese-genealogy-migration:post-apply`.
+- Added `scripts/check-vietnamese-genealogy-manual-apply-verification.cjs` and `npm run check:vietnamese-genealogy-manual-apply-verification`.
+- DB verification status: `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS`.
+- RLS/policy DB verification status: `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS`.
+- Excluded-scope DB verification status: `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS`.
+- Static source review remains unchanged: migration creates only `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`, enables RLS, uses existing permissions and includes no seed/backfill.
+- Boundary: no DB apply run by AI/local, no migration rerun, no SQL mutation executed by AI/local, no seed/backfill, no migration file modification, no new migration, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not read or committed.
+- Validation: Phase 103-113 checkers PASS, Phase 113A verifier PASS_WITH_SAFE_SKIP, Phase 113A checker PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Recommended next phase: Phase 113B Credential-Assisted Vietnamese Genealogy Read-Only DB Verification before Phase 114-117. If the owner accepts owner-confirmation-only evidence, Phase 114-117 grouped prompt can start with this limitation recorded.
+
 ## 2026-06-18 - Phase 113 Vietnamese Genealogy Migration Apply Execution recorded
 
 - Owner approval received for DB apply of `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.

@@ -1,5 +1,24 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 113A Vietnamese Genealogy Manual Apply Verification
+
+- Owner/operator confirmation received: `OWNER CONFIRMED MANUAL APPLY SUCCESS`.
+- Manual apply method recorded: Supabase Dashboard SQL Editor.
+- Target Supabase project ref recorded: `frkyeuxrlcflmsxxsolp`.
+- Migration file recorded: `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Expected SHA256 and actual SHA256 matched: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Apply status recorded as `OWNER_CONFIRMED_APPLIED`.
+- Created `docs/113A_VIETNAMESE_GENEALOGY_MANUAL_APPLY_VERIFICATION.md`.
+- Added read-only verifier `scripts/verify-vietnamese-genealogy-migration-post-apply.cjs`.
+- Added checker `scripts/check-vietnamese-genealogy-manual-apply-verification.cjs`.
+- DB verification safe-skipped because explicit shell env was missing: `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS`.
+- RLS/policy DB verification safe-skipped; static migration review remains unchanged.
+- Excluded-scope DB verification safe-skipped; static source verification remains unchanged.
+- No DB apply run by AI/local, no migration rerun, no SQL mutation executed by AI/local, no seed/backfill, no migration file modification, no new migration, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: Phase 103-113 checkers PASS, Phase 113A verifier PASS_WITH_SAFE_SKIP, Phase 113A checker PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Recommended next phase: Phase 113B Credential-Assisted Vietnamese Genealogy Read-Only DB Verification before Phase 114-117.
+
 ## 2026-06-18 - Phase 113 Vietnamese Genealogy Migration Apply Execution
 
 - Owner approval received for DB apply of `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.

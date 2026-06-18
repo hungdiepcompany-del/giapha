@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 134 - Owner manual apply confirmation is not independent DB verification
+
+Chon:
+
+Record Phase 113A as `OWNER_CONFIRMED_APPLIED` based on owner/operator confirmation, while keeping DB verification, RLS/policy DB verification and excluded-scope DB verification as `SKIPPED_MISSING_EXPLICIT_VERIFICATION_CREDENTIALS` until shell-only read-only verification credentials are provided.
+
+Ly do:
+
+- The owner/operator confirmed manual apply success through Supabase Dashboard SQL Editor for the exact approved migration and target project.
+- The migration checksum still matches the approved Phase 112/113 fingerprint.
+- Codex did not apply DB locally, rerun migration or execute SQL mutation in Phase 113A.
+- Independent DB verification requires explicit shell env and must not read `.env.local`, `.dev.vars` or secrets from files.
+- Phase 114-117 should wait for credential-assisted read-only DB verification if the owner wants independent DB evidence before runtime/UI planning.
+
 ## Decision 133 - Phase 113 local apply requires safe one-file execution tooling
 
 Chon:

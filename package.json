@@ -143,7 +143,9 @@
     "check:vietnamese-genealogy-first-migration-scope": "node scripts/check-vietnamese-genealogy-first-migration-scope.cjs",
     "check:vietnamese-genealogy-real-migration-file": "node scripts/check-vietnamese-genealogy-real-migration-file.cjs",
     "check:vietnamese-genealogy-migration-apply-readiness": "node scripts/check-vietnamese-genealogy-migration-apply-readiness.cjs",
-    "check:vietnamese-genealogy-migration-apply-execution": "node scripts/check-vietnamese-genealogy-migration-apply-execution.cjs"
+    "check:vietnamese-genealogy-migration-apply-execution": "node scripts/check-vietnamese-genealogy-migration-apply-execution.cjs",
+    "verify:vietnamese-genealogy-migration:post-apply": "node scripts/verify-vietnamese-genealogy-migration-post-apply.cjs",
+    "check:vietnamese-genealogy-manual-apply-verification": "node scripts/check-vietnamese-genealogy-manual-apply-verification.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
