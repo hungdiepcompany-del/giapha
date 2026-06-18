@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 132 - Phase 112 is apply readiness only
+
+Chon:
+
+Phase 112 prepares readiness for the Phase 111 Vietnamese genealogy migration but does not authorize DB apply. Phase 113 can proceed only after separate explicit owner approval for DB apply, confirmed Supabase project ref, current backup/snapshot, rollback owner/path and post-apply verification plan.
+
+Ly do:
+
+- The Phase 111 migration file exists and remains `NOT_APPLIED`.
+- Applying schema changes is a separate risk boundary from creating a migration file.
+- The migration checksum/fingerprint must be recorded before apply so Phase 113 can detect drift.
+- RLS/privacy, backup/snapshot and rollback must be reviewed before any production data mutation.
+
 ## Decision 131 - Phase 111 creates only the approved lineage migration file
 
 Chon:

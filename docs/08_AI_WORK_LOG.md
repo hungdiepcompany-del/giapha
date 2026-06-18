@@ -1,5 +1,18 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 112 Vietnamese Genealogy Migration Apply Readiness
+
+- Created `docs/112_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_READINESS.md`.
+- Added `scripts/check-vietnamese-genealogy-migration-apply-readiness.cjs` and `npm run check:vietnamese-genealogy-migration-apply-readiness`.
+- Reviewed migration file `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql` without modifying it.
+- Migration fingerprint recorded: SHA256 `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Readiness result: `READY_FOR_PHASE_113_APPROVAL_REQUEST`.
+- Apply status remains `NOT_APPLIED`.
+- Phase 113 remains blocked until the owner explicitly approves DB apply after Supabase project confirmation, backup/snapshot, rollback path and post-apply verification plan are confirmed.
+- No DB apply, no SQL executed, no Supabase command run, no production data mutation, no migration file modified, no new migration created, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:vietnamese-genealogy-schema-candidate` PASS, `npm run check:vietnamese-genealogy-first-migration-scope` PASS, `npm run check:vietnamese-genealogy-real-migration-file` PASS, `npm run check:vietnamese-genealogy-migration-apply-readiness` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `npm run typecheck` PASS, `npm run lint` PASS, `git diff --check` PASS, `git diff --cached --check` PASS, `git status --short` completed with `PLANNING.MD` still untracked outside scope.
+
 ## 2026-06-18 - Phase 111 Vietnamese Genealogy Real Migration File
 
 - Owner approved Phase 111 real migration file creation only.

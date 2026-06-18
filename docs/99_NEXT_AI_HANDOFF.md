@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 112 Vietnamese Genealogy Migration Apply Readiness completed
+
+- Created `docs/112_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_READINESS.md`.
+- Added `scripts/check-vietnamese-genealogy-migration-apply-readiness.cjs` and `npm run check:vietnamese-genealogy-migration-apply-readiness`.
+- Reviewed migration file `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql` without modifying it.
+- Migration fingerprint recorded: SHA256 `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Readiness result: `READY_FOR_PHASE_113_APPROVAL_REQUEST`.
+- Apply status remains `NOT_APPLIED`.
+- Required before Phase 113: explicit owner approval for DB apply, correct Supabase project ref, current DB backup/snapshot, migration path confirmation, checksum comparison, RLS review, rollback owner/path and post-apply verification plan.
+- No-go: wrong/unconfirmed project, missing backup, unclear rollback, failing migration/readiness checker, out-of-scope migration contents, unclear RLS/privacy or missing Phase 113 owner approval.
+- Post-apply verification plan: verify tables, RLS, policies, unchanged old tables, build/runtime surfaces and no Worker/runtime changes.
+- Worker/runtime: no main Worker touch, no runtime dependency, no service Worker, no OpenNext/Wrangler config change and no Worker size risk.
+- Boundary: no DB apply, no SQL executed, no Supabase command run, no production data mutation, no migration file modified, no new migration created, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not read or committed.
+- Recommended next phase: Phase 113 only if owner explicitly approves DB apply.
+
 ## 2026-06-18 - Phase 111 Vietnamese Genealogy Real Migration File completed
 
 - Owner approved Phase 111 real migration file creation only.

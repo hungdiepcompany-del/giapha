@@ -141,7 +141,8 @@
     "check:vietnamese-genealogy-domain": "node scripts/check-vietnamese-genealogy-domain-readiness.cjs",
     "check:vietnamese-genealogy-schema-candidate": "node scripts/check-vietnamese-genealogy-schema-candidate.cjs",
     "check:vietnamese-genealogy-first-migration-scope": "node scripts/check-vietnamese-genealogy-first-migration-scope.cjs",
-    "check:vietnamese-genealogy-real-migration-file": "node scripts/check-vietnamese-genealogy-real-migration-file.cjs"
+    "check:vietnamese-genealogy-real-migration-file": "node scripts/check-vietnamese-genealogy-real-migration-file.cjs",
+    "check:vietnamese-genealogy-migration-apply-readiness": "node scripts/check-vietnamese-genealogy-migration-apply-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
