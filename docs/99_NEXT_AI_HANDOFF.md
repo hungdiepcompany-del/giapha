@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Model Readiness completed
+
+- Bundle 1 completed as docs/checker only.
+- Created `docs/103_107_VIETNAMESE_GENEALOGY_DOMAIN_MODEL_READINESS.md`.
+- Added `npm run check:vietnamese-genealogy-domain`.
+- Phase 103 documented Vietnamese genealogy domain concepts: `dong_ho`, `chi`, `nhanh`, `doi`, `the_he`, founder, clan head, branch head, spouse/child/adopted/step relationships, memorial and privacy needs.
+- Phase 104 recorded current model strengths and gaps, classified as Required Now / Recommended Next / Later.
+- Phase 105 specified Vietnamese person profile fields and public/private defaults.
+- Phase 106 specified relationship rules, child ordering and conflict warnings.
+- Phase 107 specified clan/branch/generation structure, tree filtering and export/import compatibility.
+- Boundary: no migration, no DB apply, no deploy, no production data mutation, no runtime app change.
+- Validation: env safe, migration order, domain checker, typecheck, lint and `git diff --check` PASS.
+- Direct build hit known Windows `.next` EPERM artifact lock; isolated temp build PASS and temp artifacts/config rewrites were removed.
+- Recommended next phase: Phase 108-110 schema candidate design, candidate static safety and explicit approval gate before any real migration.
+
 ## 2026-06-18 - Phase 102 Verification Credential Completion Handoff completed
 
 - Phase 98-102 completed with separate commits.

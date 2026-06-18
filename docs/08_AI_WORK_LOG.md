@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 103-107 Vietnamese Genealogy Domain Model Readiness
+
+- Created Bundle 1 docs/checker artifact for Vietnamese genealogy domain readiness.
+- Phase 103: documented Vietnamese clan, branch, generation, founder, clan head, branch head, spouse, child, adopted child, step child, memorial and privacy concepts.
+- Phase 104: compared current `people`, family/parent/child/couple, tree layout, privacy and export foundations against Vietnamese genealogy needs.
+- Phase 105: specified person profile field groups, including legal/birth name, common name, taboo/courtesy/dharma names, lunar dates, home town, death place, occupation, biography, avatar, living status and private notes.
+- Phase 106: specified relationship rules and warning cases for biological/adoptive/step/guardian parent-child relationships, spouses, former spouses, child order and conflict detection.
+- Phase 107: specified clan/branch/generation structure and compatibility with public tree filtering, export/import and backup.
+- Added static checker `check:vietnamese-genealogy-domain` to verify required headings/concepts, docs index/log/handoff entries, no migration status changes and no runtime surface changes.
+- No migration created, no DB apply, no deploy, no production data mutation and no runtime app change.
+- Validation: `npm.cmd run check:env:safe` PASS, `npm.cmd run check:migrations` PASS, `npm.cmd run check:vietnamese-genealogy-domain` PASS, `npm.cmd run typecheck` PASS, `npm.cmd run lint` PASS, `git diff --check` PASS.
+- Direct `npm.cmd run build` failed on known Windows-local `.next` EPERM unlink artifact; isolated temp build with a temporary `distDir` override PASS, then temporary `next.config.ts`/`tsconfig.json` changes and `.next-domain-build-check` were removed.
+- Recommended next phase: Phase 108-110 schema candidate design, static safety check and approval gate before any real migration file.
+
 ## 2026-06-18 - Phase 102 Verification Credential Completion Handoff
 
 - Phase 98-102 summary recorded.

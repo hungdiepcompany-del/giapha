@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 126 - Vietnamese genealogy Bundle 1 stays docs/checker only
+
+Chon:
+
+Phase 103-107 chot domain gia pha Viet Nam bang mot tai lieu tong hop va checker static. Khong tao migration, khong apply DB, khong deploy, khong sua runtime app.
+
+Ly do:
+
+- Current model da co people, relationship, tree layout, privacy va export foundation, nhung can chot nghiep vu Viet Nam truoc khi thiet ke schema.
+- Cac khai niem dong ho, chi, nhanh, doi/the he, truong ho, truong chi, ten huy/ten tu/phap danh, ngay am lich va mo phan co anh huong schema/export/privacy.
+- Phase 108-110 moi la noi thiet ke schema candidate, safety check va approval gate.
+- Giu RLS, auth, permission, public privacy va export/backup boundary hien co.
+
 ## Decision 125 - Next phase remains verification environment completion
 
 Chon:
