@@ -28,6 +28,11 @@ const modules = [
     description: "Tải JSON/GEDCOM/ZIP và kiểm tra import preview.",
   },
   {
+    href: "/admin/backups",
+    title: "Backup dry-run",
+    description: "Kiểm tra operator dry-run panel, không tạo backup production.",
+  },
+  {
     href: "/admin/revisions",
     title: "Lịch sử chỉnh sửa",
     description: "Xem before/after, diff field và audit trail.",

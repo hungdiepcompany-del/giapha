@@ -67,4 +67,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 56_MAIN_APP_BACKUP_SERVICE_BINDING_SMOKE.md | Smoke static/local cho main app backup service binding dry-run, khong goi network/env. | Khi can xac nhan adapter/guardrail/operator contract van dry-run truoc handoff. |
 | 57_MAIN_APP_BINDING_DRY_RUN_HANDOFF.md | Handoff tong hop Phase 53-57 cho main app backup service binding dry-run. | Khi can chon Phase 58 UI dry-run, deploy worker that, hoac domain model readiness. |
 | 58_BACKUP_OPERATOR_API_DRY_RUN_ROUTE.md | Runtime route dry-run cho operator backup API, chi tra envelope noi bo va khong goi worker/DB/network. | Khi can UI/operator panel goi dry-run route truoc permission hardening that. |
+| 59_BACKUP_OPERATOR_UI_DRY_RUN_PANEL.md | Admin UI panel cho backup operator dry-run, chi goi route noi bo va hien canh bao no-real-backup. | Khi can operator xem dry-run status ma chua deploy/goi worker that. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

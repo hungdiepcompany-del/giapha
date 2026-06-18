@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 082 - Operator UI calls only the local dry-run route
+
+Chon:
+
+Phase 59 tao `/admin/backups` va component operator panel chi goi `/api/admin/backups/service-dry-run`.
+
+Ly do:
+
+- UI can cho operator thay dry-run status nhung khong duoc goi backup worker URL that.
+- Local route da co marker dry-run va envelope safety ro rang.
+- Dashboard admin can co duong vao panel de tranh route bi an trong van hanh.
+
+He qua:
+
+- UI hien canh bao no production backup, no storage upload, no restore va no real worker call.
+- Route API van can permission hardening rieng truoc khi dung cho van hanh that.
+
 ## Decision 081 - Operator API route starts as dry-run contract without DB auth
 
 Chon:
