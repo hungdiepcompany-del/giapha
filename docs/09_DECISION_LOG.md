@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 102 - Real migration file requires static verification before execution planning
+
+Chon:
+
+Phase 79 them static verification rieng cho migration file `supabase/migrations/20260618_0007_backup_operator_permissions.sql`, khong chay migration va khong goi DB.
+
+Ly do:
+
+- File migration that da ton tai trong repo nen can guardrail manh hon candidate checks.
+- Can xac nhan role assignment khong cap backup permission cho viewer/public/anonymous roles.
+- Can chan destructive SQL, secret/network text va runtime execute/restore action wording truoc execution planning.
+
+He qua:
+
+- `npm run check:backup-permission-real-migration-static-verification` la gate bat buoc truoc cac phase sau.
+- Migration van chua duoc chay va runtime fallback `permissions.manage` van giu nguyen.
+
 ## Decision 101 - Backup operator permission migration file is created but not run
 
 Chon:

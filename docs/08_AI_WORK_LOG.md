@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 79 Backup Permission Migration Static Verification
+
+### Phase
+
+Phase 79 - Backup Permission Migration Static Verification
+
+### Viec da lam
+
+- Tao `docs/79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md`.
+- Tao `scripts/check-backup-permission-real-migration-static-verification.cjs`.
+- Them `npm run check:backup-permission-real-migration-static-verification`.
+- Checker scan `supabase/migrations/20260618_0007_backup_operator_permissions.sql`.
+- Checker xac nhan filename pattern, markers, 4 permission names, idempotency va role assignment khong vuot qua `OWNER`/`ADMIN`.
+- Checker chan destructive SQL, URL/network text, secret-like text va runtime backup/restore action wording.
+- Khong chay migration, khong apply DB va khong goi Supabase/API/DB/network.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md
+- scripts/check-backup-permission-real-migration-static-verification.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi trong Phase 79.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+
 ## 2026-06-18 - Phase 78 Backup Permission Real Migration File Implementation
 
 ### Phase

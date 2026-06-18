@@ -87,4 +87,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 76_BACKUP_PERMISSION_REAL_MIGRATION_APPROVAL_CHECKLIST.md | Approval checklist bat buoc truoc migration backup permission that, gom owner approval, DB backup, rollback, window va no-go. | Khi can xin phep tao/apply migration that trong phase sau. |
 | 77_BACKUP_PERMISSION_MIGRATION_CANDIDATE_HANDOFF.md | Handoff tong hop SQL candidate, static safety, smoke va approval checklist Phase 73-77, chua migration/DB mutation. | Khi can quyet dinh co tao migration backup permission that hay tam dung ha tang. |
 | 78_BACKUP_PERMISSION_REAL_MIGRATION_FILE_IMPLEMENTATION.md | Tao migration file that cho `backup.operator.*` trong `supabase/migrations/`, nhung chua chay/apply DB. | Khi can review file migration backup permission vua duoc tao. |
+| 79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md | Static verification cho migration file backup permission that, khong chay migration/DB. | Khi can gate migration file truoc fallback removal plan hoac execution runbook. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

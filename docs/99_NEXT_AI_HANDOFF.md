@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 79 Backup Permission Migration Static Verification completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 79 da them static verification cho migration file backup permission that. Checker chi doc source local, khong chay migration, khong apply DB va khong goi Supabase/API/DB/network.
+
+### File/script moi
+
+- `docs/79_BACKUP_PERMISSION_MIGRATION_STATIC_VERIFICATION.md`
+- `scripts/check-backup-permission-real-migration-static-verification.cjs`
+- `npm run check:backup-permission-real-migration-static-verification`
+
+### Verification baseline
+
+- Migration under review: `supabase/migrations/20260618_0007_backup_operator_permissions.sql`
+- Required markers: `BACKUP_PERMISSION_REAL_MIGRATION_FILE`, `OWNER_APPROVED_FILE_CREATION_ONLY`, `DO_NOT_RUN_WITHOUT_SEPARATE_OWNER_APPROVAL`
+- Required permissions: `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute`, `backup.operator.restore`
+- Allowed assignment: `OWNER` all four, `ADMIN` view/dry_run, viewer/public/anonymous none.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration.
+- Khong apply DB.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong goi backup service worker that.
+- Khong bat execute/restore runtime.
+
+### Task tiep theo de xuat
+
+Phase 80 - Backup Permission Runtime Fallback Removal Plan.
+
 ## 2026-06-18 - Phase 78 Backup Permission Real Migration File Implementation completed
 
 ### Trang thai hien tai

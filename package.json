@@ -106,6 +106,7 @@
     "check:backup-permission-real-migration-approval-checklist": "node scripts/check-backup-permission-real-migration-approval-checklist.cjs",
     "check:backup-permission-migration-candidate-handoff": "node scripts/check-backup-permission-migration-candidate-handoff.cjs",
     "check:backup-permission-real-migration-file": "node scripts/check-backup-permission-real-migration-file.cjs",
+    "check:backup-permission-real-migration-static-verification": "node scripts/check-backup-permission-real-migration-static-verification.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",
