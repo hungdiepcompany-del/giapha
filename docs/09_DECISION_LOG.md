@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 112 - Post-apply verification must safe-skip without admin credentials
+
+Chon:
+
+Phase 89 them verifier read-only cho backup permissions va role assignments. Khi local khong co `NEXT_PUBLIC_SUPABASE_URL` va `SUPABASE_SERVICE_ROLE_KEY`, verifier tra `SKIPPED_MISSING_VERIFICATION_CREDENTIALS` thay vi doan ket qua hoac in secret.
+
+Ly do:
+
+- Owner-confirmed apply va Codex-independent DB verification la hai lop bang chung khac nhau.
+- Khong duoc che thieu credential bang mock data.
+- Fallback `permissions.manage` phai giu nguyen trong khi DB verification con limited.
+
 ## Decision 111 - Record manual Dashboard migration apply as owner-confirmed execution
 
 Chon:

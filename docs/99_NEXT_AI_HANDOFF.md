@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 89 Backup Permission Post-Apply Verification completed
+
+### Trang thai hien tai
+
+Migration apply van la owner-confirmed successful tren project ref `frkyeuxrlcflmsxxsolp`. Phase 89 da them verifier read-only cho permission rows va OWNER/ADMIN mappings. Local khong co verification credentials nen current result la `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+
+### File/script moi
+
+- `docs/89_BACKUP_PERMISSION_POST_APPLY_VERIFICATION.md`
+- `scripts/verify-backup-permissions-post-apply.cjs`
+- `scripts/check-backup-permission-post-apply-verification.cjs`
+- `npm run verify:backup-permissions:post-apply`
+- `npm run check:backup-permission-post-apply-verification`
+
+### Verification baseline
+
+- Apply: owner-confirmed successful.
+- Automated permission existence verification: SKIPPED.
+- Automated role assignment verification: SKIPPED.
+- Reason: missing local verification credentials.
+- Verifier is read-only and does not print credential values.
+- Runtime fallback `permissions.manage` still remains.
+- Execute/restore runtime still disabled.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong mutate DB trong verifier.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong worker call/production backup/restore.
+- Khong hardcode hoac in secret/token/key.
+
+### Task tiep theo de xuat
+
+Phase 90 - Backup Operator Permission Runtime Smoke.
+
 ## 2026-06-18 - Phase 88 Backup Permission Real Migration Apply Execution completed
 
 ### Trang thai hien tai

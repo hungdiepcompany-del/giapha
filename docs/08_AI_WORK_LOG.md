@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 89 Backup Permission Post-Apply Verification
+
+### Phase
+
+Phase 89 - Backup Permission Post-Apply Verification
+
+### Viec da lam
+
+- Tao verifier read-only cho 4 backup operator permissions va OWNER/ADMIN role assignments.
+- Verifier doc `.env.local` neu ton tai nhung khong in credential values.
+- Verifier safe-skip khi thieu `NEXT_PUBLIC_SUPABASE_URL` hoac `SUPABASE_SERVICE_ROLE_KEY`.
+- Ghi result hien tai `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`.
+- Ghi ro apply van la owner-confirmed, con permission rows/role mappings chua duoc Codex verify doc lap.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/89_BACKUP_PERMISSION_POST_APPLY_VERIFICATION.md
+- scripts/verify-backup-permissions-post-apply.cjs
+- scripts/check-backup-permission-post-apply-verification.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong mutate DB trong verifier.
+- Khong go fallback.
+- Khong bat execute/restore runtime.
+- Khong in secret/token/key.
+
 ## 2026-06-18 - Phase 88 Backup Permission Real Migration Apply Execution
 
 ### Phase
