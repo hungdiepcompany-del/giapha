@@ -130,6 +130,7 @@
     "check:backup-permission-verification-completion-handoff": "node scripts/check-backup-permission-verification-completion-handoff.cjs",
     "check:verification-credential-completion-runbook": "node scripts/check-verification-credential-completion-runbook.cjs",
     "check:db-verification-credential-assisted-run": "node scripts/check-db-verification-credential-assisted-run.cjs",
+    "check:authenticated-smoke-credential-assisted-run": "node scripts/check-authenticated-smoke-credential-assisted-run.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

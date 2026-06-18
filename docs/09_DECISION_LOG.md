@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 123 - Local smoke PASS does not upgrade authenticated smoke SKIP
+
+Chon:
+
+Ghi authenticated endpoint `SKIPPED_MISSING_EXPLICIT_ENV`; ghi rieng permission guard va dry-run local/static `PASS`.
+
+Ly do:
+
+- Khong co base URL/auth material explicit.
+- Static source evidence khong chung minh authenticated runtime access.
+- Khong fake PASS va khong goi worker/backup that.
+
 ## Decision 122 - Assisted DB run remains a skip without shell credentials
 
 Chon:
