@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 122 - Assisted DB run remains a skip without shell credentials
+
+Chon:
+
+Ghi `SKIPPED_MISSING_VERIFICATION_CREDENTIALS`, four permissions `NO`, role assignments `NOT_RUN`.
+
+Ly do:
+
+- Shell khong co ba DB verification env.
+- Verifier return truoc network/client creation.
+- Owner-confirmed apply khong duoc doi thanh independent PASS.
+
 ## Decision 121 - Verification credentials are owner-operated shell state
 
 Chon:

@@ -107,4 +107,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 96_BACKUP_PERMISSION_VERIFICATION_COMPLETION_RUN.md | Ket qua bundle DB verify, authenticated smoke va local/static smoke; ghi limitation trung thuc. | Khi can danh gia evidence verification completion truoc handoff/fallback readiness. |
 | 97_BACKUP_PERMISSION_VERIFICATION_COMPLETION_HANDOFF.md | Handoff Phase 95-97, phan tach verified/unverified va ket luan fallback removal NOT_READY. | Khi can chon verification credential completion hoac phase tiep theo. |
 | 98_VERIFICATION_CREDENTIAL_COMPLETION_RUNBOOK.md | Runbook CMD/PowerShell set va clear shell-only verification env bang placeholder, khong luu secret vao file. | Khi owner san sang cung cap credential trong shell de chay DB verify/smoke. |
+| 99_DB_VERIFICATION_CREDENTIAL_ASSISTED_RUN.md | Ket qua assisted DB verifier; safe-skip khi shell credential chua duoc set. | Khi can ghi bang chung DB verification PASS/FAIL/SKIP trung thuc. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
