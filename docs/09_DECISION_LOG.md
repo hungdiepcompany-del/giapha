@@ -1,5 +1,17 @@
 # Decision Log
 
+## Decision 114 - Fallback removal is not ready after partial verification
+
+Chon:
+
+Phase 91 ket luan `NOT_READY_FOR_FALLBACK_REMOVAL`; giu `permissions.manage` trong API/UI guards.
+
+Ly do:
+
+- Migration apply la owner-confirmed nhung DB permission/role rows chua duoc verifier query thanh cong.
+- Runtime smoke moi PASS local/static; authenticated endpoint smoke chua chay.
+- Go fallback can separate owner approval sau khi DB verify va endpoint smoke PASS.
+
 ## Decision 113 - Runtime smoke remains local/static without explicit env
 
 Chon:

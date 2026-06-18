@@ -1,5 +1,47 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 91 Backup Permission Fallback Removal Readiness
+
+### Phase
+
+Phase 91 - Backup Permission Fallback Removal Readiness
+
+### Viec da lam
+
+- Danh gia migration apply, DB verification va runtime smoke evidence.
+- Xac nhan API/UI runtime files van con fallback `permissions.manage`.
+- Ket luan `NOT_READY_FOR_FALLBACK_REMOVAL`.
+- Ly do: DB verification safe-skip va explicit-env endpoint smoke safe-skip.
+- Ghi required separate owner approval truoc future fallback removal.
+- Tao checker local xac nhan docs va fallback van ton tai trong runtime.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/91_BACKUP_PERMISSION_FALLBACK_REMOVAL_READINESS.md
+- scripts/check-backup-permission-fallback-removal-readiness.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration moi.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong sua runtime.
+- Khong go fallback.
+- Khong deploy/push.
+- Khong mutate DB.
+- Khong bat execute/restore runtime.
+
 ## 2026-06-18 - Phase 90 Backup Operator Permission Runtime Smoke
 
 ### Phase

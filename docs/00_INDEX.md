@@ -99,4 +99,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 88_BACKUP_PERMISSION_REAL_MIGRATION_APPLY_EXECUTION.md | Ghi nhan owner-confirmed manual apply migration backup permission tren Supabase Dashboard dung project. | Khi can biet apply method, mutation scope va boundary sau migration. |
 | 89_BACKUP_PERMISSION_POST_APPLY_VERIFICATION.md | Post-apply verification read-only cho permission rows va OWNER/ADMIN mappings, safe-skip khi thieu credential. | Khi can xac minh DB sau apply ma khong in secret hoac mutate DB. |
 | 90_BACKUP_OPERATOR_PERMISSION_RUNTIME_SMOKE.md | Runtime smoke an toan sau apply: endpoint smoke safe-skip, permission guard va dry-run smoke local/static. | Khi can danh gia route guard ma khong goi worker hay tao backup that. |
+| 91_BACKUP_PERMISSION_FALLBACK_REMOVAL_READINESS.md | Danh gia fallback removal sau apply; ket luan not ready khi DB verify va endpoint smoke chua pass. | Khi can quyet dinh co du dieu kien xin approval go `permissions.manage` hay chua. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

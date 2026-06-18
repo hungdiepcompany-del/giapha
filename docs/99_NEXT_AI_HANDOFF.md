@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 91 Backup Permission Fallback Removal Readiness completed
+
+### Trang thai hien tai
+
+Phase 91 da danh gia fallback removal readiness va ket luan `NOT_READY_FOR_FALLBACK_REMOVAL`. Migration apply la owner-confirmed, nhung DB verification va authenticated endpoint smoke van safe-skip. Fallback `permissions.manage` van con trong API/UI runtime.
+
+### File/script moi
+
+- `docs/91_BACKUP_PERMISSION_FALLBACK_REMOVAL_READINESS.md`
+- `scripts/check-backup-permission-fallback-removal-readiness.cjs`
+- `npm run check:backup-permission-fallback-removal-readiness`
+
+### Readiness baseline
+
+- Migration apply: OWNER_CONFIRMED_APPLIED.
+- Permission verification: SKIPPED_MISSING_VERIFICATION_CREDENTIALS.
+- Runtime smoke: PARTIAL_LOCAL_STATIC_ONLY.
+- API fallback removal: NOT_READY.
+- UI fallback removal: NOT_READY.
+- Separate owner approval still required.
+
+### Boundary giu nguyen
+
+- Khong sua runtime/go fallback.
+- Khong deploy/push.
+- Khong mutate DB.
+- Khong bat execute/restore runtime.
+- Khong worker call/production backup/restore.
+
+### Task tiep theo de xuat
+
+Phase 92 - Backup Permission Apply Handoff.
+
 ## 2026-06-18 - Phase 90 Backup Operator Permission Runtime Smoke completed
 
 ### Trang thai hien tai
