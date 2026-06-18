@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 093 - Backup permission assignment requires owner approval
+
+Chon:
+
+Phase 70 ghi runbook assignment nhung khong assign that. Future assignment can owner approval, dac biet cho `backup.operator.execute` va `backup.operator.restore`.
+
+Ly do:
+
+- Execute/restore co the mo duong backup/restore that sau nay.
+- Role assignment can kiem soat ro de khong cap backup permission cho viewer/public roles.
+- Runbook giup phase migration/seed that co checklist verify va rollback truoc khi cham DB.
+
+He qua:
+
+- `OWNER` duoc de xuat all four permission.
+- `ADMIN` chi duoc de xuat view/dry_run.
+- Cac role khac none by default unless owner approves.
+
 ## Decision 092 - Backup permission seed proof stays dry-run only
 
 Chon:

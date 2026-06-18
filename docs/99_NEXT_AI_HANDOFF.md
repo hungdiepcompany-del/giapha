@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 70 Backup Permission Assignment Runbook completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 70 da them runbook assignment cho backup permissions. Runbook chi la huong dan, khong assign that, khong chay SQL, khong migration va khong mutate DB.
+
+### File/script moi
+
+- `docs/70_BACKUP_PERMISSION_ASSIGNMENT_RUNBOOK.md`
+- `scripts/check-backup-permission-assignment-runbook.cjs`
+- `npm run check:backup-permission-assignment-runbook`
+
+### Assignment baseline
+
+- `OWNER`: view, dry_run, execute, restore.
+- `ADMIN`: view, dry_run.
+- Other roles: none by default unless owner approves.
+- Execute/restore require owner approval before any real activation.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 71 - Backup Permission Activation Guardrails.
+
 ## 2026-06-18 - Phase 69 Backup Permission Seed Dry-Run Checker completed
 
 ### Trang thai hien tai

@@ -78,4 +78,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 67_BACKUP_OPERATOR_PERMISSION_HANDOFF.md | Handoff tong hop Phase 63-67 cho backup operator permission hardening va dry-run boundary. | Khi can chon migration/seed permission, deploy worker co approval, hoac quay lai domain model. |
 | 68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md | Design migration/seed cho `backup.operator.*` theo role hien co, khong tao/chay migration. | Khi can chuan bi permission seed truoc dry-run checker hoac migration that co approval. |
 | 69_BACKUP_PERMISSION_SEED_DRY_RUN_CHECKER.md | Dry-run checker mo phong seed `backup.operator.*` va role assignment, khong goi DB/Supabase/env. | Khi can bang chung seed plan truoc runbook assignment hoac migration that. |
+| 70_BACKUP_PERMISSION_ASSIGNMENT_RUNBOOK.md | Runbook assign backup permissions cho role/operator sau nay, yeu cau approval va khong mutate DB. | Khi can quy trinh gan quyen truoc activation guardrails hoac migration/seed that. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |
