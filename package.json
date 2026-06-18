@@ -99,6 +99,7 @@
     "check:backup-permission-assignment-runbook": "node scripts/check-backup-permission-assignment-runbook.cjs",
     "check:backup-permission-activation-guardrails": "node scripts/check-backup-permission-activation-guardrails.cjs",
     "check:backup-permission-seed-readiness-handoff": "node scripts/check-backup-permission-seed-readiness-handoff.cjs",
+    "check:backup-permission-sql-candidate-draft": "node scripts/check-backup-permission-sql-candidate-draft.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

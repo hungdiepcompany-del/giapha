@@ -1,0 +1,50 @@
+-- BACKUP_PERMISSION_SQL_CANDIDATE_ONLY
+-- DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL
+-- Draft review artifact only. This is not a migration and must stay outside
+-- supabase/migrations until a future owner-approved phase creates a real file.
+
+begin;
+
+insert into public.permissions (code, name, description)
+values
+  (
+    'backup.operator.view',
+    'View backup operator',
+    'View the backup operator UI and panel.'
+  ),
+  (
+    'backup.operator.dry_run',
+    'Run backup dry-run',
+    'Run the backup operator dry-run route.'
+  ),
+  (
+    'backup.operator.execute',
+    'Execute backup',
+    'Reserved for future real backup execution; not enabled now.'
+  ),
+  (
+    'backup.operator.restore',
+    'Restore backup',
+    'Reserved for future real restore execution; not enabled now.'
+  )
+on conflict (code) do update
+set name = excluded.name,
+    description = excluded.description;
+
+with role_permission_candidates (role_code, permission_code) as (
+  values
+    ('OWNER', 'backup.operator.view'),
+    ('OWNER', 'backup.operator.dry_run'),
+    ('OWNER', 'backup.operator.execute'),
+    ('OWNER', 'backup.operator.restore'),
+    ('ADMIN', 'backup.operator.view'),
+    ('ADMIN', 'backup.operator.dry_run')
+)
+insert into public.role_permissions (role_id, permission_id)
+select r.id, p.id
+from role_permission_candidates rpc
+join public.roles r on r.code = rpc.role_code
+join public.permissions p on p.code = rpc.permission_code
+on conflict (role_id, permission_id) do nothing;
+
+commit;

@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 73 Backup Permission SQL Candidate Draft
+
+### Phase
+
+Phase 73 - Backup Permission SQL Candidate Draft
+
+### Viec da lam
+
+- Tao `docs/73_BACKUP_PERMISSION_SQL_CANDIDATE_DRAFT.md`.
+- Tao `scripts/backup-permission-sql-candidate.sql.draft`.
+- Tao `scripts/check-backup-permission-sql-candidate-draft.cjs`.
+- Them `npm run check:backup-permission-sql-candidate-draft`.
+- SQL draft co marker `BACKUP_PERMISSION_SQL_CANDIDATE_ONLY` va `DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL`.
+- SQL draft nam trong `scripts/`, khong nam trong `supabase/migrations/`.
+- SQL draft chi mo ta upsert permission va role_permissions bang `on conflict`, khong chay SQL va khong mutate DB.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/73_BACKUP_PERMISSION_SQL_CANDIDATE_DRAFT.md
+- scripts/backup-permission-sql-candidate.sql.draft
+- scripts/check-backup-permission-sql-candidate-draft.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+- Khong tao file trong `supabase/migrations/`.
+
 ## 2026-06-18 - Phase 72 Backup Permission Seed Readiness Handoff
 
 ### Phase

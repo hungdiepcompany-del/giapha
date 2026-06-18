@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 096 - Backup permission SQL remains a draft candidate
+
+Chon:
+
+Phase 73 tao SQL candidate draft trong `scripts/backup-permission-sql-candidate.sql.draft`, khong tao migration that trong `supabase/migrations/` va khong chay SQL.
+
+Ly do:
+
+- Owner chua approve migration/schema/DB mutation that.
+- Can co artifact review gan voi schema hien co truoc khi tao migration.
+- Draft co the static check destructive SQL va secret/URL drift ma khong cham DB.
+
+He qua:
+
+- Candidate co `BACKUP_PERMISSION_SQL_CANDIDATE_ONLY` va `DO_NOT_RUN_ON_PRODUCTION_WITHOUT_OWNER_APPROVAL`.
+- Future migration that van can approval, DB backup/snapshot, rollback va validation rieng.
+- Runtime fallback `permissions.manage` van giu nguyen.
+
 ## Decision 095 - Backup permission seed readiness stops before real migration
 
 Chon:
