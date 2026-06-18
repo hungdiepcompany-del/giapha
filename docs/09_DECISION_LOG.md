@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 100 - Migration candidate handoff stops before real DB change
+
+Chon:
+
+Phase 77 tong hop SQL candidate, static safety, seed candidate smoke va approval checklist, nhung van dung truoc real migration file va DB mutation.
+
+Ly do:
+
+- Phase 73-77 tao du artifact de owner review nhung khong thay the explicit approval cho DB change.
+- Candidate SQL khong phai migration that va khong nam trong `supabase/migrations/`.
+- Execute/restore van high-risk va chua duoc bat runtime.
+
+He qua:
+
+- Runtime fallback `permissions.manage` van con.
+- Future Phase 78 chi duoc tao migration file that neu owner explicitly approve.
+- Khong deploy, khong chay SQL, khong mutate DB, khong production backup va khong secret commit trong bundle nay.
+
 ## Decision 099 - Real backup permission migration requires explicit approval gate
 
 Chon:

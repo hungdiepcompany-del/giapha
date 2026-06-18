@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 77 Backup Permission Migration Candidate Handoff completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 73-77 da hoan tat migration candidate bundle cho `backup.operator.*`: SQL candidate draft, static safety, seed candidate smoke, approval checklist va handoff. Chua tao migration that, chua co file trong `supabase/migrations/`, chua chay SQL, chua mutate DB, chua deploy va chua bat execute/restore.
+
+### File/script moi
+
+- `docs/77_BACKUP_PERMISSION_MIGRATION_CANDIDATE_HANDOFF.md`
+- `scripts/check-backup-permission-migration-candidate-handoff.cjs`
+- `npm run check:backup-permission-migration-candidate-handoff`
+
+### Candidate baseline
+
+- SQL candidate path: `scripts/backup-permission-sql-candidate.sql.draft`
+- SQL candidate is not real migration.
+- Static safety: `npm run check:backup-permission-sql-static-safety`
+- Seed candidate smoke: `npm run smoke:backup-permission:seed-candidate`
+- Approval checklist: `npm run check:backup-permission-real-migration-approval-checklist`
+- Required owner marker: `OWNER_APPROVAL_REQUIRED_BEFORE_BACKUP_PERMISSION_REAL_MIGRATION=true`
+- Runtime fallback `permissions.manage` remains.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong tao migration that.
+- Khong co file trong `supabase/migrations/`.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi Supabase/API/DB/network.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+- Khong hardcode secret/token/key.
+
+### Task tiep theo de xuat
+
+- Phase 78 - Backup Permission Real Migration File Implementation, chi khi owner explicitly approve tao migration/schema that.
+- Hoac Phase 78 - Backup Service Worker Manual Deploy Execution, chi khi owner explicitly approve deploy that va secrets da san sang.
+- Hoac Phase 78 - Vietnamese Genealogy Domain Model Readiness.
+
 ## 2026-06-18 - Phase 76 Backup Permission Real Migration Approval Checklist completed
 
 ### Trang thai hien tai

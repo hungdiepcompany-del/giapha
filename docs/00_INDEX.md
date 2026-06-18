@@ -85,4 +85,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 74_BACKUP_PERMISSION_SQL_STATIC_SAFETY_CHECK.md | Static safety check cho SQL candidate draft, chan destructive SQL, network URL, service-role/JWT wording va thieu marker approval. | Khi can gate SQL candidate truoc smoke hoac approval checklist. |
 | 75_BACKUP_PERMISSION_SEED_CANDIDATE_SMOKE.md | Smoke local so sanh SQL candidate draft voi seed dry-run script, khong chay SQL/DB/network/env. | Khi can xac nhan candidate va dry-run dong nhat truoc approval checklist. |
 | 76_BACKUP_PERMISSION_REAL_MIGRATION_APPROVAL_CHECKLIST.md | Approval checklist bat buoc truoc migration backup permission that, gom owner approval, DB backup, rollback, window va no-go. | Khi can xin phep tao/apply migration that trong phase sau. |
+| 77_BACKUP_PERMISSION_MIGRATION_CANDIDATE_HANDOFF.md | Handoff tong hop SQL candidate, static safety, smoke va approval checklist Phase 73-77, chua migration/DB mutation. | Khi can quyet dinh co tao migration backup permission that hay tam dung ha tang. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

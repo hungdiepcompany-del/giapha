@@ -1,5 +1,52 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 77 Backup Permission Migration Candidate Handoff
+
+### Phase
+
+Phase 77 - Backup Permission Migration Candidate Handoff
+
+### Viec da lam
+
+- Tao `docs/77_BACKUP_PERMISSION_MIGRATION_CANDIDATE_HANDOFF.md`.
+- Tao `scripts/check-backup-permission-migration-candidate-handoff.cjs`.
+- Them `npm run check:backup-permission-migration-candidate-handoff`.
+- Tong hop Phase 73-77: SQL candidate draft, static safety, seed candidate smoke, approval checklist va handoff.
+- Ghi ro SQL candidate is not real migration, no file in `supabase/migrations/`, no DB mutation, no deploy va no production backup.
+- Ghi ro `backup.operator.execute` va `backup.operator.restore` still not enabled.
+- Ghi required future real migration, DB backup/snapshot va rollback plan.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/77_BACKUP_PERMISSION_MIGRATION_CANDIDATE_HANDOFF.md
+- scripts/check-backup-permission-migration-candidate-handoff.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong tao migration that.
+- Khong chay SQL.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/DB/network.
+- Khong tao file trong `supabase/migrations/`.
+
 ## 2026-06-18 - Phase 76 Backup Permission Real Migration Approval Checklist
 
 ### Phase
