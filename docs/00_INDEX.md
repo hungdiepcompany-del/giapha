@@ -79,4 +79,5 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 | 68_BACKUP_PERMISSION_MIGRATION_SEED_DESIGN.md | Design migration/seed cho `backup.operator.*` theo role hien co, khong tao/chay migration. | Khi can chuan bi permission seed truoc dry-run checker hoac migration that co approval. |
 | 69_BACKUP_PERMISSION_SEED_DRY_RUN_CHECKER.md | Dry-run checker mo phong seed `backup.operator.*` va role assignment, khong goi DB/Supabase/env. | Khi can bang chung seed plan truoc runbook assignment hoac migration that. |
 | 70_BACKUP_PERMISSION_ASSIGNMENT_RUNBOOK.md | Runbook assign backup permissions cho role/operator sau nay, yeu cau approval va khong mutate DB. | Khi can quy trinh gan quyen truoc activation guardrails hoac migration/seed that. |
+| 71_BACKUP_PERMISSION_ACTIVATION_GUARDRAILS.md | Guardrail source-static chan `backup.operator.execute`/`restore`, worker call, storage, backup va secret drift trong runtime dry-run. | Khi can xac nhan execute/restore chua bat that truoc seed readiness handoff hoac migration that. |
 | 99_NEXT_AI_HANDOFF.md | Trạng thái mới nhất và handoff cho AI tiếp theo. | Luôn đọc phần trên cùng trước khi tiếp tục dự án. |

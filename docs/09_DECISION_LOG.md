@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 094 - Backup permission activation stays blocked by guardrails
+
+Chon:
+
+Phase 71 them source-static guardrail de chan `backup.operator.execute` va `backup.operator.restore` trong runtime dry-run, dong thoi chan worker call, production backup, storage upload, restore trigger va secret/env drift.
+
+Ly do:
+
+- Execute/restore la permission high-risk va chua co migration/seed approval.
+- Runtime hien tai chi nen cho phep view/dry_run voi fallback `permissions.manage`.
+- Guardrail static giup phat hien drift ma khong can server, DB, worker, secret hay network.
+
+He qua:
+
+- Execute/restore chi duoc xuat hien trong docs/runbook/dry-run seed voi ghi chu chua bat that.
+- Runtime backup operator van dry-run-only va chua goi backup service worker that.
+- Future migration/seed or real backup activation van can owner approval va phase rieng.
+
 ## Decision 093 - Backup permission assignment requires owner approval
 
 Chon:

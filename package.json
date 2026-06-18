@@ -97,6 +97,7 @@
     "backup:permission:seed:dry-run": "node scripts/backup-permission-seed-dry-run.cjs",
     "check:backup-permission-seed-dry-run": "node scripts/check-backup-permission-seed-dry-run.cjs",
     "check:backup-permission-assignment-runbook": "node scripts/check-backup-permission-assignment-runbook.cjs",
+    "check:backup-permission-activation-guardrails": "node scripts/check-backup-permission-activation-guardrails.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

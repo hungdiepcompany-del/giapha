@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 71 Backup Permission Activation Guardrails completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 71 da them guardrail source-static de xac nhan runtime dry-run chua bat `backup.operator.execute` hoac `backup.operator.restore`, chua goi worker that, chua tao backup/storage/restore va chua doc env secret.
+
+### File/script moi
+
+- `docs/71_BACKUP_PERMISSION_ACTIVATION_GUARDRAILS.md`
+- `scripts/check-backup-permission-activation-guardrails.cjs`
+- `npm run check:backup-permission-activation-guardrails`
+
+### Guardrail baseline
+
+- Runtime UI may use `backup.operator.view`.
+- Runtime API may use `backup.operator.dry_run`.
+- Runtime fallback `permissions.manage` van giu cho den khi co migration/seed that.
+- `backup.operator.execute` va `backup.operator.restore` chi la future permissions, chua bat runtime.
+- Checker scan runtime backup route/page/component/service va seed dry-run script.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong goi backup service worker that.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 72 - Backup Permission Seed Readiness Handoff.
+
 ## 2026-06-18 - Phase 70 Backup Permission Assignment Runbook completed
 
 ### Trang thai hien tai

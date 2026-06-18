@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 71 Backup Permission Activation Guardrails
+
+### Phase
+
+Phase 71 - Backup Permission Activation Guardrails
+
+### Viec da lam
+
+- Tao `docs/71_BACKUP_PERMISSION_ACTIVATION_GUARDRAILS.md`.
+- Tao `scripts/check-backup-permission-activation-guardrails.cjs`.
+- Them `npm run check:backup-permission-activation-guardrails`.
+- Guardrail scan `app/api/admin/backups`, `app/(admin)/admin/backups`, `components/admin/backup-operator-dry-run-panel.tsx`, `server/services/backup-service-client.ts` va `scripts/backup-permission-seed-dry-run.cjs`.
+- Chan `backup.operator.execute`/`backup.operator.restore` trong runtime route/page/component/service.
+- Chan worker real call, production backup trigger, storage upload, restore trigger, hardcoded token/key va `.env.local`/`.dev.vars` read.
+- Cho phep execute/restore trong seed dry-run script vi script co marker dry-run va khong mutate DB/network.
+- Cap nhat docs index, decision log va handoff.
+
+### File da tao/cap nhat
+
+- docs/71_BACKUP_PERMISSION_ACTIVATION_GUARDRAILS.md
+- scripts/check-backup-permission-activation-guardrails.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
+### Migration da tao
+
+- Khong tao migration.
+
+### Package da them
+
+- Khong them package.
+
+### Ghi chu
+
+- Khong deploy.
+- Khong push.
+- Khong chay migration that.
+- Khong mutate DB.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi Supabase/API/network.
+- Khong goi backup service worker that.
+- Khong bat execute/restore that.
+
 ## 2026-06-18 - Phase 70 Backup Permission Assignment Runbook
 
 ### Phase
