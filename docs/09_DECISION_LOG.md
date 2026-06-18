@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 085 - Operator dry-run bundle stops before permission hardening or real worker call
+
+Chon:
+
+Ket thuc Phase 58-62 voi operator API/UI dry-run, guardrails, smoke va handoff, nhung chua permission hardening that va chua goi backup service worker.
+
+Ly do:
+
+- API route da co contract dry-run nhung permission boundary cho API can phase rieng.
+- Worker deploy, secret readiness, real storage va production backup van chua duoc owner approve.
+- Handoff can khoa trang thai hien tai de agent sau khong tu y bien dry-run thanh runtime backup.
+
+He qua:
+
+- Phase tiep theo hop ly la permission hardening, manual worker deploy co approval, hoac quay lai domain model gia pha.
+- Bat ky real worker call, storage upload, restore, cron, deploy hoac production backup nao van can approval va phase rieng.
+
 ## Decision 084 - Operator smoke stays source-static
 
 Chon:
