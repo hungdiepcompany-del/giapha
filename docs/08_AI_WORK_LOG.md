@@ -1,5 +1,22 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 113 Vietnamese Genealogy Migration Apply Execution
+
+- Owner approval received for DB apply of `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Target Supabase project ref recorded: `frkyeuxrlcflmsxxsolp`.
+- DB backup/snapshot recorded as `DONE`.
+- Expected SHA256 and actual SHA256 matched: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Local/static pre-apply validation passed.
+- Local apply was not run because Supabase CLI was not available in PATH and no explicit DB apply/verification credentials were present in shell state.
+- Phase 113 status recorded as `OWNER_ACTION_REQUIRED_MANUAL_DASHBOARD_APPLY`.
+- Apply result: `OWNER_ACTION_REQUIRED`; DB verification result: `NOT_RUN_APPLY_NOT_CONFIRMED`.
+- Created `docs/113_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_EXECUTION.md`.
+- Added `scripts/check-vietnamese-genealogy-migration-apply-execution.cjs` and `npm run check:vietnamese-genealogy-migration-apply-execution`.
+- No migration file modification, no extra migration, no extra SQL executed, no seed data, no production data mutation, no backfill from `people.branch_name`, no backfill from `people.generation_number`, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` remains untracked, was not read and was not committed.
+- Validation: genealogy domain/schema/scope/real-migration/readiness/apply-execution checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Recommended next phase before Phase 114 runtime planning: Phase 113A Owner Manual Apply Result Capture And Read-Only Verification.
+
 ## 2026-06-18 - Phase 112 Vietnamese Genealogy Migration Apply Readiness
 
 - Created `docs/112_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_READINESS.md`.

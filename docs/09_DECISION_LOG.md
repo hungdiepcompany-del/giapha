@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 133 - Phase 113 local apply requires safe one-file execution tooling
+
+Chon:
+
+Record the owner-approved Phase 113 apply attempt as `OWNER_ACTION_REQUIRED_MANUAL_DASHBOARD_APPLY` because this workstation has no Supabase CLI in PATH and no explicit DB apply/verification credentials in shell state.
+
+Ly do:
+
+- Owner approval, target project ref and backup/snapshot were provided.
+- The approved migration checksum matches the Phase 112 fingerprint.
+- Applying from local tooling must prove the operation targets `frkyeuxrlcflmsxxsolp` and applies only `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Without safe one-file execution tooling, Codex must not run DB apply, extra SQL, seeds or backfills.
+- Phase 114-117 runtime/UI planning should wait until owner manual apply result and read-only DB verification are recorded.
+
 ## Decision 132 - Phase 112 is apply readiness only
 
 Chon:

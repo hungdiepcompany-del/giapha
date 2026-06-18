@@ -1,5 +1,23 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 113 Vietnamese Genealogy Migration Apply Execution recorded
+
+- Owner approval received for DB apply of `db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql`.
+- Target Supabase project ref: `frkyeuxrlcflmsxxsolp`.
+- DB backup/snapshot: `DONE`.
+- Expected SHA256: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Actual SHA256: `522B11AF4D8BDA4F1E29AB63C49C9718129ADF1B27F3F2119BB40D9F7214EA5F`.
+- Pre-apply local/static checks passed.
+- Local Supabase project ref file matched `frkyeuxrlcflmsxxsolp`, but Supabase CLI was not available in PATH and `.env.local` was missing.
+- Apply result: `OWNER_ACTION_REQUIRED`; Codex did not run local DB apply.
+- Required owner/operator action: manually apply exactly the approved migration file through a controlled Supabase Dashboard or equivalent one-file-only path, then record the result.
+- DB verification result: `NOT_RUN_APPLY_NOT_CONFIRMED`; read-only post-apply verification still needs to confirm tables, RLS, policies, no old table drift, no excluded tables, no seed rows and no backfill.
+- Created `docs/113_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_EXECUTION.md`.
+- Added `scripts/check-vietnamese-genealogy-migration-apply-execution.cjs` and `npm run check:vietnamese-genealogy-migration-apply-execution`.
+- Boundary: no migration file modification, no extra migration, no extra SQL executed, no seed data, no production data mutation, no backfill from `people.branch_name`, no backfill from `people.generation_number`, no deploy, no runtime app code change, no UI change, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not read or committed.
+- Validation: genealogy domain/schema/scope/real-migration/readiness/apply-execution checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Recommended next phase: Phase 113A Owner Manual Apply Result Capture And Read-Only Verification. Phase 114-117 should wait until apply confirmation and read-only verification are recorded.
+
 ## 2026-06-18 - Phase 112 Vietnamese Genealogy Migration Apply Readiness completed
 
 - Created `docs/112_VIETNAMESE_GENEALOGY_MIGRATION_APPLY_READINESS.md`.
