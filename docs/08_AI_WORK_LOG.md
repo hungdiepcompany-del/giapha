@@ -1,5 +1,16 @@
 # AI Work Log
 
+## 2026-06-18 - Phase 108-110 Schema Candidate Owner Review
+
+- Created `docs/108_110_SCHEMA_CANDIDATE_OWNER_REVIEW.md` to review the Phase 108-110 candidate before any Phase 111 migration-file decision.
+- Review result: candidate direction is sound, but first migration scope should be narrowed before owner approval.
+- Recommended owner decision: `REQUEST_CHANGES_BEFORE_PHASE_111`.
+- Proposed first migration scope: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships`; `person_names` is optional only if owner confirms immediate need.
+- Deferred from first migration: `person_life_events`, `person_burials`, `person_media`, media processing, large export/import/GEDCOM/ZIP work and runtime changes.
+- No migration, no DB apply, no SQL executed, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no package added and no push.
+- `PLANNING.MD` remains untracked and was not committed in this review.
+- Validation: `npm run check:vietnamese-genealogy-domain` PASS, `npm run check:vietnamese-genealogy-schema-candidate` PASS, `npm run check:env:safe` PASS, `npm run check:migrations` PASS, `git diff --check` PASS, `git status --short` completed with `PLANNING.MD` still untracked outside scope.
+
 ## 2026-06-18 - Phase 108-110 Vietnamese Genealogy Schema Candidate Gate
 
 - Created `docs/108_110_VIETNAMESE_GENEALOGY_SCHEMA_CANDIDATE.md` as a candidate-only schema design, static safety and approval gate bundle.

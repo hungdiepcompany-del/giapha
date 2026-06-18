@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 129 - Schema candidate needs owner changes before Phase 111
+
+Chon:
+
+Recommend `REQUEST_CHANGES_BEFORE_PHASE_111` for the Phase 108-110 schema candidate. Phase 111 should not create a real migration file until the first migration scope, RLS policy shape, export/import JSON compatibility and `person_names` inclusion are explicitly approved.
+
+Ly do:
+
+- The candidate direction is sound, but first migration should be narrower than the full candidate.
+- `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships` are the safest first migration scope.
+- `person_life_events`, `person_burials` and `person_media` add privacy/workflow/media-boundary risk and should be deferred.
+- Phase 111 remains file-creation only; DB apply still requires a separate later approval.
+
 ## Decision 128 - Vietnamese genealogy schema candidate stays additive and gated
 
 Chon:

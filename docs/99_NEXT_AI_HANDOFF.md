@@ -1,5 +1,15 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 108-110 Schema Candidate Owner Review completed
+
+- Created `docs/108_110_SCHEMA_CANDIDATE_OWNER_REVIEW.md`.
+- Review result: Phase 108-110 candidate is directionally sound but should not proceed directly to Phase 111 without scope and policy decisions.
+- Recommended owner decision: `REQUEST_CHANGES_BEFORE_PHASE_111`.
+- Proposed first migration scope if owner approves later: `clans`, `clan_branches`, `generation_rules`, `person_branch_memberships`; `person_names` is optional only if owner confirms immediate need.
+- Deferred from first migration: `person_life_events`, `person_burials`, `person_media`, media processing, large export/import/GEDCOM/ZIP work and runtime changes.
+- Boundary: no real migration file, no DB apply, no SQL executed, no deploy, no runtime app change, no Worker created, no OpenNext/Wrangler config change, no package added, no push and `PLANNING.MD` not committed.
+- Recommended next phase: Phase 111 only if owner approves real migration file creation after review changes/questions are resolved.
+
 ## 2026-06-18 - Phase 108-110 Vietnamese Genealogy Schema Candidate Gate completed
 
 - Created `docs/108_110_VIETNAMESE_GENEALOGY_SCHEMA_CANDIDATE.md` for schema strategy, candidate tables/fields, compatibility, worker boundary notes and real migration approval gate.
