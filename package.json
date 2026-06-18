@@ -87,6 +87,7 @@
     "smoke:backup-operator:dry-run": "node scripts/smoke-backup-operator-dry-run.cjs",
     "check:backup-operator-local-smoke": "node scripts/check-backup-operator-local-smoke.cjs",
     "check:backup-operator-dry-run-handoff": "node scripts/check-backup-operator-dry-run-handoff.cjs",
+    "check:backup-operator-permission-model-review": "node scripts/check-backup-operator-permission-model-review.cjs",
     "smoke:main-app-backup-service-binding": "node scripts/smoke-main-app-backup-service-binding.cjs",
     "check:main-app-backup-service-binding-smoke": "node scripts/check-main-app-backup-service-binding-smoke.cjs",
     "check:main-app-binding-dry-run-handoff": "node scripts/check-main-app-binding-dry-run-handoff.cjs",

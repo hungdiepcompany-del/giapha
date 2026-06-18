@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-18 - Phase 63 Backup Operator Permission Model Review completed
+
+### Trang thai hien tai
+
+Production van chay tren main worker hien co. Phase 63 da review permission model cho backup operator va de xuat `backup.operator.*` lam boundary tuong lai, nhung chua migration/schema/seed va chua cap quyen DB that.
+
+### File/script moi
+
+- `docs/63_BACKUP_OPERATOR_PERMISSION_MODEL_REVIEW.md`
+- `scripts/check-backup-operator-permission-model-review.cjs`
+- `npm run check:backup-operator-permission-model-review`
+
+### Permission model de xuat
+
+- `backup.operator.view` cho UI dry-run.
+- `backup.operator.dry_run` cho API dry-run.
+- `backup.operator.execute` cho backup that trong phase sau.
+- `backup.operator.restore` cho restore that trong phase sau.
+
+### Boundary giu nguyen
+
+- Khong deploy/push.
+- Khong doc `.env.local` hoac `.dev.vars`.
+- Khong goi backup service worker that.
+- Khong goi network/API/DB.
+- Khong tao migration/schema/seed.
+- Khong hardcode URL/token/key.
+- Khong tao/upload backup production that.
+- Khong restore production.
+
+### Task tiep theo de xuat
+
+Phase 64 - Backup Operator API Permission Guard.
+
 ## 2026-06-18 - Phase 62 Backup Operator Dry-Run Handoff completed
 
 ### Trang thai hien tai

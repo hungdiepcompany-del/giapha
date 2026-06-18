@@ -1,5 +1,22 @@
 # Decision Log
 
+## Decision 086 - Backup operator permissions are proposed before DB seed
+
+Chon:
+
+Phase 63 chi de xuat `backup.operator.view`, `backup.operator.dry_run`, `backup.operator.execute` va `backup.operator.restore`, chua them migration/schema/seed.
+
+Ly do:
+
+- Current permission table chua co backup operator codes.
+- Them permission that can phase rieng de kiem seed, role mapping va owner approval.
+- API/UI guard co the fail-closed bang fallback documented `permissions.manage` cho den khi permission backup duoc seed that.
+
+He qua:
+
+- Dry-run UI/API se duoc guard trong phase sau nhung van khong mo execute/restore.
+- Real backup, real storage, deploy worker va restore van bi chan cho den khi co approval va phase rieng.
+
 ## Decision 085 - Operator dry-run bundle stops before permission hardening or real worker call
 
 Chon:
