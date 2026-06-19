@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
+import { getTreeNodeInlineWarnings } from "@/lib/family/inline-warning-rules";
 import {
   CHILD_RELATIONSHIP_TYPES,
   COUPLE_RELATIONSHIP_STATUSES,
@@ -170,6 +172,7 @@ export function TreeEditorSidePanel({
     selectedNode.birthYear || selectedNode.deathYear
       ? `${selectedNode.birthYear ?? "?"} - ${selectedNode.deathYear ?? (selectedNode.isLiving ? "" : "?")}`
       : null;
+  const inlineWarnings = getTreeNodeInlineWarnings(selectedNode);
 
   return (
     <aside className="space-y-6 border border-slate-200 bg-white p-4">
@@ -201,6 +204,11 @@ export function TreeEditorSidePanel({
         <RelationList title="Vợ/chồng/bạn đời" people={summary.spouses} />
         <RelationList title="Con" people={summary.children} />
       </div>
+
+      <AdminWarningList
+        warnings={inlineWarnings}
+        title="Cảnh báo nút đang chọn"
+      />
 
       {canCreateRelationships ? (
         <div className="space-y-4 border-t border-slate-200 pt-4">

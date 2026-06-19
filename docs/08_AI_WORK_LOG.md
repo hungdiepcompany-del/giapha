@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 121A Lightweight Inline Admin Warning UI
+
+- Implemented owner-approved Option D as lightweight deterministic inline
+  warnings on admin person detail, genealogy dashboard, membership management
+  and the selected tree-node side panel.
+- Warning generation uses only person, lineage and tree-node data already
+  loaded by each surface; no warning query, persistence or full-tree scan was
+  added.
+- Added reusable Vietnamese severity badge/list UI with `Thông tin`, `Cảnh báo`
+  and `Cần xử lý`, actionable next-step copy, text severity signals and a safe
+  empty state that does not imply full-tree coverage.
+- Added `lib/family/inline-warning-rules.ts`,
+  `lib/family/inline-warning-types.ts`,
+  `components/genealogy/admin-warning-badge.tsx` and
+  `components/genealogy/admin-warning-list.tsx`.
+- Added `docs/121A_INLINE_ADMIN_WARNING_UI.md`,
+  `scripts/check-inline-admin-warning-ui.cjs` and
+  `npm run check:inline-admin-warning-ui`.
+- Updated the Phase 118A-120D static checkers with an exact owner-marker-gated
+  Phase 121A runtime whitelist.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no persistent warning table, no full-tree scan, no media
+  work, no Worker created, no OpenNext/Wrangler config change, no runtime
+  dependency added, no deploy and no push.
+- Validation: inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 118D-120D Vietnamese Genealogy Media/Data Quality Final Readiness
 
 - Completed final docs-only readiness review after Phase 118C-120C commit `3bc3847`.

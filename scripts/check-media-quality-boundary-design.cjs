@@ -58,6 +58,32 @@ function gitStatus(...pathspecs) {
   return gitOutput(["status", "--short", "--", ...pathspecs]);
 }
 
+function allowsPhase121ARuntimeStatus(status) {
+  const docPath = path.join(root, "docs/121A_INLINE_ADMIN_WARNING_UI.md");
+  if (!fs.existsSync(docPath)) return false;
+  const doc = fs.readFileSync(docPath, "utf8");
+  if (
+    !doc.includes("Status: `COMPLETED_LOCAL_STATIC_VALIDATED`") ||
+    !doc.includes("Owner approval: `OPTION_D_INLINE_ADMIN_WARNING_UI_ONLY`")
+  ) {
+    return false;
+  }
+  const allowed = new Set([
+    "app/(admin)/admin/people/[id]/page.tsx",
+    "app/(admin)/admin/genealogy/page.tsx",
+    "app/(admin)/admin/genealogy/memberships/page.tsx",
+    "components/tree/tree-editor-side-panel.tsx",
+    "components/genealogy/admin-warning-badge.tsx",
+    "components/genealogy/admin-warning-list.tsx",
+    "lib/family/inline-warning-types.ts",
+    "lib/family/inline-warning-rules.ts",
+  ]);
+  return status
+    .split(/\r?\n/)
+    .filter((line) => line.trim())
+    .every((line) => allowed.has(line.slice(3).trim().replaceAll("\\", "/")));
+}
+
 const packageJson = readJson("package.json");
 const mediaDoc = readFile("docs/118A_MEDIA_DOMAIN_STORAGE_BOUNDARY_DESIGN.md");
 const qualityDoc = readFile("docs/119A_DATA_QUALITY_BOUNDARY_WARNING_DESIGN.md");
@@ -205,7 +231,9 @@ const migrationStatus = gitStatus("db/migrations");
 if (migrationStatus.trim()) failures.push(`migration files changed: ${migrationStatus.trim()}`);
 
 const runtimeStatus = gitStatus("app", "components", "lib", "server");
-if (runtimeStatus.trim()) failures.push(`runtime app surface changed: ${runtimeStatus.trim()}`);
+if (runtimeStatus.trim() && !allowsPhase121ARuntimeStatus(runtimeStatus)) {
+  failures.push(`runtime app surface changed: ${runtimeStatus.trim()}`);
+}
 
 const workerConfigStatus = gitStatus(
   "services",

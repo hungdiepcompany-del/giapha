@@ -1,4 +1,5 @@
 import { AdminShell } from "@/components/layout/admin-shell";
+import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
 import { MembershipForm, MembershipList } from "@/components/genealogy/lineage-admin";
 import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { PageHeader } from "@/components/ui/page-header";
@@ -10,6 +11,7 @@ import {
   listGenerationRules,
   listPersonBranchMemberships,
 } from "@/lib/family/lineage-service";
+import { getLineageDashboardInlineWarnings } from "@/lib/family/inline-warning-rules";
 import { listPeople } from "@/lib/family/people-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
@@ -44,6 +46,15 @@ export default async function MembershipsPage({
   const ruleData = rules.ok ? rules.data : [];
   const membershipData = memberships.ok ? memberships.data : [];
   const peopleData = people.ok ? people.data : [];
+  const inlineWarnings =
+    clans.ok && branches.ok && rules.ok && memberships.ok
+      ? getLineageDashboardInlineWarnings({
+          clans: clanData,
+          branches: branchData,
+          generationRules: ruleData,
+          memberships: membershipData,
+        })
+      : [];
 
   return (
     <AdminShell
@@ -75,6 +86,14 @@ export default async function MembershipsPage({
             </StatusCallout>
           ),
         )}
+
+        {clans.ok && branches.ok && rules.ok && memberships.ok ? (
+          <AdminWarningList
+            warnings={inlineWarnings}
+            title="Cảnh báo gắn thành viên đang hiển thị"
+            className="mt-6"
+          />
+        ) : null}
 
         {canManage ? (
           <SectionCard className="mt-6">

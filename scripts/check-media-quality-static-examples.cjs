@@ -46,6 +46,32 @@ function gitStatus(...pathspecs) {
   return gitOutput(["status", "--short", "--", ...pathspecs]);
 }
 
+function allowsPhase121ARuntimeStatus(status) {
+  const docPath = path.join(root, "docs/121A_INLINE_ADMIN_WARNING_UI.md");
+  if (!fs.existsSync(docPath)) return false;
+  const doc = fs.readFileSync(docPath, "utf8");
+  if (
+    !doc.includes("Status: `COMPLETED_LOCAL_STATIC_VALIDATED`") ||
+    !doc.includes("Owner approval: `OPTION_D_INLINE_ADMIN_WARNING_UI_ONLY`")
+  ) {
+    return false;
+  }
+  const allowed = new Set([
+    "app/(admin)/admin/people/[id]/page.tsx",
+    "app/(admin)/admin/genealogy/page.tsx",
+    "app/(admin)/admin/genealogy/memberships/page.tsx",
+    "components/tree/tree-editor-side-panel.tsx",
+    "components/genealogy/admin-warning-badge.tsx",
+    "components/genealogy/admin-warning-list.tsx",
+    "lib/family/inline-warning-types.ts",
+    "lib/family/inline-warning-rules.ts",
+  ]);
+  return status
+    .split(/\r?\n/)
+    .filter((line) => line.trim())
+    .every((line) => allowed.has(line.slice(3).trim().replaceAll("\\", "/")));
+}
+
 function gitShowHead(relativePath) {
   try {
     return childProcess.execFileSync("git", ["show", `HEAD:${relativePath}`], {
@@ -214,7 +240,10 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
 }
 
 if (gitStatus("db/migrations").trim()) failures.push("migration files changed");
-if (gitStatus("app", "components", "lib", "server").trim()) failures.push("runtime app surface changed");
+const runtimeStatus = gitStatus("app", "components", "lib", "server");
+if (runtimeStatus.trim() && !allowsPhase121ARuntimeStatus(runtimeStatus)) {
+  failures.push("runtime app surface changed");
+}
 if (
   gitStatus("services", "wrangler.toml", "open-next.config.ts", "next.config.ts", ".github/workflows").trim()
 ) {

@@ -5,6 +5,7 @@ import {
   MembershipForm,
   MembershipSummary,
 } from "@/components/genealogy/lineage-admin";
+import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
 import { PersonForm } from "@/components/people/person-form";
 import { CoupleForm } from "@/components/relationships/couple-form";
 import { RelationshipForm } from "@/components/relationships/relationship-form";
@@ -20,6 +21,7 @@ import {
   listGenerationRules,
   listPersonBranchMemberships,
 } from "@/lib/family/lineage-service";
+import { getPersonInlineWarnings } from "@/lib/family/inline-warning-rules";
 import { getPersonById } from "@/lib/family/people-service";
 import {
   getPersonRelationshipSummary,
@@ -100,6 +102,18 @@ export default async function PersonDetailPage({
         : membershipsResult && !membershipsResult.ok
           ? membershipsResult.error
           : "Bạn cần quyền people.view hoặc tree.view để xem dữ liệu dòng họ/chi.";
+  const inlineWarnings =
+    personResult.ok &&
+    branchesResult?.ok &&
+    rulesResult?.ok &&
+    membershipsResult?.ok
+      ? getPersonInlineWarnings({
+          person: personResult.data,
+          memberships: membershipsResult.data,
+          branches: branchesResult.data,
+          generationRules: rulesResult.data,
+        })
+      : [];
 
   return (
     <AdminShell
@@ -127,6 +141,11 @@ export default async function PersonDetailPage({
                 error={query.error}
                 saved={query.saved}
                 submitLabel="Lưu thay đổi"
+              />
+
+              <AdminWarningList
+                warnings={inlineWarnings}
+                title="Cảnh báo hồ sơ đang xem"
               />
 
               {canViewRevisions ? (

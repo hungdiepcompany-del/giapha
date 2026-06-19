@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 121A Lightweight Inline Admin Warning UI completed
+
+- Owner-approved Option D was implemented only as deterministic inline admin
+  hints from data already loaded on person, genealogy, membership and selected
+  tree-node surfaces.
+- Added reusable Vietnamese warning badge/list UI and pure warning-rule
+  helpers; no warning query, persistence, background job or full-tree scan was
+  introduced.
+- Admin people warnings cover incomplete identity, invalid date order,
+  living-person public visibility, multiple primary memberships, incomplete
+  lineage assignment and lineage scope conflicts.
+- Admin genealogy warnings summarize the already-loaded memberships; the tree
+  editor only evaluates the selected loaded person node.
+- Warning UI remains inside existing admin permission boundaries, does not
+  expose private notes/source notes and is not present on public routes.
+- Added `docs/121A_INLINE_ADMIN_WARNING_UI.md`,
+  `scripts/check-inline-admin-warning-ui.cjs` and
+  `npm run check:inline-admin-warning-ui`.
+- Worker/runtime: main Worker receives only the small existing-app component
+  and helper code; runtime dependency added NO; new service Worker created NO;
+  OpenNext/Wrangler config changed NO; heavy scan/media/export/import work NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no persistent warning table, no full-tree scan, no media work,
+  no deploy and no push.
+- Validation: inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: keep media, persistent warnings and heavy scans
+  deferred; require separate owner approval for any Phase 121B schema, service
+  or broader runtime scope.
+
 ## 2026-06-19 - Phase 118D-120D Vietnamese Genealogy Media/Data Quality Final Readiness completed
 
 - Completed final docs-only readiness/signoff review after commit `3bc3847`.

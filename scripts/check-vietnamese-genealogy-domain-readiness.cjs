@@ -97,6 +97,20 @@ function allowsPhase114RuntimeStatus(status) {
     "components/genealogy/",
     "lib/family/lineage-",
   ];
+  const phase121Doc = path.join(root, "docs/121A_INLINE_ADMIN_WARNING_UI.md");
+  if (fs.existsSync(phase121Doc)) {
+    const phase121Content = fs.readFileSync(phase121Doc, "utf8");
+    if (
+      phase121Content.includes("Status: `COMPLETED_LOCAL_STATIC_VALIDATED`") &&
+      phase121Content.includes(
+        "Owner approval: `OPTION_D_INLINE_ADMIN_WARNING_UI_ONLY`",
+      )
+    ) {
+      allowedFiles.add("components/tree/tree-editor-side-panel.tsx");
+      allowedFiles.add("lib/family/inline-warning-types.ts");
+      allowedFiles.add("lib/family/inline-warning-rules.ts");
+    }
+  }
 
   return lines.every((line) => {
     const statusPath = line.slice(2).trim().replaceAll("\\", "/");

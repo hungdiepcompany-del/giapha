@@ -1,5 +1,25 @@
 # Decision Log
 
+## Decision 143 - Option D permits only deterministic inline admin hints from already loaded data
+
+Chon:
+
+Phase 121A may add lightweight warning helpers and UI to existing admin people,
+genealogy and tree surfaces only when findings are derived from data those
+surfaces already loaded. The approval does not include persistent warning
+storage, new queries for warning generation, full-tree scans, media work,
+service Workers, dependencies or deploy changes.
+
+Ly do:
+
+- Deterministic inline hints can improve admin review without creating a new
+  data-quality subsystem.
+- Existing server-side permission boundaries remain the authority for access.
+- Empty state and warning copy must state the displayed-data boundary and must
+  not imply a complete tree scan.
+- Persistent lifecycle, heavy scans and media processing remain separate
+  schema/service decisions under the Worker guardrail and service roadmap.
+
 ## Decision 142 - Default implementation decision remains defer; inline hints need separate approval
 
 Chon:

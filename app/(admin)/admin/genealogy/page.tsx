@@ -1,10 +1,12 @@
 import { AdminShell } from "@/components/layout/admin-shell";
+import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
 import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
 import { getLineageDashboard } from "@/lib/family/lineage-service";
+import { getLineageDashboardInlineWarnings } from "@/lib/family/inline-warning-rules";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +47,9 @@ export default async function GenealogyPage({
             ? "Chưa cấu hình Supabase cho môi trường hiện tại."
             : "Bạn cần quyền people.view hoặc tree.view để xem dữ liệu dòng họ.",
       };
+  const inlineWarnings = result.ok
+    ? getLineageDashboardInlineWarnings(result.data)
+    : [];
 
   return (
     <AdminShell
@@ -112,6 +117,14 @@ export default async function GenealogyPage({
             </ActionLink>
           </SectionCard>
         </div>
+
+        {result.ok ? (
+          <AdminWarningList
+            warnings={inlineWarnings}
+            title="Cảnh báo dữ liệu dòng họ đang hiển thị"
+            className="mt-6"
+          />
+        ) : null}
 
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <StatusCallout tone="info">
