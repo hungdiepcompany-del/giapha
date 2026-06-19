@@ -11,16 +11,16 @@ import type {
 
 function SummaryGrid({ preview }: { preview: ImportPreview }) {
   const rows = [
-    ["Schema", preview.summary.schema_version ?? "-"],
-    ["App", preview.summary.app_name ?? "-"],
-    ["Exported at", preview.summary.exported_at ?? "-"],
-    ["People", preview.summary.people_count],
-    ["Families", preview.summary.family_count],
-    ["Family parents", preview.summary.family_parent_count],
-    ["Family children", preview.summary.family_child_count],
-    ["Couples", preview.summary.couple_relationship_count],
-    ["Tree layouts", preview.summary.tree_layout_count],
-    ["Tree nodes", preview.summary.tree_layout_node_count],
+    ["Phiên bản schema", preview.summary.schema_version ?? "-"],
+    ["Ứng dụng", preview.summary.app_name ?? "-"],
+    ["Thời điểm xuất", preview.summary.exported_at ?? "-"],
+    ["Thành viên", preview.summary.people_count],
+    ["Đơn vị gia đình", preview.summary.family_count],
+    ["Cha/mẹ trong gia đình", preview.summary.family_parent_count],
+    ["Con trong gia đình", preview.summary.family_child_count],
+    ["Quan hệ đôi", preview.summary.couple_relationship_count],
+    ["Bố cục cây", preview.summary.tree_layout_count],
+    ["Nút trên cây", preview.summary.tree_layout_node_count],
   ];
 
   return (
@@ -84,7 +84,7 @@ function ConflictList({ preview }: { preview: ImportPreview }) {
   if (preview.conflict_check_status === "unavailable") {
     return (
       <div className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-        {preview.conflict_check_message ?? "Chưa kiểm tra được conflict DB."}
+        {preview.conflict_check_message ?? "Chưa kiểm tra được xung đột DB."}
       </div>
     );
   }
@@ -92,7 +92,7 @@ function ConflictList({ preview }: { preview: ImportPreview }) {
   if (preview.conflicts.length === 0) {
     return (
       <div className="border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-        Không phát hiện conflict ID/slug trong DB hiện tại.
+        Không phát hiện xung đột ID/slug trong DB hiện tại.
       </div>
     );
   }
@@ -124,7 +124,7 @@ export function JsonImportPreviewForm() {
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
             <span className="text-sm font-semibold text-slate-800">
-              Upload family.json
+              Tải lên family.json
             </span>
             <input
               type="file"
@@ -134,8 +134,8 @@ export function JsonImportPreviewForm() {
             />
           </label>
           <div className="border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-            Phase 10 chỉ đọc file để preview và validate. Nút xác nhận import bị
-            khóa vì chưa có transaction/restore validation đầy đủ.
+            Phase 10 chỉ đọc file để xem trước và kiểm tra. Nút xác nhận nhập dữ liệu bị
+            khóa vì chưa có giao dịch và kiểm tra phục hồi đầy đủ.
           </div>
         </div>
 
@@ -164,7 +164,7 @@ export function JsonImportPreviewForm() {
             disabled
             className="inline-flex min-h-11 cursor-not-allowed items-center justify-center border border-slate-300 bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-500"
           >
-            Xác nhận import
+            Xác nhận nhập dữ liệu
           </button>
         </div>
       </form>
@@ -189,12 +189,12 @@ export function JsonImportPreviewForm() {
           </section>
 
           <section className="grid gap-3">
-            <h2 className="text-lg font-bold text-slate-950">Validation</h2>
+            <h2 className="text-lg font-bold text-slate-950">Kết quả kiểm tra</h2>
             <IssueList issues={state.preview.issues} />
           </section>
 
           <section className="grid gap-3">
-            <h2 className="text-lg font-bold text-slate-950">Conflict DB</h2>
+            <h2 className="text-lg font-bold text-slate-950">Xung đột DB</h2>
             <ConflictList preview={state.preview} />
           </section>
         </div>

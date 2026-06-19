@@ -28,6 +28,12 @@ const precisionLabels: Record<string, string> = {
   unknown: "Chưa rõ",
 };
 
+const visibilityLabels: Record<string, string> = {
+  family: "Nội bộ gia đình",
+  private: "Riêng tư",
+  public: "Công khai",
+};
+
 export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
   return (
     <form action={createCoupleRelationshipAction} className="space-y-4 border border-slate-200 bg-white p-4">
@@ -41,7 +47,9 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
       ) : null}
       {!contextPersonId ? (
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Person 1 ID</span>
+          <span className="text-sm font-semibold text-slate-800">
+            ID thành viên 1
+          </span>
           <input
             name="person1_id"
             required
@@ -52,7 +60,7 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
       ) : null}
       <label className="block">
         <span className="text-sm font-semibold text-slate-800">
-          {contextPersonId ? "Person ID của vợ/chồng/bạn đời" : "Person 2 ID"}
+          {contextPersonId ? "ID thành viên của vợ/chồng/bạn đời" : "ID thành viên 2"}
         </span>
         <input
           name="person2_id"
@@ -77,7 +85,9 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Visibility</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Phạm vi hiển thị
+          </span>
           <select
             name="visibility"
             defaultValue="family"
@@ -85,7 +95,7 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
           >
             {RELATIONSHIP_VISIBILITIES.map((visibility) => (
               <option key={visibility} value={visibility}>
-                {visibility}
+                {visibilityLabels[visibility]}
               </option>
             ))}
           </select>
@@ -140,7 +150,9 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
         </label>
       </div>
       <label className="block">
-        <span className="text-sm font-semibold text-slate-800">Family ID liên kết</span>
+        <span className="text-sm font-semibold text-slate-800">
+          ID gia đình liên kết
+        </span>
         <input
           name="family_id"
           className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"

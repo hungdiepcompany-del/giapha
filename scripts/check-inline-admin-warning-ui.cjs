@@ -177,6 +177,51 @@ const allowedRuntimeFiles = new Set([
   ...phase125AllowedRuntimeFiles,
 ]);
 
+const uiVn01AllowedRuntimeFiles = new Set([
+  "app/(admin)/admin/backups/page.tsx",
+  "app/(admin)/admin/exports/import/page.tsx",
+  "app/(admin)/admin/exports/page.tsx",
+  "app/(admin)/admin/genealogy/actions.ts",
+  "app/(admin)/admin/page.tsx",
+  "app/(admin)/admin/people/new/page.tsx",
+  "app/(admin)/admin/people/page.tsx",
+  "app/(admin)/admin/preview/public/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
+  "app/(admin)/admin/revisions/[id]/page.tsx",
+  "app/(admin)/admin/revisions/page.tsx",
+  "app/(admin)/admin/system/status/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/layout.tsx",
+  "app/unauthorized/page.tsx",
+  "components/admin/backup-operator-dry-run-panel.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "components/imports/json-import-preview-form.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
+  "components/public/public-person-profile.tsx",
+  "components/public/public-tree-shell.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
+  "components/relationships/relationship-summary.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "lib/family/json-import-preview-service.ts",
+  "lib/family/lineage-service.ts",
+  "lib/family/people-validation.ts",
+  "lib/family/public-family-service.ts",
+  "lib/family/relationship-validation.ts",
+  "lib/family/tree-graph-builder.ts",
+  "lib/family/tree-layout-service.ts",
+]);
+
+const statusAllowedRuntimeFiles = new Set([
+  ...allowedRuntimeFiles,
+  ...uiVn01AllowedRuntimeFiles,
+]);
+
 const status = gitOutput(["status", "--short"]);
 const changedFiles = status
   .split(/\r?\n/)
@@ -189,7 +234,7 @@ for (const file of changedFiles) {
   }
   if (
     /^(app|components|lib|server)\//.test(file) &&
-    !allowedRuntimeFiles.has(file)
+    !statusAllowedRuntimeFiles.has(file)
   ) {
     failures.push(`runtime file outside Phase 121A scope: ${file}`);
   }

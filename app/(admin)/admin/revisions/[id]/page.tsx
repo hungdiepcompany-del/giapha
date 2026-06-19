@@ -41,6 +41,23 @@ function relatedEntityHref(entityType: string, entityId: string) {
   return null;
 }
 
+const entityTypeLabels: Record<string, string> = {
+  couple_relationships: "Quan hệ đôi",
+  families: "Gia đình",
+  family_children: "Con trong gia đình",
+  family_parents: "Cha/mẹ trong gia đình",
+  people: "Thành viên",
+  tree_layout_nodes: "Nút bố cục cây",
+  tree_layouts: "Bố cục cây",
+};
+
+const actionLabels: Record<string, string> = {
+  create: "Tạo mới",
+  delete: "Xóa mềm",
+  restore: "Khôi phục",
+  update: "Cập nhật",
+};
+
 function JsonBlock({ value }: { value: unknown }) {
   return (
     <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap border border-slate-200 bg-slate-950 p-4 text-xs leading-5 text-slate-100">
@@ -62,7 +79,7 @@ export default async function RevisionDetailPage({
         error:
           context.reason === "missing_supabase_config"
             ? "Chưa cấu hình Supabase."
-            : "Bạn chưa có quyền xem revision.",
+            : "Bạn chưa có quyền xem bản ghi lịch sử.",
       };
 
   return (
@@ -75,10 +92,10 @@ export default async function RevisionDetailPage({
         <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-              Revision detail
+              Chi tiết lịch sử chỉnh sửa
             </p>
             <h1 className="mt-2 text-3xl font-bold text-slate-950">
-              Chi tiết revision
+              Chi tiết lịch sử chỉnh sửa
             </h1>
           </div>
           <Link
@@ -98,15 +115,21 @@ export default async function RevisionDetailPage({
                   <div className="mt-1">{formatDate(result.data.revision.changed_at)}</div>
                 </div>
                 <div>
-                  <div className="font-bold text-slate-950">Action</div>
-                  <div className="mt-1">{result.data.revision.action}</div>
+                  <div className="font-bold text-slate-950">Thao tác</div>
+                  <div className="mt-1">
+                    {actionLabels[result.data.revision.action] ??
+                      result.data.revision.action}
+                  </div>
                 </div>
                 <div>
-                  <div className="font-bold text-slate-950">Entity</div>
-                  <div className="mt-1">{result.data.revision.entity_type}</div>
+                  <div className="font-bold text-slate-950">Loại bản ghi</div>
+                  <div className="mt-1">
+                    {entityTypeLabels[result.data.revision.entity_type] ??
+                      result.data.revision.entity_type}
+                  </div>
                 </div>
                 <div className="md:col-span-2">
-                  <div className="font-bold text-slate-950">Entity ID</div>
+                  <div className="font-bold text-slate-950">ID bản ghi</div>
                   <div className="mt-1 font-mono text-xs">
                     {result.data.revision.entity_id}
                   </div>
@@ -139,7 +162,7 @@ export default async function RevisionDetailPage({
                     }
                     className="inline-flex min-h-11 items-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
                   >
-                    Mở entity liên quan
+                    Mở bản ghi liên quan
                   </Link>
                 ) : null}
                 <button
@@ -154,25 +177,27 @@ export default async function RevisionDetailPage({
               {result.data.can_restore ? (
                 <div className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
                   Bạn có quyền `revisions.restore`, nhưng Phase 9 chỉ bật
-                  placeholder. Restore thật cần transaction, validation và ghi
-                  revision mới ở phase sau.
+                  placeholder. Phục hồi thật cần giao dịch, kiểm tra và ghi
+                  lịch sử mới ở phase sau.
                 </div>
               ) : (
                 <div className="border border-slate-200 bg-white p-4 text-sm text-slate-700">
-                  Restore thật chưa được bật trong Phase 9.
+                  Phục hồi thật chưa được bật trong Phase 9.
                 </div>
               )}
 
               <div className="border border-slate-200 bg-white p-5">
-                <h2 className="text-xl font-bold text-slate-950">Diff field</h2>
+                <h2 className="text-xl font-bold text-slate-950">
+                  Trường thay đổi
+                </h2>
                 {result.data.diff.length > 0 ? (
                   <div className="mt-4 overflow-x-auto">
                     <table className="w-full border-collapse text-left text-sm">
                       <thead className="bg-slate-100 text-slate-700">
                         <tr>
-                          <th className="px-4 py-3">Field</th>
-                          <th className="px-4 py-3">Before</th>
-                          <th className="px-4 py-3">After</th>
+                          <th className="px-4 py-3">Trường</th>
+                          <th className="px-4 py-3">Trước</th>
+                          <th className="px-4 py-3">Sau</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -201,7 +226,7 @@ export default async function RevisionDetailPage({
                   </div>
                 ) : (
                   <p className="mt-3 text-sm text-slate-700">
-                    Không có field thay đổi hoặc JSON không đủ dữ liệu để so sánh.
+                    Không có trường thay đổi hoặc JSON không đủ dữ liệu để so sánh.
                   </p>
                 )}
               </div>
@@ -209,13 +234,13 @@ export default async function RevisionDetailPage({
               {result.data.items.length > 0 ? (
                 <div className="border border-slate-200 bg-white p-5">
                   <h2 className="text-xl font-bold text-slate-950">
-                    Revision items
+                    Mục lịch sử chỉnh sửa
                   </h2>
                   <div className="mt-4 grid gap-3">
                     {result.data.items.map((item) => (
                       <div key={item.id} className="border border-slate-200 p-4">
                         <div className="text-sm font-bold text-slate-950">
-                          {item.field_name ?? "entity"}
+                          {item.field_name ?? "bản ghi"}
                         </div>
                         <div className="mt-3 grid gap-3 md:grid-cols-2">
                           <JsonBlock value={item.before_json} />
@@ -230,13 +255,13 @@ export default async function RevisionDetailPage({
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <h2 className="mb-3 text-xl font-bold text-slate-950">
-                    Before JSON
+                    JSON trước
                   </h2>
                   <JsonBlock value={result.data.revision.before_json} />
                 </div>
                 <div>
                   <h2 className="mb-3 text-xl font-bold text-slate-950">
-                    After JSON
+                    JSON sau
                   </h2>
                   <JsonBlock value={result.data.revision.after_json} />
                 </div>

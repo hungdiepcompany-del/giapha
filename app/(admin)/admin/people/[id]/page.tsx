@@ -124,7 +124,7 @@ export default async function PersonDetailPage({
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
         <div className="border-b border-slate-200 pb-6">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            People CRUD foundation
+            Nền tảng quản lý thành viên
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-950">
             Chi tiết thành viên

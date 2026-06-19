@@ -19,7 +19,7 @@ export default async function AdminPublicPreviewPage() {
         error:
           context.reason === "missing_supabase_config"
             ? "Chưa cấu hình Supabase."
-            : "Bạn chưa có quyền xem preview public.",
+            : "Bạn chưa có quyền xem bản xem trước công khai.",
       };
 
   return (
@@ -32,7 +32,7 @@ export default async function AdminPublicPreviewPage() {
         <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-              Public privacy preview
+              Xem trước quyền riêng tư công khai
             </p>
             <h1 className="mt-2 text-3xl font-bold text-slate-950">
               Người ngoài sẽ thấy gì
@@ -42,12 +42,12 @@ export default async function AdminPublicPreviewPage() {
             href="/tree"
             className="inline-flex min-h-11 items-center border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
           >
-            Mở public tree
+            Mở cây công khai
           </Link>
         </div>
 
         <div className="mt-6 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-          Preview này dùng cùng public service với `/tree`, không dùng dữ liệu
+          Bản xem trước này dùng cùng dịch vụ công khai với `/tree`, không dùng dữ liệu
           admin chưa sanitize.
         </div>
 

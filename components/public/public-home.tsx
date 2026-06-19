@@ -37,7 +37,7 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
                 {peopleCount ?? 0}
               </div>
               <div className="mt-1 text-sm text-slate-600">
-                người đang hiển thị public
+                người đang hiển thị công khai
               </div>
             </div>
             <div className="border-t border-slate-200 pt-4">
@@ -45,11 +45,11 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
                 {treeNodeCount ?? 0}
               </div>
               <div className="mt-1 text-sm text-slate-600">
-                node cây đã lọc riêng tư
+                nút cây đã lọc riêng tư
               </div>
             </div>
             <div className="border-t border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
-              Người còn sống được bảo vệ: public mode không hiển thị ghi chú nội
+              Người còn sống được bảo vệ: chế độ công khai không hiển thị ghi chú nội
               bộ hoặc thông tin nhạy cảm.
             </div>
           </SectionCard>
@@ -63,15 +63,15 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
             </p>
           </div>
           <div>
-            <h2 className="font-bold text-slate-950">Readonly public</h2>
+            <h2 className="font-bold text-slate-950">Công khai chỉ đọc</h2>
             <p className="mt-2">
-              Trang public chỉ xem, không có thao tác chỉnh sửa.
+              Trang công khai chỉ xem, không có thao tác chỉnh sửa.
             </p>
           </div>
           <div>
             <h2 className="font-bold text-slate-950">Quản trị có phân quyền</h2>
             <p className="mt-2">
-              Các thay đổi gia phả nằm sau đăng nhập và permission.
+              Các thay đổi gia phả nằm sau đăng nhập và quyền phù hợp.
             </p>
           </div>
         </div>

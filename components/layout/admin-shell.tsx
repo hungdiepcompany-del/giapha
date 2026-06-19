@@ -12,13 +12,13 @@ type AdminShellProps = {
 };
 
 const navItems = [
-  { href: "/admin/genealogy", label: "Genealogy" },
+  { href: "/admin/genealogy", label: "Gia phả Việt Nam" },
   { href: "/admin", label: "Tổng quan", exact: true },
   { href: "/admin/people", label: "Thành viên" },
   { href: "/admin/relationships", label: "Quan hệ gia đình" },
   { href: "/admin/tree", label: "Cây gia phả", exact: true },
   { href: "/admin/tree/edit", label: "Chỉnh sửa cây" },
-  { href: "/admin/exports", label: "Backup / Export" },
+  { href: "/admin/exports", label: "Sao lưu / Xuất dữ liệu" },
   { href: "/admin/revisions", label: "Lịch sử chỉnh sửa" },
   { href: "/admin/system/status", label: "Trạng thái hệ thống" },
 ];
@@ -52,7 +52,7 @@ export function AdminShell({
                 Quản trị GIA PHẢ
               </Link>
               <p className="mt-2 text-sm text-slate-600">
-                Quản lý thành viên, quan hệ, cây gia phả, backup và lịch sử sửa đổi.
+                Quản lý thành viên, quan hệ, cây gia phả, sao lưu và lịch sử sửa đổi.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -95,21 +95,21 @@ export function AdminShell({
               href="/"
               className="border border-slate-200 bg-white px-3 py-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-950"
             >
-              Public
+              Trang công khai
             </Link>
           </nav>
 
           <div className="grid gap-3 border-t border-slate-100 pt-4 text-xs text-slate-600 sm:grid-cols-3">
             <div>
-              <span className="font-bold text-slate-800">User:</span>{" "}
+              <span className="font-bold text-slate-800">Người dùng:</span>{" "}
               {userEmail ?? "Không rõ"}
             </div>
             <div>
-              <span className="font-bold text-slate-800">Roles:</span>{" "}
+              <span className="font-bold text-slate-800">Vai trò:</span>{" "}
               {roles.length > 0 ? roles.join(", ") : "Chưa có role"}
             </div>
             <div>
-              <span className="font-bold text-slate-800">Permissions:</span>{" "}
+              <span className="font-bold text-slate-800">Số quyền:</span>{" "}
               {permissions.length}
             </div>
           </div>

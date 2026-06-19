@@ -43,23 +43,23 @@ export default async function RelationshipsPage({
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Relationship CRUD foundation"
+          eyebrow="Nền tảng quản lý quan hệ"
           title="Quan hệ gia đình"
-          description="Family là đơn vị nối cha/mẹ với con; quan hệ đôi lưu vợ/chồng/bạn đời riêng để giữ model rõ ràng."
+          description="Gia đình là đơn vị nối cha/mẹ với con; quan hệ đôi lưu vợ/chồng/bạn đời riêng để giữ mô hình rõ ràng."
         />
 
         <div className="mt-6 grid gap-4 text-sm leading-6 text-slate-700 md:grid-cols-3">
           <SectionCard>
-            <h2 className="font-bold text-slate-950">Family</h2>
-            <p className="mt-2">Một family gom cha/mẹ và danh sách con.</p>
+            <h2 className="font-bold text-slate-950">Gia đình</h2>
+            <p className="mt-2">Một đơn vị gia đình gom cha/mẹ và danh sách con.</p>
           </SectionCard>
           <SectionCard>
             <h2 className="font-bold text-slate-950">Cha mẹ / con</h2>
-            <p className="mt-2">Chọn family rồi nhập UUID người đã tồn tại.</p>
+            <p className="mt-2">Chọn gia đình rồi nhập UUID người đã tồn tại.</p>
           </SectionCard>
           <SectionCard>
             <h2 className="font-bold text-slate-950">Quan hệ đôi</h2>
-            <p className="mt-2">Vợ/chồng/bạn đời được lưu độc lập với family.</p>
+            <p className="mt-2">Vợ/chồng/bạn đời được lưu độc lập với gia đình.</p>
           </SectionCard>
         </div>
 
@@ -87,7 +87,7 @@ export default async function RelationshipsPage({
                 <div className="space-y-6">
                   <StatusCallout tone="info">
                     Khi form còn yêu cầu UUID, hãy mở trang thành viên để copy ID
-                    người liên quan. Phase này chỉ polish UI, chưa đổi model chọn người.
+                    người liên quan. Phase này chỉ làm rõ UI, chưa đổi mô hình chọn người.
                   </StatusCallout>
                   <RelationshipForm
                     families={result.data.families}

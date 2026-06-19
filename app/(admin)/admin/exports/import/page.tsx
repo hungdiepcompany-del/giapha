@@ -14,9 +14,9 @@ export default async function AdminImportPage() {
     context.reason === "missing_admin_config";
   const canPreview = configMissing || context.permissions.includes("imports.create");
   const message = configMissing
-    ? "Chưa cấu hình Supabase. Trang vẫn cho kiểm tra cấu trúc JSON, nhưng không kiểm tra conflict DB."
+    ? "Chưa cấu hình Supabase. Trang vẫn cho kiểm tra cấu trúc JSON, nhưng không kiểm tra xung đột DB."
     : !context.user
-      ? "Bạn cần đăng nhập để kiểm tra import."
+      ? "Bạn cần đăng nhập để kiểm tra nhập dữ liệu."
       : "Bạn chưa có quyền imports.create.";
 
   return (
@@ -27,10 +27,10 @@ export default async function AdminImportPage() {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Import JSON foundation"
+          eyebrow="Nền tảng nhập JSON"
           title="Kiểm tra backup JSON"
-          description="Upload hoặc paste family.json để preview schema, quan hệ, vòng tổ tiên và conflict. Import confirm vẫn disabled."
-          actions={<ActionLink href="/admin/exports">Quay lại Backup / Export</ActionLink>}
+          description="Tải lên hoặc dán nội dung family.json để xem trước schema, quan hệ, vòng tổ tiên và xung đột. Xác nhận nhập dữ liệu vẫn đang tắt."
+          actions={<ActionLink href="/admin/exports">Quay lại Sao lưu / Xuất dữ liệu</ActionLink>}
         />
 
         {!canPreview ? (
@@ -42,7 +42,7 @@ export default async function AdminImportPage() {
             <StatusCallout tone={configMissing ? "warning" : "info"} className="mb-6">
               {configMissing
                 ? message
-                : "Preview không ghi dữ liệu vào database. Chỉ bật import thật sau khi có transaction, validation final và log an toàn."}
+                : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
             </StatusCallout>
             <JsonImportPreviewForm />
           </div>

@@ -137,7 +137,7 @@ export function validateFamilyInput(
   const errors: string[] = [];
 
   if (!isAllowed(input.visibility ?? "family", RELATIONSHIP_VISIBILITIES)) {
-    errors.push("Visibility quan hệ không hợp lệ.");
+    errors.push("Phạm vi hiển thị quan hệ không hợp lệ.");
   }
 
   if (errors.length > 0) {
@@ -162,11 +162,11 @@ export function validateFamilyParentInput(
   const errors: string[] = [];
 
   if (!isUuid(input.family_id)) {
-    errors.push("Family ID không hợp lệ.");
+    errors.push("ID gia đình không hợp lệ.");
   }
 
   if (!isUuid(input.person_id)) {
-    errors.push("Person ID không hợp lệ.");
+    errors.push("ID thành viên không hợp lệ.");
   }
 
   if (!isAllowed(input.parent_role ?? "unknown", PARENT_ROLES)) {
@@ -201,11 +201,11 @@ export function validateFamilyChildInput(
   const errors: string[] = [];
 
   if (!isUuid(input.family_id)) {
-    errors.push("Family ID không hợp lệ.");
+    errors.push("ID gia đình không hợp lệ.");
   }
 
   if (!isUuid(input.person_id)) {
-    errors.push("Person ID không hợp lệ.");
+    errors.push("ID thành viên không hợp lệ.");
   }
 
   if (
@@ -238,11 +238,11 @@ export function validateCoupleRelationshipInput(
   const errors: string[] = [];
 
   if (!isUuid(input.person1_id)) {
-    errors.push("Person 1 ID không hợp lệ.");
+    errors.push("ID thành viên 1 không hợp lệ.");
   }
 
   if (!isUuid(input.person2_id)) {
-    errors.push("Person 2 ID không hợp lệ.");
+    errors.push("ID thành viên 2 không hợp lệ.");
   }
 
   if (input.person1_id && input.person1_id === input.person2_id) {
@@ -250,7 +250,7 @@ export function validateCoupleRelationshipInput(
   }
 
   if (input.family_id && !isUuid(input.family_id)) {
-    errors.push("Family ID liên kết không hợp lệ.");
+    errors.push("ID gia đình liên kết không hợp lệ.");
   }
 
   if (
@@ -263,7 +263,7 @@ export function validateCoupleRelationshipInput(
   }
 
   if (!isAllowed(input.visibility ?? "family", RELATIONSHIP_VISIBILITIES)) {
-    errors.push("Visibility quan hệ không hợp lệ.");
+    errors.push("Phạm vi hiển thị quan hệ không hợp lệ.");
   }
 
   if (

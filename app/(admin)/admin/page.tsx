@@ -15,7 +15,7 @@ const modules = [
   {
     href: "/admin/relationships",
     title: "Quan hệ gia đình",
-    description: "Nối family, cha mẹ, con và quan hệ đôi.",
+    description: "Nối đơn vị gia đình, cha mẹ, con và quan hệ đôi.",
   },
   {
     href: "/admin/tree",
@@ -24,18 +24,18 @@ const modules = [
   },
   {
     href: "/admin/exports",
-    title: "Backup / Export",
-    description: "Tải JSON/GEDCOM/ZIP và kiểm tra import preview.",
+    title: "Sao lưu / Xuất dữ liệu",
+    description: "Tải JSON/GEDCOM/ZIP và kiểm tra nhập dữ liệu dạng xem trước.",
   },
   {
     href: "/admin/backups",
-    title: "Backup dry-run",
-    description: "Kiểm tra operator dry-run panel, không tạo backup production.",
+    title: "Kiểm tra sao lưu thử",
+    description: "Kiểm tra bảng vận hành dry-run, không tạo bản sao lưu production.",
   },
   {
     href: "/admin/revisions",
     title: "Lịch sử chỉnh sửa",
-    description: "Xem before/after, diff field và audit trail.",
+    description: "Xem trước/sau, khác biệt từng trường và dấu vết kiểm toán.",
   },
   {
     href: "/admin/system/status",
@@ -55,7 +55,7 @@ export default async function AdminPage() {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-12">
         <PageHeader
-          eyebrow="Stable Supabase baseline"
+          eyebrow="Nền tảng Supabase ổn định"
           title="Quản trị GIA PHẢ"
           description="Mốc hiện tại đã smoke test Supabase thật. UI polish chỉ làm rõ luồng sử dụng, không đổi schema hay auth."
         />

@@ -133,7 +133,7 @@ const route = readOptional("app/api/admin/backups/service-dry-run/route.ts");
 const component = readOptional("components/admin/backup-operator-dry-run-panel.tsx");
 
 requireIncludes(route, "BACKUP_OPERATOR_API_DRY_RUN_ONLY", "API dry-run marker");
-requireIncludes(component, "Dry-run only", "UI dry-run warning");
+requireIncludes(component, "Chỉ kiểm tra thử", "UI dry-run warning");
 requireIncludes(component, "/api/admin/backups/service-dry-run", "UI local route call");
 
 if (packageJson) {

@@ -23,9 +23,9 @@ export function PublicTreeShell({ result }: PublicTreeShellProps) {
     <PublicShell>
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
         <PageHeader
-          eyebrow="Public tree"
-          title="Cây gia phả public"
-          description="Chế độ public chỉ đọc và đã lọc dữ liệu riêng tư. Người còn sống không hiển thị thông tin nhạy cảm."
+          eyebrow="Cây gia phả công khai"
+          title="Cây gia phả công khai"
+          description="Chế độ công khai chỉ đọc và đã lọc dữ liệu riêng tư. Người còn sống không hiển thị thông tin nhạy cảm."
         />
 
         <StatusCallout tone="info" className="mt-6">

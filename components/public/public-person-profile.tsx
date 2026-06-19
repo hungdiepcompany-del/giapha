@@ -14,9 +14,9 @@ export function PublicPersonProfile({ person }: PublicPersonProfileProps) {
     <PublicShell>
       <section className="mx-auto w-full max-w-3xl px-6 py-10">
         <PageHeader
-          eyebrow="Public profile"
+          eyebrow="Hồ sơ công khai"
           title={person.label}
-          description="Hồ sơ public chỉ hiển thị phần thông tin được phép công khai."
+          description="Hồ sơ công khai chỉ hiển thị phần thông tin được phép công khai."
         />
 
         <SectionCard className="mt-6">
@@ -53,7 +53,7 @@ export function PublicPersonProfile({ person }: PublicPersonProfileProps) {
 
           {person.is_living ? (
             <StatusCallout tone="success" className="mt-6">
-              Thông tin chi tiết của người còn sống được ẩn ở public mode.
+              Thông tin chi tiết của người còn sống được ẩn ở chế độ công khai.
             </StatusCallout>
           ) : null}
 

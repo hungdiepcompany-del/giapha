@@ -64,14 +64,14 @@ export function FamilyTreeToolbar({
           onClick={onFitView}
           className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
         >
-          Fit view
+          Vừa khung nhìn
         </button>
         <button
           type="button"
           onClick={onResetLayout}
           className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
         >
-          Reset layout
+          Đặt lại bố cục
         </button>
       </div>
     </div>

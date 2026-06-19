@@ -159,10 +159,10 @@ async function ensureDefaultLayout(changedBy: string | null) {
     .from("tree_layouts")
     .insert({
       layout_code: DEFAULT_LAYOUT_CODE,
-      layout_name: "Admin default tree layout",
+      layout_name: "Bố cục cây mặc định cho quản trị",
       layout_scope: "admin",
       is_default: true,
-      description: "Manual positions saved from /admin/tree/edit.",
+      description: "Vị trí thủ công được lưu từ /admin/tree/edit.",
       created_by: changedBy,
       updated_by: changedBy,
     })
@@ -419,7 +419,7 @@ export async function resetTreeLayout(): Promise<
     .update({
       deleted_at: new Date().toISOString(),
       deleted_by: profileId,
-      delete_reason: "Reset layout to auto layout.",
+        delete_reason: "Đặt lại bố cục về bố cục tự động.",
       updated_by: profileId,
     })
     .eq("layout_id", layout.data.id)

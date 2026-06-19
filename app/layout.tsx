@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "WEB GIA PHẢ",
   description:
-    "Nền tảng web gia phả với public/private mode và backup JSON/GEDCOM/ZIP.",
+    "Nền tảng web gia phả với chế độ công khai/riêng tư và sao lưu JSON/GEDCOM/ZIP.",
 };
 
 export default function RootLayout({

@@ -71,12 +71,12 @@ for (const token of [
 }
 
 for (const token of [
-  "Dry-run only",
-  "No production backup",
-  "No storage upload",
-  "No restore",
-  "No real worker call",
-  "Run dry-run check",
+  "Chỉ kiểm tra thử",
+  "Không tạo bản sao lưu production",
+  "Không tải lên storage",
+  "Không phục hồi dữ liệu",
+  "Không gọi Worker thật",
+  "Chạy kiểm tra thử",
   "/api/admin/backups/service-dry-run",
 ]) {
   requireIncludes(combinedUi, token, `ui token ${token}`);

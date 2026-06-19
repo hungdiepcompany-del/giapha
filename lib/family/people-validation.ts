@@ -95,7 +95,7 @@ export function validatePersonInput(
   }
 
   if (!isAllowed(input.visibility ?? "family", PERSON_VISIBILITIES)) {
-    errors.push("Visibility không hợp lệ.");
+    errors.push("Phạm vi hiển thị không hợp lệ.");
   }
 
   if (!isAllowed(input.gender ?? null, PERSON_GENDERS)) {
@@ -139,4 +139,3 @@ export function validatePersonInput(
     },
   };
 }
-

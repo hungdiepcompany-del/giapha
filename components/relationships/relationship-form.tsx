@@ -41,6 +41,12 @@ const childTypeLabels: Record<string, string> = {
   unknown: "Chưa rõ",
 };
 
+const visibilityLabels: Record<string, string> = {
+  family: "Nội bộ gia đình",
+  private: "Riêng tư",
+  public: "Công khai",
+};
+
 export function RelationshipForm({
   families,
   contextPersonId,
@@ -50,10 +56,14 @@ export function RelationshipForm({
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <form action={createFamilyAction} className="space-y-4 border border-slate-200 bg-white p-4">
-        <h3 className="text-base font-semibold text-slate-950">Tạo family</h3>
+        <h3 className="text-base font-semibold text-slate-950">
+          Tạo đơn vị gia đình
+        </h3>
         <input type="hidden" name="return_to" value={returnTo} />
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Mã family</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Mã gia đình
+          </span>
           <input
             name="family_code"
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
@@ -69,7 +79,9 @@ export function RelationshipForm({
           />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Visibility</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Phạm vi hiển thị
+          </span>
           <select
             name="visibility"
             defaultValue="family"
@@ -77,7 +89,7 @@ export function RelationshipForm({
           >
             {RELATIONSHIP_VISIBILITIES.map((visibility) => (
               <option key={visibility} value={visibility}>
-                {visibility}
+                {visibilityLabels[visibility]}
               </option>
             ))}
           </select>
@@ -94,7 +106,7 @@ export function RelationshipForm({
           type="submit"
           className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
         >
-          Tạo family
+          Tạo gia đình
         </button>
       </form>
 
@@ -107,13 +119,15 @@ export function RelationshipForm({
           <input type="hidden" name="context_person_id" value={contextPersonId} />
         ) : null}
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Family</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Gia đình
+          </span>
           <select
             name="family_id"
             required
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
           >
-            <option value="">Chọn family</option>
+            <option value="">Chọn gia đình</option>
             {families.map((family) => (
               <option key={family.id} value={family.id}>
                 {family.family_label || family.family_code || family.id}
@@ -170,20 +184,22 @@ export function RelationshipForm({
 
       <form action={addChildToFamilyAction} className="space-y-4 border border-slate-200 bg-white p-4">
         <h3 className="text-base font-semibold text-slate-950">
-          {mode === "person" ? "Thêm con cho family của thành viên" : "Thêm con"}
+          {mode === "person" ? "Thêm con cho gia đình của thành viên" : "Thêm con"}
         </h3>
         <input type="hidden" name="return_to" value={returnTo} />
         {contextPersonId ? (
           <input type="hidden" name="context_person_id" value={contextPersonId} />
         ) : null}
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Family</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Gia đình
+          </span>
           <select
             name="family_id"
             required
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
           >
-            <option value="">Chọn family</option>
+            <option value="">Chọn gia đình</option>
             {families.map((family) => (
               <option key={family.id} value={family.id}>
                 {family.family_label || family.family_code || family.id}

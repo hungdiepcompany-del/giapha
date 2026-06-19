@@ -112,7 +112,7 @@ async function findImportConflicts(
     return {
       status: "unavailable",
       conflicts: [],
-      message: `Không kiểm tra được conflict DB: ${firstError.message}.`,
+      message: `Không kiểm tra được xung đột DB: ${firstError.message}.`,
     };
   }
 
@@ -120,7 +120,7 @@ async function findImportConflicts(
     ...(peopleById.data ?? []).map((person) => ({
       kind: "people_id" as const,
       id: person.id,
-      message: `Person ID đã tồn tại trong DB: ${person.id}.`,
+      message: `ID thành viên đã tồn tại trong DB: ${person.id}.`,
     })),
     ...(peopleBySlug.data ?? []).map((person) => ({
       kind: "person_slug" as const,
@@ -131,12 +131,12 @@ async function findImportConflicts(
     ...(families.data ?? []).map((family) => ({
       kind: "family_id" as const,
       id: family.id,
-      message: `Family ID đã tồn tại trong DB: ${family.id}.`,
+      message: `ID gia đình đã tồn tại trong DB: ${family.id}.`,
     })),
     ...(treeLayouts.data ?? []).map((layout) => ({
       kind: "tree_layout_id" as const,
       id: layout.id,
-      message: `Tree layout ID đã tồn tại trong DB: ${layout.id}.`,
+      message: `ID bố cục cây đã tồn tại trong DB: ${layout.id}.`,
     })),
   ];
 
@@ -176,7 +176,7 @@ export async function previewFamilyJsonImport(
   if (!configMissing && !context.user) {
     return {
       ok: false,
-      error: "Bạn cần đăng nhập để kiểm tra import.",
+      error: "Bạn cần đăng nhập để kiểm tra nhập dữ liệu.",
       reason: context.reason ?? "anonymous",
       data: issuePreview(rawText, "Chưa chạy kiểm tra DB vì chưa đăng nhập."),
     };
@@ -227,7 +227,7 @@ export async function previewFamilyJsonImport(
           status: "unavailable" as const,
           conflicts: [],
           message:
-            "Chưa cấu hình Supabase nên chỉ kiểm tra cấu trúc file, không kiểm tra conflict DB.",
+            "Chưa cấu hình Supabase nên chỉ kiểm tra cấu trúc file, không kiểm tra xung đột DB.",
         }
       : await findImportConflicts(parsed.input);
 
@@ -243,7 +243,7 @@ export async function previewFamilyJsonImport(
   if (hasBlockingIssue) {
     return {
       ok: false,
-      error: "family.json còn lỗi cần sửa trước khi import.",
+      error: "family.json còn lỗi cần sửa trước khi nhập dữ liệu.",
       reason: "validation_failed",
       data: preview,
     };

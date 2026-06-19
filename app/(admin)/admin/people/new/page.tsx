@@ -26,7 +26,7 @@ export default async function NewPersonPage({ searchParams }: NewPersonPageProps
     >
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
         <PageHeader
-          eyebrow="People CRUD foundation"
+          eyebrow="Nền tảng quản lý thành viên"
           title="Thêm thành viên"
           description="Nhập thông tin theo từng nhóm để dễ kiểm tra trước khi lưu."
         />

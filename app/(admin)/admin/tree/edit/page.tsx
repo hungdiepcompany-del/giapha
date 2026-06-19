@@ -51,9 +51,9 @@ export default async function AdminTreeEditPage({
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
         <PageHeader
-          eyebrow="Tree editor foundation"
+          eyebrow="Nền tảng chỉnh sửa cây gia phả"
           title="Chỉnh sửa cây"
-          description="Click một person node để mở side panel, kéo node để chỉnh layout UI, rồi bấm lưu layout. Quan hệ thật chỉ đổi qua form có chủ đích."
+          description="Bấm một nút thành viên để mở bảng chi tiết, kéo nút để chỉnh bố cục UI, rồi bấm lưu bố cục. Quan hệ thật chỉ đổi qua form có chủ đích."
         />
 
         {query.error ? (

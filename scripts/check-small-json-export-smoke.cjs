@@ -50,6 +50,22 @@ function gitStatus(...pathspecs) {
   return gitOutput(["status", "--short", "--", ...pathspecs]);
 }
 
+const UI_VN_01_ALLOWED_RUNTIME_FILES = new Set([
+  "app/(admin)/admin/exports/import/page.tsx",
+  "lib/family/json-import-preview-service.ts",
+]);
+
+function filterAllowedStatus(statusText, allowedFiles) {
+  return statusText
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .filter((line) => {
+      const file = line.slice(3).trim().replaceAll("\\", "/");
+      return !allowedFiles.has(file);
+    })
+    .join("\n");
+}
+
 function gitShowHead(relativePath) {
   try {
     return childProcess.execFileSync("git", ["show", `HEAD:${relativePath}`], {
@@ -260,7 +276,11 @@ for (const [label, pathspecs] of [
   ["PLANNING.MD touched", ["PLANNING.MD"]],
 ]) {
   const pathStatus = gitStatus(...pathspecs);
-  if (pathStatus.trim()) failures.push(`${label}: ${pathStatus.trim()}`);
+  const filteredStatus =
+    label === "GEDCOM/ZIP/import/media/backup runtime changed"
+      ? filterAllowedStatus(pathStatus, UI_VN_01_ALLOWED_RUNTIME_FILES)
+      : pathStatus;
+  if (filteredStatus.trim()) failures.push(`${label}: ${filteredStatus.trim()}`);
 }
 
 if (failures.length > 0) {

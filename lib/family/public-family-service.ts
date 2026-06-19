@@ -202,7 +202,7 @@ export async function getPublicFamilyTreeGraph(): Promise<
   }
 
   if (!input.data) {
-    return errorResult("Không có dữ liệu public.", "public_query_empty");
+    return errorResult("Không có dữ liệu công khai.", "public_query_empty");
   }
 
   const graph = buildFamilyTreeGraph(input.data, { mode: "public" });
@@ -239,13 +239,13 @@ export async function getPublicPersonProfile(
   }
 
   if (!data) {
-    return errorResult("Không tìm thấy hồ sơ public.", "public_person_not_found");
+    return errorResult("Không tìm thấy hồ sơ công khai.", "public_person_not_found");
   }
 
   const person = sanitizePersonForMode(data, "public");
 
   if (!person || "notes_private" in person) {
-    return errorResult("Không tìm thấy hồ sơ public.", "public_person_hidden");
+    return errorResult("Không tìm thấy hồ sơ công khai.", "public_person_hidden");
   }
 
   return {

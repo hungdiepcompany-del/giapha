@@ -23,6 +23,12 @@ function personName(row: FamilyParent | FamilyChild) {
   return row.person?.display_name || row.person?.full_name || row.person_id;
 }
 
+const visibilityLabels: Record<string, string> = {
+  family: "Nội bộ gia đình",
+  private: "Riêng tư",
+  public: "Công khai",
+};
+
 function DeleteButton({
   id,
   action,
@@ -69,7 +75,7 @@ function FamilyBlock({
             {family.family_label || family.family_code || family.id}
           </h3>
           <p className="mt-1 text-sm text-slate-600">
-            Visibility: {family.visibility}
+            Phạm vi hiển thị: {visibilityLabels[family.visibility]}
           </p>
         </div>
         {canDelete ? (
@@ -78,7 +84,7 @@ function FamilyBlock({
             action={softDeleteFamilyAction}
             returnTo={returnTo}
             contextPersonId={contextPersonId}
-            label="Xóa mềm family"
+            label="Xóa mềm gia đình"
           />
         ) : null}
       </div>
@@ -183,7 +189,7 @@ export function RelationshipSummary({
           ))
         ) : (
           <div className="border border-slate-200 bg-white p-4 text-sm text-slate-700">
-            Chưa có family parent/child nào.
+            Chưa có quan hệ cha/mẹ/con trong gia đình nào.
           </div>
         )}
       </div>

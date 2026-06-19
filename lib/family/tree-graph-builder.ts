@@ -105,7 +105,7 @@ function toFamilyNode(family: Family): TreeGraphNode {
     id: `family:${family.id}`,
     kind: "family",
     familyId: family.id,
-    label: family.family_label || family.family_code || "Family unit",
+    label: family.family_label || family.family_code || "Đơn vị gia đình",
     visibility: family.visibility,
     position: {
       x: 0,

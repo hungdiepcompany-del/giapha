@@ -14,14 +14,14 @@ type PersonListProps = {
 
 function visibilityLabel(value: string) {
   if (value === "public") {
-    return "Public";
+    return "Công khai";
   }
 
   if (value === "private") {
-    return "Private";
+    return "Riêng tư";
   }
 
-  return "Family";
+  return "Nội bộ gia đình";
 }
 
 export function PersonList({
@@ -55,7 +55,9 @@ export function PersonList({
             <th className="border-b border-slate-200 px-4 py-3">Đời</th>
             <th className="border-b border-slate-200 px-4 py-3">Chi/nhánh</th>
             <th className="border-b border-slate-200 px-4 py-3">Trạng thái</th>
-            <th className="border-b border-slate-200 px-4 py-3">Visibility</th>
+            <th className="border-b border-slate-200 px-4 py-3">
+              Phạm vi hiển thị
+            </th>
             <th className="border-b border-slate-200 px-4 py-3">Thao tác</th>
           </tr>
         </thead>

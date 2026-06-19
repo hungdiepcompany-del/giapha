@@ -33,9 +33,9 @@ const precisionLabels: Record<string, string> = {
 };
 
 const visibilityLabels: Record<string, string> = {
-  family: "Family - chỉ nội bộ gia đình",
-  private: "Private - riêng tư, hạn chế tối đa",
-  public: "Public - có thể hiển thị ở trang công khai",
+  family: "Nội bộ gia đình - chỉ nội bộ gia đình",
+  private: "Riêng tư - hạn chế tối đa",
+  public: "Công khai - có thể hiển thị ở trang công khai",
 };
 
 function FieldLabel({ children }: { children: string }) {
@@ -236,7 +236,7 @@ export function PersonForm({
         <h2 className="text-lg font-bold text-slate-950">Riêng tư / ghi chú</h2>
         <div className="mt-4 grid gap-4">
           <label className="block">
-            <FieldLabel>Visibility</FieldLabel>
+            <FieldLabel>Phạm vi hiển thị</FieldLabel>
             <select
               name="visibility"
               disabled={readOnly}

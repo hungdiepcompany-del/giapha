@@ -45,7 +45,10 @@ function friendlyError(message: string) {
     return "Bạn chưa có quyền cập nhật thông tin dòng họ/chi.";
   }
 
-  if (normalized.includes("supabase is not configured")) {
+  if (
+    normalized.includes("supabase is not configured") ||
+    normalized.includes("chưa cấu hình supabase")
+  ) {
     return "Chưa cấu hình Supabase cho môi trường hiện tại.";
   }
 

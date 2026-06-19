@@ -36,11 +36,11 @@ requireIncludes(route, "production_backup: false", "API production_backup false"
 requireIncludes(route, "storage_upload: false", "API storage_upload false");
 requireIncludes(route, "restore: false", "API restore false");
 requireIncludes(page, "BackupOperatorDryRunPanel", "admin backups page panel");
-requireIncludes(component, "Dry-run only", "UI dry-run warning");
-requireIncludes(component, "No production backup", "UI no production backup warning");
-requireIncludes(component, "No storage upload", "UI no storage upload warning");
-requireIncludes(component, "No restore", "UI no restore warning");
-requireIncludes(component, "No real worker call", "UI no real worker call warning");
+requireIncludes(component, "Chỉ kiểm tra thử", "UI dry-run warning");
+requireIncludes(component, "Không tạo bản sao lưu production", "UI no production backup warning");
+requireIncludes(component, "Không tải lên storage", "UI no storage upload warning");
+requireIncludes(component, "Không phục hồi dữ liệu", "UI no restore warning");
+requireIncludes(component, "Không gọi Worker thật", "UI no real worker call warning");
 requireIncludes(component, "/api/admin/backups/service-dry-run", "UI local dry-run route");
 requireIncludes(guardrail, "Backup operator UI guardrail check passed", "guardrail checker");
 requireIncludes(packageJsonText, "\"check:backup-operator-ui-guardrails\"", "guardrail package script");

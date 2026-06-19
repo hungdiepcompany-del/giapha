@@ -22,7 +22,7 @@ const foundationChecks = [
 ];
 
 function statusLabel(value: boolean) {
-  return value ? "yes" : "no";
+  return value ? "Có" : "Không";
 }
 
 export default async function AdminSystemStatusPage() {
@@ -32,15 +32,15 @@ export default async function AdminSystemStatusPage() {
     context.permissions.includes("permissions.manage");
   const configStatus = [
     {
-      label: "Supabase URL configured",
+      label: "Đã cấu hình Supabase URL",
       value: statusLabel(Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)),
     },
     {
-      label: "Anon key configured",
+      label: "Đã cấu hình anon key",
       value: statusLabel(Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)),
     },
     {
-      label: "Service role configured server-side",
+      label: "Đã cấu hình service role phía server",
       value: statusLabel(Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)),
     },
   ];
@@ -54,21 +54,21 @@ export default async function AdminSystemStatusPage() {
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
         <div className="border-b border-slate-200 pb-6">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Supabase integration gate
+            Cổng kiểm tra tích hợp Supabase
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            System status
+            Trạng thái hệ thống
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
-            Trang này chỉ hiển thị trạng thái cấu hình dạng yes/no và danh sách
+            Trang này chỉ hiển thị trạng thái cấu hình dạng có/không và danh sách
             check nền. Không hiển thị secret và không query dữ liệu nhạy cảm.
           </p>
         </div>
 
         {!canView ? (
           <div className="mt-6 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            Cần quyền settings.manage hoặc permissions.manage để xem system
-            status.
+            Cần quyền settings.manage hoặc permissions.manage để xem trạng thái
+            hệ thống.
           </div>
         ) : (
           <div className="mt-6 grid gap-6">
@@ -90,7 +90,7 @@ export default async function AdminSystemStatusPage() {
 
             <div className="border border-slate-200 bg-white p-5">
               <h2 className="text-base font-bold text-slate-950">
-                Foundation checks
+                Các lệnh kiểm tra nền tảng
               </h2>
               <ul className="mt-4 grid gap-2 text-sm text-slate-700 md:grid-cols-2">
                 {foundationChecks.map((check) => (

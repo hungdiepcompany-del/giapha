@@ -1,5 +1,26 @@
 # Decision Log
 
+## Decision 149 - Vietnamese UI copy normalization is display-only
+
+Chon:
+
+UI-VN-01 may normalize user-visible UI labels, headings, helper text,
+placeholders, dropdown labels and service/validation messages to Vietnamese
+with diacritics. It must keep code/internal values unchanged, including route
+paths, identifiers, permission keys, enum values, database names, JSON keys,
+package/env names and migration/SQL contracts. It does not authorize schema,
+migration, DB apply, runtime expansion, Worker, dependency, deploy or push
+work.
+
+Ly do:
+
+- User-visible Vietnamese copy improves clarity without changing product
+  behavior or contracts.
+- Form option display labels can change safely as long as submitted values stay
+  unchanged.
+- Internal values must remain stable for routes, permissions, database schema,
+  export/import compatibility and existing static checkers.
+
 ## Decision 148 - Phase 126 smoke is static review only, not export expansion
 
 Chon:

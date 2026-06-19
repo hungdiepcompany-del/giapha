@@ -136,8 +136,8 @@ async function requireAnyLineagePermission(permissions: PermissionCode[]) {
       ok: false as const,
       error:
         context.reason === "missing_supabase_config"
-          ? "Supabase is not configured."
-          : "You need to sign in.",
+          ? "Chưa cấu hình Supabase."
+          : "Bạn cần đăng nhập.",
       reason: context.reason ?? "anonymous",
       context,
     };
@@ -150,7 +150,7 @@ async function requireAnyLineagePermission(permissions: PermissionCode[]) {
   if (!allowed) {
     return {
       ok: false as const,
-      error: `Missing one of: ${permissions.join(", ")}.`,
+      error: `Thiếu một trong các quyền: ${permissions.join(", ")}.`,
       reason: context.reason ?? `missing_${permissions.join("_or_")}`,
       context,
     };
@@ -190,7 +190,7 @@ async function getActiveClan(id: string) {
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult<Clan>("Supabase is not configured.", "missing_admin_config");
+    return errorResult<Clan>("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const { data, error } = await supabase
@@ -201,7 +201,7 @@ async function getActiveClan(id: string) {
     .maybeSingle<Clan>();
 
   if (error) return errorResult<Clan>(error.message, "clan_get_failed");
-  if (!data) return errorResult<Clan>("Clan not found.", "clan_not_found");
+  if (!data) return errorResult<Clan>("Không tìm thấy dòng họ.", "clan_not_found");
 
   return { ok: true as const, data };
 }
@@ -211,7 +211,7 @@ async function getActiveBranch(id: string) {
 
   if (!supabase) {
     return errorResult<ClanBranch>(
-      "Supabase is not configured.",
+      "Chưa cấu hình Supabase.",
       "missing_admin_config",
     );
   }
@@ -225,7 +225,7 @@ async function getActiveBranch(id: string) {
 
   if (error) return errorResult<ClanBranch>(error.message, "branch_get_failed");
   if (!data) {
-    return errorResult<ClanBranch>("Branch not found.", "branch_not_found");
+    return errorResult<ClanBranch>("Không tìm thấy chi/nhánh.", "branch_not_found");
   }
 
   return { ok: true as const, data };
@@ -236,7 +236,7 @@ async function getActiveGenerationRule(id: string) {
 
   if (!supabase) {
     return errorResult<GenerationRule>(
-      "Supabase is not configured.",
+      "Chưa cấu hình Supabase.",
       "missing_admin_config",
     );
   }
@@ -253,7 +253,7 @@ async function getActiveGenerationRule(id: string) {
   }
   if (!data) {
     return errorResult<GenerationRule>(
-      "Generation rule not found.",
+      "Không tìm thấy quy tắc đời/thế hệ.",
       "generation_rule_not_found",
     );
   }
@@ -266,7 +266,7 @@ async function getActiveMembership(id: string) {
 
   if (!supabase) {
     return errorResult<PersonBranchMembership>(
-      "Supabase is not configured.",
+      "Chưa cấu hình Supabase.",
       "missing_admin_config",
     );
   }
@@ -286,7 +286,7 @@ async function getActiveMembership(id: string) {
   }
   if (!data) {
     return errorResult<PersonBranchMembership>(
-      "Membership not found.",
+      "Không tìm thấy thông tin gắn dòng họ/chi.",
       "membership_not_found",
     );
   }
@@ -302,7 +302,7 @@ export async function listClans(): Promise<LineageServiceResult<Clan[]>> {
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const { data, error } = await supabase
@@ -327,7 +327,7 @@ export async function listClanBranches(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   let query = supabase
@@ -358,7 +358,7 @@ export async function listGenerationRules(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   let query = supabase
@@ -389,7 +389,7 @@ export async function listPersonBranchMemberships(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   let query = supabase
@@ -456,7 +456,7 @@ export async function createClan(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -471,7 +471,7 @@ export async function createClan(
     .single<Clan>();
 
   if (error || !data) {
-    return errorResult(error?.message ?? "Could not create clan.", "clan_create_failed");
+    return errorResult(error?.message ?? "Không thể tạo dòng họ.", "clan_create_failed");
   }
 
   await logLineageRevision({
@@ -511,7 +511,7 @@ export async function updateClan(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -526,7 +526,7 @@ export async function updateClan(
     .single<Clan>();
 
   if (error || !data) {
-    return errorResult(error?.message ?? "Could not update clan.", "clan_update_failed");
+    return errorResult(error?.message ?? "Không thể cập nhật dòng họ.", "clan_update_failed");
   }
 
   await logLineageRevision({
@@ -557,7 +557,7 @@ export async function createClanBranch(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -573,7 +573,7 @@ export async function createClanBranch(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not create branch.",
+      error?.message ?? "Không thể tạo chi/nhánh.",
       "branch_create_failed",
     );
   }
@@ -616,7 +616,7 @@ export async function updateClanBranch(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -632,7 +632,7 @@ export async function updateClanBranch(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not update branch.",
+      error?.message ?? "Không thể cập nhật chi/nhánh.",
       "branch_update_failed",
     );
   }
@@ -665,7 +665,7 @@ export async function createGenerationRule(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -681,7 +681,7 @@ export async function createGenerationRule(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not create generation rule.",
+      error?.message ?? "Không thể tạo quy tắc đời/thế hệ.",
       "generation_rule_create_failed",
     );
   }
@@ -722,7 +722,7 @@ export async function updateGenerationRule(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -738,7 +738,7 @@ export async function updateGenerationRule(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not update generation rule.",
+      error?.message ?? "Không thể cập nhật quy tắc đời/thế hệ.",
       "generation_rule_update_failed",
     );
   }
@@ -771,7 +771,7 @@ export async function createPersonBranchMembership(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -787,7 +787,7 @@ export async function createPersonBranchMembership(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not create membership.",
+      error?.message ?? "Không thể tạo thông tin gắn dòng họ/chi.",
       "membership_create_failed",
     );
   }
@@ -829,7 +829,7 @@ export async function updatePersonBranchMembership(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const actor = profileId(permission);
@@ -845,7 +845,7 @@ export async function updatePersonBranchMembership(
 
   if (error || !data) {
     return errorResult(
-      error?.message ?? "Could not update membership.",
+      error?.message ?? "Không thể cập nhật thông tin gắn dòng họ/chi.",
       "membership_update_failed",
     );
   }
@@ -874,7 +874,7 @@ export async function listPublicLineageMembershipsForPeople(
   const supabase = maybeCreateAdminSupabaseClient();
 
   if (!supabase) {
-    return errorResult("Supabase is not configured.", "missing_admin_config");
+    return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
   const [memberships, clans, branches] = await Promise.all([

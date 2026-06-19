@@ -45,8 +45,8 @@ export default async function AdminExportsPage() {
     >
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
         <PageHeader
-          eyebrow="Export/backup foundation"
-          title="Backup / Export"
+          eyebrow="Nền tảng xuất dữ liệu / sao lưu"
+          title="Sao lưu / Xuất dữ liệu"
           description="Supabase là hệ thống vận hành, nhưng JSON/GEDCOM/ZIP là lớp bảo vệ dữ liệu lâu dài."
         />
 
@@ -83,13 +83,13 @@ export default async function AdminExportsPage() {
         )}
 
         <SectionCard className="mt-6 text-sm leading-6 text-slate-700">
-          <h2 className="font-bold text-slate-950">Import foundation</h2>
+          <h2 className="font-bold text-slate-950">Nền tảng nhập dữ liệu</h2>
           <p className="mt-2">
-            Import hiện chỉ preview: đọc schema_version, kiểm tra dữ liệu và
-            conflict. Chưa ghi database, chưa overwrite dữ liệu thật.
+            Nhập dữ liệu hiện chỉ xem trước: đọc schema_version, kiểm tra dữ liệu và
+            xung đột. Chưa ghi database, chưa ghi đè dữ liệu thật.
           </p>
           <ActionLink href="/admin/exports/import" className="mt-3">
-            Import / kiểm tra backup JSON
+            Nhập / kiểm tra bản sao lưu JSON
           </ActionLink>
         </SectionCard>
       </section>

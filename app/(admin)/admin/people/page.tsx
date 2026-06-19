@@ -54,7 +54,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="People CRUD foundation"
+          eyebrow="Nền tảng quản lý thành viên"
           title="Thành viên"
           description="Tra cứu, lọc và mở hồ sơ từng người. Dữ liệu riêng tư vẫn nằm sau permission."
           actions={
@@ -77,16 +77,18 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
             />
           </label>
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">Visibility</span>
+            <span className="text-sm font-semibold text-slate-800">
+              Phạm vi hiển thị
+            </span>
             <select
               name="visibility"
               defaultValue={params.visibility ?? "all"}
               className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
             >
               <option value="all">Tất cả</option>
-              <option value="public">Public</option>
-              <option value="family">Family</option>
-              <option value="private">Private</option>
+              <option value="public">Công khai</option>
+              <option value="family">Nội bộ gia đình</option>
+              <option value="private">Riêng tư</option>
             </select>
           </label>
           <label className="block">

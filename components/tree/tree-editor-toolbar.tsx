@@ -20,7 +20,9 @@ export function TreeEditorToolbar({
   return (
     <div className="flex flex-col gap-4 border-b border-slate-200 bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
-        <div className="text-sm font-bold text-slate-950">Tree editor</div>
+        <div className="text-sm font-bold text-slate-950">
+          Trình sửa cây gia phả
+        </div>
         <div className="mt-1 text-sm leading-6 text-slate-600">
           {nodeCount} nút. Kéo node chỉ lưu layout UI, không sửa quan hệ thật.
         </div>
@@ -31,14 +33,14 @@ export function TreeEditorToolbar({
           onClick={onFitView}
           className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
         >
-          Fit view
+          Vừa khung nhìn
         </button>
         <button
           type="button"
           onClick={onAutoLayout}
           className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
         >
-          Auto layout
+          Tự xếp bố cục
         </button>
         <form action={saveAction}>
           <input type="hidden" name="return_to" value="/admin/tree/edit" />
@@ -56,7 +58,7 @@ export function TreeEditorToolbar({
             type="submit"
             className="min-h-11 border border-red-700 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50"
           >
-            Reset layout
+            Đặt lại bố cục
           </button>
         </form>
       </div>

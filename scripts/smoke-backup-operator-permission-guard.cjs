@@ -44,7 +44,7 @@ requireIncludes(page, "backup.operator.view", "UI view permission");
 requireIncludes(page, "permissions.manage", "UI fallback permission");
 requireIncludes(page, "missing_backup_operator_view", "UI denied reason");
 requireIncludes(component, "BACKUP_OPERATOR_UI_PERMISSION_GUARD", "UI component permission marker");
-requireIncludes(component, "Dry-run only", "UI dry-run warning");
+requireIncludes(component, "Chỉ kiểm tra thử", "UI dry-run warning");
 requireIncludes(component, "/api/admin/backups/service-dry-run", "UI local dry-run route");
 
 requireIncludes(adapter, "MAIN_APP_BACKUP_SERVICE_CLIENT_DRY_RUN_ONLY", "adapter dry-run marker");

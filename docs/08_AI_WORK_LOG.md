@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-06-19 - UI-VN-01 - Vietnamese UI Copy Normalization
+
+- Normalized user-visible UI copy to Vietnamese with diacritics across admin
+  navigation/dashboard, people, relationships, tree viewer/editor,
+  import/export preview, public pages, revisions, system status, backup
+  dry-run and related service/validation messages.
+- Kept code/internal values unchanged: route paths, component/function names,
+  DB table/column names, permission keys, enum values, JSON keys, package/env
+  names and migration/SQL contracts were not renamed.
+- Normalized textfield labels/placeholders where they were user-visible; kept
+  technical examples such as UUID/JSON/ID/schema_version where they describe
+  input contracts.
+- Normalized combobox/dropdown display labels for visibility, relationship
+  roles/types/statuses and tree-editor relationship inputs while preserving
+  submitted values.
+- Added `scripts/check-vietnamese-ui-copy.cjs` and
+  `npm run check:vietnamese-ui-copy` to guard known English UI snippets,
+  expected Vietnamese copy, dependency stability and no PLANNING/SQL/migration
+  drift.
+- Added `docs/UI_VN_01_VIETNAMESE_UI_COPY_NORMALIZATION.md` and indexed it in
+  `docs/00_INDEX.md`.
+- Boundary result: No migration, no `.sql` file, no DB apply, no SQL mutation,
+  no seed/backfill, no schema change, no permission/auth logic change, no
+  export/import runtime expansion, no Worker created, no OpenNext/Wrangler
+  config change, no runtime dependency added, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 126 - Small JSON Export Smoke, Privacy Review, and Handoff Hardening
 
 - Reviewed Phase 125 small `family.json` export hardening using local

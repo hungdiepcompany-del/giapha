@@ -75,11 +75,11 @@ for (const token of [
   "permissions.manage",
   "missing_backup_operator_view",
   "BackupOperatorDryRunPanel",
-  "Dry-run only",
-  "No production backup",
-  "No storage upload",
-  "No restore",
-  "No real worker call",
+  "Chỉ kiểm tra thử",
+  "Không tạo bản sao lưu production",
+  "Không tải lên storage",
+  "Không phục hồi dữ liệu",
+  "Không gọi Worker thật",
   "/api/admin/backups/service-dry-run",
 ]) {
   requireIncludes(uiSource, token, `UI token ${token}`);

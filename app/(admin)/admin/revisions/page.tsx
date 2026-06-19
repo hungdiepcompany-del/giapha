@@ -25,6 +25,24 @@ const actions: Array<RevisionAction | "all"> = [
   "restore",
 ];
 
+const entityTypeLabels: Record<string, string> = {
+  couple_relationships: "Quan hệ đôi",
+  families: "Gia đình",
+  family_children: "Con trong gia đình",
+  family_parents: "Cha/mẹ trong gia đình",
+  people: "Thành viên",
+  tree_layout_nodes: "Nút bố cục cây",
+  tree_layouts: "Bố cục cây",
+};
+
+const actionLabels: Record<RevisionAction | "all", string> = {
+  all: "Tất cả",
+  create: "Tạo mới",
+  delete: "Xóa mềm",
+  restore: "Khôi phục",
+  update: "Cập nhật",
+};
+
 type RevisionsPageProps = {
   searchParams: Promise<{
     entity_type?: string;
@@ -76,20 +94,20 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
         <div className="border-b border-slate-200 pb-6">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Revision history foundation
+            Nền tảng lịch sử chỉnh sửa
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-950">
             Lịch sử chỉnh sửa
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
             Theo dõi ai đã sửa dữ liệu gia phả, sửa lúc nào và thay đổi trước/sau.
-            Phase này chỉ xem lịch sử; restore thật chưa được bật.
+            Phase này chỉ xem lịch sử; phục hồi thật chưa được bật.
           </p>
         </div>
 
         <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 md:grid-cols-6">
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">Entity</span>
+            <span className="text-sm font-semibold text-slate-800">Loại bản ghi</span>
             <select
               name="entity_type"
               defaultValue={params.entity_type ?? ""}
@@ -98,13 +116,13 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
               <option value="">Tất cả</option>
               {entityTypes.map((entityType) => (
                 <option key={entityType} value={entityType}>
-                  {entityType}
+                  {entityTypeLabels[entityType]}
                 </option>
               ))}
             </select>
           </label>
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">Action</span>
+            <span className="text-sm font-semibold text-slate-800">Thao tác</span>
             <select
               name="action"
               defaultValue={params.action ?? "all"}
@@ -112,13 +130,13 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
             >
               {actions.map((action) => (
                 <option key={action} value={action}>
-                  {action === "all" ? "Tất cả" : action}
+                  {actionLabels[action]}
                 </option>
               ))}
             </select>
           </label>
           <label className="block md:col-span-2">
-            <span className="text-sm font-semibold text-slate-800">Entity ID</span>
+            <span className="text-sm font-semibold text-slate-800">ID bản ghi</span>
             <input
               name="entity_id"
               defaultValue={params.entity_id ?? ""}
@@ -171,9 +189,9 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
                       <th className="px-4 py-3">Thời gian</th>
-                      <th className="px-4 py-3">Action</th>
-                      <th className="px-4 py-3">Entity</th>
-                      <th className="px-4 py-3">Entity ID</th>
+                      <th className="px-4 py-3">Thao tác</th>
+                      <th className="px-4 py-3">Loại bản ghi</th>
+                      <th className="px-4 py-3">ID bản ghi</th>
                       <th className="px-4 py-3">Người sửa</th>
                       <th className="px-4 py-3">Lý do</th>
                       <th className="px-4 py-3">Chi tiết</th>
@@ -186,10 +204,10 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
                           {formatDate(revision.changed_at)}
                         </td>
                         <td className="px-4 py-3 font-semibold text-slate-950">
-                          {revision.action}
+                          {actionLabels[revision.action]}
                         </td>
                         <td className="px-4 py-3 text-slate-700">
-                          {revision.entity_type}
+                          {entityTypeLabels[revision.entity_type] ?? revision.entity_type}
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-slate-700">
                           {revision.entity_id}
@@ -215,7 +233,7 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
               </div>
             ) : (
               <div className="border border-slate-200 bg-white p-6 text-sm text-slate-700">
-                Chưa có revision phù hợp bộ lọc.
+                Chưa có bản ghi lịch sử phù hợp bộ lọc.
               </div>
             )
           ) : (

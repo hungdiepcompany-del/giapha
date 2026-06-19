@@ -24,11 +24,11 @@ export const BACKUP_OPERATOR_UI_PERMISSION_GUARD =
   "BACKUP_OPERATOR_UI_PERMISSION_GUARD";
 
 const safetyItems = [
-  "Dry-run only",
-  "No production backup",
-  "No storage upload",
-  "No restore",
-  "No real worker call",
+  "Chỉ kiểm tra thử",
+  "Không tạo bản sao lưu production",
+  "Không tải lên storage",
+  "Không phục hồi dữ liệu",
+  "Không gọi Worker thật",
 ];
 
 export function BackupOperatorDryRunPanel({
@@ -50,14 +50,14 @@ export function BackupOperatorDryRunPanel({
       const payload = (await response.json()) as DryRunResult;
 
       if (!response.ok) {
-        setError("Dry-run route returned a non-success response.");
+        setError("Route kiểm tra thử trả về phản hồi không thành công.");
         setResult(payload);
         return;
       }
 
       setResult(payload);
     } catch {
-      setError("Dry-run route could not be reached from the browser.");
+      setError("Không thể gọi route kiểm tra thử từ trình duyệt.");
     } finally {
       setIsRunning(false);
     }
@@ -71,7 +71,7 @@ export function BackupOperatorDryRunPanel({
     >
       <div className="border border-emerald-200 bg-emerald-50 p-4">
         <h2 className="text-base font-bold text-emerald-950">
-          Operator dry-run status
+          Trạng thái kiểm tra thử
         </h2>
         <div className="mt-3 grid gap-2 text-sm text-emerald-900 sm:grid-cols-2">
           {safetyItems.map((item) => (
@@ -86,11 +86,11 @@ export function BackupOperatorDryRunPanel({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-base font-bold text-slate-950">
-              Run dry-run check
+              Chạy kiểm tra thử
             </h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">
-              Calls the main app local dry-run route and confirms that worker,
-              storage, backup and restore actions remain disabled.
+              Gọi route dry-run cục bộ của app chính và xác nhận Worker,
+              storage, sao lưu và phục hồi dữ liệu vẫn đang tắt.
             </p>
           </div>
           <button
@@ -99,7 +99,7 @@ export function BackupOperatorDryRunPanel({
             disabled={isRunning}
             className="border border-slate-950 bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-300"
           >
-            {isRunning ? "Checking..." : "Run dry-run check"}
+            {isRunning ? "Đang kiểm tra..." : "Chạy kiểm tra thử"}
           </button>
         </div>
 
@@ -112,43 +112,43 @@ export function BackupOperatorDryRunPanel({
         {result ? (
           <div className="mt-4 grid gap-3 text-sm text-slate-700 md:grid-cols-2">
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Mode</div>
-              <div className="mt-1 font-mono">{String(result.mode ?? "unknown")}</div>
+              <div className="font-semibold text-slate-950">Chế độ</div>
+              <div className="mt-1 font-mono">{String(result.mode ?? "không rõ")}</div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Request ID</div>
+              <div className="font-semibold text-slate-950">ID yêu cầu</div>
               <div className="mt-1 break-all font-mono">
-                {String(result.request_id ?? "unknown")}
+                {String(result.request_id ?? "không rõ")}
               </div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Permission guard</div>
+              <div className="font-semibold text-slate-950">Guard quyền</div>
               <div className="mt-1 break-all font-mono">
                 {String(result.permission_guard ?? permissionGuard)}
               </div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Permission source</div>
+              <div className="font-semibold text-slate-950">Nguồn quyền</div>
               <div className="mt-1 break-all font-mono">
                 {String(result.permission_source ?? permissionSource)}
               </div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Worker call</div>
+              <div className="font-semibold text-slate-950">Gọi Worker</div>
               <div className="mt-1 font-mono">{String(result.worker_call)}</div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Production backup</div>
+              <div className="font-semibold text-slate-950">Sao lưu production</div>
               <div className="mt-1 font-mono">
                 {String(result.production_backup)}
               </div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Storage upload</div>
+              <div className="font-semibold text-slate-950">Tải lên storage</div>
               <div className="mt-1 font-mono">{String(result.storage_upload)}</div>
             </div>
             <div className="border border-slate-200 p-3">
-              <div className="font-semibold text-slate-950">Restore</div>
+              <div className="font-semibold text-slate-950">Phục hồi dữ liệu</div>
               <div className="mt-1 font-mono">{String(result.restore)}</div>
             </div>
           </div>

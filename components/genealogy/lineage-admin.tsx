@@ -166,7 +166,7 @@ export function ClanForm({
         <label className="block">
           <FieldLabel>Phạm vi hiển thị</FieldLabel>
           <VisibilitySelect defaultValue={clan?.visibility} />
-          <FieldHelp>Công khai chỉ nên dùng cho dữ liệu đã được duyệt để lộ ra public.</FieldHelp>
+          <FieldHelp>Công khai chỉ nên dùng cho dữ liệu đã được duyệt để hiển thị ở trang công khai.</FieldHelp>
         </label>
       </div>
       <label className="block">
@@ -601,7 +601,7 @@ export function MembershipForm({
         <label className="block">
           <FieldLabel>Phạm vi hiển thị</FieldLabel>
           <VisibilitySelect defaultValue={membership?.visibility} />
-          <FieldHelp>Public chỉ hiển thị ngoài public khi người đó không còn sống và lineage được đánh dấu công khai.</FieldHelp>
+          <FieldHelp>Công khai chỉ hiển thị ngoài trang công khai khi người đó không còn sống và dòng họ/chi được đánh dấu công khai.</FieldHelp>
         </label>
         <label className="flex min-h-10 items-center gap-3 pt-6 text-sm font-semibold text-slate-800">
           <input

@@ -49,14 +49,14 @@ export default async function AdminBackupsPage() {
     >
       <section className="mx-auto w-full max-w-5xl px-6 py-10">
         <PageHeader
-          eyebrow="Backup operator dry-run"
-          title="Backup dry-run"
-          description="Operator panel for checking the local backup service dry-run contract. This page does not create production backup, upload storage, restore data or call the real worker."
+          eyebrow="Kiểm tra thử cho vận hành sao lưu"
+          title="Kiểm tra sao lưu thử"
+          description="Bảng vận hành dùng để kiểm tra contract dry-run của dịch vụ sao lưu nội bộ. Trang này không tạo bản sao lưu production, không tải lên storage, không phục hồi dữ liệu và không gọi Worker thật."
         />
 
         <StatusCallout tone="warning" className="mt-6">
-          Dry-run only. No production backup. No storage upload. No restore. No
-          real worker call.
+          Chỉ kiểm tra thử. Không tạo bản sao lưu production. Không tải lên storage.
+          Không phục hồi dữ liệu. Không gọi Worker thật.
         </StatusCallout>
 
         <div className="mt-6">

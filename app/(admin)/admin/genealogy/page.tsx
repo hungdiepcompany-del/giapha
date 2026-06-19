@@ -128,7 +128,7 @@ export default async function GenealogyPage({
 
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <StatusCallout tone="info">
-            Quyền xem dùng permission hiện có `people.view` hoặc `tree.view`.
+            Quyền xem dùng quyền hiện có `people.view` hoặc `tree.view`.
             Quyền cập nhật dùng `people.update`, `relationships.update`,
             `tree.edit_layout` hoặc `settings.manage`.
           </StatusCallout>
@@ -148,7 +148,7 @@ export default async function GenealogyPage({
         {!canManage ? (
           <StatusCallout tone="warning" className="mt-6">
             Bạn có thể xem dữ liệu dòng họ/chi, nhưng chưa có quyền cập nhật
-            trong nhóm permission hiện có.
+            trong nhóm quyền hiện có.
           </StatusCallout>
         ) : null}
       </section>

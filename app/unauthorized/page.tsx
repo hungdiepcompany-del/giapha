@@ -15,7 +15,7 @@ export default async function UnauthorizedPage({
     <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center px-6 py-12">
       <div className="border border-slate-200 bg-white p-6 shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-red-700">
-          Permission denied
+          Không đủ quyền
         </p>
         <h1 className="mt-3 text-3xl font-bold text-slate-950">
           Không có quyền truy cập
@@ -25,7 +25,7 @@ export default async function UnauthorizedPage({
         </p>
         {params.reason ? (
           <p className="mt-4 border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-            Reason: {params.reason}
+            Lý do: {params.reason}
           </p>
         ) : null}
         <div className="mt-6 flex flex-wrap gap-4 text-sm font-semibold">

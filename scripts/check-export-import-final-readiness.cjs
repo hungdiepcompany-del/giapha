@@ -68,6 +68,54 @@ const PHASE_125_ALLOWED_RUNTIME_FILES = new Set([
   "lib/family/json-exporter.ts",
 ]);
 
+const UI_VN_01_ALLOWED_RUNTIME_FILES = new Set([
+  "app/(admin)/admin/backups/page.tsx",
+  "app/(admin)/admin/exports/import/page.tsx",
+  "app/(admin)/admin/exports/page.tsx",
+  "app/(admin)/admin/genealogy/actions.ts",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "app/(admin)/admin/page.tsx",
+  "app/(admin)/admin/people/[id]/page.tsx",
+  "app/(admin)/admin/people/new/page.tsx",
+  "app/(admin)/admin/people/page.tsx",
+  "app/(admin)/admin/preview/public/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
+  "app/(admin)/admin/revisions/[id]/page.tsx",
+  "app/(admin)/admin/revisions/page.tsx",
+  "app/(admin)/admin/system/status/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/layout.tsx",
+  "app/unauthorized/page.tsx",
+  "components/admin/backup-operator-dry-run-panel.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "components/imports/json-import-preview-form.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
+  "components/public/public-person-profile.tsx",
+  "components/public/public-tree-shell.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
+  "components/relationships/relationship-summary.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "lib/family/json-import-preview-service.ts",
+  "lib/family/lineage-service.ts",
+  "lib/family/people-validation.ts",
+  "lib/family/public-family-service.ts",
+  "lib/family/relationship-validation.ts",
+  "lib/family/tree-graph-builder.ts",
+  "lib/family/tree-layout-service.ts",
+]);
+
+const RUNTIME_ALLOWED_DIRTY_FILES = new Set([
+  ...PHASE_125_ALLOWED_RUNTIME_FILES,
+  ...UI_VN_01_ALLOWED_RUNTIME_FILES,
+]);
+
 function filterAllowedStatus(statusText, allowedFiles) {
   return statusText
     .split(/\r?\n/)
@@ -280,7 +328,7 @@ for (const [label, pathspecs] of [
   const pathStatus = gitStatus(...pathspecs);
   const filteredStatus =
     label === "runtime app surface changed"
-      ? filterAllowedStatus(pathStatus, PHASE_125_ALLOWED_RUNTIME_FILES)
+      ? filterAllowedStatus(pathStatus, RUNTIME_ALLOWED_DIRTY_FILES)
       : pathStatus;
   if (filteredStatus.trim()) failures.push(`${label}: ${filteredStatus.trim()}`);
 }

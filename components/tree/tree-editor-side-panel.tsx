@@ -33,6 +33,39 @@ function personLabel(node: TreePersonNode) {
   return node.displayName || node.fullName;
 }
 
+const parentRoleLabels: Record<ParentRole, string> = {
+  father: "Cha",
+  mother: "Mẹ",
+  parent: "Phụ huynh",
+  unknown: "Chưa rõ",
+};
+
+const parentTypeLabels: Record<ParentRelationshipType, string> = {
+  adoptive: "Nuôi",
+  biological: "Ruột",
+  guardian: "Giám hộ",
+  step: "Kế",
+  unknown: "Chưa rõ",
+};
+
+const childTypeLabels: Record<ChildRelationshipType, string> = {
+  adoptive: "Con nuôi",
+  biological: "Con ruột",
+  foster: "Con được chăm sóc",
+  step: "Con riêng/kế",
+  unknown: "Chưa rõ",
+};
+
+const coupleStatusLabels: Record<CoupleRelationshipStatus, string> = {
+  divorced: "Ly hôn",
+  engaged: "Đính hôn",
+  married: "Đã kết hôn",
+  partner: "Bạn đời",
+  separated: "Ly thân",
+  unknown: "Chưa rõ",
+  widowed: "Góa",
+};
+
 function peopleById(graph: FamilyTreeGraph) {
   return new Map(
     graph.nodes
@@ -148,9 +181,9 @@ export function TreeEditorSidePanel({
   if (!selectedNode) {
     return (
       <aside className="border border-slate-200 bg-white p-4">
-        <h2 className="text-lg font-bold text-slate-950">Side panel</h2>
+        <h2 className="text-lg font-bold text-slate-950">Bảng chi tiết</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Chọn một person node để xem quan hệ và thao tác.
+          Chọn một nút thành viên để xem quan hệ và thao tác.
         </p>
       </aside>
     );
@@ -159,9 +192,9 @@ export function TreeEditorSidePanel({
   if (selectedNode.kind !== "person") {
     return (
       <aside className="border border-slate-200 bg-white p-4">
-        <h2 className="text-lg font-bold text-slate-950">Family node</h2>
+        <h2 className="text-lg font-bold text-slate-950">Nút gia đình</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Phase 6 chưa hỗ trợ sửa trực tiếp family node.
+          Phase 6 chưa hỗ trợ sửa trực tiếp nút gia đình.
         </p>
       </aside>
     );
@@ -231,7 +264,7 @@ export function TreeEditorSidePanel({
                 >
                   {PARENT_ROLES.map((role: ParentRole) => (
                     <option key={role} value={role}>
-                      {role}
+                      {parentRoleLabels[role]}
                     </option>
                   ))}
                 </select>
@@ -246,7 +279,7 @@ export function TreeEditorSidePanel({
                   {PARENT_RELATIONSHIP_TYPES.map(
                     (type: ParentRelationshipType) => (
                       <option key={type} value={type}>
-                        {type}
+                        {parentTypeLabels[type]}
                       </option>
                     ),
                   )}
@@ -284,7 +317,7 @@ export function TreeEditorSidePanel({
                 {COUPLE_RELATIONSHIP_STATUSES.map(
                   (status: CoupleRelationshipStatus) => (
                     <option key={status} value={status}>
-                      {status}
+                      {coupleStatusLabels[status]}
                     </option>
                   ),
                 )}
@@ -318,9 +351,9 @@ export function TreeEditorSidePanel({
               >
                 {CHILD_RELATIONSHIP_TYPES.map(
                   (type: ChildRelationshipType) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
+                  <option key={type} value={type}>
+                    {childTypeLabels[type]}
+                  </option>
                   ),
                 )}
               </select>

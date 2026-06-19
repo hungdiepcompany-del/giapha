@@ -31,9 +31,9 @@ export default async function AdminTreePage() {
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
         <PageHeader
-          eyebrow="Tree viewer foundation"
+          eyebrow="Nền tảng xem cây gia phả"
           title="Cây gia phả"
-          description="Viewer chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, fit view và reset layout để xem nhanh toàn bộ cây."
+          description="Màn hình xem chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, vừa khung nhìn và đặt lại bố cục để xem nhanh toàn bộ cây."
           actions={
             canEditLayout ? (
               <ActionLink href="/admin/tree/edit" variant="primary">
