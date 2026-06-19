@@ -1,5 +1,18 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 118A-120A Vietnamese Genealogy Media/Data Quality Boundary Design
+
+- Implemented grouped Phase 118A, 119A and 120A as docs/static planning only after Phase 117A commit `4a3f45038950f18d6e9bdf680d4c66de171b5e3e`.
+- Phase 118A result: created media domain/storage boundary design for portraits, grave/tombstone photos, family documents/photos, branch/clan documents, event photos, metadata concepts, privacy and future storage/service gates.
+- Phase 119A result: created data-quality boundary design for missing dates, impossible dates, duplicate suspicion, missing parent links, multiple primary memberships, branch/generation conflict, relationship inconsistency and visibility conflict warnings.
+- Phase 120A result: created admin warning UX planning with Vietnamese severity labels, empty-state copy, suggested admin locations and privacy-safe warning behavior.
+- Added `scripts/check-media-quality-boundary-design.cjs` and `npm run check:media-quality-boundary-design`.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation, no seed/backfill, No media upload/storage bucket, no real image/video/file processing, no thumbnail generation, no large export/import/GEDCOM/ZIP, No Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy and no push.
+- Runtime result: main app runtime code was not changed; this phase only changed docs, package script registration and a static checker.
+- Validation: media/data-quality boundary checker PASS, Phase 103-120A Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Workspace-root `npm run build` remains blocked before compile by the pre-existing Windows `.next` artifact ACL error: `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`. A clean temp copy excluding `.next`, env files and `PLANNING.MD` built successfully.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+
 ## 2026-06-19 - Phase 117A Vietnamese Genealogy Admin UX Polish
 
 - Implemented Phase 117A as a scoped polish pass after grouped Phase 114-117 commit `22aff0f28e3f361a13e79cca831dd7935eb7ac45`.

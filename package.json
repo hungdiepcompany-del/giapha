@@ -149,7 +149,8 @@
     "check:vietnamese-genealogy-credential-verification": "node scripts/check-vietnamese-genealogy-credential-verification.cjs",
     "check:vietnamese-genealogy-verification-diagnostic": "node scripts/check-vietnamese-genealogy-verification-diagnostic.cjs",
     "check:vietnamese-genealogy-manual-sql-diagnostic-pass": "node scripts/check-vietnamese-genealogy-manual-sql-diagnostic-pass.cjs",
-    "check:vietnamese-genealogy-domain-ui": "node scripts/check-vietnamese-genealogy-domain-ui.cjs"
+    "check:vietnamese-genealogy-domain-ui": "node scripts/check-vietnamese-genealogy-domain-ui.cjs",
+    "check:media-quality-boundary-design": "node scripts/check-media-quality-boundary-design.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

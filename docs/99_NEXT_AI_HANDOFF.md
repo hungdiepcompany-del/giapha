@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 118A-120A Vietnamese Genealogy Media/Data Quality Boundary Design completed
+
+- Grouped Phase 118A, 119A and 120A completed locally as design-only boundary planning after Phase 117A commit `4a3f45038950f18d6e9bdf680d4c66de171b5e3e`.
+- Phase 118A result: created `docs/118A_MEDIA_DOMAIN_STORAGE_BOUNDARY_DESIGN.md` for media domain/storage boundary, portraits, grave/tombstone photos, family documents/photos, branch/clan documents, event photos, metadata concepts, privacy and future storage/service gates.
+- Phase 119A result: created `docs/119A_DATA_QUALITY_BOUNDARY_WARNING_DESIGN.md` for data-quality warning categories, severity, admin display locations, privacy and service-boundary split.
+- Phase 120A result: created `docs/120A_ADMIN_WARNING_UX_PLANNING.md` for admin warning UX principles, Vietnamese severity labels, empty states, privacy-safe behavior and deferred runtime work.
+- Added `scripts/check-media-quality-boundary-design.cjs` and `npm run check:media-quality-boundary-design`.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk introduced NO.
+- Boundary: no migration, no `.sql` file, no DB apply, no SQL mutation, no seed/backfill, no media upload/storage bucket, no real image/video/file processing, no thumbnail generation, no large export/import/GEDCOM/ZIP, no deploy and no push.
+- Validation: media/data-quality boundary checker PASS, Phase 103-120A Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` remains blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Note for next AI: `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md` remain mandatory before any future media upload/storage, large data-quality scan, import preview, GEDCOM/ZIP, new Worker, dependency or deploy/config work.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+- Recommended next phase: Phase 118B/119B/120B static contract/checklist work, or owner-approved Phase 121 only if it explicitly stays within boundary gates.
+
 ## 2026-06-19 - Phase 117A Vietnamese Genealogy Admin UX Polish completed
 
 - Phase 117A completed locally as a scoped polish pass after grouped Phase 114-117 commit `22aff0f28e3f361a13e79cca831dd7935eb7ac45`.

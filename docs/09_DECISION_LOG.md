@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 139 - Media and data-quality work remain boundary design before schema/runtime
+
+Chon:
+
+Phase 118A-120A records media, data-quality warning and admin warning UX plans as design-only boundary work. It does not authorize schema, migration, storage bucket, media upload, thumbnail generation, full-tree scan, runtime warning implementation, Worker creation, dependency change or deploy.
+
+Ly do:
+
+- Media files and thumbnails can be large, private and dependency-heavy, so they must follow `docs/RUNTIME_WORKER_GUARDRAIL.md` and `docs/SERVICE_BOUNDARY_ROADMAP.md`.
+- Data-quality scans and duplicate detection can become full-family or import-wide work that should be scheduled or service-boundary governed instead of folded into the main Worker by default.
+- Admin warning UX can be planned now, but persistent warning records and runtime warning generation need separate schema/privacy/service approval.
+- Future Phase 118B/119B/120B work must keep media, warning and scan boundaries explicit before any runtime or database implementation.
+
 ## Decision 138 - Lineage admin UI uses existing permissions and keeps heavy work deferred
 
 Chon:
