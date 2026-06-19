@@ -154,7 +154,8 @@
     "check:media-quality-static-contracts": "node scripts/check-media-quality-static-contracts.cjs",
     "check:media-quality-static-examples": "node scripts/check-media-quality-static-examples.cjs",
     "check:media-quality-final-readiness": "node scripts/check-media-quality-final-readiness.cjs",
-    "check:inline-admin-warning-ui": "node scripts/check-inline-admin-warning-ui.cjs"
+    "check:inline-admin-warning-ui": "node scripts/check-inline-admin-warning-ui.cjs",
+    "check:export-import-boundary-design": "node scripts/check-export-import-boundary-design.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

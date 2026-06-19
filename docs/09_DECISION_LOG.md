@@ -1,5 +1,26 @@
 # Decision Log
 
+## Decision 144 - Export/import portability work remains design-only until service/runtime approval
+
+Chon:
+
+Phase 122A-124A records export boundary, import boundary and data portability
+contracts only. These docs do not authorize large JSON/GEDCOM/ZIP runtime,
+large import parser/runtime, media export/import, production mutation,
+export-service Worker, import-service Worker, dependency, config or deploy
+changes.
+
+Ly do:
+
+- `family.json` must remain the canonical long-term portability format, but
+  versioning and compatibility must be reviewed before runtime expansion.
+- Large ZIP/GEDCOM/export assembly and large import validation are Worker-size,
+  timeout and privacy risks.
+- Import apply is a production mutation and requires owner approval, backup,
+  rollback and verification gates.
+- Media and persistent warnings remain separately deferred and must not sneak
+  into export/import runtime through portability planning.
+
 ## Decision 143 - Option D permits only deterministic inline admin hints from already loaded data
 
 Chon:

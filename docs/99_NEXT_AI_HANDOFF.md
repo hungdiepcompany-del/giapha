@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 122A-124A Export/Import Boundary And Portability Contract completed
+
+- Added `docs/122A_EXPORT_BOUNDARY_DESIGN.md` for design-only export boundary:
+  current foundation, `family.json`, GEDCOM, ZIP, media-later, data groups,
+  privacy rules, main Worker limits and export-service/ZIP/GEDCOM approval
+  gates.
+- Added `docs/123A_IMPORT_BOUNDARY_DESIGN.md` for design-only import boundary:
+  current safe preview foundation, import stages, validation groups, no direct
+  production mutation and import-service/large-import approval gates.
+- Added `docs/124A_DATA_PORTABILITY_BACKUP_COMPATIBILITY_CONTRACT.md` for
+  canonical `family.json`, stable IDs, schema versioning, backward/forward
+  compatibility, restore dry-run, manifest, lineage, media-later and
+  warnings-later compatibility.
+- Added `scripts/check-export-import-boundary-design.cjs` and
+  `npm run check:export-import-boundary-design`.
+- Decision 144 records that these docs are not runtime/schema/service approval.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new
+  service Worker created NO; OpenNext/Wrangler config changed NO; large
+  export/import/media work NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime, no
+  media export/import, no deploy and no push.
+- Validation: export/import boundary design PASS; inline admin warning UI PASS;
+  media-quality final readiness, static examples, static contracts and boundary
+  design PASS; Vietnamese genealogy manual SQL diagnostic, domain UI and domain
+  readiness PASS; env-safe PASS; migrations PASS; typecheck PASS; lint PASS;
+  clean temp `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: Phase 122B/123B/124B static examples/checklists, or a
+  separately owner-approved service-boundary design phase.
+
 ## 2026-06-19 - Phase 121B Inline Warning UI Post-Integration Smoke completed
 
 - Completed post-integration smoke/review after commit `86d4ad6`.

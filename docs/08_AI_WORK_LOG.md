@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 122A-124A Export/Import Boundary And Portability Contract
+
+- Added Phase 122A export boundary design covering current export foundation,
+  `family.json`, GEDCOM, ZIP, media-later scope, privacy rules, main Worker
+  limits and future export-service approval gates.
+- Added Phase 123A import boundary design covering current import preview
+  foundation, import stages, validation groups, production mutation gate and
+  future import-service approval gates.
+- Added Phase 124A data portability and backup compatibility contract covering
+  canonical `family.json`, stable IDs, schema versioning, compatibility,
+  restore dry-run expectations, manifest expectations, lineage compatibility,
+  media-later and warnings-later boundaries.
+- Added `scripts/check-export-import-boundary-design.cjs` and
+  `npm run check:export-import-boundary-design`.
+- Decision 144 records that export/import portability work remains design-only
+  until separately approved service/runtime phases.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime,
+  no media export/import, no Worker created, no OpenNext/Wrangler config
+  change, no runtime dependency added, no deploy and no push.
+- Validation: export/import boundary design PASS; inline admin warning UI PASS;
+  media-quality final readiness, static examples, static contracts and boundary
+  design PASS; Vietnamese genealogy manual SQL diagnostic, domain UI and domain
+  readiness PASS; env-safe PASS; migrations PASS; typecheck PASS; lint PASS;
+  clean temp `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 121B Inline Warning UI Post-Integration Smoke
 
 - Reviewed Phase 121A inline admin warning UI/copy/privacy/performance after
