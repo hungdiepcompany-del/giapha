@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 142 - Default implementation decision remains defer; inline hints need separate approval
+
+Chon:
+
+After final review of Phase 118A-120C, choose option A by default: defer all media, persistent data-quality and runtime warning implementation. Option D, lightweight inline admin warning UI without schema, is only conditionally ready and still requires a separate explicit owner-approved runtime phase.
+
+Ly do:
+
+- Media still lacks an approved schema, storage provider, RLS/signed-access model and service contract.
+- Persistent warnings still lack an approved lifecycle, RLS/privacy model and migration gate.
+- Full-tree, duplicate, import-wide and export-readiness scans remain service/offline workloads.
+- Inline hints can potentially use already loaded admin data, but they are runtime changes and must not be inferred from docs-only readiness.
+
 ## Decision 141 - Static examples are acceptance evidence, not runtime or schema authorization
 
 Chon:

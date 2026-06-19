@@ -1,5 +1,21 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 118D-120D Vietnamese Genealogy Media/Data Quality Final Readiness completed
+
+- Completed final docs-only readiness/signoff review after commit `3bc3847`.
+- Created `docs/118D_120D_MEDIA_QUALITY_FINAL_READINESS_REVIEW.md` with Phase 118D media review, Phase 119D data-quality review, Phase 120D admin warning UX review, decision matrix, owner approvals and no-go conditions.
+- Decision matrix result: option A defer all implementation is `RECOMMENDED_DEFAULT`.
+- Option D inline admin warning UI is `CONDITIONALLY_READY` only through a separate explicit owner-approved lightweight runtime phase with no schema, persistence, heavy scan, Worker, dependency or config change.
+- Options B/C are ready only for separately approved docs/static schema-candidate phases; options E/F are ready only for separately approved service design phases, not Worker implementation.
+- Added `scripts/check-media-quality-final-readiness.cjs` and `npm run check:media-quality-final-readiness`.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk introduced NO.
+- Boundary: no migration, no `.sql` file, no DB apply, no SQL mutation, no seed/backfill, no media upload/storage bucket, no thumbnail/image processing, no persistent warning table, no full-tree runtime scan, no runtime warning UI, no large export/import/GEDCOM/ZIP, no deploy and no push.
+- Validation: final readiness checker PASS, static examples/contracts/boundary checkers PASS, Phase 103-120D Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` remains blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Note for next AI: this final readiness review is a decision gate, not approval for any option B-F. Require explicit owner approval naming the selected path.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+- Recommended next path: keep option A, or request explicit owner approval for a narrowly scoped option D phase.
+
 ## 2026-06-19 - Phase 118C-120C Vietnamese Genealogy Media/Data Quality Acceptance Examples completed
 
 - Grouped Phase 118C, 119C and 120C completed locally as docs/static examples and acceptance checklists after commit `7f794d7`.
