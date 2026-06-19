@@ -68,6 +68,9 @@ const peoplePage = readFile("app/(admin)/admin/people/[id]/page.tsx");
 const genealogyPage = readFile("app/(admin)/admin/genealogy/page.tsx");
 const membershipsPage = readFile("app/(admin)/admin/genealogy/memberships/page.tsx");
 const treePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const publicRouteFiles = gitOutput(["ls-files", "app/(public)", "components/public"])
+  .split(/\r?\n/)
+  .filter(Boolean);
 
 for (const token of [
   "Status: `COMPLETED_LOCAL_STATIC_VALIDATED`",
@@ -203,6 +206,23 @@ for (const file of allowedRuntimeFiles) {
     "runQualityScan",
   ]) {
     rejectIncludes(content, token, `${token} in ${file}`);
+  }
+}
+
+for (const file of publicRouteFiles) {
+  const content = readFile(file);
+  for (const token of [
+    "AdminWarningList",
+    "AdminWarningBadge",
+    "inline-warning-rules",
+    "inline-warning-types",
+    "getPersonInlineWarnings",
+    "getLineageDashboardInlineWarnings",
+    "getTreeNodeInlineWarnings",
+    "data_quality_warnings",
+    "quality_warnings",
+  ]) {
+    rejectIncludes(content, token, `${token} in public route file ${file}`);
   }
 }
 

@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 121B Inline Warning UI Post-Integration Smoke
+
+- Reviewed Phase 121A inline admin warning UI/copy/privacy/performance after
+  commit `86d4ad6`.
+- Browser smoke: `/admin/genealogy` with no effective permissions failed
+  closed and did not render fake warning findings; `/tree` had no admin warning
+  panel/copy and no browser console warning/error.
+- Source audit confirmed warning UI remains limited to admin people,
+  genealogy, memberships and tree-editor selected-node surfaces.
+- Hardened `scripts/check-inline-admin-warning-ui.cjs` to scan public
+  route/component files and reject admin warning imports/helpers plus
+  persistent-warning references.
+- Added `docs/121B_INLINE_WARNING_UI_POST_INTEGRATION_SMOKE.md` and updated
+  index/handoff.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no persistent warning table, no full-tree scan, no media
+  upload/storage/processing, no large export/import/GEDCOM/ZIP, no Worker
+  created, no OpenNext/Wrangler config change, no dependency added, no deploy
+  and no push.
+- Validation: inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 121A Lightweight Inline Admin Warning UI
 
 - Implemented owner-approved Option D as lightweight deterministic inline

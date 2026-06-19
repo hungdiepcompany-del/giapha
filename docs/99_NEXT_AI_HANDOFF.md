@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 121B Inline Warning UI Post-Integration Smoke completed
+
+- Completed post-integration smoke/review after commit `86d4ad6`.
+- Admin smoke: `/admin/genealogy` with no effective permissions failed closed,
+  showing the existing permission message and no fake warning data.
+- Public smoke: `/tree` showed no admin warning panel/copy and no console
+  warning/error.
+- UI/copy review passed: labels remain `Thông tin`, `Cảnh báo`, `Cần xử lý`;
+  warning cards include an actionable next step and safe empty-state copy.
+- Privacy review passed: warning copy does not expose `notes_private`,
+  `source_note`, hidden relationship facts, credentials, media/storage details
+  or raw source material.
+- Hardened `scripts/check-inline-admin-warning-ui.cjs` to scan public
+  route/component source for admin warning imports/helpers and persistent
+  warning references.
+- Added `docs/121B_INLINE_WARNING_UI_POST_INTEGRATION_SMOKE.md`.
+- Worker/runtime: main Worker touched only by checker/doc hardening in this
+  phase; runtime dependency added NO; new service Worker created NO;
+  OpenNext/Wrangler config changed NO; heavy scan/media/export/import work NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no persistent warning table, no full-tree scan, no media work,
+  no deploy and no push.
+- Validation: inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: keep media, persistent warnings and heavy scans
+  deferred; require separate owner approval for any schema, service Worker,
+  media, export/import or broader runtime phase.
+
 ## 2026-06-19 - Phase 121A Lightweight Inline Admin Warning UI completed
 
 - Owner-approved Option D was implemented only as deterministic inline admin
