@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 136 - Phase 113B-fix requires SQL metadata evidence before PASS
+
+Chon:
+
+Keep Vietnamese genealogy post-apply DB verification at `NOT_VERIFIED` after the owner-provided REST-only verifier output returned `FAIL` for all four required lineage tables. Do not record PASS until sanitized read-only SQL metadata evidence proves required table existence, excluded table absence, existing core table safety, RLS enabled status, policies and no seed/backfill row counts.
+
+Ly do:
+
+- The available owner-provided verifier output is FAIL evidence, not PASS evidence.
+- A REST-only verifier cannot prove RLS enabled status or `pg_policies` contents.
+- The verifier cannot distinguish every failure mode between migration not applied, wrong project ref, REST schema cache/exposure issues and metadata access limits.
+- Service role key material was exposed in chat and must be rotated or revoked before further credential-assisted verification.
+- Phase 114-117 should remain blocked until sanitized SQL evidence is provided or the owner explicitly accepts proceeding with this limitation recorded.
+
 ## Decision 135 - Phase 113B safe-skip does not unblock Phase 114-117
 
 Chon:

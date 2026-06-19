@@ -1,5 +1,23 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 113B-fix Vietnamese Genealogy Verification Diagnostic completed
+
+- Phase 113B-fix handled owner-provided PowerShell verifier output that returned `FAIL`, not PASS.
+- Current DB verification status: `NOT_VERIFIED`; do not record PASS from the current evidence.
+- Required REST table checks failed for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- RLS result: not verified by REST-only verifier; needs SQL metadata evidence.
+- Policy result: not verified by REST-only verifier; needs `pg_policies` evidence.
+- Excluded scope result: not fully proven by current evidence; needs sanitized SQL output showing `person_names`, `person_life_events`, `person_burials` and `person_media` are absent.
+- No seed/backfill result: not proven; needs read-only row-count SQL output for the four lineage tables.
+- Existing table safety result: not proven; needs sanitized SQL output showing `people`, `families`, `family_parents`, `family_children` and `couple_relationships` still exist.
+- Added `docs/113B_FIX_VIETNAMESE_GENEALOGY_VERIFICATION_DIAGNOSTIC.md` with diagnostic hypotheses and manual Supabase Dashboard read-only SQL checks.
+- Hardened `scripts/verify-vietnamese-genealogy-migration-post-apply.cjs` to classify table failures, verify expected project ref shape, check existing core table REST readability and avoid claiming RLS/policy PASS from REST-only evidence.
+- Added `scripts/check-vietnamese-genealogy-verification-diagnostic.cjs` and `npm run check:vietnamese-genealogy-verification-diagnostic`.
+- Security note: service role key material was exposed in chat by the owner/operator. The exposed key must be rotated or revoked before further credential-assisted verification. Do not repeat, request, write or commit credential values.
+- Boundary: no DB apply, no migration rerun, no SQL mutation, no seed/backfill, no migration file modification, no new migration, no runtime app code change, no UI change, no deploy, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no push and `PLANNING.MD` not read or committed.
+- No-go before Phase 114-117: required tables, RLS, policies, excluded scope, no seed/backfill and existing core table safety must be proven by sanitized SQL evidence, or the owner must explicitly accept proceeding with the limitation recorded.
+- Recommended next step: owner rotates/revokes the exposed key, then runs the manual SQL checklist in Supabase Dashboard for project `frkyeuxrlcflmsxxsolp` and provides sanitized results.
+
 ## 2026-06-18 - Phase 113B Vietnamese Genealogy Credential Verification recorded
 
 - Phase 113B attempted credential-assisted read-only post-apply verification.

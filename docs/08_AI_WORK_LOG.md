@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 113B-fix Vietnamese Genealogy Verification Diagnostic
+
+- Recorded Phase 113B-fix as diagnostic follow-up after owner-provided PowerShell verifier output returned `FAIL`, not PASS.
+- DB verification status remains `NOT_VERIFIED`; PASS was not recorded.
+- Required REST table checks failed for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- RLS, policies, no seed/backfill row counts and existing core table safety were not proven by the REST-only verifier output.
+- Added `docs/113B_FIX_VIETNAMESE_GENEALOGY_VERIFICATION_DIAGNOSTIC.md` with diagnostic hypotheses, manual read-only Supabase Dashboard SQL checks and no-go conditions before Phase 114-117.
+- Hardened `scripts/verify-vietnamese-genealogy-migration-post-apply.cjs` so it classifies table read failures, checks expected project ref and existing core table readability, and does not claim RLS/policy PASS from REST-only verification.
+- Added `scripts/check-vietnamese-genealogy-verification-diagnostic.cjs` and `npm run check:vietnamese-genealogy-verification-diagnostic`.
+- Security note: service role key material was exposed in chat by the owner/operator; the diagnostic records that the key must be rotated or revoked before further credential-assisted verification. The key value was not repeated or written to files.
+- No DB apply, no migration rerun, no SQL mutation, no seed/backfill, no migration file modification, no new migration, no runtime app code change, no UI change, no deploy, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `PLANNING.MD` was not read and was not committed.
+- Recommended next step: owner rotates/revokes the exposed key, then runs the manual read-only SQL diagnostic checklist in Supabase Dashboard for project `frkyeuxrlcflmsxxsolp` and provides sanitized results.
+
 ## 2026-06-18 - Phase 113B Vietnamese Genealogy Credential Verification
 
 - Ran Phase 113B as credential-assisted read-only post-apply verification attempt.
