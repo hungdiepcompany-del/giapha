@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 122C-124C Export/Import Final Readiness Matrix
+
+- Added Phase 122C export compatibility matrix for `family.json`, GEDCOM, ZIP,
+  media-later, core genealogy tables, lineage tables, tree layouts, revisions,
+  future media, future warnings, public/family/admin scopes and living-person
+  privacy handling.
+- Added Phase 123C import compatibility matrix for current/older/future
+  `family.json`, GEDCOM, ZIP, media-later, validation areas, conflict handling,
+  preview expectations and restore/import apply gates.
+- Added Phase 124C final readiness gate with docs/contracts/examples readiness,
+  not-ready runtime items, decision matrix, required owner approvals, no-go
+  runtime conditions, privacy/security notes and default recommendation.
+- Added `scripts/check-export-import-final-readiness.cjs` and
+  `npm run check:export-import-final-readiness`.
+- Decision 146 records that the export/import/backup portability bundle is
+  ready for owner decision only and remains design/static, not runtime,
+  schema, service Worker, dependency, config, deploy or mutation approval.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime,
+  no media export/import, no backup/restore runtime, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and
+  no push.
+- Validation: export/import final readiness PASS; export/import static
+  examples PASS; export/import boundary design PASS; inline admin warning UI
+  PASS; media-quality final readiness, static examples, static contracts and
+  boundary design PASS; Vietnamese genealogy manual SQL diagnostic, domain UI
+  and domain readiness PASS; env-safe PASS; migrations PASS; typecheck PASS;
+  lint PASS; clean temp `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 122B-124B Export/Import Static Examples And Test Contracts
 
 - Added Phase 122B export static examples and acceptance checklists for

@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 122C-124C Export/Import Final Readiness Matrix completed
+
+- Added `docs/122C_EXPORT_COMPATIBILITY_MATRIX.md` with export compatibility
+  status for `family.json`, GEDCOM, ZIP, media-later, core genealogy tables,
+  lineage tables, tree layouts, revisions, future media/warnings,
+  public/family/admin export scopes and living-person privacy handling.
+- Added `docs/123C_IMPORT_COMPATIBILITY_MATRIX.md` with import compatibility
+  status for current/older/future `family.json`, GEDCOM, ZIP, media-later,
+  validation matrix, conflict handling, preview expectations and
+  restore/import apply gates.
+- Added `docs/124C_PORTABILITY_BACKUP_FINAL_READINESS_GATE.md` with final
+  docs/contracts/examples readiness, runtime not-ready list, decision matrix,
+  required owner approvals, no-go runtime conditions, privacy/security notes
+  and default recommendation.
+- Added `scripts/check-export-import-final-readiness.cjs` and
+  `npm run check:export-import-final-readiness`.
+- Decision 146 records that the bundle is an owner decision gate only, not
+  runtime, schema, service Worker, dependency, config, deploy or mutation
+  approval.
+- Default recommendation: defer implementation, or only consider separately
+  approved small main-app JSON export hardening if it adds no heavy runtime,
+  dependency or Worker changes.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new
+  service Worker created NO; OpenNext/Wrangler config changed NO; large
+  export/import/media/GEDCOM/ZIP/backup/restore work NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime, no
+  media export/import, no backup/restore runtime, no deploy and no push.
+- Validation: export/import final readiness PASS; export/import static
+  examples PASS; export/import boundary design PASS; inline admin warning UI
+  PASS; media-quality final readiness, static examples, static contracts and
+  boundary design PASS; Vietnamese genealogy manual SQL diagnostic, domain UI
+  and domain readiness PASS; env-safe PASS; migrations PASS; typecheck PASS;
+  lint PASS; clean temp `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: defer implementation or request a separately
+  owner-approved Phase 125 small JSON export hardening design/runtime gate.
+
 ## 2026-06-19 - Phase 122B-124B Export/Import Static Examples And Test Contracts completed
 
 - Added `docs/122B_EXPORT_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md` with static

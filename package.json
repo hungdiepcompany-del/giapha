@@ -156,7 +156,8 @@
     "check:media-quality-final-readiness": "node scripts/check-media-quality-final-readiness.cjs",
     "check:inline-admin-warning-ui": "node scripts/check-inline-admin-warning-ui.cjs",
     "check:export-import-boundary-design": "node scripts/check-export-import-boundary-design.cjs",
-    "check:export-import-static-examples": "node scripts/check-export-import-static-examples.cjs"
+    "check:export-import-static-examples": "node scripts/check-export-import-static-examples.cjs",
+    "check:export-import-final-readiness": "node scripts/check-export-import-final-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

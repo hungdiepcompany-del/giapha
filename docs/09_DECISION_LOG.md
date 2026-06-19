@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 146 - Export/import final readiness is an owner decision gate, not runtime approval
+
+Chon:
+
+Phase 122C-124C may add export/import compatibility matrices, portability
+backup final readiness review, a decision matrix and a static checker. This
+bundle confirms docs/contracts/examples readiness for owner decision only. It
+does not authorize runtime export/import, parser implementation, backup or
+restore runtime, media bundle work, GEDCOM/ZIP heavy processing, migration,
+SQL, DB apply, dependency, Worker, OpenNext/Wrangler config, deploy or
+production mutation changes.
+
+Ly do:
+
+- Compatibility matrices help the owner choose a future path without opening
+  unsafe runtime surfaces.
+- Restore/import apply is production mutation and must remain owner-gated with
+  backup, rollback and verification evidence.
+- GEDCOM/ZIP/media/backup work can affect Worker size, startup and privacy, so
+  it must follow service-boundary approval before runtime.
+- The default recommendation remains defer implementation, with only small
+  main-app JSON export hardening as a possible separately approved low-risk
+  candidate.
+
 ## Decision 145 - Export/import static examples are review evidence, not runtime fixtures
 
 Chon:
