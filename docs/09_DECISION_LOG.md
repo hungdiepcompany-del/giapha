@@ -1,5 +1,31 @@
 # Decision Log
 
+## Decision 153 - Phase 130 must remain blocked when explicit smoke env is absent
+
+Chon:
+
+Phase 130 may execute authenticated production requests only when all required
+shell-only smoke variables are already present in the execution process. If
+any variable is missing, execution must stop before network requests and record
+`PHASE_130_BLOCKED_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+
+Static checks, public smoke and prior deploy evidence must not be promoted to
+authenticated PASS.
+
+Ket qua:
+
+- Git synchronization and pre-smoke static gates passed.
+- All four explicit Phase 129 smoke variables were missing.
+- No authenticated network request was performed.
+- Auth/session, permission, authenticated privacy/UI and live export evidence
+  remain unverified.
+
+Ly do:
+
+- Missing shell-only material prevents safe authenticated verification.
+- Requesting or reconstructing credentials would violate owner approval.
+- Honest blocked evidence is safer than an inferred PASS.
+
 ## Decision 152 - Authenticated production smoke requires explicit shell-only material
 
 Chon:
