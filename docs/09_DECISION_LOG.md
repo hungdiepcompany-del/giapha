@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 155 - Routine public monitoring snapshots are not authenticated smoke
+
+Chon:
+
+Phase 132 may record routine unauthenticated production monitoring for `/`,
+`/tree` and `/auth/login`, including HTTP status, Vietnamese public UI copy,
+obvious server-error checks and forbidden public marker counts. It must not
+run authenticated smoke, request credentials, deploy, push, mutate data,
+change schema/auth/permission/runtime behavior, expand export/import/media/
+backup behavior, create Workers, change OpenNext/Wrangler config or add
+dependencies.
+
+Ket qua:
+
+- Public monitoring PASS for the three approved routes.
+- Authenticated smoke remains
+  `PHASE_130_BLOCKED_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Public/static evidence remains separate from authenticated PASS.
+
+Ly do:
+
+- Routine monitoring is useful operational evidence, but it cannot prove
+  authenticated role, permission, privacy or export behavior.
+- Keeping snapshots public-only avoids credential handling and production data
+  exposure.
+- The authenticated smoke retry remains gated by explicit shell-only env and
+  owner approval.
+
 ## Decision 154 - Phase 131 monitoring/prep is not authenticated smoke
 
 Chon:

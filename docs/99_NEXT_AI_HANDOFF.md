@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 132 - Routine Production Monitoring Snapshot completed
+
+- Added `docs/132_ROUTINE_PRODUCTION_MONITORING_SNAPSHOT.md`.
+- Added `scripts/check-routine-production-monitoring-snapshot.cjs` and
+  `npm run check:routine-production-monitoring-snapshot`.
+- Git sync/public monitoring gate PASS: local `main` and `origin/main`
+  synchronized; ahead/behind `0 0`; worktree clean.
+- Production URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Monitoring timestamp: `2026-06-19 17:58:02 +07:00`.
+- Public monitoring PASS for `/`, `/tree` and `/auth/login`: HTTP 200,
+  expected Vietnamese public UI copy present, obvious server error count `0`
+  and forbidden marker count `0`.
+- Forbidden markers checked: `notes_private`, `source_note`, `admin-warning`,
+  `service_role`, `sb_secret_`, `Bearer `, `signedUrl`, `signed_url`,
+  `COOKIE` and `SESSION`.
+- Current authenticated smoke status remains
+  `PHASE_130_BLOCKED_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Public monitoring and static validation were not promoted to authenticated
+  PASS.
+- Decision 155 records that routine public monitoring snapshots are not
+  authenticated smoke.
+- Boundary: no authenticated smoke run, no credential requested, no secret
+  printed or written, no deploy, no push, no migration, no `.sql`, no DB
+  apply, no SQL/data mutation, no seed/backfill, no schema change, no
+  auth/permission logic change, no export/import runtime expansion, no
+  GEDCOM/ZIP/media/backup runtime, no Worker created, no OpenNext/Wrangler
+  config change and no runtime dependency added.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: continue routine public production monitoring, or
+  retry Phase 130 authenticated production smoke only after owner/operator
+  prepares explicit shell-only env in the Codex execution process and
+  explicitly approves the retry.
+
 ## 2026-06-19 - Phase 131 - Production Monitoring and Authenticated Smoke Preparation completed
 
 - Added `docs/131_PRODUCTION_MONITORING_AND_AUTH_SMOKE_PREPARATION.md`.
