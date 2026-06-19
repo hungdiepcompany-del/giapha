@@ -111,6 +111,19 @@ function allowsPhase114RuntimeStatus(status) {
       allowedFiles.add("lib/family/inline-warning-rules.ts");
     }
   }
+  const phase125Doc = path.join(root, "docs/125_SMALL_JSON_EXPORT_HARDENING.md");
+  if (fs.existsSync(phase125Doc)) {
+    const phase125Content = fs.readFileSync(phase125Doc, "utf8");
+    if (
+      phase125Content.includes("Status: `IMPLEMENTED_SMALL_JSON_ONLY`") &&
+      phase125Content.includes("No large JSON export runtime.") &&
+      phase125Content.includes("No Worker created.")
+    ) {
+      allowedFiles.add("lib/family/export-types.ts");
+      allowedFiles.add("lib/family/export-collector.ts");
+      allowedFiles.add("lib/family/json-exporter.ts");
+    }
+  }
 
   return lines.every((line) => {
     const statusPath = line.slice(2).trim().replaceAll("\\", "/");

@@ -1,5 +1,45 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 125 - Small Main-App JSON Export Hardening
+
+- Implemented owner-approved small/main-app `family.json` hardening only.
+- Reviewed existing export surface:
+  `app/(admin)/admin/exports/download/json/route.ts`,
+  `lib/family/json-exporter.ts`, `lib/family/export-collector.ts` and
+  `lib/family/export-types.ts`.
+- Added JSON metadata/scope fields: `app_export_version`, `export_scope` and
+  `privacy_scope`; existing `schema_version`, `exported_at`, app metadata,
+  manifest and checksum behavior remain.
+- Added lineage sections to JSON export using only existing verified tables:
+  `clans`, `clan_branches`, `generation_rules` and
+  `person_branch_memberships`.
+- Hardened non-admin JSON builder behavior for future `family`/`public` modes:
+  people are sanitized through the existing privacy service, hidden rows are
+  filtered, private/source notes are stripped, and non-admin tree layout export
+  is omitted.
+- Added `scripts/check-small-json-export-hardening.cjs` and
+  `npm run check:small-json-export-hardening`.
+- Decision 147 records that Phase 125 touches only the existing small JSON
+  export path and does not authorize large JSON, GEDCOM/ZIP/media,
+  backup/restore, Worker, dependency, config, deploy or DB mutation work.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no large JSON export runtime, no GEDCOM heavy runtime, no
+  ZIP runtime, no import parser runtime, no media export/import, no
+  backup/restore runtime, no Worker created, no OpenNext/Wrangler config
+  change, no runtime dependency added, no deploy and no push.
+- Validation: small JSON export hardening PASS; export/import final readiness
+  PASS; export/import static examples PASS; export/import boundary design PASS;
+  inline admin warning UI PASS; Vietnamese genealogy manual SQL diagnostic,
+  domain UI and domain readiness PASS; env-safe PASS; migrations PASS;
+  typecheck PASS; lint PASS; clean temp `npm run build` PASS; Git whitespace
+  checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 122C-124C Export/Import Final Readiness Matrix
 
 - Added Phase 122C export compatibility matrix for `family.json`, GEDCOM, ZIP,

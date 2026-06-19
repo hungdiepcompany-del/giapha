@@ -159,6 +159,12 @@ if (packageHead && packageJson) {
   }
 }
 
+const phase125AllowedRuntimeFiles = new Set([
+  "lib/family/export-types.ts",
+  "lib/family/export-collector.ts",
+  "lib/family/json-exporter.ts",
+]);
+
 const allowedRuntimeFiles = new Set([
   "app/(admin)/admin/people/[id]/page.tsx",
   "app/(admin)/admin/genealogy/page.tsx",
@@ -168,6 +174,7 @@ const allowedRuntimeFiles = new Set([
   "components/genealogy/admin-warning-list.tsx",
   "lib/family/inline-warning-types.ts",
   "lib/family/inline-warning-rules.ts",
+  ...phase125AllowedRuntimeFiles,
 ]);
 
 const status = gitOutput(["status", "--short"]);
@@ -189,6 +196,10 @@ for (const file of changedFiles) {
 }
 
 for (const file of allowedRuntimeFiles) {
+  if (phase125AllowedRuntimeFiles.has(file)) {
+    continue;
+  }
+
   const content = readFile(file);
   for (const token of [
     ".from(",

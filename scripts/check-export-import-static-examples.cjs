@@ -62,6 +62,23 @@ function gitShowHead(relativePath) {
   }
 }
 
+const PHASE_125_ALLOWED_RUNTIME_FILES = new Set([
+  "lib/family/export-types.ts",
+  "lib/family/export-collector.ts",
+  "lib/family/json-exporter.ts",
+]);
+
+function filterAllowedStatus(statusText, allowedFiles) {
+  return statusText
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .filter((line) => {
+      const file = line.slice(3).trim().replaceAll("\\", "/");
+      return !allowedFiles.has(file);
+    })
+    .join("\n");
+}
+
 const packageJson = readJson("package.json");
 const exportDoc = readFile("docs/122B_EXPORT_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md");
 const importDoc = readFile("docs/123B_IMPORT_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md");
@@ -257,7 +274,11 @@ for (const [label, pathspecs] of [
   ["PLANNING.MD touched", ["PLANNING.MD"]],
 ]) {
   const pathStatus = gitStatus(...pathspecs);
-  if (pathStatus.trim()) failures.push(`${label}: ${pathStatus.trim()}`);
+  const filteredStatus =
+    label === "runtime app surface changed"
+      ? filterAllowedStatus(pathStatus, PHASE_125_ALLOWED_RUNTIME_FILES)
+      : pathStatus;
+  if (filteredStatus.trim()) failures.push(`${label}: ${filteredStatus.trim()}`);
 }
 
 if (failures.length > 0) {

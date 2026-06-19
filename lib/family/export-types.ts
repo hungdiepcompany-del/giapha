@@ -1,3 +1,9 @@
+import type {
+  Clan,
+  ClanBranch,
+  GenerationRule,
+  PersonBranchMembership,
+} from "@/lib/family/lineage-types";
 import type { Person } from "@/lib/family/people-types";
 import type {
   CoupleRelationship,
@@ -10,9 +16,11 @@ import type { TreeLayout, TreeLayoutNode } from "@/lib/family/tree-types";
 export const FAMILY_EXPORT_SCHEMA_VERSION = "1.0.0";
 export const FAMILY_EXPORT_APP_NAME = "WEB GIA PHẢ";
 export const FAMILY_EXPORT_APP_VERSION = "0.1.0";
+export const FAMILY_EXPORT_APP_EXPORT_VERSION = "phase-125-small-json";
 
 export type ExportPrivacyMode = "admin" | "family" | "public";
 export type ExportAction = "create" | "download";
+export type ExportScope = "admin_full_backup" | "family_json" | "public_json";
 
 export type ExportBuildOptions = {
   action?: ExportAction;
@@ -27,6 +35,10 @@ export type FamilyExportChild = Omit<FamilyChild, "person">;
 export type FamilyExportCouple = Omit<CoupleRelationship, "person1" | "person2">;
 export type FamilyExportTreeLayout = TreeLayout;
 export type FamilyExportTreeLayoutNode = TreeLayoutNode;
+export type FamilyExportClan = Clan;
+export type FamilyExportClanBranch = ClanBranch;
+export type FamilyExportGenerationRule = GenerationRule;
+export type FamilyExportPersonBranchMembership = PersonBranchMembership;
 
 export type FamilyExportCollection = {
   exported_by: string | null;
@@ -35,6 +47,10 @@ export type FamilyExportCollection = {
   family_parents: FamilyExportParent[];
   family_children: FamilyExportChild[];
   couple_relationships: FamilyExportCouple[];
+  clans: FamilyExportClan[];
+  clan_branches: FamilyExportClanBranch[];
+  generation_rules: FamilyExportGenerationRule[];
+  person_branch_memberships: FamilyExportPersonBranchMembership[];
   tree_layouts: FamilyExportTreeLayout[];
   tree_layout_nodes: FamilyExportTreeLayoutNode[];
 };
@@ -42,13 +58,20 @@ export type FamilyExportCollection = {
 export type FamilyJsonManifest = {
   app_name: string;
   app_version: string;
+  app_export_version: string;
   schema_version: string;
   exported_at: string;
   exported_by: string | null;
+  export_scope: ExportScope;
+  privacy_scope: ExportPrivacyMode;
   privacy_mode: ExportPrivacyMode;
   people_count: number;
   family_count: number;
   relationship_count: number;
+  clan_count: number;
+  clan_branch_count: number;
+  generation_rule_count: number;
+  person_branch_membership_count: number;
   tree_layout_count: number;
   tree_layout_node_count: number;
   media_count: number;
@@ -59,7 +82,10 @@ export type FamilyJsonExport = FamilyExportCollection & {
   schema_version: string;
   app_name: string;
   app_version: string;
+  app_export_version: string;
   exported_at: string;
+  export_scope: ExportScope;
+  privacy_scope: ExportPrivacyMode;
   privacy_mode: ExportPrivacyMode;
   manifest: FamilyJsonManifest;
 };

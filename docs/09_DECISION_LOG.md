@@ -1,5 +1,27 @@
 # Decision Log
 
+## Decision 147 - Phase 125 allows only small main-app JSON export hardening
+
+Chon:
+
+Owner-approved Phase 125 may harden the existing small/main-app `family.json`
+export path with metadata, lineage sections from existing verified tables and
+privacy-safe non-admin builder behavior. This approval does not authorize large
+JSON export runtime, GEDCOM/ZIP runtime expansion, media export/import,
+backup/restore runtime, import parser runtime, migration, SQL, DB apply,
+dependency, Worker, OpenNext/Wrangler config, deploy or push.
+
+Ly do:
+
+- The current JSON export already exists and can be hardened without adding a
+  new runtime surface or dependency.
+- `family.json` is the canonical portability format and should include lineage
+  metadata after the lineage tables were applied and verified.
+- Public/family export behavior must be safe even before a public/family export
+  route is approved.
+- GEDCOM/ZIP/media/backup work remains service-boundary governed because it can
+  affect Worker size, timeout, privacy and rollback requirements.
+
 ## Decision 146 - Export/import final readiness is an owner decision gate, not runtime approval
 
 Chon:

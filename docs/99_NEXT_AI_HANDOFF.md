@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 125 - Small Main-App JSON Export Hardening completed
+
+- Owner approved Phase 125 small main-app JSON export hardening only.
+- Reviewed existing JSON export surface:
+  `app/(admin)/admin/exports/download/json/route.ts`,
+  `lib/family/json-exporter.ts`, `lib/family/export-collector.ts` and
+  `lib/family/export-types.ts`.
+- Hardened `family.json` metadata with `app_export_version`, `export_scope`
+  and `privacy_scope`; existing `schema_version`, `exported_at`, app metadata,
+  manifest and checksum behavior remain.
+- Added lineage export sections for existing verified tables only: `clans`,
+  `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Hardened non-admin JSON builder behavior for future `family`/`public` calls:
+  people are sanitized through the existing privacy service, hidden rows are
+  filtered, private/source notes are stripped, audit/delete actor fields are
+  cleared and non-admin tree layout coordinates are omitted.
+- Added `docs/125_SMALL_JSON_EXPORT_HARDENING.md`,
+  `scripts/check-small-json-export-hardening.cjs` and
+  `npm run check:small-json-export-hardening`.
+- Decision 147 records that Phase 125 is only small JSON export hardening and
+  does not authorize large JSON, GEDCOM/ZIP/media, backup/restore, import
+  parser, Worker, dependency, config, deploy, migration or DB mutation work.
+- Worker/runtime: main Worker touched YES, limited to existing small JSON
+  export code; runtime dependency added NO; new service Worker created NO;
+  OpenNext/Wrangler config changed NO; Worker size risk LOW.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no large JSON export runtime, no GEDCOM heavy runtime, no ZIP
+  runtime, no import parser runtime, no media export/import, no backup/restore
+  runtime, no deploy and no push.
+- Validation: small JSON export hardening PASS; export/import final readiness
+  PASS; export/import static examples PASS; export/import boundary design PASS;
+  inline admin warning UI PASS; Vietnamese genealogy manual SQL diagnostic,
+  domain UI and domain readiness PASS; env-safe PASS; migrations PASS;
+  typecheck PASS; lint PASS; clean temp `npm run build` PASS; Git whitespace
+  checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: Phase 126 small JSON export smoke/review, or defer
+  further export implementation until a separately owner-approved
+  export-service boundary design phase.
+
 ## 2026-06-19 - Phase 122C-124C Export/Import Final Readiness Matrix completed
 
 - Added `docs/122C_EXPORT_COMPATIBILITY_MATRIX.md` with export compatibility
