@@ -67,7 +67,16 @@ function visibleCouple(
   return !row.deleted_at && canShowVisibility(row.visibility, mode);
 }
 
-function toPersonNode(person: Person): TreeGraphNode {
+function toPersonNode(
+  person: Person,
+  lineage?: {
+    clanName: string | null;
+    branchName: string | null;
+    generationNumber: number | null;
+    membershipType: string | null;
+    visibility: "public" | "family" | "private" | null;
+  },
+): TreeGraphNode {
   return {
     id: `person:${person.id}`,
     kind: "person",
@@ -77,8 +86,12 @@ function toPersonNode(person: Person): TreeGraphNode {
     birthYear: yearOf(person.birth_date),
     deathYear: yearOf(person.death_date),
     isLiving: person.is_living,
-    branchName: person.branch_name,
-    generationNumber: person.generation_number,
+    branchName: lineage?.branchName ?? person.branch_name,
+    generationNumber: lineage?.generationNumber ?? person.generation_number,
+    lineageClanName: lineage?.clanName ?? null,
+    lineageBranchName: lineage?.branchName ?? null,
+    lineageMembershipType: lineage?.membershipType ?? null,
+    lineageVisibility: lineage?.visibility ?? null,
     visibility: person.visibility,
     position: {
       x: 0,
@@ -132,6 +145,44 @@ export function buildFamilyTreeGraph(
       personIds.has(row.person1_id) &&
       personIds.has(row.person2_id),
   );
+  const clanById = new Map(
+    (input.lineageClans ?? []).map((clan) => [clan.id, clan]),
+  );
+  const branchById = new Map(
+    (input.lineageBranches ?? []).map((branch) => [branch.id, branch]),
+  );
+  const lineageByPerson = new Map<
+    string,
+    {
+      clanName: string | null;
+      branchName: string | null;
+      generationNumber: number | null;
+      membershipType: string | null;
+      visibility: "public" | "family" | "private" | null;
+    }
+  >();
+
+  for (const membership of (input.lineageMemberships ?? [])
+    .filter((row) => !row.deleted_at)
+    .sort((a, b) => {
+      if (a.is_primary !== b.is_primary) return a.is_primary ? -1 : 1;
+      return a.sort_order - b.sort_order;
+    })) {
+    if (lineageByPerson.has(membership.person_id)) continue;
+
+    const clan = clanById.get(membership.clan_id);
+    const branch = membership.branch_id
+      ? branchById.get(membership.branch_id)
+      : null;
+
+    lineageByPerson.set(membership.person_id, {
+      clanName: clan?.clan_name ?? null,
+      branchName: branch?.branch_name ?? null,
+      generationNumber: membership.generation_number,
+      membershipType: membership.membership_type,
+      visibility: membership.visibility,
+    });
+  }
 
   const familiesWithEdges = families.filter((family) => {
     return (
@@ -140,7 +191,7 @@ export function buildFamilyTreeGraph(
     );
   });
   const nodes: TreeGraphNode[] = [
-    ...visiblePeople.map(toPersonNode),
+    ...visiblePeople.map((person) => toPersonNode(person, lineageByPerson.get(person.id))),
     ...familiesWithEdges.map(toFamilyNode),
   ];
   const familyNodeIds = new Set(familiesWithEdges.map((family) => family.id));

@@ -4,6 +4,11 @@ import type { PermissionCode } from "@/lib/permissions/permission-types";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 import { maybeCreateAdminSupabaseClient } from "@/lib/supabase/admin";
 import { buildFamilyTreeGraph } from "@/lib/family/tree-graph-builder";
+import type {
+  Clan,
+  ClanBranch,
+  PersonBranchMembership,
+} from "@/lib/family/lineage-types";
 import type { Person } from "@/lib/family/people-types";
 import type {
   CoupleRelationship,
@@ -110,6 +115,69 @@ const COUPLE_TREE_SELECT = `
   delete_reason
 `;
 
+const CLAN_TREE_SELECT = `
+  id,
+  clan_code,
+  clan_name,
+  family_name,
+  origin_place,
+  founder_person_id,
+  current_head_person_id,
+  description,
+  visibility,
+  created_at,
+  created_by,
+  updated_at,
+  updated_by,
+  deleted_at,
+  deleted_by,
+  delete_reason
+`;
+
+const BRANCH_TREE_SELECT = `
+  id,
+  clan_id,
+  parent_branch_id,
+  branch_code,
+  branch_name,
+  branch_level,
+  sort_order,
+  founder_person_id,
+  head_person_id,
+  representative_person_id,
+  description,
+  visibility,
+  created_at,
+  created_by,
+  updated_at,
+  updated_by,
+  deleted_at,
+  deleted_by,
+  delete_reason
+`;
+
+const MEMBERSHIP_TREE_SELECT = `
+  id,
+  person_id,
+  clan_id,
+  branch_id,
+  generation_rule_id,
+  generation_number,
+  generation_override_reason,
+  membership_type,
+  is_primary,
+  sort_order,
+  source_note,
+  visibility,
+  created_at,
+  created_by,
+  updated_at,
+  updated_by,
+  deleted_at,
+  deleted_by,
+  delete_reason
+`;
+
 function errorResult<T>(
   error: string,
   reason?: string,
@@ -166,7 +234,16 @@ export async function getAdminFamilyTreeGraph(): Promise<
     return errorResult("Chưa cấu hình Supabase.", "missing_admin_config");
   }
 
-  const [people, families, familyParents, familyChildren, couples] =
+  const [
+    people,
+    families,
+    familyParents,
+    familyChildren,
+    couples,
+    clans,
+    branches,
+    memberships,
+  ] =
     await Promise.all([
       supabase
         .from("people")
@@ -193,6 +270,21 @@ export async function getAdminFamilyTreeGraph(): Promise<
         .select(COUPLE_TREE_SELECT)
         .is("deleted_at", null)
         .returns<CoupleRelationship[]>(),
+      supabase
+        .from("clans")
+        .select(CLAN_TREE_SELECT)
+        .is("deleted_at", null)
+        .returns<Clan[]>(),
+      supabase
+        .from("clan_branches")
+        .select(BRANCH_TREE_SELECT)
+        .is("deleted_at", null)
+        .returns<ClanBranch[]>(),
+      supabase
+        .from("person_branch_memberships")
+        .select(MEMBERSHIP_TREE_SELECT)
+        .is("deleted_at", null)
+        .returns<PersonBranchMembership[]>(),
     ]);
 
   const firstError =
@@ -200,7 +292,10 @@ export async function getAdminFamilyTreeGraph(): Promise<
     families.error ??
     familyParents.error ??
     familyChildren.error ??
-    couples.error;
+    couples.error ??
+    clans.error ??
+    branches.error ??
+    memberships.error;
 
   if (firstError) {
     return errorResult(firstError.message, "tree_query_failed");
@@ -215,6 +310,9 @@ export async function getAdminFamilyTreeGraph(): Promise<
         familyParents: familyParents.data ?? [],
         familyChildren: familyChildren.data ?? [],
         coupleRelationships: couples.data ?? [],
+        lineageClans: clans.data ?? [],
+        lineageBranches: branches.data ?? [],
+        lineageMemberships: memberships.data ?? [],
       },
       { mode: "admin" },
     ),

@@ -12,6 +12,7 @@ type AdminShellProps = {
 };
 
 const navItems = [
+  { href: "/admin/genealogy", label: "Genealogy" },
   { href: "/admin", label: "Tổng quan", exact: true },
   { href: "/admin/people", label: "Thành viên" },
   { href: "/admin/relationships", label: "Quan hệ gia đình" },

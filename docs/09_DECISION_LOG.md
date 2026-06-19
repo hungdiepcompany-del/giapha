@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 138 - Lineage admin UI uses existing permissions and keeps heavy work deferred
+
+Chon:
+
+Grouped Phase 114-117 can integrate verified Vietnamese genealogy lineage tables into the main app as lightweight admin CRUD/UI and privacy-safe display work, using only existing permissions and no new schema, Worker, dependency or deploy change.
+
+Ly do:
+
+- Phase 113C recorded `PASS_MANUAL_SQL_DIAGNOSTIC` for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Existing RLS policies already use `people.view` or `tree.view` for reads and `people.update`, `relationships.update`, `tree.edit_layout` or `settings.manage` for writes.
+- Adding a dedicated lineage permission would require a future migration/permission phase and is outside Phase 114-117.
+- Public routes must stay conservative: lineage membership data is not queried on public routes in this phase, and sanitizer logic clears lineage fields unless they are explicitly public-safe.
+- Export/import/GEDCOM/ZIP/media/data-quality work remains deferred to boundary-governed phases and must not be folded into this UI integration.
+
 ## Decision 137 - Manual SQL diagnostic PASS unblocks grouped Phase 114-117
 
 Chon:

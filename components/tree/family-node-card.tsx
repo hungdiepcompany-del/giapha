@@ -31,6 +31,9 @@ function PersonCard({ data }: { data: Extract<TreeGraphNode, { kind: "person" }>
       <div className="mt-3 grid gap-1 text-xs text-slate-600">
         {dateRange ? <div>{dateRange}</div> : null}
         {data.generationNumber ? <div>Đời {data.generationNumber}</div> : null}
+        {data.lineageClanName ? (
+          <div className="truncate">{data.lineageClanName}</div>
+        ) : null}
         {data.branchName ? <div className="truncate">{data.branchName}</div> : null}
       </div>
       <div className="mt-3 inline-flex border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">

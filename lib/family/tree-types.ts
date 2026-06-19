@@ -1,5 +1,10 @@
 import type { Person } from "@/lib/family/people-types";
 import type {
+  Clan,
+  ClanBranch,
+  PersonBranchMembership,
+} from "@/lib/family/lineage-types";
+import type {
   CoupleRelationship,
   Family,
   FamilyChild,
@@ -25,6 +30,10 @@ export type TreePersonNode = {
   isLiving: boolean;
   branchName: string | null;
   generationNumber: number | null;
+  lineageClanName: string | null;
+  lineageBranchName: string | null;
+  lineageMembershipType: string | null;
+  lineageVisibility: "public" | "family" | "private" | null;
   visibility: Person["visibility"];
   position: {
     x: number;
@@ -72,6 +81,9 @@ export type TreeBuilderInput = {
   familyParents: FamilyParent[];
   familyChildren: FamilyChild[];
   coupleRelationships: CoupleRelationship[];
+  lineageMemberships?: PersonBranchMembership[];
+  lineageClans?: Clan[];
+  lineageBranches?: ClanBranch[];
 };
 
 export type TreeLayout = {

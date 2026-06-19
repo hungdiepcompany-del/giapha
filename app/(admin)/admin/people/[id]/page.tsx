@@ -1,6 +1,10 @@
 import Link from "next/link";
 
 import { AdminShell } from "@/components/layout/admin-shell";
+import {
+  MembershipForm,
+  MembershipSummary,
+} from "@/components/genealogy/lineage-admin";
 import { PersonForm } from "@/components/people/person-form";
 import { CoupleForm } from "@/components/relationships/couple-form";
 import { RelationshipForm } from "@/components/relationships/relationship-form";
@@ -10,6 +14,12 @@ import {
   softDeletePersonAction,
   updatePersonAction,
 } from "@/app/(admin)/admin/people/actions";
+import {
+  listClanBranches,
+  listClans,
+  listGenerationRules,
+  listPersonBranchMemberships,
+} from "@/lib/family/lineage-service";
 import { getPersonById } from "@/lib/family/people-service";
 import {
   getPersonRelationshipSummary,
@@ -42,6 +52,14 @@ export default async function PersonDetailPage({
   const canRestore = context.permissions.includes("people.restore");
   const canViewRevisions = context.permissions.includes("revisions.view");
   const canViewRelationships = context.permissions.includes("relationships.view");
+  const canViewLineage =
+    context.permissions.includes("people.view") ||
+    context.permissions.includes("tree.view");
+  const canManageLineage =
+    context.permissions.includes("people.update") ||
+    context.permissions.includes("relationships.update") ||
+    context.permissions.includes("tree.edit_layout") ||
+    context.permissions.includes("settings.manage");
   const canCreateRelationships = context.permissions.includes(
     "relationships.create",
   );
@@ -63,6 +81,25 @@ export default async function PersonDetailPage({
       : null;
   const relationshipListResult =
     personResult.ok && canCreateRelationships ? await listRelationships() : null;
+  const lineageResult =
+    personResult.ok && canViewLineage
+      ? await Promise.all([
+          listClans(),
+          listClanBranches(),
+          listGenerationRules(),
+          listPersonBranchMemberships(id),
+        ])
+      : null;
+  const [clansResult, branchesResult, rulesResult, membershipsResult] =
+    lineageResult ?? [null, null, null, null];
+  const lineageError =
+    clansResult && !clansResult.ok
+      ? clansResult.error
+      : branchesResult && !branchesResult.ok
+        ? branchesResult.error
+        : membershipsResult && !membershipsResult.ok
+          ? membershipsResult.error
+          : "Missing people.view or tree.view for lineage data.";
 
   return (
     <AdminShell
@@ -141,6 +178,50 @@ export default async function PersonDetailPage({
                       Khôi phục
                     </button>
                   </form>
+                ) : null}
+              </div>
+
+              <div className="border-t border-slate-200 pt-6">
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-slate-950">
+                    Genealogy branch membership
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Memberships are stored in lineage tables and are not
+                    automatically backfilled from legacy people fields.
+                  </p>
+                </div>
+
+                {clansResult?.ok && branchesResult?.ok && membershipsResult?.ok ? (
+                  <MembershipSummary
+                    memberships={membershipsResult.data}
+                    clans={clansResult.data}
+                    branches={branchesResult.data}
+                  />
+                ) : (
+                  <div className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                    {lineageError}
+                  </div>
+                )}
+
+                {canManageLineage &&
+                clansResult?.ok &&
+                branchesResult?.ok &&
+                rulesResult?.ok ? (
+                  <div className="mt-6 border border-slate-200 bg-slate-50 p-4">
+                    <h3 className="text-base font-bold text-slate-950">
+                      Assign membership
+                    </h3>
+                    <div className="mt-4">
+                      <MembershipForm
+                        personId={personResult.data.id}
+                        clans={clansResult.data}
+                        branches={branchesResult.data}
+                        generationRules={rulesResult.data}
+                        returnTo={`/admin/people/${personResult.data.id}`}
+                      />
+                    </div>
+                  </div>
                 ) : null}
               </div>
 

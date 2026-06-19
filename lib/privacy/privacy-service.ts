@@ -134,11 +134,20 @@ function sanitizeTreePersonNode(
     return null;
   }
 
-  if (mode === "public" && node.isLiving) {
+  if (mode === "public") {
+    const canShowLineage =
+      !node.isLiving && node.lineageVisibility === "public";
+
     return {
       ...node,
-      birthYear: null,
-      deathYear: null,
+      birthYear: node.isLiving ? null : node.birthYear,
+      deathYear: node.isLiving ? null : node.deathYear,
+      lineageClanName: canShowLineage ? node.lineageClanName : null,
+      lineageBranchName: canShowLineage ? node.lineageBranchName : null,
+      lineageMembershipType: canShowLineage ? node.lineageMembershipType : null,
+      lineageVisibility: canShowLineage ? node.lineageVisibility : null,
+      branchName: canShowLineage ? node.branchName : null,
+      generationNumber: canShowLineage ? node.generationNumber : null,
     };
   }
 

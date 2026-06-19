@@ -1,5 +1,20 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 114-117 Vietnamese Genealogy Domain UI Integration
+
+- Implemented grouped Phase 114-117 runtime/admin integration after Phase 113C recorded `PASS_MANUAL_SQL_DIAGNOSTIC`.
+- Phase 114 service result: added server-only lineage types, validation and service layer for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Phase 115 admin UI result: added `/admin/genealogy`, `/admin/genealogy/clans`, `/admin/genealogy/branches`, `/admin/genealogy/generation-rules` and `/admin/genealogy/memberships`.
+- Phase 116 membership integration result: person detail pages now show branch membership and include an explicit assignment form when the user has an existing manage permission.
+- Phase 117 privacy/tree/public result: admin tree can display lineage membership data; public sanitizer clears lineage fields unless future lineage data is public-visible and the person is not living. Public routes do not query lineage tables in this phase.
+- Permissions used: read via `people.view` or `tree.view`; manage via `people.update`, `relationships.update`, `tree.edit_layout` or `settings.manage`.
+- Added `scripts/check-vietnamese-genealogy-domain-ui.cjs` and `npm run check:vietnamese-genealogy-domain-ui`.
+- Created `docs/114_117_VIETNAMESE_GENEALOGY_DOMAIN_UI_INTEGRATION.md` and updated `docs/00_INDEX.md`.
+- Validation: Phase 103-117 Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Workspace-root `npm run build` was blocked before compile by a pre-existing Windows `.next` artifact ACL error: `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`. A clean temp copy excluding `.next`, env files and `PLANNING.MD` built successfully.
+- No migration created, no DB apply, no SQL mutation by Codex, no seed/backfill, no automatic backfill from `people.branch_name` or `people.generation_number`, no excluded tables used, no media/upload/storage, no large export/import/GEDCOM/ZIP, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy and no push.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+
 ## 2026-06-19 - Phase 113C Vietnamese Genealogy Manual SQL Diagnostic PASS
 
 - Recorded owner/operator-provided manual Supabase Dashboard SQL diagnostic result for project `frkyeuxrlcflmsxxsolp`.

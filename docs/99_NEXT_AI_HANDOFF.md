@@ -1,5 +1,23 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 114-117 Vietnamese Genealogy Domain UI Integration completed
+
+- Grouped Phase 114-117 completed locally after Phase 113C `PASS_MANUAL_SQL_DIAGNOSTIC`.
+- Phase 114 result: added server-only lineage types, validation and service layer for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Phase 115 result: added admin routes `/admin/genealogy`, `/admin/genealogy/clans`, `/admin/genealogy/branches`, `/admin/genealogy/generation-rules` and `/admin/genealogy/memberships`.
+- Phase 116 result: person detail pages now show branch membership and include an explicit assignment form when the user has an existing manage permission.
+- Phase 117 result: admin tree can display lineage membership data; public sanitizer clears lineage fields unless future lineage data is public-visible and the person is not living. Public routes do not query lineage tables in this phase.
+- Permissions used: read via `people.view` or `tree.view`; manage via `people.update`, `relationships.update`, `tree.edit_layout` or `settings.manage`.
+- Created `docs/114_117_VIETNAMESE_GENEALOGY_DOMAIN_UI_INTEGRATION.md`.
+- Added `scripts/check-vietnamese-genealogy-domain-ui.cjs` and `npm run check:vietnamese-genealogy-domain-ui`.
+- Updated `docs/00_INDEX.md`, `docs/08_AI_WORK_LOG.md` and `docs/09_DECISION_LOG.md`.
+- Worker/runtime: main Worker touched YES for lightweight admin CRUD/UI only; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk LOW.
+- Validation: Phase 103-117 Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` is blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Deferred: export/import/GEDCOM/ZIP/media/data-quality work remains boundary-governed and not implemented here.
+- Boundary: no migration created, no DB apply, no SQL mutation by Codex, no seed/backfill, no automatic backfill from `people.branch_name` or `people.generation_number`, no excluded tables used, no media/upload/storage, no large export/import/GEDCOM/ZIP, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy, no push and `.env.local`, `.dev.vars` and `PLANNING.MD` not read.
+- Recommended next phase: Phase 118A Media Domain and Storage Boundary Design, or a focused Phase 117A UX polish pass for genealogy admin selectors.
+
 ## 2026-06-19 - Phase 113C Vietnamese Genealogy Manual SQL Diagnostic PASS recorded
 
 - Phase 113C recorded owner/operator-provided manual read-only SQL diagnostic PASS from Supabase Dashboard SQL Editor.
