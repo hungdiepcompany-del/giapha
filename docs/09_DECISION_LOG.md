@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 140 - Media/data-quality static contracts require approval gates before schema or service work
+
+Chon:
+
+Phase 118B-120B records static media, data-quality and admin warning UX contracts with approval gates only. These contracts do not authorize schema, migration, SQL, storage bucket creation, media upload, thumbnail/image processing, persistent warning tables, full-tree scans, Worker creation, dependency changes or deploy.
+
+Ly do:
+
+- Phase 118A-120A established boundary design but future agents still need concrete no-go gates before implementation.
+- Media storage and processing require owner approval, storage/provider selection, RLS/privacy review, export/backup impact review and service boundary review before any real migration or Worker.
+- Persistent warnings and full-tree quality scans require schema/privacy/service approval before they can become database or runtime behavior.
+- Admin warning UX can have static copy and accessibility contracts now, but runtime components must wait until warning source and persistence model are approved.
+
 ## Decision 139 - Media and data-quality work remain boundary design before schema/runtime
 
 Chon:

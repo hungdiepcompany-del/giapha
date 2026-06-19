@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 118B-120B Vietnamese Genealogy Media/Data Quality Static Contracts completed
+
+- Grouped Phase 118B, 119B and 120B completed locally as docs/static contract and approval-gate work after commit `a436cfa`.
+- Phase 118B result: created `docs/118B_MEDIA_STATIC_CONTRACT_AND_APPROVAL_GATE.md` for future media metadata concepts, storage contract fields, privacy contract, media-service boundary and approval gates before media migration or media-service Worker.
+- Phase 119B result: created `docs/119B_DATA_QUALITY_STATIC_CONTRACT_AND_APPROVAL_GATE.md` for warning categories, severity contract, future warning shape, privacy boundary and approval gates before persistent warning migration or quality-service Worker.
+- Phase 120B result: created `docs/120B_ADMIN_WARNING_UX_STATIC_CONTRACT.md` for admin warning locations, Vietnamese labels, UX states, privacy-safe copy, accessibility/basic UI rules and schema/service boundaries.
+- Added `scripts/check-media-quality-static-contracts.cjs` and `npm run check:media-quality-static-contracts`.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk introduced NO.
+- Boundary: no migration, no `.sql` file, no DB apply, no SQL mutation, no seed/backfill, no media upload/storage bucket, no thumbnail/image/video/file processing, no persistent warning table, no full-tree runtime scan, no large export/import/GEDCOM/ZIP, no deploy and no push.
+- Validation: media/data-quality static contracts checker PASS, media/data-quality boundary checker PASS, Phase 103-120B Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` remains blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Note for next AI: these contracts are approval gates, not implementation permission. Any future media migration, storage provider activation, media-service Worker, persistent warning table, full-tree quality scan, import preview scan or export-readiness scan needs separate owner-approved phase.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+- Recommended next phase: Phase 118C/119C/120C static examples and acceptance checklists, or a separately owner-approved schema/service candidate phase.
+
 ## 2026-06-19 - Phase 118A-120A Vietnamese Genealogy Media/Data Quality Boundary Design completed
 
 - Grouped Phase 118A, 119A and 120A completed locally as design-only boundary planning after Phase 117A commit `4a3f45038950f18d6e9bdf680d4c66de171b5e3e`.

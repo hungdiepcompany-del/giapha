@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 118B-120B Vietnamese Genealogy Media/Data Quality Static Contracts
+
+- Implemented grouped Phase 118B, 119B and 120B as docs/static contract and approval-gate work only after commit `a436cfa`.
+- Phase 118B result: created media static contract and approval gate covering future person/family/clan/branch/memorial media concepts, storage contract fields, privacy, media-service boundary and approval gates before media migration or media-service Worker.
+- Phase 119B result: created data-quality static contract and approval gate covering warning categories, severity, future warning shape, privacy, persistent warning migration gate and quality-service Worker gate.
+- Phase 120B result: created admin warning UX static contract covering admin locations, Vietnamese labels, UX states, privacy-safe copy, accessibility rules and schema/service boundaries.
+- Added `scripts/check-media-quality-static-contracts.cjs` and `npm run check:media-quality-static-contracts`.
+- Approval gates added before future media migration, media-service Worker, persistent warning migration and quality-service Worker.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation, no seed/backfill, No media upload/storage bucket, no thumbnail/image/video/file processing, no persistent warning table, no full-tree runtime scan, no large export/import/GEDCOM/ZIP, No Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy and no push.
+- Runtime result: main app runtime code was not changed; this phase only changed docs, package script registration and a static checker.
+- Validation: media/data-quality static contracts checker PASS, media/data-quality boundary checker PASS, Phase 103-120B Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Workspace-root `npm run build` remains blocked before compile by the pre-existing Windows `.next` artifact ACL error: `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`. A clean temp copy excluding `.next`, env files and `PLANNING.MD` built successfully.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+
 ## 2026-06-19 - Phase 118A-120A Vietnamese Genealogy Media/Data Quality Boundary Design
 
 - Implemented grouped Phase 118A, 119A and 120A as docs/static planning only after Phase 117A commit `4a3f45038950f18d6e9bdf680d4c66de171b5e3e`.
