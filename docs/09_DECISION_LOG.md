@@ -1,5 +1,28 @@
 # Decision Log
 
+## Decision 154 - Phase 131 monitoring/prep is not authenticated smoke
+
+Chon:
+
+Phase 131 may record lightweight public production monitoring and prepare a
+future authenticated smoke retry with shell-only placeholders. It must not run
+authenticated requests, request credentials, deploy, push, mutate data, change
+auth/permission logic, expand runtime export/import/media/backup behavior,
+create Workers, change OpenNext/Wrangler config or add dependencies.
+
+Public monitoring is allowed only when local `main` and `origin/main` are
+synchronized and the worktree is clean. Static checks and public monitoring
+must not be promoted to authenticated PASS.
+
+Ly do:
+
+- Phase 130 remains blocked until explicit shell-only authenticated smoke
+  material exists in the execution process.
+- Public route health is useful operational evidence but cannot prove
+  authenticated permission, privacy or export behavior.
+- Separating monitoring/prep from authenticated execution keeps credentials
+  out of docs, chat, logs and committed files.
+
 ## Decision 153 - Phase 130 must remain blocked when explicit smoke env is absent
 
 Chon:

@@ -1,5 +1,29 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 131 - Production Monitoring and Authenticated Smoke Preparation
+
+- Added `docs/131_PRODUCTION_MONITORING_AND_AUTH_SMOKE_PREPARATION.md`.
+- Confirmed Phase 130 authenticated smoke status remains
+  `PHASE_130_BLOCKED_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Public production monitoring was allowed only after sync/clean gate passed:
+  local `main` and `origin/main` synchronized; worktree clean.
+- Lightweight unauthenticated public monitoring PASS for `/`, `/tree` and
+  `/auth/login`: HTTP 200, Vietnamese copy present, no obvious server error
+  and no public privacy/runtime marker exposure found.
+- Authenticated smoke was not run and public/static evidence was not promoted
+  to authenticated PASS.
+- Added shell-only preparation guidance, cleanup commands, no-go conditions,
+  incident notes and rollback/escalation notes for a future Phase 130 retry.
+- Added `scripts/check-production-monitoring-auth-smoke-prep.cjs` and
+  `npm run check:production-monitoring-auth-smoke-prep`.
+- Boundary: no authenticated smoke run, no credential requested, no secret
+  printed or written, no deploy, no push, no migration, no `.sql`, no DB
+  apply, no SQL/data mutation, no seed/backfill, no schema change, no
+  auth/permission logic change, no export/import runtime expansion, no
+  GEDCOM/ZIP/media/backup runtime, no Worker created, no OpenNext/Wrangler
+  config change and no runtime dependency added.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 130 - Authenticated Production Smoke Execution
 
 - Owner approved authenticated production smoke only when explicit shell-only

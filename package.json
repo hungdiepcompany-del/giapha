@@ -163,7 +163,8 @@
     "check:vietnamese-ui-copy": "node scripts/check-vietnamese-ui-copy.cjs",
     "check:post-runtime-ui-deploy-readiness": "node scripts/check-post-runtime-ui-deploy-readiness.cjs",
     "check:authenticated-smoke-runbook": "node scripts/check-authenticated-smoke-runbook.cjs",
-    "check:authenticated-smoke-result": "node scripts/check-authenticated-smoke-result.cjs"
+    "check:authenticated-smoke-result": "node scripts/check-authenticated-smoke-result.cjs",
+    "check:production-monitoring-auth-smoke-prep": "node scripts/check-production-monitoring-auth-smoke-prep.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

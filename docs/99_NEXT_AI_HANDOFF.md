@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 131 - Production Monitoring and Authenticated Smoke Preparation completed
+
+- Added `docs/131_PRODUCTION_MONITORING_AND_AUTH_SMOKE_PREPARATION.md`.
+- Added `scripts/check-production-monitoring-auth-smoke-prep.cjs` and
+  `npm run check:production-monitoring-auth-smoke-prep`.
+- Git sync/public monitoring gate PASS before public requests: local `main`
+  and `origin/main` synchronized; worktree clean.
+- Production URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Lightweight public production monitoring PASS for `/`, `/tree` and
+  `/auth/login`: HTTP 200, Vietnamese copy present and no obvious server error.
+- Public tree/privacy marker review PASS: no admin warning UI marker,
+  `notes_private`, `source_note`, token/key/session/signed URL marker found in
+  the public route review.
+- Current authenticated smoke status remains
+  `PHASE_130_BLOCKED_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Public monitoring and static validation were not promoted to authenticated
+  PASS.
+- Future Phase 130 retry requires: synced local/origin, clean worktree,
+  reachable production URL, Phase 129 runbook PASS, Phase 130 checker PASS,
+  all explicit shell-only env names present, no credential printing/writing
+  and explicit owner approval for retry.
+- If explicit shell-only env is missing, record
+  `SAFE_SKIP_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV` and stop before
+  authenticated network requests.
+- Decision 154 records that Phase 131 monitoring/prep is docs/checker-only and
+  not authenticated smoke.
+- Boundary: no authenticated smoke run, no credential requested, no secret
+  printed or written, no deploy, no push, no migration, no `.sql`, no DB
+  apply, no SQL/data mutation, no seed/backfill, no schema change, no
+  auth/permission logic change, no export/import runtime expansion, no
+  GEDCOM/ZIP/media/backup runtime, no Worker created, no OpenNext/Wrangler
+  config change and no runtime dependency added.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: retry Phase 130 authenticated production smoke only
+  after owner/operator prepares explicit shell-only env in the Codex execution
+  process and explicitly approves the retry; otherwise continue routine public
+  production monitoring.
+
 ## 2026-06-19 - Phase 130 - Authenticated Production Smoke Result completed
 
 - Owner approved authenticated production smoke only if explicit shell-only
