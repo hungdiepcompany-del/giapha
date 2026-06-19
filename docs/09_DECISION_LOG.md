@@ -1,5 +1,21 @@
 # Decision Log
 
+## Decision 137 - Manual SQL diagnostic PASS unblocks grouped Phase 114-117
+
+Chon:
+
+Record Vietnamese genealogy post-apply DB verification as `PASS_MANUAL_SQL_DIAGNOSTIC` based on owner/operator manual read-only SQL diagnostic results from the Supabase Dashboard SQL Editor for project `frkyeuxrlcflmsxxsolp`. Grouped Phase 114-117 can start from this evidence.
+
+Ly do:
+
+- Owner/operator confirmed required lineage tables exist: `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Owner/operator confirmed excluded tables do not exist: `person_names`, `person_life_events`, `person_burials` and `person_media`.
+- Owner/operator confirmed existing core tables still exist: `people`, `families`, `family_parents`, `family_children` and `couple_relationships`.
+- Owner/operator confirmed RLS is enabled and policies exist for all four new lineage tables.
+- Owner/operator confirmed zero rows in all four new lineage tables, so no seed/backfill was recorded.
+- Codex did not run DB verification, did not run the REST verifier, did not execute SQL and did not use credentials for this PASS record.
+- The previously exposed service role key must still be rotated or revoked before future credential-assisted verification.
+
 ## Decision 136 - Phase 113B-fix requires SQL metadata evidence before PASS
 
 Chon:

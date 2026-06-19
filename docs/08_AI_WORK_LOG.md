@@ -1,5 +1,23 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 113C Vietnamese Genealogy Manual SQL Diagnostic PASS
+
+- Recorded owner/operator-provided manual Supabase Dashboard SQL diagnostic result for project `frkyeuxrlcflmsxxsolp`.
+- Final DB verification status recorded as `PASS_MANUAL_SQL_DIAGNOSTIC`.
+- Verification source: owner/operator manual read-only SQL diagnostic in Supabase Dashboard SQL Editor.
+- Required tables result: PASS for `clans`, `clan_branches`, `generation_rules` and `person_branch_memberships`.
+- Excluded tables result: PASS; `person_names`, `person_life_events`, `person_burials` and `person_media` do not exist per owner/operator diagnostic.
+- Existing core tables result: PASS for `people`, `families`, `family_parents`, `family_children` and `couple_relationships`.
+- RLS result: PASS; owner/operator diagnostic confirmed RLS enabled on all four new lineage tables.
+- Policies result: PASS; owner/operator diagnostic confirmed policies exist for all four new lineage tables.
+- No seed/backfill result: PASS; owner/operator diagnostic confirmed zero rows in all four new lineage tables.
+- Created `docs/113C_VIETNAMESE_GENEALOGY_MANUAL_SQL_DIAGNOSTIC_PASS.md`.
+- Added `scripts/check-vietnamese-genealogy-manual-sql-diagnostic-pass.cjs` and `npm run check:vietnamese-genealogy-manual-sql-diagnostic-pass`.
+- Security note remains active: previously exposed service role key material must be rotated or revoked before future credential-assisted verification. No key value was repeated or written to files.
+- No DB apply, no migration rerun, no SQL execution by Codex, no SQL mutation, no seed/backfill, no migration file change, no new migration, no runtime app code change, no UI change, no deploy, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added and no push.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+- Recommended next phase: grouped Phase 114-117 can start.
+
 ## 2026-06-19 - Phase 113B-fix Vietnamese Genealogy Verification Diagnostic
 
 - Recorded Phase 113B-fix as diagnostic follow-up after owner-provided PowerShell verifier output returned `FAIL`, not PASS.

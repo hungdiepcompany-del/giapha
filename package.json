@@ -147,7 +147,8 @@
     "verify:vietnamese-genealogy-migration:post-apply": "node scripts/verify-vietnamese-genealogy-migration-post-apply.cjs",
     "check:vietnamese-genealogy-manual-apply-verification": "node scripts/check-vietnamese-genealogy-manual-apply-verification.cjs",
     "check:vietnamese-genealogy-credential-verification": "node scripts/check-vietnamese-genealogy-credential-verification.cjs",
-    "check:vietnamese-genealogy-verification-diagnostic": "node scripts/check-vietnamese-genealogy-verification-diagnostic.cjs"
+    "check:vietnamese-genealogy-verification-diagnostic": "node scripts/check-vietnamese-genealogy-verification-diagnostic.cjs",
+    "check:vietnamese-genealogy-manual-sql-diagnostic-pass": "node scripts/check-vietnamese-genealogy-manual-sql-diagnostic-pass.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
