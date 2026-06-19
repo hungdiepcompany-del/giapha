@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 127 - Post Runtime/UI Deploy Readiness Gate
+
+- Added `docs/127_POST_RUNTIME_UI_DEPLOY_READINESS_GATE.md` with status
+  `READY_FOR_MANUAL_DEPLOY_CHECK`.
+- Reviewed recent local work: Phase 125 small JSON export hardening, Phase 126
+  small JSON export smoke/review and UI-VN-01 Vietnamese UI copy normalization.
+- Added `scripts/check-post-runtime-ui-deploy-readiness.cjs` and
+  `npm run check:post-runtime-ui-deploy-readiness`.
+- Runtime/UI review: Phase 125 touched the existing small `family.json` export
+  path; Phase 126 was static review only; UI-VN-01 was display-copy/message
+  normalization only.
+- Worker/runtime result: Main Worker touched YES by prior small JSON/UI changes;
+  runtime dependency added NO; new Worker created NO; OpenNext/Wrangler config
+  changed NO; Worker size risk LOW.
+- Dependency/config drift result: no dependency drift, no Wrangler/OpenNext
+  config drift and no deploy workflow mutation for Phase 127.
+- Migration/SQL/DB result: no migration, no `.sql`, no DB apply, no SQL
+  mutation, no seed/backfill and no schema change.
+- Privacy/security result: small JSON export remains guarded; non-admin builder
+  behavior remains privacy-safe; UI copy did not expose private notes, source
+  notes, tokens, keys or secrets.
+- Deploy readiness status: `READY_FOR_MANUAL_DEPLOY_CHECK`, not deployed.
+- Validation: post-runtime/UI deploy readiness PASS; Vietnamese UI copy PASS;
+  small JSON export smoke PASS; small JSON export hardening PASS; inline admin
+  warning UI PASS; export/import final readiness PASS; export/import static
+  examples PASS; export/import boundary design PASS; env-safe PASS; migrations
+  PASS; typecheck PASS; lint PASS; clean temp `npm run build` PASS.
+- Workspace-root `npm run build` remains blocked before compile by the known
+  Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+- Boundary result: no deploy, no push, no migration, no `.sql`, no DB apply, no
+  SQL mutation, no seed/backfill, no schema change, no permission/auth logic
+  change, no export/import runtime expansion, no GEDCOM/ZIP/media/backup
+  runtime, no Worker created, no OpenNext/Wrangler config change and no runtime
+  dependency added.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - UI-VN-01 - Vietnamese UI Copy Normalization
 
 - Normalized user-visible UI copy to Vietnamese with diacritics across admin

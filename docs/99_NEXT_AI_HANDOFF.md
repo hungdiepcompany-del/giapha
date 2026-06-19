@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 127 - Post Runtime/UI Deploy Readiness Gate completed
+
+- Added `docs/127_POST_RUNTIME_UI_DEPLOY_READINESS_GATE.md` with status
+  `READY_FOR_MANUAL_DEPLOY_CHECK`.
+- Added `scripts/check-post-runtime-ui-deploy-readiness.cjs` and
+  `npm run check:post-runtime-ui-deploy-readiness`.
+- Reviewed recent local work for deploy readiness: Phase 125 small JSON export
+  hardening, Phase 126 small JSON export smoke/review and UI-VN-01 Vietnamese
+  UI copy normalization.
+- Runtime/UI changes reviewed: small existing `family.json` export hardening
+  and display-only Vietnamese UI/message copy normalization.
+- Worker/runtime: Main Worker touched YES by prior small JSON/UI changes;
+  runtime dependency added NO; new Worker created NO; OpenNext/Wrangler config
+  changed NO; Worker size risk LOW.
+- Dependency/config drift: no dependency drift, no Wrangler/OpenNext config
+  drift and no deploy workflow mutation in Phase 127.
+- Migration/SQL/DB impact: no migration, no `.sql`, no DB apply, no SQL
+  mutation, no seed/backfill, no schema change.
+- Privacy/security: small JSON export remains guarded and privacy-safe;
+  UI-VN-01 did not expose private/source notes, tokens, keys or secrets.
+- Deploy readiness status: `READY_FOR_MANUAL_DEPLOY_CHECK`; this is not
+  `DEPLOYED` and no deploy/push was performed.
+- Validation: post-runtime/UI deploy readiness PASS; Vietnamese UI copy PASS;
+  small JSON export smoke PASS; small JSON export hardening PASS; inline admin
+  warning UI PASS; export/import final readiness PASS; export/import static
+  examples PASS; export/import boundary design PASS; env-safe PASS; migrations
+  PASS; typecheck PASS; lint PASS; clean temp `npm run build` PASS.
+- Required before any deploy: explicit owner approval for deploy target/timing,
+  intended commit, backup/snapshot expectation, GitHub Actions/Cloudflare path,
+  Auth/OAuth URL readiness, rollback owner/path and post-deploy smoke operator.
+- Root workspace build remains expected to hit the known Windows `.next` ACL
+  `EPERM` before compile; use clean temp build excluding `.git`, `.next`,
+  `node_modules`, env files and `PLANNING.MD` to distinguish source build
+  failures from local artifact locks.
+- Boundary: no deploy, no push, no migration, no `.sql`, no DB apply, no SQL
+  mutation, no seed/backfill, no schema change, no permission/auth logic
+  change, no export/import runtime expansion, no GEDCOM/ZIP/media/backup
+  runtime, no Worker created, no OpenNext/Wrangler config change and no runtime
+  dependency added.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: owner-approved manual deploy check/deploy phase, or
+  defer deploy and continue with separately approved product/runtime work.
+
 ## 2026-06-19 - UI-VN-01 - Vietnamese UI Copy Normalization completed
 
 - Normalized user-visible UI copy to Vietnamese with diacritics across admin

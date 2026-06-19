@@ -1,5 +1,26 @@
 # Decision Log
 
+## Decision 150 - Phase 127 is a manual deploy readiness gate, not a deploy
+
+Chon:
+
+Phase 127 may add a deploy-readiness document and static checker after recent
+runtime/UI changes. It may review small JSON export hardening, small JSON
+export smoke evidence and Vietnamese UI copy normalization for a future manual
+deploy decision. It must not deploy, push, create migrations, create SQL files,
+apply DB changes, mutate data, change schema, change permission/auth logic,
+expand export/import/GEDCOM/ZIP/media/backup runtime, create Workers, change
+OpenNext/Wrangler config, mutate deploy workflows or add runtime dependencies.
+
+Ly do:
+
+- Recent runtime/UI changes need a clear readiness gate before any production
+  deploy decision.
+- `READY_FOR_MANUAL_DEPLOY_CHECK` is an operator decision state, not proof that
+  production has been deployed.
+- Worker, dependency, privacy, DB and deploy boundaries must remain explicit so
+  a later AI does not treat readiness documentation as deploy authorization.
+
 ## Decision 149 - Vietnamese UI copy normalization is display-only
 
 Chon:

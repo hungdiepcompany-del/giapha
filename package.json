@@ -160,7 +160,8 @@
     "check:export-import-final-readiness": "node scripts/check-export-import-final-readiness.cjs",
     "check:small-json-export-hardening": "node scripts/check-small-json-export-hardening.cjs",
     "check:small-json-export-smoke": "node scripts/check-small-json-export-smoke.cjs",
-    "check:vietnamese-ui-copy": "node scripts/check-vietnamese-ui-copy.cjs"
+    "check:vietnamese-ui-copy": "node scripts/check-vietnamese-ui-copy.cjs",
+    "check:post-runtime-ui-deploy-readiness": "node scripts/check-post-runtime-ui-deploy-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
