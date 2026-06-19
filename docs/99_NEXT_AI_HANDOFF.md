@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 129 - Authenticated Production Smoke Runbook completed
+
+- Added `docs/129_AUTHENTICATED_PRODUCTION_SMOKE_RUNBOOK.md`.
+- Current production remains deployed and public smoke remains PASS from Phase
+  128 at `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Authenticated smoke remains
+  `SAFE_SKIP_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Added owner/operator prerequisites and shell-only placeholders for base URL,
+  enable marker, expected user email and session material.
+- Real credential/session/cookie/token values must not be pasted into chat,
+  docs, issues, committed files or logs.
+- Added authenticated route checklist and role/permission matrix for people,
+  relationships, genealogy, tree editor, export, revisions and system status.
+- Added privacy matrix covering public tree/profile, private/source notes,
+  relationship facts, admin warnings, system status and error output.
+- Added small `family.json` smoke matrix for permission, metadata, lineage,
+  privacy and artifact handling.
+- Added Vietnamese UI smoke matrix for login, admin shell/dashboard, people,
+  relationships, genealogy, tree, export/import, revisions, system status and
+  unauthorized states.
+- Added `scripts/check-authenticated-smoke-runbook.cjs` and
+  `npm run check:authenticated-smoke-runbook`.
+- Decision 152 records that SAFE_SKIP is required until explicit shell-only
+  authenticated smoke material is prepared; public/static evidence cannot be
+  promoted to authenticated PASS.
+- No authenticated smoke was run in Phase 129.
+- Boundary: no credential requested, no secret written, no test account, no
+  deploy, no push, no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no schema change, no auth/permission logic change, no
+  export/import runtime expansion, no GEDCOM/ZIP/media/backup runtime, no
+  Worker created, no OpenNext/Wrangler config change and no runtime dependency
+  added.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: owner/operator authenticated production smoke
+  execution only after explicit shell-only prerequisites are prepared;
+  otherwise continue routine production monitoring.
+
 ## 2026-06-19 - Phase 128 - Production Deploy And Smoke completed
 
 - Owner approved manual production deploy check and post-deploy smoke.

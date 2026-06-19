@@ -1,5 +1,30 @@
 # Decision Log
 
+## Decision 152 - Authenticated production smoke requires explicit shell-only material
+
+Chon:
+
+Phase 129 may document authenticated production smoke readiness, operator
+prerequisites, role/privacy/export/UI matrices and safe-skip behavior. It must
+not run authenticated requests unless explicit shell-only smoke material is
+already configured. Real authentication material must never be requested in
+chat, written to docs, printed to logs or committed.
+
+If prerequisites are missing, the only valid result is:
+
+`SAFE_SKIP_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`
+
+Ly do:
+
+- Authenticated production smoke can expose session material and private
+  responses if handled casually.
+- Shell-only placeholders let the owner/operator prepare a later run without
+  turning documentation into a credential store.
+- SAFE_SKIP preserves honest evidence and must not be upgraded to PASS from
+  public smoke or static checks.
+- This readiness phase must not change auth, permissions, schema, runtime,
+  Worker, deployment or dependencies.
+
 ## Decision 151 - Phase 128 deploys only the synchronized Phase 125-127 bundle
 
 Chon:

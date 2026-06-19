@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 129 - Authenticated Production Smoke Readiness / Operator Runbook
+
+- Added `docs/129_AUTHENTICATED_PRODUCTION_SMOKE_RUNBOOK.md`.
+- Recorded current authenticated smoke status as
+  `SAFE_SKIP_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Added owner/operator prerequisites and a shell-only environment policy using
+  placeholders only; no real session, cookie, token, email or credential value
+  was requested or written.
+- Added authenticated route checklist plus role/permission, privacy, small JSON
+  export and Vietnamese UI smoke matrices.
+- Added PASS/FAIL/SAFE_SKIP definitions, no-go conditions and sanitized
+  incident/rollback escalation guidance.
+- Added `scripts/check-authenticated-smoke-runbook.cjs` and
+  `npm run check:authenticated-smoke-runbook`.
+- Checker verifies runbook structure, safe-skip wording, production URL,
+  credential safety, package dependency stability and no SQL/migration,
+  Worker/service, workflow, OpenNext/Wrangler or `PLANNING.MD` drift.
+- Phase 129 did not run authenticated production smoke because explicit
+  shell-only smoke material was unavailable.
+- Boundary: no credential requested, no secret written, no test account, no
+  deploy, no push, no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no schema change, no auth/permission logic change, no
+  export/import runtime expansion, no GEDCOM/ZIP/media/backup runtime, no
+  Worker created, no OpenNext/Wrangler config change and no runtime dependency
+  added.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 128 - Production Deploy And Smoke
 
 - Owner approved manual production deploy check and post-deploy smoke.
