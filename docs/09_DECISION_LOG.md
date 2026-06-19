@@ -1,5 +1,18 @@
 # Decision Log
 
+## Decision 141 - Static examples are acceptance evidence, not runtime or schema authorization
+
+Chon:
+
+Phase 118C-120C may provide illustrative media payloads, warning examples, Vietnamese copy and acceptance checklists, but those examples remain documentation only. They do not authorize fixtures, runtime data, schema, migration, storage, scans, warning UI, Worker creation or deploy.
+
+Ly do:
+
+- Concrete examples make future reviews testable without opening implementation surfaces.
+- Media examples can expose privacy/storage mistakes, so unsafe cases and service gates must be explicit before runtime work.
+- Warning examples need deterministic codes, consistent severity and fail-closed public behavior before persistence or scanning.
+- UX acceptance criteria can be reviewed now while warning source, persistence and service boundaries remain separately owner-gated.
+
 ## Decision 140 - Media/data-quality static contracts require approval gates before schema or service work
 
 Chon:

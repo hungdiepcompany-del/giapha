@@ -151,7 +151,8 @@
     "check:vietnamese-genealogy-manual-sql-diagnostic-pass": "node scripts/check-vietnamese-genealogy-manual-sql-diagnostic-pass.cjs",
     "check:vietnamese-genealogy-domain-ui": "node scripts/check-vietnamese-genealogy-domain-ui.cjs",
     "check:media-quality-boundary-design": "node scripts/check-media-quality-boundary-design.cjs",
-    "check:media-quality-static-contracts": "node scripts/check-media-quality-static-contracts.cjs"
+    "check:media-quality-static-contracts": "node scripts/check-media-quality-static-contracts.cjs",
+    "check:media-quality-static-examples": "node scripts/check-media-quality-static-examples.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

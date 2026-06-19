@@ -1,5 +1,18 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 118C-120C Vietnamese Genealogy Media/Data Quality Acceptance Examples
+
+- Implemented grouped Phase 118C, 119C and 120C as docs/static examples and acceptance checklists only after commit `7f794d7`.
+- Phase 118C result: added illustrative media metadata, visibility, storage and unsafe-case examples plus future media migration, media-service Worker and export/backup acceptance checklists.
+- Phase 119C result: added nine deterministic warning examples with severity, Vietnamese copy, admin-only detail, public behavior and resolution path plus quality-service acceptance criteria.
+- Phase 120C result: added admin warning UX acceptance checklists for people, genealogy, tree editor, import preview and export readiness with Vietnamese copy, accessibility and privacy requirements.
+- Added `scripts/check-media-quality-static-examples.cjs` and `npm run check:media-quality-static-examples`.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation, no seed/backfill, No media upload/storage bucket, no thumbnail/image processing, no persistent warning table, no full-tree runtime scan, no runtime warning UI, no large export/import/GEDCOM/ZIP, No Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy and no push.
+- Runtime result: main app runtime code was not changed; examples remain documentation-only and are not fixtures or runtime data.
+- Validation: media/data-quality static examples checker PASS, static contracts checker PASS, boundary design checker PASS, Phase 103-120C Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Workspace-root `npm run build` remains blocked before compile by the pre-existing Windows `.next` artifact ACL error: `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`. A clean temp copy excluding `.next`, env files and `PLANNING.MD` built successfully.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+
 ## 2026-06-19 - Phase 118B-120B Vietnamese Genealogy Media/Data Quality Static Contracts
 
 - Implemented grouped Phase 118B, 119B and 120B as docs/static contract and approval-gate work only after commit `a436cfa`.

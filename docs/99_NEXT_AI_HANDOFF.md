@@ -1,5 +1,20 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 118C-120C Vietnamese Genealogy Media/Data Quality Acceptance Examples completed
+
+- Grouped Phase 118C, 119C and 120C completed locally as docs/static examples and acceptance checklists after commit `7f794d7`.
+- Phase 118C result: created `docs/118C_MEDIA_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md` with media payload, visibility, storage, unsafe-case and future migration/service/export acceptance examples.
+- Phase 119C result: created `docs/119C_DATA_QUALITY_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md` with nine warning examples, deterministic codes, severity, Vietnamese copy, privacy behavior, resolution paths and quality-service acceptance criteria.
+- Phase 120C result: created `docs/120C_ADMIN_WARNING_UX_ACCEPTANCE_CHECKLIST.md` with acceptance criteria for people, genealogy, tree editor, future import/export warning surfaces, copy, accessibility and privacy.
+- Added `scripts/check-media-quality-static-examples.cjs` and `npm run check:media-quality-static-examples`.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk introduced NO.
+- Boundary: no migration, no `.sql` file, no DB apply, no SQL mutation, no seed/backfill, no media upload/storage bucket, no thumbnail/image processing, no persistent warning table, no full-tree runtime scan, no runtime warning UI, no large export/import/GEDCOM/ZIP, no deploy and no push.
+- Validation: media/data-quality static examples checker PASS, static contracts checker PASS, boundary design checker PASS, Phase 103-120C Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` remains blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Note for next AI: static examples are acceptance evidence only. They are not fixtures, runtime data, schema authorization or service/Worker approval.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read; `PLANNING.MD` was not committed.
+- Recommended next phase: Phase 118D/119D/120D review-only refinement, or a separately owner-approved schema/service/runtime candidate phase.
+
 ## 2026-06-19 - Phase 118B-120B Vietnamese Genealogy Media/Data Quality Static Contracts completed
 
 - Grouped Phase 118B, 119B and 120B completed locally as docs/static contract and approval-gate work after commit `a436cfa`.
