@@ -158,7 +158,8 @@
     "check:export-import-boundary-design": "node scripts/check-export-import-boundary-design.cjs",
     "check:export-import-static-examples": "node scripts/check-export-import-static-examples.cjs",
     "check:export-import-final-readiness": "node scripts/check-export-import-final-readiness.cjs",
-    "check:small-json-export-hardening": "node scripts/check-small-json-export-hardening.cjs"
+    "check:small-json-export-hardening": "node scripts/check-small-json-export-hardening.cjs",
+    "check:small-json-export-smoke": "node scripts/check-small-json-export-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

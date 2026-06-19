@@ -1,5 +1,23 @@
 # Decision Log
 
+## Decision 148 - Phase 126 smoke is static review only, not export expansion
+
+Chon:
+
+Phase 126 may add local static/source smoke checks and docs for the Phase 125
+small `family.json` export hardening. It must not call the database, generate
+real production exports, add fixtures from production data, expand large JSON,
+GEDCOM, ZIP, import, media or backup runtime, add dependencies, create Workers,
+change OpenNext/Wrangler config, deploy, push or mutate data.
+
+Ly do:
+
+- Phase 125 already changed the approved small JSON export path; Phase 126 is
+  only the post-integration review and handoff hardening.
+- Privacy and lineage behavior can be reviewed from source without live DB
+  access or production data.
+- Large export/import/media/backup work remains service-boundary governed.
+
 ## Decision 147 - Phase 125 allows only small main-app JSON export hardening
 
 Chon:

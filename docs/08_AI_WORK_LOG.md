@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 126 - Small JSON Export Smoke, Privacy Review, and Handoff Hardening
+
+- Reviewed Phase 125 small `family.json` export hardening using local
+  static/source smoke only; no live DB query or real export file generation.
+- Confirmed metadata coverage in source: `schema_version`,
+  `app_export_version`, `exported_at`, `export_scope`, `privacy_scope` and
+  manifest lineage counts.
+- Confirmed lineage sections remain limited to existing verified tables:
+  `clans`, `clan_branches`, `generation_rules` and
+  `person_branch_memberships`.
+- Confirmed privacy hardening source behavior for future non-admin builder
+  paths: people privacy sanitizer, visibility filtering, private/source note
+  stripping, audit/delete actor clearing and non-admin tree layout omission.
+- Added `scripts/check-small-json-export-smoke.cjs` and
+  `npm run check:small-json-export-smoke`.
+- Decision 148 records that Phase 126 is static smoke/review only and does not
+  authorize more export runtime, DB, Worker, dependency, config, deploy or push
+  work.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no large JSON export runtime, no GEDCOM runtime, no ZIP
+  runtime, no import parser runtime, no media export/import, no
+  backup/restore runtime, no Worker created, no OpenNext/Wrangler config
+  change, no runtime dependency added, no deploy and no push.
+- Validation: small JSON export smoke PASS; small JSON export hardening PASS;
+  export/import final readiness PASS; export/import static examples PASS;
+  export/import boundary design PASS; inline admin warning UI PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 125 - Small Main-App JSON Export Hardening
 
 - Implemented owner-approved small/main-app `family.json` hardening only.

@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 126 - Small JSON Export Smoke Review completed
+
+- Reviewed Phase 125 small `family.json` export hardening with local
+  static/source smoke only; no DB query, real export file generation, deploy or
+  production data access.
+- Added `docs/126_SMALL_JSON_EXPORT_SMOKE_REVIEW.md` with metadata, privacy,
+  lineage and runtime-boundary review results.
+- Added `scripts/check-small-json-export-smoke.cjs` and
+  `npm run check:small-json-export-smoke`.
+- Smoke confirmed source coverage for `schema_version`, `app_export_version`,
+  `exported_at`, `export_scope`, `privacy_scope`, lineage sections and lineage
+  counts.
+- Privacy review confirmed future non-admin builder paths use the existing
+  privacy sanitizer, filter hidden rows, strip private/source notes, clear
+  audit/delete actors and omit non-admin tree layout coordinates.
+- Lineage review confirmed runtime export source references only `clans`,
+  `clan_branches`, `generation_rules` and `person_branch_memberships`; no
+  unsupported future media/name/life-event/burial/persistent-warning tables.
+- Decision 148 records that Phase 126 is static smoke/review only and does not
+  authorize export expansion, DB access, Worker, dependency, config, deploy or
+  push work.
+- Worker/runtime: main Worker touched NO in Phase 126 review; runtime
+  dependency added NO; new service Worker created NO; OpenNext/Wrangler config
+  changed NO; Worker size risk NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no large JSON export runtime, no GEDCOM runtime, no ZIP
+  runtime, no import parser runtime, no media export/import, no backup/restore
+  runtime, no deploy and no push.
+- Validation: small JSON export smoke PASS; small JSON export hardening PASS;
+  export/import final readiness PASS; export/import static examples PASS;
+  export/import boundary design PASS; inline admin warning UI PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: defer further export implementation, or request a
+  separately owner-approved export-service boundary design phase before large
+  JSON/GEDCOM/ZIP/media/backup expansion.
+
 ## 2026-06-19 - Phase 125 - Small Main-App JSON Export Hardening completed
 
 - Owner approved Phase 125 small main-app JSON export hardening only.
