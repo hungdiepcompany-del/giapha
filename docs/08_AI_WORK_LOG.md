@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 128 - Production Deploy And Smoke
+
+- Owner approved manual production deploy check and post-deploy smoke.
+- Confirmed local `main` and `origin/main` were synchronized at `692920a`;
+  `git rev-list --left-right --count HEAD...origin/main` returned `0 0`.
+- Confirmed worktree clean and Phase 127 status
+  `READY_FOR_MANUAL_DEPLOY_CHECK`.
+- Pre-deploy readiness, Vietnamese UI copy, small JSON export smoke/hardening,
+  inline warning UI, export/import readiness, env safety, migration order,
+  typecheck, lint and Git whitespace checks PASS.
+- Workspace-root build failed before compile only on the known Windows `.next`
+  ACL `EPERM`; clean temp build PASS.
+- Triggered existing `.github/workflows/cloudflare-deploy.yml` manually on
+  `main`; no workflow/config change.
+- GitHub Actions run `27817582152` PASS, including Linux Next build and
+  Cloudflare deploy.
+- Deployed commit:
+  `692920a5ba8779cde2d77bcf3fa8e5806cbc18aa`.
+- Production Worker `web-gia-pha` Version ID:
+  `4765471a-a05d-45e8-8db4-7ccb3795d002`.
+- Production URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Lightweight production smoke PASS for `/`, `/tree` and `/auth/login`; public
+  Vietnamese copy present, no obvious server error, no admin warning marker and
+  no `notes_private` marker on public tree response.
+- Authenticated smoke safe-skipped because no explicit authenticated-smoke
+  environment was configured. No credential was requested, read, printed or
+  written.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no schema change, no permission/auth logic change, no new
+  runtime feature, no export/import runtime expansion, no
+  GEDCOM/ZIP/media/backup runtime, no Worker created, no OpenNext/Wrangler
+  config change and no runtime dependency added.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 127 - Post Runtime/UI Deploy Readiness Gate
 
 - Added `docs/127_POST_RUNTIME_UI_DEPLOY_READINESS_GATE.md` with status

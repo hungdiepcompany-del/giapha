@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 128 - Production Deploy And Smoke completed
+
+- Owner approved manual production deploy check and post-deploy smoke.
+- Git sync PASS: local `main` and `origin/main` both at `692920a`; ahead/behind
+  count `0 0`; worktree clean before deploy.
+- Phase 127 status confirmed: `READY_FOR_MANUAL_DEPLOY_CHECK`.
+- Pre-deploy gates PASS: post-runtime/UI readiness, Vietnamese UI copy, small
+  JSON export smoke/hardening, inline warning UI, export/import final
+  readiness, env safety, migrations, typecheck, lint and Git whitespace.
+- Workspace-root `npm run build` failed before compile only on the known
+  Windows `.next` ACL `EPERM`; clean temp build PASS.
+- Existing manual workflow `.github/workflows/cloudflare-deploy.yml` deployed
+  commit `692920a5ba8779cde2d77bcf3fa8e5806cbc18aa`.
+- GitHub Actions run:
+  `https://github.com/hungdiepcompany-del/giapha/actions/runs/27817582152`.
+- Deploy result: PASS.
+- Worker: `web-gia-pha`.
+- Cloudflare Version ID:
+  `4765471a-a05d-45e8-8db4-7ccb3795d002`.
+- Production URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Lightweight public smoke PASS: `/`, `/tree`, `/auth/login` returned HTTP 200;
+  Vietnamese copy present; no obvious server error; public tree response did
+  not contain admin warning UI markers or `notes_private`.
+- Authenticated smoke:
+  `SAFE_SKIP_MISSING_EXPLICIT_AUTHENTICATED_SMOKE_ENV`.
+- Small JSON export risk remains LOW and limited to the approved small
+  `family.json` path. No authenticated export download was run.
+- No credential, token, key, cookie or secret was written to docs.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no schema change, no permission/auth logic change, no new
+  runtime feature, no export/import runtime expansion, no
+  GEDCOM/ZIP/media/backup runtime, no Worker created, no OpenNext/Wrangler
+  config change and no runtime dependency added.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: owner/operator authenticated production smoke with
+  explicit shell-only smoke material, or routine production monitoring.
+
 ## 2026-06-19 - Phase 127 - Post Runtime/UI Deploy Readiness Gate completed
 
 - Added `docs/127_POST_RUNTIME_UI_DEPLOY_READINESS_GATE.md` with status

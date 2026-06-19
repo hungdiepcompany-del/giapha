@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 151 - Phase 128 deploys only the synchronized Phase 125-127 bundle
+
+Chon:
+
+Phase 128 may deploy only when local `main` and `origin/main` are synchronized,
+the working tree is clean and all required pre-deploy gates pass. The approved
+deploy path is the existing manual GitHub Actions `Cloudflare Deploy` workflow.
+Post-deploy verification is lightweight and read-only; authenticated smoke must
+safe-skip when explicit shell-only smoke material is unavailable.
+
+Result:
+
+- The sync gate returned `0 0` at commit `692920a`.
+- GitHub Actions run `27817582152` deployed successfully.
+- Public production smoke passed.
+- Authenticated smoke safe-skipped because explicit authenticated-smoke
+  environment was unavailable.
+
+Ly do:
+
+- Deploying only a synchronized commit keeps the deployed source traceable.
+- Reusing the existing workflow avoids unapproved Worker/config/dependency
+  drift.
+- Safe-skipping authenticated smoke avoids requesting or exposing credentials.
+- Deploy approval does not authorize migration, DB mutation, schema/auth
+  changes or runtime feature expansion.
+
 ## Decision 150 - Phase 127 is a manual deploy readiness gate, not a deploy
 
 Chon:
