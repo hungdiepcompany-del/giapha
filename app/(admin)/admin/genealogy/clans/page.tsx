@@ -1,5 +1,6 @@
 import { AdminShell } from "@/components/layout/admin-shell";
 import { ClanForm, ClanList } from "@/components/genealogy/lineage-admin";
+import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
@@ -33,9 +34,9 @@ export default async function ClansPage({ searchParams }: ClansPageProps) {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Vietnamese genealogy"
-          title="Clans"
-          description="Create and update lineage roots without adding new schema or backfilling old people fields."
+          eyebrow="Gia phả Việt Nam"
+          title="Dòng họ"
+          description="Tạo và cập nhật dòng họ gốc, không thêm schema mới và không backfill từ trường legacy."
         />
 
         {query.error ? (
@@ -45,13 +46,13 @@ export default async function ClansPage({ searchParams }: ClansPageProps) {
         ) : null}
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Saved: {query.saved}
+            {lineageSavedMessage(query.saved)}
           </StatusCallout>
         ) : null}
 
         {canManage ? (
           <SectionCard className="mt-6">
-            <h2 className="text-lg font-bold text-slate-950">Create clan</h2>
+            <h2 className="text-lg font-bold text-slate-950">Tạo dòng họ</h2>
             <div className="mt-4">
               <ClanForm returnTo="/admin/genealogy/clans" />
             </div>

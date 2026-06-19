@@ -1,5 +1,23 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 117A Vietnamese Genealogy Admin UX Polish completed
+
+- Phase 117A completed locally as a scoped polish pass after grouped Phase 114-117 commit `22aff0f28e3f361a13e79cca831dd7935eb7ac45`.
+- UX polish: admin genealogy dashboard/routes now use clearer Vietnamese labels and saved messages; empty states include next-step links.
+- Form polish: clan, branch, generation rule and membership forms now have clearer Vietnamese labels, placeholders and helper text.
+- Validation polish: required-field validation returns Vietnamese messages; duplicate/unique and foreign-key action errors are mapped to clearer user-facing copy.
+- Double-submit guard: genealogy submit buttons use `useFormStatus` pending labels without adding dependencies.
+- Person membership UX: person detail lineage section now explains explicit lineage-table assignment and warns when a clan prerequisite is missing.
+- Tree display: admin tree cards label lineage display as `Dòng họ` and `Chi`, preferring lineage branch metadata when present.
+- Public privacy remains conservative: public routes still do not query lineage tables, sanitizer still clears lineage fields unless public-visible and not living, and source/private/family-only membership data is not exposed publicly.
+- Created `docs/117A_VIETNAMESE_GENEALOGY_ADMIN_UX_POLISH.md` and updated `docs/00_INDEX.md`.
+- Updated `scripts/check-vietnamese-genealogy-domain-ui.cjs` to cover Phase 117A doc/polish markers and public privacy guard continuity.
+- Worker/runtime: main Worker touched YES for lightweight admin UI polish only; runtime dependency added NO; new service Worker created NO; OpenNext/Wrangler config changed NO; Worker size risk LOW.
+- Validation: Phase 103-117A Vietnamese genealogy static checkers PASS, env-safe PASS, migrations PASS, typecheck PASS, lint PASS, clean temp `npm run build` PASS, `git diff --check` PASS and `git diff --cached --check` PASS.
+- Note for next AI: workspace-root `npm run build` remains blocked before compile by pre-existing Windows `.next` artifact ACL error `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`; clean temp copy build passed with `.next`, env files and `PLANNING.MD` excluded.
+- Boundary: no migration, no DB apply, no SQL mutation, no seed/backfill, no excluded runtime tables, no media/upload/storage, no large export/import/GEDCOM/ZIP, no Worker created, no OpenNext/Wrangler config change, no runtime dependency added, no deploy, no push and `.env.local`, `.dev.vars` and `PLANNING.MD` not read.
+- Recommended next phase: Phase 118A Media Domain and Storage Boundary Design.
+
 ## 2026-06-19 - Phase 114-117 Vietnamese Genealogy Domain UI Integration completed
 
 - Grouped Phase 114-117 completed locally after Phase 113C `PASS_MANUAL_SQL_DIAGNOSTIC`.

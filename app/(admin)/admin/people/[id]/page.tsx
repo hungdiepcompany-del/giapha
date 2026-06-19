@@ -99,7 +99,7 @@ export default async function PersonDetailPage({
         ? branchesResult.error
         : membershipsResult && !membershipsResult.ok
           ? membershipsResult.error
-          : "Missing people.view or tree.view for lineage data.";
+          : "Bạn cần quyền people.view hoặc tree.view để xem dữ liệu dòng họ/chi.";
 
   return (
     <AdminShell
@@ -184,11 +184,11 @@ export default async function PersonDetailPage({
               <div className="border-t border-slate-200 pt-6">
                 <div className="mb-4">
                   <h2 className="text-xl font-bold text-slate-950">
-                    Genealogy branch membership
+                    Dòng họ và chi
                   </h2>
                   <p className="mt-1 text-sm text-slate-600">
-                    Memberships are stored in lineage tables and are not
-                    automatically backfilled from legacy people fields.
+                    Thông tin gắn dòng họ/chi được lưu trong bảng lineage, nhập
+                    thủ công và không tự backfill từ trường legacy của people.
                   </p>
                 </div>
 
@@ -210,8 +210,14 @@ export default async function PersonDetailPage({
                 rulesResult?.ok ? (
                   <div className="mt-6 border border-slate-200 bg-slate-50 p-4">
                     <h3 className="text-base font-bold text-slate-950">
-                      Assign membership
+                      Gán dòng họ/chi
                     </h3>
+                    {clansResult.data.length === 0 ? (
+                      <div className="mt-3 border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                        Cần tạo dòng họ trước khi gán thành viên này vào dòng
+                        họ/chi.
+                      </div>
+                    ) : null}
                     <div className="mt-4">
                       <MembershipForm
                         personId={personResult.data.id}

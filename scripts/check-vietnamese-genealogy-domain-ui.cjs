@@ -92,6 +92,7 @@ function readRuntimeFiles() {
 
 const packageJson = readJson("package.json");
 const doc = readFile("docs/114_117_VIETNAMESE_GENEALOGY_DOMAIN_UI_INTEGRATION.md");
+const polishDoc = readFile("docs/117A_VIETNAMESE_GENEALOGY_ADMIN_UX_POLISH.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
@@ -99,9 +100,12 @@ const index = readFile("docs/00_INDEX.md");
 const lineageService = readFile("lib/family/lineage-service.ts");
 const lineageTypes = readFile("lib/family/lineage-types.ts");
 const lineageAdmin = readFile("components/genealogy/lineage-admin.tsx");
+const lineageLabels = readFile("components/genealogy/lineage-labels.ts");
+const lineageSubmitButton = readFile("components/genealogy/lineage-submit-button.tsx");
 const genealogyActions = readFile("app/(admin)/admin/genealogy/actions.ts");
 const genealogyPage = readFile("app/(admin)/admin/genealogy/page.tsx");
 const personPage = readFile("app/(admin)/admin/people/[id]/page.tsx");
+const treeCard = readFile("components/tree/family-node-card.tsx");
 const treeService = readFile("lib/family/tree-service.ts");
 const privacyService = readFile("lib/privacy/privacy-service.ts");
 
@@ -117,6 +121,22 @@ for (const token of [
   "No migration created",
 ]) {
   requireIncludes(doc, token, `Phase 114-117 doc token ${token}`);
+}
+
+for (const token of [
+  "Status: `COMPLETED_LOCAL_STATIC_VALIDATED`",
+  "UX Polish Changes",
+  "Validation/Form Changes",
+  "Person Membership UX Changes",
+  "Tree Display Changes",
+  "Public Privacy Notes",
+  "Worker/Runtime Impact",
+  "No migration",
+  "No DB apply",
+  "No SQL mutation",
+  "No seed/backfill",
+]) {
+  requireIncludes(polishDoc, token, `Phase 117A doc token ${token}`);
 }
 
 for (const token of [
@@ -151,8 +171,24 @@ for (const token of [
   "GenerationRuleForm",
   "MembershipForm",
   "MembershipSummary",
+  "LineageSubmitButton",
+  "Chưa có",
+  "Gán dòng họ/chi",
 ]) {
   requireIncludes(lineageAdmin, token, `lineage admin token ${token}`);
+}
+
+for (const token of [
+  "lineageSavedMessage",
+  "Nội bộ gia đình",
+  "Huyết thống",
+  "Đã gán thành viên vào dòng họ/chi.",
+]) {
+  requireIncludes(lineageLabels, token, `lineage label token ${token}`);
+}
+
+for (const token of ["useFormStatus", "pendingLabel", "disabled || pending"]) {
+  requireIncludes(lineageSubmitButton, token, `submit button token ${token}`);
 }
 
 for (const token of [
@@ -160,6 +196,9 @@ for (const token of [
   "createClanBranchAction",
   "createGenerationRuleAction",
   "createPersonBranchMembershipAction",
+  "friendlyError",
+  "duplicate key",
+  "foreign key",
 ]) {
   requireIncludes(genealogyActions, token, `genealogy action token ${token}`);
 }
@@ -175,12 +214,19 @@ for (const token of [
 
 requireIncludes(personPage, "MembershipForm", "person detail membership form");
 requireIncludes(personPage, "MembershipSummary", "person detail membership summary");
+requireIncludes(personPage, "Dòng họ và chi", "person detail Vietnamese lineage title");
 requireIncludes(treeService, "person_branch_memberships", "tree service lineage query");
+requireIncludes(treeCard, "Dòng họ:", "tree lineage clan label");
+requireIncludes(treeCard, "Chi:", "tree lineage branch label");
 requireIncludes(privacyService, "lineageVisibility", "privacy lineage filtering");
+rejectIncludes(privacyService, "source_note", "public privacy source note exposure");
 requireIncludes(index, "114_117_VIETNAMESE_GENEALOGY_DOMAIN_UI_INTEGRATION.md", "index entry");
+requireIncludes(index, "117A_VIETNAMESE_GENEALOGY_ADMIN_UX_POLISH.md", "Phase 117A index entry");
 requireIncludes(workLog, "Phase 114-117 Vietnamese Genealogy Domain UI Integration", "work log entry");
+requireIncludes(workLog, "Phase 117A Vietnamese Genealogy Admin UX Polish", "Phase 117A work log entry");
 requireIncludes(decisionLog, "Decision 138", "decision log entry");
 requireIncludes(handoff, "Phase 114-117 Vietnamese Genealogy Domain UI Integration completed", "handoff entry");
+requireIncludes(handoff, "Phase 117A Vietnamese Genealogy Admin UX Polish completed", "Phase 117A handoff entry");
 
 if (packageJson) {
   const scripts = packageJson.scripts || {};

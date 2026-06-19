@@ -1,6 +1,7 @@
 import { ActionLink } from "@/components/ui/action-link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionCard } from "@/components/ui/section-card";
+import { LineageSubmitButton } from "@/components/genealogy/lineage-submit-button";
 import {
   childPolicyLabels,
   membershipTypeLabels,
@@ -42,11 +43,13 @@ type LineageSelectData = {
 
 const inputClass =
   "mt-1 min-h-10 w-full border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none focus:border-slate-900 disabled:bg-slate-100";
-const buttonClass =
-  "min-h-10 border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700";
 
 function FieldLabel({ children }: { children: string }) {
   return <span className="text-sm font-semibold text-slate-800">{children}</span>;
+}
+
+function FieldHelp({ children }: { children: string }) {
+  return <p className="mt-1 text-xs leading-5 text-slate-500">{children}</p>;
 }
 
 function nameForPerson(person?: Pick<Person, "full_name" | "display_name"> | null) {
@@ -58,12 +61,12 @@ function clanName(clans: Clan[], clanId: string) {
 }
 
 function branchName(branches: ClanBranch[], branchId?: string | null) {
-  if (!branchId) return "No branch";
+  if (!branchId) return "Chưa chọn chi";
   return branches.find((branch) => branch.id === branchId)?.branch_name ?? branchId;
 }
 
 function personName(people: Person[] | undefined, personId?: string | null) {
-  if (!personId) return "No person";
+  if (!personId) return "Chưa chọn thành viên";
   return (
     nameForPerson(people?.find((person) => person.id === personId)) ?? personId
   );
@@ -102,72 +105,84 @@ export function ClanForm({
       {clan ? <input type="hidden" name="id" value={clan.id} /> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <FieldLabel>Clan code *</FieldLabel>
+          <FieldLabel>Mã dòng họ *</FieldLabel>
           <input
             name="clan_code"
             required
+            autoComplete="off"
+            placeholder="VD: NGUYEN-TIEN"
             defaultValue={clan?.clan_code ?? ""}
             className={inputClass}
           />
+          <FieldHelp>Dùng mã ngắn, ổn định để phân biệt các dòng họ.</FieldHelp>
         </label>
         <label className="block">
-          <FieldLabel>Clan name *</FieldLabel>
+          <FieldLabel>Tên dòng họ *</FieldLabel>
           <input
             name="clan_name"
             required
+            placeholder="VD: Nguyễn Tiến"
             defaultValue={clan?.clan_name ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Family name</FieldLabel>
+          <FieldLabel>Họ chính</FieldLabel>
           <input
             name="family_name"
+            placeholder="VD: Nguyễn"
             defaultValue={clan?.family_name ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Origin place</FieldLabel>
+          <FieldLabel>Nơi phát tích</FieldLabel>
           <input
             name="origin_place"
+            placeholder="Tỉnh/thành, làng/xã nếu có"
             defaultValue={clan?.origin_place ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Founder person ID</FieldLabel>
+          <FieldLabel>ID thủy tổ/người khởi nguồn</FieldLabel>
           <input
             name="founder_person_id"
+            placeholder="UUID thành viên, để trống nếu chưa rõ"
             defaultValue={clan?.founder_person_id ?? ""}
             className={inputClass}
           />
+          <FieldHelp>Chỉ nhập khi thành viên đã tồn tại trong hệ thống.</FieldHelp>
         </label>
         <label className="block">
-          <FieldLabel>Current head person ID</FieldLabel>
+          <FieldLabel>ID trưởng họ hiện tại</FieldLabel>
           <input
             name="current_head_person_id"
+            placeholder="UUID thành viên, để trống nếu chưa rõ"
             defaultValue={clan?.current_head_person_id ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Visibility</FieldLabel>
+          <FieldLabel>Phạm vi hiển thị</FieldLabel>
           <VisibilitySelect defaultValue={clan?.visibility} />
+          <FieldHelp>Công khai chỉ nên dùng cho dữ liệu đã được duyệt để lộ ra public.</FieldHelp>
         </label>
       </div>
       <label className="block">
-        <FieldLabel>Description</FieldLabel>
+        <FieldLabel>Mô tả</FieldLabel>
         <textarea
           name="description"
+          placeholder="Ghi chú ngắn về dòng họ, nơi phát tích hoặc nguồn xác minh."
           defaultValue={clan?.description ?? ""}
           rows={3}
           className={`${inputClass} min-h-24`}
         />
       </label>
-      <button type="submit" className={buttonClass}>
-        {clan ? "Update clan" : "Create clan"}
-      </button>
+      <LineageSubmitButton
+        idleLabel={clan ? "Cập nhật dòng họ" : "Tạo dòng họ"}
+        pendingLabel="Đang lưu dòng họ..."
+      />
     </form>
   );
 }
@@ -192,7 +207,7 @@ export function BranchForm({
       {branch ? <input type="hidden" name="id" value={branch.id} /> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <FieldLabel>Clan *</FieldLabel>
+          <FieldLabel>Dòng họ *</FieldLabel>
           <select
             name="clan_id"
             required
@@ -200,7 +215,7 @@ export function BranchForm({
             className={inputClass}
           >
             <option value="" disabled>
-              Select clan
+              Chọn dòng họ
             </option>
             {clans.map((clan) => (
               <option key={clan.id} value={clan.id}>
@@ -210,13 +225,13 @@ export function BranchForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Parent branch</FieldLabel>
+          <FieldLabel>Chi cha</FieldLabel>
           <select
             name="parent_branch_id"
             defaultValue={branch?.parent_branch_id ?? ""}
             className={inputClass}
           >
-            <option value="">No parent branch</option>
+            <option value="">Không có chi cha</option>
             {branches
               .filter((candidate) => candidate.id !== branch?.id)
               .map((candidate) => (
@@ -227,25 +242,28 @@ export function BranchForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Branch code *</FieldLabel>
+          <FieldLabel>Mã chi *</FieldLabel>
           <input
             name="branch_code"
             required
+            autoComplete="off"
+            placeholder="VD: CHI-1"
             defaultValue={branch?.branch_code ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Branch name *</FieldLabel>
+          <FieldLabel>Tên chi *</FieldLabel>
           <input
             name="branch_name"
             required
+            placeholder="VD: Chi trưởng"
             defaultValue={branch?.branch_name ?? ""}
             className={inputClass}
           />
         </label>
         <label className="block">
-          <FieldLabel>Branch level</FieldLabel>
+          <FieldLabel>Cấp chi</FieldLabel>
           <input
             name="branch_level"
             type="number"
@@ -253,9 +271,10 @@ export function BranchForm({
             defaultValue={branch?.branch_level ?? 1}
             className={inputClass}
           />
+          <FieldHelp>Cấp 1 là chi lớn ngay dưới dòng họ.</FieldHelp>
         </label>
         <label className="block">
-          <FieldLabel>Sort order</FieldLabel>
+          <FieldLabel>Thứ tự sắp xếp</FieldLabel>
           <input
             name="sort_order"
             type="number"
@@ -264,22 +283,25 @@ export function BranchForm({
           />
         </label>
         <label className="block">
-          <FieldLabel>Visibility</FieldLabel>
+          <FieldLabel>Phạm vi hiển thị</FieldLabel>
           <VisibilitySelect defaultValue={branch?.visibility} />
         </label>
       </div>
       <label className="block">
-        <FieldLabel>Description</FieldLabel>
+        <FieldLabel>Mô tả</FieldLabel>
         <textarea
           name="description"
+          placeholder="Ghi chú ngắn về chi, nhánh hoặc nguồn xác minh."
           defaultValue={branch?.description ?? ""}
           rows={3}
           className={`${inputClass} min-h-24`}
         />
       </label>
-      <button type="submit" className={buttonClass} disabled={clans.length === 0}>
-        {branch ? "Update branch" : "Create branch"}
-      </button>
+      <LineageSubmitButton
+        idleLabel={branch ? "Cập nhật chi" : "Tạo chi"}
+        pendingLabel="Đang lưu chi..."
+        disabled={clans.length === 0}
+      />
     </form>
   );
 }
@@ -304,7 +326,7 @@ export function GenerationRuleForm({
       {rule ? <input type="hidden" name="id" value={rule.id} /> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <FieldLabel>Clan *</FieldLabel>
+          <FieldLabel>Dòng họ *</FieldLabel>
           <select
             name="clan_id"
             required
@@ -312,7 +334,7 @@ export function GenerationRuleForm({
             className={inputClass}
           >
             <option value="" disabled>
-              Select clan
+              Chọn dòng họ
             </option>
             {clans.map((clan) => (
               <option key={clan.id} value={clan.id}>
@@ -322,13 +344,13 @@ export function GenerationRuleForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Branch</FieldLabel>
+          <FieldLabel>Chi áp dụng</FieldLabel>
           <select
             name="branch_id"
             defaultValue={rule?.branch_id ?? ""}
             className={inputClass}
           >
-            <option value="">Clan-wide rule</option>
+            <option value="">Áp dụng toàn dòng họ</option>
             {branches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.branch_name}
@@ -337,15 +359,17 @@ export function GenerationRuleForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Root person ID</FieldLabel>
+          <FieldLabel>ID người gốc</FieldLabel>
           <input
             name="root_person_id"
+            placeholder="UUID thành viên, để trống nếu chưa chốt"
             defaultValue={rule?.root_person_id ?? ""}
             className={inputClass}
           />
+          <FieldHelp>Không tự tính đời trong phase này; ID này chỉ là metadata.</FieldHelp>
         </label>
         <label className="block">
-          <FieldLabel>Start generation</FieldLabel>
+          <FieldLabel>Đời bắt đầu</FieldLabel>
           <input
             name="start_generation"
             type="number"
@@ -355,7 +379,7 @@ export function GenerationRuleForm({
           />
         </label>
         <label className="block">
-          <FieldLabel>Numbering method</FieldLabel>
+          <FieldLabel>Cách đánh số đời</FieldLabel>
           <select
             name="numbering_method"
             defaultValue={rule?.numbering_method ?? "root_is_one"}
@@ -369,7 +393,7 @@ export function GenerationRuleForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Adopted child policy</FieldLabel>
+          <FieldLabel>Quy ước con nuôi</FieldLabel>
           <select
             name="adopted_child_policy"
             defaultValue={rule?.adopted_child_policy ?? "family_decision"}
@@ -383,7 +407,7 @@ export function GenerationRuleForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Step child policy</FieldLabel>
+          <FieldLabel>Quy ước con riêng/kế</FieldLabel>
           <select
             name="step_child_policy"
             defaultValue={rule?.step_child_policy ?? "not_bloodline_by_default"}
@@ -397,7 +421,7 @@ export function GenerationRuleForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Spouse display policy</FieldLabel>
+          <FieldLabel>Quy ước hiển thị vợ/chồng</FieldLabel>
           <select
             name="spouse_display_policy"
             defaultValue={rule?.spouse_display_policy ?? "spouse_of_generation"}
@@ -417,21 +441,24 @@ export function GenerationRuleForm({
             defaultChecked={rule?.is_active ?? true}
             className="h-4 w-4"
           />
-          Active
+          Đang áp dụng
         </label>
       </div>
       <label className="block">
-        <FieldLabel>Notes</FieldLabel>
+        <FieldLabel>Ghi chú</FieldLabel>
         <textarea
           name="notes"
+          placeholder="Ghi rõ quy ước gia đình nếu có ngoại lệ."
           defaultValue={rule?.notes ?? ""}
           rows={3}
           className={`${inputClass} min-h-24`}
         />
       </label>
-      <button type="submit" className={buttonClass} disabled={clans.length === 0}>
-        {rule ? "Update rule" : "Create rule"}
-      </button>
+      <LineageSubmitButton
+        idleLabel={rule ? "Cập nhật quy tắc đời" : "Tạo quy tắc đời"}
+        pendingLabel="Đang lưu quy tắc..."
+        disabled={clans.length === 0}
+      />
     </form>
   );
 }
@@ -468,7 +495,7 @@ export function MembershipForm({
       <div className="grid gap-4 md:grid-cols-2">
         {!fixedPersonId ? (
           <label className="block">
-            <FieldLabel>Person *</FieldLabel>
+            <FieldLabel>Thành viên *</FieldLabel>
             <select
               name="person_id"
               required
@@ -476,7 +503,7 @@ export function MembershipForm({
               className={inputClass}
             >
               <option value="" disabled>
-                Select person
+                Chọn thành viên
               </option>
               {people.map((person) => (
                 <option key={person.id} value={person.id}>
@@ -487,7 +514,7 @@ export function MembershipForm({
           </label>
         ) : null}
         <label className="block">
-          <FieldLabel>Clan *</FieldLabel>
+          <FieldLabel>Dòng họ *</FieldLabel>
           <select
             name="clan_id"
             required
@@ -495,7 +522,7 @@ export function MembershipForm({
             className={inputClass}
           >
             <option value="" disabled>
-              Select clan
+              Chọn dòng họ
             </option>
             {clans.map((clan) => (
               <option key={clan.id} value={clan.id}>
@@ -505,13 +532,13 @@ export function MembershipForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Branch</FieldLabel>
+          <FieldLabel>Chi</FieldLabel>
           <select
             name="branch_id"
             defaultValue={membership?.branch_id ?? ""}
             className={inputClass}
           >
-            <option value="">No branch</option>
+            <option value="">Chưa chọn chi</option>
             {branches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.branch_name}
@@ -520,34 +547,36 @@ export function MembershipForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Generation rule</FieldLabel>
+          <FieldLabel>Quy tắc đời</FieldLabel>
           <select
             name="generation_rule_id"
             defaultValue={membership?.generation_rule_id ?? ""}
             className={inputClass}
           >
-            <option value="">No rule</option>
+            <option value="">Chưa chọn quy tắc</option>
             {generationRules.map((rule) => (
               <option key={rule.id} value={rule.id}>
                 {clanName(clans, rule.clan_id)} /{" "}
-                {branchName(branches, rule.branch_id)} / Gen{" "}
+                {branchName(branches, rule.branch_id)} / Đời bắt đầu{" "}
                 {rule.start_generation}
               </option>
             ))}
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Generation number</FieldLabel>
+          <FieldLabel>Đời</FieldLabel>
           <input
             name="generation_number"
             type="number"
             min="1"
+            placeholder="Để trống nếu chưa xác định"
             defaultValue={membership?.generation_number ?? ""}
             className={inputClass}
           />
+          <FieldHelp>Nhập thủ công; hệ thống không tự backfill từ people.generation_number.</FieldHelp>
         </label>
         <label className="block">
-          <FieldLabel>Membership type</FieldLabel>
+          <FieldLabel>Loại gắn dòng họ/chi</FieldLabel>
           <select
             name="membership_type"
             defaultValue={membership?.membership_type ?? "bloodline"}
@@ -561,7 +590,7 @@ export function MembershipForm({
           </select>
         </label>
         <label className="block">
-          <FieldLabel>Sort order</FieldLabel>
+          <FieldLabel>Thứ tự sắp xếp</FieldLabel>
           <input
             name="sort_order"
             type="number"
@@ -570,8 +599,9 @@ export function MembershipForm({
           />
         </label>
         <label className="block">
-          <FieldLabel>Visibility</FieldLabel>
+          <FieldLabel>Phạm vi hiển thị</FieldLabel>
           <VisibilitySelect defaultValue={membership?.visibility} />
+          <FieldHelp>Public chỉ hiển thị ngoài public khi người đó không còn sống và lineage được đánh dấu công khai.</FieldHelp>
         </label>
         <label className="flex min-h-10 items-center gap-3 pt-6 text-sm font-semibold text-slate-800">
           <input
@@ -580,33 +610,33 @@ export function MembershipForm({
             defaultChecked={membership?.is_primary ?? true}
             className="h-4 w-4"
           />
-          Primary membership
+          Gắn chính
         </label>
       </div>
       <label className="block">
-        <FieldLabel>Generation override reason</FieldLabel>
+        <FieldLabel>Lý do nhập đời thủ công</FieldLabel>
         <input
           name="generation_override_reason"
+          placeholder="VD: Theo gia phả giấy, quyết định hội đồng gia đình..."
           defaultValue={membership?.generation_override_reason ?? ""}
           className={inputClass}
         />
       </label>
       <label className="block">
-        <FieldLabel>Source note</FieldLabel>
+        <FieldLabel>Ghi chú nguồn</FieldLabel>
         <textarea
           name="source_note"
+          placeholder="Ghi nguồn xác minh ngắn gọn. Không nhập bí mật nhạy cảm nếu không cần."
           defaultValue={membership?.source_note ?? ""}
           rows={3}
           className={`${inputClass} min-h-24`}
         />
       </label>
-      <button
-        type="submit"
-        className={buttonClass}
+      <LineageSubmitButton
+        idleLabel={membership ? "Cập nhật gắn dòng họ/chi" : "Gán dòng họ/chi"}
+        pendingLabel="Đang lưu gắn dòng họ/chi..."
         disabled={clans.length === 0 || (!fixedPersonId && people.length === 0)}
-      >
-        {membership ? "Update membership" : "Create membership"}
-      </button>
+      />
     </form>
   );
 }
@@ -621,8 +651,11 @@ export function ClanList({
   if (clans.length === 0) {
     return (
       <EmptyState
-        title="No clans yet"
-        description="Create the first clan before adding branches, generation rules or memberships."
+        title="Chưa có dòng họ"
+        description="Tạo dòng họ đầu tiên trước khi thêm chi, quy tắc đời hoặc gán thành viên."
+        actions={
+          <ActionLink href="/admin/genealogy/clans">Tạo dòng họ</ActionLink>
+        }
       />
     );
   }
@@ -640,13 +673,13 @@ export function ClanList({
                 {clan.clan_code} / {visibilityLabels[clan.visibility]}
               </p>
               {clan.origin_place ? (
-                <p className="mt-2 text-sm text-slate-700">
-                  Origin: {clan.origin_place}
+              <p className="mt-2 text-sm text-slate-700">
+                  Nơi phát tích: {clan.origin_place}
                 </p>
               ) : null}
             </div>
             <ActionLink href="/admin/genealogy/branches">
-              Manage branches
+              Quản lý chi
             </ActionLink>
           </div>
           <div className="mt-5 border-t border-slate-100 pt-5">
@@ -670,8 +703,13 @@ export function BranchList({
   if (branches.length === 0) {
     return (
       <EmptyState
-        title="No branches yet"
-        description="Branches can be added after at least one clan exists."
+        title="Chưa có chi"
+        description="Chi chỉ tạo được sau khi đã có ít nhất một dòng họ."
+        actions={
+          <ActionLink href="/admin/genealogy/clans">
+            Kiểm tra dòng họ
+          </ActionLink>
+        }
       />
     );
   }
@@ -685,7 +723,7 @@ export function BranchList({
               {branch.branch_name}
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              {branch.branch_code} / {clanName(clans, branch.clan_id)} / Level{" "}
+              {branch.branch_code} / {clanName(clans, branch.clan_id)} / Cấp{" "}
               {branch.branch_level}
             </p>
           </div>
@@ -717,8 +755,13 @@ export function GenerationRuleList({
   if (rules.length === 0) {
     return (
       <EmptyState
-        title="No generation rules yet"
-        description="Create a clan-wide or branch-specific numbering rule."
+        title="Chưa có quy tắc đời"
+        description="Tạo quy tắc toàn dòng họ hoặc riêng cho từng chi để thống nhất cách nhập đời."
+        actions={
+          <ActionLink href="/admin/genealogy/generation-rules">
+            Tạo quy tắc đời
+          </ActionLink>
+        }
       />
     );
   }
@@ -733,9 +776,9 @@ export function GenerationRuleList({
               {branchName(branches, rule.branch_id)}
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Start generation {rule.start_generation} /{" "}
+              Đời bắt đầu {rule.start_generation} /{" "}
               {numberingMethodLabels[rule.numbering_method]} /{" "}
-              {rule.is_active ? "Active" : "Inactive"}
+              {rule.is_active ? "Đang áp dụng" : "Tạm dừng"}
             </p>
           </div>
           <div className="mt-5 border-t border-slate-100 pt-5">
@@ -767,8 +810,11 @@ export function MembershipList({
   if (memberships.length === 0) {
     return (
       <EmptyState
-        title="No memberships yet"
-        description="Assign people to clans and branches without automatic backfill."
+        title="Chưa gán thành viên"
+        description="Gán thành viên vào dòng họ/chi bằng thao tác rõ ràng; hệ thống không tự backfill từ trường legacy."
+        actions={
+          <ActionLink href="/admin/people">Mở danh sách thành viên</ActionLink>
+        }
       />
     );
   }
@@ -786,6 +832,12 @@ export function MembershipList({
               {branchName(branches, membership.branch_id)} /{" "}
               {membershipTypeLabels[membership.membership_type]}
             </p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <ActionLink href={`/admin/people/${membership.person_id}`}>
+              Mở hồ sơ thành viên
+            </ActionLink>
+            <ActionLink href="/admin/tree">Xem trên cây</ActionLink>
           </div>
           <div className="mt-5 border-t border-slate-100 pt-5">
             <MembershipForm
@@ -815,8 +867,8 @@ export function MembershipSummary({
   if (memberships.length === 0) {
     return (
       <EmptyState
-        title="No branch membership"
-        description="This person has not been assigned to a clan or branch yet."
+        title="Chưa có gắn dòng họ/chi"
+        description="Thành viên này chưa được gán vào dòng họ hoặc chi. Hãy gán thủ công khi đã có dữ liệu xác minh."
       />
     );
   }
@@ -834,11 +886,11 @@ export function MembershipSummary({
           </div>
           <div className="mt-1">
             {membershipTypeLabels[membership.membership_type]} /{" "}
-            {membership.is_primary ? "Primary" : "Secondary"} /{" "}
+            {membership.is_primary ? "Gắn chính" : "Gắn phụ"} /{" "}
             {visibilityLabels[membership.visibility]}
           </div>
           {membership.generation_number ? (
-            <div className="mt-1">Generation {membership.generation_number}</div>
+            <div className="mt-1">Đời {membership.generation_number}</div>
           ) : null}
           {membership.source_note ? (
             <div className="mt-2 text-slate-600">{membership.source_note}</div>

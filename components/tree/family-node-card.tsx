@@ -11,11 +11,16 @@ export type FamilyTreeReactNode = Node<
   FamilyTreeNodeData["kind"]
 >;
 
-function PersonCard({ data }: { data: Extract<TreeGraphNode, { kind: "person" }> }) {
+function PersonCard({
+  data,
+}: {
+  data: Extract<TreeGraphNode, { kind: "person" }>;
+}) {
   const dateRange =
     data.birthYear || data.deathYear
       ? `${data.birthYear ?? "?"} - ${data.deathYear ?? (data.isLiving ? "" : "?")}`
       : null;
+  const branchLabel = data.lineageBranchName ?? data.branchName;
 
   return (
     <div className="w-[220px] border border-slate-300 bg-white px-4 py-3 shadow-sm">
@@ -32,9 +37,9 @@ function PersonCard({ data }: { data: Extract<TreeGraphNode, { kind: "person" }>
         {dateRange ? <div>{dateRange}</div> : null}
         {data.generationNumber ? <div>Đời {data.generationNumber}</div> : null}
         {data.lineageClanName ? (
-          <div className="truncate">{data.lineageClanName}</div>
+          <div className="truncate">Dòng họ: {data.lineageClanName}</div>
         ) : null}
-        {data.branchName ? <div className="truncate">{data.branchName}</div> : null}
+        {branchLabel ? <div className="truncate">Chi: {branchLabel}</div> : null}
       </div>
       <div className="mt-3 inline-flex border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
         {data.isLiving ? "Còn sống" : "Đã mất"}

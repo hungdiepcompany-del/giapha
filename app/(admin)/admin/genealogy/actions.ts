@@ -24,6 +24,34 @@ function errorParam(message: string) {
   return encodeURIComponent(message);
 }
 
+function friendlyError(message: string) {
+  const normalized = message.toLowerCase();
+
+  if (
+    normalized.includes("duplicate key") ||
+    normalized.includes("unique constraint")
+  ) {
+    return "Mã hoặc bản ghi này đã tồn tại. Vui lòng kiểm tra lại mã dòng họ, mã chi nhánh hoặc gán thành viên hiện có.";
+  }
+
+  if (
+    normalized.includes("foreign key") ||
+    normalized.includes("violates foreign key")
+  ) {
+    return "Bản ghi liên kết không còn tồn tại hoặc chưa được chọn đúng. Vui lòng tải lại trang và chọn lại.";
+  }
+
+  if (normalized.includes("missing one of")) {
+    return "Bạn chưa có quyền cập nhật thông tin dòng họ/chi.";
+  }
+
+  if (normalized.includes("supabase is not configured")) {
+    return "Chưa cấu hình Supabase cho môi trường hiện tại.";
+  }
+
+  return message;
+}
+
 function returnTo(formData: FormData, fallback = "/admin/genealogy") {
   return String(formData.get("return_to") ?? fallback);
 }
@@ -32,7 +60,7 @@ function redirectWithError(formData: FormData, error: string): never {
   const target = returnTo(formData);
   const separator = target.includes("?") ? "&" : "?";
 
-  redirect(`${target}${separator}error=${errorParam(error)}`);
+  redirect(`${target}${separator}error=${errorParam(friendlyError(error))}`);
 }
 
 function redirectWithSaved(formData: FormData, saved: string): never {

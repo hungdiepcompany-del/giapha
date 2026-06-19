@@ -1,4 +1,5 @@
 import { AdminShell } from "@/components/layout/admin-shell";
+import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
@@ -41,8 +42,8 @@ export default async function GenealogyPage({
         ok: false as const,
         error:
           context.reason === "missing_supabase_config"
-            ? "Supabase is not configured."
-            : "Missing people.view or tree.view.",
+            ? "Chưa cấu hình Supabase cho môi trường hiện tại."
+            : "Bạn cần quyền people.view hoặc tree.view để xem dữ liệu dòng họ.",
       };
 
   return (
@@ -53,9 +54,9 @@ export default async function GenealogyPage({
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Vietnamese genealogy"
-          title="Clan, branch and generation"
-          description="Manage lineage metadata that was added by the approved Vietnamese genealogy migration."
+          eyebrow="Gia phả Việt Nam"
+          title="Dòng họ, chi nhánh và đời"
+          description="Quản lý metadata dòng họ đã được verify sau migration gia phả Việt Nam. Mọi gán thành viên đều nhập rõ ràng, không tự backfill."
         />
 
         {query.error ? (
@@ -66,7 +67,7 @@ export default async function GenealogyPage({
 
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Saved: {query.saved}
+            {lineageSavedMessage(query.saved)}
           </StatusCallout>
         ) : null}
 
@@ -75,52 +76,53 @@ export default async function GenealogyPage({
             <h2 className="text-2xl font-bold text-slate-950">
               {result.ok ? result.data.clans.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Clans</p>
+            <p className="mt-1 text-sm text-slate-600">Dòng họ</p>
             <ActionLink href="/admin/genealogy/clans" className="mt-4">
-              Open
+              Mở quản lý
             </ActionLink>
           </SectionCard>
           <SectionCard>
             <h2 className="text-2xl font-bold text-slate-950">
               {result.ok ? result.data.branches.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Branches</p>
+            <p className="mt-1 text-sm text-slate-600">Chi</p>
             <ActionLink href="/admin/genealogy/branches" className="mt-4">
-              Open
+              Mở quản lý
             </ActionLink>
           </SectionCard>
           <SectionCard>
             <h2 className="text-2xl font-bold text-slate-950">
               {result.ok ? result.data.generationRules.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Generation rules</p>
+            <p className="mt-1 text-sm text-slate-600">Quy tắc đời</p>
             <ActionLink
               href="/admin/genealogy/generation-rules"
               className="mt-4"
             >
-              Open
+              Mở quản lý
             </ActionLink>
           </SectionCard>
           <SectionCard>
             <h2 className="text-2xl font-bold text-slate-950">
               {result.ok ? result.data.memberships.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Memberships</p>
+            <p className="mt-1 text-sm text-slate-600">Gán thành viên</p>
             <ActionLink href="/admin/genealogy/memberships" className="mt-4">
-              Open
+              Mở quản lý
             </ActionLink>
           </SectionCard>
         </div>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <StatusCallout tone="info">
-            Read uses existing permissions people.view or tree.view. Manage uses
-            existing permissions people.update, relationships.update,
-            tree.edit_layout or settings.manage.
+            Quyền xem dùng permission hiện có `people.view` hoặc `tree.view`.
+            Quyền cập nhật dùng `people.update`, `relationships.update`,
+            `tree.edit_layout` hoặc `settings.manage`.
           </StatusCallout>
           <StatusCallout tone="warning">
-            No automatic backfill from people.branch_name or
-            people.generation_number is performed. Enter memberships explicitly.
+            Không tự backfill từ `people.branch_name` hoặc
+            `people.generation_number`. Hãy gán dòng họ/chi thủ công khi có
+            dữ liệu xác minh.
           </StatusCallout>
         </div>
 
@@ -132,8 +134,8 @@ export default async function GenealogyPage({
 
         {!canManage ? (
           <StatusCallout tone="warning" className="mt-6">
-            You can view lineage data, but you do not have one of the existing
-            manage permissions for updates.
+            Bạn có thể xem dữ liệu dòng họ/chi, nhưng chưa có quyền cập nhật
+            trong nhóm permission hiện có.
           </StatusCallout>
         ) : null}
       </section>

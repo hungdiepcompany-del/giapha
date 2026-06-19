@@ -1,5 +1,6 @@
 import { AdminShell } from "@/components/layout/admin-shell";
 import { BranchForm, BranchList } from "@/components/genealogy/lineage-admin";
+import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
@@ -35,9 +36,9 @@ export default async function BranchesPage({ searchParams }: BranchesPageProps) 
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Vietnamese genealogy"
-          title="Branches"
-          description="Manage chi/nhanh hierarchy inside each clan."
+          eyebrow="Gia phả Việt Nam"
+          title="Chi nhánh"
+          description="Quản lý thứ bậc chi/nhánh trong từng dòng họ."
         />
 
         {query.error ? (
@@ -47,7 +48,7 @@ export default async function BranchesPage({ searchParams }: BranchesPageProps) 
         ) : null}
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Saved: {query.saved}
+            {lineageSavedMessage(query.saved)}
           </StatusCallout>
         ) : null}
         {!clans.ok ? (
@@ -63,7 +64,12 @@ export default async function BranchesPage({ searchParams }: BranchesPageProps) 
 
         {canManage ? (
           <SectionCard className="mt-6">
-            <h2 className="text-lg font-bold text-slate-950">Create branch</h2>
+            <h2 className="text-lg font-bold text-slate-950">Tạo chi</h2>
+            {clanData.length === 0 ? (
+              <StatusCallout tone="warning" className="mt-4">
+                Cần tạo ít nhất một dòng họ trước khi thêm chi.
+              </StatusCallout>
+            ) : null}
             <div className="mt-4">
               <BranchForm
                 clans={clanData}

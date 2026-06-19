@@ -58,12 +58,12 @@ function enumValue<T extends readonly string[]>(
 }
 
 function validateRequired(value: string | null | undefined, label: string) {
-  return value && value.trim() ? null : `${label} is required.`;
+  return value && value.trim() ? null : `Vui lòng nhập ${label}.`;
 }
 
 function validatePositive(value: number | null | undefined, label: string) {
   if (value === null || value === undefined) return null;
-  return value >= 1 ? null : `${label} must be 1 or greater.`;
+  return value >= 1 ? null : `${label} phải là số từ 1 trở lên.`;
 }
 
 function result<T>(data: T, errors: Array<string | null>): ValidationResult<T> {
@@ -97,8 +97,8 @@ export function validateClanInput(input: CreateClanInput) {
       visibility: input.visibility ?? "family",
     },
     [
-      validateRequired(input.clan_code, "Clan code"),
-      validateRequired(input.clan_name, "Clan name"),
+      validateRequired(input.clan_code, "mã dòng họ"),
+      validateRequired(input.clan_name, "tên dòng họ"),
     ],
   );
 }
@@ -136,10 +136,10 @@ export function validateClanBranchInput(input: CreateClanBranchInput) {
       visibility: input.visibility ?? "family",
     },
     [
-      validateRequired(input.clan_id, "Clan"),
-      validateRequired(input.branch_code, "Branch code"),
-      validateRequired(input.branch_name, "Branch name"),
-      validatePositive(input.branch_level, "Branch level"),
+      validateRequired(input.clan_id, "dòng họ"),
+      validateRequired(input.branch_code, "mã chi nhánh"),
+      validateRequired(input.branch_name, "tên chi nhánh"),
+      validatePositive(input.branch_level, "Cấp chi nhánh"),
     ],
   );
 }
@@ -189,8 +189,8 @@ export function validateGenerationRuleInput(input: CreateGenerationRuleInput) {
       is_active: input.is_active ?? true,
     },
     [
-      validateRequired(input.clan_id, "Clan"),
-      validatePositive(input.start_generation, "Start generation"),
+      validateRequired(input.clan_id, "dòng họ"),
+      validatePositive(input.start_generation, "Đời bắt đầu"),
     ],
   );
 }
@@ -237,9 +237,9 @@ export function validatePersonBranchMembershipInput(
       visibility: input.visibility ?? "family",
     },
     [
-      validateRequired(input.person_id, "Person"),
-      validateRequired(input.clan_id, "Clan"),
-      validatePositive(input.generation_number, "Generation number"),
+      validateRequired(input.person_id, "thành viên"),
+      validateRequired(input.clan_id, "dòng họ"),
+      validatePositive(input.generation_number, "Đời"),
     ],
   );
 }

@@ -1,5 +1,6 @@
 import { AdminShell } from "@/components/layout/admin-shell";
 import { MembershipForm, MembershipList } from "@/components/genealogy/lineage-admin";
+import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
@@ -52,9 +53,9 @@ export default async function MembershipsPage({
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Vietnamese genealogy"
-          title="Branch memberships"
-          description="Assign people to a clan or branch explicitly; no automatic backfill is performed."
+          eyebrow="Gia phả Việt Nam"
+          title="Gắn thành viên vào dòng họ/chi"
+          description="Gán người vào dòng họ hoặc chi bằng thao tác rõ ràng. Không tự backfill từ branch_name hoặc generation_number."
         />
 
         {query.error ? (
@@ -64,7 +65,7 @@ export default async function MembershipsPage({
         ) : null}
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Saved: {query.saved}
+            {lineageSavedMessage(query.saved)}
           </StatusCallout>
         ) : null}
         {[clans, branches, rules, memberships, people].map((result, index) =>
@@ -78,8 +79,14 @@ export default async function MembershipsPage({
         {canManage ? (
           <SectionCard className="mt-6">
             <h2 className="text-lg font-bold text-slate-950">
-              Create membership
+              Gán thành viên
             </h2>
+            {clanData.length === 0 || peopleData.length === 0 ? (
+              <StatusCallout tone="warning" className="mt-4">
+                Cần có ít nhất một dòng họ và một thành viên trước khi gán dòng
+                họ/chi.
+              </StatusCallout>
+            ) : null}
             <div className="mt-4">
               <MembershipForm
                 clans={clanData}

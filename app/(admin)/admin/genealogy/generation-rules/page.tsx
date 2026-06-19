@@ -3,6 +3,7 @@ import {
   GenerationRuleForm,
   GenerationRuleList,
 } from "@/components/genealogy/lineage-admin";
+import { lineageSavedMessage } from "@/components/genealogy/lineage-labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
@@ -49,9 +50,9 @@ export default async function GenerationRulesPage({
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Vietnamese genealogy"
-          title="Generation rules"
-          description="Record clan-wide or branch-specific generation numbering rules."
+          eyebrow="Gia phả Việt Nam"
+          title="Quy tắc đời"
+          description="Ghi nhận cách đánh số đời cho toàn dòng họ hoặc từng chi. Phase này chỉ lưu metadata, không tự tính đời."
         />
 
         {query.error ? (
@@ -61,7 +62,7 @@ export default async function GenerationRulesPage({
         ) : null}
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Saved: {query.saved}
+            {lineageSavedMessage(query.saved)}
           </StatusCallout>
         ) : null}
         {[clans, branches, rules].map((result, index) =>
@@ -75,8 +76,13 @@ export default async function GenerationRulesPage({
         {canManage ? (
           <SectionCard className="mt-6">
             <h2 className="text-lg font-bold text-slate-950">
-              Create generation rule
+              Tạo quy tắc đời
             </h2>
+            {clanData.length === 0 ? (
+              <StatusCallout tone="warning" className="mt-4">
+                Cần tạo ít nhất một dòng họ trước khi thêm quy tắc đời.
+              </StatusCallout>
+            ) : null}
             <div className="mt-4">
               <GenerationRuleForm
                 clans={clanData}
