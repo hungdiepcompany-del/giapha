@@ -1,5 +1,25 @@
 # Decision Log
 
+## Decision 145 - Export/import static examples are review evidence, not runtime fixtures
+
+Chon:
+
+Phase 122B-124B may add static export/import/backup examples, acceptance
+checklists and dry-run report shapes, but those examples are documentation
+only. They do not authorize runtime fixtures, parser implementation, large
+JSON/GEDCOM/ZIP expansion, backup/restore runtime, service Workers, dependency,
+config, deploy or production mutation changes.
+
+Ly do:
+
+- Concrete examples make future export/import reviews testable without opening
+  unsafe runtime surfaces.
+- Backup and restore examples can be mistaken for runnable fixtures, so the
+  design-only boundary must remain explicit.
+- Public/family/admin export examples need privacy review before code changes.
+- Import apply remains a production mutation and requires owner approval,
+  backup/snapshot evidence and rollback gates.
+
 ## Decision 144 - Export/import portability work remains design-only until service/runtime approval
 
 Chon:

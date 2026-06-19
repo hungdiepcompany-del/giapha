@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-19 - Phase 122B-124B Export/Import Static Examples And Test Contracts completed
+
+- Added `docs/122B_EXPORT_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md` with static
+  `family.json` export shape, public/family/admin privacy-safe cases, GEDCOM
+  mapping notes, ZIP manifest example, unsafe export cases and future
+  export-service/GEDCOM/ZIP acceptance checklists.
+- Added `docs/123B_IMPORT_STATIC_EXAMPLES_ACCEPTANCE_CHECKLIST.md` with static
+  import payload cases, preview result shape, apply gate and future
+  import-service/large import acceptance checklists.
+- Added `docs/124B_PORTABILITY_BACKUP_TEST_CONTRACT_EXAMPLES.md` with static
+  portability checks, backup manifest example, restore dry-run report,
+  backward/forward compatibility examples, no-go conditions and future
+  backup/import-service acceptance checklists.
+- Added `scripts/check-export-import-static-examples.cjs` and
+  `npm run check:export-import-static-examples`.
+- Decision 145 records that these examples are review evidence only, not
+  runtime fixtures, parser implementation, restore/apply approval or service
+  Worker approval.
+- Worker/runtime: main Worker touched NO; runtime dependency added NO; new
+  service Worker created NO; OpenNext/Wrangler config changed NO; large
+  export/import/media/backup/restore work NO.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL mutation, no
+  seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime, no
+  media export/import, no backup/restore runtime, no deploy and no push.
+- Validation: export/import static examples PASS; export/import boundary
+  design PASS; inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root build remains blocked before compile by the pre-existing
+  Windows `.next` ACL `EPERM` unlink error. The clean temp copy build passed
+  with `.git`, `.next`, env files and `PLANNING.MD` excluded.
+- `.env.local`, `.dev.vars` and `PLANNING.MD` were not read;
+  `PLANNING.MD` was not committed.
+- Recommended next path: Phase 122C/123C/124C static compatibility matrix or a
+  separately owner-approved service-boundary design phase.
+
 ## 2026-06-19 - Phase 122A-124A Export/Import Boundary And Portability Contract completed
 
 - Added `docs/122A_EXPORT_BOUNDARY_DESIGN.md` for design-only export boundary:

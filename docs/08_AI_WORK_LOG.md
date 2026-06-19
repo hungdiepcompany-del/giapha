@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-06-19 - Phase 122B-124B Export/Import Static Examples And Test Contracts
+
+- Added Phase 122B export static examples and acceptance checklists for
+  `family.json`, privacy-safe export cases, GEDCOM mapping notes, ZIP manifest
+  shape, unsafe export cases and future export-service/GEDCOM/ZIP gates.
+- Added Phase 123B import static examples and acceptance checklists for valid
+  and unsafe payload cases, preview result shape, apply gate, future
+  import-service and large import gates.
+- Added Phase 124B portability/backup test contract examples for stable IDs,
+  reference resolution, backup manifest, restore dry-run report, compatibility
+  examples, no-go conditions and future backup/import-service gates.
+- Added `scripts/check-export-import-static-examples.cjs` and
+  `npm run check:export-import-static-examples`.
+- Decision 145 records that static examples are review evidence, not runtime
+  fixtures or restore/import/export approval.
+- Boundary result: No migration, no `.sql` file, No DB apply, No SQL mutation,
+  no seed/backfill, no large JSON/GEDCOM/ZIP runtime, no import parser runtime,
+  no media export/import, no backup/restore runtime, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and
+  no push.
+- Validation: export/import static examples PASS; export/import boundary
+  design PASS; inline admin warning UI PASS; media-quality final readiness,
+  static examples, static contracts and boundary design PASS; Vietnamese
+  genealogy manual SQL diagnostic, domain UI and domain readiness PASS;
+  env-safe PASS; migrations PASS; typecheck PASS; lint PASS; clean temp
+  `npm run build` PASS; Git whitespace checks PASS.
+- Workspace-root `npm run build` remains blocked before compile by the
+  pre-existing Windows `.next` artifact ACL error:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+  A clean temp copy excluding `.git`, `.next`, env files and `PLANNING.MD`
+  built successfully.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 122A-124A Export/Import Boundary And Portability Contract
 
 - Added Phase 122A export boundary design covering current export foundation,
