@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
 import { getTreeNodeInlineWarnings } from "@/lib/family/inline-warning-rules";
@@ -31,6 +32,28 @@ type TreeEditorSidePanelProps = {
 
 function personLabel(node: TreePersonNode) {
   return node.displayName || node.fullName;
+}
+
+function personOptionLabel(node: TreePersonNode) {
+  const details = [
+    node.birthYear ? `sinh ${node.birthYear}` : null,
+    node.generationNumber ? `đời ${node.generationNumber}` : null,
+    node.branchName,
+  ].filter(Boolean);
+
+  return details.length > 0
+    ? `${personLabel(node)} · ${details.join(" · ")}`
+    : personLabel(node);
+}
+
+function normalizeSearch(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .trim();
 }
 
 const parentRoleLabels: Record<ParentRole, string> = {
@@ -154,19 +177,125 @@ function RelationList({
   );
 }
 
-function RelatedPersonInput() {
+function RelatedPersonPicker({
+  people,
+  pickerId,
+  selectedPersonId,
+}: {
+  people: TreePersonNode[];
+  pickerId: string;
+  selectedPersonId: string;
+}) {
+  const candidates = useMemo(() => {
+    return people
+      .filter((person) => person.personId !== selectedPersonId)
+      .sort((a, b) => personLabel(a).localeCompare(personLabel(b), "vi"));
+  }, [people, selectedPersonId]);
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState("");
+  const selectedPerson = candidates.find(
+    (person) => person.personId === selectedId,
+  );
+  const normalizedQuery = normalizeSearch(query);
+  const filteredCandidates = normalizedQuery
+    ? candidates.filter((person) => {
+        const searchable = normalizeSearch(
+          [
+            person.fullName,
+            person.displayName,
+            person.birthYear,
+            person.branchName,
+            person.generationNumber ? `doi ${person.generationNumber}` : null,
+          ]
+            .filter(Boolean)
+            .join(" "),
+        );
+
+        return searchable.includes(normalizedQuery);
+      })
+    : candidates.slice(0, 8);
+
   return (
-    <label className="block">
-      <span className="text-sm font-semibold text-slate-800">
-        UUID người liên quan
-      </span>
-      <input
+    <div className="space-y-2">
+      <label className="block">
+        <span className="text-sm font-semibold text-slate-800">
+          Tìm thành viên
+        </span>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 text-sm"
+          placeholder="Tìm theo tên, năm sinh hoặc chi nhánh..."
+          role="combobox"
+          aria-expanded="true"
+          aria-controls={pickerId}
+          aria-autocomplete="list"
+        />
+      </label>
+
+      <select
         name="related_person_id"
+        value={selectedId}
+        onChange={(event) => setSelectedId(event.target.value)}
         required
-        className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
-        placeholder="UUID thành viên đã tồn tại"
-      />
-    </label>
+        className="sr-only"
+        aria-label="Thành viên liên quan đã chọn"
+      >
+        <option value="">Chưa chọn thành viên liên quan</option>
+        {candidates.map((person) => (
+          <option key={person.personId} value={person.personId}>
+            {personOptionLabel(person)}
+          </option>
+        ))}
+      </select>
+
+      <div
+        id={pickerId}
+        role="listbox"
+        className="max-h-56 overflow-y-auto border border-slate-200 bg-white"
+      >
+        {filteredCandidates.length > 0 ? (
+          filteredCandidates.map((person) => {
+            const isSelected = person.personId === selectedId;
+
+            return (
+              <button
+                key={person.personId}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => {
+                  setSelectedId(person.personId);
+                  setQuery(personOptionLabel(person));
+                }}
+                className={`block min-h-11 w-full px-3 py-2 text-left text-sm ${
+                  isSelected
+                    ? "bg-slate-900 text-white"
+                    : "bg-white text-slate-800 hover:bg-slate-50"
+                }`}
+              >
+                {personOptionLabel(person)}
+              </button>
+            );
+          })
+        ) : (
+          <p className="px-3 py-3 text-sm text-slate-600">
+            Không tìm thấy thành viên phù hợp.
+          </p>
+        )}
+      </div>
+
+      <p className="text-xs text-slate-500">
+        Kết quả chọn:{" "}
+        {selectedPerson
+          ? personOptionLabel(selectedPerson)
+          : "Chưa chọn thành viên."}
+      </p>
+      <p className="text-xs text-slate-500">
+        ID nội bộ được dùng tự động sau khi chọn, người dùng không cần nhập thủ công.
+      </p>
+    </div>
   );
 }
 
@@ -201,6 +330,9 @@ export function TreeEditorSidePanel({
   }
 
   const summary = relationshipSummary(graph, selectedNode.id);
+  const people = graph.nodes.filter(
+    (node): node is TreePersonNode => node.kind === "person",
+  );
   const dateRange =
     selectedNode.birthYear || selectedNode.deathYear
       ? `${selectedNode.birthYear ?? "?"} - ${selectedNode.deathYear ?? (selectedNode.isLiving ? "" : "?")}`
@@ -245,6 +377,9 @@ export function TreeEditorSidePanel({
 
       {canCreateRelationships ? (
         <div className="space-y-4 border-t border-slate-200 pt-4">
+          <p className="text-sm font-semibold text-slate-800">
+            Người đang chọn: {personLabel(selectedNode)}
+          </p>
           <form action={addParentAction} className="space-y-3">
             <input type="hidden" name="return_to" value="/admin/tree/edit" />
             <input
@@ -253,7 +388,11 @@ export function TreeEditorSidePanel({
               value={selectedNode.personId}
             />
             <h3 className="text-sm font-bold text-slate-950">Thêm cha/mẹ</h3>
-            <RelatedPersonInput />
+            <RelatedPersonPicker
+              people={people}
+              pickerId="tree-parent-person-results"
+              selectedPersonId={selectedNode.personId}
+            />
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="text-sm font-semibold text-slate-800">Vai trò</span>
@@ -304,7 +443,11 @@ export function TreeEditorSidePanel({
             <h3 className="text-sm font-bold text-slate-950">
               Thêm vợ/chồng/bạn đời
             </h3>
-            <RelatedPersonInput />
+            <RelatedPersonPicker
+              people={people}
+              pickerId="tree-spouse-person-results"
+              selectedPersonId={selectedNode.personId}
+            />
             <label className="block">
               <span className="text-sm font-semibold text-slate-800">
                 Trạng thái
@@ -339,7 +482,11 @@ export function TreeEditorSidePanel({
               value={selectedNode.personId}
             />
             <h3 className="text-sm font-bold text-slate-950">Thêm con</h3>
-            <RelatedPersonInput />
+            <RelatedPersonPicker
+              people={people}
+              pickerId="tree-child-person-results"
+              selectedPersonId={selectedNode.personId}
+            />
             <label className="block">
               <span className="text-sm font-semibold text-slate-800">
                 Loại quan hệ con

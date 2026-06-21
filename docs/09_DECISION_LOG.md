@@ -1,5 +1,27 @@
 # Decision Log
 
+## Decision 156 - Tree Editor relationship picker keeps UUID internal
+
+Chon:
+
+Plan A-01 may replace the Tree Editor user-facing related-person UUID input
+with a Vietnamese searchable member picker sourced from the already loaded
+admin tree graph. The UI may show names, birth year, generation and branch
+information, but the submitted internal field remains `related_person_id` and
+the selected value remains the person UUID.
+
+The existing tree editor server actions, relationship service, route,
+permission keys, database fields and business rules stay unchanged.
+
+Ly do:
+
+- Users should not need to remember or paste UUIDs for normal relationship
+  editing.
+- Using the already loaded admin tree graph avoids a new API surface and keeps
+  the current permission/privacy boundary.
+- Keeping UUID as the internal value preserves existing relationship service
+  contracts.
+
 ## Decision 155 - Routine public monitoring snapshots are not authenticated smoke
 
 Chon:

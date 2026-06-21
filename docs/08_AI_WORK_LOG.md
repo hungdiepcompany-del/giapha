@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-06-21 - Plan A-01 - Tree Relationship Picker UX
+
+- Replaced the Tree Editor side-panel manual related-person UUID input with a
+  Vietnamese searchable member picker built from the already loaded admin tree
+  graph.
+- Picker labels show member name plus supporting birth year, generation and
+  branch information when available.
+- Internal submitted field remains `related_person_id`; selected value remains
+  the person UUID through `person.personId`.
+- Existing server actions and relationship service remain unchanged:
+  `addParentFromTreeAction`, `addSpouseFromTreeAction` and
+  `addChildFromTreeAction`.
+- Existing permission/auth logic remains unchanged; `/admin/tree/edit` still
+  requires tree permissions and mutations still require `relationships.create`
+  in the relationship service.
+- Added `docs/PLAN_A01_TREE_RELATIONSHIP_PICKER_UX.md`.
+- Added `scripts/check-tree-relationship-picker-ux.cjs` and
+  `npm run check:tree-relationship-picker-ux`.
+- Inline create-new-person from Tree Editor: DEFERRED.
+- Broader `/admin/relationships` UUID form replacement: DEFERRED.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and
+  no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-19 - Phase 132 - Routine Production Monitoring Snapshot
 
 - Added `docs/132_ROUTINE_PRODUCTION_MONITORING_SNAPSHOT.md`.

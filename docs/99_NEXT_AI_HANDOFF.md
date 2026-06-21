@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-21 - Plan A-01 - Tree Relationship Picker UX completed
+
+- Replaced the Tree Editor side-panel manual related-person UUID input with a
+  Vietnamese searchable member picker.
+- Picker source: already loaded admin tree graph, so no new API endpoint was
+  added.
+- User-visible picker copy includes `Người đang chọn`, `Tìm thành viên`,
+  `Tìm theo tên, năm sinh hoặc chi nhánh...`, `Không tìm thấy thành viên phù hợp.`
+  and `Kết quả chọn`.
+- Picker display label uses member name plus available birth year, generation
+  and branch information.
+- Internal submitted field remains `related_person_id`; selected value remains
+  `person.personId` UUID.
+- Existing server actions and relationship service remain unchanged:
+  `addParentFromTreeAction`, `addSpouseFromTreeAction` and
+  `addChildFromTreeAction`.
+- Existing permission/auth logic remains unchanged; relationship creation still
+  goes through the current service and `relationships.create` boundary.
+- Added `docs/PLAN_A01_TREE_RELATIONSHIP_PICKER_UX.md`.
+- Added `scripts/check-tree-relationship-picker-ux.cjs` and
+  `npm run check:tree-relationship-picker-ux`.
+- Decision 156 records that UUID stays internal while the Tree Editor shows a
+  human-friendly member picker.
+- Deferred: inline create-new-person from Tree Editor and broader
+  `/admin/relationships` UUID form replacement.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and
+  no push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: optional browser-level Tree Editor UX smoke with an
+  authenticated operator session, or a separate scoped phase to replace UUID
+  inputs on `/admin/relationships`.
+
 ## 2026-06-19 - Phase 132 - Routine Production Monitoring Snapshot completed
 
 - Added `docs/132_ROUTINE_PRODUCTION_MONITORING_SNAPSHOT.md`.
