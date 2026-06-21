@@ -166,7 +166,8 @@
     "check:authenticated-smoke-result": "node scripts/check-authenticated-smoke-result.cjs",
     "check:production-monitoring-auth-smoke-prep": "node scripts/check-production-monitoring-auth-smoke-prep.cjs",
     "check:routine-production-monitoring-snapshot": "node scripts/check-routine-production-monitoring-snapshot.cjs",
-    "check:tree-relationship-picker-ux": "node scripts/check-tree-relationship-picker-ux.cjs"
+    "check:tree-relationship-picker-ux": "node scripts/check-tree-relationship-picker-ux.cjs",
+    "check:vietnamese-cultural-ui-ux": "node scripts/check-vietnamese-cultural-ui-ux.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

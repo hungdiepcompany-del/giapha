@@ -1,5 +1,25 @@
 # AI Work Log
 
+## 2026-06-21 - UI-UX-VN-02 - Vietnamese Cultural UI/UX Hardening
+
+- Added `docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md`.
+- Hardened `/admin/relationships` copy so operators are guided to choose
+  members by Vietnamese name labels instead of typing/copying UUIDs.
+- Updated relationship creation forms to render member selectors for
+  parent/child and couple workflows while keeping internal submitted values as
+  existing IDs.
+- Updated `/admin/people/[id]` relationship forms to pass the existing
+  permission-checked member list into the relationship selectors.
+- Existing relationship actions, validation, service contracts, route
+  structure, auth and permission logic remain unchanged.
+- Added `scripts/check-vietnamese-cultural-ui-ux.cjs` and
+  `npm run check:vietnamese-cultural-ui-ux`.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL/data mutation, no
+  seed/backfill, no schema change, no auth/permission logic change, no Worker
+  created, no OpenNext/Wrangler config change, no runtime dependency added, no
+  deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-21 - Plan A-01 - Tree Relationship Picker UX
 
 - Replaced the Tree Editor side-panel manual related-person UUID input with a

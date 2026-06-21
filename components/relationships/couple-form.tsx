@@ -1,4 +1,5 @@
 import { createCoupleRelationshipAction } from "@/app/(admin)/admin/relationships/actions";
+import type { Person } from "@/lib/family/people-types";
 import {
   COUPLE_RELATIONSHIP_STATUSES,
   RELATIONSHIP_DATE_PRECISIONS,
@@ -6,6 +7,7 @@ import {
 } from "@/lib/family/relationship-types";
 
 type CoupleFormProps = {
+  people: Person[];
   contextPersonId?: string;
   returnTo: string;
 };
@@ -34,41 +36,90 @@ const visibilityLabels: Record<string, string> = {
   public: "Công khai",
 };
 
-export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
+function personLabel(person: Pick<Person, "full_name" | "display_name" | "birth_date">) {
+  const name = person.display_name || person.full_name;
+  const birthYear = person.birth_date ? person.birth_date.slice(0, 4) : null;
+
+  return birthYear ? `${name} - sinh ${birthYear}` : name;
+}
+
+function PersonSelect({
+  label,
+  name,
+  people,
+  excludePersonId,
+}: {
+  label: string;
+  name: string;
+  people: Person[];
+  excludePersonId?: string;
+}) {
+  const candidates = people
+    .filter((person) => !excludePersonId || person.id !== excludePersonId)
+    .sort((a, b) => personLabel(a).localeCompare(personLabel(b), "vi"));
+
   return (
-    <form action={createCoupleRelationshipAction} className="space-y-4 border border-slate-200 bg-white p-4">
-      <h3 className="text-base font-semibold text-slate-950">Tạo quan hệ đôi</h3>
+    <label className="block">
+      <span className="text-sm font-semibold text-slate-800">{label}</span>
+      <select
+        name={name}
+        required
+        defaultValue=""
+        className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+      >
+        <option value="">Chọn thành viên</option>
+        {candidates.map((person) => (
+          <option key={person.id} value={person.id}>
+            {personLabel(person)}
+          </option>
+        ))}
+      </select>
+      {candidates.length === 0 ? (
+        <p className="mt-1 text-xs text-amber-700">
+          Chưa có danh sách thành viên để chọn. Cần quyền xem thành viên trước
+          khi tạo quan hệ.
+        </p>
+      ) : null}
+    </label>
+  );
+}
+
+export function CoupleForm({
+  people,
+  contextPersonId,
+  returnTo,
+}: CoupleFormProps) {
+  return (
+    <form
+      action={createCoupleRelationshipAction}
+      className="space-y-4 border border-slate-200 bg-white p-4"
+    >
+      <h3 className="text-base font-semibold text-slate-950">
+        Tạo quan hệ đôi
+      </h3>
       <input type="hidden" name="return_to" value={returnTo} />
       {contextPersonId ? (
         <>
           <input type="hidden" name="context_person_id" value={contextPersonId} />
           <input type="hidden" name="person1_id" value={contextPersonId} />
         </>
-      ) : null}
-      {!contextPersonId ? (
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            ID thành viên 1
-          </span>
-          <input
-            name="person1_id"
-            required
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
-            placeholder="UUID thành viên"
-          />
-        </label>
-      ) : null}
-      <label className="block">
-        <span className="text-sm font-semibold text-slate-800">
-          {contextPersonId ? "ID thành viên của vợ/chồng/bạn đời" : "ID thành viên 2"}
-        </span>
-        <input
-          name="person2_id"
-          required
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
-          placeholder="UUID thành viên"
+      ) : (
+        <PersonSelect
+          label="Chọn thành viên thứ nhất"
+          name="person1_id"
+          people={people}
         />
-      </label>
+      )}
+      <PersonSelect
+        label={
+          contextPersonId
+            ? "Chọn vợ/chồng/bạn đời"
+            : "Chọn thành viên thứ hai"
+        }
+        name="person2_id"
+        people={people}
+        excludePersonId={contextPersonId}
+      />
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
           <span className="text-sm font-semibold text-slate-800">Trạng thái</span>
@@ -101,7 +152,9 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Ngày bắt đầu</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Ngày bắt đầu
+          </span>
           <input
             name="start_date"
             type="date"
@@ -125,7 +178,9 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Ngày kết thúc</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Ngày kết thúc
+          </span>
           <input
             name="end_date"
             type="date"
@@ -151,11 +206,11 @@ export function CoupleForm({ contextPersonId, returnTo }: CoupleFormProps) {
       </div>
       <label className="block">
         <span className="text-sm font-semibold text-slate-800">
-          ID gia đình liên kết
+          Gia đình liên kết
         </span>
         <input
           name="family_id"
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
+          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
           placeholder="Tùy chọn"
         />
       </label>

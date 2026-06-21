@@ -1,5 +1,25 @@
 # Decision Log
 
+## Decision 157 - Vietnamese cultural UI favors names and kinship labels over manual IDs
+
+Chon:
+
+Vietnamese genealogy UI should prefer Vietnamese kinship language and member
+name selectors on operator-facing forms. UUIDs and English internal enum/API
+values remain allowed as hidden submitted values and implementation details,
+but normal relationship editing should not ask users to remember or paste IDs
+when a permission-checked member list is already available.
+
+The relationship actions, validation, database fields, permission keys, route
+structure and service contracts remain unchanged.
+
+Ly do:
+
+- Genealogy work is naturally name- and relationship-centered, not ID-centered.
+- Keeping IDs internal preserves existing service contracts and avoids schema or
+  permission changes.
+- Using already permission-checked member data avoids a new runtime API surface.
+
 ## Decision 156 - Tree Editor relationship picker keeps UUID internal
 
 Chon:

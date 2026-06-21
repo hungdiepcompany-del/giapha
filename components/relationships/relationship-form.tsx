@@ -3,6 +3,7 @@ import {
   addParentToFamilyAction,
   createFamilyAction,
 } from "@/app/(admin)/admin/relationships/actions";
+import type { Person } from "@/lib/family/people-types";
 import {
   CHILD_RELATIONSHIP_TYPES,
   PARENT_RELATIONSHIP_TYPES,
@@ -13,6 +14,7 @@ import {
 
 type RelationshipFormProps = {
   families: FamilyWithMembers[];
+  people: Person[];
   contextPersonId?: string;
   returnTo: string;
   mode?: "page" | "person";
@@ -47,15 +49,69 @@ const visibilityLabels: Record<string, string> = {
   public: "Công khai",
 };
 
+function personLabel(person: Pick<Person, "full_name" | "display_name" | "birth_date">) {
+  const name = person.display_name || person.full_name;
+  const birthYear = person.birth_date ? person.birth_date.slice(0, 4) : null;
+
+  return birthYear ? `${name} - sinh ${birthYear}` : name;
+}
+
+function PersonSelect({
+  label,
+  name,
+  people,
+  defaultValue,
+  excludePersonId,
+}: {
+  label: string;
+  name: string;
+  people: Person[];
+  defaultValue?: string;
+  excludePersonId?: string;
+}) {
+  const candidates = people
+    .filter((person) => !excludePersonId || person.id !== excludePersonId)
+    .sort((a, b) => personLabel(a).localeCompare(personLabel(b), "vi"));
+
+  return (
+    <label className="block">
+      <span className="text-sm font-semibold text-slate-800">{label}</span>
+      <select
+        name={name}
+        required
+        defaultValue={defaultValue ?? ""}
+        className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+      >
+        <option value="">Chọn thành viên</option>
+        {candidates.map((person) => (
+          <option key={person.id} value={person.id}>
+            {personLabel(person)}
+          </option>
+        ))}
+      </select>
+      {candidates.length === 0 ? (
+        <p className="mt-1 text-xs text-amber-700">
+          Chưa có danh sách thành viên để chọn. Cần quyền xem thành viên trước
+          khi tạo quan hệ.
+        </p>
+      ) : null}
+    </label>
+  );
+}
+
 export function RelationshipForm({
   families,
+  people,
   contextPersonId,
   returnTo,
   mode = "page",
 }: RelationshipFormProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-3">
-      <form action={createFamilyAction} className="space-y-4 border border-slate-200 bg-white p-4">
+      <form
+        action={createFamilyAction}
+        className="space-y-4 border border-slate-200 bg-white p-4"
+      >
         <h3 className="text-base font-semibold text-slate-950">
           Tạo đơn vị gia đình
         </h3>
@@ -71,7 +127,9 @@ export function RelationshipForm({
           />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Tên hiển thị</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Tên hiển thị
+          </span>
           <input
             name="family_label"
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
@@ -110,7 +168,10 @@ export function RelationshipForm({
         </button>
       </form>
 
-      <form action={addParentToFamilyAction} className="space-y-4 border border-slate-200 bg-white p-4">
+      <form
+        action={addParentToFamilyAction}
+        className="space-y-4 border border-slate-200 bg-white p-4"
+      >
         <h3 className="text-base font-semibold text-slate-950">
           {mode === "person" ? "Thêm cha/mẹ cho thành viên này" : "Thêm cha/mẹ"}
         </h3>
@@ -135,17 +196,12 @@ export function RelationshipForm({
             ))}
           </select>
         </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Person ID của cha/mẹ
-          </span>
-          <input
-            name="person_id"
-            required
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
-            placeholder="UUID thành viên"
-          />
-        </label>
+        <PersonSelect
+          label="Chọn cha/mẹ"
+          name="person_id"
+          people={people}
+          excludePersonId={contextPersonId}
+        />
         <label className="block">
           <span className="text-sm font-semibold text-slate-800">Vai trò</span>
           <select
@@ -161,7 +217,9 @@ export function RelationshipForm({
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Loại quan hệ</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Loại quan hệ
+          </span>
           <select
             name="relationship_type"
             defaultValue="unknown"
@@ -182,7 +240,10 @@ export function RelationshipForm({
         </button>
       </form>
 
-      <form action={addChildToFamilyAction} className="space-y-4 border border-slate-200 bg-white p-4">
+      <form
+        action={addChildToFamilyAction}
+        className="space-y-4 border border-slate-200 bg-white p-4"
+      >
         <h3 className="text-base font-semibold text-slate-950">
           {mode === "person" ? "Thêm con cho gia đình của thành viên" : "Thêm con"}
         </h3>
@@ -207,18 +268,16 @@ export function RelationshipForm({
             ))}
           </select>
         </label>
+        <PersonSelect
+          label="Chọn con"
+          name="person_id"
+          people={people}
+          defaultValue={mode === "person" ? contextPersonId : ""}
+        />
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Person ID của con</span>
-          <input
-            name="person_id"
-            required
-            defaultValue={mode === "person" ? contextPersonId : ""}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 font-mono text-sm"
-            placeholder="UUID thành viên"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Loại quan hệ con</span>
+          <span className="text-sm font-semibold text-slate-800">
+            Loại quan hệ con
+          </span>
           <select
             name="child_relationship_type"
             defaultValue="biological"

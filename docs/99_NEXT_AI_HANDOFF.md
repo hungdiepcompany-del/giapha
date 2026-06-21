@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-06-21 - UI-UX-VN-02 - Vietnamese Cultural UI/UX Hardening completed
+
+- Added `docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md`.
+- `/admin/relationships` now tells operators to choose members by Vietnamese
+  names; visible manual UUID/copy-ID guidance was removed from that surface.
+- `RelationshipForm` now accepts a permission-checked `people` list and uses
+  member selectors for parent/child relationship creation.
+- `CoupleForm` now accepts the same member list and uses selectors for
+  spouse/partner relationship creation.
+- `/admin/people/[id]` passes the existing member list into the relationship
+  forms so person-detail relationship workflows also avoid visible manual ID
+  entry.
+- Internal submitted values and field names remain unchanged:
+  `person_id`, `person1_id`, `person2_id`, `family_id` and
+  `related_person_id` stay internal IDs.
+- Existing relationship actions, service validation, route structure and
+  auth/permission logic remain unchanged.
+- Added `scripts/check-vietnamese-cultural-ui-ux.cjs` and
+  `npm run check:vietnamese-cultural-ui-ux`.
+- Decision 157 records that Vietnamese cultural UI should favor names and
+  kinship labels while keeping IDs internal.
+- Boundary: no migration, no `.sql`, no DB apply, no SQL/data mutation, no
+  seed/backfill, no schema change, no auth/permission logic change, no Worker
+  created, no OpenNext/Wrangler config change, no runtime dependency added, no
+  deploy and no push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: optional browser-level authenticated Vietnamese
+  relationship UX smoke, or a small visual polish phase for dense admin
+  relationship screens.
+
 ## 2026-06-21 - Plan A-01 - Tree Relationship Picker UX completed
 
 - Replaced the Tree Editor side-panel manual related-person UUID input with a

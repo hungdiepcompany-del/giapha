@@ -22,7 +22,7 @@ import {
   listPersonBranchMemberships,
 } from "@/lib/family/lineage-service";
 import { getPersonInlineWarnings } from "@/lib/family/inline-warning-rules";
-import { getPersonById } from "@/lib/family/people-service";
+import { getPersonById, listPeople } from "@/lib/family/people-service";
 import {
   getPersonRelationshipSummary,
   listRelationships,
@@ -83,6 +83,8 @@ export default async function PersonDetailPage({
       : null;
   const relationshipListResult =
     personResult.ok && canCreateRelationships ? await listRelationships() : null;
+  const relationshipPeopleResult =
+    personResult.ok && canCreateRelationships ? await listPeople() : null;
   const lineageResult =
     personResult.ok && canViewLineage
       ? await Promise.all([
@@ -279,11 +281,21 @@ export default async function PersonDetailPage({
                   <div className="mt-6 space-y-6">
                     <RelationshipForm
                       families={relationshipListResult.data.families}
+                      people={
+                        relationshipPeopleResult?.ok
+                          ? relationshipPeopleResult.data
+                          : []
+                      }
                       contextPersonId={personResult.data.id}
                       returnTo={`/admin/people/${personResult.data.id}`}
                       mode="person"
                     />
                     <CoupleForm
+                      people={
+                        relationshipPeopleResult?.ok
+                          ? relationshipPeopleResult.data
+                          : []
+                      }
                       contextPersonId={personResult.data.id}
                       returnTo={`/admin/people/${personResult.data.id}`}
                     />

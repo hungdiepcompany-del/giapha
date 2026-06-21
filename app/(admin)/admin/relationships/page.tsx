@@ -5,6 +5,7 @@ import { RelationshipSummary } from "@/components/relationships/relationship-sum
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
+import { listPeople } from "@/lib/family/people-service";
 import { listRelationships } from "@/lib/family/relationship-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
@@ -25,6 +26,7 @@ export default async function RelationshipsPage({
   const canView = context.permissions.includes("relationships.view");
   const canCreate = context.permissions.includes("relationships.create");
   const canDelete = context.permissions.includes("relationships.delete");
+  const canViewPeople = context.permissions.includes("people.view");
   const result = canView
     ? await listRelationships()
     : {
@@ -34,6 +36,8 @@ export default async function RelationshipsPage({
             ? "Chưa cấu hình Supabase."
             : "Bạn chưa có quyền xem quan hệ gia đình.",
       };
+  const peopleResult = canCreate && canViewPeople ? await listPeople() : null;
+  const people = peopleResult?.ok ? peopleResult.data : [];
 
   return (
     <AdminShell
@@ -51,15 +55,21 @@ export default async function RelationshipsPage({
         <div className="mt-6 grid gap-4 text-sm leading-6 text-slate-700 md:grid-cols-3">
           <SectionCard>
             <h2 className="font-bold text-slate-950">Gia đình</h2>
-            <p className="mt-2">Một đơn vị gia đình gom cha/mẹ và danh sách con.</p>
+            <p className="mt-2">
+              Một đơn vị gia đình gom cha/mẹ và danh sách con.
+            </p>
           </SectionCard>
           <SectionCard>
             <h2 className="font-bold text-slate-950">Cha mẹ / con</h2>
-            <p className="mt-2">Chọn gia đình rồi nhập UUID người đã tồn tại.</p>
+            <p className="mt-2">
+              Chọn gia đình và chọn thành viên theo tên để gắn cha/mẹ hoặc con.
+            </p>
           </SectionCard>
           <SectionCard>
             <h2 className="font-bold text-slate-950">Quan hệ đôi</h2>
-            <p className="mt-2">Vợ/chồng/bạn đời được lưu độc lập với gia đình.</p>
+            <p className="mt-2">
+              Vợ/chồng/bạn đời được lưu độc lập với gia đình.
+            </p>
           </SectionCard>
         </div>
 
@@ -86,14 +96,23 @@ export default async function RelationshipsPage({
               {canCreate ? (
                 <div className="space-y-6">
                   <StatusCallout tone="info">
-                    Khi form còn yêu cầu UUID, hãy mở trang thành viên để copy ID
-                    người liên quan. Phase này chỉ làm rõ UI, chưa đổi mô hình chọn người.
+                    Chọn thành viên theo tên hiển thị; mã nội bộ chỉ được dùng ở
+                    phía sau khi lưu quan hệ.
                   </StatusCallout>
+                  {!canViewPeople ? (
+                    <StatusCallout tone="warning">
+                      Bạn cần quyền xem thành viên để chọn người khi tạo quan hệ.
+                    </StatusCallout>
+                  ) : null}
                   <RelationshipForm
                     families={result.data.families}
+                    people={people}
                     returnTo="/admin/relationships"
                   />
-                  <CoupleForm returnTo="/admin/relationships" />
+                  <CoupleForm
+                    people={people}
+                    returnTo="/admin/relationships"
+                  />
                 </div>
               ) : null}
             </div>
