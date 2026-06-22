@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 167 - A-13 DB apply is blocked without backup confirmation
+
+Status: `ACTIVE`
+
+Chon:
+
+`APPROVE_A12_MERGE_DEDUPE_DB_APPLY` was received, and static precheck passed,
+but A-13 must not connect or apply because backup/snapshot timestamp, restore
+owner/path, target project/environment and safe apply tooling were not confirmed.
+
+Result:
+
+- A-13A: `PASS`
+- A-13B: `BLOCKED_MISSING_BACKUP_CONFIRMATION`
+- A-13C: `SKIPPED_BACKUP_GATE`
+- A-13D: `SKIPPED_DB_NOT_APPLIED`
+
+DB remains not applied. The nine catalog checks remain unexecuted, so
+`APPROVE_A13_MERGE_DEDUPE_DB_SCHEMA_VERIFIED` cannot be issued. Runtime and
+permission registration remain closed.
+
+Ly do:
+
+- Apply approval is not evidence that a fresh recoverable backup exists.
+- An unknown target or missing rollback owner makes production DDL unsafe.
+- Static PASS cannot be promoted to live DB apply or verification PASS.
+
 ## Decision 166 - A-12 migration review is approved after FK syntax correction
 
 Status: `ACTIVE`

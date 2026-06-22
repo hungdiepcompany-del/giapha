@@ -1,5 +1,27 @@
 # Next AI Handoff
 
+## 2026-06-22 - A-13 Merge/Dedupe DB Apply blocked
+
+- Owner marker `APPROVE_A12_MERGE_DEDUPE_DB_APPLY` was received.
+- A-13A static precheck PASS at migration SHA256
+  `9645F8E69068C73332A9CCE74E91449E06271734083A1C419176CBBDCA1C75B9`.
+- A-13B: `BLOCKED_MISSING_BACKUP_CONFIRMATION` because no fresh snapshot
+  timestamp/retention, restore owner/path or exact target confirmation existed.
+- PG shell env and `psql` were absent; no repo env file was read.
+- A-13C: `SKIPPED_BACKUP_GATE`; DB remains not applied.
+- A-13D: `SKIPPED_DB_NOT_APPLIED`; all nine catalog checks remain unexecuted.
+- A-13E local static validation PASS for A-10/A-11/A-12, migration/schema, Tree
+  dedupe/data-quality, typecheck, lint, build and diff gates. A-09 remained the
+  expected safe-skip.
+- Static evidence was not promoted to DB verification PASS, and
+  `APPROVE_A13_MERGE_DEDUPE_DB_SCHEMA_VERIFIED` is not available.
+- Runtime merge/dedupe and permission registration remain closed.
+- Resume only after explicit backup/restore/target/tooling confirmation, then
+  rerun A-13A before any one-file apply.
+- Boundary: no DB/API/network/SQL execution, seed/backfill, data mutation,
+  route/action/service, Worker/config/dependency/deploy/push. `PLANNING.MD` was
+  not read or committed.
+
 ## 2026-06-22 - Owner Review A-12 approved
 
 - Review result: `APPROVED`.

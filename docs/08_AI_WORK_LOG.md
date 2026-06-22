@@ -1,5 +1,25 @@
 # AI Work Log
 
+## 2026-06-22 - A-13 Merge/Dedupe DB Apply - BLOCKED
+
+- Received `APPROVE_A12_MERGE_DEDUPE_DB_APPLY`.
+- A-13A PASS: clean preflight, exact files, SHA256 and A-12 checker passed.
+- A-13B result: `BLOCKED_MISSING_BACKUP_CONFIRMATION`.
+- Missing non-secret confirmations: fresh snapshot timestamp/retention, tested
+  restore path, rollback owner and exact target project/environment.
+- Shell-only PG env and `psql` were absent; values were not read or printed and
+  repo env files were not opened.
+- A-13C migration apply: `SKIPPED_BACKUP_GATE`.
+- A-13D nine-item check SQL: `SKIPPED_DB_NOT_APPLIED` for every item.
+- No DB/API/network connection or SQL execution occurred.
+- A-13E local validation PASS: A-10/A-11/A-12, migration/schema and related Tree
+  checkers; typecheck; lint; workspace-root production build; diff checks.
+- A-09 remained the expected missing-explicit-session safe-skip.
+- Runtime merge/dedupe remains closed; permission runtime remains unregistered.
+- Boundary: docs/checker compatibility only; no schema/data mutation,
+  seed/backfill, route/action/service, Worker/config/dependency/deploy/push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Owner Review A-12 - APPROVED
 
 - Reviewed migration, check SQL, static checker and owner apply/backup/rollback
