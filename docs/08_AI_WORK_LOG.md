@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-06-22 - A-12 Bundle - Merge/Dedupe Real Migration Candidate
+
+- Received `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` for migration candidate,
+  check SQL and apply-plan creation only.
+- Used Supabase CLI 2.107.0 `migration new` to scaffold the migration, then
+  canonicalized its filename to the repo's `YYYYMMDD_0000_` convention.
+- Added `db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql` with the
+  exact reviewed A-11 schema body and A-12 no-apply markers.
+- Added read-only catalog check `db/checks/check_merge_dedupe_schema.sql`.
+- Added `docs/PLAN_A12_MERGE_DEDUPE_REAL_MIGRATION_APPLY_PLAN.md` with preflight,
+  backup, exact apply/check commands, expected output and rollback/no-go plan.
+- Added A-12 static checker/package command; it verifies schema parity,
+  fingerprint, SQL safety, check coverage and closed runtime boundaries.
+- Decision 165 requires `APPROVE_A12_MERGE_DEDUPE_DB_APPLY` before a separate DB
+  apply phase. Runtime merge/dedupe remains closed.
+- Validation PASS: A-10/A-11/A-12 checkers; migration order and related
+  Vietnamese genealogy schema/migration gates; Tree duplicate and
+  polish/dedupe/data-quality gates; typecheck; lint; workspace-root production
+  build; diff and cached-diff checks.
+- A-09 returned expected safe-skip
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`; this is not a
+  bundle failure.
+- Boundary: DB not applied; no check SQL run on DB, seed/backfill, data mutation,
+  permission runtime, route/action/service, Worker/config, dependency, deploy or
+  push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Owner Review A-11 - APPROVED
 
 - Reviewed all six candidate tables for lifecycle, version/conflict/graph,

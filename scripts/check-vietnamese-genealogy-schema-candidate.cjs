@@ -63,17 +63,23 @@ function allowsOnlyApprovedPhase111Migration(status) {
   const lines = status.trim().split(/\r?\n/).filter(Boolean);
   if (lines.length === 0) return true;
 
-  const allowedPath = "db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql";
   return lines.every((line) => {
     const statusPath = line.slice(2).trim().replaceAll("\\", "/");
-    if (statusPath !== allowedPath) return false;
-
-    const content = readFile(allowedPath);
-    return (
-      content.includes("VIETNAMESE_GENEALOGY_PHASE_111_REAL_MIGRATION") &&
-      content.includes("OWNER_APPROVED_FILE_CREATION_ONLY") &&
-      content.includes("DO_NOT_APPLY_WITHOUT_SEPARATE_PHASE_113_APPROVAL")
-    );
+    const content = readFile(statusPath);
+    if (statusPath === "db/migrations/20260618_0008_vietnamese_genealogy_first_migration.sql") {
+      return (
+        content.includes("VIETNAMESE_GENEALOGY_PHASE_111_REAL_MIGRATION") &&
+        content.includes("OWNER_APPROVED_FILE_CREATION_ONLY") &&
+        content.includes("DO_NOT_APPLY_WITHOUT_SEPARATE_PHASE_113_APPROVAL")
+      );
+    }
+    if (statusPath === "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql") {
+      return (
+        content.includes("A12_MERGE_DEDUPE_REAL_MIGRATION_CANDIDATE") &&
+        content.includes("DO_NOT_APPLY_WITHOUT_APPROVE_A12_MERGE_DEDUPE_DB_APPLY")
+      );
+    }
+    return false;
   });
 }
 

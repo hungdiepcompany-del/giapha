@@ -236,7 +236,19 @@ if (packageHead && packageJson) {
 }
 
 const migrationStatus = gitOutput(["status", "--short", "--", "db/migrations"]);
-if (migrationStatus.trim()) failures.push(`real migration changed: ${migrationStatus.trim()}`);
+for (const line of migrationStatus.split(/\r?\n/).filter(Boolean)) {
+  const file = line.slice(3).trim().replaceAll("\\", "/");
+  const approvedA12Path =
+    "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql";
+  const content = file === approvedA12Path ? readFile(file) : "";
+  if (
+    file !== approvedA12Path ||
+    !content.includes("A12_MERGE_DEDUPE_REAL_MIGRATION_CANDIDATE") ||
+    !content.includes("DO_NOT_APPLY_WITHOUT_APPROVE_A12_MERGE_DEDUPE_DB_APPLY")
+  ) {
+    failures.push(`unexpected real migration change: ${file}`);
+  }
+}
 
 const runtimeStatus = gitOutput([
   "status",

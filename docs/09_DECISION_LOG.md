@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 165 - A-12 creates a real migration candidate without DB apply
+
+Status: `ACTIVE`
+
+Chon:
+
+Owner marker `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` authorizes creation of
+the exact A-12 migration candidate, read-only check SQL, static checker and apply
+plan. A-12 does not apply DB.
+
+The migration keeps the A-11 reviewed schema body, enables RLS on all six tables
+and adds no policy, permission, DML, seed/backfill, function, procedure, trigger
+or grant. Runtime merge/dedupe remains closed.
+
+DB apply requires separate marker:
+
+`APPROVE_A12_MERGE_DEDUPE_DB_APPLY`
+
+That marker permits only the reviewed schema apply and read-only verification;
+it does not authorize permission runtime, RLS policies, route/action/service or
+merge execution.
+
+Ly do:
+
+- A committed migration candidate and fingerprint make owner review precise.
+- Catalog check SQL can prove RLS, constraints and absence of policies/triggers/
+  routines more reliably than REST-only verification.
+- Separating file creation, DB apply and runtime preserves the sequential safety
+  gates established by Decisions 161-164.
+
 ## Decision 164 - A-11 schema candidate review is approved
 
 Status: `ACTIVE`

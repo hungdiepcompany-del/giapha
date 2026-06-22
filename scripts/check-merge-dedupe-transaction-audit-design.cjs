@@ -57,6 +57,7 @@ function gitShowHead(relativePath) {
 const allowedChangedFiles = new Set([
   "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md",
   "docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md",
+  "docs/PLAN_A12_MERGE_DEDUPE_REAL_MIGRATION_APPLY_PLAN.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -64,7 +65,10 @@ const allowedChangedFiles = new Set([
   "package.json",
   "scripts/check-merge-dedupe-transaction-audit-design.cjs",
   "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
+  "scripts/check-merge-dedupe-real-migration-readiness.cjs",
   "scripts/merge-dedupe-schema-candidate.sql.draft",
+  "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql",
+  "db/checks/check_merge_dedupe_schema.sql",
   "scripts/check-tree-editor-auth-browser-smoke.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
   "scripts/check-tree-duplicate-suggestion-ux.cjs",
@@ -80,6 +84,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-small-json-export-smoke.cjs",
   "scripts/check-small-json-export-hardening.cjs",
   "scripts/check-export-import-final-readiness.cjs",
+  "scripts/check-vietnamese-genealogy-schema-candidate.cjs",
+  "scripts/check-vietnamese-genealogy-first-migration-scope.cjs",
+  "scripts/check-vietnamese-genealogy-real-migration-file.cjs",
 ]);
 
 const docPath = "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md";
@@ -203,14 +210,31 @@ const status = gitOutput(["status", "--short", "--untracked-files=all"]);
 for (const line of status.split(/\r?\n/).filter(Boolean)) {
   const file = line.slice(3).trim().replaceAll("\\", "/");
   const lowerFile = file.toLowerCase();
+  const isApprovedA12SqlArtifact =
+    file === "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql" ||
+    file === "db/checks/check_merge_dedupe_schema.sql";
+  const isApprovedMigrationCompatibilityChecker =
+    file === "scripts/check-vietnamese-genealogy-schema-candidate.cjs" ||
+    file === "scripts/check-vietnamese-genealogy-first-migration-scope.cjs" ||
+    file === "scripts/check-vietnamese-genealogy-real-migration-file.cjs";
 
   if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
-  if (lowerFile.endsWith(".sql")) failures.push(`SQL file changed: ${file}`);
+  if (lowerFile.endsWith(".sql") && !isApprovedA12SqlArtifact) {
+    failures.push(`SQL file changed: ${file}`);
+  }
   const isA11CandidateArtifact =
     file === "docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md" ||
     file === "scripts/check-merge-dedupe-schema-candidate-readiness.cjs" ||
     file === "scripts/merge-dedupe-schema-candidate.sql.draft";
-  if (file.startsWith("db/") || (file.includes("schema") && !isA11CandidateArtifact)) {
+  if (
+    (file.startsWith("db/") && !isApprovedA12SqlArtifact) ||
+    (
+      file.includes("schema") &&
+      !isA11CandidateArtifact &&
+      !isApprovedA12SqlArtifact &&
+      !isApprovedMigrationCompatibilityChecker
+    )
+  ) {
     failures.push(`database/schema drift: ${file}`);
   }
   if (
@@ -235,7 +259,6 @@ const runtimeDiff = gitOutput([
   "components",
   "lib",
   "server",
-  "db",
 ]);
 const forbiddenRuntimePatterns = [
   ["mergePersons", /\bmergePersons\b/],

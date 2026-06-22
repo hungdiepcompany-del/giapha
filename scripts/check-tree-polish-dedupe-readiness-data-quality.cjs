@@ -68,6 +68,7 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md",
   "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md",
   "docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md",
+  "docs/PLAN_A12_MERGE_DEDUPE_REAL_MIGRATION_APPLY_PLAN.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -75,7 +76,10 @@ const allowedChangedFiles = new Set([
   "package.json",
   "scripts/check-merge-dedupe-transaction-audit-design.cjs",
   "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
+  "scripts/check-merge-dedupe-real-migration-readiness.cjs",
   "scripts/merge-dedupe-schema-candidate.sql.draft",
+  "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql",
+  "db/checks/check_merge_dedupe_schema.sql",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
   "scripts/check-tree-editor-auth-browser-smoke.cjs",
   "scripts/check-tree-duplicate-suggestion-ux.cjs",
@@ -89,6 +93,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-post-runtime-ui-deploy-readiness.cjs",
   "scripts/check-production-monitoring-auth-smoke-prep.cjs",
   "scripts/check-routine-production-monitoring-snapshot.cjs",
+  "scripts/check-vietnamese-genealogy-schema-candidate.cjs",
+  "scripts/check-vietnamese-genealogy-first-migration-scope.cjs",
+  "scripts/check-vietnamese-genealogy-real-migration-file.cjs",
 ]);
 
 const packageJson = readJson("package.json");
@@ -283,16 +290,19 @@ for (const token of [
   rejectIncludes(mutationSources, token, `runtime merge/delete mutation ${token}`);
 }
 
-const status = gitOutput(["status", "--short"]);
+const status = gitOutput(["status", "--short", "--untracked-files=all"]);
 for (const line of status.split(/\r?\n/).filter(Boolean)) {
   const file = line.slice(3).trim().replaceAll("\\", "/");
   const lowerFile = file.toLowerCase();
+  const isApprovedA12SqlArtifact =
+    file === "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql" ||
+    file === "db/checks/check_merge_dedupe_schema.sql";
 
   if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
-  if (lowerFile.endsWith(".sql")) {
+  if (lowerFile.endsWith(".sql") && !isApprovedA12SqlArtifact) {
     failures.push(`SQL file changed or added: ${file}`);
   }
-  if (file.startsWith("db/migrations/")) {
+  if (file.startsWith("db/migrations/") && !isApprovedA12SqlArtifact) {
     failures.push(`migration file changed or added: ${file}`);
   }
   if (

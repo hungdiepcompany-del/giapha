@@ -244,7 +244,11 @@ const migrationStatus = gitStatus("db/migrations")
 
 for (const line of migrationStatus) {
   const statusPath = line.slice(2).trim().replaceAll("\\", "/");
-  if (statusPath !== migrationPath) {
+  const isApprovedA12Migration =
+    statusPath === "db/migrations/20260622_0009_merge_dedupe_schema_candidate.sql" &&
+    readFile(statusPath).includes("A12_MERGE_DEDUPE_REAL_MIGRATION_CANDIDATE") &&
+    readFile(statusPath).includes("DO_NOT_APPLY_WITHOUT_APPROVE_A12_MERGE_DEDUPE_DB_APPLY");
+  if (statusPath !== migrationPath && !isApprovedA12Migration) {
     failures.push(`unexpected migration status outside Phase 111 file: ${line}`);
   }
 }
