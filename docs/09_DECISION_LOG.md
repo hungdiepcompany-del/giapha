@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 164 - A-11 schema candidate review is approved
+
+Status: `ACTIVE`
+
+Chon:
+
+A-11 Review concludes `APPROVED` after tightening ready-state actor/time,
+non-blank gate values, graph evidence, audit reason and no-trigger checker
+coverage. The canonical next owner marker is:
+
+`APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE`
+
+This marker may open a separate phase for a real migration file, SQL checking
+and DB apply planning. It does not apply DB, register permissions or authorize
+runtime merge/dedupe. The older shorthand marker name in Decision 163 is
+superseded by the canonical marker above.
+
+Ly do:
+
+- Schema status alone must not bypass version, conflict or graph evidence.
+- SQL draft remains outside `db/migrations`, with RLS enabled and no policy,
+  permission, function, procedure or trigger.
+- Real migration creation, DB apply and runtime remain separate approval gates.
+
 ## Decision 163 - A-11 remains schema candidate only
 
 Status: `ACTIVE`

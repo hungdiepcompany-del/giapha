@@ -31,7 +31,7 @@ confidence, trạng thái và idempotency key. Session chứa:
 - actor/timestamp request, approval và execution;
 - `source_person_updated_at`, `target_person_updated_at` và version tokens;
 - version check status/actor/time;
-- conflict review status/actor/time;
+- conflict review status/checksum/actor/time;
 - graph validation status/result/actor/time;
 - impact checksum và owner approval marker metadata.
 
@@ -114,7 +114,7 @@ request tương lai, không đăng ký permission và không tự mở runtime.
 Gate hiện tại:
 
 - `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN`: `GRANTED_FOR_A11_CANDIDATE_ONLY`.
-- `APPROVE_A11_MERGE_DEDUPE_SCHEMA`: `NOT_GRANTED`.
+- `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE`: `NOT_GRANTED`.
 - `APPROVE_A12_MERGE_DEDUPE_RUNTIME`: `NOT_GRANTED`.
 
 ## A-11B - SQL draft
@@ -125,7 +125,7 @@ permission registration, destructive SQL hoặc apply instruction.
 
 Không đặt draft trong `db/migrations`; `npm run check:migrations` không coi đây
 là migration có thể apply. Một phase riêng chỉ được tạo migration thật sau khi
-owner cấp `APPROVE_A11_MERGE_DEDUPE_SCHEMA`.
+owner cấp `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE`.
 
 ## A-11C - Static checker
 
@@ -139,7 +139,7 @@ owner cấp `APPROVE_A11_MERGE_DEDUPE_SCHEMA`.
 - version/conflict/graph validation fields;
 - rollback person/relationship/layout/membership/visibility/revision/export;
 - RLS cho mọi bảng và không có policy/permission registration;
-- không DML, destructive SQL, function/procedure hoặc apply command;
+- không DML, destructive SQL, function/procedure/trigger hoặc apply command;
 - không drift runtime, Worker/config, dependency hoặc real migration.
 
 ## A-11D - Decision and handoff
@@ -171,8 +171,29 @@ checks PASS. Không push.
 
 Runtime merge/dedupe remains closed.
 
+## Owner review result
+
+A-11 Review result: `APPROVED`.
+
+Review xác nhận đủ sáu bảng, coverage và safety boundary. Trong review, draft
+được siết thêm để:
+
+- status approved/executed bắt buộc version/conflict/graph actor và timestamp;
+- version token, idempotency key, impact checksum và approval marker không thể
+  dùng chuỗi rỗng để vượt gate;
+- approved state yêu cầu checksum của conflict-decision manifest;
+- graph trạng thái `passed` phải có result khác object rỗng;
+- audit event luôn có reason khác rỗng;
+- checker cấm cả function/procedure và trigger runtime;
+- marker canonical cho bước kế tiếp là
+  `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE`.
+
+Owner có thể cấp marker trên để mở một phase riêng tạo real migration/check SQL/
+apply plan. Marker status: `NOT_GRANTED_BY_THIS_REVIEW`. Marker này không cho
+apply DB và không mở A-12 runtime merge.
+
 ## Recommended next phase
 
 Owner review A-11 schema candidate. Chỉ sau khi owner cấp
-`APPROVE_A11_MERGE_DEDUPE_SCHEMA` mới được tạo real migration file ở phase
+`APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` mới được tạo real migration file ở phase
 riêng; việc apply DB vẫn cần approval riêng và không tự mở A-12 runtime.

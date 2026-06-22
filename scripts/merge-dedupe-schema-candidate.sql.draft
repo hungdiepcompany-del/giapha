@@ -2,7 +2,7 @@
 -- NOT_A_REAL_MIGRATION
 -- DO_NOT_APPLY_TO_ANY_DATABASE
 -- APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN_GRANTED_FOR_A11_CANDIDATE_ONLY
--- REQUIRES_APPROVE_A11_MERGE_DEDUPE_SCHEMA_BEFORE_REAL_MIGRATION
+-- REQUIRES_APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_BEFORE_REAL_MIGRATION
 -- RUNTIME_MERGE_DEDUPE_REMAINS_CLOSED
 -- Additive schema draft only. No seed, backfill, policy, permission registration,
 -- function, route, action, service, runtime mutation, deploy or Worker change.
@@ -66,6 +66,7 @@ create table if not exists public.merge_dedupe_sessions (
   version_checked_by uuid references public.profiles(id) on delete restrict,
   version_checked_at timestamptz,
   conflict_review_status text not null default 'pending',
+  conflict_review_checksum text,
   conflicts_resolved_by uuid references public.profiles(id) on delete restrict,
   conflicts_resolved_at timestamptz,
   graph_validation_status text not null default 'pending',
@@ -87,6 +88,25 @@ create table if not exists public.merge_dedupe_sessions (
     source_person_id <> target_person_id
   ),
   constraint merge_dedupe_sessions_reason_not_blank check (length(btrim(reason)) > 0),
+  constraint merge_dedupe_sessions_version_tokens_not_blank check (
+    length(btrim(source_person_version_token)) > 0
+    and length(btrim(target_person_version_token)) > 0
+  ),
+  constraint merge_dedupe_sessions_idempotency_key_not_blank check (
+    length(btrim(idempotency_key)) > 0
+  ),
+  constraint merge_dedupe_sessions_impact_checksum_not_blank check (
+    impact_manifest_checksum is null
+    or length(btrim(impact_manifest_checksum)) > 0
+  ),
+  constraint merge_dedupe_sessions_conflict_checksum_not_blank check (
+    conflict_review_checksum is null
+    or length(btrim(conflict_review_checksum)) > 0
+  ),
+  constraint merge_dedupe_sessions_approval_marker_not_blank check (
+    approval_marker_code is null
+    or length(btrim(approval_marker_code)) > 0
+  ),
   constraint merge_dedupe_sessions_confidence_check check (
     confidence_level in ('strong', 'medium', 'weak')
   ),
@@ -117,6 +137,10 @@ create table if not exists public.merge_dedupe_sessions (
     (graph_validated_by is null and graph_validated_at is null)
     or (graph_validated_by is not null and graph_validated_at is not null)
   ),
+  constraint merge_dedupe_sessions_graph_passed_result_check check (
+    graph_validation_status <> 'passed'
+    or graph_validation_result <> '{}'::jsonb
+  ),
   constraint merge_dedupe_sessions_approval_actor_time_check check (
     (
       approval_marker_code is null
@@ -144,9 +168,16 @@ create table if not exists public.merge_dedupe_sessions (
     or (
       version_check_status = 'passed'
       and conflict_review_status = 'resolved'
+      and conflict_review_checksum is not null
       and graph_validation_status = 'passed'
       and impact_manifest_checksum is not null
       and approval_marker_code is not null
+      and version_checked_by is not null
+      and version_checked_at is not null
+      and conflicts_resolved_by is not null
+      and conflicts_resolved_at is not null
+      and graph_validated_by is not null
+      and graph_validated_at is not null
       and approved_by is not null
       and approved_at is not null
     )
@@ -256,7 +287,7 @@ create table if not exists public.merge_dedupe_audit_events (
   event_type text not null,
   actor_id uuid not null references public.profiles(id) on delete restrict,
   occurred_at timestamptz not null default now(),
-  reason text,
+  reason text not null,
   field_impact jsonb not null default '{}'::jsonb,
   relationship_impact jsonb not null default '{}'::jsonb,
   layout_impact jsonb not null default '{}'::jsonb,
@@ -266,6 +297,9 @@ create table if not exists public.merge_dedupe_audit_events (
   event_metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   constraint merge_dedupe_audit_events_sequence_check check (event_sequence >= 1),
+  constraint merge_dedupe_audit_events_reason_not_blank check (
+    length(btrim(reason)) > 0
+  ),
   constraint merge_dedupe_audit_events_type_check check (
     event_type in (
       'requested', 'reviewed', 'approved', 'rejected', 'version_checked',

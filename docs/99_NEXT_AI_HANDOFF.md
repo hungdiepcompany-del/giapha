@@ -1,5 +1,24 @@
 # Next AI Handoff
 
+## 2026-06-22 - Owner Review A-11 approved
+
+- Review result: `APPROVED`.
+- Six-table schema coverage, composite audit/rollback correlation, rollback
+  restoration and fail-closed RLS boundary are complete.
+- Review tightened approved/executed actor/time requirements, non-blank gate
+  values, graph evidence, audit reason and no-trigger checker coverage.
+- Canonical next marker:
+  `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE`.
+- Marker status: `NOT_GRANTED_BY_THIS_REVIEW`. It may open a separate real
+  migration/check-SQL/apply-plan phase, but does not apply DB or authorize A-12
+  runtime merge/dedupe.
+- SQL remains `.sql.draft` outside `db/migrations`; DB remains not applied.
+- A-10/A-11, migration/schema and Tree dedupe/data-quality checkers plus
+  typecheck, lint, workspace-root production build and diff gates PASS. A-09 is
+  the expected missing-explicit-session safe-skip.
+- Boundary: no seed/backfill, permission runtime, route/action/service,
+  Worker/config/dependency/deploy/push. `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - A-11 Bundle - Merge/Dedupe Schema Candidate Readiness completed
 
 - Owner marker `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` was received for A-11

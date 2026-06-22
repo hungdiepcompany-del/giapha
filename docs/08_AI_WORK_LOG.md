@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-06-22 - Owner Review A-11 - APPROVED
+
+- Reviewed all six candidate tables for lifecycle, version/conflict/graph,
+  impacts, audit and rollback coverage.
+- Confirmed composite `(session_id, merge_id)` FKs for audit and rollback,
+  fail-closed RLS, no policies/permissions, no DML/destructive/runtime SQL and
+  no real migration.
+- Tightened ready-state actor/time requirements, non-blank tokens/checksums/
+  markers, graph evidence and audit reason constraints.
+- Extended the checker to reject trigger runtime and guard the tightened
+  constraints.
+- Result: `APPROVED`. Owner may use
+  `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` to open a separate real-migration/
+  check-SQL/apply-plan phase. Marker status is `NOT_GRANTED_BY_THIS_REVIEW`.
+- Runtime merge/dedupe remains closed; DB remains not applied.
+- Validation PASS: A-10/A-11 checkers; migration order and related Vietnamese
+  genealogy schema/migration gates; Tree duplicate and polish/dedupe/data-quality
+  gates; typecheck; lint; workspace-root production build; diff checks.
+- A-09 returned expected safe-skip
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`; this is not a
+  review failure.
+- Boundary: docs/checker/SQL draft only; no real migration, DB apply,
+  seed/backfill, route/action/service, auth/permission runtime, Worker/config,
+  dependency, deploy or push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - A-11 Bundle - Merge/Dedupe Schema Candidate Readiness
 
 - Received owner marker `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` for A-11
