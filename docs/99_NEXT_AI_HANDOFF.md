@@ -1,5 +1,25 @@
 # Next AI Handoff
 
+## 2026-06-22 - Owner Review A-10 approved
+
+- Review result: `APPROVED`.
+- A-10 fully covers advisory strong/medium/weak candidates, same-name create
+  continuity, atomic/versioned transaction, conflict and graph validation,
+  audit impact, rollback restoration, five proposed permissions, three
+  sequential markers and Vietnamese future UI.
+- The checker now guards the complete review criteria rather than only section
+  presence and a subset of tokens.
+- Owner may explicitly use `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` to open
+  A-11 schema candidate.
+- Marker status: `NOT_GRANTED_BY_THIS_REVIEW`; A-11 has not been opened by this
+  review and runtime remains closed under Decisions 161 and 162.
+- Relevant A-10, Tree, dedupe and data-quality checkers plus typecheck, lint,
+  workspace-root production build and diff checks PASS. A-09 remains the honest
+  authenticated-browser safe-skip because no explicit session was supplied.
+- Boundary: no migration, `.sql`, DB apply, schema/runtime/auth/permission
+  change, route/action/service, delete, Worker/config, dependency, deploy or
+  push. `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Plan A-10 - Merge/Dedupe Transaction & Audit Design completed
 
 - Added `docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md` and its static

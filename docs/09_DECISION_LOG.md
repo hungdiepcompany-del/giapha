@@ -1,5 +1,26 @@
 # Decision Log
 
+## Decision 162 - A-10 design review is approved without granting the owner marker
+
+Status: `ACTIVE`
+
+Chon:
+
+Owner Review A-10 concludes `APPROVED`: the design is complete enough for the
+owner to use `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` to open A-11 schema
+candidate work. This review does not itself grant the marker.
+
+A-11, if explicitly opened, remains docs/schema-candidate/checker only until
+its own approval gate. It does not authorize migration, DB apply, permission
+registration, merge route/action/service or runtime mutation.
+
+Ly do:
+
+- The design covers advisory candidate confidence, transaction atomicity,
+  version/conflict/graph checks, audit impact, rollback and Vietnamese UI.
+- Keeping review approval separate from the explicit owner marker preserves the
+  sequential A-10/A-11/A-12 gate model in Decision 161.
+
 ## Decision 161 - Merge/dedupe runtime remains closed
 
 Status: `ACTIVE`

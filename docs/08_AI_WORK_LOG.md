@@ -1,5 +1,28 @@
 # AI Work Log
 
+## 2026-06-22 - Owner Review A-10 - APPROVED
+
+- Reviewed the A-10 design and checker against candidate, transaction, audit,
+  rollback, permission/approval and Vietnamese future UI acceptance criteria.
+- Result: `APPROVED`; no design blocker remains before an explicit owner marker.
+- Strengthened the A-10 checker to require strong/medium/weak advisory behavior,
+  same-name create continuity, all-or-nothing/version/conflict/graph guards,
+  complete audit actors/timestamps/impact and rollback restoration coverage.
+- Owner may use `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` to open A-11 schema
+  candidate. Marker status remains `NOT_GRANTED_BY_THIS_REVIEW`.
+- Decision 162 separates design review approval from the explicit owner action.
+- Validation PASS: A-10 checker; Tree viewer/editor, relationship picker,
+  inline-create, duplicate suggestion, Tree polish/dedupe/data-quality, inline
+  warning and media/data-quality readiness checkers; typecheck; lint;
+  workspace-root production build; `git diff --check`; cached diff check.
+- A-09 authenticated browser checker remains the expected safe-skip:
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- Boundary: review/docs/checker only; no migration, `.sql`, DB apply,
+  seed/backfill, schema change, runtime merge/dedupe, route/action/service,
+  person/relationship delete, auth/permission runtime change, Worker/config,
+  dependency, deploy or push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Plan A-10 - Merge/Dedupe Transaction & Audit Design
 
 - Added `docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md`.
