@@ -45,7 +45,7 @@ export function AdminWarningList({
       )}
       <p className="mt-3 text-xs leading-5 text-slate-500">
         Cảnh báo này chỉ dùng dữ liệu đã tải trên trang quản trị, không lưu
-        trạng thái và không hiển thị trên public.
+        trạng thái và không hiển thị trên trang công khai.
       </p>
     </section>
   );

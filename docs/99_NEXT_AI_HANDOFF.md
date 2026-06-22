@@ -1,5 +1,54 @@
 # Next AI Handoff
 
+## 2026-06-22 - PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS completed
+
+- Added
+  `docs/PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md`.
+- Added `scripts/check-tree-polish-dedupe-readiness-data-quality.cjs` and
+  `npm run check:tree-polish-dedupe-readiness-data-quality`.
+- A-06 visual polish:
+  - Tree canvas has more space and a stable taller viewport.
+  - Selected person card has a visible `Người đang chọn` state.
+  - Person cards show clearer year, `Đời thứ` and `Chi nhánh` labels.
+  - Family intermediary cards show `Gia đình`, not an English implementation
+    label.
+  - Toolbar uses `Vừa màn hình`, `Phóng to`, `Thu nhỏ`,
+    `Sắp xếp lại cây`, `Lưu bố cục` and `Khôi phục bố cục tự động`.
+- Add-relative panel copy is shorter and remains split into selected person,
+  relationship, existing/new member and confirmation steps.
+- A-07 merge/dedupe readiness is docs/checker-only. No merge UI, action,
+  service, route or DB mutation was created.
+- No-auto-merge guard:
+  - no automatic person merge;
+  - no automatic person or relationship deletion;
+  - no automatic private/source-note overwrite;
+  - no future merge without explicit owner approval, audit and rollback.
+- A-08 adds `Gợi ý hoàn thiện dữ liệu` for the selected person using only the
+  already loaded graph. Suggestions may cover missing years, missing parents,
+  no relationships and clearly similar names.
+- Warning UI states:
+  `Đây chỉ là gợi ý kiểm tra, hệ thống không tự thay đổi dữ liệu.`
+- Decision 160 records that Tree data quality guidance is read-only and future
+  merge stays approval-gated.
+- Existing auth/permission logic, relationship business rules, route contracts
+  and internal UUID/personId behavior remain unchanged.
+- Required static checkers, env safety, migration order, typecheck and lint
+  PASS.
+- Workspace-root build hit the known Windows `.next` ACL `EPERM` before
+  compile; clean temporary-copy production build PASS.
+- Local browser opened `/admin/tree/edit`, but the current session lacked
+  `tree.view`. The route failed closed safely; authenticated canvas visual smoke
+  was not claimed. Status:
+  `TREE_POLISH_BROWSER_SMOKE_SKIPPED_NO_AUTHORIZED_SESSION`.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no runtime merge/dedupe mutation, no person/relationship delete, no
+  Worker, no OpenNext/Wrangler config change, no runtime dependency, no deploy
+  and no push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: authenticated browser smoke for the polished Tree
+  Editor when explicit owner/operator auth env is available, or a docs-only
+  merge transaction/audit design phase without runtime authorization.
+
 ## 2026-06-22 - PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION completed
 
 - Added `docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md`.

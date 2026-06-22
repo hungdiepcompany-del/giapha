@@ -169,7 +169,8 @@
     "check:tree-relationship-picker-ux": "node scripts/check-tree-relationship-picker-ux.cjs",
     "check:vietnamese-cultural-ui-ux": "node scripts/check-vietnamese-cultural-ui-ux.cjs",
     "check:tree-inline-create-person-ux": "node scripts/check-tree-inline-create-person-ux.cjs",
-    "check:tree-duplicate-suggestion-ux": "node scripts/check-tree-duplicate-suggestion-ux.cjs"
+    "check:tree-duplicate-suggestion-ux": "node scripts/check-tree-duplicate-suggestion-ux.cjs",
+    "check:tree-polish-dedupe-readiness-data-quality": "node scripts/check-tree-polish-dedupe-readiness-data-quality.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

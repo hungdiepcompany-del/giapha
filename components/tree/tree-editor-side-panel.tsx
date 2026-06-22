@@ -6,6 +6,7 @@ import { useFormStatus } from "react-dom";
 
 import { AdminWarningList } from "@/components/genealogy/admin-warning-list";
 import { getTreeNodeInlineWarnings } from "@/lib/family/inline-warning-rules";
+import type { InlineAdminWarning } from "@/lib/family/inline-warning-types";
 import type {
   FamilyTreeGraph,
   TreeGraphNode,
@@ -222,6 +223,92 @@ function relationshipSummary(graph: FamilyTreeGraph, personNodeId: string) {
     children: [...new Map(children.map((node) => [node.id, node])).values()],
     spouses: [...new Map(spouses.map((node) => [node.id, node])).values()],
   };
+}
+
+function getTreeDataQualitySuggestions({
+  selectedNode,
+  people,
+  summary,
+}: {
+  selectedNode: TreePersonNode;
+  people: TreePersonNode[];
+  summary: ReturnType<typeof relationshipSummary>;
+}): InlineAdminWarning[] {
+  const suggestions: InlineAdminWarning[] = [];
+  const addSuggestion = (
+    code: string,
+    title: string,
+    message: string,
+    action: string,
+  ) => {
+    suggestions.push({
+      code,
+      severity: "info",
+      title,
+      message,
+      action,
+    });
+  };
+
+  if (!selectedNode.birthYear) {
+    addSuggestion(
+      "TREE_PERSON_BIRTH_YEAR_MISSING",
+      "Thành viên này chưa có năm sinh",
+      "Năm sinh giúp phân biệt người trùng tên và sắp xếp thế hệ dễ hơn.",
+      "Bổ sung khi gia đình có nguồn xác minh phù hợp.",
+    );
+  }
+
+  if (!selectedNode.isLiving && !selectedNode.deathYear) {
+    addSuggestion(
+      "TREE_PERSON_DEATH_YEAR_MISSING",
+      "Thành viên này chưa có năm mất",
+      "Hồ sơ đã ghi nhận là đã mất nhưng chưa có năm mất.",
+      "Bổ sung khi đã xác minh được thông tin.",
+    );
+  }
+
+  if (summary.parents.length === 0) {
+    addSuggestion(
+      "TREE_PERSON_PARENTS_MISSING",
+      "Thành viên này chưa có cha/mẹ trong cây",
+      "Có thể đây là người đầu nhánh, hoặc quan hệ cha/mẹ chưa được bổ sung.",
+      "Kiểm tra lại gia phả trước khi thêm quan hệ.",
+    );
+  }
+
+  if (
+    summary.parents.length === 0 &&
+    summary.children.length === 0 &&
+    summary.spouses.length === 0
+  ) {
+    addSuggestion(
+      "TREE_PERSON_RELATIONSHIPS_EMPTY",
+      "Thành viên này chưa có quan hệ gia đình nào",
+      "Thẻ đang đứng riêng trong dữ liệu cây hiện tại.",
+      "Thêm quan hệ khi đã xác định đúng người thân.",
+    );
+  }
+
+  const normalizedSelectedName = normalizeDuplicateName(
+    personLabel(selectedNode),
+  );
+  const hasSimilarMember = people.some(
+    (person) =>
+      person.personId !== selectedNode.personId &&
+      normalizeDuplicateName(personLabel(person)) === normalizedSelectedName,
+  );
+
+  if (normalizedSelectedName && hasSimilarMember) {
+    addSuggestion(
+      "TREE_PERSON_SIMILAR_NAME",
+      "Có thể đã tồn tại thành viên tương tự",
+      "Cây đang có người khác với tên rất giống thành viên đang chọn.",
+      "Đối chiếu năm sinh và quan hệ trước khi tạo thêm hồ sơ.",
+    );
+  }
+
+  return suggestions.slice(0, 5);
 }
 
 function RelationList({
@@ -676,13 +763,18 @@ export function TreeEditorSidePanel({
   const people = graph.nodes.filter(
     (node): node is TreePersonNode => node.kind === "person",
   );
-  const dateRange =
-    selectedNode.birthYear || selectedNode.deathYear
-      ? `${selectedNode.birthYear ?? "?"} - ${
-          selectedNode.deathYear ?? (selectedNode.isLiving ? "" : "?")
-        }`
-      : null;
-  const inlineWarnings = getTreeNodeInlineWarnings(selectedNode);
+  const dateRange = `${selectedNode.birthYear ?? "Chưa rõ năm sinh"} - ${
+    selectedNode.deathYear ??
+    (selectedNode.isLiving ? "nay" : "Chưa rõ năm mất")
+  }`;
+  const inlineWarnings = [
+    ...getTreeNodeInlineWarnings(selectedNode),
+    ...getTreeDataQualitySuggestions({
+      selectedNode,
+      people,
+      summary,
+    }),
+  ].slice(0, 5);
   const existingAction = actionForRelation(relationKind, {
     addParentAction,
     addSpouseAction,
@@ -691,8 +783,11 @@ export function TreeEditorSidePanel({
   const canUseNewPersonFlow = canCreateRelationships && canCreatePeople;
 
   return (
-    <aside className="space-y-6 border border-slate-200 bg-white p-4">
-      <div>
+    <aside className="space-y-5 border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="border-l-4 border-emerald-700 pl-4">
+        <div className="text-xs font-bold text-emerald-800">
+          Người đang chọn
+        </div>
         <h2 className="text-lg font-bold text-slate-950">
           {personLabel(selectedNode)}
         </h2>
@@ -700,11 +795,13 @@ export function TreeEditorSidePanel({
           <p className="mt-1 text-sm text-slate-500">{selectedNode.fullName}</p>
         ) : null}
         <div className="mt-3 grid gap-1 text-sm text-slate-700">
-          {dateRange ? <div>{dateRange}</div> : null}
+          <div>{dateRange}</div>
           {selectedNode.generationNumber ? (
-            <div>Đời {selectedNode.generationNumber}</div>
+            <div>Đời thứ {selectedNode.generationNumber}</div>
           ) : null}
-          {selectedNode.branchName ? <div>{selectedNode.branchName}</div> : null}
+          {selectedNode.branchName ? (
+            <div>Chi nhánh: {selectedNode.branchName}</div>
+          ) : null}
           <div>{selectedNode.isLiving ? "Còn sống" : "Đã mất"}</div>
         </div>
         <Link
@@ -715,7 +812,7 @@ export function TreeEditorSidePanel({
         </Link>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 border-t border-slate-200 pt-4">
         <RelationList title="Cha/mẹ" people={summary.parents} />
         <RelationList title="Vợ/chồng/bạn đời" people={summary.spouses} />
         <RelationList title="Con" people={summary.children} />
@@ -723,24 +820,24 @@ export function TreeEditorSidePanel({
 
       <AdminWarningList
         warnings={inlineWarnings}
-        title="Cảnh báo thẻ đang chọn"
+        title="Gợi ý hoàn thiện dữ liệu"
+        emptyMessage="Chưa có gợi ý từ dữ liệu đang hiển thị."
       />
+      <p className="-mt-3 text-xs leading-5 text-slate-500">
+        Đây chỉ là gợi ý kiểm tra, hệ thống không tự thay đổi dữ liệu.
+      </p>
 
       {canCreateRelationships ? (
-        <div className="space-y-4 border-t border-slate-200 pt-4">
+        <div className="space-y-4 border-t border-slate-200 pt-5">
           <div>
-            <p className="text-sm font-semibold text-slate-800">
-              Người đang chọn: {personLabel(selectedNode)}
-            </p>
-            <h3 className="mt-2 text-base font-bold text-slate-950">
+            <h3 className="text-base font-bold text-slate-950">
               Thêm người thân
             </h3>
-            <div className="mt-2 text-sm font-semibold text-slate-800">
+            <div className="mt-1 text-sm font-semibold text-slate-800">
               Quan hệ với người đang chọn
             </div>
             <p className="mt-1 text-sm text-slate-600">
-              Chọn quan hệ với người đang chọn, rồi chọn thành viên đã có hoặc
-              tạo thành viên mới để thêm vào cây gia phả.
+              Chọn quan hệ, sau đó dùng thành viên đã có hoặc tạo người mới.
             </p>
           </div>
 

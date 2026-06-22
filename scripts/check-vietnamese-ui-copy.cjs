@@ -101,9 +101,9 @@ const combinedUi = Object.values(files).join("\n");
 for (const token of [
   "Không đủ quyền",
   "Lý do:",
-  "Trình sửa cây gia phả",
+  "Cây gia phả",
   "Vừa khung nhìn",
-  "Tự xếp bố cục",
+  "Sắp xếp lại cây",
   "Đặt lại bố cục",
   "Bảng chi tiết",
   "Thẻ gia đình",

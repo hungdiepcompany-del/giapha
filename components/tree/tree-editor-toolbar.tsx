@@ -6,6 +6,8 @@ type TreeEditorToolbarProps = {
   saveAction: (formData: FormData) => void | Promise<void>;
   resetAction: (formData: FormData) => void | Promise<void>;
   onFitView: () => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
   onAutoLayout: () => void;
 };
 
@@ -15,50 +17,49 @@ export function TreeEditorToolbar({
   saveAction,
   resetAction,
   onFitView,
+  onZoomIn,
+  onZoomOut,
   onAutoLayout,
 }: TreeEditorToolbarProps) {
+  const secondaryButton =
+    "min-h-10 border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900";
+
   return (
-    <div className="flex flex-col gap-4 border-b border-slate-200 bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-col gap-4 border-b border-slate-200 bg-white p-4">
       <div>
-        <div className="text-sm font-bold text-slate-950">
-          Trình sửa cây gia phả
-        </div>
+        <div className="text-base font-bold text-slate-950">Cây gia phả</div>
         <div className="mt-1 text-sm leading-6 text-slate-600">
-          {nodeCount} nút. Kéo node chỉ lưu layout UI, không sửa quan hệ thật.
+          {nodeCount} thẻ đang hiển thị. Kéo thẻ chỉ đổi bố cục, không thay đổi
+          quan hệ gia đình.
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={onFitView}
-          className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
-        >
-          Vừa khung nhìn
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={onFitView} className={secondaryButton}>
+          Vừa màn hình
         </button>
-        <button
-          type="button"
-          onClick={onAutoLayout}
-          className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
-        >
-          Tự xếp bố cục
+        <button type="button" onClick={onZoomIn} className={secondaryButton}>
+          Phóng to
+        </button>
+        <button type="button" onClick={onZoomOut} className={secondaryButton}>
+          Thu nhỏ
+        </button>
+        <button type="button" onClick={onAutoLayout} className={secondaryButton}>
+          Sắp xếp lại cây
         </button>
         <form action={saveAction}>
           <input type="hidden" name="return_to" value="/admin/tree/edit" />
           <input type="hidden" name="positions_json" value={positionsJson} />
           <button
             type="submit"
-            className="min-h-11 border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+            className="min-h-10 border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
           >
-            Lưu layout
+            Lưu bố cục
           </button>
         </form>
         <form action={resetAction}>
           <input type="hidden" name="return_to" value="/admin/tree/edit" />
-          <button
-            type="submit"
-            className="min-h-11 border border-red-700 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50"
-          >
-            Đặt lại bố cục
+          <button type="submit" className={secondaryButton}>
+            Khôi phục bố cục tự động
           </button>
         </form>
       </div>

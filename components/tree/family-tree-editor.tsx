@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Background,
-  Controls,
   MiniMap,
   ReactFlow,
   useEdgesState,
@@ -166,23 +165,26 @@ export function FamilyTreeEditor({
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="overflow-hidden border border-slate-200 bg-white">
+    <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="min-w-0 overflow-hidden border border-slate-200 bg-white shadow-sm">
         <TreeEditorToolbar
           nodeCount={nodes.length}
           positionsJson={positionsJson}
           saveAction={saveLayoutAction}
           resetAction={resetLayoutAction}
           onFitView={() => flow?.fitView({ padding: 0.2, duration: 400 })}
+          onZoomIn={() => flow?.zoomIn({ duration: 250 })}
+          onZoomOut={() => flow?.zoomOut({ duration: 250 })}
           onAutoLayout={autoLayout}
         />
-        <div className="h-[720px] min-h-[560px] bg-slate-50">
+        <div className="h-[760px] min-h-[600px] bg-slate-50">
           <ReactFlow
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onNodeClick={handleNodeClick}
+            onPaneClick={() => setSelectedNodeId(null)}
             onInit={setFlow}
             fitView
             minZoom={0.2}
@@ -192,7 +194,6 @@ export function FamilyTreeEditor({
             elementsSelectable
           >
             <Background color="#cbd5e1" gap={24} />
-            <Controls showInteractive={false} />
             <MiniMap pannable zoomable nodeStrokeWidth={3} />
           </ReactFlow>
         </div>

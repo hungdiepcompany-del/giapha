@@ -59,26 +59,19 @@ function gitShowHead(relativePath) {
 }
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/tree/edit/page.tsx",
-  "app/(admin)/admin/people/[id]/page.tsx",
-  "app/(admin)/admin/relationships/page.tsx",
-  "components/relationships/couple-form.tsx",
-  "components/relationships/relationship-form.tsx",
   "components/tree/family-node-card.tsx",
   "components/tree/family-tree-editor.tsx",
   "components/tree/tree-editor-side-panel.tsx",
   "components/tree/tree-editor-toolbar.tsx",
   "components/genealogy/admin-warning-list.tsx",
   "docs/PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md",
-  "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
-  "docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
-  "scripts/check-tree-duplicate-suggestion-ux.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
   "scripts/check-tree-inline-create-person-ux.cjs",
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
@@ -92,123 +85,138 @@ const allowedChangedFiles = new Set([
 ]);
 
 const packageJson = readJson("package.json");
-const relationshipForm = readFile("components/relationships/relationship-form.tsx");
-const coupleForm = readFile("components/relationships/couple-form.tsx");
-const relationshipsPage = readFile("app/(admin)/admin/relationships/page.tsx");
-const treeSidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
-const adminShell = readFile("components/layout/admin-shell.tsx");
-const doc = readFile("docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md");
+const nodeCard = readFile("components/tree/family-node-card.tsx");
+const editor = readFile("components/tree/family-tree-editor.tsx");
+const toolbar = readFile("components/tree/tree-editor-toolbar.tsx");
+const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const doc = readFile(
+  "docs/PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md",
+);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "Chọn thành viên",
-  "Chọn cha/mẹ",
-  "Chọn con",
-  "Chọn vợ/chồng/bạn đời",
-  "Tạo quan hệ đôi",
-  "Nội bộ gia đình",
-  "Công khai",
-  "Riêng tư",
-  "Chưa có danh sách thành viên để chọn",
+  "Người đang chọn",
+  "Chưa rõ năm sinh",
+  "Chưa rõ năm mất",
+  "Đời thứ",
+  "Chi nhánh:",
+  "Gia đình",
 ]) {
-  requireIncludes(
-    `${relationshipForm}\n${coupleForm}`,
+  requireIncludes(nodeCard, token, `tree node/card copy ${token}`);
+}
+
+for (const token of [
+  "Vừa màn hình",
+  "Phóng to",
+  "Thu nhỏ",
+  "Sắp xếp lại cây",
+  "Lưu bố cục",
+  "Khôi phục bố cục tự động",
+]) {
+  requireIncludes(toolbar, token, `tree toolbar copy ${token}`);
+}
+
+for (const token of [
+  "onZoomIn",
+  "onZoomOut",
+  "zoomIn",
+  "zoomOut",
+  "2xl:grid-cols-[minmax(0,1fr)_400px]",
+  "h-[760px]",
+]) {
+  requireIncludes(`${toolbar}\n${editor}`, token, `tree polish behavior ${token}`);
+}
+
+for (const token of [
+  "Gợi ý hoàn thiện dữ liệu",
+  "Đây chỉ là gợi ý kiểm tra, hệ thống không tự thay đổi dữ liệu.",
+  "Có thể đã tồn tại thành viên tương tự",
+  "Thành viên này chưa có năm sinh",
+  "Thành viên này chưa có cha/mẹ trong cây",
+  "getTreeDataQualitySuggestions",
+  "Thêm người thân",
+]) {
+  requireIncludes(sidePanel, token, `data quality UI ${token}`);
+}
+
+for (const token of [
+  "notes_private",
+  "source_note",
+  "service_role",
+  "sb_secret_",
+  "Bearer ",
+  "COOKIE",
+  "SESSION",
+  "signedUrl",
+  "signed_url",
+  "storage key",
+  "raw SQL",
+  "stack trace",
+]) {
+  rejectIncludes(
+    `${nodeCard}\n${toolbar}\n${sidePanel}`,
     token,
-    `relationship form Vietnamese token ${token}`,
+    `private/secret marker ${token}`,
   );
 }
 
 for (const token of [
-  "Chọn gia đình và chọn thành viên theo tên",
-  "mã nội bộ chỉ được dùng ở",
-  "Bạn cần quyền xem thành viên",
+  ">Merge<",
+  ">Duplicate<",
+  ">Dedupe<",
+  "Data quality",
+  ">Warning<",
+  "Fit view",
+  "Zoom in",
+  "Zoom out",
+  "Enter UUID",
+  "Paste UUID",
+  "Nhập UUID",
+  "Dán UUID",
 ]) {
-  requireIncludes(relationshipsPage, token, `relationships page token ${token}`);
-}
-
-for (const token of [
-  "RelatedPersonPicker",
-  "Tìm thành viên",
-  "Chọn thành viên đã có",
-  "Tạo thành viên mới",
-  "Lưu và gắn quan hệ",
-]) {
-  requireIncludes(treeSidePanel, token, `tree editor picker token ${token}`);
-}
-
-for (const token of [
-  "Gia phả Việt Nam",
-  "Cây gia phả",
-  "Quan hệ gia đình",
-]) {
-  requireIncludes(adminShell, token, `admin navigation Vietnamese token ${token}`);
-}
-
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
-]) {
-  for (const token of [
-    "Enter UUID",
-    "Paste UUID",
-    "Person ID",
-    "Related person ID",
-    "UUID thành viên",
-    "nhập UUID",
-    "copy ID",
-    "ID thành viên",
-    "font-mono text-sm",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} visible/manual ID copy ${token}`);
-  }
-}
-
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["components/tree/tree-editor-side-panel.tsx", treeSidePanel],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
-]) {
-  for (const token of [
-    "notes_private",
-    "source_note",
-    "service_role",
-    "sb_secret_",
-    "Bearer ",
-    "COOKIE",
-    "SESSION",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} private/secret marker ${token}`);
-  }
+  rejectIncludes(
+    `${nodeCard}\n${toolbar}\n${sidePanel}`,
+    token,
+    `forbidden user-facing copy ${token}`,
+  );
 }
 
 for (const token of [
   "Status: `PASS_LOCAL_STATIC`",
   "Summary",
-  "Owner Requirements",
-  "UI Text Hardening Result",
-  "Vietnamese Style Direction",
-  "Navigation/Menu Result",
-  "Cây Gia Phả Priority Result",
-  "Tree Viewer/Editor UX Result",
-  "Form/Input/Dropdown Result",
-  "Code/Internal Values Unchanged",
-  "Privacy/Security Result",
-  "Deferred Items",
-  "Checker Result",
-  "Validation Results",
-  "Recommended Next Phase",
+  "Why A-06/A-07/A-08 were grouped",
+  "A-06 visual polish result",
+  "Tree node/card result",
+  "Tree toolbar result",
+  "Add-relative panel result",
+  "Duplicate suggestion polish result",
+  "A-07 merge/dedupe readiness result",
+  "No-auto-merge guard",
+  "Future merge approval boundary",
+  "A-08 data quality warning result",
+  "Warning logic",
+  "Privacy/permission result",
+  "Vietnamese UI copy result",
+  "Deferred items",
+  "Checker result",
+  "Validation results",
+  "Recommended next phase",
+  "Không auto merge.",
+  "Không xóa person tự động.",
+  "Không xóa relationship tự động.",
+  "Không ghi đè private/source notes tự động.",
+  "Không merge nếu chưa có audit/rollback rõ.",
+  "Không merge nếu chưa có owner approval.",
 ]) {
-  requireIncludes(doc, token, `UI-UX-VN-02 doc token ${token}`);
+  requireIncludes(doc, token, `A-06/A-07/A-08 doc token ${token}`);
 }
 
 for (const token of [
-  "UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
-  "UI-UX-VN-02",
+  "PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md",
+  "PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS",
 ]) {
   requireIncludes(index, token, `index token ${token}`);
   requireIncludes(workLog, token, `work log token ${token}`);
@@ -217,15 +225,19 @@ for (const token of [
 
 requireIncludes(
   decisionLog,
-  "Decision 157 - Vietnamese cultural UI favors names and kinship labels over manual IDs",
-  "decision log UI-UX-VN-02 decision",
+  "Decision 160 - Tree data quality guidance is read-only and merge stays approval-gated",
+  "decision log Decision 160",
 );
 
 if (
-  packageJson?.scripts?.["check:vietnamese-cultural-ui-ux"] !==
-  "node scripts/check-vietnamese-cultural-ui-ux.cjs"
+  packageJson?.scripts?.[
+    "check:tree-polish-dedupe-readiness-data-quality"
+  ] !==
+  "node scripts/check-tree-polish-dedupe-readiness-data-quality.cjs"
 ) {
-  failures.push("package.json missing check:vietnamese-cultural-ui-ux script");
+  failures.push(
+    "package.json missing check:tree-polish-dedupe-readiness-data-quality script",
+  );
 }
 
 const packageHead = gitShowHead("package.json");
@@ -245,14 +257,31 @@ if (packageHead && packageJson) {
   }
 }
 
+const mutationSources = gitOutput([
+  "diff",
+  "--",
+  "app",
+  "lib",
+  "server",
+  "components",
+]);
+for (const token of [
+  "mergePerson",
+  "dedupePerson",
+  "deletePerson",
+  "deleteRelationship",
+  "supabase.from(\"people\").delete",
+  "supabase.from('people').delete",
+]) {
+  rejectIncludes(mutationSources, token, `runtime merge/delete mutation ${token}`);
+}
+
 const status = gitOutput(["status", "--short"]);
 for (const line of status.split(/\r?\n/).filter(Boolean)) {
   const file = line.slice(3).trim().replaceAll("\\", "/");
   const lowerFile = file.toLowerCase();
 
-  if (file === "PLANNING.MD") {
-    failures.push("PLANNING.MD changed or staged");
-  }
+  if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
   if (lowerFile.endsWith(".sql")) {
     failures.push(`SQL file changed or added: ${file}`);
   }
@@ -273,16 +302,14 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
     failures.push(`deploy workflow mutation: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
-    failures.push(`unexpected changed file for UI-UX-VN-02: ${file}`);
+    failures.push(`unexpected changed file for Plan A-06/A-07/A-08: ${file}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("Vietnamese cultural UI/UX check failed:");
-  for (const failure of failures) {
-    console.error(`- ${failure}`);
-  }
+  console.error("Tree polish/dedupe readiness/data quality check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("Vietnamese cultural UI/UX check passed.");
+console.log("Tree polish/dedupe readiness/data quality check passed.");

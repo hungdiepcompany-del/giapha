@@ -1,5 +1,28 @@
 # Decision Log
 
+## Decision 160 - Tree data quality guidance is read-only and merge stays approval-gated
+
+Chon:
+
+The Tree Editor may calculate lightweight data quality suggestions from the
+selected person and graph data already loaded for the authenticated admin
+surface. These suggestions are advisory, are not persisted and must not mutate
+people or relationships.
+
+Runtime merge/dedupe remains closed. Any future merge must be a separate
+owner-approved phase with explicit permission, affected-record preview,
+transaction behavior, revision/audit trail, export/stable-ID compatibility,
+privacy review and rollback.
+
+Ly do:
+
+- Lightweight guidance improves daily genealogy editing without introducing a
+  full-tree scan or new service boundary.
+- Same-name people can be legitimate, so warning evidence cannot authorize
+  automatic merge.
+- Person identity touches relationships, lineage, layout, revisions, privacy
+  and exports; merge without audit and rollback would be unsafe.
+
 ## Decision 159 - Tree quick-create duplicate suggestion stays client-side and advisory
 
 Chon:

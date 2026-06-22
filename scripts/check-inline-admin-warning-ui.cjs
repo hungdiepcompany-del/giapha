@@ -101,7 +101,7 @@ for (const token of [
   "chỉ dùng dữ liệu đã tải",
   "không lưu",
   "trạng thái",
-  "không hiển thị trên public",
+  "không hiển thị trên trang công khai",
 ]) {
   requireIncludes(list, token, `warning list token ${token}`);
 }
@@ -170,6 +170,8 @@ const allowedRuntimeFiles = new Set([
   "app/(admin)/admin/genealogy/page.tsx",
   "app/(admin)/admin/genealogy/memberships/page.tsx",
   "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/family-node-card.tsx",
+  "components/tree/family-tree-editor.tsx",
   "components/genealogy/admin-warning-badge.tsx",
   "components/genealogy/admin-warning-list.tsx",
   "lib/family/inline-warning-types.ts",

@@ -1,5 +1,43 @@
 # AI Work Log
 
+## 2026-06-22 - PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS
+
+- Added
+  `docs/PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md`.
+- Added `scripts/check-tree-polish-dedupe-readiness-data-quality.cjs` and
+  `npm run check:tree-polish-dedupe-readiness-data-quality`.
+- Polished the Tree Editor as the primary/highest-value product surface:
+  larger canvas, wider working area, selected-person visual state and clearer
+  person/family cards.
+- Replaced Tree Editor control copy with Vietnamese actions: `Vừa màn hình`,
+  `Phóng to`, `Thu nhỏ`, `Sắp xếp lại cây`, `Lưu bố cục` and
+  `Khôi phục bố cục tự động`.
+- Added `Gợi ý hoàn thiện dữ liệu` for the selected person using only the
+  already loaded graph. Suggestions include missing birth/death year, missing
+  parents, no family relationships and clearly similar names.
+- Warning UI explicitly states:
+  `Đây chỉ là gợi ý kiểm tra, hệ thống không tự thay đổi dữ liệu.`
+- Recorded A-07 merge/dedupe readiness. Runtime merge remains closed until a
+  separate owner-approved phase defines permissions, preview, audit,
+  transaction behavior, export/stable-ID compatibility and rollback.
+- No auto merge, person deletion, relationship deletion or private/source-note
+  overwrite was added.
+- Existing auth/permission, person, relationship and layout action contracts
+  remain unchanged.
+- Validation PASS for all required static checkers, env safety, migration order,
+  typecheck and lint.
+- Workspace-root build hit the known Windows `.next` ACL `EPERM` before
+  compile; clean temporary-copy production build PASS.
+- Local `/admin/tree/edit` browser review reached the fail-closed permission
+  state because the current session lacked `tree.view`; authenticated canvas
+  visual smoke status:
+  `TREE_POLISH_BROWSER_SMOKE_SKIPPED_NO_AUTHORIZED_SESSION`.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no runtime merge/dedupe mutation, no
+  Worker, no OpenNext/Wrangler config change, no dependency, no deploy and no
+  push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION
 
 - Added `docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md`.
