@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-06-22 - Plan A-09 - Authenticated Tree Editor Browser Smoke safe-skipped
+
+- Added `docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md`.
+- Added `scripts/check-tree-editor-auth-browser-smoke.cjs` and
+  `npm run check:tree-editor-auth-browser-smoke`.
+- Git sync gate PASS: local `main` and `origin/main` synchronized; worktree was
+  clean before A-09 changes.
+- Explicit A-09 env/session gates were absent in the Codex process:
+  `GIA_PHA_AUTH_BROWSER_SMOKE`, `GIA_PHA_SMOKE_BASE_URL` and
+  `GIA_PHA_AUTH_STORAGE_STATE_PATH`.
+- Result:
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- No authenticated canvas, toolbar, selected-node, add-relative, duplicate
+  suggestion or data-quality browser PASS was claimed from static evidence.
+- Permission result: `NOT_RUN_MISSING_EXPLICIT_AUTH_SESSION`; no bypass was
+  attempted.
+- Mutation results:
+  - `A09_ATTACH_EXISTING_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET`
+  - `A09_CREATE_PERSON_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET`
+- Static guards still verify Vietnamese Tree Editor copy, pending/disabled
+  submit behavior, no visible UUID entry, duplicate suggestion, read-only
+  warning copy and privacy marker exclusions.
+- No runtime Tree Editor bug was established or fixed.
+- Boundary: no credential read/log, no migration, no `.sql`, no DB apply, no
+  seed/backfill, no schema/auth/permission change, no mutation, no
+  merge/dedupe, no delete, no Worker/config/dependency/deploy/push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: retry A-09 only after owner/operator prepares an
+  explicit authorized browser session; mutation smoke additionally needs an
+  explicitly approved safe local/staging dataset.
+
 ## 2026-06-22 - PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS completed
 
 - Added

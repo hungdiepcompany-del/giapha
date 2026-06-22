@@ -4,6 +4,11 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
+const requiredEnvNames = [
+  "GIA_PHA_AUTH_BROWSER_SMOKE",
+  "GIA_PHA_SMOKE_BASE_URL",
+  "GIA_PHA_AUTH_STORAGE_STATE_PATH",
+];
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -59,29 +64,17 @@ function gitShowHead(relativePath) {
 }
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/tree/edit/actions.ts",
-  "app/(admin)/admin/tree/edit/page.tsx",
-  "components/tree/family-node-card.tsx",
-  "components/tree/family-tree-editor.tsx",
-  "components/tree/tree-editor-side-panel.tsx",
-  "components/tree/tree-editor-toolbar.tsx",
-  "components/genealogy/admin-warning-list.tsx",
-  "docs/PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS.md",
   "docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md",
-  "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
-  "docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
-  "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
-  "scripts/check-tree-duplicate-suggestion-ux.cjs",
-  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
   "scripts/check-tree-editor-auth-browser-smoke.cjs",
+  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
   "scripts/check-tree-inline-create-person-ux.cjs",
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
-  "scripts/check-vietnamese-ui-copy.cjs",
   "scripts/check-authenticated-smoke-result.cjs",
   "scripts/check-export-import-final-readiness.cjs",
   "scripts/check-inline-admin-warning-ui.cjs",
@@ -91,75 +84,107 @@ const allowedChangedFiles = new Set([
 ]);
 
 const packageJson = readJson("package.json");
-const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
-const editor = readFile("components/tree/family-tree-editor.tsx");
-const page = readFile("app/(admin)/admin/tree/edit/page.tsx");
-const actions = readFile("app/(admin)/admin/tree/edit/actions.ts");
-const doc = readFile("docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md");
+const doc = readFile("docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
-const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const toolbar = readFile("components/tree/tree-editor-toolbar.tsx");
+const nodeCard = readFile("components/tree/family-node-card.tsx");
+const envReady =
+  process.env.GIA_PHA_AUTH_BROWSER_SMOKE === "1" &&
+  requiredEnvNames.every((name) => Boolean(process.env[name]));
 
 for (const token of [
-  "Tạo thành viên mới",
-  "Chọn thành viên đã có",
-  "Lưu và gắn quan hệ",
-  "Người đang chọn",
+  "Summary",
+  "Smoke target",
+  "Auth/session safety rule",
+  "Explicit env/session requirements",
+  "Smoke result",
+  "Safe-skip reason",
+  "Permission result",
+  "Tree canvas result",
+  "Toolbar result",
+  "Add-relative panel result",
+  "Existing member attach result",
+  "Create new person attach result",
+  "Duplicate suggestion result",
+  "Data quality warning result",
+  "Vietnamese UI result",
+  "Privacy/security result",
+  "Bugs found/fixed",
+  "Deferred items",
+  "Checker result",
+  "Validation results",
+  "Recommended next phase",
+  "A09_ATTACH_EXISTING_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET",
+  "A09_CREATE_PERSON_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET",
+]) {
+  requireIncludes(doc, token, `A-09 doc token ${token}`);
+}
+
+if (!envReady) {
+  requireIncludes(
+    doc,
+    "Status: `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`",
+    "safe-skip status",
+  );
+  requireIncludes(
+    doc,
+    "A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION",
+    "safe-skip result",
+  );
+  rejectIncludes(
+    doc,
+    "Status: `A09_AUTH_BROWSER_SMOKE_PASS`",
+    "PASS claim without explicit auth session",
+  );
+}
+
+for (const token of [
   "Thêm người thân",
-  "Quan hệ với người đang chọn",
-  "Chọn quan hệ",
-  "Họ và tên",
-  "Chọn giới tính",
-  "Năm sinh",
-  "Năm mất",
-  "Ghi chú ngắn",
-  "Nhập họ và tên thành viên...",
+  "Chọn thành viên đã có",
+  "Tạo thành viên mới",
+  "Lưu và gắn quan hệ",
   "Đang lưu thành viên...",
-  "Bạn không có quyền thực hiện thao tác này.",
-  "useFormStatus",
+  "Có thể đã tồn tại thành viên tương tự",
+  "Dùng thành viên này để gắn quan hệ",
+  "Vẫn tạo thành viên mới",
+  "Gợi ý hoàn thiện dữ liệu",
+  "Đây chỉ là gợi ý kiểm tra",
   "disabled={pending}",
 ]) {
-  requireIncludes(sidePanel, token, `side panel token ${token}`);
+  requireIncludes(sidePanel, token, `Tree Editor smoke copy/guard ${token}`);
 }
 
 for (const token of [
-  "createPersonAndAttachFromTreeAction",
-  "createPerson(",
-  "addParentToFamily",
-  "addChildToFamily",
-  "createCoupleRelationship",
-  "Đã tạo thành viên mới nhưng chưa gắn được quan hệ",
-  "inline_person_created",
+  "Vừa màn hình",
+  "Phóng to",
+  "Thu nhỏ",
+  "Sắp xếp lại cây",
 ]) {
-  requireIncludes(actions, token, `action token ${token}`);
+  requireIncludes(toolbar, token, `toolbar token ${token}`);
 }
 
-for (const token of [
-  "canCreatePeople",
-  "createPersonAndAttachAction",
-]) {
-  requireIncludes(editor, token, `editor token ${token}`);
-  requireIncludes(page, token, `page/editor wiring token ${token}`);
-}
-
-requireIncludes(
-  page,
-  "Đã thêm thành viên mới và gắn quan hệ vào cây gia phả.",
-  "success message",
-);
+requireIncludes(nodeCard, "Người đang chọn", "selected person state");
 
 for (const token of [
-  "Enter UUID",
-  "Paste UUID",
+  "Fit view",
+  "Zoom in",
+  "Zoom out",
+  "Reset layout",
+  "Use existing",
+  "Create anyway",
   "Person UUID",
   "Related person UUID",
-  "Nhập UUID",
-  "Dán UUID",
-  "UUID thành viên",
-  "relationship id",
+  "Enter UUID",
+  "Paste UUID",
 ]) {
-  rejectIncludes(sidePanel, token, `manual UUID/ID UI copy ${token}`);
+  rejectIncludes(
+    `${sidePanel}\n${toolbar}\n${nodeCard}`,
+    token,
+    `forbidden user-facing text ${token}`,
+  );
 }
 
 for (const token of [
@@ -175,50 +200,27 @@ for (const token of [
   "raw SQL",
   "stack trace",
 ]) {
-  rejectIncludes(sidePanel, token, `private/secret marker ${token}`);
+  rejectIncludes(
+    `${sidePanel}\n${toolbar}\n${nodeCard}`,
+    token,
+    `private/secret marker ${token}`,
+  );
 }
 
 for (const token of [
-  "Status: `PASS_LOCAL_STATIC`",
-  "Summary",
-  "User problem",
-  "Scope",
-  "Existing create person flow reviewed",
-  "UX before",
-  "UX after",
-  "Relationship types supported",
-  "Create person then attach relationship behavior",
-  "Internal UUID behavior",
-  "Vietnamese UI copy result",
-  "Privacy/permission result",
-  "Deferred items",
-  "Checker result",
-  "Validation results",
-  "Recommended next phase",
-]) {
-  requireIncludes(doc, token, `Plan A-03 doc token ${token}`);
-}
-
-for (const token of [
-  "PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md",
-  "Plan A-03",
+  "PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md",
+  "Plan A-09",
 ]) {
   requireIncludes(index, token, `index token ${token}`);
   requireIncludes(workLog, token, `work log token ${token}`);
   requireIncludes(handoff, token, `handoff token ${token}`);
 }
 
-requireIncludes(
-  decisionLog,
-  "Decision 158 - Tree inline create person reuses existing services",
-  "decision log Decision 158",
-);
-
 if (
-  packageJson?.scripts?.["check:tree-inline-create-person-ux"] !==
-  "node scripts/check-tree-inline-create-person-ux.cjs"
+  packageJson?.scripts?.["check:tree-editor-auth-browser-smoke"] !==
+  "node scripts/check-tree-editor-auth-browser-smoke.cjs"
 ) {
-  failures.push("package.json missing check:tree-inline-create-person-ux script");
+  failures.push("package.json missing check:tree-editor-auth-browser-smoke script");
 }
 
 const packageHead = gitShowHead("package.json");
@@ -243,14 +245,10 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
   const file = line.slice(3).trim().replaceAll("\\", "/");
   const lowerFile = file.toLowerCase();
 
-  if (file === "PLANNING.MD") {
-    failures.push("PLANNING.MD changed or staged");
-  }
-  if (lowerFile.endsWith(".sql")) {
-    failures.push(`SQL file changed or added: ${file}`);
-  }
+  if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
+  if (lowerFile.endsWith(".sql")) failures.push(`SQL file changed: ${file}`);
   if (file.startsWith("db/migrations/")) {
-    failures.push(`migration file changed or added: ${file}`);
+    failures.push(`migration file changed: ${file}`);
   }
   if (
     file === "wrangler.toml" ||
@@ -260,22 +258,28 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
     failures.push(`Worker/OpenNext/Wrangler config drift: ${file}`);
   }
   if (file.startsWith("services/")) {
-    failures.push(`Worker/service file changed or added: ${file}`);
+    failures.push(`Worker/service file changed: ${file}`);
   }
   if (file.startsWith(".github/workflows/")) {
     failures.push(`deploy workflow mutation: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
-    failures.push(`unexpected changed file for Plan A-03: ${file}`);
+    failures.push(`unexpected changed file for Plan A-09: ${file}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("Tree inline create person UX check failed:");
-  for (const failure of failures) {
-    console.error(`- ${failure}`);
-  }
+  console.error("Tree Editor authenticated browser smoke check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("Tree inline create person UX check passed.");
+if (envReady) {
+  console.log(
+    "A09_AUTH_BROWSER_SMOKE_READY_EXPLICIT_SESSION - browser execution evidence is still required before PASS.",
+  );
+} else {
+  console.log(
+    "A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION",
+  );
+}

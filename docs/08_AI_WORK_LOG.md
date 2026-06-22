@@ -1,5 +1,33 @@
 # AI Work Log
 
+## 2026-06-22 - Plan A-09 - Authenticated Tree Editor Browser Smoke
+
+- Added `docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md`.
+- Added `scripts/check-tree-editor-auth-browser-smoke.cjs` and
+  `npm run check:tree-editor-auth-browser-smoke`.
+- Git sync gate PASS before work: local `main` and `origin/main` synchronized;
+  worktree clean.
+- Explicit A-09 auth/browser env presence check found all gates absent:
+  `GIA_PHA_AUTH_BROWSER_SMOKE`, `GIA_PHA_SMOKE_BASE_URL` and
+  `GIA_PHA_AUTH_STORAGE_STATE_PATH`.
+- Smoke result:
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- No authenticated browser PASS was claimed. No session file, token, cookie or
+  credential value was read or printed.
+- Existing-member mutation result:
+  `A09_ATTACH_EXISTING_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET`.
+- Create-person mutation result:
+  `A09_CREATE_PERSON_MUTATION_SKIPPED_MISSING_EXPLICIT_SAFE_DATASET`.
+- Static Tree Editor source guards continue to verify Vietnamese toolbar,
+  add-relative flow, loading/disabled submit guard, duplicate suggestion,
+  read-only data quality guidance, internal UUID behavior and privacy markers.
+- No runtime Tree Editor bug was established or fixed because authorized browser
+  execution was unavailable.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission change, no bypass, no mutation, no merge/dedupe,
+  no person/relationship delete, no Worker/config/dependency/deploy/push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - PLAN_A06_A07_A08_TREE_POLISH_DEDUPE_READINESS_DATA_QUALITY_WARNINGS
 
 - Added
