@@ -30,11 +30,13 @@ import type {
 type FamilyTreeEditorProps = {
   graph: FamilyTreeGraph;
   canCreateRelationships: boolean;
+  canCreatePeople: boolean;
   saveLayoutAction: (formData: FormData) => void | Promise<void>;
   resetLayoutAction: (formData: FormData) => void | Promise<void>;
   addParentAction: (formData: FormData) => void | Promise<void>;
   addSpouseAction: (formData: FormData) => void | Promise<void>;
   addChildAction: (formData: FormData) => void | Promise<void>;
+  createPersonAndAttachAction: (formData: FormData) => void | Promise<void>;
 };
 
 const nodeTypes = {
@@ -98,11 +100,13 @@ function graphWithNodePositions(
 export function FamilyTreeEditor({
   graph,
   canCreateRelationships,
+  canCreatePeople,
   saveLayoutAction,
   resetLayoutAction,
   addParentAction,
   addSpouseAction,
   addChildAction,
+  createPersonAndAttachAction,
 }: FamilyTreeEditorProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<FamilyTreeReactNode>(
     toReactFlowNodes(graph),
@@ -198,9 +202,11 @@ export function FamilyTreeEditor({
         graph={graphWithNodePositions(graph, nodes)}
         selectedNode={selectedNode}
         canCreateRelationships={canCreateRelationships}
+        canCreatePeople={canCreatePeople}
         addParentAction={addParentAction}
         addSpouseAction={addSpouseAction}
         addChildAction={addChildAction}
+        createPersonAndAttachAction={createPersonAndAttachAction}
       />
     </div>
   );

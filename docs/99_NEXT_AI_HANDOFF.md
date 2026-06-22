@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-22 - Plan A-03 - Tree Inline Create Person UX completed
+
+- Added `docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md`.
+- Added `scripts/check-tree-inline-create-person-ux.cjs` and
+  `npm run check:tree-inline-create-person-ux`.
+- Existing create-person flow reviewed and reused: `createPerson()` in
+  `lib/family/people-service.ts`, existing person validation and existing
+  relationship services.
+- Added `createPersonAndAttachFromTreeAction` in
+  `app/(admin)/admin/tree/edit/actions.ts`. It creates the person first, then
+  attaches father, mother, child or spouse/partner through existing services.
+- Updated `components/tree/tree-editor-side-panel.tsx` with a compact
+  Vietnamese flow:
+  - `Chọn quan hệ`
+  - `Chọn thành viên đã có`
+  - `Tạo thành viên mới`
+  - `Lưu và gắn quan hệ`
+- Supported relationship types: `Cha`, `Mẹ`, `Con`, `Vợ/chồng/bạn đời`.
+- If person creation succeeds but relationship attachment fails, the user sees
+  the safe Vietnamese partial-success message beginning with `Đã tạo thành viên
+  mới nhưng chưa gắn được quan hệ`.
+- Internal UUIDs remain hidden/submitted values; user-facing UI does not ask for
+  manual UUID entry.
+- Existing auth and permission logic remains unchanged. `people.create` and
+  `relationships.create` remain enforced by the existing services.
+- Decision 158 records the service-reuse boundary for Tree inline create person.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and no
+  push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: browser-level authenticated Tree Editor smoke for
+  inline create-person UX, or a narrow polish phase for family linking after
+  quick-create.
+
 ## 2026-06-21 - UI-UX-VN-02 - Vietnamese Cultural UI/UX Hardening completed
 
 - Added `docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md`.

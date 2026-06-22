@@ -106,7 +106,7 @@ for (const token of [
   "Tự xếp bố cục",
   "Đặt lại bố cục",
   "Bảng chi tiết",
-  "Nút gia đình",
+  "Thẻ gia đình",
   "Phạm vi hiển thị",
   "Công khai",
   "Riêng tư",

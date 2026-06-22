@@ -1,4 +1,11 @@
-import { addChildFromTreeAction, addParentFromTreeAction, addSpouseFromTreeAction, resetTreeLayoutAction, saveTreeLayoutAction } from "@/app/(admin)/admin/tree/edit/actions";
+import {
+  addChildFromTreeAction,
+  addParentFromTreeAction,
+  addSpouseFromTreeAction,
+  createPersonAndAttachFromTreeAction,
+  resetTreeLayoutAction,
+  saveTreeLayoutAction,
+} from "@/app/(admin)/admin/tree/edit/actions";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { FamilyTreeEditor } from "@/components/tree/family-tree-editor";
 import { FamilyTreeErrorState } from "@/components/tree/family-tree-error-state";
@@ -17,6 +24,14 @@ type AdminTreeEditPageProps = {
   }>;
 };
 
+function savedMessage(saved?: string) {
+  if (saved === "inline_person_created") {
+    return "Đã thêm thành viên và gắn quan hệ vào cây gia phả.";
+  }
+
+  return saved ? `Đã lưu thay đổi: ${saved}` : null;
+}
+
 export default async function AdminTreeEditPage({
   searchParams,
 }: AdminTreeEditPageProps) {
@@ -27,6 +42,7 @@ export default async function AdminTreeEditPage({
   const canCreateRelationships = context.permissions.includes(
     "relationships.create",
   );
+  const canCreatePeople = context.permissions.includes("people.create");
   const graphResult =
     canViewTree && canEditLayout
       ? await getAdminFamilyTreeGraph()
@@ -37,11 +53,12 @@ export default async function AdminTreeEditPage({
               ? "Chưa cấu hình Supabase."
               : !canViewTree
                 ? "Bạn chưa có quyền xem cây gia phả."
-                : "Bạn chưa có quyền chỉnh sửa layout cây.",
+                : "Bạn chưa có quyền chỉnh sửa bố cục cây.",
         };
   const result = graphResult.ok
     ? await applySavedLayoutToGraph(graphResult.data)
     : graphResult;
+  const saved = savedMessage(query.saved);
 
   return (
     <AdminShell
@@ -53,7 +70,7 @@ export default async function AdminTreeEditPage({
         <PageHeader
           eyebrow="Nền tảng chỉnh sửa cây gia phả"
           title="Chỉnh sửa cây"
-          description="Bấm một nút thành viên để mở bảng chi tiết, kéo nút để chỉnh bố cục UI, rồi bấm lưu bố cục. Quan hệ thật chỉ đổi qua form có chủ đích."
+          description="Bấm một thành viên để mở bảng chi tiết, kéo thẻ để chỉnh bố cục giao diện, rồi bấm lưu. Quan hệ thật chỉ đổi qua form có chủ đích."
         />
 
         {query.error ? (
@@ -62,9 +79,9 @@ export default async function AdminTreeEditPage({
           </StatusCallout>
         ) : null}
 
-        {query.saved ? (
+        {saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Đã lưu thay đổi: {query.saved}
+            {saved}
           </StatusCallout>
         ) : null}
 
@@ -73,11 +90,13 @@ export default async function AdminTreeEditPage({
             <FamilyTreeEditor
               graph={result.data}
               canCreateRelationships={canCreateRelationships}
+              canCreatePeople={canCreatePeople}
               saveLayoutAction={saveTreeLayoutAction}
               resetLayoutAction={resetTreeLayoutAction}
               addParentAction={addParentFromTreeAction}
               addSpouseAction={addSpouseFromTreeAction}
               addChildAction={addChildFromTreeAction}
+              createPersonAndAttachAction={createPersonAndAttachFromTreeAction}
             />
           ) : (
             <FamilyTreeErrorState message={result.error} />

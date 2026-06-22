@@ -59,137 +59,134 @@ function gitShowHead(relativePath) {
 }
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/people/[id]/page.tsx",
-  "app/(admin)/admin/relationships/page.tsx",
-  "components/relationships/couple-form.tsx",
-  "components/relationships/relationship-form.tsx",
-  "docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/family-tree-editor.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "scripts/check-tree-inline-create-person-ux.cjs",
+  "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
+  "scripts/check-vietnamese-ui-copy.cjs",
 ]);
 
 const packageJson = readJson("package.json");
-const relationshipForm = readFile("components/relationships/relationship-form.tsx");
-const coupleForm = readFile("components/relationships/couple-form.tsx");
-const relationshipsPage = readFile("app/(admin)/admin/relationships/page.tsx");
-const treeSidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
-const adminShell = readFile("components/layout/admin-shell.tsx");
-const doc = readFile("docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md");
+const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const editor = readFile("components/tree/family-tree-editor.tsx");
+const page = readFile("app/(admin)/admin/tree/edit/page.tsx");
+const actions = readFile("app/(admin)/admin/tree/edit/actions.ts");
+const doc = readFile("docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "Chọn thành viên",
-  "Chọn cha/mẹ",
-  "Chọn con",
-  "Chọn vợ/chồng/bạn đời",
-  "Tạo quan hệ đôi",
-  "Nội bộ gia đình",
-  "Công khai",
-  "Riêng tư",
-  "Chưa có danh sách thành viên để chọn",
-]) {
-  requireIncludes(
-    `${relationshipForm}\n${coupleForm}`,
-    token,
-    `relationship form Vietnamese token ${token}`,
-  );
-}
-
-for (const token of [
-  "Chọn gia đình và chọn thành viên theo tên",
-  "mã nội bộ chỉ được dùng ở",
-  "Bạn cần quyền xem thành viên",
-]) {
-  requireIncludes(relationshipsPage, token, `relationships page token ${token}`);
-}
-
-for (const token of [
-  "RelatedPersonPicker",
-  "Tìm thành viên",
-  "Chọn thành viên đã có",
   "Tạo thành viên mới",
+  "Chọn thành viên đã có",
   "Lưu và gắn quan hệ",
+  "Người đang chọn",
+  "Thêm người thân",
+  "Quan hệ với người đang chọn",
+  "Chọn quan hệ",
+  "Họ và tên",
+  "Chọn giới tính",
+  "Năm sinh",
+  "Năm mất",
+  "Ghi chú ngắn",
+  "Nhập họ và tên thành viên...",
+  "Đang lưu thành viên...",
+  "Bạn không có quyền thực hiện thao tác này.",
+  "useFormStatus",
+  "disabled={pending}",
 ]) {
-  requireIncludes(treeSidePanel, token, `tree editor picker token ${token}`);
+  requireIncludes(sidePanel, token, `side panel token ${token}`);
 }
 
 for (const token of [
-  "Gia phả Việt Nam",
-  "Cây gia phả",
-  "Quan hệ gia đình",
+  "createPersonAndAttachFromTreeAction",
+  "createPerson(",
+  "addParentToFamily",
+  "addChildToFamily",
+  "createCoupleRelationship",
+  "Đã tạo thành viên mới nhưng chưa gắn được quan hệ",
+  "inline_person_created",
 ]) {
-  requireIncludes(adminShell, token, `admin navigation Vietnamese token ${token}`);
+  requireIncludes(actions, token, `action token ${token}`);
 }
 
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
+for (const token of [
+  "canCreatePeople",
+  "createPersonAndAttachAction",
 ]) {
-  for (const token of [
-    "Enter UUID",
-    "Paste UUID",
-    "Person ID",
-    "Related person ID",
-    "UUID thành viên",
-    "nhập UUID",
-    "copy ID",
-    "ID thành viên",
-    "font-mono text-sm",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} visible/manual ID copy ${token}`);
-  }
+  requireIncludes(editor, token, `editor token ${token}`);
+  requireIncludes(page, token, `page/editor wiring token ${token}`);
 }
 
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["components/tree/tree-editor-side-panel.tsx", treeSidePanel],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
+requireIncludes(
+  page,
+  "Đã thêm thành viên và gắn quan hệ vào cây gia phả.",
+  "success message",
+);
+
+for (const token of [
+  "Enter UUID",
+  "Paste UUID",
+  "Person UUID",
+  "Related person UUID",
+  "Nhập UUID",
+  "Dán UUID",
+  "UUID thành viên",
+  "relationship id",
 ]) {
-  for (const token of [
-    "notes_private",
-    "source_note",
-    "service_role",
-    "sb_secret_",
-    "Bearer ",
-    "COOKIE",
-    "SESSION",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} private/secret marker ${token}`);
-  }
+  rejectIncludes(sidePanel, token, `manual UUID/ID UI copy ${token}`);
+}
+
+for (const token of [
+  "notes_private",
+  "source_note",
+  "service_role",
+  "sb_secret_",
+  "Bearer ",
+  "COOKIE",
+  "SESSION",
+  "signedUrl",
+  "signed_url",
+  "raw SQL",
+  "stack trace",
+]) {
+  rejectIncludes(sidePanel, token, `private/secret marker ${token}`);
 }
 
 for (const token of [
   "Status: `PASS_LOCAL_STATIC`",
   "Summary",
-  "Owner Requirements",
-  "UI Text Hardening Result",
-  "Vietnamese Style Direction",
-  "Navigation/Menu Result",
-  "Cây Gia Phả Priority Result",
-  "Tree Viewer/Editor UX Result",
-  "Form/Input/Dropdown Result",
-  "Code/Internal Values Unchanged",
-  "Privacy/Security Result",
-  "Deferred Items",
-  "Checker Result",
-  "Validation Results",
-  "Recommended Next Phase",
+  "User problem",
+  "Scope",
+  "Existing create person flow reviewed",
+  "UX before",
+  "UX after",
+  "Relationship types supported",
+  "Create person then attach relationship behavior",
+  "Internal UUID behavior",
+  "Vietnamese UI copy result",
+  "Privacy/permission result",
+  "Deferred items",
+  "Checker result",
+  "Validation results",
+  "Recommended next phase",
 ]) {
-  requireIncludes(doc, token, `UI-UX-VN-02 doc token ${token}`);
+  requireIncludes(doc, token, `Plan A-03 doc token ${token}`);
 }
 
 for (const token of [
-  "UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
-  "UI-UX-VN-02",
+  "PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md",
+  "Plan A-03",
 ]) {
   requireIncludes(index, token, `index token ${token}`);
   requireIncludes(workLog, token, `work log token ${token}`);
@@ -198,15 +195,15 @@ for (const token of [
 
 requireIncludes(
   decisionLog,
-  "Decision 157 - Vietnamese cultural UI favors names and kinship labels over manual IDs",
-  "decision log UI-UX-VN-02 decision",
+  "Decision 158 - Tree inline create person reuses existing services",
+  "decision log Decision 158",
 );
 
 if (
-  packageJson?.scripts?.["check:vietnamese-cultural-ui-ux"] !==
-  "node scripts/check-vietnamese-cultural-ui-ux.cjs"
+  packageJson?.scripts?.["check:tree-inline-create-person-ux"] !==
+  "node scripts/check-tree-inline-create-person-ux.cjs"
 ) {
-  failures.push("package.json missing check:vietnamese-cultural-ui-ux script");
+  failures.push("package.json missing check:tree-inline-create-person-ux script");
 }
 
 const packageHead = gitShowHead("package.json");
@@ -254,16 +251,16 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
     failures.push(`deploy workflow mutation: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
-    failures.push(`unexpected changed file for UI-UX-VN-02: ${file}`);
+    failures.push(`unexpected changed file for Plan A-03: ${file}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("Vietnamese cultural UI/UX check failed:");
+  console.error("Tree inline create person UX check failed:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log("Vietnamese cultural UI/UX check passed.");
+console.log("Tree inline create person UX check passed.");

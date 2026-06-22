@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-06-22 - Plan A-03 - Tree Inline Create Person UX
+
+- Added `docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md`.
+- Added `scripts/check-tree-inline-create-person-ux.cjs` and
+  `npm run check:tree-inline-create-person-ux`.
+- Reviewed the existing create-person flow and reused `createPerson()` from
+  `lib/family/people-service.ts`; no new schema, API route or permission key was
+  added.
+- Added `createPersonAndAttachFromTreeAction` in the existing Tree Editor action
+  module. It creates the person through the people service, then attaches the
+  relationship through existing relationship services.
+- Updated the Tree Editor side panel so the operator can choose `Cha`, `Mẹ`,
+  `Con` or `Vợ/chồng/bạn đời`, then either choose an existing member or create a
+  new member inline.
+- New-member form uses compact Vietnamese fields: `Họ và tên`, `Chọn giới
+  tính`, `Năm sinh`, `Năm mất` and `Ghi chú ngắn`.
+- UUIDs remain internal values; the side panel does not ask users to type or
+  paste UUIDs.
+- Existing auth and permission logic remains unchanged. `people.create` is still
+  enforced by `createPerson()` and `relationships.create` by relationship
+  services.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and no
+  push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-21 - UI-UX-VN-02 - Vietnamese Cultural UI/UX Hardening
 
 - Added `docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md`.

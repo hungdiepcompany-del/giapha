@@ -1,5 +1,24 @@
 # Decision Log
 
+## Decision 158 - Tree inline create person reuses existing services
+
+Chon:
+
+Plan A-03 may add a Tree Editor inline create-person UX, but it must compose the
+existing `createPerson()` and relationship services instead of adding schema,
+routes, permission keys or a parallel mutation path. The UI may collect compact
+Vietnamese fields for a new relative, then submit internal IDs and existing
+field names behind the form.
+
+Ly do:
+
+- Tree editing is the highest-value genealogy workflow and should not require
+  leaving the tree for a simple new relative.
+- Reusing existing services preserves server-side permission checks,
+  validation, revision logging and relationship cycle checks.
+- Keeping IDs internal avoids exposing UUID entry while preserving service
+  contracts.
+
 ## Decision 157 - Vietnamese cultural UI favors names and kinship labels over manual IDs
 
 Chon:
