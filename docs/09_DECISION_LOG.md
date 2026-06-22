@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 163 - A-11 remains schema candidate only
+
+Status: `ACTIVE`
+
+Chon:
+
+Owner marker `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` opens A-11 schema
+candidate/readiness only. A-11 may add a SQL draft outside `db/migrations`,
+schema documentation and static checker, but DB remains `NOT_APPLIED` and
+runtime merge/dedupe remains closed.
+
+The candidate is additive and fail-closed: six merge/dedupe tables enable RLS
+without policies because `people.merge.*` permissions are not registered.
+There is no route, action, service, function/procedure or data mutation.
+
+A real migration file requires separate owner marker
+`APPROVE_A11_MERGE_DEDUPE_SCHEMA`. DB apply and A-12 runtime each require their
+own later approval; one marker never implicitly grants the next gate.
+
+Ly do:
+
+- Separating draft from real migration makes review possible without changing
+  database state or current runtime behavior.
+- Explicit audit, version, graph, conflict and rollback columns preserve A-10
+  safety requirements for a future implementation.
+- RLS without policies avoids accidentally exposing sensitive candidate,
+  conflict, audit or rollback snapshots before permission design is approved.
+
 ## Decision 162 - A-10 design review is approved without granting the owner marker
 
 Status: `ACTIVE`

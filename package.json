@@ -172,7 +172,8 @@
     "check:tree-duplicate-suggestion-ux": "node scripts/check-tree-duplicate-suggestion-ux.cjs",
     "check:tree-polish-dedupe-readiness-data-quality": "node scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
     "check:tree-editor-auth-browser-smoke": "node scripts/check-tree-editor-auth-browser-smoke.cjs",
-    "check:merge-dedupe-transaction-audit-design": "node scripts/check-merge-dedupe-transaction-audit-design.cjs"
+    "check:merge-dedupe-transaction-audit-design": "node scripts/check-merge-dedupe-transaction-audit-design.cjs",
+    "check:merge-dedupe-schema-candidate-readiness": "node scripts/check-merge-dedupe-schema-candidate-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

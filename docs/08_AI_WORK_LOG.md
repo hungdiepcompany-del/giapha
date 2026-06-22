@@ -1,5 +1,30 @@
 # AI Work Log
 
+## 2026-06-22 - A-11 Bundle - Merge/Dedupe Schema Candidate Readiness
+
+- Received owner marker `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` for A-11
+  schema candidate only.
+- Added `docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md`.
+- Added non-applied SQL draft
+  `scripts/merge-dedupe-schema-candidate.sql.draft` outside `db/migrations`.
+- Candidate covers pairs, sessions, field decisions, typed relationship/layout/
+  lineage/privacy/export impacts, audit events and rollback manifests.
+- Added `scripts/check-merge-dedupe-schema-candidate-readiness.cjs` and package
+  command to guard schema coverage, static SQL safety and closed runtime.
+- Decision 163 keeps A-11 candidate-only. Real migration file requires
+  `APPROVE_A11_MERGE_DEDUPE_SCHEMA`; DB apply and runtime require later gates.
+- Validation PASS: A-10 and A-11 checkers; migration order, Vietnamese
+  genealogy schema candidate/first-migration-scope/real-migration-file gates;
+  Tree duplicate, polish/dedupe/data-quality checkers; typecheck; lint;
+  workspace-root production build; diff and cached-diff checks.
+- A-09 returned expected safe-skip
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`; it is not
+  counted as a failure.
+- Boundary: no DB apply, seed/backfill, real migration, runtime merge/dedupe,
+  route/action/service, person/relationship deletion, auth/permission runtime,
+  Worker/config, dependency, deploy or push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Owner Review A-10 - APPROVED
 
 - Reviewed the A-10 design and checker against candidate, transaction, audit,

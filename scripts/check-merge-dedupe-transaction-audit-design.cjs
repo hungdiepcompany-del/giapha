@@ -56,12 +56,15 @@ function gitShowHead(relativePath) {
 
 const allowedChangedFiles = new Set([
   "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md",
+  "docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
   "scripts/check-merge-dedupe-transaction-audit-design.cjs",
+  "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
+  "scripts/merge-dedupe-schema-candidate.sql.draft",
   "scripts/check-tree-editor-auth-browser-smoke.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
   "scripts/check-tree-duplicate-suggestion-ux.cjs",
@@ -203,7 +206,11 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
 
   if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
   if (lowerFile.endsWith(".sql")) failures.push(`SQL file changed: ${file}`);
-  if (file.startsWith("db/") || file.includes("schema")) {
+  const isA11CandidateArtifact =
+    file === "docs/PLAN_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE_READINESS.md" ||
+    file === "scripts/check-merge-dedupe-schema-candidate-readiness.cjs" ||
+    file === "scripts/merge-dedupe-schema-candidate.sql.draft";
+  if (file.startsWith("db/") || (file.includes("schema") && !isA11CandidateArtifact)) {
     failures.push(`database/schema drift: ${file}`);
   }
   if (

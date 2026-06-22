@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-06-22 - A-11 Bundle - Merge/Dedupe Schema Candidate Readiness completed
+
+- Owner marker `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN` was received for A-11
+  candidate work only.
+- Added the A-11 design doc, non-applied `.sql.draft`, static checker and package
+  command.
+- Six candidate tables cover duplicate pairs, sessions, field decisions,
+  typed impacts, audit events and rollback manifests.
+- Version/conflict/graph state, approval evidence, actor/timestamps, impact
+  snapshots and person/relationship/layout/lineage/privacy/revision/export
+  rollback coverage are explicit.
+- All candidate tables enable RLS with no policies. No `people.merge.*`
+  permission is registered; access remains fail-closed if a later real migration
+  adopts the candidate.
+- Decision 163: DB remains not applied and runtime merge/dedupe remains closed.
+  A real migration file requires `APPROVE_A11_MERGE_DEDUPE_SCHEMA`; apply and
+  A-12 runtime need later approvals.
+- A-10/A-11, migration/schema and related Tree dedupe/data-quality checkers plus
+  typecheck, lint, workspace-root production build and diff gates PASS. A-09 is
+  the expected missing-explicit-session safe-skip, not a failure.
+- Boundary: no real migration, DB apply, seed/backfill, route/action/service,
+  data mutation/delete, auth/permission runtime, Worker/config, dependency,
+  deploy or push. `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Owner Review A-10 approved
 
 - Review result: `APPROVED`.
