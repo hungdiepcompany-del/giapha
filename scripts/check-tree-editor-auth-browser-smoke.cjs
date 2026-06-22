@@ -65,10 +65,13 @@ function gitShowHead(relativePath) {
 
 const allowedChangedFiles = new Set([
   "docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md",
+  "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "scripts/check-merge-dedupe-transaction-audit-design.cjs",
   "scripts/check-tree-editor-auth-browser-smoke.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
   "scripts/check-tree-duplicate-suggestion-ux.cjs",

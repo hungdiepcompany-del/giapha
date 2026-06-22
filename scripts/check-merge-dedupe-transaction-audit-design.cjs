@@ -1,0 +1,229 @@
+const fs = require("node:fs");
+const path = require("node:path");
+const childProcess = require("node:child_process");
+
+const root = process.cwd();
+const failures = [];
+
+function readFile(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return "";
+  }
+  return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readJson(relativePath) {
+  const content = readFile(relativePath);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    failures.push(`${relativePath} is not valid JSON`);
+    return null;
+  }
+}
+
+function requireIncludes(content, token, label = token) {
+  if (!content.includes(token)) failures.push(`missing ${label}`);
+}
+
+function gitOutput(args) {
+  try {
+    return childProcess.execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    failures.push(`git ${args.join(" ")} failed`);
+    return "";
+  }
+}
+
+function gitShowHead(relativePath) {
+  try {
+    return childProcess.execFileSync("git", ["show", `HEAD:${relativePath}`], {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return "";
+  }
+}
+
+const allowedChangedFiles = new Set([
+  "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
+  "package.json",
+  "scripts/check-merge-dedupe-transaction-audit-design.cjs",
+  "scripts/check-tree-editor-auth-browser-smoke.cjs",
+  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
+  "scripts/check-tree-inline-create-person-ux.cjs",
+  "scripts/check-tree-relationship-picker-ux.cjs",
+  "scripts/check-vietnamese-cultural-ui-ux.cjs",
+  "scripts/check-vietnamese-ui-copy.cjs",
+  "scripts/check-routine-production-monitoring-snapshot.cjs",
+  "scripts/check-production-monitoring-auth-smoke-prep.cjs",
+  "scripts/check-authenticated-smoke-result.cjs",
+  "scripts/check-post-runtime-ui-deploy-readiness.cjs",
+  "scripts/check-inline-admin-warning-ui.cjs",
+  "scripts/check-small-json-export-smoke.cjs",
+  "scripts/check-small-json-export-hardening.cjs",
+  "scripts/check-export-import-final-readiness.cjs",
+]);
+
+const docPath = "docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md";
+const doc = readFile(docPath);
+const packageJson = readJson("package.json");
+const index = readFile("docs/00_INDEX.md");
+const workLog = readFile("docs/08_AI_WORK_LOG.md");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
+const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+
+for (const heading of [
+  "## Summary",
+  "## User problem",
+  "## Data objects impacted",
+  "## Candidate detection design",
+  "## Merge policy",
+  "## Audit design",
+  "## Rollback design",
+  "## Permission and approval gate",
+  "## Future UI design",
+  "## Deferred items",
+]) {
+  requireIncludes(doc, heading, `A-10 section ${heading}`);
+}
+
+for (const token of [
+  "Không auto merge",
+  "Không tự xóa thành viên",
+  "Không runtime merge",
+  "Không DB apply",
+  "Không migration",
+  "APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN",
+  "APPROVE_A11_MERGE_DEDUPE_SCHEMA",
+  "APPROVE_A12_MERGE_DEDUPE_RUNTIME",
+  "source_person",
+  "target_person",
+  "merge_id",
+  "rollback_snapshot_manifest",
+  "people.merge.suggest",
+  "people.merge.review",
+  "people.merge.approve",
+  "people.merge.execute",
+  "people.merge.rollback",
+  "Nghi trùng thành viên",
+  "So sánh thành viên",
+  "Giữ thông tin này",
+  "Xung đột dữ liệu",
+  "Quan hệ bị ảnh hưởng",
+  "Yêu cầu gộp",
+  "Phê duyệt gộp",
+  "Thực hiện gộp",
+  "Hoàn tác gộp",
+]) {
+  requireIncludes(doc, token, `A-10 design token ${token}`);
+}
+
+for (const [content, token, label] of [
+  [index, "PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md", "index entry"],
+  [workLog, "Plan A-10 - Merge/Dedupe Transaction & Audit Design", "work log entry"],
+  [handoff, "Plan A-10 - Merge/Dedupe Transaction & Audit Design", "handoff entry"],
+  [decisionLog, "Decision 161 - Merge/dedupe runtime remains closed", "Decision 161"],
+]) {
+  requireIncludes(content, token, label);
+}
+
+if (
+  packageJson?.scripts?.["check:merge-dedupe-transaction-audit-design"] !==
+  "node scripts/check-merge-dedupe-transaction-audit-design.cjs"
+) {
+  failures.push(
+    "package.json missing check:merge-dedupe-transaction-audit-design script",
+  );
+}
+
+const packageHead = gitShowHead("package.json");
+if (packageHead && packageJson) {
+  const previousPackage = JSON.parse(packageHead);
+  if (
+    JSON.stringify(previousPackage.dependencies || {}) !==
+    JSON.stringify(packageJson.dependencies || {})
+  ) {
+    failures.push("runtime dependencies changed");
+  }
+  if (
+    JSON.stringify(previousPackage.devDependencies || {}) !==
+    JSON.stringify(packageJson.devDependencies || {})
+  ) {
+    failures.push("devDependencies changed");
+  }
+}
+
+const status = gitOutput(["status", "--short", "--untracked-files=all"]);
+for (const line of status.split(/\r?\n/).filter(Boolean)) {
+  const file = line.slice(3).trim().replaceAll("\\", "/");
+  const lowerFile = file.toLowerCase();
+
+  if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
+  if (lowerFile.endsWith(".sql")) failures.push(`SQL file changed: ${file}`);
+  if (file.startsWith("db/") || file.includes("schema")) {
+    failures.push(`database/schema drift: ${file}`);
+  }
+  if (
+    file === "wrangler.toml" ||
+    file.includes("open-next") ||
+    file.includes("opennext") ||
+    file.startsWith("services/") ||
+    file.startsWith(".github/workflows/")
+  ) {
+    failures.push(`Worker/OpenNext/Wrangler/deploy drift: ${file}`);
+  }
+  if (!allowedChangedFiles.has(file)) {
+    failures.push(`unexpected changed file for Plan A-10: ${file}`);
+  }
+}
+
+const runtimeDiff = gitOutput([
+  "diff",
+  "HEAD",
+  "--",
+  "app",
+  "components",
+  "lib",
+  "server",
+  "db",
+]);
+const forbiddenRuntimePatterns = [
+  ["mergePersons", /\bmergePersons\b/],
+  ["executeMerge", /\bexecuteMerge\b/],
+  ["rollbackMerge", /\brollbackMerge\b/],
+  ["dedupePersons", /\bdedupePersons\b/],
+  ["deleteDuplicatePerson", /\bdeleteDuplicatePerson\b/],
+  ["merge API route", /\/api\/[^\s]+\/merge\b/],
+  ["dedupe API route", /\/api\/[^\s]+\/dedupe\b/],
+  ["runtime merge permission registration", /people\.merge\.execute/],
+];
+for (const [label, pattern] of forbiddenRuntimePatterns) {
+  if (pattern.test(runtimeDiff)) failures.push(`forbidden runtime pattern ${label}`);
+}
+
+if (runtimeDiff.trim()) {
+  failures.push("runtime, permission or schema source changed in Plan A-10");
+}
+
+if (failures.length > 0) {
+  console.error("Merge/dedupe transaction and audit design check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("Merge/dedupe transaction and audit design check passed.");

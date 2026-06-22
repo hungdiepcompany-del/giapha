@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-06-22 - Plan A-10 - Merge/Dedupe Transaction & Audit Design completed
+
+- Added `docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md` and its static
+  checker/package command.
+- Candidate confidence is strong/medium/weak and advisory only. No level
+  authorizes automatic merge or blocks a legitimate same-name person.
+- Future transaction design is all-or-nothing, version-checked and idempotent by
+  `merge_id`; it must validate graph/privacy before and after mutation.
+- Audit design covers actors/timestamps/reason/confidence plus field,
+  relationship, layout, branch/generation, export and rollback-manifest impact.
+- Rollback requires a pre-merge snapshot/manifest and restores source person,
+  relationships, layout, membership, visibility and revision trail. Later edits
+  require manual conflict reconciliation rather than silent overwrite.
+- Proposed permissions and owner markers are design text only. Decision 161
+  keeps runtime closed until explicit approval, audit, rollback and schema gates
+  are approved.
+- Future UI copy is Vietnamese and covers candidate list, person comparison,
+  conflict selection, affected relationships, request/approval/execution and
+  audit/rollback.
+- Required static checker suite, env/migration safety, typecheck, lint and
+  workspace-root production build PASS. A-09 remains the honest safe-skip
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- Boundary: no migration, `.sql`, DB apply, seed/backfill, schema change,
+  runtime merge/dedupe, person/relationship delete, auth/permission runtime
+  change, route/action/service, Worker, OpenNext/Wrangler config, dependency,
+  deploy or push.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: owner review of A-10. A-11 schema candidate work may
+  begin only after explicit `APPROVE_A10_MERGE_DEDUPE_RUNTIME_DESIGN`; it still
+  must not DB apply or open runtime merge.
+
 ## 2026-06-22 - Plan A-09 - Authenticated Tree Editor Browser Smoke safe-skipped
 
 - Added `docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md`.

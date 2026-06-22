@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-22 - Plan A-10 - Merge/Dedupe Transaction & Audit Design
+
+- Added `docs/PLAN_A10_MERGE_DEDUPE_TRANSACTION_AUDIT_DESIGN.md`.
+- Added `scripts/check-merge-dedupe-transaction-audit-design.cjs` and
+  `npm run check:merge-dedupe-transaction-audit-design`.
+- Defined strong/medium/weak candidate confidence as advisory only; same-name
+  people remain allowed and candidate detection does not block creation.
+- Defined source/target, per-field conflict resolution, relationship and layout
+  impact, lineage membership, revision and stable export identity contracts.
+- Defined all-or-nothing transaction, idempotent `merge_id`, immutable audit
+  fields and pre-merge rollback snapshot/manifest requirements.
+- Proposed future permission keys and sequential owner markers without
+  registering any runtime permission.
+- Defined Vietnamese future UI steps for candidate list, comparison, conflict
+  selection, affected relationships, approval, execution, audit and rollback.
+- Decision 161 keeps runtime closed until explicit approval, audit, rollback and
+  schema gates are approved.
+- Updated the required historical checker allowlists only for the A-10 doc and
+  checker artifacts so cross-phase validation remains strict and compatible.
+- Validation PASS: A-10 checker; all requested Tree Editor, Vietnamese UI,
+  monitoring, authenticated-smoke-result, deploy-readiness, inline warning,
+  small JSON export, export/import readiness, env safety and migration checkers;
+  typecheck; lint; workspace-root production build; `git diff --check`.
+- A-09 remains the expected safe-skip:
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- Boundary: docs/checker/readiness only; no migration, `.sql`, DB apply,
+  seed/backfill, schema change, runtime merge/dedupe, person/relationship
+  delete, auth/permission runtime change, route/action/service, Worker,
+  OpenNext/Wrangler config, dependency, deploy or push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Plan A-09 - Authenticated Tree Editor Browser Smoke
 
 - Added `docs/PLAN_A09_AUTHENTICATED_TREE_EDITOR_BROWSER_SMOKE.md`.

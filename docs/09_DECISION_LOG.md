@@ -1,5 +1,27 @@
 # Decision Log
 
+## Decision 161 - Merge/dedupe runtime remains closed
+
+Status: `ACTIVE`
+
+Decision: Merge/dedupe runtime remains closed until explicit approval, audit,
+rollback and schema gates are approved.
+
+Chon:
+
+Plan A-10 defines candidate, transaction, audit, rollback, permission and UI
+contracts only. It does not authorize schema, permission registration, route,
+action, service or production mutation. The owner markers for A-10, A-11 and
+A-12 are sequential gates; mentioning them in documentation is not approval.
+
+Ly do:
+
+- Same-name family members make automatic identity decisions unsafe.
+- Merge affects people, relationships, layout, lineage membership, revisions,
+  privacy, export identity and backup/restore assumptions.
+- A pre-merge snapshot, immutable audit, explicit reviewer decision and tested
+  rollback are required before any destructive-capable runtime is considered.
+
 ## Decision 160 - Tree data quality guidance is read-only and merge stays approval-gated
 
 Chon:
