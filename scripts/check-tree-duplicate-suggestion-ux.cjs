@@ -60,13 +60,8 @@ function gitShowHead(relativePath) {
 
 const allowedChangedFiles = new Set([
   "app/(admin)/admin/tree/edit/page.tsx",
-  "app/(admin)/admin/people/[id]/page.tsx",
-  "app/(admin)/admin/relationships/page.tsx",
-  "components/relationships/couple-form.tsx",
-  "components/relationships/relationship-form.tsx",
   "components/tree/tree-editor-side-panel.tsx",
   "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
-  "docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -84,123 +79,120 @@ const allowedChangedFiles = new Set([
 ]);
 
 const packageJson = readJson("package.json");
-const relationshipForm = readFile("components/relationships/relationship-form.tsx");
-const coupleForm = readFile("components/relationships/couple-form.tsx");
-const relationshipsPage = readFile("app/(admin)/admin/relationships/page.tsx");
-const treeSidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
-const adminShell = readFile("components/layout/admin-shell.tsx");
-const doc = readFile("docs/UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md");
+const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const treePage = readFile("app/(admin)/admin/tree/edit/page.tsx");
+const doc = readFile(
+  "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
+);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "Chọn thành viên",
-  "Chọn cha/mẹ",
-  "Chọn con",
-  "Chọn vợ/chồng/bạn đời",
-  "Tạo quan hệ đôi",
-  "Nội bộ gia đình",
-  "Công khai",
-  "Riêng tư",
-  "Chưa có danh sách thành viên để chọn",
+  "DuplicateSuggestionBox",
+  "duplicateSuggestionScore",
+  "normalizeDuplicateName",
+  "tokenizedName",
+  "yearDistance",
+  "slice(0, 5)",
+  "onUseExistingPerson",
+  "setEntryMode(\"existing\")",
+  "setSelectedRelatedPersonId(personId)",
+  "selectedRelatedPersonId",
+  "name=\"related_person_id\"",
+  "value={selectedRelatedPersonId}",
 ]) {
-  requireIncludes(
-    `${relationshipForm}\n${coupleForm}`,
-    token,
-    `relationship form Vietnamese token ${token}`,
-  );
+  requireIncludes(sidePanel, token, `duplicate suggestion behavior ${token}`);
 }
 
 for (const token of [
-  "Chọn gia đình và chọn thành viên theo tên",
-  "mã nội bộ chỉ được dùng ở",
-  "Bạn cần quyền xem thành viên",
+  "Có thể đã tồn tại thành viên tương tự",
+  "Dùng thành viên này để gắn quan hệ",
+  "Vẫn tạo thành viên mới",
+  "Không tìm thấy thành viên tương tự",
+  "Gợi ý tránh tạo trùng",
+  "Thành viên đã có",
+  "Tạo mới vẫn đúng nếu đây là người khác trong gia đình",
 ]) {
-  requireIncludes(relationshipsPage, token, `relationships page token ${token}`);
+  requireIncludes(sidePanel, token, `Vietnamese duplicate suggestion copy ${token}`);
 }
 
 for (const token of [
-  "RelatedPersonPicker",
-  "Tìm thành viên",
-  "Chọn thành viên đã có",
-  "Tạo thành viên mới",
-  "Lưu và gắn quan hệ",
+  "Đã gắn quan hệ với thành viên đã có trong cây gia phả.",
+  "Đã thêm thành viên mới và gắn quan hệ vào cây gia phả.",
 ]) {
-  requireIncludes(treeSidePanel, token, `tree editor picker token ${token}`);
+  requireIncludes(treePage, token, `tree page success copy ${token}`);
 }
 
 for (const token of [
-  "Gia phả Việt Nam",
-  "Cây gia phả",
-  "Quan hệ gia đình",
+  "\"Duplicate\"",
+  ">Duplicate<",
+  "\"Suggestion\"",
+  ">Suggestion<",
+  "Use existing",
+  "Create anyway",
+  "Similar person",
 ]) {
-  requireIncludes(adminShell, token, `admin navigation Vietnamese token ${token}`);
+  rejectIncludes(sidePanel, token, `English user-facing copy ${token}`);
 }
 
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
+for (const token of [
+  "Enter UUID",
+  "Paste UUID",
+  "Person UUID",
+  "Related person UUID",
+  "Nhập UUID",
+  "Dán UUID",
+  "UUID thành viên",
 ]) {
-  for (const token of [
-    "Enter UUID",
-    "Paste UUID",
-    "Person ID",
-    "Related person ID",
-    "UUID thành viên",
-    "nhập UUID",
-    "copy ID",
-    "ID thành viên",
-    "font-mono text-sm",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} visible/manual ID copy ${token}`);
-  }
+  rejectIncludes(sidePanel, token, `manual UUID UI copy ${token}`);
 }
 
-for (const [relativePath, content] of [
-  ["components/relationships/relationship-form.tsx", relationshipForm],
-  ["components/relationships/couple-form.tsx", coupleForm],
-  ["components/tree/tree-editor-side-panel.tsx", treeSidePanel],
-  ["app/(admin)/admin/relationships/page.tsx", relationshipsPage],
+for (const token of [
+  "notes_private",
+  "source_note",
+  "hidden relationship facts",
+  "service_role",
+  "sb_secret_",
+  "Bearer ",
+  "COOKIE",
+  "SESSION",
+  "signedUrl",
+  "signed_url",
+  "storage key",
+  "raw SQL",
+  "stack trace",
 ]) {
-  for (const token of [
-    "notes_private",
-    "source_note",
-    "service_role",
-    "sb_secret_",
-    "Bearer ",
-    "COOKIE",
-    "SESSION",
-  ]) {
-    rejectIncludes(content, token, `${relativePath} private/secret marker ${token}`);
-  }
+  rejectIncludes(sidePanel, token, `private/secret marker ${token}`);
 }
 
 for (const token of [
   "Status: `PASS_LOCAL_STATIC`",
   "Summary",
-  "Owner Requirements",
-  "UI Text Hardening Result",
-  "Vietnamese Style Direction",
-  "Navigation/Menu Result",
-  "Cây Gia Phả Priority Result",
-  "Tree Viewer/Editor UX Result",
-  "Form/Input/Dropdown Result",
-  "Code/Internal Values Unchanged",
-  "Privacy/Security Result",
-  "Deferred Items",
-  "Checker Result",
-  "Validation Results",
-  "Recommended Next Phase",
+  "Why A-04 and A-05 were grouped",
+  "A-04 smoke result",
+  "A-04 safe-skip reason",
+  "A-03 bug fixes",
+  "A-05 user problem",
+  "Duplicate suggestion UX result",
+  "Matching strategy",
+  "Use existing member behavior",
+  "Create new anyway behavior",
+  "Internal UUID behavior",
+  "Vietnamese UI copy result",
+  "Privacy/permission result",
+  "Deferred items",
+  "Checker result",
+  "Validation results",
+  "Recommended next phase",
 ]) {
-  requireIncludes(doc, token, `UI-UX-VN-02 doc token ${token}`);
+  requireIncludes(doc, token, `A-04/A-05 doc token ${token}`);
 }
 
 for (const token of [
-  "UI_UX_VN_02_VIETNAMESE_CULTURAL_UI_UX_HARDENING.md",
-  "UI-UX-VN-02",
+  "PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
+  "PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION",
 ]) {
   requireIncludes(index, token, `index token ${token}`);
   requireIncludes(workLog, token, `work log token ${token}`);
@@ -209,15 +201,15 @@ for (const token of [
 
 requireIncludes(
   decisionLog,
-  "Decision 157 - Vietnamese cultural UI favors names and kinship labels over manual IDs",
-  "decision log UI-UX-VN-02 decision",
+  "Decision 159 - Tree quick-create duplicate suggestion stays client-side and advisory",
+  "decision log Decision 159",
 );
 
 if (
-  packageJson?.scripts?.["check:vietnamese-cultural-ui-ux"] !==
-  "node scripts/check-vietnamese-cultural-ui-ux.cjs"
+  packageJson?.scripts?.["check:tree-duplicate-suggestion-ux"] !==
+  "node scripts/check-tree-duplicate-suggestion-ux.cjs"
 ) {
-  failures.push("package.json missing check:vietnamese-cultural-ui-ux script");
+  failures.push("package.json missing check:tree-duplicate-suggestion-ux script");
 }
 
 const packageHead = gitShowHead("package.json");
@@ -265,16 +257,30 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
     failures.push(`deploy workflow mutation: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
-    failures.push(`unexpected changed file for UI-UX-VN-02: ${file}`);
+    failures.push(`unexpected changed file for Plan A-04/A-05: ${file}`);
   }
 }
 
+for (const [label, pathspecs] of [
+  ["migration files changed", ["db/migrations"]],
+  ["SQL files changed", ["*.sql", "db/**/*.sql", "scripts/**/*.sql"]],
+  ["Worker/service files changed", ["services"]],
+  [
+    "OpenNext/Wrangler config changed",
+    ["wrangler.toml", "open-next.config.ts", "open-next.config.mjs", "next.config.ts"],
+  ],
+  ["deploy workflow changed", [".github/workflows"]],
+]) {
+  const changed = gitOutput(["status", "--short", "--", ...pathspecs]);
+  if (changed.trim()) failures.push(`${label}: ${changed.trim()}`);
+}
+
 if (failures.length > 0) {
-  console.error("Vietnamese cultural UI/UX check failed:");
+  console.error("Tree duplicate suggestion UX check failed:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log("Vietnamese cultural UI/UX check passed.");
+console.log("Tree duplicate suggestion UX check passed.");

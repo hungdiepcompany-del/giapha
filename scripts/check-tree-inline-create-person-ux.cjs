@@ -63,16 +63,22 @@ const allowedChangedFiles = new Set([
   "app/(admin)/admin/tree/edit/page.tsx",
   "components/tree/family-tree-editor.tsx",
   "components/tree/tree-editor-side-panel.tsx",
+  "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
   "docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
   "scripts/check-tree-inline-create-person-ux.cjs",
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
   "scripts/check-vietnamese-ui-copy.cjs",
+  "scripts/check-authenticated-smoke-result.cjs",
+  "scripts/check-post-runtime-ui-deploy-readiness.cjs",
+  "scripts/check-production-monitoring-auth-smoke-prep.cjs",
+  "scripts/check-routine-production-monitoring-snapshot.cjs",
 ]);
 
 const packageJson = readJson("package.json");
@@ -130,7 +136,7 @@ for (const token of [
 
 requireIncludes(
   page,
-  "Đã thêm thành viên và gắn quan hệ vào cây gia phả.",
+  "Đã thêm thành viên mới và gắn quan hệ vào cây gia phả.",
   "success message",
 );
 

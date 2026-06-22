@@ -66,6 +66,85 @@ function normalizeSearch(value: string) {
     .trim();
 }
 
+function normalizeDuplicateName(value: string) {
+  return normalizeSearch(value).replace(/\s+/g, " ");
+}
+
+function tokenizedName(value: string) {
+  return normalizeDuplicateName(value)
+    .split(" ")
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
+function yearDistance(inputYear: string, candidateYear: string | null) {
+  if (!inputYear || !candidateYear) {
+    return null;
+  }
+
+  const input = Number(inputYear);
+  const candidate = Number(candidateYear);
+
+  if (!Number.isInteger(input) || !Number.isInteger(candidate)) {
+    return null;
+  }
+
+  return Math.abs(input - candidate);
+}
+
+function duplicateSuggestionScore(
+  candidate: TreePersonNode,
+  fullName: string,
+  birthYear: string,
+  deathYear: string,
+) {
+  const normalizedInput = normalizeDuplicateName(fullName);
+
+  if (!normalizedInput) {
+    return 0;
+  }
+
+  const candidateNames = [
+    candidate.fullName,
+    candidate.displayName,
+  ].filter(Boolean);
+  const candidateTokens = new Set(
+    candidateNames.flatMap((name) => tokenizedName(String(name))),
+  );
+  const inputTokens = tokenizedName(normalizedInput);
+  const exactNameMatch = candidateNames.some(
+    (name) => normalizeDuplicateName(String(name)) === normalizedInput,
+  );
+  const sharedTokenCount = inputTokens.filter((token) =>
+    candidateTokens.has(token),
+  ).length;
+  const birthDistance = yearDistance(birthYear, candidate.birthYear);
+  const deathDistance = yearDistance(deathYear, candidate.deathYear);
+  let score = 0;
+
+  if (exactNameMatch) {
+    score += 100;
+  } else if (inputTokens.length >= 2 && sharedTokenCount >= 2) {
+    score += 55 + sharedTokenCount * 5;
+  } else if (inputTokens.length >= 1 && sharedTokenCount >= 1) {
+    score += 25;
+  }
+
+  if (birthDistance === 0) {
+    score += 30;
+  } else if (birthDistance !== null && birthDistance <= 2) {
+    score += 18;
+  }
+
+  if (deathDistance === 0) {
+    score += 20;
+  } else if (deathDistance !== null && deathDistance <= 2) {
+    score += 10;
+  }
+
+  return score;
+}
+
 function defaultGender(relationKind: RelationKind) {
   if (relationKind === "father") {
     return "male";
@@ -170,10 +249,14 @@ function RelatedPersonPicker({
   people,
   pickerId,
   selectedPersonId,
+  selectedRelatedPersonId,
+  onSelectPerson,
 }: {
   people: TreePersonNode[];
   pickerId: string;
   selectedPersonId: string;
+  selectedRelatedPersonId: string;
+  onSelectPerson: (personId: string) => void;
 }) {
   const candidates = useMemo(() => {
     return people
@@ -181,9 +264,8 @@ function RelatedPersonPicker({
       .sort((a, b) => personLabel(a).localeCompare(personLabel(b), "vi"));
   }, [people, selectedPersonId]);
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState("");
   const selectedPerson = candidates.find(
-    (person) => person.personId === selectedId,
+    (person) => person.personId === selectedRelatedPersonId,
   );
   const normalizedQuery = normalizeSearch(query);
   const filteredCandidates = normalizedQuery
@@ -225,8 +307,8 @@ function RelatedPersonPicker({
 
       <select
         name="related_person_id"
-        value={selectedId}
-        onChange={(event) => setSelectedId(event.target.value)}
+        value={selectedRelatedPersonId}
+        onChange={(event) => onSelectPerson(event.target.value)}
         required
         className="sr-only"
         aria-label="Thành viên liên quan đã chọn"
@@ -246,7 +328,7 @@ function RelatedPersonPicker({
       >
         {filteredCandidates.length > 0 ? (
           filteredCandidates.map((person) => {
-            const isSelected = person.personId === selectedId;
+            const isSelected = person.personId === selectedRelatedPersonId;
 
             return (
               <button
@@ -255,7 +337,7 @@ function RelatedPersonPicker({
                 role="option"
                 aria-selected={isSelected}
                 onClick={() => {
-                  setSelectedId(person.personId);
+                  onSelectPerson(person.personId);
                   setQuery(personOptionLabel(person));
                 }}
                 className={`block min-h-11 w-full px-3 py-2 text-left text-sm ${
@@ -322,10 +404,14 @@ function ExistingRelationshipFields({
   relationKind,
   people,
   selectedPersonId,
+  selectedRelatedPersonId,
+  onSelectPerson,
 }: {
   relationKind: RelationKind;
   people: TreePersonNode[];
   selectedPersonId: string;
+  selectedRelatedPersonId: string;
+  onSelectPerson: (personId: string) => void;
 }) {
   return (
     <>
@@ -333,6 +419,8 @@ function ExistingRelationshipFields({
         people={people}
         pickerId={`tree-${relationKind}-person-results`}
         selectedPersonId={selectedPersonId}
+        selectedRelatedPersonId={selectedRelatedPersonId}
+        onSelectPerson={onSelectPerson}
       />
       {relationKind === "father" || relationKind === "mother" ? (
         <>
@@ -354,7 +442,109 @@ function ExistingRelationshipFields({
   );
 }
 
-function NewPersonFields({ relationKind }: { relationKind: RelationKind }) {
+function DuplicateSuggestionBox({
+  people,
+  selectedPersonId,
+  fullName,
+  birthYear,
+  deathYear,
+  onUseExistingPerson,
+}: {
+  people: TreePersonNode[];
+  selectedPersonId: string;
+  fullName: string;
+  birthYear: string;
+  deathYear: string;
+  onUseExistingPerson: (personId: string) => void;
+}) {
+  const suggestions = useMemo(() => {
+    const trimmedName = fullName.trim();
+
+    if (!trimmedName) {
+      return [];
+    }
+
+    return people
+      .filter((person) => person.personId !== selectedPersonId)
+      .map((person) => ({
+        person,
+        score: duplicateSuggestionScore(person, trimmedName, birthYear, deathYear),
+      }))
+      .filter(({ score }) => score >= 55)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map(({ person }) => person);
+  }, [birthYear, deathYear, fullName, people, selectedPersonId]);
+
+  if (!fullName.trim()) {
+    return null;
+  }
+
+  return (
+    <div className="border border-amber-200 bg-amber-50 p-3">
+      <div className="text-xs font-semibold uppercase text-amber-800">
+        Gợi ý tránh tạo trùng
+      </div>
+      {suggestions.length > 0 ? (
+        <div className="mt-2 space-y-3">
+          <h4 className="text-sm font-bold text-amber-950">
+            Có thể đã tồn tại thành viên tương tự
+          </h4>
+          <div className="space-y-2">
+            {suggestions.map((person) => (
+              <div
+                key={person.personId}
+                className="border border-amber-200 bg-white p-3"
+              >
+                <div className="text-sm font-semibold text-slate-950">
+                  {personLabel(person)}
+                </div>
+                <div className="mt-1 text-xs text-slate-600">
+                  {personOptionLabel(person)}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onUseExistingPerson(person.personId)}
+                    className="min-h-10 border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
+                  >
+                    Dùng thành viên này để gắn quan hệ
+                  </button>
+                  <span className="inline-flex min-h-10 items-center border border-slate-200 px-3 py-2 text-xs text-slate-600">
+                    Thành viên đã có
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-amber-900">
+            Tạo mới vẫn đúng nếu đây là người khác trong gia đình.
+          </p>
+        </div>
+      ) : (
+        <p className="mt-2 text-sm text-amber-900">
+          Không tìm thấy thành viên tương tự.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function NewPersonFields({
+  relationKind,
+  people,
+  selectedPersonId,
+  onUseExistingPerson,
+}: {
+  relationKind: RelationKind;
+  people: TreePersonNode[];
+  selectedPersonId: string;
+  onUseExistingPerson: (personId: string) => void;
+}) {
+  const [fullName, setFullName] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [deathYear, setDeathYear] = useState("");
+
   return (
     <div className="grid gap-3">
       <label className="block">
@@ -362,6 +552,8 @@ function NewPersonFields({ relationKind }: { relationKind: RelationKind }) {
         <input
           name="full_name"
           required
+          value={fullName}
+          onChange={(event) => setFullName(event.target.value)}
           className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
           placeholder="Nhập họ và tên thành viên..."
         />
@@ -391,6 +583,8 @@ function NewPersonFields({ relationKind }: { relationKind: RelationKind }) {
             type="number"
             min="1"
             max="9999"
+            value={birthYear}
+            onChange={(event) => setBirthYear(event.target.value)}
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
             placeholder="Ví dụ: 1950"
           />
@@ -402,6 +596,8 @@ function NewPersonFields({ relationKind }: { relationKind: RelationKind }) {
             type="number"
             min="1"
             max="9999"
+            value={deathYear}
+            onChange={(event) => setDeathYear(event.target.value)}
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
             placeholder="Để trống nếu còn sống"
           />
@@ -418,6 +614,24 @@ function NewPersonFields({ relationKind }: { relationKind: RelationKind }) {
           placeholder="Thông tin công khai ngắn, nếu cần..."
         />
       </label>
+      <DuplicateSuggestionBox
+        people={people}
+        selectedPersonId={selectedPersonId}
+        fullName={fullName}
+        birthYear={birthYear}
+        deathYear={deathYear}
+        onUseExistingPerson={onUseExistingPerson}
+      />
+      {fullName.trim() ? (
+        <p className="text-xs text-slate-600">
+          <button
+            type="submit"
+            className="min-h-10 border border-slate-300 bg-white px-3 py-2 font-semibold text-slate-800"
+          >
+            Vẫn tạo thành viên mới
+          </button>
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -434,6 +648,7 @@ export function TreeEditorSidePanel({
 }: TreeEditorSidePanelProps) {
   const [relationKind, setRelationKind] = useState<RelationKind>("father");
   const [entryMode, setEntryMode] = useState<EntryMode>("existing");
+  const [selectedRelatedPersonId, setSelectedRelatedPersonId] = useState("");
 
   if (!selectedNode) {
     return (
@@ -538,7 +753,10 @@ export function TreeEditorSidePanel({
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => setRelationKind(option.value)}
+                  onClick={() => {
+                    setRelationKind(option.value);
+                    setSelectedRelatedPersonId("");
+                  }}
                   className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
                     relationKind === option.value
                       ? "border-slate-900 bg-slate-900 text-white"
@@ -572,7 +790,10 @@ export function TreeEditorSidePanel({
                 value="new"
                 checked={entryMode === "new"}
                 disabled={!canUseNewPersonFlow}
-                onChange={() => setEntryMode("new")}
+                onChange={() => {
+                  setEntryMode("new");
+                  setSelectedRelatedPersonId("");
+                }}
               />
               Tạo thành viên mới
             </label>
@@ -590,6 +811,8 @@ export function TreeEditorSidePanel({
                 relationKind={relationKind}
                 people={people}
                 selectedPersonId={selectedNode.personId}
+                selectedRelatedPersonId={selectedRelatedPersonId}
+                onSelectPerson={setSelectedRelatedPersonId}
               />
               <SubmitButton />
             </form>
@@ -602,7 +825,15 @@ export function TreeEditorSidePanel({
                 value={selectedNode.personId}
               />
               <input type="hidden" name="relation_kind" value={relationKind} />
-              <NewPersonFields relationKind={relationKind} />
+              <NewPersonFields
+                relationKind={relationKind}
+                people={people}
+                selectedPersonId={selectedNode.personId}
+                onUseExistingPerson={(personId) => {
+                  setSelectedRelatedPersonId(personId);
+                  setEntryMode("existing");
+                }}
+              />
               <SubmitButton />
             </form>
           )}

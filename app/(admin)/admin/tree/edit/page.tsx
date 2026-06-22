@@ -26,7 +26,15 @@ type AdminTreeEditPageProps = {
 
 function savedMessage(saved?: string) {
   if (saved === "inline_person_created") {
-    return "Đã thêm thành viên và gắn quan hệ vào cây gia phả.";
+    return "Đã thêm thành viên mới và gắn quan hệ vào cây gia phả.";
+  }
+
+  if (
+    saved === "parent_added" ||
+    saved === "child_added" ||
+    saved === "spouse_added"
+  ) {
+    return "Đã gắn quan hệ với thành viên đã có trong cây gia phả.";
   }
 
   return saved ? `Đã lưu thay đổi: ${saved}` : null;

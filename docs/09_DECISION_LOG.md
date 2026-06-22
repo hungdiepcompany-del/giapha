@@ -1,5 +1,26 @@
 # Decision Log
 
+## Decision 159 - Tree quick-create duplicate suggestion stays client-side and advisory
+
+Chon:
+
+Plan A-05 may suggest similar existing members while an operator quick-creates a
+relative in the Tree Editor, but the suggestion must remain advisory and use
+only data already loaded for the Tree Editor. Choosing an existing member
+switches to the existing relationship attach path; choosing to continue creates
+a new person through the existing `createPerson()` flow.
+
+The bundle does not add a dedupe table, unique constraint, database merge flow,
+new route, permission key, schema change or service Worker.
+
+Ly do:
+
+- Duplicate prevention is useful at the point of quick creation, but family
+  trees can legitimately contain people with the same name.
+- Keeping matching advisory avoids changing genealogy business rules.
+- Using the already loaded graph preserves the current permission and privacy
+  boundary.
+
 ## Decision 158 - Tree inline create person reuses existing services
 
 Chon:

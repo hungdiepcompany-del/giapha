@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-06-22 - PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION
+
+- Added `docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md`.
+- Added `scripts/check-tree-duplicate-suggestion-ux.cjs` and
+  `npm run check:tree-duplicate-suggestion-ux`.
+- A-04 authenticated/browser smoke was safe-skipped with
+  `A04_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_ENV` because no explicit
+  browser/auth smoke environment was available in the Codex execution context.
+- Static/source review found no true A-03 blocker before A-05: existing-member
+  mode still uses existing relationship actions, new-member mode still uses
+  `createPersonAndAttachFromTreeAction`, and UUIDs remain internal.
+- Added A-05 duplicate suggestion UX to the Tree Editor quick-create form using
+  only people already loaded in the admin tree graph.
+- Matching is advisory and local: normalized Vietnamese names, optional
+  birth/death year proximity, and at most five suggestions.
+- Choosing `Dùng thành viên này để gắn quan hệ` switches to existing-member mode
+  and submits the internal personId through the existing relationship action;
+  no new person is created.
+- Choosing `Vẫn tạo thành viên mới` keeps the existing quick-create behavior:
+  create through `createPerson()` and attach through existing relationship
+  services.
+- Added success copy for the existing-member path and clarified new-member
+  success copy.
+- Boundary: no migration, no `.sql`, no DB apply, no seed/backfill, no schema
+  change, no auth/permission logic change, no Worker created, no
+  OpenNext/Wrangler config change, no runtime dependency added, no deploy and no
+  push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - Plan A-03 - Tree Inline Create Person UX
 
 - Added `docs/PLAN_A03_TREE_INLINE_CREATE_PERSON_UX.md`.

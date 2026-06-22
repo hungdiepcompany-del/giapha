@@ -55,13 +55,23 @@ function gitShowHead(relativePath) {
 }
 
 const allowedChangedFiles = new Set([
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "docs/PLAN_A04_A05_TREE_EDITOR_SMOKE_AND_DUPLICATE_SUGGESTION.md",
   "docs/131_PRODUCTION_MONITORING_AND_AUTH_SMOKE_PREPARATION.md",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
+  "scripts/check-tree-inline-create-person-ux.cjs",
+  "scripts/check-tree-relationship-picker-ux.cjs",
+  "scripts/check-vietnamese-cultural-ui-ux.cjs",
+  "scripts/check-authenticated-smoke-result.cjs",
+  "scripts/check-post-runtime-ui-deploy-readiness.cjs",
   "scripts/check-production-monitoring-auth-smoke-prep.cjs",
+  "scripts/check-routine-production-monitoring-snapshot.cjs",
 ]);
 
 const doc = readFile("docs/131_PRODUCTION_MONITORING_AND_AUTH_SMOKE_PREPARATION.md");
