@@ -311,7 +311,6 @@ create table if not exists public.merge_dedupe_audit_events (
     foreign key (session_id, merge_id)
     references public.merge_dedupe_sessions(id, merge_id)
     on delete restrict
-  )
 );
 
 create index if not exists merge_dedupe_audit_events_merge_idx
@@ -373,7 +372,6 @@ create table if not exists public.merge_dedupe_rollback_manifests (
     foreign key (session_id, merge_id)
     references public.merge_dedupe_sessions(id, merge_id)
     on delete restrict
-  )
 );
 
 create index if not exists merge_dedupe_rollback_manifests_merge_idx

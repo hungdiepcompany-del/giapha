@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-06-22 - Owner Review A-12 - APPROVED
+
+- Reviewed migration, check SQL, static checker and owner apply/backup/rollback
+  plan against A-10/A-11 requirements.
+- Found two extra closing parentheses after composite FK clauses in the
+  committed migration; retained the pre-existing correction and synchronized
+  the A-11 draft.
+- Updated migration fingerprint to
+  `9645F8E69068C73332A9CCE74E91449E06271734083A1C419176CBBDCA1C75B9`.
+- Tightened the A-12 checker to reject the invalid composite-FK closing pattern.
+- Result: `APPROVED`. Owner may grant
+  `APPROVE_A12_MERGE_DEDUPE_DB_APPLY` for a separate exact-file apply/read-only
+  verification phase. Marker status is `NOT_GRANTED_BY_THIS_REVIEW`.
+- DB remains not applied; check SQL was not run on DB; runtime remains closed.
+- Validation PASS: A-10/A-11/A-12 checkers; migration order and related
+  Vietnamese genealogy schema/migration gates; Tree duplicate and
+  polish/dedupe/data-quality gates; typecheck; lint; workspace-root production
+  build; diff and cached-diff checks.
+- A-09 returned expected safe-skip
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`; this is not a
+  review failure.
+- Boundary: migration/check/docs/checker only; no seed/backfill, data mutation,
+  permission runtime, route/action/service, Worker/config, dependency, deploy or
+  push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - A-12 Bundle - Merge/Dedupe Real Migration Candidate
 
 - Received `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` for migration candidate,

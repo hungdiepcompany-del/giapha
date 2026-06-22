@@ -1,5 +1,30 @@
 # Decision Log
 
+## Decision 166 - A-12 migration review is approved after FK syntax correction
+
+Status: `ACTIVE`
+
+Chon:
+
+A-12 Review concludes `APPROVED` after removing two extra closing parentheses
+from the audit and rollback composite foreign-key definitions, synchronizing the
+A-11 draft and updating the reviewed fingerprint/checker.
+
+Owner may next grant:
+
+`APPROVE_A12_MERGE_DEDUPE_DB_APPLY`
+
+That marker permits only the exact reviewed migration apply and read-only check
+SQL in a separate phase. It does not register permissions, add policies or open
+runtime merge/dedupe.
+
+Ly do:
+
+- A syntactically invalid migration must never reach an apply gate even when its
+  schema intent is correct.
+- Fingerprint and schema-parity checks must track the corrected artifact.
+- DB apply, permission activation and runtime remain separate owner gates.
+
 ## Decision 165 - A-12 creates a real migration candidate without DB apply
 
 Status: `ACTIVE`

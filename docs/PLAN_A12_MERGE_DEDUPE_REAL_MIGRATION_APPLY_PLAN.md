@@ -25,7 +25,7 @@ the A-11 reviewed six-table schema and tightening constraints.
 
 Migration SHA256:
 
-`5ADECCDAA0396E42CFDED01574B6FCD785617CF01CDCD7F894ECEEF3824A525C`
+`9645F8E69068C73332A9CCE74E91449E06271734083A1C419176CBBDCA1C75B9`
 
 The migration is additive only. It contains no DML, seed, backfill, destructive
 SQL, function, procedure, trigger, grant, policy or `people.merge.*`
@@ -203,6 +203,28 @@ build and diff gates pass. Do not push.
 - Worker/OpenNext/Wrangler/dependency/deploy/push.
 
 Runtime merge/dedupe remains closed.
+
+## Owner review result
+
+A-12 Review result: `APPROVED`.
+
+Review found and corrected two extra closing parentheses after the composite
+audit/rollback foreign-key definitions. The correction was synchronized to the
+A-11 draft, the fingerprint was updated, and the A-12 checker now rejects that
+invalid FK closing pattern.
+
+Review otherwise confirms:
+
+- six-table schema parity and required gates/coverage;
+- no DML, seed/backfill, destructive SQL, routine, trigger, grant, policy or
+  permission registration;
+- RLS fail-closed on all six tables;
+- read-only nine-row catalog verification;
+- pre-apply backup, exact one-file apply, expected PASS and rollback/no-go plan.
+
+Owner may grant `APPROVE_A12_MERGE_DEDUPE_DB_APPLY` for a separate phase that
+applies only this reviewed migration and runs the read-only check SQL. Marker
+status: `NOT_GRANTED_BY_THIS_REVIEW`. Runtime merge/dedupe remains closed.
 
 ## Recommended next phase
 

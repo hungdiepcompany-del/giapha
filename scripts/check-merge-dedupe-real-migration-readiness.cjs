@@ -11,7 +11,7 @@ const draftPath = "scripts/merge-dedupe-schema-candidate.sql.draft";
 const checkSqlPath = "db/checks/check_merge_dedupe_schema.sql";
 const docPath = "docs/PLAN_A12_MERGE_DEDUPE_REAL_MIGRATION_APPLY_PLAN.md";
 const expectedSha256 =
-  "5ADECCDAA0396E42CFDED01574B6FCD785617CF01CDCD7F894ECEEF3824A525C";
+  "9645F8E69068C73332A9CCE74E91449E06271734083A1C419176CBBDCA1C75B9";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -160,6 +160,7 @@ for (const pattern of [
   /\bgrant\s+/i,
   /\balter\s+default\s+privileges\b/i,
   /\bpeople\.merge\.(?:suggest|review|approve|execute|rollback)\b/i,
+  /references\s+public\.merge_dedupe_sessions\s*\(id,\s*merge_id\)\s*on\s+delete\s+restrict\s*\)\s*\);/i,
 ]) {
   rejectPattern(migrationCode, pattern, `unsafe migration SQL ${pattern}`);
 }

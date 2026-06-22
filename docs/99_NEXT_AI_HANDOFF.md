@@ -1,5 +1,25 @@
 # Next AI Handoff
 
+## 2026-06-22 - Owner Review A-12 approved
+
+- Review result: `APPROVED`.
+- Review found and corrected two extra `)` tokens after the audit/rollback
+  composite FK clauses; A-11 draft parity and checker regression coverage were
+  updated.
+- Corrected migration SHA256:
+  `9645F8E69068C73332A9CCE74E91449E06271734083A1C419176CBBDCA1C75B9`.
+- Migration safety, six-table coverage, fail-closed RLS, read-only nine-row check
+  SQL and backup/apply/rollback plan are approved for the next owner gate.
+- Owner may grant `APPROVE_A12_MERGE_DEDUPE_DB_APPLY` in a separate phase.
+  Marker status: `NOT_GRANTED_BY_THIS_REVIEW`; runtime remains closed.
+- DB is not applied and check SQL was not run on DB.
+- A-10/A-11/A-12, migration/schema and Tree dedupe/data-quality checkers plus
+  typecheck, lint, workspace-root production build and diff gates PASS. A-09 is
+  the expected missing-explicit-session safe-skip.
+- Boundary: no seed/backfill, data mutation, permission runtime,
+  route/action/service, Worker/config/dependency/deploy/push. `PLANNING.MD` was
+  not read or committed.
+
 ## 2026-06-22 - A-12 Bundle - Merge/Dedupe Real Migration Candidate completed
 
 - Owner marker `APPROVE_A11_MERGE_DEDUPE_SCHEMA_CANDIDATE` was received for file
@@ -8,7 +28,7 @@
   and read-only check `db/checks/check_merge_dedupe_schema.sql`.
 - Migration schema body matches the approved A-11 draft, all six tables enable
   RLS, and no policy/permission/DML/seed/function/trigger/grant exists.
-- Migration SHA256:
+- Migration SHA256 at A-12 bundle commit (superseded by Owner Review correction):
   `5ADECCDAA0396E42CFDED01574B6FCD785617CF01CDCD7F894ECEEF3824A525C`.
 - Added A-12 static checker/package command and owner apply plan with exact
   backup, one-file apply, 9-row catalog verification and rollback/no-go gates.
