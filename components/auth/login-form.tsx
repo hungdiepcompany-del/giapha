@@ -21,6 +21,10 @@ const LOGIN_REASON_MESSAGES: Record<string, string> = {
     "Magic link đã hết hạn. Vui lòng gửi lại link đăng nhập mới.",
   provider_disabled:
     "Google OAuth chưa được bật trong Supabase Dashboard.",
+  email_rate_limit:
+    "Hệ thống gửi email đang giới hạn tần suất. Vui lòng chờ một lát rồi gửi lại magic link.",
+  invalid_email:
+    "Email chưa đúng định dạng. Vui lòng kiểm tra lại địa chỉ email.",
 };
 
 function getLoginReasonMessage(reason: string) {
@@ -71,7 +75,7 @@ export function LoginForm({
 
       if (error) {
         setStatus("error");
-        setMessage(error.message);
+        setMessage(getLoginReasonMessage(error.code ?? "auth_callback_failed"));
         return;
       }
 
@@ -79,7 +83,11 @@ export function LoginForm({
       setMessage("Đã gửi magic link. Vui lòng kiểm tra email.");
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Không thể gửi link.");
+      setMessage(
+        error instanceof Error
+          ? "Không thể gửi magic link lúc này. Vui lòng kiểm tra kết nối và thử lại."
+          : "Không thể gửi magic link lúc này. Vui lòng thử lại.",
+      );
     }
   }
 
@@ -112,7 +120,7 @@ export function LoginForm({
       setGoogleStatus("error");
       setMessage(
         error instanceof Error
-          ? error.message
+          ? "Không thể bắt đầu đăng nhập Google. Vui lòng thử lại."
           : "Không thể bắt đầu đăng nhập Google.",
       );
     }
@@ -146,7 +154,7 @@ export function LoginForm({
           : "Đăng nhập với Google"}
       </button>
 
-      <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+      <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-normal text-slate-400">
         <span className="h-px flex-1 bg-slate-200" />
         <span>hoặc</span>
         <span className="h-px flex-1 bg-slate-200" />

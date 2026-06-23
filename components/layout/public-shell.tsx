@@ -17,12 +17,12 @@ export function PublicShell({ children }: PublicShellProps) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-[#f6f7f1] text-slate-900">
-      <header className="border-b border-slate-200 bg-white/95">
+    <div className="min-h-screen bg-[#f4efe6] text-stone-900">
+      <header className="border-b border-stone-200 bg-[#fffaf0]/95">
         <div className="mx-auto flex min-h-16 max-w-7xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href="/"
-            className="text-sm font-bold uppercase tracking-[0.16em] text-slate-950"
+            className="text-base font-black uppercase tracking-normal text-stone-950"
           >
             WEB GIA PHẢ
           </Link>
@@ -33,8 +33,8 @@ export function PublicShell({ children }: PublicShellProps) {
                 href={item.href}
                 className={
                   pathname === item.href
-                    ? "border border-slate-900 bg-slate-900 px-3 py-2 text-white"
-                    : "border border-slate-200 bg-white px-3 py-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-950"
+                    ? "border border-stone-900 bg-stone-900 px-3 py-2 text-white"
+                    : "border border-stone-200 bg-white px-3 py-2 text-stone-700 transition hover:border-stone-400 hover:text-stone-950"
                 }
               >
                 {item.label}
@@ -42,9 +42,9 @@ export function PublicShell({ children }: PublicShellProps) {
             ))}
             <Link
               href="/auth/login"
-              className="border border-emerald-700 bg-emerald-700 px-3 py-2 text-white transition hover:bg-emerald-800"
+              className="border border-emerald-800 bg-emerald-800 px-3 py-2 text-white transition hover:bg-emerald-900"
             >
-              Đăng nhập quản trị
+              Vào quản trị
             </Link>
           </nav>
         </div>

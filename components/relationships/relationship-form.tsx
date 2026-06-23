@@ -115,6 +115,9 @@ export function RelationshipForm({
         <h3 className="text-base font-semibold text-slate-950">
           Tạo đơn vị gia đình
         </h3>
+        <p className="text-sm leading-6 text-slate-600">
+          Dùng khi cần một nhóm cha/mẹ và con. Có thể tạo gia đình trước rồi gắn người sau.
+        </p>
         <input type="hidden" name="return_to" value={returnTo} />
         <label className="block">
           <span className="text-sm font-semibold text-slate-800">
@@ -123,8 +126,11 @@ export function RelationshipForm({
           <input
             name="family_code"
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-            placeholder="FAM-001"
+            placeholder="Ví dụ: FAM-001"
           />
+          <p className="mt-1 text-xs text-slate-500">
+            Có thể để trống nếu gia đình chưa có quy ước mã riêng.
+          </p>
         </label>
         <label className="block">
           <span className="text-sm font-semibold text-slate-800">
@@ -133,7 +139,7 @@ export function RelationshipForm({
           <input
             name="family_label"
             className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-            placeholder="Gia đình ông/bà..."
+            placeholder="Ví dụ: Gia đình ông Bảy và bà Lan"
           />
         </label>
         <label className="block">
@@ -175,6 +181,9 @@ export function RelationshipForm({
         <h3 className="text-base font-semibold text-slate-950">
           {mode === "person" ? "Thêm cha/mẹ cho thành viên này" : "Thêm cha/mẹ"}
         </h3>
+        <p className="text-sm leading-6 text-slate-600">
+          Chọn đúng đơn vị gia đình trước khi gắn cha/mẹ để tránh nối nhầm nhánh.
+        </p>
         <input type="hidden" name="return_to" value={returnTo} />
         {contextPersonId ? (
           <input type="hidden" name="context_person_id" value={contextPersonId} />
@@ -195,6 +204,11 @@ export function RelationshipForm({
               </option>
             ))}
           </select>
+          {families.length === 0 ? (
+            <p className="mt-1 text-xs text-amber-700">
+              Chưa có đơn vị gia đình. Hãy tạo gia đình trước rồi quay lại gắn cha/mẹ.
+            </p>
+          ) : null}
         </label>
         <PersonSelect
           label="Chọn cha/mẹ"
@@ -247,6 +261,9 @@ export function RelationshipForm({
         <h3 className="text-base font-semibold text-slate-950">
           {mode === "person" ? "Thêm con cho gia đình của thành viên" : "Thêm con"}
         </h3>
+        <p className="text-sm leading-6 text-slate-600">
+          Con được gắn vào một đơn vị gia đình, không gắn trực tiếp bằng cách kéo cạnh trên cây.
+        </p>
         <input type="hidden" name="return_to" value={returnTo} />
         {contextPersonId ? (
           <input type="hidden" name="context_person_id" value={contextPersonId} />
@@ -267,6 +284,11 @@ export function RelationshipForm({
               </option>
             ))}
           </select>
+          {families.length === 0 ? (
+            <p className="mt-1 text-xs text-amber-700">
+              Chưa có đơn vị gia đình. Hãy tạo gia đình trước rồi quay lại gắn con.
+            </p>
+          ) : null}
         </label>
         <PersonSelect
           label="Chọn con"

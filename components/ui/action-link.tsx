@@ -9,9 +9,9 @@ const variantClasses = {
   danger:
     "border-red-700 bg-white text-red-700 hover:bg-red-50",
   primary:
-    "border-slate-900 bg-slate-900 text-white hover:bg-slate-700",
+    "border-stone-900 bg-stone-900 text-white hover:bg-stone-700",
   secondary:
-    "border-slate-300 bg-white text-slate-900 hover:border-slate-900 hover:bg-slate-50",
+    "border-stone-300 bg-white text-stone-900 hover:border-stone-900 hover:bg-[#fffaf0]",
 };
 
 export function ActionLink({

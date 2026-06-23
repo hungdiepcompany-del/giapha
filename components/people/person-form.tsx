@@ -71,6 +71,9 @@ export function PersonForm({
 
       <SectionCard>
         <h2 className="text-lg font-bold text-slate-950">Thông tin cơ bản</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Nên nhập họ tên đầy đủ trước, tên hiển thị chỉ dùng khi gia đình quen gọi bằng tên ngắn.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Họ tên *</FieldLabel>
@@ -80,6 +83,7 @@ export function PersonForm({
               readOnly={readOnly}
               defaultValue={person?.full_name ?? ""}
               className={inputClass}
+              placeholder="Ví dụ: Nguyễn Văn An"
             />
           </label>
 
@@ -90,6 +94,7 @@ export function PersonForm({
               readOnly={readOnly}
               defaultValue={person?.display_name ?? ""}
               className={inputClass}
+              placeholder="Ví dụ: Ông An"
             />
           </label>
 
@@ -126,6 +131,9 @@ export function PersonForm({
         <h2 className="text-lg font-bold text-slate-950">
           Ngày sinh / ngày mất
         </h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Nếu chỉ biết năm hoặc ước lượng, chọn độ chính xác phù hợp để người sau hiểu nguồn dữ liệu.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Ngày sinh</FieldLabel>
@@ -187,6 +195,9 @@ export function PersonForm({
         <h2 className="text-lg font-bold text-slate-950">
           Quê quán / chi nhánh
         </h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Thông tin chi/nhánh và đời thứ giúp lọc, tìm và sắp xếp cây gia phả dễ hơn.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Nơi sinh</FieldLabel>
@@ -195,6 +206,7 @@ export function PersonForm({
               readOnly={readOnly}
               defaultValue={person?.birth_place ?? ""}
               className={inputClass}
+              placeholder="Nơi sinh, nếu gia đình biết rõ"
             />
           </label>
 
@@ -205,6 +217,7 @@ export function PersonForm({
               readOnly={readOnly}
               defaultValue={person?.home_town ?? ""}
               className={inputClass}
+              placeholder="Quê quán hoặc nguyên quán"
             />
           </label>
 
@@ -215,6 +228,7 @@ export function PersonForm({
               readOnly={readOnly}
               defaultValue={person?.branch_name ?? ""}
               className={inputClass}
+              placeholder="Ví dụ: Chi trưởng, nhánh miền Nam"
             />
           </label>
 
@@ -234,6 +248,9 @@ export function PersonForm({
 
       <SectionCard>
         <h2 className="text-lg font-bold text-slate-950">Riêng tư / ghi chú</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Chọn phạm vi hiển thị trước khi ghi tiểu sử. Ghi chú riêng tư chỉ dành cho quản trị, không dùng cho trang công khai.
+        </p>
         <div className="mt-4 grid gap-4">
           <label className="block">
             <FieldLabel>Phạm vi hiển thị</FieldLabel>
@@ -259,6 +276,7 @@ export function PersonForm({
               defaultValue={person?.short_bio ?? ""}
               rows={4}
               className={`${inputClass} min-h-28`}
+              placeholder="Tóm tắt ngắn có thể hiển thị theo phạm vi đã chọn"
             />
           </label>
 
@@ -270,6 +288,7 @@ export function PersonForm({
               defaultValue={person?.notes_private ?? ""}
               rows={4}
               className={`${inputClass} min-h-28`}
+              placeholder="Ghi chú nội bộ, nguồn kiểm chứng hoặc việc cần hỏi lại gia đình"
             />
           </label>
         </div>
@@ -284,7 +303,9 @@ export function PersonForm({
             {submitLabel}
           </button>
         ) : null}
-        <ActionLink href="/admin/people">Hủy</ActionLink>
+        <ActionLink href="/admin/people">
+          {readOnly ? "Quay lại danh sách" : "Hủy thay đổi"}
+        </ActionLink>
       </div>
     </form>
   );

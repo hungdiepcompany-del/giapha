@@ -13,7 +13,7 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
       <section className="mx-auto grid min-h-[calc(100vh-96px)] w-full max-w-7xl content-center gap-8 px-6 py-14">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div className="space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            <p className="text-sm font-semibold uppercase tracking-normal text-emerald-700">
               Gia phả số cho gia đình
             </p>
             <h1 className="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 sm:text-5xl">

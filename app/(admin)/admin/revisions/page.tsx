@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 import { AdminShell } from "@/components/layout/admin-shell";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusCallout } from "@/components/ui/status-callout";
 import type { RevisionAction, RevisionListFilter } from "@/lib/family/revision-types";
 import { listRevisions } from "@/lib/family/revision-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
@@ -92,18 +95,11 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
       permissions={context.permissions}
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-10">
-        <div className="border-b border-slate-200 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            Nền tảng lịch sử chỉnh sửa
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Lịch sử chỉnh sửa
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
-            Theo dõi ai đã sửa dữ liệu gia phả, sửa lúc nào và thay đổi trước/sau.
-            Phase này chỉ xem lịch sử; phục hồi thật chưa được bật.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Nền tảng lịch sử chỉnh sửa"
+          title="Lịch sử chỉnh sửa"
+          description="Theo dõi ai đã sửa dữ liệu gia phả, sửa lúc nào và thay đổi trước/sau. Phase này chỉ xem lịch sử; phục hồi thật chưa được bật."
+        />
 
         <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 md:grid-cols-6">
           <label className="block">
@@ -232,14 +228,15 @@ export default async function RevisionsPage({ searchParams }: RevisionsPageProps
                 </table>
               </div>
             ) : (
-              <div className="border border-slate-200 bg-white p-6 text-sm text-slate-700">
-                Chưa có bản ghi lịch sử phù hợp bộ lọc.
-              </div>
+              <EmptyState
+                title="Chưa có bản ghi lịch sử phù hợp"
+                description="Hãy xóa bớt bộ lọc hoặc kiểm tra lại khoảng thời gian nếu bạn đang tìm một thay đổi cụ thể."
+              />
             )
           ) : (
-            <div className="border border-amber-200 bg-amber-50 p-6 text-amber-900">
+            <StatusCallout tone="warning">
               {result.error}
-            </div>
+            </StatusCallout>
           )}
         </div>
       </section>

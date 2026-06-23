@@ -1,5 +1,73 @@
 # AI Work Log
 
+## 2026-06-23 - A-14A - Related Member Add UX Overhaul
+
+- Added `docs/PLAN_A14A_RELATED_MEMBER_ADD_UX.md` for the focused Tree Editor
+  related-member add UX phase and classic modern genealogy style direction.
+- Local branch status before continuing: `main...origin/main` ahead 0 / behind
+  0. No push was attempted.
+- Expanded `components/tree/tree-editor-side-panel.tsx` from a shortened create
+  form into two modes: `Thêm nhanh` and `Nhập chi tiết hơn`.
+- Quick mode keeps fast tree-building fields: full name, gender, birth/death
+  year, short note, duplicate suggestion and primary `Thêm vào cây`.
+- Detail mode adds only existing person fields: display name, is living,
+  birth/death date, birth place, home town, branch name, generation number,
+  visibility and admin-only private note.
+- Updated `app/(admin)/admin/tree/edit/actions.ts` to pass those existing fields
+  into `createPerson()` without schema change, migration or new service.
+- Kept unsupported fields out of runtime: death place, aliases beyond
+  `display_name`, sibling order, "other related person", sibling action and
+  inline lineage membership assignment are documented as later schema/service
+  candidates.
+- Applied classic modern genealogy style through warm paper/stone palette in
+  global CSS, admin/public shells and shared UI primitives.
+- Added `scripts/check-a14a-related-member-add-ux.cjs` and
+  `npm run check:a14a-related-member-add-ux`.
+- Validation PASS: A-14A/A-14, UI polish, Vietnamese UI, Vietnamese cultural
+  UI, Tree relationship picker, inline create, duplicate suggestion,
+  polish/dedupe/data-quality, A-10/A-11/A-12 merge/dedupe, env safe,
+  migrations, typecheck, lint, root build and diff checks. A-09 returned the
+  expected missing-explicit-auth-session safe-skip.
+- Boundary: no migration, no `.sql`, no DB apply, no check SQL run on DB, no
+  seed/backfill, no runtime merge/dedupe, no route/action/service merge/dedupe,
+  no permission runtime registration, no Worker/OpenNext/Wrangler config
+  change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+- `PLANNING.MD` was not read or committed.
+
+## 2026-06-23 - A-14 Bundle - UI/UX Overhaul
+
+- Added `docs/PLAN_A14_UI_UX_OVERHAUL.md` for A-14A through A-14J:
+  UI/UX audit, design direction, layout/navigation polish, Tree Editor UX,
+  forms/tables/detail polish, Vietnamese copy/accessibility/safety, checker,
+  docs/handoff and validation boundary.
+- Polished admin navigation into grouped sidebar sections: daily work, tree
+  surfaces and data safety. Routes were not changed and no feature was hidden.
+- Improved shared UI primitives: page header typography, empty state spacing,
+  public/admin shell labels and keyboard focus state.
+- Improved People CRUD UX with filter guidance, mobile card fallback, clearer
+  profile actions, form help text and safer privacy-note copy.
+- Improved Relationship CRUD UX with clearer family/parent-child/couple
+  distinctions, next-step empty state and warnings when no family unit exists.
+- Improved Tree Editor UX with stronger layout-vs-relationship guidance,
+  selected-person side-panel hints, warning before attaching an existing member
+  and separate pending labels for attach-existing versus create-new.
+- Improved import/login/revision/system UI copy: no raw login error message,
+  friendlier import issue labels, shared `PageHeader`/`EmptyState`/`StatusCallout`
+  on secondary admin pages.
+- Added `scripts/check-a14-ui-ux-overhaul.cjs` and
+  `npm run check:a14-ui-ux-overhaul`.
+- Updated Tree/A-10/A-11/A-12 checker compatibility allowlists so A-14 UI files
+  do not count as drift while SQL, migration, Worker/config/deploy and
+  merge/dedupe runtime remain blocked.
+- Boundary: no migration, no `.sql`, no DB apply, no check SQL run on DB, no
+  seed/backfill, no runtime merge/dedupe, no route/action/service merge/dedupe,
+  no permission runtime registration, no Worker/OpenNext/Wrangler config
+  change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`; A-13
+  DB merge/dedupe remains not applied and runtime remains closed.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-22 - A-13 Merge/Dedupe DB Apply - BLOCKED
 
 - Received `APPROVE_A12_MERGE_DEDUPE_DB_APPLY`.

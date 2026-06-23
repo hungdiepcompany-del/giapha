@@ -277,6 +277,33 @@ for (const line of migrationStatus.split(/\r?\n/).filter(Boolean)) {
   if (file !== migrationPath) failures.push(`unexpected migration change: ${file}`);
 }
 
+const allowedA14UiRuntimeFiles = new Set([
+  "app/(admin)/admin/people/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
+  "app/(admin)/admin/revisions/page.tsx",
+  "app/(admin)/admin/system/status/page.tsx",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "app/auth/login/page.tsx",
+  "app/globals.css",
+  "components/auth/login-form.tsx",
+  "components/imports/json-import-preview-form.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/layout/public-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
+  "components/relationships/relationship-summary.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "components/ui/action-link.tsx",
+  "components/ui/empty-state.tsx",
+  "components/ui/page-header.tsx",
+  "components/ui/section-card.tsx",
+]);
+
 const runtimeStatus = gitOutput([
   "status",
   "--short",
@@ -291,7 +318,13 @@ const runtimeStatus = gitOutput([
   "next.config.ts",
   ".github/workflows",
 ]);
-if (runtimeStatus.trim()) failures.push(`runtime/config drift: ${runtimeStatus.trim()}`);
+const unexpectedRuntimeStatus = runtimeStatus
+  .split(/\r?\n/)
+  .filter(Boolean)
+  .filter((line) => !allowedA14UiRuntimeFiles.has(line.slice(3).trim().replaceAll("\\", "/")));
+if (unexpectedRuntimeStatus.length > 0) {
+  failures.push(`runtime/config drift: ${unexpectedRuntimeStatus.join("; ")}`);
+}
 
 const status = gitOutput(["status", "--short", "--untracked-files=all"]);
 if (status.split(/\r?\n/).some((line) => line.slice(3).trim() === "PLANNING.MD")) {

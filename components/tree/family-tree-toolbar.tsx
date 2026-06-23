@@ -23,7 +23,9 @@ export function FamilyTreeToolbar({
 }: FamilyTreeToolbarProps) {
   return (
     <div className="flex flex-col gap-4 border-b border-slate-200 bg-white p-4 lg:flex-row lg:items-end lg:justify-between">
-      <div className="grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
+      <div>
+        <div className="text-base font-bold text-slate-950">Tìm trong cây</div>
+        <div className="mt-1 grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
         <label className="block">
           <span className="text-sm font-semibold text-slate-800">
             Tìm người trong cây
@@ -48,6 +50,7 @@ export function FamilyTreeToolbar({
         >
           Tìm
         </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -55,7 +58,10 @@ export function FamilyTreeToolbar({
           {personCount} người / {nodeCount} nút
         </div>
         {searchStatus ? (
-          <div className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900">
+          <div
+            aria-live="polite"
+            className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900"
+          >
             {searchStatus}
           </div>
         ) : null}

@@ -33,6 +33,9 @@ export function TreeEditorToolbar({
           quan hệ gia đình.
         </div>
       </div>
+      <div className="border border-amber-200 bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-900">
+        Sau khi kéo thẻ, bấm &quot;Lưu bố cục&quot; để ghi vị trí mới. Các nút thêm người thân nằm trong bảng chi tiết bên phải.
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" onClick={onFitView} className={secondaryButton}>
           Vừa màn hình

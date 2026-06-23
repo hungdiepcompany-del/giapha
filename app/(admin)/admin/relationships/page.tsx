@@ -104,6 +104,14 @@ export default async function RelationshipsPage({
                       Bạn cần quyền xem thành viên để chọn người khi tạo quan hệ.
                     </StatusCallout>
                   ) : null}
+                  <div className="border-b border-slate-200 pb-3">
+                    <h2 className="text-xl font-bold text-slate-950">
+                      Thêm quan hệ mới
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Nên tạo đơn vị gia đình trước, sau đó gắn cha/mẹ và con. Quan hệ đôi có thể tạo độc lập.
+                    </p>
+                  </div>
                   <RelationshipForm
                     families={result.data.families}
                     people={people}

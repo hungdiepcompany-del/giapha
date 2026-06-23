@@ -15,6 +15,7 @@ import type {
 
 type RelationKind = "father" | "mother" | "child" | "spouse";
 type EntryMode = "existing" | "new";
+type CreateMode = "quick" | "detail";
 
 type TreeEditorSidePanelProps = {
   graph: FamilyTreeGraph;
@@ -156,6 +157,29 @@ function defaultGender(relationKind: RelationKind) {
   }
 
   return "unknown";
+}
+
+function relationLabel(relationKind: RelationKind) {
+  if (relationKind === "father") return "cha";
+  if (relationKind === "mother") return "mẹ";
+  if (relationKind === "child") return "con";
+  return "vợ/chồng/bạn đời";
+}
+
+function relationContext(relationKind: RelationKind, selectedName: string) {
+  if (relationKind === "father") {
+    return `Người mới sẽ được gắn là cha của ${selectedName}.`;
+  }
+
+  if (relationKind === "mother") {
+    return `Người mới sẽ được gắn là mẹ của ${selectedName}.`;
+  }
+
+  if (relationKind === "child") {
+    return `Người mới sẽ được gắn là con của ${selectedName}.`;
+  }
+
+  return `Người mới sẽ được gắn là vợ/chồng/bạn đời của ${selectedName}.`;
 }
 
 function peopleById(graph: FamilyTreeGraph) {
@@ -454,7 +478,13 @@ function RelatedPersonPicker({
   );
 }
 
-function SubmitButton() {
+function SubmitButton({
+  label = "Lưu và gắn quan hệ",
+  pendingLabel = "Đang lưu quan hệ...",
+}: {
+  label?: string;
+  pendingLabel?: string;
+}) {
   const { pending } = useFormStatus();
 
   return (
@@ -463,7 +493,7 @@ function SubmitButton() {
       disabled={pending}
       className="min-h-11 border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-500"
     >
-      {pending ? "Đang lưu thành viên..." : "Lưu và gắn quan hệ"}
+      {pending ? pendingLabel : label}
     </button>
   );
 }
@@ -621,50 +651,110 @@ function NewPersonFields({
   relationKind,
   people,
   selectedPersonId,
+  selectedPersonName,
   onUseExistingPerson,
 }: {
   relationKind: RelationKind;
   people: TreePersonNode[];
   selectedPersonId: string;
+  selectedPersonName: string;
   onUseExistingPerson: (personId: string) => void;
 }) {
   const [fullName, setFullName] = useState("");
+  const [createMode, setCreateMode] = useState<CreateMode>("quick");
   const [birthYear, setBirthYear] = useState("");
   const [deathYear, setDeathYear] = useState("");
+  const selectedRelationLabel = relationLabel(relationKind);
+  const isDetail = createMode === "detail";
 
   return (
-    <div className="grid gap-3">
-      <label className="block">
-        <span className="text-sm font-semibold text-slate-800">Họ và tên *</span>
-        <input
-          name="full_name"
-          required
-          value={fullName}
-          onChange={(event) => setFullName(event.target.value)}
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          placeholder="Nhập họ và tên thành viên..."
-        />
-      </label>
-      <label className="block">
-        <span className="text-sm font-semibold text-slate-800">
-          Chọn giới tính
-        </span>
-        <select
-          key={relationKind}
-          name="gender"
-          defaultValue={defaultGender(relationKind)}
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+    <div className="grid gap-4">
+      <input type="hidden" name="form_mode" value={createMode} />
+      <div className="border border-stone-200 bg-[#fffaf0] p-3 text-sm leading-6 text-stone-800">
+        <div className="font-bold text-stone-950">
+          Bạn đang thêm {selectedRelationLabel} cho: {selectedPersonName}
+        </div>
+        <div className="mt-1">{relationContext(relationKind, selectedPersonName)}</div>
+        <div className="mt-1 text-stone-600">
+          Kiểm tra kỹ để tránh gắn nhầm quan hệ trong gia phả.
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Chọn cách nhập thành viên mới">
+        <button
+          type="button"
+          onClick={() => setCreateMode("quick")}
+          className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
+            createMode === "quick"
+              ? "border-stone-900 bg-stone-900 text-white"
+              : "border-stone-300 bg-white text-stone-800"
+          }`}
         >
-          {genderOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+          Thêm nhanh
+        </button>
+        <button
+          type="button"
+          onClick={() => setCreateMode("detail")}
+          className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
+            createMode === "detail"
+              ? "border-stone-900 bg-stone-900 text-white"
+              : "border-stone-300 bg-white text-stone-800"
+          }`}
+        >
+          Nhập chi tiết hơn
+        </button>
+      </div>
+
+      <div className="grid gap-3">
+        <label className="block">
+          <span className="text-sm font-semibold text-slate-800">Họ và tên *</span>
+          <input
+            name="full_name"
+            required
+            value={fullName}
+            onChange={(event) => setFullName(event.target.value)}
+            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            placeholder="Nhập họ và tên thành viên..."
+          />
+        </label>
+
+        {isDetail ? (
+          <label className="block">
+            <span className="text-sm font-semibold text-slate-800">
+              Tên thường gọi / tên hiển thị
+            </span>
+            <input
+              name="display_name"
+              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              placeholder="Ví dụ: Ông Ba, Bà Tư..."
+            />
+          </label>
+        ) : null}
+
+        <label className="block">
+          <span className="text-sm font-semibold text-slate-800">
+            Chọn giới tính
+          </span>
+          <select
+            key={relationKind}
+            name="gender"
+            defaultValue={defaultGender(relationKind)}
+            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+          >
+            {genderOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Năm sinh</span>
+          <span className="text-sm font-semibold text-slate-800">
+            {isDetail ? "Năm sinh nếu chưa biết ngày" : "Năm sinh"}
+          </span>
           <input
             name="birth_year"
             type="number"
@@ -677,7 +767,9 @@ function NewPersonFields({
           />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Năm mất</span>
+          <span className="text-sm font-semibold text-slate-800">
+            {isDetail ? "Năm mất nếu chưa biết ngày" : "Năm mất"}
+          </span>
           <input
             name="death_year"
             type="number"
@@ -690,6 +782,109 @@ function NewPersonFields({
           />
         </label>
       </div>
+
+      {isDetail ? (
+        <div className="grid gap-3 border-t border-stone-200 pt-4">
+          <label className="flex min-h-11 items-center gap-3 text-sm font-semibold text-slate-800">
+            <input
+              name="is_living"
+              type="checkbox"
+              defaultChecked
+              className="h-4 w-4"
+            />
+            Còn sống nếu chưa có ngày mất
+          </label>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Ngày sinh
+              </span>
+              <input
+                name="birth_date"
+                type="date"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Ngày mất
+              </span>
+              <input
+                name="death_date"
+                type="date"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              />
+            </label>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Nơi sinh
+              </span>
+              <input
+                name="birth_place"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                placeholder="Nơi sinh, nếu đã biết"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Quê quán
+              </span>
+              <input
+                name="home_town"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                placeholder="Quê quán hoặc nguyên quán"
+              />
+            </label>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Chi/nhánh
+              </span>
+              <input
+                name="branch_name"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                placeholder="Ví dụ: Chi trưởng"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-slate-800">
+                Đời thứ
+              </span>
+              <input
+                name="generation_number"
+                type="number"
+                min="1"
+                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                placeholder="Ví dụ: 5"
+              />
+            </label>
+          </div>
+
+          <label className="block">
+            <span className="text-sm font-semibold text-slate-800">
+              Phạm vi hiển thị
+            </span>
+            <select
+              name="visibility"
+              defaultValue="family"
+              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            >
+              <option value="family">Nội bộ gia đình</option>
+              <option value="private">Riêng tư</option>
+              <option value="public">Công khai</option>
+            </select>
+          </label>
+        </div>
+      ) : (
+        <input type="hidden" name="visibility" value="family" />
+      )}
+
       <label className="block">
         <span className="text-sm font-semibold text-slate-800">
           Ghi chú ngắn
@@ -701,6 +896,19 @@ function NewPersonFields({
           placeholder="Thông tin công khai ngắn, nếu cần..."
         />
       </label>
+      {isDetail ? (
+        <label className="block">
+          <span className="text-sm font-semibold text-slate-800">
+            Ghi chú riêng tư
+          </span>
+          <textarea
+            name="notes_private"
+            rows={3}
+            className="mt-1 w-full border border-slate-300 px-3 py-2"
+            placeholder="Chỉ hiển thị trong quản trị, không đưa ra trang công khai."
+          />
+        </label>
+      ) : null}
       <DuplicateSuggestionBox
         people={people}
         selectedPersonId={selectedPersonId}
@@ -710,14 +918,14 @@ function NewPersonFields({
         onUseExistingPerson={onUseExistingPerson}
       />
       {fullName.trim() ? (
-        <p className="text-xs text-slate-600">
+        <div className="text-xs text-slate-600">
           <button
             type="submit"
             className="min-h-10 border border-slate-300 bg-white px-3 py-2 font-semibold text-slate-800"
           >
             Vẫn tạo thành viên mới
           </button>
-        </p>
+        </div>
       ) : null}
     </div>
   );
@@ -744,6 +952,9 @@ export function TreeEditorSidePanel({
         <p className="mt-2 text-sm text-slate-600">
           Chọn một thành viên để xem quan hệ và thao tác.
         </p>
+        <div className="mt-4 border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
+          Mẹo: kéo thẻ trên cây chỉ đổi bố cục hiển thị. Muốn thêm cha/mẹ, vợ/chồng/bạn đời hoặc con, hãy chọn một người rồi dùng form trong bảng này.
+        </div>
       </aside>
     );
   }
@@ -911,7 +1122,12 @@ export function TreeEditorSidePanel({
                 selectedRelatedPersonId={selectedRelatedPersonId}
                 onSelectPerson={setSelectedRelatedPersonId}
               />
-              <SubmitButton />
+              {selectedRelatedPersonId ? (
+                <div className="border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+                  Bạn đang gắn một thành viên đã có vào quan hệ mới. Hãy đối chiếu tên, năm sinh và chi nhánh trước khi lưu để tránh nối nhầm dữ liệu gia phả.
+                </div>
+              ) : null}
+              <SubmitButton label="Gắn thành viên đã có" pendingLabel="Đang gắn quan hệ..." />
             </form>
           ) : (
             <form action={createPersonAndAttachAction} className="space-y-3">
@@ -926,12 +1142,16 @@ export function TreeEditorSidePanel({
                 relationKind={relationKind}
                 people={people}
                 selectedPersonId={selectedNode.personId}
+                selectedPersonName={personLabel(selectedNode)}
                 onUseExistingPerson={(personId) => {
                   setSelectedRelatedPersonId(personId);
                   setEntryMode("existing");
                 }}
               />
-              <SubmitButton />
+              <SubmitButton
+                label="Thêm vào cây"
+                pendingLabel="Đang lưu thành viên..."
+              />
             </form>
           )}
 

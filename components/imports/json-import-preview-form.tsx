@@ -27,7 +27,7 @@ function SummaryGrid({ preview }: { preview: ImportPreview }) {
     <div className="grid gap-3 md:grid-cols-5">
       {rows.map(([label, value]) => (
         <div key={label} className="border border-slate-200 bg-slate-50 p-3">
-          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+          <div className="text-xs font-semibold uppercase tracking-normal text-slate-500">
             {label}
           </div>
           <div className="mt-1 break-words text-sm font-bold text-slate-950">
@@ -54,9 +54,9 @@ function IssueList({ issues }: { issues: ImportValidationIssue[] }) {
         <thead className="bg-slate-100 text-slate-700">
           <tr>
             <th className="px-4 py-3">Mức</th>
-            <th className="px-4 py-3">Code</th>
-            <th className="px-4 py-3">Path</th>
-            <th className="px-4 py-3">Nội dung</th>
+            <th className="px-4 py-3">Mã kiểm tra</th>
+            <th className="px-4 py-3">Vị trí trong file</th>
+            <th className="px-4 py-3">Nội dung cần xử lý</th>
           </tr>
         </thead>
         <tbody>
@@ -162,6 +162,7 @@ export function JsonImportPreviewForm() {
           <button
             type="button"
             disabled
+            title="Chưa bật nhập dữ liệu thật vì cần giao dịch, kiểm tra cuối và log an toàn."
             className="inline-flex min-h-11 cursor-not-allowed items-center justify-center border border-slate-300 bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-500"
           >
             Xác nhận nhập dữ liệu

@@ -1,5 +1,75 @@
 # Decision Log
 
+## Decision 169 - A-14A related-member UX uses existing fields only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14A may improve the Tree Editor related-member add flow, including quick and
+detailed create modes, context copy, duplicate suggestion guidance and classic
+modern genealogy styling, but it must use only schema/service fields already
+available through `CreatePersonInput` and existing relationship actions.
+
+The classic modern style direction is approved for this phase as restrained
+warm paper, stone text, deep green and muted rust accents without adding a UI
+dependency or changing routes.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- runtime merge/dedupe;
+- permission runtime registration;
+- sibling/other-related-person runtime action without separate service design;
+- Worker/OpenNext/Wrangler/deploy change.
+
+Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+
+Ly do:
+
+- The owner needs a richer add-relative experience now, but the backup gate and
+  merge/dedupe runtime gates are still closed.
+- Existing person fields are enough to remove the "cut-off form" feeling
+  without changing schema.
+- Sibling and other relation types require explicit relationship-service design
+  before they can be safe runtime behavior.
+
+## Decision 168 - A-14 is UI/UX polish only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14 Bundle - UI/UX Overhaul is allowed to improve layout, navigation, forms,
+tables, detail pages, Tree Viewer/Tree Editor user guidance, Vietnamese copy,
+accessibility states, docs and static checker coverage only.
+
+A-14 does not authorize DB/runtime work. DB merge/dedupe vẫn chưa apply. Check
+SQL chưa chạy trên DB. Runtime merge/dedupe vẫn đóng. Permission runtime chưa
+đăng ký. Backup gate vẫn chưa bị bypass and remains
+`BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. Không deploy trong phase này.
+
+Result:
+
+- Admin navigation may be regrouped without route changes.
+- UI components may add help text, empty states, mobile fallback and safer
+  warnings.
+- Tree Editor may clarify selected person, add-relative flow, duplicate
+  suggestions and data-quality warning copy.
+- Static checkers may add A-14 compatibility allowlists for UI files while still
+  failing SQL, migration, Worker/config/deploy and merge/dedupe runtime drift.
+
+Ly do:
+
+- Owner feedback says current UI/UX is poor and needs immediate improvement.
+- A-13 DB apply is blocked by backup evidence, so A-14 must not bypass DB safety
+  gates or open merge/dedupe runtime.
+- Better UI can reduce mistaken genealogy edits without changing schema,
+  service boundary or business logic.
+
 ## Decision 167 - A-13 DB apply is blocked without backup confirmation
 
 Status: `ACTIVE`

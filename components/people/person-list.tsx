@@ -47,8 +47,70 @@ export function PersonList({
   }
 
   return (
-    <div className="overflow-x-auto border border-slate-200 bg-white shadow-sm">
-      <table className="w-full min-w-[820px] border-collapse text-left text-sm">
+    <div className="grid gap-4">
+      <div className="border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+        Đang hiển thị <span className="font-bold text-slate-950">{people.length}</span>{" "}
+        thành viên. Mở hồ sơ trước khi sửa để tránh thay đổi nhầm thông tin gia phả.
+      </div>
+
+      <div className="grid gap-3 md:hidden">
+        {people.map((person) => (
+          <article key={person.id} className="border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="font-bold text-slate-950">
+              {person.display_name || person.full_name}
+            </div>
+            {person.display_name ? (
+              <div className="mt-1 text-sm text-slate-500">{person.full_name}</div>
+            ) : null}
+            <dl className="mt-3 grid grid-cols-2 gap-2 text-sm text-slate-700">
+              <div>
+                <dt className="font-semibold text-slate-800">Đời</dt>
+                <dd>{person.generation_number ?? "Chưa rõ"}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-800">Trạng thái</dt>
+                <dd>{person.is_living ? "Còn sống" : "Đã mất"}</dd>
+              </div>
+              <div className="col-span-2">
+                <dt className="font-semibold text-slate-800">Chi/nhánh</dt>
+                <dd>{person.branch_name ?? "Chưa rõ"}</dd>
+              </div>
+              <div className="col-span-2">
+                <dt className="font-semibold text-slate-800">Phạm vi hiển thị</dt>
+                <dd>{visibilityLabel(person.visibility)}</dd>
+              </div>
+            </dl>
+            {person.deleted_at ? (
+              <div className="mt-3 inline-flex border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-900">
+                Đã xóa mềm
+              </div>
+            ) : null}
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                className="inline-flex min-h-10 items-center border border-emerald-700 bg-white px-3 py-2 text-sm font-semibold text-emerald-800"
+                href={`/admin/people/${person.id}`}
+              >
+                {canUpdate ? "Sửa hồ sơ" : "Xem hồ sơ"}
+              </Link>
+              {canDelete && !person.deleted_at ? (
+                <form action={softDeletePersonAction}>
+                  <input type="hidden" name="id" value={person.id} />
+                  <button
+                    type="submit"
+                    aria-label={`Xóa mềm hồ sơ ${person.display_name || person.full_name}`}
+                    className="inline-flex min-h-10 items-center border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700"
+                  >
+                    Xóa mềm
+                  </button>
+                </form>
+              ) : null}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="hidden overflow-x-auto border border-slate-200 bg-white shadow-sm md:block">
+        <table className="w-full min-w-[820px] border-collapse text-left text-sm">
         <thead className="bg-slate-100 text-slate-700">
           <tr>
             <th className="border-b border-slate-200 px-4 py-3">Họ tên</th>
@@ -95,13 +157,14 @@ export function PersonList({
                     className="font-semibold text-emerald-700 underline"
                     href={`/admin/people/${person.id}`}
                   >
-                    {canUpdate ? "Sửa" : "Xem"}
+                    {canUpdate ? "Sửa hồ sơ" : "Xem hồ sơ"}
                   </Link>
                   {canDelete && !person.deleted_at ? (
                     <form action={softDeletePersonAction}>
                       <input type="hidden" name="id" value={person.id} />
                       <button
                         type="submit"
+                        aria-label={`Xóa mềm hồ sơ ${person.display_name || person.full_name}`}
                         className="font-semibold text-red-700 underline"
                       >
                         Xóa mềm
@@ -114,6 +177,7 @@ export function PersonList({
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

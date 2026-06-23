@@ -174,7 +174,9 @@
     "check:tree-editor-auth-browser-smoke": "node scripts/check-tree-editor-auth-browser-smoke.cjs",
     "check:merge-dedupe-transaction-audit-design": "node scripts/check-merge-dedupe-transaction-audit-design.cjs",
     "check:merge-dedupe-schema-candidate-readiness": "node scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
-    "check:merge-dedupe-real-migration-readiness": "node scripts/check-merge-dedupe-real-migration-readiness.cjs"
+    "check:merge-dedupe-real-migration-readiness": "node scripts/check-merge-dedupe-real-migration-readiness.cjs",
+    "check:a14-ui-ux-overhaul": "node scripts/check-a14-ui-ux-overhaul.cjs",
+    "check:a14a-related-member-add-ux": "node scripts/check-a14a-related-member-add-ux.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

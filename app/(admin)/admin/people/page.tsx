@@ -67,6 +67,12 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
         />
 
         <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
+          <div className="md:col-span-4">
+            <h2 className="text-base font-bold text-slate-950">Lọc danh sách</h2>
+            <p className="mt-1 text-sm leading-6 text-slate-600">
+              Dùng bộ lọc để tìm đúng người trước khi sửa hồ sơ hoặc nối quan hệ.
+            </p>
+          </div>
           <label className="block md:col-span-2">
             <span className="text-sm font-semibold text-slate-800">Tìm kiếm</span>
             <input
@@ -103,13 +109,16 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
               <option value="deceased">Đã mất</option>
             </select>
           </label>
-          <div className="md:col-span-4">
+          <div className="flex flex-wrap gap-3 md:col-span-4">
             <button
               type="submit"
               className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
             >
               Lọc danh sách
             </button>
+            <ActionLink href="/admin/people">
+              Xóa bộ lọc
+            </ActionLink>
           </div>
         </form>
 

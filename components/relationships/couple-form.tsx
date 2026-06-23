@@ -97,6 +97,9 @@ export function CoupleForm({
       <h3 className="text-base font-semibold text-slate-950">
         Tạo quan hệ đôi
       </h3>
+      <p className="text-sm leading-6 text-slate-600">
+        Dùng cho vợ/chồng/bạn đời. Quan hệ đôi được lưu riêng với đơn vị gia đình cha/mẹ/con.
+      </p>
       <input type="hidden" name="return_to" value={returnTo} />
       {contextPersonId ? (
         <>
@@ -211,8 +214,11 @@ export function CoupleForm({
         <input
           name="family_id"
           className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          placeholder="Tùy chọn"
+          placeholder="Có thể để trống"
         />
+        <p className="mt-1 text-xs text-slate-500">
+          Chỉ nhập khi đã biết chính xác gia đình cần liên kết; nếu chưa chắc, hãy để trống.
+        </p>
       </label>
       <label className="block">
         <span className="text-sm font-semibold text-slate-800">Ghi chú</span>

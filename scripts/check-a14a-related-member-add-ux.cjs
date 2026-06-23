@@ -1,0 +1,288 @@
+const fs = require("node:fs");
+const path = require("node:path");
+const childProcess = require("node:child_process");
+
+const root = process.cwd();
+const failures = [];
+
+const allowedChangedFiles = new Set([
+  "app/(admin)/admin/people/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
+  "app/(admin)/admin/revisions/page.tsx",
+  "app/(admin)/admin/system/status/page.tsx",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "app/auth/login/page.tsx",
+  "app/globals.css",
+  "components/auth/login-form.tsx",
+  "components/imports/json-import-preview-form.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/layout/public-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
+  "components/relationships/relationship-summary.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "components/ui/action-link.tsx",
+  "components/ui/empty-state.tsx",
+  "components/ui/page-header.tsx",
+  "components/ui/section-card.tsx",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A14_UI_UX_OVERHAUL.md",
+  "docs/PLAN_A14A_RELATED_MEMBER_ADD_UX.md",
+  "package.json",
+  "scripts/check-a14-ui-ux-overhaul.cjs",
+  "scripts/check-a14a-related-member-add-ux.cjs",
+  "scripts/check-merge-dedupe-real-migration-readiness.cjs",
+  "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
+  "scripts/check-merge-dedupe-transaction-audit-design.cjs",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
+  "scripts/check-tree-editor-auth-browser-smoke.cjs",
+  "scripts/check-tree-inline-create-person-ux.cjs",
+  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
+  "scripts/check-tree-relationship-picker-ux.cjs",
+  "scripts/check-vietnamese-cultural-ui-ux.cjs",
+]);
+
+function readFile(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return "";
+  }
+  return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readJson(relativePath) {
+  const content = readFile(relativePath);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    failures.push(`${relativePath} is not valid JSON`);
+    return null;
+  }
+}
+
+function gitOutput(args) {
+  try {
+    return childProcess.execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    failures.push(`git ${args.join(" ")} failed`);
+    return "";
+  }
+}
+
+function gitShowHead(relativePath) {
+  try {
+    return childProcess.execFileSync("git", ["show", `HEAD:${relativePath}`], {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return "";
+  }
+}
+
+function requireIncludes(content, token, label = token) {
+  if (!content.includes(token)) failures.push(`missing ${label}`);
+}
+
+function rejectIncludes(content, token, label = token) {
+  if (content.includes(token)) failures.push(`forbidden ${label}`);
+}
+
+const packageJson = readJson("package.json");
+const doc = readFile("docs/PLAN_A14A_RELATED_MEMBER_ADD_UX.md");
+const index = readFile("docs/00_INDEX.md");
+const workLog = readFile("docs/08_AI_WORK_LOG.md");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
+const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const sidePanel = readFile("components/tree/tree-editor-side-panel.tsx");
+const treeActions = readFile("app/(admin)/admin/tree/edit/actions.ts");
+const globals = readFile("app/globals.css");
+const adminShell = readFile("components/layout/admin-shell.tsx");
+const publicShell = readFile("components/layout/public-shell.tsx");
+const primitives = [
+  readFile("components/ui/action-link.tsx"),
+  readFile("components/ui/page-header.tsx"),
+  readFile("components/ui/section-card.tsx"),
+  readFile("components/ui/empty-state.tsx"),
+].join("\n");
+
+for (const token of [
+  "Status: `PASS_LOCAL_STATIC`",
+  "A-14A1 - Audit luồng thêm thành viên liên quan",
+  "A-14A2 - Classic Modern Genealogy Style Direction",
+  "A-14A3 - Thiết kế UX mới: Thêm nhanh / Nhập chi tiết",
+  "A-14A4 - Context rõ ràng khi thêm người thân",
+  "A-14A5 - Gắn người đã có vào cây",
+  "A-14A6 - Duplicate suggestion and data-quality warning",
+  "A-14A9 - Checker",
+  "No migration",
+  "No `.sql`",
+  "Runtime merge/dedupe vẫn đóng",
+  "BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION",
+]) {
+  requireIncludes(doc, token, `A-14A doc token ${token}`);
+}
+
+for (const token of [
+  "PLAN_A14A_RELATED_MEMBER_ADD_UX.md",
+  "A-14A - Related Member Add UX Overhaul",
+]) {
+  requireIncludes(index, token, `index token ${token}`);
+  requireIncludes(workLog, token, `work log token ${token}`);
+  requireIncludes(handoff, token, `handoff token ${token}`);
+}
+
+requireIncludes(
+  decisionLog,
+  "Decision 169 - A-14A related-member UX uses existing fields only",
+  "Decision 169",
+);
+
+for (const token of [
+  "type CreateMode = \"quick\" | \"detail\"",
+  "Thêm nhanh",
+  "Nhập chi tiết hơn",
+  "Bạn đang thêm",
+  "Thêm vào cây",
+  "display_name",
+  "birth_date",
+  "death_date",
+  "is_living",
+  "birth_place",
+  "home_town",
+  "branch_name",
+  "generation_number",
+  "notes_private",
+  "visibility",
+  "Gợi ý tránh tạo trùng",
+  "Tạo mới vẫn đúng nếu đây là người khác trong gia đình",
+]) {
+  requireIncludes(sidePanel, token, `related-member UI token ${token}`);
+}
+
+for (const token of [
+  "display_name: optionalText(formData, \"display_name\")",
+  "birth_place: optionalText(formData, \"birth_place\")",
+  "home_town: optionalText(formData, \"home_town\")",
+  "branch_name: optionalText(formData, \"branch_name\")",
+  "generation_number: optionalNumber(formData, \"generation_number\")",
+  "notes_private: optionalText(formData, \"notes_private\")",
+  "visibility: visibilityValue(optionalText(formData, \"visibility\"))",
+]) {
+  requireIncludes(treeActions, token, `tree action field ${token}`);
+}
+
+for (const token of [
+  "#f4efe6",
+  "#fffaf0",
+  "stone-900",
+  "Classic Modern",
+]) {
+  const styleBundle = `${globals}\n${adminShell}\n${publicShell}\n${primitives}\n${doc}`;
+  requireIncludes(styleBundle, token, `classic modern style token ${token}`);
+}
+
+for (const token of [
+  "mergePerson",
+  "dedupePerson",
+  "people.merge.execute",
+  "people.merge.rollback",
+  "APPROVE_A13_MERGE_DEDUPE_DB_SCHEMA_VERIFIED",
+  "sb_secret_",
+  "eyJhbGci",
+  "Bearer ",
+]) {
+  rejectIncludes(`${sidePanel}\n${treeActions}`, token, `forbidden runtime token ${token}`);
+}
+
+const publicUi = [
+  readFile("components/public/public-home.tsx"),
+  readFile("components/public/public-tree-shell.tsx"),
+  readFile("components/public/public-person-profile.tsx"),
+  readFile("app/(public)/page.tsx"),
+  readFile("app/(public)/tree/page.tsx"),
+  readFile("app/(public)/people/[slug]/page.tsx"),
+].join("\n");
+for (const token of ["notes_private", "source_note", "source_notes", "private_notes"]) {
+  rejectIncludes(publicUi, token, `public private/source note token ${token}`);
+}
+
+if (
+  packageJson?.scripts?.["check:a14a-related-member-add-ux"] !==
+  "node scripts/check-a14a-related-member-add-ux.cjs"
+) {
+  failures.push("package.json missing check:a14a-related-member-add-ux script");
+}
+
+const packageHead = gitShowHead("package.json");
+if (packageHead && packageJson) {
+  const previousPackage = JSON.parse(packageHead);
+  if (
+    JSON.stringify(previousPackage.dependencies || {}) !==
+    JSON.stringify(packageJson.dependencies || {})
+  ) {
+    failures.push("runtime dependencies changed");
+  }
+  if (
+    JSON.stringify(previousPackage.devDependencies || {}) !==
+    JSON.stringify(packageJson.devDependencies || {})
+  ) {
+    failures.push("dev dependencies changed");
+  }
+}
+
+const runtimeDiff = gitOutput(["diff", "--", "app", "components", "lib", "server"]);
+for (const token of [
+  "mergePerson",
+  "dedupePerson",
+  "deletePerson",
+  "deleteRelationship",
+  "supabase.from(\"people\").delete",
+  "supabase.from('people').delete",
+]) {
+  rejectIncludes(runtimeDiff, token, `runtime merge/delete mutation ${token}`);
+}
+
+const status = gitOutput(["status", "--short", "--untracked-files=all"]);
+for (const line of status.split(/\r?\n/).filter(Boolean)) {
+  const file = line.slice(3).trim().replaceAll("\\", "/");
+  const lowerFile = file.toLowerCase();
+
+  if (file === "PLANNING.MD") failures.push("PLANNING.MD changed or staged");
+  if (lowerFile.endsWith(".sql")) failures.push(`SQL file changed or added: ${file}`);
+  if (file.startsWith("db/migrations/")) failures.push(`migration file changed or added: ${file}`);
+  if (
+    file === "wrangler.toml" ||
+    file.includes("open-next") ||
+    file.includes("opennext") ||
+    file === "next.config.ts" ||
+    file.startsWith("services/")
+  ) {
+    failures.push(`Worker/OpenNext/Wrangler/service drift: ${file}`);
+  }
+  if (file.startsWith(".github/workflows/")) failures.push(`deploy workflow mutation: ${file}`);
+  if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file for A-14A: ${file}`);
+}
+
+if (failures.length > 0) {
+  console.error("A-14A related member add UX check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("A-14A related member add UX check passed.");

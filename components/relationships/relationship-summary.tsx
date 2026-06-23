@@ -4,6 +4,7 @@ import {
   softDeleteFamilyChildAction,
   softDeleteFamilyParentAction,
 } from "@/app/(admin)/admin/relationships/actions";
+import { EmptyState } from "@/components/ui/empty-state";
 import type {
   FamilyChild,
   FamilyParent,
@@ -188,9 +189,10 @@ export function RelationshipSummary({
             />
           ))
         ) : (
-          <div className="border border-slate-200 bg-white p-4 text-sm text-slate-700">
-            Chưa có quan hệ cha/mẹ/con trong gia đình nào.
-          </div>
+          <EmptyState
+            title="Chưa có quan hệ cha/mẹ/con"
+            description="Tạo một đơn vị gia đình, sau đó gắn cha/mẹ và con bằng cách chọn thành viên theo tên."
+          />
         )}
       </div>
 
@@ -204,7 +206,7 @@ export function RelationshipSummary({
                   {couple.person1?.display_name ||
                     couple.person1?.full_name ||
                     couple.person1_id}
-                  {" ↔ "}
+                  {" với "}
                   {couple.person2?.display_name ||
                     couple.person2?.full_name ||
                     couple.person2_id}
@@ -224,7 +226,9 @@ export function RelationshipSummary({
               </li>
             ))
           ) : (
-            <li>Chưa có quan hệ đôi.</li>
+            <li className="text-slate-600">
+              Chưa có quan hệ đôi. Khi có thông tin chắc chắn, hãy tạo quan hệ vợ/chồng/bạn đời ở form bên dưới.
+            </li>
           )}
         </ul>
       </div>

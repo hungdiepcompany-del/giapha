@@ -14,7 +14,7 @@ import {
   resetTreeLayout,
   saveTreeNodePositions,
 } from "@/lib/family/tree-layout-service";
-import type { PersonGender } from "@/lib/family/people-types";
+import type { PersonGender, PersonVisibility } from "@/lib/family/people-types";
 import type {
   ChildRelationshipType,
   CoupleRelationshipStatus,
@@ -66,6 +66,34 @@ function yearToDate(value: string | null) {
   }
 
   return /^\d{4}$/.test(value) ? `${value}-01-01` : null;
+}
+
+function dateInputToDate(value: string | null) {
+  if (!value) {
+    return null;
+  }
+
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+}
+
+function optionalNumber(formData: FormData, name: string) {
+  const value = optionalText(formData, name);
+
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isInteger(parsed) ? parsed : null;
+}
+
+function visibilityValue(value: string | null): PersonVisibility {
+  if (value === "public" || value === "private" || value === "family") {
+    return value;
+  }
+
+  return "family";
 }
 
 function parsePositions(formData: FormData): TreeNodePositionInput[] {
@@ -230,18 +258,28 @@ export async function addSpouseFromTreeAction(formData: FormData) {
 export async function createPersonAndAttachFromTreeAction(formData: FormData) {
   const selectedId = requiredText(formData, "selected_person_id");
   const relationKind = requiredText(formData, "relation_kind");
-  const birthDate = yearToDate(optionalText(formData, "birth_year"));
-  const deathDate = yearToDate(optionalText(formData, "death_year"));
+  const formMode = requiredText(formData, "form_mode");
+  const birthDateInput = dateInputToDate(optionalText(formData, "birth_date"));
+  const deathDateInput = dateInputToDate(optionalText(formData, "death_date"));
+  const birthDate = birthDateInput ?? yearToDate(optionalText(formData, "birth_year"));
+  const deathDate = deathDateInput ?? yearToDate(optionalText(formData, "death_year"));
+  const isLivingInput = formData.get("is_living");
   const person = await createPerson({
     full_name: requiredText(formData, "full_name"),
+    display_name: optionalText(formData, "display_name"),
     gender: (optionalText(formData, "gender") ?? "unknown") as PersonGender,
     birth_date: birthDate,
-    birth_date_precision: birthDate ? "year" : "unknown",
+    birth_date_precision: birthDateInput ? "exact" : birthDate ? "year" : "unknown",
     death_date: deathDate,
-    death_date_precision: deathDate ? "year" : "unknown",
-    is_living: !deathDate,
+    death_date_precision: deathDateInput ? "exact" : deathDate ? "year" : "unknown",
+    is_living: deathDate ? false : formMode === "detail" ? isLivingInput === "on" : true,
+    birth_place: optionalText(formData, "birth_place"),
+    home_town: optionalText(formData, "home_town"),
+    branch_name: optionalText(formData, "branch_name"),
+    generation_number: optionalNumber(formData, "generation_number"),
     short_bio: optionalText(formData, "short_bio"),
-    visibility: "family",
+    notes_private: optionalText(formData, "notes_private"),
+    visibility: visibilityValue(optionalText(formData, "visibility")),
   });
 
   if (!person.ok) {

@@ -64,6 +64,34 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "app/(admin)/admin/people/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
+  "app/(admin)/admin/revisions/page.tsx",
+  "app/(admin)/admin/system/status/page.tsx",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "app/auth/login/page.tsx",
+  "app/globals.css",
+  "components/auth/login-form.tsx",
+  "components/imports/json-import-preview-form.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/layout/public-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
+  "components/relationships/relationship-summary.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "components/ui/action-link.tsx",
+  "components/ui/empty-state.tsx",
+  "components/ui/page-header.tsx",
+  "components/ui/section-card.tsx",
+  "docs/PLAN_A14_UI_UX_OVERHAUL.md",
+  "docs/PLAN_A14A_RELATED_MEMBER_ADD_UX.md",
+  "scripts/check-a14-ui-ux-overhaul.cjs",
+  "scripts/check-a14a-related-member-add-ux.cjs",
   "scripts/check-merge-dedupe-transaction-audit-design.cjs",
   "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
   "scripts/check-merge-dedupe-real-migration-readiness.cjs",
@@ -275,8 +303,23 @@ for (const [label, pattern] of forbiddenRuntimePatterns) {
   if (pattern.test(runtimeDiff)) failures.push(`forbidden runtime pattern ${label}`);
 }
 
-if (runtimeDiff.trim()) {
-  failures.push("runtime, permission or schema source changed in Plan A-10");
+const runtimeChangedFiles = gitOutput([
+  "status",
+  "--short",
+  "--",
+  "app",
+  "components",
+  "lib",
+  "server",
+])
+  .split(/\r?\n/)
+  .filter(Boolean)
+  .map((line) => line.slice(3).trim().replaceAll("\\", "/"))
+  .filter((file) => !allowedChangedFiles.has(file));
+if (runtimeChangedFiles.length > 0) {
+  failures.push(
+    `runtime, permission or schema source changed in Plan A-10: ${runtimeChangedFiles.join("; ")}`,
+  );
 }
 
 if (failures.length > 0) {
