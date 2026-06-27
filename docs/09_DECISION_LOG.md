@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 176 - A-14G-R1 retry remains SAFE_SKIP without explicit base URL
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14G-R1 is a public-only/read-only retry of the A-14G browser visual smoke.
+It may open public routes only when an explicit `PUBLIC_VISUAL_SMOKE_BASE_URL`,
+`LOCAL_SMOKE_BASE_URL` or `PROD_SMOKE_BASE_URL` is available in the execution
+process.
+
+Result:
+
+- `PUBLIC_VISUAL_SMOKE_BASE_URL`, `LOCAL_SMOKE_BASE_URL` and
+  `PROD_SMOKE_BASE_URL` were absent.
+- `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` was absent.
+- Therefore A-14G-R1 remains `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`; the person
+  profile target also remains `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG`.
+- No browser was opened and no visual PASS was claimed.
+
+Not authorized:
+
+- admin/auth route smoke;
+- mutation click;
+- DB apply or check SQL execution;
+- migration or `.sql`;
+- runtime merge/dedupe;
+- permission runtime registration;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change;
+- committing secret/session/token/cookie/storage state.
+
+Ly do:
+
+- A real browser visual smoke needs an explicit navigable target. Without one,
+  static readiness remains static readiness and must not be promoted to PASS.
+
 ## Decision 175 - A-14G public browser visual smoke is SAFE_SKIP without explicit base URL
 
 Status: `ACTIVE`

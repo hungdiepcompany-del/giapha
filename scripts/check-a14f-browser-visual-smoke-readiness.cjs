@@ -11,6 +11,7 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md",
+  "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14a-related-member-add-ux.cjs",

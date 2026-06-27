@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14G-R1 - Public Browser Visual Smoke Retry completed (SAFE_SKIP)
+
+- Reran A-14G-R1 public/read-only visual smoke gate.
+- Base URL source: none. `PUBLIC_VISUAL_SMOKE_BASE_URL`,
+  `LOCAL_SMOKE_BASE_URL` and `PROD_SMOKE_BASE_URL` were all absent in the
+  Codex execution process.
+- Result remains `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`; no browser was opened.
+- `/` result: `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- `/tree` result: `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- `/people/<slug>` result: `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG` plus
+  `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`; no DB query was run to discover a slug.
+- Public not-found/private/error state result:
+  `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- Mobile viewport result: `SAFE_SKIP_MOBILE_VIEWPORT_TOOLING_UNAVAILABLE` plus
+  `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- No screenshots were captured or committed. No token/cookie/session/storage
+  state was read, printed, saved or committed.
+- Validation PASS: A-14G, A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI
+  polish, Vietnamese UI copy, Vietnamese cultural UI/UX, tree relationship
+  picker, inline create, duplicate suggestion, tree polish/dedupe/data-quality,
+  A-10/A-11/A-12 merge/dedupe guards, env safe, migrations, typecheck, lint,
+  root build and diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14G-R1.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary confirmed: public-only/read-only retry, no admin/auth route smoke,
+  no mutation, no DB apply, no check SQL on DB, no migration, no `.sql`, no
+  seed/backfill, no runtime merge/dedupe, no permission runtime registration,
+  no Worker/OpenNext/Wrangler config change, no dependency, no deploy and no
+  push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+  DB merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+  Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+- To get real visual PASS later, owner/operator must provide explicit
+  `PUBLIC_VISUAL_SMOKE_BASE_URL` (preferred) or `LOCAL_SMOKE_BASE_URL` /
+  `PROD_SMOKE_BASE_URL`; person profile smoke also needs
+  `PUBLIC_VISUAL_SMOKE_PERSON_SLUG`.
+
 ## 2026-06-27 - A-14G - Public Browser Visual Smoke completed (SAFE_SKIP)
 
 - Added `docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md`.

@@ -354,3 +354,73 @@ Không push trừ khi owner yêu cầu riêng.
 - Không commit secret/session/token/cookie/storage state.
 - Không đọc hoặc commit `PLANNING.MD`.
 - Không claim visual PASS khi browser/base URL thiếu.
+
+
+## A-14G-R1 - Public Browser Visual Smoke Retry
+
+Status: `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`
+
+Retry date: 2026-06-27.
+
+R1 base URL gate:
+
+- `PUBLIC_VISUAL_SMOKE_BASE_URL`: not set in the Codex execution process.
+- `LOCAL_SMOKE_BASE_URL`: not set in the Codex execution process.
+- `PROD_SMOKE_BASE_URL`: not set in the Codex execution process.
+- Selected base URL source: none.
+- Result: `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+
+Because all allowed base URL variables were absent, A-14G-R1 did not open a browser, did not infer a URL, did not start or deploy a server, and did not claim visual PASS from static evidence.
+
+R1 target results:
+
+| Target | Result | Evidence |
+| --- | --- | --- |
+| Public home `/` | `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` | No explicit base URL was available. |
+| Public tree `/tree` | `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` | No explicit base URL was available. |
+| Public person `/people/<slug>` | `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG` + `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` | `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` was not set and no DB query was allowed to discover a slug. |
+| Public not-found/private/error state | `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` | No explicit base URL was available. |
+| Mobile viewport smoke | `SAFE_SKIP_MOBILE_VIEWPORT_TOOLING_UNAVAILABLE` + `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` | Viewport smoke cannot navigate without a base URL. |
+
+R1 evidence handling:
+
+- No screenshot captured.
+- No screenshot committed.
+- No token/cookie/session/storage state read, printed, saved or committed.
+- No browser opened because the base URL gate failed.
+
+R1 validation:
+
+- `npm run check:a14g-public-browser-visual-smoke`: PASS.
+- `npm run check:a14f-browser-visual-smoke-readiness`: PASS.
+- A-14E/D/C/B/A and A-14 UI checkers: PASS.
+- UI/Vietnamese/tree checkers: PASS.
+- A-10/A-11/A-12 merge/dedupe guards: PASS.
+- `npm run check:env:safe`: PASS.
+- `npm run check:migrations`: PASS.
+- `npm run typecheck`: PASS.
+- `npm run lint`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- `git diff --cached --check`: PASS.
+- `check:tree-editor-auth-browser-smoke`: expected
+  `A09_AUTH_BROWSER_SMOKE_SKIPPED_MISSING_EXPLICIT_AUTH_SESSION`.
+- `check:merge-dedupe-backup-gate-readiness`: `NOT_AVAILABLE`.
+
+R1 boundary:
+
+- Public-only/read-only retry.
+- No admin/auth route smoke.
+- No mutation click.
+- No DB apply.
+- No check SQL run on DB.
+- No migration or `.sql`.
+- No seed/backfill.
+- No runtime merge/dedupe.
+- No permission runtime registration.
+- No backup gate bypass.
+- No deploy.
+- No Worker/OpenNext/Wrangler change.
+- No dependency added.
+- No push.
+- `PLANNING.MD` was not read or committed.

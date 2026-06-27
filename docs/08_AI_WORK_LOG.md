@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-06-27 - A-14G-R1 - Public Browser Visual Smoke Retry
+
+- Reran A-14G public browser visual smoke gate.
+- Base URL source: none. `PUBLIC_VISUAL_SMOKE_BASE_URL`,
+  `LOCAL_SMOKE_BASE_URL` and `PROD_SMOKE_BASE_URL` were all absent in the
+  Codex execution process.
+- Result remained `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- Public home `/`, public tree `/tree`, public not-found/private/error state
+  and mobile viewport smoke were not opened in a browser.
+- Public person profile smoke also remained
+  `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG` because
+  `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` was absent and no DB query was allowed to
+  discover a slug.
+- No browser opened, no screenshot captured, no screenshot committed and no
+  token/cookie/session/storage-state artifact was read, printed, saved or
+  committed.
+- Validation PASS: A-14G, A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI
+  polish, Vietnamese UI copy, Vietnamese cultural UI/UX, tree relationship
+  picker, inline create, duplicate suggestion, tree polish/dedupe/data-quality,
+  A-10/A-11/A-12 merge/dedupe guards, env safe, migrations, typecheck, lint,
+  root build and diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; A-13B backup gate remains blocked and was not recreated by
+  A-14G-R1.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary: public-only/read-only retry, no admin/auth route smoke, no mutation,
+  no DB apply, no check SQL run on DB, no migration, no `.sql`, no seed/backfill,
+  no runtime merge/dedupe, no permission runtime registration, no Worker/OpenNext/
+  Wrangler config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14G - Public Browser Visual Smoke
 
 - Added `docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md`.
