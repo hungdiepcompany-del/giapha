@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-27 - A-15A1 - Public Home Modern Heritage UI
+
+- Applied Gemini Modern Heritage / Di sản Hiện đại polish to Public Home only.
+- Touched UI files: `components/public/public-home.tsx` and
+  `components/layout/public-shell.tsx`.
+- Home route `app/(public)/page.tsx` was inspected but not changed; existing
+  stats query and props contract remain unchanged.
+- Public Home now uses warm paper `bg-stone-50`, `text-stone-900`,
+  `text-stone-600`, teal primary CTA `bg-teal-700 hover:bg-teal-800`, amber
+  accents `bg-amber-50 text-amber-800`, rounded-xl/rounded-2xl cards,
+  rounded-full CTAs, `shadow-sm`/`shadow-md` and `min-h-11` touch targets.
+- Vietnamese copy was polished toward a warmer family-memory tone:
+  `Lưu giữ ký ức, kết nối các thế hệ.` and
+  `Cội nguồn yêu thương của dòng họ...`.
+- Added `docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md`.
+- Added `scripts/check-a15a1-public-home-modern-heritage-ui.cjs` and package
+  command `check:a15a1-public-home-modern-heritage-ui`.
+- Validation PASS: A-15A1, A-15A0, A-14G, A-14F, A-14E, A-14D, A-14C,
+  A-14B, A-14A, UI polish, Vietnamese UI copy, Vietnamese cultural UI/UX,
+  env safe, migrations, typecheck, lint, root build and diff checks.
+- Browser smoke PASS on local `http://localhost:3100/`: desktop and mobile
+  viewport checks showed the expected Public Home H1/copy/CTA and no horizontal
+  overflow.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary: Public Home only, UI-only, no admin/tree/form UI, no DB/schema/
+  migration, no `.sql`, no DB apply/check SQL, no API/action/service logic, no
+  auth/permission/route change, no runtime merge/dedupe, no Worker/OpenNext/
+  Wrangler change, no dependency, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-15A0 - Gemini Modern Heritage UI/UX Design Spec
 
 - Added `docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md`.

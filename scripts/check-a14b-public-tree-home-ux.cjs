@@ -20,6 +20,8 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
+  "docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md",
   "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
   "docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
   "ui_ux_design_specification.md",
@@ -201,10 +203,9 @@ requireIncludes(
 );
 
 for (const token of [
-  "Lưu giữ ký ức gia đình",
-  "Lưu giữ ký ức gia đình, kết nối các thế hệ",
+  "Lưu giữ ký ức, kết nối các thế hệ.",
   "Không gian gia phả cho cả gia đình",
-  "Khám phá cây gia phả",
+  "Xem cây gia phả",
   "Đăng nhập quản trị",
   "Sổ gia phả công khai",
   "Lưu giữ dòng họ",
@@ -227,9 +228,9 @@ for (const token of [
 }
 
 for (const token of [
-  "bg-[#fbf4e8]",
-  "bg-[#fffaf0]",
-  "text-stone-950",
+  "bg-stone-50",
+  "bg-white/90",
+  "text-stone-900",
   "text-[#8a4b2a]",
   "rounded-md",
   "min-h-11",

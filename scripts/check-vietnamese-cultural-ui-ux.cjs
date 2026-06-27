@@ -139,6 +139,10 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
   "scripts/check-a14g-public-browser-visual-smoke.cjs",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
+  "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
+  "docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md",
+  "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
 ]);
 
 const packageJson = readJson("package.json");

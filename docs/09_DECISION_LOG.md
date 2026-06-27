@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 178 - A-15A1 applies Modern Heritage to Public Home only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A1 applies the Gemini Modern Heritage / Di sản Hiện đại design direction
+only to the Public Home surface and its directly used public shell/header.
+
+The phase may polish Public Home visual styling, mobile-safe layout, CTA
+treatment and Vietnamese copy, while preserving existing route, stats query,
+props contract and public-read-only behavior.
+
+Not authorized by A-15A1:
+
+- admin dashboard, people list, person form or tree viewer/editor changes;
+- DB/schema/migration or DB apply;
+- API/action/service logic changes;
+- auth/permission/middleware/RLS changes;
+- route changes;
+- tree layout algorithm changes;
+- runtime merge/dedupe or permission runtime registration;
+- Worker/OpenNext/Wrangler changes;
+- dependency changes;
+- deploy or push.
+
+Ly do:
+
+A-15A0 accepted the design spec as a source. A-15A1 must implement it in a
+small, reviewable slice so Public Home can improve without opening broader
+runtime, data, auth or navigation risk.
+
 ## Decision 177 - Gemini Modern Heritage design spec is UI-only source
 
 Status: `ACTIVE`

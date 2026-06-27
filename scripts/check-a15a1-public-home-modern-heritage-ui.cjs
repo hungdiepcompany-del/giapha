@@ -6,15 +6,14 @@ const root = process.cwd();
 const failures = [];
 
 const allowedChangedFiles = new Set([
+  "components/layout/public-shell.tsx",
+  "components/public/public-home.tsx",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
   "docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md",
   "package.json",
-  "components/layout/public-shell.tsx",
-  "components/public/public-home.tsx",
   "scripts/check-a14a-related-member-add-ux.cjs",
   "scripts/check-a14b-public-tree-home-ux.cjs",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
@@ -80,67 +79,84 @@ function gitShowHead(relativePath) {
   }
 }
 
-const docPath = "docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md";
-const doc = readFile(docPath);
+const packageJson = readJson("package.json");
+const doc = readFile("docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md");
+const designSpec = readFile("docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
-const packageJson = readJson("package.json");
+const publicHome = readFile("components/public/public-home.tsx");
+const publicShell = readFile("components/layout/public-shell.tsx");
+const publicUi = `${publicHome}\n${publicShell}`;
 
 for (const token of [
-  "DESIGN_SPEC_ACCEPTED_FOR_UI_ONLY_IMPLEMENTATION",
-  "Gemini UI/UX design output",
+  "A-15A1 - Public Home Modern Heritage UI",
+  "Public Home UI only",
+  "PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
+  "Gemini Modern Heritage",
+  "UI-only",
+  "No DB/schema/migration",
+  "No API/action/service logic change",
+  "No auth/permission",
+  "No route change",
+  "No Worker/OpenNext/Wrangler change",
+  "No dependency",
+  "`PLANNING.MD` not read or committed",
+]) {
+  requireIncludes(doc, token, `A-15A1 doc token ${token}`);
+}
+
+for (const token of [
   "Modern Heritage",
-  "Di sản Hiện đại",
-  "Executive Design Summary",
-  "Design Problems",
-  "Proposed Visual System",
-  "Screen-by-screen Redesign",
-  "Tree Viewer / Tree Editor Detailed Redesign",
-  "Mobile UX Rules",
-  "Vietnamese UX Copy Pack",
-  "Component Implementation Checklist For Codex",
-  "Do-not-change Boundary",
-  "Final Acceptance Criteria",
+  "Design direction",
+  "PublicHome",
+]) {
+  requireIncludes(designSpec, token, `A-15A0 source token ${token}`);
+}
+
+for (const token of [
   "bg-stone-50",
   "text-stone-900",
+  "text-stone-600",
   "bg-teal-700",
+  "hover:bg-teal-800",
+  "bg-amber-50",
   "text-amber-800",
+  "border-stone-200",
   "rounded-xl",
   "rounded-2xl",
+  "rounded-full",
   "shadow-sm",
-  "DEFERRED_REQUIRES_INTERACTION_LOGIC_REVIEW",
-  "slide-over selected person panel",
-  "bottom navigation",
-  "fixed mobile form action bar",
-  "drawer/bottom sheet animation",
-  "pinch zoom gesture",
-  "new avatar/media behavior",
-  "any new menu state",
-  "any new mutation path",
+  "shadow-md",
+  "min-h-11",
+  "Lưu giữ ký ức, kết nối các thế hệ.",
+  "Cội nguồn yêu thương của dòng họ",
+  "Xem cây gia phả",
+  "Không gian gia phả cho cả gia đình",
+  "Sổ gia phả công khai",
 ]) {
-  requireIncludes(doc, token, `A-15A0 doc token ${token}`);
+  requireIncludes(publicUi, token, `Public Home style/copy token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md", "index entry"],
-  [workLog, "A-15A0 - Gemini Modern Heritage UI/UX Design Spec", "work log entry"],
+  [index, "PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md", "index entry"],
+  [workLog, "A-15A1 - Public Home Modern Heritage UI", "work log entry"],
   [
     decisionLog,
-    "Decision 177 - Gemini Modern Heritage design spec is UI-only source",
+    "Decision 178 - A-15A1 applies Modern Heritage to Public Home only",
     "decision log entry",
   ],
-  [handoff, "A-15A0 - Gemini Modern Heritage UI/UX Design Spec completed", "handoff entry"],
+  [handoff, "A-15A1 - Public Home Modern Heritage UI completed", "handoff entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15a0-gemini-modern-heritage-design-spec"] !==
-  "node scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs"
+  packageJson?.scripts?.["check:a15a1-public-home-modern-heritage-ui"] !==
+  "node scripts/check-a15a1-public-home-modern-heritage-ui.cjs"
 ) {
-  failures.push("missing package script check:a15a0-gemini-modern-heritage-design-spec");
+  failures.push("missing package script check:a15a1-public-home-modern-heritage-ui");
 }
 
 const changedFiles = gitOutput(["diff", "--name-only"])
@@ -164,7 +180,7 @@ for (const file of changedFiles) {
     file.startsWith("services/") ||
     file.startsWith("pages/")
   ) {
-    failures.push(`runtime/UI/API/route file changed ${file}`);
+    failures.push(`route/API/service/runtime file changed ${file}`);
   }
   if (
     file.startsWith("components/") &&
@@ -173,7 +189,7 @@ for (const file of changedFiles) {
       "components/public/public-home.tsx",
     ].includes(file)
   ) {
-    failures.push(`unexpected component file changed ${file}`);
+    failures.push(`non-Public Home component changed ${file}`);
   }
   if (/storage-state|storage_state|session|cookie|token|secret|\.png$|\.jpg$|\.jpeg$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
@@ -193,23 +209,6 @@ if (packageHead) {
   }
 }
 
-const guardedChangedContent = changedFiles
-  .filter((file) => {
-    if (
-      file.startsWith("app/") ||
-      file.startsWith("components/") ||
-      file.startsWith("lib/") ||
-      file.startsWith("server/") ||
-      file.startsWith("services/") ||
-      file.startsWith("pages/")
-    ) {
-      return /\.(tsx?|jsx?)$/.test(file);
-    }
-    return false;
-  })
-  .map((file) => readFile(file))
-  .join("\n");
-
 for (const pattern of [
   /\bCREATE\s+TABLE\b/i,
   /\bALTER\s+TABLE\b/i,
@@ -227,14 +226,15 @@ for (const pattern of [
   /refresh_token["'\s:=]+[A-Za-z0-9._-]{12,}/i,
   /access_token["'\s:=]+[A-Za-z0-9._-]{12,}/i,
   /Cookie:\s*[^,\n]{12,}/i,
+  /mergePerson|dedupePerson|people\.merge\./i,
 ]) {
-  rejectPattern(guardedChangedContent, pattern, pattern.toString());
+  rejectPattern(publicUi, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15A0 Gemini Modern Heritage design spec check failed:");
+  console.error("A-15A1 Public Home Modern Heritage UI check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15A0 Gemini Modern Heritage design spec check passed.");
+console.log("A-15A1 Public Home Modern Heritage UI check passed.");

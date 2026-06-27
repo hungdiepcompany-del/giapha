@@ -183,7 +183,8 @@
     "check:a14e-mobile-ux-sweep": "node scripts/check-a14e-mobile-ux-sweep.cjs",
     "check:a14f-browser-visual-smoke-readiness": "node scripts/check-a14f-browser-visual-smoke-readiness.cjs",
     "check:a14g-public-browser-visual-smoke": "node scripts/check-a14g-public-browser-visual-smoke.cjs",
-    "check:a15a0-gemini-modern-heritage-design-spec": "node scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs"
+    "check:a15a0-gemini-modern-heritage-design-spec": "node scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
+    "check:a15a1-public-home-modern-heritage-ui": "node scripts/check-a15a1-public-home-modern-heritage-ui.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

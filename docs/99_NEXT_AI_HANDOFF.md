@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-15A1 - Public Home Modern Heritage UI completed
+
+- Applied Gemini Modern Heritage / Di sản Hiện đại polish to Public Home only.
+- Changed `components/public/public-home.tsx` and
+  `components/layout/public-shell.tsx`.
+- Inspected home route `app/(public)/page.tsx`; no route/query/runtime logic was
+  changed.
+- Public Home now uses warm paper `bg-stone-50`, `text-stone-900`,
+  `text-stone-600`, teal primary CTA `bg-teal-700 hover:bg-teal-800`, amber
+  accents `bg-amber-50 text-amber-800`, `border-stone-200`, rounded-xl/
+  rounded-2xl cards, rounded-full CTAs, `shadow-sm`/`shadow-md` and `min-h-11`
+  touch targets.
+- Mobile behavior: header/nav remains stacked, H1 starts at `text-3xl`, CTAs
+  stack safely, cards stack to one column, no sticky/floating/drawer/menu/gesture
+  behavior was added.
+- Vietnamese copy now emphasizes family memory and lineage:
+  `Lưu giữ ký ức, kết nối các thế hệ.` and
+  `Cội nguồn yêu thương của dòng họ...`.
+- Added `docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md`.
+- Added `scripts/check-a15a1-public-home-modern-heritage-ui.cjs` and package
+  command `check:a15a1-public-home-modern-heritage-ui`.
+- Validation PASS: A-15A1, A-15A0, A-14G, A-14F, A-14E, A-14D, A-14C,
+  A-14B, A-14A, UI polish, Vietnamese UI copy, Vietnamese cultural UI/UX,
+  env safe, migrations, typecheck, lint, root build and diff checks.
+- Browser smoke PASS on local `http://localhost:3100/`: desktop and mobile
+  viewport checks showed expected Public Home H1/copy/CTA and no horizontal
+  overflow. The temporary local server was stopped and the smoke log removed.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Decision 178 records that A-15A1 is Public Home only and UI-only.
+- Boundary confirmed: no admin/tree/form UI, no DB/schema/migration, no `.sql`,
+  no DB apply/check SQL, no API/action/service logic, no auth/permission/route
+  change, no runtime merge/dedupe, no permission runtime registration, no
+  Worker/OpenNext/Wrangler change, no dependency, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-15A0 - Gemini Modern Heritage UI/UX Design Spec completed
 
 - Added `docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md`.
