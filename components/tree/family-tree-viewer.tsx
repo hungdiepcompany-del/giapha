@@ -141,7 +141,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
   }
 
   return (
-    <div className="overflow-hidden border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-md border border-stone-200 bg-[#fffaf0] shadow-sm">
       <FamilyTreeToolbar
         searchQuery={searchQuery}
         searchStatus={isLayouting ? "Đang tự sắp xếp" : searchStatus}
@@ -152,7 +152,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
         onFitView={() => flow?.fitView({ padding: 0.2, duration: 400 })}
         onResetLayout={resetLayout}
       />
-      <div className="h-[680px] min-h-[520px] bg-slate-50">
+      <div className="h-[680px] min-h-[520px] bg-[#f7efe1]">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -165,7 +165,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
           elementsSelectable
           onInit={setFlow}
         >
-          <Background color="#cbd5e1" gap={24} />
+          <Background color="#d8c8ad" gap={24} />
           <Controls showInteractive={false} />
           <MiniMap pannable zoomable nodeStrokeWidth={3} />
         </ReactFlow>

@@ -102,7 +102,7 @@ for (const token of [
   "Không đủ quyền",
   "Lý do:",
   "Cây gia phả",
-  "Vừa khung nhìn",
+  "Vừa màn hình",
   "Sắp xếp lại cây",
   "Đặt lại bố cục",
   "Bảng chi tiết",

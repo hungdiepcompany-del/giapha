@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 170 - A-14B public UX polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14B may improve public home, public tree viewer, public profile, public shell,
+Vietnamese copy, empty/error states, responsive behavior and classic modern
+genealogy styling.
+
+The approved style is restrained: warm paper/ivory backgrounds, stone text,
+muted rust accents, deep green primary actions, light borders and moderate
+rounded corners. The UI should feel like family archive material without
+becoming heavy or old-fashioned.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- runtime merge/dedupe;
+- permission runtime registration;
+- public edit/delete/mutation action;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change.
+
+Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+Permission runtime remains unregistered.
+
+Ly do:
+
+- Public viewers need a clearer, warmer genealogy experience before any new data
+  operation is opened.
+- Better public copy and empty/error states reduce confusion between public
+  read-only browsing and admin management.
+- A-13B backup evidence is still a separate safety gate and must not be bypassed
+  by UI polish.
+
 ## Decision 169 - A-14A related-member UX uses existing fields only
 
 Status: `ACTIVE`

@@ -28,7 +28,7 @@ export default async function PublicPersonPage({ params }: PublicPersonPageProps
     return (
       <PublicShell>
         <section className="mx-auto w-full max-w-3xl px-6 py-10">
-          <FamilyTreeErrorState message={result.error} />
+          <FamilyTreeErrorState message="Không thể tải hồ sơ công khai. Gia đình có thể đang cập nhật dữ liệu hoặc quyền xem." />
         </section>
       </PublicShell>
     );

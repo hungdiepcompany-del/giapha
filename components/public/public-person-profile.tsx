@@ -9,58 +9,69 @@ type PublicPersonProfileProps = {
   person: PublicPerson;
 };
 
+function PublicField({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+}) {
+  return (
+    <div>
+      <dt className="font-bold text-stone-950">{label}</dt>
+      <dd className="mt-1 text-stone-700">
+        {value || "Thông tin này đang được gia đình cập nhật"}
+      </dd>
+    </div>
+  );
+}
+
 export function PublicPersonProfile({ person }: PublicPersonProfileProps) {
+  const yearRange =
+    !person.is_living && (person.birth_year || person.death_year)
+      ? `${person.birth_year ?? "Chưa rõ năm sinh"} - ${
+          person.death_year ?? "Chưa rõ năm mất"
+        }`
+      : null;
+
   return (
     <PublicShell>
-      <section className="mx-auto w-full max-w-3xl px-6 py-10">
+      <section className="mx-auto w-full max-w-4xl px-5 py-10 sm:px-6">
         <PageHeader
           eyebrow="Hồ sơ công khai"
           title={person.label}
-          description="Hồ sơ công khai chỉ hiển thị phần thông tin được phép công khai."
+          description="Hồ sơ công khai chỉ hiển thị phần thông tin được phép chia sẻ với người xem."
+          actions={<ActionLink href="/tree">Quay lại cây gia phả</ActionLink>}
         />
 
-        <SectionCard className="mt-6">
-          <dl className="grid gap-4 text-sm text-slate-700 sm:grid-cols-2">
-            <div>
-              <dt className="font-bold text-slate-950">Trạng thái</dt>
-              <dd className="mt-1">
-                {person.is_living ? "Còn sống" : "Đã mất"}
-              </dd>
-            </div>
-            {person.generation_number ? (
-              <div>
-                <dt className="font-bold text-slate-950">Đời thứ</dt>
-                <dd className="mt-1">{person.generation_number}</dd>
-              </div>
-            ) : null}
-            {person.branch_name ? (
-              <div>
-                <dt className="font-bold text-slate-950">Chi/nhánh</dt>
-                <dd className="mt-1">{person.branch_name}</dd>
-              </div>
-            ) : null}
-            {!person.is_living && (person.birth_year || person.death_year) ? (
-              <div>
-                <dt className="font-bold text-slate-950">
-                  Năm sinh - năm mất
-                </dt>
-                <dd className="mt-1">
-                  {person.birth_year ?? "?"} - {person.death_year ?? "?"}
-                </dd>
-              </div>
-            ) : null}
-          </dl>
+        <div className="mt-6 grid gap-5">
+          <SectionCard>
+            <h2 className="text-lg font-bold text-stone-950">
+              Thông tin chính
+            </h2>
+            <dl className="mt-4 grid gap-4 text-sm leading-6 sm:grid-cols-2">
+              <PublicField
+                label="Trạng thái"
+                value={person.is_living ? "Còn sống" : "Đã mất"}
+              />
+              <PublicField label="Năm sinh - năm mất" value={yearRange} />
+              <PublicField label="Đời thứ" value={person.generation_number} />
+              <PublicField label="Chi/nhánh" value={person.branch_name} />
+            </dl>
+          </SectionCard>
 
           {person.is_living ? (
-            <StatusCallout tone="success" className="mt-6">
+            <StatusCallout tone="success" title="Bảo vệ thông tin người còn sống">
               Thông tin chi tiết của người còn sống được ẩn ở chế độ công khai.
+              Gia đình có thể cập nhật thêm trong khu vực quản trị.
             </StatusCallout>
-          ) : null}
-
-          <ActionLink href="/tree" className="mt-6">
-            Quay lại cây
-          </ActionLink>
-        </SectionCard>
+          ) : (
+            <StatusCallout tone="info" title="Thông tin đang được hoàn thiện">
+              Nếu hồ sơ còn thiếu năm sinh, chi nhánh hoặc đời thứ, nghĩa là gia
+              đình đang tiếp tục đối chiếu tư liệu.
+            </StatusCallout>
+          )}
+        </div>
       </section>
     </PublicShell>
   );

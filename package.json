@@ -176,7 +176,8 @@
     "check:merge-dedupe-schema-candidate-readiness": "node scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
     "check:merge-dedupe-real-migration-readiness": "node scripts/check-merge-dedupe-real-migration-readiness.cjs",
     "check:a14-ui-ux-overhaul": "node scripts/check-a14-ui-ux-overhaul.cjs",
-    "check:a14a-related-member-add-ux": "node scripts/check-a14a-related-member-add-ux.cjs"
+    "check:a14a-related-member-add-ux": "node scripts/check-a14a-related-member-add-ux.cjs",
+    "check:a14b-public-tree-home-ux": "node scripts/check-a14b-public-tree-home-ux.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

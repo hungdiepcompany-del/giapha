@@ -22,45 +22,49 @@ export function FamilyTreeToolbar({
   onResetLayout,
 }: FamilyTreeToolbarProps) {
   return (
-    <div className="flex flex-col gap-4 border-b border-slate-200 bg-white p-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-4 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <div className="text-base font-bold text-slate-950">Tìm trong cây</div>
-        <div className="mt-1 grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Tìm người trong cây
-          </span>
-          <input
-            value={searchQuery}
-            onChange={(event) => onSearchChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                onFocusSearch();
-              }
-            }}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
-            placeholder="Nhập họ tên hoặc tên hiển thị"
-          />
-        </label>
-        <button
-          type="button"
-          onClick={onFocusSearch}
-          className="min-h-11 self-end border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
-        >
-          Tìm
-        </button>
+        <div className="text-base font-bold text-stone-950">Tìm trong cây</div>
+        <p className="mt-1 max-w-xl text-sm leading-6 text-stone-600">
+          Nhập tên để đưa người thân vào giữa khung nhìn. Có thể kéo nền để di
+          chuyển và cuộn để phóng to hoặc thu nhỏ.
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
+          <label className="block">
+            <span className="text-sm font-semibold text-stone-800">
+              Tìm người trong cây
+            </span>
+            <input
+              value={searchQuery}
+              onChange={(event) => onSearchChange(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  onFocusSearch();
+                }
+              }}
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base outline-none focus:border-stone-900"
+              placeholder="Nhập họ tên hoặc tên thường gọi"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={onFocusSearch}
+            className="min-h-11 self-end rounded-md border border-stone-900 bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-700"
+          >
+            Tìm người
+          </button>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+        <div className="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700">
           {personCount} người / {nodeCount} nút
         </div>
         {searchStatus ? (
           <div
             aria-live="polite"
-            className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900"
+            className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900"
           >
             {searchStatus}
           </div>
@@ -68,16 +72,18 @@ export function FamilyTreeToolbar({
         <button
           type="button"
           onClick={onFitView}
-          className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
+          className="min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-stone-900"
+          title="Đưa toàn bộ cây vào khung nhìn"
         >
-          Vừa khung nhìn
+          Vừa màn hình
         </button>
         <button
           type="button"
           onClick={onResetLayout}
-          className="min-h-11 border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-900"
+          className="min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-stone-900"
+          title="Sắp xếp lại cây tự động trong chế độ xem"
         >
-          Đặt lại bố cục
+          Sắp xếp lại
         </button>
       </div>
     </div>

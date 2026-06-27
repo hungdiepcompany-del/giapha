@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14B - Public Tree / Home UX Classic Modern Polish completed
+
+- Added `docs/PLAN_A14B_PUBLIC_TREE_HOME_UX.md`.
+- Public shell now has a warmer family-archive brand treatment, subtitle and
+  footer while preserving existing routes.
+- Public home now leads with `Lưu giữ ký ức gia đình, kết nối các thế hệ`, clear
+  CTAs, privacy-safe public stats and four benefit sections.
+- Public tree page now explains drag/pan, scroll zoom, search focus and the
+  read-only public boundary.
+- Tree viewer/toolbar/node cards now use the classic modern genealogy palette:
+  warm paper, stone text, muted rust and restrained green.
+- Public empty/error states are friendlier and avoid confusing public viewers
+  with admin-only actions.
+- Public person profile now groups public-safe fields and uses
+  `Thông tin này đang được gia đình cập nhật` for missing values.
+- Added `scripts/check-a14b-public-tree-home-ux.cjs` and package command
+  `check:a14b-public-tree-home-ux`.
+- Validation PASS: A-14B, A-14A, A-14, UI polish, Vietnamese UI copy,
+  Vietnamese cultural UI/UX, tree relationship picker, inline create,
+  duplicate suggestion, tree polish/dedupe/data-quality, A-10/A-11/A-12
+  merge/dedupe guards, env safe, migrations, typecheck, lint and root build.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip. Browser visual smoke was not run because no Browser navigation
+  tool was available in this Codex session.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14B.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL run on
+  DB, no seed/backfill, no runtime merge/dedupe, no route/action/service
+  merge/dedupe, no permission runtime registration, no Worker/OpenNext/Wrangler
+  config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+  merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+  Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-23 - A-14A - Related Member Add UX Overhaul completed
 
 - Added `docs/PLAN_A14A_RELATED_MEMBER_ADD_UX.md`.
