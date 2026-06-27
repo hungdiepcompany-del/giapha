@@ -407,7 +407,7 @@ function RelatedPersonPicker({
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 text-sm"
+          className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
           placeholder="Tìm theo tên, năm sinh hoặc chi nhánh..."
           role="combobox"
           aria-expanded="true"
@@ -435,7 +435,7 @@ function RelatedPersonPicker({
       <div
         id={pickerId}
         role="listbox"
-        className="max-h-48 overflow-y-auto border border-slate-200 bg-white"
+        className="max-h-56 overflow-y-auto rounded-md border border-stone-200 bg-white"
       >
         {filteredCandidates.length > 0 ? (
           filteredCandidates.map((person) => {
@@ -491,7 +491,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="min-h-11 border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-500"
+      className="min-h-11 w-full rounded-md border border-[#245744] bg-[#245744] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-500 sm:w-auto"
     >
       {pending ? pendingLabel : label}
     </button>
@@ -611,23 +611,23 @@ function DuplicateSuggestionBox({
             {suggestions.map((person) => (
               <div
                 key={person.personId}
-                className="border border-amber-200 bg-white p-3"
+                className="min-w-0 rounded-md border border-amber-200 bg-white p-3"
               >
-                <div className="text-sm font-semibold text-slate-950">
+                <div className="break-words text-sm font-semibold text-slate-950">
                   {personLabel(person)}
                 </div>
                 <div className="mt-1 text-xs text-slate-600">
                   {personOptionLabel(person)}
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 grid gap-2 min-[380px]:flex min-[380px]:flex-wrap">
                   <button
                     type="button"
                     onClick={() => onUseExistingPerson(person.personId)}
-                    className="min-h-10 border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
+                    className="min-h-11 rounded-md border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white"
                   >
                     Dùng thành viên này để gắn quan hệ
                   </button>
-                  <span className="inline-flex min-h-10 items-center border border-slate-200 px-3 py-2 text-xs text-slate-600">
+                  <span className="inline-flex min-h-11 items-center rounded-md border border-stone-200 px-3 py-2 text-xs text-stone-600">
                     Thành viên đã có
                   </span>
                 </div>
@@ -680,11 +680,11 @@ function NewPersonFields({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Chọn cách nhập thành viên mới">
+      <div className="grid gap-2 min-[380px]:grid-cols-2" role="group" aria-label="Chọn cách nhập thành viên mới">
         <button
           type="button"
           onClick={() => setCreateMode("quick")}
-          className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
+          className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
             createMode === "quick"
               ? "border-stone-900 bg-stone-900 text-white"
               : "border-stone-300 bg-white text-stone-800"
@@ -695,7 +695,7 @@ function NewPersonFields({
         <button
           type="button"
           onClick={() => setCreateMode("detail")}
-          className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
+          className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
             createMode === "detail"
               ? "border-stone-900 bg-stone-900 text-white"
               : "border-stone-300 bg-white text-stone-800"
@@ -713,7 +713,7 @@ function NewPersonFields({
             required
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Nhập họ và tên thành viên..."
           />
         </label>
@@ -725,7 +725,7 @@ function NewPersonFields({
             </span>
             <input
               name="display_name"
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
               placeholder="Ví dụ: Ông Ba, Bà Tư..."
             />
           </label>
@@ -739,7 +739,7 @@ function NewPersonFields({
             key={relationKind}
             name="gender"
             defaultValue={defaultGender(relationKind)}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
           >
             {genderOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -762,7 +762,7 @@ function NewPersonFields({
             max="9999"
             value={birthYear}
             onChange={(event) => setBirthYear(event.target.value)}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Ví dụ: 1950"
           />
         </label>
@@ -777,7 +777,7 @@ function NewPersonFields({
             max="9999"
             value={deathYear}
             onChange={(event) => setDeathYear(event.target.value)}
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Để trống nếu còn sống"
           />
         </label>
@@ -803,7 +803,7 @@ function NewPersonFields({
               <input
                 name="birth_date"
                 type="date"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
               />
             </label>
             <label className="block">
@@ -813,7 +813,7 @@ function NewPersonFields({
               <input
                 name="death_date"
                 type="date"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
               />
             </label>
           </div>
@@ -825,7 +825,7 @@ function NewPersonFields({
               </span>
               <input
                 name="birth_place"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
                 placeholder="Nơi sinh, nếu đã biết"
               />
             </label>
@@ -835,7 +835,7 @@ function NewPersonFields({
               </span>
               <input
                 name="home_town"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
                 placeholder="Quê quán hoặc nguyên quán"
               />
             </label>
@@ -848,7 +848,7 @@ function NewPersonFields({
               </span>
               <input
                 name="branch_name"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
                 placeholder="Ví dụ: Chi trưởng"
               />
             </label>
@@ -860,7 +860,7 @@ function NewPersonFields({
                 name="generation_number"
                 type="number"
                 min="1"
-                className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+                className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
                 placeholder="Ví dụ: 5"
               />
             </label>
@@ -873,7 +873,7 @@ function NewPersonFields({
             <select
               name="visibility"
               defaultValue="family"
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
             >
               <option value="family">Nội bộ gia đình</option>
               <option value="private">Riêng tư</option>
@@ -892,7 +892,7 @@ function NewPersonFields({
         <textarea
           name="short_bio"
           rows={3}
-          className="mt-1 w-full border border-slate-300 px-3 py-2"
+          className="mt-1 min-h-28 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
           placeholder="Thông tin công khai ngắn, nếu cần..."
         />
       </label>
@@ -904,7 +904,7 @@ function NewPersonFields({
           <textarea
             name="notes_private"
             rows={3}
-            className="mt-1 w-full border border-slate-300 px-3 py-2"
+            className="mt-1 min-h-28 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Chỉ hiển thị trong quản trị, không đưa ra trang công khai."
           />
         </label>
@@ -921,7 +921,7 @@ function NewPersonFields({
         <div className="text-xs text-slate-600">
           <button
             type="submit"
-            className="min-h-10 border border-slate-300 bg-white px-3 py-2 font-semibold text-slate-800"
+            className="min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 font-semibold text-stone-800"
           >
             Vẫn tạo thành viên mới
           </button>
@@ -947,7 +947,7 @@ export function TreeEditorSidePanel({
 
   if (!selectedNode) {
     return (
-      <aside className="border border-slate-200 bg-white p-4">
+      <aside className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4">
         <h2 className="text-lg font-bold text-slate-950">Bảng chi tiết</h2>
         <p className="mt-2 text-sm text-slate-600">
           Chọn một thành viên để xem quan hệ và thao tác.
@@ -961,7 +961,7 @@ export function TreeEditorSidePanel({
 
   if (selectedNode.kind !== "person") {
     return (
-      <aside className="border border-slate-200 bg-white p-4">
+      <aside className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4">
         <h2 className="text-lg font-bold text-slate-950">Thẻ gia đình</h2>
         <p className="mt-2 text-sm text-slate-600">
           Chọn một thành viên cụ thể để thêm người thân hoặc chỉnh quan hệ.
@@ -994,7 +994,7 @@ export function TreeEditorSidePanel({
   const canUseNewPersonFlow = canCreateRelationships && canCreatePeople;
 
   return (
-    <aside className="space-y-5 border border-slate-200 bg-white p-4 shadow-sm">
+    <aside className="min-w-0 space-y-5 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm">
       <div className="border-l-4 border-emerald-700 pl-4">
         <div className="text-xs font-bold text-emerald-800">
           Người đang chọn
@@ -1056,7 +1056,7 @@ export function TreeEditorSidePanel({
             <div className="text-sm font-semibold text-slate-800">
               Chọn quan hệ
             </div>
-            <div className="mt-2 grid grid-cols-2 gap-2">
+            <div className="mt-2 grid gap-2 min-[380px]:grid-cols-2">
               {relationOptions.map((option) => (
                 <button
                   key={option.value}
@@ -1065,7 +1065,7 @@ export function TreeEditorSidePanel({
                     setRelationKind(option.value);
                     setSelectedRelatedPersonId("");
                   }}
-                  className={`min-h-10 border px-3 py-2 text-sm font-semibold ${
+                  className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
                     relationKind === option.value
                       ? "border-slate-900 bg-slate-900 text-white"
                       : "border-slate-300 bg-white text-slate-800 hover:border-slate-600"

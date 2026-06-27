@@ -22,7 +22,7 @@ export function ActionLink({
   return (
     <Link
       {...props}
-      className={`inline-flex min-h-11 items-center justify-center rounded-md border px-5 py-3 text-sm font-semibold transition ${variantClasses[variant]} ${className}`}
+      className={`inline-flex min-h-11 max-w-full items-center justify-center rounded-md border px-5 py-3 text-center text-sm font-semibold transition ${variantClasses[variant]} ${className}`}
     />
   );
 }

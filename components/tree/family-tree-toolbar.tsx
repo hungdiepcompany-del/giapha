@@ -26,11 +26,11 @@ export function FamilyTreeToolbar({
   onResetLayout,
 }: FamilyTreeToolbarProps) {
   const secondaryButton =
-    "min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
+    "min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 text-center text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
 
   return (
-    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-4 lg:flex-row lg:items-end lg:justify-between">
-      <div>
+    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-3 sm:p-4 lg:flex-row lg:items-end lg:justify-between">
+      <div className="min-w-0">
         <div className="text-base font-bold text-stone-950">Tìm trong cây</div>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-stone-600">
           Kéo để di chuyển cây, cuộn để phóng to hoặc thu nhỏ, bấm vào một
@@ -66,8 +66,8 @@ export function FamilyTreeToolbar({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700">
+      <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center">
+        <div className="rounded-md border border-stone-200 bg-white px-3 py-2 text-center text-sm text-stone-700">
           {personCount} người / {nodeCount} nút
         </div>
         {searchStatus ? (

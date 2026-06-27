@@ -22,12 +22,12 @@ export function TreeEditorToolbar({
   onAutoLayout,
 }: TreeEditorToolbarProps) {
   const secondaryButton =
-    "min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
+    "min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 text-center text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
 
   return (
-    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-4">
-      <div>
-        <div className="text-base font-bold text-stone-950">
+    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-3 sm:p-4">
+      <div className="min-w-0">
+        <div className="break-words text-base font-bold text-stone-950">
           Cây gia phả · Chế độ chỉnh sửa
         </div>
         <div className="mt-1 text-sm leading-6 text-stone-600">
@@ -39,7 +39,7 @@ export function TreeEditorToolbar({
         Sau khi kéo thẻ, bấm “Lưu bố cục” để ghi vị trí mới. Các nút thêm
         người thân nằm trong bảng chi tiết bên phải và dùng action hiện có.
       </div>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <button
           type="button"
           onClick={onFitView}
@@ -81,7 +81,7 @@ export function TreeEditorToolbar({
           <input type="hidden" name="positions_json" value={positionsJson} />
           <button
             type="submit"
-            className="min-h-11 rounded-md border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#1f4939]"
+            className="min-h-11 w-full rounded-md border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#1f4939] sm:w-auto"
           >
             Lưu bố cục
           </button>

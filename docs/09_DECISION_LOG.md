@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 173 - A-14E mobile UX polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14E may improve mobile/tablet usability for public UI, admin UI, Tree Viewer,
+Tree Editor, people list/form, related-member add panel, selected-person
+preview, shared empty/loading/error states, Vietnamese copy and accessibility
+touch targets.
+
+The style remains classic modern genealogy: cổ điển pha hiện đại, warm paper,
+stone text, muted rust labels and restrained deep green actions. On mobile,
+readability and tap safety take priority over decorative density.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- runtime merge/dedupe;
+- route/action/service merge/dedupe;
+- permission runtime registration;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change.
+
+Public tree remains read-only. Backup gate remains
+`BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB merge/dedupe remains not
+applied. Runtime merge/dedupe remains closed. Permission runtime remains
+unregistered.
+
+Ly do:
+
+- Mobile and tablet are likely primary viewing devices for family members.
+- Tree browsing and member forms need touch-safe controls and readable long
+  Vietnamese names.
+- Mobile polish must not be interpreted as approval for schema, database,
+  merge/dedupe runtime, permission runtime or deployment work.
+
 ## Decision 172 - A-14D tree interaction polish is UI-only
 
 Status: `ACTIVE`

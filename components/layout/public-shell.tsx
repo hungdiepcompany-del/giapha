@@ -19,30 +19,30 @@ export function PublicShell({ children }: PublicShellProps) {
   return (
     <div className="min-h-screen bg-[#f4efe6] text-stone-900">
       <header className="border-b border-stone-200 bg-[#fffaf0]/95 shadow-sm">
-        <div className="mx-auto flex min-h-16 max-w-7xl flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex min-h-16 max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-3 text-base font-black uppercase tracking-normal text-stone-950"
+            className="inline-flex min-w-0 items-center gap-3 text-base font-black uppercase tracking-normal text-stone-950"
           >
             <span className="flex size-10 items-center justify-center rounded-md border border-[#8a4b2a]/30 bg-[#efe0c8] text-sm text-[#6f3b22]">
               Gia
             </span>
-            <span>
+            <span className="min-w-0 break-words">
               WEB GIA PHẢ
               <span className="block text-xs font-semibold normal-case text-stone-600">
                 Lưu giữ ký ức gia đình
               </span>
             </span>
           </Link>
-          <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+          <nav className="grid w-full grid-cols-2 gap-2 text-sm font-semibold sm:flex sm:w-auto sm:flex-wrap sm:items-center">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={
                   pathname === item.href
-                    ? "rounded-md border border-stone-900 bg-stone-900 px-3 py-2 text-white"
-                    : "rounded-md border border-stone-200 bg-white px-3 py-2 text-stone-700 transition hover:border-stone-400 hover:text-stone-950"
+                    ? "inline-flex min-h-11 items-center justify-center rounded-md border border-stone-900 bg-stone-900 px-3 py-2 text-center text-white"
+                    : "inline-flex min-h-11 items-center justify-center rounded-md border border-stone-200 bg-white px-3 py-2 text-center text-stone-700 transition hover:border-stone-400 hover:text-stone-950"
                 }
               >
                 {item.label}
@@ -50,7 +50,7 @@ export function PublicShell({ children }: PublicShellProps) {
             ))}
             <Link
               href="/auth/login"
-              className="rounded-md border border-emerald-800 bg-emerald-800 px-3 py-2 text-white transition hover:bg-emerald-900"
+              className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-md border border-emerald-800 bg-emerald-800 px-3 py-2 text-center text-white transition hover:bg-emerald-900 sm:col-span-1"
             >
               Vào quản trị
             </Link>

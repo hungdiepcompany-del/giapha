@@ -177,7 +177,7 @@ export function FamilyTreeEditor({
           onZoomOut={() => flow?.zoomOut({ duration: 250 })}
           onAutoLayout={autoLayout}
         />
-        <div className="h-[760px] min-h-[600px] bg-[#f7efe1]">
+        <div className="h-[62vh] min-h-[460px] bg-[#f7efe1] sm:h-[760px] sm:min-h-[600px]">
           <ReactFlow
             nodes={nodes}
             edges={edges}

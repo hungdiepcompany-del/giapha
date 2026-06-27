@@ -11,12 +11,12 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
   return (
     <PublicShell>
       <section className="border-b border-stone-200 bg-[#fbf4e8]">
-        <div className="mx-auto grid min-h-[calc(100vh-164px)] w-full max-w-7xl content-center gap-10 px-5 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:py-16">
+        <div className="mx-auto grid min-h-[calc(100vh-164px)] w-full max-w-7xl content-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:py-16">
           <div className="space-y-7">
             <p className="text-sm font-semibold uppercase tracking-normal text-[#8a4b2a]">
               Không gian gia phả cho cả gia đình
             </p>
-            <h1 className="max-w-3xl text-4xl font-bold tracking-normal text-stone-950 sm:text-5xl">
+            <h1 className="max-w-3xl break-words text-3xl font-bold tracking-normal text-stone-950 sm:text-5xl">
               Lưu giữ ký ức gia đình, kết nối các thế hệ
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-stone-700">
@@ -24,7 +24,7 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
               trực quan, quản lý quyền riêng tư và giữ dữ liệu có thể xuất ra
               khi cần lưu trữ lâu dài.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="grid gap-3 sm:flex sm:flex-wrap">
               <ActionLink href="/tree" variant="primary">
                 Khám phá cây gia phả
               </ActionLink>
@@ -36,8 +36,8 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
             </p>
           </div>
 
-          <div className="rounded-md border border-[#8a4b2a]/20 bg-[#fffaf0] p-5 shadow-sm">
-            <div className="rounded-md border border-stone-200 bg-[#fbf4e8] p-5">
+          <div className="rounded-md border border-[#8a4b2a]/20 bg-[#fffaf0] p-4 shadow-sm sm:p-5">
+            <div className="rounded-md border border-stone-200 bg-[#fbf4e8] p-4 sm:p-5">
               <p className="text-sm font-semibold uppercase text-[#8a4b2a]">
                 Sổ gia phả công khai
               </p>
@@ -68,7 +68,7 @@ export function PublicHome({ peopleCount, treeNodeCount }: PublicHomeProps) {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-5 py-10 sm:px-6">
+      <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
         <div className="grid gap-4 text-sm leading-6 text-stone-700 md:grid-cols-2 lg:grid-cols-4">
           <SectionCard>
             <h2 className="font-bold text-stone-950">Lưu giữ dòng họ</h2>

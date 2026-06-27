@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14E - Mobile UX Sweep completed
+
+- Added `docs/PLAN_A14E_MOBILE_UX_SWEEP.md`.
+- Public shell navigation now uses a mobile two-column grid, full-width admin
+  login action and safer brand wrapping.
+- Public home/tree/profile now have tighter mobile padding, stacked CTAs and
+  long-text wrapping while preserving public read-only behavior.
+- Admin shell/sidebar/header now have bounded mobile navigation, larger touch
+  targets and safer long account/role wrapping.
+- Shared UI primitives now handle mobile action stacking, long title wrapping
+  and compact card/empty-state padding.
+- People list/form now have improved mobile card layout, larger actions,
+  text-base inputs and clearer mobile submit/cancel stacking.
+- Tree Viewer and Tree Editor now use mobile grid toolbars, viewport-aware
+  canvas heights, mobile-safe node card widths and selected preview placement
+  that does not cover the canvas.
+- Tree Editor related-member add panel now has rounded mobile inputs, larger
+  touch targets and narrow-screen segmented controls.
+- Added `scripts/check-a14e-mobile-ux-sweep.cjs` and package command
+  `check:a14e-mobile-ux-sweep`.
+- Validation PASS: A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI polish,
+  Vietnamese UI copy, Vietnamese cultural UI/UX, tree relationship picker,
+  inline create, duplicate suggestion, tree polish/dedupe/data-quality,
+  A-10/A-11/A-12 merge/dedupe guards, env safe, migrations, typecheck, lint,
+  root build and diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14E.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL run on
+  DB, no seed/backfill, no runtime merge/dedupe, no route/action/service
+  merge/dedupe, no permission runtime registration, no Worker/OpenNext/Wrangler
+  config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+  merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+  Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14D - Tree Viewer Interaction Polish completed
 
 - Added `docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md`.

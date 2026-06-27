@@ -131,6 +131,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
   "app/(admin)/admin/tree/page.tsx",
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14e-mobile-ux-sweep.cjs",
+  "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 

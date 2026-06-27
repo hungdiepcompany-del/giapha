@@ -29,7 +29,7 @@ function PersonCard({
   return (
     <div
       tabIndex={0}
-      className={`w-[248px] rounded-md border bg-[#fffaf0] px-4 py-3 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#245744] ${
+      className={`w-[248px] max-w-[78vw] rounded-md border bg-[#fffaf0] px-4 py-3 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#245744] ${
         selected
           ? "border-[#245744] shadow-md ring-2 ring-emerald-100"
           : "border-stone-300 hover:border-[#8a4b2a] hover:shadow-md"
@@ -42,11 +42,11 @@ function PersonCard({
         </div>
       ) : null}
       <div className="min-w-0">
-        <div className="truncate text-base font-bold text-stone-950">
+        <div className="truncate text-base font-bold text-stone-950" title={data.displayName || data.fullName}>
           {data.displayName || data.fullName}
         </div>
         {data.displayName ? (
-          <div className="truncate text-xs text-stone-500">{data.fullName}</div>
+          <div className="truncate text-xs text-stone-500" title={data.fullName}>{data.fullName}</div>
         ) : null}
       </div>
       <div className="mt-3 grid gap-1 text-xs text-stone-600">
@@ -75,7 +75,7 @@ function FamilyUnitCard({
   data: Extract<TreeGraphNode, { kind: "family" }>;
 }) {
   return (
-    <div className="w-[128px] rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-center shadow-sm">
+      <div className="w-[128px] max-w-[52vw] rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-center shadow-sm">
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <div className="truncate text-xs font-bold text-emerald-950">
         {data.label}

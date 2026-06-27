@@ -48,6 +48,11 @@ const allowedChangedFiles = new Set([
   "components/tree/tree-editor-side-panel.tsx",
   "components/tree/tree-editor-toolbar.tsx",
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14e-mobile-ux-sweep.cjs",
+  "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
+  "components/public/public-person-profile.tsx",
+  "components/public/public-home.tsx",
+  "components/layout/public-shell.tsx",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 

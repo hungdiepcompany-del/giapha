@@ -19,7 +19,7 @@ function PublicField({
   return (
     <div>
       <dt className="font-bold text-stone-950">{label}</dt>
-      <dd className="mt-1 text-stone-700">
+      <dd className="mt-1 break-words text-stone-700">
         {value || "Thông tin này đang được gia đình cập nhật"}
       </dd>
     </div>
@@ -36,7 +36,7 @@ export function PublicPersonProfile({ person }: PublicPersonProfileProps) {
 
   return (
     <PublicShell>
-      <section className="mx-auto w-full max-w-4xl px-5 py-10 sm:px-6">
+      <section className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
         <PageHeader
           eyebrow="Hồ sơ công khai"
           title={person.label}

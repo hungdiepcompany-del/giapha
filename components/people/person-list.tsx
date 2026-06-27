@@ -48,7 +48,7 @@ export function PersonList({
 
   return (
     <div className="grid gap-4">
-      <div className="rounded-md border border-stone-200 bg-[#fffaf0] px-4 py-3 text-sm text-stone-700 shadow-sm">
+      <div className="rounded-md border border-stone-200 bg-[#fffaf0] px-4 py-3 text-sm leading-6 text-stone-700 shadow-sm">
         Đang hiển thị{" "}
         <span className="font-bold text-stone-950">{people.length}</span> thành
         viên. Mở hồ sơ trước khi sửa để tránh thay đổi nhầm thông tin gia phả.
@@ -58,17 +58,17 @@ export function PersonList({
         {people.map((person) => (
           <article
             key={person.id}
-            className="rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm"
+            className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm"
           >
-            <div className="font-bold text-stone-950">
+            <div className="break-words font-bold text-stone-950">
               {person.display_name || person.full_name}
             </div>
             {person.display_name ? (
-              <div className="mt-1 text-sm text-stone-500">
+              <div className="mt-1 break-words text-sm text-stone-500">
                 {person.full_name}
               </div>
             ) : null}
-            <dl className="mt-3 grid grid-cols-2 gap-2 text-sm text-stone-700">
+            <dl className="mt-3 grid grid-cols-1 gap-2 text-sm text-stone-700 min-[380px]:grid-cols-2">
               <div>
                 <dt className="font-semibold text-stone-800">Đời</dt>
                 <dd>{person.generation_number ?? "Chưa rõ"}</dd>
@@ -93,9 +93,9 @@ export function PersonList({
                 Đã xóa mềm
               </div>
             ) : null}
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-4 grid gap-3 min-[380px]:flex min-[380px]:flex-wrap">
               <Link
-                className="inline-flex min-h-10 items-center rounded-md border border-[#245744] bg-white px-3 py-2 text-sm font-semibold text-[#245744]"
+                className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#245744] bg-white px-3 py-2 text-sm font-semibold text-[#245744]"
                 href={`/admin/people/${person.id}`}
               >
                 {canUpdate ? "Sửa hồ sơ" : "Xem hồ sơ"}
@@ -106,7 +106,7 @@ export function PersonList({
                   <button
                     type="submit"
                     aria-label={`Xóa mềm hồ sơ ${person.display_name || person.full_name}`}
-                    className="inline-flex min-h-10 items-center rounded-md border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 min-[380px]:w-auto"
                   >
                     Xóa mềm
                   </button>
@@ -138,7 +138,7 @@ export function PersonList({
                 className="border-b border-stone-100 align-top last:border-b-0"
               >
                 <td className="px-4 py-4">
-                  <div className="font-semibold text-stone-900">
+                    <div className="break-words font-semibold text-stone-900">
                     {person.display_name || person.full_name}
                   </div>
                   {person.display_name ? (

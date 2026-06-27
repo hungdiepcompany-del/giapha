@@ -43,7 +43,7 @@ function FieldLabel({ children }: { children: string }) {
 }
 
 const inputClass =
-  "mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-950 outline-none focus:border-[#245744] disabled:bg-stone-100 read-only:bg-stone-100";
+  "mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base text-stone-950 outline-none focus:border-[#245744] disabled:bg-stone-100 read-only:bg-stone-100";
 
 export function PersonForm({
   action,
@@ -294,11 +294,11 @@ export function PersonForm({
         </div>
       </SectionCard>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="grid gap-3 sm:flex sm:flex-wrap">
         {!readOnly ? (
           <button
             type="submit"
-            className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+            className="min-h-11 rounded-md border border-[#245744] bg-[#245744] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1f4939]"
           >
             {submitLabel}
           </button>

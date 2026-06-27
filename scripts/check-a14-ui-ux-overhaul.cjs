@@ -66,6 +66,8 @@ const allowedChangedFiles = new Set([
   "app/(admin)/admin/tree/edit/page.tsx",
   "components/tree/family-tree-editor.tsx",
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14e-mobile-ux-sweep.cjs",
+  "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 

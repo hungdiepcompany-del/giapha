@@ -124,12 +124,12 @@ export function AdminShell({
           <div>
             <Link
               href="/admin"
-              className="flex items-center gap-3 text-base font-black uppercase tracking-normal text-stone-950"
+              className="flex min-w-0 items-center gap-3 text-base font-black uppercase tracking-normal text-stone-950"
             >
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[#d8c8ad] bg-[#fbf4e8] text-sm text-[#245744] shadow-sm">
                 Gia
               </span>
-              <span>
+              <span className="min-w-0 break-words">
                 Quản trị GIA PHẢ
                 <span className="block text-xs font-semibold normal-case text-stone-600">
                   Sổ gia phả nội bộ
@@ -142,7 +142,7 @@ export function AdminShell({
             </p>
           </div>
 
-          <nav className="grid gap-5 text-sm" aria-label="Điều hướng quản trị">
+          <nav className="grid max-h-[52vh] gap-5 overflow-y-auto pr-1 text-sm lg:max-h-none lg:overflow-visible lg:pr-0" aria-label="Điều hướng quản trị">
             {navGroups.map((group) => (
               <div key={group.title}>
                 <div className="mb-2 text-xs font-bold uppercase tracking-normal text-stone-500">
@@ -162,8 +162,8 @@ export function AdminShell({
                         aria-current={active ? "page" : undefined}
                         className={
                           active
-                            ? "rounded-md border border-[#245744] bg-[#245744] px-3 py-2 font-bold text-white shadow-sm"
-                            : "rounded-md border border-transparent px-3 py-2 font-semibold text-stone-700 transition hover:border-[#d8c8ad] hover:bg-[#f6efe2] hover:text-stone-950"
+                            ? "block min-h-11 rounded-md border border-[#245744] bg-[#245744] px-3 py-2 font-bold text-white shadow-sm"
+                            : "block min-h-11 rounded-md border border-transparent px-3 py-2 font-semibold text-stone-700 transition hover:border-[#d8c8ad] hover:bg-[#f6efe2] hover:text-stone-950"
                         }
                       >
                         <span className="block">{item.label}</span>
@@ -195,8 +195,8 @@ export function AdminShell({
 
       <div className="min-w-0">
         <header className="border-b border-stone-200 bg-[#fffaf0]/90 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between">
-            <div className="grid gap-1 text-sm text-stone-600">
+          <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
+            <div className="grid min-w-0 gap-1 text-sm text-stone-600">
               <div>
                 <span className="font-bold text-stone-800">Người dùng:</span>{" "}
                 {userEmail ?? "Không rõ"}

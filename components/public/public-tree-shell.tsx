@@ -38,7 +38,7 @@ function publicTreeErrorMessage(error: string) {
 export function PublicTreeShell({ result }: PublicTreeShellProps) {
   return (
     <PublicShell>
-      <section className="mx-auto w-full max-w-7xl px-6 py-10">
+      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <PageHeader
           eyebrow="Cây gia phả công khai"
           title="Khám phá cây gia phả"

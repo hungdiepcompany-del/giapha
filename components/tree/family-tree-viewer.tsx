@@ -86,8 +86,8 @@ function SelectedPersonPreview({
 }) {
   if (!selectedNode || selectedNode.kind !== "person") {
     return (
-      <div className="rounded-md border border-dashed border-stone-300 bg-[#fffaf0] p-4 text-sm leading-6 text-stone-700">
-        <div className="font-bold text-stone-950">Chọn một người trên cây</div>
+      <div className="min-w-0 rounded-md border border-dashed border-stone-300 bg-[#fffaf0] p-4 text-sm leading-6 text-stone-700">
+        <div className="break-words font-bold text-stone-950">Chọn một người trên cây</div>
         <p className="mt-1">
           Chọn một người trên cây để xem thông tin chính. Khung xem này không
           chỉnh sửa dữ liệu.
@@ -103,15 +103,15 @@ function SelectedPersonPreview({
   const branchLabel = selectedNode.lineageBranchName ?? selectedNode.branchName;
 
   return (
-    <div className="rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm">
+    <div className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm">
       <div className="text-xs font-bold uppercase tracking-normal text-[#8a4b2a]">
         Đang chọn
       </div>
-      <h2 className="mt-2 text-lg font-bold text-stone-950">
+      <h2 className="mt-2 break-words text-lg font-bold text-stone-950">
         {personName(selectedNode)}
       </h2>
       {selectedNode.displayName ? (
-        <p className="mt-1 text-sm text-stone-500">{selectedNode.fullName}</p>
+        <p className="mt-1 break-words text-sm text-stone-500">{selectedNode.fullName}</p>
       ) : null}
       <dl className="mt-3 grid gap-2 text-sm text-stone-700 sm:grid-cols-2">
         <div>
@@ -133,7 +133,7 @@ function SelectedPersonPreview({
       </dl>
       <Link
         href={profileHref}
-        className="mt-4 inline-flex min-h-10 items-center rounded-md border border-[#245744] bg-white px-3 py-2 text-sm font-semibold text-[#245744] transition hover:bg-[#f6efe2]"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center justify-center rounded-md border border-[#245744] bg-white px-3 py-2 text-center text-sm font-semibold text-[#245744] transition hover:bg-[#f6efe2]"
       >
         {mode === "public" ? "Xem hồ sơ công khai" : "Mở hồ sơ quản trị"}
       </Link>
@@ -255,9 +255,9 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
         onZoomOut={() => flow?.zoomOut({ duration: 250 })}
         onResetLayout={resetLayout}
       />
-      <div className="grid gap-4 p-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-4 p-3 sm:p-4 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 overflow-hidden rounded-md border border-stone-200 bg-[#f7efe1]">
-          <div className="h-[680px] min-h-[520px]">
+          <div className="h-[58vh] min-h-[420px] sm:h-[680px] sm:min-h-[520px]">
             <ReactFlow
               nodes={nodes}
               edges={edges}
