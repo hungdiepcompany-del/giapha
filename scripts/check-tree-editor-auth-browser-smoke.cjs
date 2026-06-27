@@ -133,6 +133,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-vietnamese-genealogy-schema-candidate.cjs",
   "scripts/check-vietnamese-genealogy-first-migration-scope.cjs",
   "scripts/check-vietnamese-genealogy-real-migration-file.cjs",
+  "app/(admin)/admin/page.tsx",
+  "components/ui/status-callout.tsx",
+  "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
 ]);
 
 const packageJson = readJson("package.json");

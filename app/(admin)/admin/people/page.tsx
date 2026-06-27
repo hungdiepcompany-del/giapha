@@ -54,9 +54,9 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Nền tảng quản lý thành viên"
+          eyebrow="Hồ sơ thành viên"
           title="Thành viên"
-          description="Tra cứu, lọc và mở hồ sơ từng người. Dữ liệu riêng tư vẫn nằm sau permission."
+          description="Tra cứu, lọc và mở hồ sơ từng người. Dữ liệu riêng tư và ghi chú quản trị vẫn nằm sau permission."
           actions={
             canCreate ? (
               <ActionLink href="/admin/people/new" variant="primary">
@@ -66,30 +66,34 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
           }
         />
 
-        <form className="mt-6 grid gap-3 border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
+        <form className="mt-6 grid gap-4 rounded-md border border-stone-200 bg-[#fffaf0] p-5 shadow-sm md:grid-cols-4">
           <div className="md:col-span-4">
-            <h2 className="text-base font-bold text-slate-950">Lọc danh sách</h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
-              Dùng bộ lọc để tìm đúng người trước khi sửa hồ sơ hoặc nối quan hệ.
+            <h2 className="text-base font-bold text-stone-950">
+              Lọc danh sách
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-stone-600">
+              Tìm đúng người trước khi sửa hồ sơ hoặc nối quan hệ. Nếu chưa
+              chắc, hãy mở hồ sơ để đối chiếu chi nhánh, đời thứ và trạng thái
+              riêng tư.
             </p>
           </div>
           <label className="block md:col-span-2">
-            <span className="text-sm font-semibold text-slate-800">Tìm kiếm</span>
+            <span className="text-sm font-semibold text-stone-800">Tìm kiếm</span>
             <input
               name="q"
               defaultValue={params.q ?? ""}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
-              placeholder="Nhập họ tên hoặc tên hiển thị"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-950 outline-none focus:border-[#245744]"
+              placeholder="Nhập họ tên hoặc tên thường gọi"
             />
           </label>
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">
+            <span className="text-sm font-semibold text-stone-800">
               Phạm vi hiển thị
             </span>
             <select
               name="visibility"
               defaultValue={params.visibility ?? "all"}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-950 outline-none focus:border-[#245744]"
             >
               <option value="all">Tất cả</option>
               <option value="public">Công khai</option>
@@ -98,11 +102,11 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
             </select>
           </label>
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">Trạng thái</span>
+            <span className="text-sm font-semibold text-stone-800">Trạng thái</span>
             <select
               name="is_living"
               defaultValue={params.is_living ?? "all"}
-              className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2 outline-none focus:border-slate-900"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-950 outline-none focus:border-[#245744]"
             >
               <option value="all">Tất cả</option>
               <option value="living">Còn sống</option>
@@ -112,7 +116,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
           <div className="flex flex-wrap gap-3 md:col-span-4">
             <button
               type="submit"
-              className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+              className="min-h-11 rounded-md border border-[#245744] bg-[#245744] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1f4939]"
             >
               Lọc danh sách
             </button>
@@ -124,7 +128,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
 
         {params.error ? (
           <StatusCallout tone="danger" className="mt-6">
-            {params.error}
+            Không thể hoàn tất thao tác. Hãy kiểm tra quyền và thử lại.
           </StatusCallout>
         ) : null}
 

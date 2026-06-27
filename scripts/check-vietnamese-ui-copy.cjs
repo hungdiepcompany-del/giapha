@@ -118,7 +118,7 @@ for (const token of [
   "Tải lên family.json",
   "Xung đột DB",
   "Nền tảng quản lý quan hệ",
-  "Nền tảng quản lý thành viên",
+  "Hồ sơ thành viên",
   "Nền tảng xem cây gia phả",
   "Nền tảng chỉnh sửa cây gia phả",
   "Đơn vị gia đình",

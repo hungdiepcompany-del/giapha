@@ -309,6 +309,8 @@ const allowedA14UiRuntimeFiles = new Set([
   "components/ui/empty-state.tsx",
   "components/ui/page-header.tsx",
   "components/ui/section-card.tsx",
+  "app/(admin)/admin/page.tsx",
+  "components/ui/status-callout.tsx",
 ]);
 
 const runtimeStatus = gitOutput([

@@ -125,6 +125,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-post-runtime-ui-deploy-readiness.cjs",
   "scripts/check-production-monitoring-auth-smoke-prep.cjs",
   "scripts/check-routine-production-monitoring-snapshot.cjs",
+  "app/(admin)/admin/page.tsx",
+  "components/ui/status-callout.tsx",
+  "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
 ]);
 
 const packageJson = readJson("package.json");

@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-27 - A-14C - Admin Dashboard / Layout UX Polish
+
+- Added `docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md`.
+- Polished admin shell/sidebar into genealogy-oriented groups: Tổng quan,
+  Thành viên / hồ sơ, Cây gia phả, Nhập / xuất dữ liệu and An toàn / hệ thống.
+- Added short sidebar group/item descriptions so users can choose the next step
+  without knowing route names.
+- Reworked admin dashboard as a practical starting point with quick actions:
+  Thêm thành viên, Mở Tree Editor, Xem cây công khai and Xuất dữ liệu.
+- Added dashboard safety cards confirming public/admin separation,
+  merge/dedupe closed status and backup gate evidence requirement.
+- Polished shared admin primitives: rounded action links, section cards, empty
+  states and status callouts with warm paper styling.
+- Polished People admin filter/list: warmer filter panel, clearer generic error
+  state, better empty state, warm desktop table/mobile cards and separated soft
+  delete action.
+- Polished person form inputs with rounded fields and deep-green focus state.
+- Added `scripts/check-a14c-admin-dashboard-layout-ux.cjs` and
+  `npm run check:a14c-admin-dashboard-layout-ux`.
+- Validation PASS: A-14C, A-14B, A-14A, A-14, UI polish, Vietnamese UI copy,
+  Vietnamese cultural UI/UX, tree relationship picker, inline create,
+  duplicate suggestion, tree polish/dedupe/data-quality, A-10/A-11/A-12
+  merge/dedupe guards, env safe, migrations, typecheck, lint, root build and
+  diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip. Browser visual smoke was not run because no Browser navigation
+  tool was available in this Codex session.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; A-13B backup gate remains blocked and was not recreated by A-14C.
+- Boundary: no migration, no `.sql`, no DB apply, no check SQL run on DB, no
+  seed/backfill, no runtime merge/dedupe, no route/action/service merge/dedupe,
+  no permission runtime registration, no Worker/OpenNext/Wrangler config
+  change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14B - Public Tree / Home UX Classic Modern Polish
 
 - Added `docs/PLAN_A14B_PUBLIC_TREE_HOME_UX.md`.

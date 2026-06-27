@@ -9,9 +9,9 @@ const variantClasses = {
   danger:
     "border-red-700 bg-white text-red-700 hover:bg-red-50",
   primary:
-    "border-stone-900 bg-stone-900 text-white hover:bg-stone-700",
+    "border-[#245744] bg-[#245744] text-white hover:bg-[#1f4939]",
   secondary:
-    "border-stone-300 bg-white text-stone-900 hover:border-stone-900 hover:bg-[#fffaf0]",
+    "border-stone-300 bg-white text-stone-900 hover:border-[#245744] hover:bg-[#fffaf0] hover:text-[#245744]",
 };
 
 export function ActionLink({
@@ -22,7 +22,7 @@ export function ActionLink({
   return (
     <Link
       {...props}
-      className={`inline-flex min-h-11 items-center justify-center border px-5 py-3 text-sm font-semibold transition ${variantClasses[variant]} ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center rounded-md border px-5 py-3 text-sm font-semibold transition ${variantClasses[variant]} ${className}`}
     />
   );
 }

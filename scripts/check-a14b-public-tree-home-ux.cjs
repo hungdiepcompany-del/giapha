@@ -35,6 +35,18 @@ const allowedChangedFiles = new Set([
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
   "scripts/check-vietnamese-ui-copy.cjs",
+  "app/(admin)/admin/page.tsx",
+  "app/(admin)/admin/people/page.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/people/person-form.tsx",
+  "components/people/person-list.tsx",
+  "components/ui/action-link.tsx",
+  "components/ui/empty-state.tsx",
+  "components/ui/page-header.tsx",
+  "components/ui/section-card.tsx",
+  "components/ui/status-callout.tsx",
+  "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
 ]);
 
 function readFile(relativePath) {

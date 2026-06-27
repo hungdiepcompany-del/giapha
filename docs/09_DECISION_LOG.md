@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 171 - A-14C admin UX polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14C may improve admin dashboard, admin shell/sidebar, admin navigation copy,
+shared admin primitives, people list/filter/form styling, admin empty/error
+states, Vietnamese copy and accessibility states.
+
+The approved admin style follows the same classic modern genealogy direction:
+warm paper/ivory backgrounds, stone text, muted rust labels, restrained deep
+green primary actions, light borders, rounded corners and calm spacing.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- runtime merge/dedupe;
+- route/action/service merge/dedupe;
+- permission runtime registration;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change.
+
+Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+Permission runtime remains unregistered.
+
+Ly do:
+
+- Admin users need clearer navigation and next-step guidance before any new
+  data operation is opened.
+- The dashboard should feel like a family-record workspace rather than a
+  technical module launcher.
+- UI polish must not blur the line between read-only/admin viewing and real
+  schema, DB or merge/dedupe runtime authorization.
+
 ## Decision 170 - A-14B public UX polish is UI-only
 
 Status: `ACTIVE`

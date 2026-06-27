@@ -58,6 +58,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
   "scripts/check-vietnamese-ui-copy.cjs",
+  "app/(admin)/admin/page.tsx",
+  "components/ui/status-callout.tsx",
+  "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -187,10 +191,10 @@ requireIncludes(
 );
 
 for (const token of [
-  "Làm việc hằng ngày",
+  "Tổng quan",
   "Cây gia phả",
-  "An toàn dữ liệu",
-  "Gia phả Việt Nam",
+  "An toàn / hệ thống",
+  "Dòng họ / chi / đời",
   "Người dùng:",
   "Số quyền:",
   "Lọc danh sách",

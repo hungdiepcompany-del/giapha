@@ -39,11 +39,11 @@ const visibilityLabels: Record<string, string> = {
 };
 
 function FieldLabel({ children }: { children: string }) {
-  return <span className="text-sm font-semibold text-slate-800">{children}</span>;
+  return <span className="text-sm font-semibold text-stone-800">{children}</span>;
 }
 
 const inputClass =
-  "mt-1 min-h-11 w-full border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-slate-900 disabled:bg-slate-100 read-only:bg-slate-100";
+  "mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-950 outline-none focus:border-[#245744] disabled:bg-stone-100 read-only:bg-stone-100";
 
 export function PersonForm({
   action,
