@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14D - Tree Viewer Interaction Polish completed
+
+- Added `docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md`.
+- Tree viewer toolbar now has explicit Vietnamese controls for `Vừa màn hình`,
+  `Phóng to`, `Thu nhỏ` and `Đưa cây về giữa`.
+- Viewer mini help now explains dragging/panning, scroll zoom and selecting a
+  person.
+- Tree viewer now has a read-only selected-person preview with grouped fields
+  and public/admin CTA split.
+- Node cards now have warmer selected state, `Đang chọn` badge and keyboard
+  focus ring.
+- Admin Tree Editor toolbar now says `Chế độ chỉnh sửa`, explains layout-only
+  dragging and uses the warm paper tree canvas.
+- Tree empty/error states were hardened for public/admin wording and avoid raw
+  technical error leakage.
+- Added `scripts/check-a14d-tree-viewer-interaction-ux.cjs` and package command
+  `check:a14d-tree-viewer-interaction-ux`.
+- Validation PASS: A-14D, A-14C, A-14B, A-14A, A-14, UI polish, Vietnamese UI
+  copy, Vietnamese cultural UI/UX, tree relationship picker, inline create,
+  duplicate suggestion, tree polish/dedupe/data-quality, A-10/A-11/A-12
+  merge/dedupe guards, env safe, migrations, typecheck, lint, root build and
+  diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip. Browser visual smoke was not run because no Browser navigation
+  tool was available in this Codex session.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14D.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL run on
+  DB, no seed/backfill, no runtime merge/dedupe, no route/action/service
+  merge/dedupe, no permission runtime registration, no Worker/OpenNext/Wrangler
+  config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+  merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+  Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14C - Admin Dashboard / Layout UX Polish completed
 
 - Added `docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md`.

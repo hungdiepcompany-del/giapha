@@ -62,6 +62,11 @@ const allowedChangedFiles = new Set([
   "components/ui/status-callout.tsx",
   "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/family-tree-editor.tsx",
+  "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 
 function readFile(relativePath) {

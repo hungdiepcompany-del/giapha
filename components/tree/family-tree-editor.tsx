@@ -161,12 +161,12 @@ export function FamilyTreeEditor({
   );
 
   if (graph.nodes.length === 0) {
-    return <FamilyTreeEmptyState />;
+    return <FamilyTreeEmptyState mode="admin" />;
   }
 
   return (
     <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_400px]">
-      <div className="min-w-0 overflow-hidden border border-slate-200 bg-white shadow-sm">
+      <div className="min-w-0 overflow-hidden rounded-md border border-stone-200 bg-[#fffaf0] shadow-sm">
         <TreeEditorToolbar
           nodeCount={nodes.length}
           positionsJson={positionsJson}
@@ -177,7 +177,7 @@ export function FamilyTreeEditor({
           onZoomOut={() => flow?.zoomOut({ duration: 250 })}
           onAutoLayout={autoLayout}
         />
-        <div className="h-[760px] min-h-[600px] bg-slate-50">
+        <div className="h-[760px] min-h-[600px] bg-[#f7efe1]">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -193,7 +193,7 @@ export function FamilyTreeEditor({
             nodesConnectable={false}
             elementsSelectable
           >
-            <Background color="#cbd5e1" gap={24} />
+            <Background color="#d8c8ad" gap={24} />
             <MiniMap pannable zoomable nodeStrokeWidth={3} />
           </ReactFlow>
         </div>

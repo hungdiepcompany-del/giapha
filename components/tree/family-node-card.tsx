@@ -21,24 +21,24 @@ function PersonCard({
   const dateRange =
     data.birthYear || data.deathYear
       ? `${data.birthYear ?? "Chưa rõ năm sinh"} - ${
-          data.deathYear ??
-          (data.isLiving ? "nay" : "Chưa rõ năm mất")
+          data.deathYear ?? (data.isLiving ? "nay" : "Chưa rõ năm mất")
         }`
       : "Chưa rõ năm sinh";
   const branchLabel = data.lineageBranchName ?? data.branchName;
 
   return (
     <div
-      className={`w-[248px] rounded-md border bg-[#fffaf0] px-4 py-3 shadow-sm transition ${
+      tabIndex={0}
+      className={`w-[248px] rounded-md border bg-[#fffaf0] px-4 py-3 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#245744] ${
         selected
-          ? "border-emerald-700 shadow-md ring-2 ring-emerald-200"
-          : "border-stone-300 hover:border-stone-500"
+          ? "border-[#245744] shadow-md ring-2 ring-emerald-100"
+          : "border-stone-300 hover:border-[#8a4b2a] hover:shadow-md"
       }`}
     >
       <Handle type="target" position={Position.Top} className="opacity-0" />
       {selected ? (
-        <div className="mb-2 text-xs font-bold text-emerald-800">
-          Người đang chọn
+        <div className="mb-2 inline-flex rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-900">
+          Đang chọn
         </div>
       ) : null}
       <div className="min-w-0">
@@ -50,7 +50,7 @@ function PersonCard({
         ) : null}
       </div>
       <div className="mt-3 grid gap-1 text-xs text-stone-600">
-        {dateRange ? <div>{dateRange}</div> : null}
+        <div>{dateRange}</div>
         {data.generationNumber ? (
           <div>Đời thứ {data.generationNumber}</div>
         ) : null}

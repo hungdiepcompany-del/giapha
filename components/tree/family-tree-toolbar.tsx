@@ -8,6 +8,8 @@ type FamilyTreeToolbarProps = {
   onSearchChange: (value: string) => void;
   onFocusSearch: () => void;
   onFitView: () => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
   onResetLayout: () => void;
 };
 
@@ -19,15 +21,21 @@ export function FamilyTreeToolbar({
   onSearchChange,
   onFocusSearch,
   onFitView,
+  onZoomIn,
+  onZoomOut,
   onResetLayout,
 }: FamilyTreeToolbarProps) {
+  const secondaryButton =
+    "min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
+
   return (
     <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-4 lg:flex-row lg:items-end lg:justify-between">
       <div>
         <div className="text-base font-bold text-stone-950">Tìm trong cây</div>
-        <p className="mt-1 max-w-xl text-sm leading-6 text-stone-600">
-          Nhập tên để đưa người thân vào giữa khung nhìn. Có thể kéo nền để di
-          chuyển và cuộn để phóng to hoặc thu nhỏ.
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-stone-600">
+          Kéo để di chuyển cây, cuộn để phóng to hoặc thu nhỏ, bấm vào một
+          người để xem thông tin. Dùng nút “Vừa màn hình” nếu cây bị lệch khỏi
+          khung.
         </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
           <label className="block">
@@ -43,14 +51,15 @@ export function FamilyTreeToolbar({
                   onFocusSearch();
                 }
               }}
-              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base outline-none focus:border-stone-900"
+              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base outline-none focus:border-[#245744]"
               placeholder="Nhập họ tên hoặc tên thường gọi"
             />
           </label>
           <button
             type="button"
             onClick={onFocusSearch}
-            className="min-h-11 self-end rounded-md border border-stone-900 bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-700"
+            className="min-h-11 self-end rounded-md border border-[#245744] bg-[#245744] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1f4939]"
+            title="Đưa người được tìm thấy vào giữa khung nhìn"
           >
             Tìm người
           </button>
@@ -72,18 +81,38 @@ export function FamilyTreeToolbar({
         <button
           type="button"
           onClick={onFitView}
-          className="min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-stone-900"
+          className={secondaryButton}
           title="Đưa toàn bộ cây vào khung nhìn"
+          aria-label="Vừa màn hình"
         >
           Vừa màn hình
         </button>
         <button
           type="button"
-          onClick={onResetLayout}
-          className="min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-stone-900"
-          title="Sắp xếp lại cây tự động trong chế độ xem"
+          onClick={onZoomIn}
+          className={secondaryButton}
+          title="Phóng to cây gia phả"
+          aria-label="Phóng to"
         >
-          Sắp xếp lại
+          Phóng to
+        </button>
+        <button
+          type="button"
+          onClick={onZoomOut}
+          className={secondaryButton}
+          title="Thu nhỏ cây gia phả"
+          aria-label="Thu nhỏ"
+        >
+          Thu nhỏ
+        </button>
+        <button
+          type="button"
+          onClick={onResetLayout}
+          className={secondaryButton}
+          title="Đưa cây về giữa và sắp xếp lại trong chế độ xem"
+          aria-label="Đưa cây về giữa"
+        >
+          Đưa cây về giữa
         </button>
       </div>
     </div>

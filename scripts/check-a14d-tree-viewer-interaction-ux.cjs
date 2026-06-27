@@ -6,36 +6,6 @@ const root = process.cwd();
 const failures = [];
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/people/page.tsx",
-  "components/layout/admin-shell.tsx",
-  "components/people/person-form.tsx",
-  "components/people/person-list.tsx",
-  "components/ui/action-link.tsx",
-  "components/ui/empty-state.tsx",
-  "components/ui/page-header.tsx",
-  "components/ui/section-card.tsx",
-  "components/ui/status-callout.tsx",
-  "docs/00_INDEX.md",
-  "docs/08_AI_WORK_LOG.md",
-  "docs/09_DECISION_LOG.md",
-  "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
-  "package.json",
-  "scripts/check-a14-ui-ux-overhaul.cjs",
-  "scripts/check-a14a-related-member-add-ux.cjs",
-  "scripts/check-a14b-public-tree-home-ux.cjs",
-  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
-  "scripts/check-merge-dedupe-real-migration-readiness.cjs",
-  "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
-  "scripts/check-merge-dedupe-transaction-audit-design.cjs",
-  "scripts/check-tree-duplicate-suggestion-ux.cjs",
-  "scripts/check-tree-editor-auth-browser-smoke.cjs",
-  "scripts/check-tree-inline-create-person-ux.cjs",
-  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
-  "scripts/check-tree-relationship-picker-ux.cjs",
-  "scripts/check-vietnamese-cultural-ui-ux.cjs",
-  "scripts/check-vietnamese-ui-copy.cjs",
   "app/(admin)/admin/tree/page.tsx",
   "app/(admin)/admin/tree/edit/page.tsx",
   "components/public/public-tree-shell.tsx",
@@ -47,8 +17,27 @@ const allowedChangedFiles = new Set([
   "components/tree/family-tree-viewer.tsx",
   "components/tree/tree-editor-side-panel.tsx",
   "components/tree/tree-editor-toolbar.tsx",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "package.json",
+  "scripts/check-a14-ui-ux-overhaul.cjs",
+  "scripts/check-a14a-related-member-add-ux.cjs",
+  "scripts/check-a14b-public-tree-home-ux.cjs",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "scripts/check-merge-dedupe-real-migration-readiness.cjs",
+  "scripts/check-merge-dedupe-schema-candidate-readiness.cjs",
+  "scripts/check-merge-dedupe-transaction-audit-design.cjs",
+  "scripts/check-tree-duplicate-suggestion-ux.cjs",
+  "scripts/check-tree-editor-auth-browser-smoke.cjs",
+  "scripts/check-tree-inline-create-person-ux.cjs",
+  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
+  "scripts/check-tree-relationship-picker-ux.cjs",
+  "scripts/check-vietnamese-cultural-ui-ux.cjs",
+  "scripts/check-vietnamese-ui-copy.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -104,130 +93,142 @@ function gitShowHead(relativePath) {
   }
 }
 
-const doc = readFile("docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md");
+const packageJson = readJson("package.json");
+const doc = readFile("docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
-const packageJson = readJson("package.json");
-const adminShell = readFile("components/layout/admin-shell.tsx");
-const dashboard = readFile("app/(admin)/admin/page.tsx");
-const peoplePage = readFile("app/(admin)/admin/people/page.tsx");
-const personList = readFile("components/people/person-list.tsx");
-const personForm = readFile("components/people/person-form.tsx");
-const actionLink = readFile("components/ui/action-link.tsx");
-const sectionCard = readFile("components/ui/section-card.tsx");
-const emptyState = readFile("components/ui/empty-state.tsx");
-const statusCallout = readFile("components/ui/status-callout.tsx");
+const viewer = readFile("components/tree/family-tree-viewer.tsx");
+const toolbar = readFile("components/tree/family-tree-toolbar.tsx");
+const editor = readFile("components/tree/family-tree-editor.tsx");
+const editorToolbar = readFile("components/tree/tree-editor-toolbar.tsx");
+const nodeCard = readFile("components/tree/family-node-card.tsx");
+const emptyState = readFile("components/tree/family-tree-empty-state.tsx");
+const errorState = readFile("components/tree/family-tree-error-state.tsx");
 
 for (const heading of [
-  "## A-14C1 - Audit Admin UX",
-  "## A-14C2 - Admin Visual System Alignment",
-  "## A-14C3 - Admin Sidebar / Navigation Polish",
-  "## A-14C4 - Admin Dashboard Polish",
-  "## A-14C5 - Tables / Lists UX Polish",
-  "## A-14C6 - Forms / Detail Pages Polish",
-  "## A-14C7 - Admin Safety / Permission UX",
-  "## A-14C8 - Vietnamese Copy / Accessibility Sweep",
-  "## A-14C9 - Checker",
-  "## A-14C10 - Docs / Decision / Handoff",
-  "## A-14C11 - Validation",
-  "## A-14C12 - Commit",
+  "## A-14D1 - Audit Tree Interaction UX",
+  "## A-14D2 - Tree Toolbar Interaction Polish",
+  "## A-14D3 - Mini Help / First-use Guidance",
+  "## A-14D4 - Node / Person Card Polish",
+  "## A-14D5 - Selected Person Panel / Preview Polish",
+  "## A-14D6 - Empty / Loading / Error State Polish",
+  "## A-14D7 - Mobile / Touch UX",
+  "## A-14D8 - Public/Admin Boundary Guard",
+  "## A-14D9 - Vietnamese Copy / Accessibility Sweep",
+  "## A-14D10 - Checker",
+  "## A-14D11 - Docs / Decision / Handoff",
+  "## A-14D12 - Validation",
+  "## A-14D13 - Commit",
 ]) {
-  requireIncludes(doc, heading, `A-14C doc section ${heading}`);
+  requireIncludes(doc, heading, `A-14D doc section ${heading}`);
 }
 
 for (const token of [
   "classic modern genealogy",
   "cổ điển pha hiện đại",
-  "warm paper",
-  "stone text",
-  "muted rust",
-  "deep green",
+  "Tree Viewer Interaction Polish",
+  "Public tree vẫn read-only",
   "Không schema change",
   "Không DB apply",
   "Không check SQL trên DB",
   "Không merge/dedupe runtime",
   "Không permission runtime",
   "Không deploy",
-  "Backup gate",
   "BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION",
 ]) {
-  requireIncludes(doc, token, `A-14C doc token ${token}`);
+  requireIncludes(doc, token, `A-14D doc token ${token}`);
 }
 
 for (const token of [
-  "Tổng quan",
-  "Thành viên / hồ sơ",
-  "Cây gia phả",
-  "Nhập / xuất dữ liệu",
-  "An toàn / hệ thống",
-  "Sổ gia phả nội bộ",
-  "Điều hướng quản trị",
+  "Kéo để di chuyển cây",
+  "cuộn để phóng to hoặc thu nhỏ",
+  "bấm vào một",
+  "Vừa màn hình",
+  "Phóng to",
+  "Thu nhỏ",
+  "Đưa cây về giữa",
+  "aria-label",
+  "title=",
 ]) {
-  requireIncludes(adminShell, token, `admin navigation token ${token}`);
+  requireIncludes(toolbar, token, `viewer toolbar token ${token}`);
 }
 
 for (const token of [
-  "Sổ quản trị gia phả",
-  "Việc thường làm",
-  "Thêm thành viên",
-  "Mở Tree Editor",
-  "Xem cây công khai",
-  "Xuất dữ liệu",
-  "Merge/dedupe",
-  "Đang đóng",
-  "Backup gate",
-  "Cần evidence",
-  "không bật merge/dedupe runtime",
+  "SelectedPersonPreview",
+  "Đang chọn",
+  "Chọn một người trên cây",
+  "Xem hồ sơ công khai",
+  "Mở hồ sơ quản trị",
+  "onNodeClick",
+  "onPaneClick",
 ]) {
-  requireIncludes(dashboard, token, `admin dashboard token ${token}`);
+  requireIncludes(viewer, token, `selected preview token ${token}`);
 }
 
 for (const token of [
-  "Hồ sơ thành viên",
-  "Lọc danh sách",
-  "Nhập họ tên hoặc tên thường gọi",
-  "Không thể hoàn tất thao tác",
+  "Chế độ chỉnh sửa",
+  "Kéo thẻ chỉ đổi bố cục",
+  "Lưu bố cục",
+  "Vừa màn hình",
+  "Phóng to",
+  "Thu nhỏ",
+  "Đưa cây về giữa",
+  "aria-label",
+  "title=",
 ]) {
-  requireIncludes(peoplePage, token, `people admin token ${token}`);
+  requireIncludes(editorToolbar, token, `editor toolbar token ${token}`);
 }
 
 for (const token of [
-  "Chưa có thành viên",
-  "Thêm thành viên đầu tiên",
-  "Xem hồ sơ",
-  "Sửa hồ sơ",
-  "Xóa mềm",
-  "Trang công khai sẽ chỉ hiển thị dữ liệu được phép",
+  "bg-[#f7efe1]",
+  "color=\"#d8c8ad\"",
 ]) {
-  requireIncludes(personList, token, `person list token ${token}`);
+  requireIncludes(editor, token, `editor warm canvas token ${token}`);
+}
+
+for (const token of [
+  "tabIndex={0}",
+  "focus-visible:ring-[#245744]",
+  "Đang chọn",
+  "Còn sống",
+  "Đã mất",
+  "Dòng họ:",
+  "Chi nhánh:",
+]) {
+  requireIncludes(nodeCard, token, `node card token ${token}`);
+}
+
+for (const token of [
+  "Gia phả này chưa có dữ liệu công khai",
+  "Hãy thêm thành viên đầu tiên",
+]) {
+  requireIncludes(emptyState, token, `empty state token ${token}`);
+}
+
+for (const token of [
+  "Bạn chưa có quyền xem cây gia phả này",
+  "Hãy thử tải lại trang",
+  "Cây gia phả chưa sẵn sàng hiển thị",
+]) {
+  requireIncludes(errorState, token, `error state token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [actionLink, "rounded-md", "rounded action link"],
-  [sectionCard, "rounded-md", "rounded section card"],
-  [emptyState, "rounded-md", "rounded empty state"],
-  [statusCallout, "rounded-md", "rounded status callout"],
-  [personForm, "focus:border-[#245744]", "admin form green focus"],
-]) {
-  requireIncludes(content, token, label);
-}
-
-for (const [content, token, label] of [
-  [index, "PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md", "index entry"],
-  [workLog, "A-14C - Admin Dashboard / Layout UX Polish", "work log entry"],
-  [handoff, "A-14C - Admin Dashboard / Layout UX Polish", "handoff entry"],
-  [decisionLog, "Decision 171 - A-14C admin UX polish is UI-only", "Decision 171"],
+  [index, "PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md", "index entry"],
+  [workLog, "A-14D - Tree Viewer Interaction Polish", "work log entry"],
+  [handoff, "A-14D - Tree Viewer Interaction Polish", "handoff entry"],
+  [decisionLog, "Decision 172 - A-14D tree interaction polish is UI-only", "Decision 172"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a14c-admin-dashboard-layout-ux"] !==
-  "node scripts/check-a14c-admin-dashboard-layout-ux.cjs"
+  packageJson?.scripts?.["check:a14d-tree-viewer-interaction-ux"] !==
+  "node scripts/check-a14d-tree-viewer-interaction-ux.cjs"
 ) {
-  failures.push("package.json missing check:a14c-admin-dashboard-layout-ux script");
+  failures.push("package.json missing check:a14d-tree-viewer-interaction-ux script");
 }
 
 const packageHead = gitShowHead("package.json");
@@ -248,10 +249,11 @@ if (packageHead && packageJson) {
 }
 
 for (const [content, label] of [
-  [adminShell, "admin shell"],
-  [dashboard, "dashboard"],
-  [peoplePage, "people page"],
-  [personList, "person list"],
+  [viewer, "viewer"],
+  [toolbar, "toolbar"],
+  [editor, "editor"],
+  [editorToolbar, "editor toolbar"],
+  [nodeCard, "node card"],
 ]) {
   for (const token of [
     "notes_private",
@@ -307,14 +309,14 @@ for (const line of status.split(/\r?\n/).filter(Boolean)) {
     failures.push(`Worker/OpenNext/Wrangler/deploy drift: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
-    failures.push(`unexpected changed file for A-14C: ${file}`);
+    failures.push(`unexpected changed file for A-14D: ${file}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("A-14C admin dashboard/layout UX check failed:");
+  console.error("A-14D tree viewer interaction UX check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-14C admin dashboard/layout UX check passed.");
+console.log("A-14D tree viewer interaction UX check passed.");

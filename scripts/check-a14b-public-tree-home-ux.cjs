@@ -47,6 +47,13 @@ const allowedChangedFiles = new Set([
   "components/ui/status-callout.tsx",
   "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/family-tree-editor.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -200,7 +207,7 @@ for (const token of [
   "cuộn để phóng to hoặc thu nhỏ",
   "Tìm người trong cây",
   "Vừa màn hình",
-  "Sắp xếp lại",
+  "Đưa cây về giữa",
   "Chưa có dữ liệu cây gia phả",
   "Không thể tải cây gia phả",
   "Thông tin này đang được gia đình cập nhật",
@@ -218,7 +225,7 @@ for (const token of [
   "rounded-md",
   "min-h-11",
   "title=\"Đưa toàn bộ cây vào khung nhìn\"",
-  "title=\"Sắp xếp lại cây tự động trong chế độ xem\"",
+  "title=\"Đưa cây về giữa và sắp xếp lại trong chế độ xem\"",
   "aria-live=\"polite\"",
 ]) {
   requireIncludes(publicUi, token, `classic modern/accessibility token ${token}`);

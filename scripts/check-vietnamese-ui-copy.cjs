@@ -103,7 +103,7 @@ for (const token of [
   "Lý do:",
   "Cây gia phả",
   "Vừa màn hình",
-  "Sắp xếp lại cây",
+  "Đưa cây về giữa",
   "Đặt lại bố cục",
   "Bảng chi tiết",
   "Thẻ gia đình",

@@ -12,11 +12,15 @@ export function FamilyTreeEmptyState({
 
   return (
     <EmptyState
-      title="Chưa có dữ liệu cây gia phả"
+      title={
+        isPublic
+          ? "Gia phả này chưa có dữ liệu công khai"
+          : "Chưa có dữ liệu cây gia phả"
+      }
       description={
         isPublic
           ? "Cây công khai sẽ xuất hiện khi gia đình có thành viên và quan hệ đủ điều kiện hiển thị. Một số thông tin riêng tư có thể đã được ẩn."
-          : "Cây sẽ xuất hiện khi có thành viên và quan hệ gia đình đủ điều kiện hiển thị."
+          : "Hãy thêm thành viên đầu tiên, sau đó nối quan hệ cha mẹ, con hoặc vợ chồng để cây gia phả bắt đầu hình thành."
       }
       actions={
         isPublic ? (

@@ -178,7 +178,8 @@
     "check:a14-ui-ux-overhaul": "node scripts/check-a14-ui-ux-overhaul.cjs",
     "check:a14a-related-member-add-ux": "node scripts/check-a14a-related-member-add-ux.cjs",
     "check:a14b-public-tree-home-ux": "node scripts/check-a14b-public-tree-home-ux.cjs",
-    "check:a14c-admin-dashboard-layout-ux": "node scripts/check-a14c-admin-dashboard-layout-ux.cjs"
+    "check:a14c-admin-dashboard-layout-ux": "node scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+    "check:a14d-tree-viewer-interaction-ux": "node scripts/check-a14d-tree-viewer-interaction-ux.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

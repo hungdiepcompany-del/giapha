@@ -137,6 +137,11 @@ const allowedChangedFiles = new Set([
   "components/ui/status-callout.tsx",
   "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/family-tree-editor.tsx",
+  "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 
 const packageJson = readJson("package.json");
@@ -217,12 +222,12 @@ for (const token of [
   "Vừa màn hình",
   "Phóng to",
   "Thu nhỏ",
-  "Sắp xếp lại cây",
+  "Đưa cây về giữa",
 ]) {
   requireIncludes(toolbar, token, `toolbar token ${token}`);
 }
 
-requireIncludes(nodeCard, "Người đang chọn", "selected person state");
+requireIncludes(nodeCard, "Đang chọn", "selected person state");
 
 for (const token of [
   "Fit view",

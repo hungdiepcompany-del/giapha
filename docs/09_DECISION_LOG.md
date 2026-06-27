@@ -1,5 +1,45 @@
 # Decision Log
 
+## Decision 172 - A-14D tree interaction polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14D may improve tree viewer/editor interaction UX: toolbar controls,
+zoom/fit/reset wording, mini help, node/person card selected and focus states,
+selected-person preview, empty/error states, mobile/touch layout and Vietnamese
+copy.
+
+The tree style follows the same classic modern genealogy direction: warm paper,
+stone text, muted rust labels, restrained deep green actions, light borders and
+calm interaction states.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- runtime merge/dedupe;
+- route/action/service merge/dedupe;
+- permission runtime registration;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change.
+
+Public tree remains read-only. Backup gate remains
+`BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB merge/dedupe remains not
+applied. Runtime merge/dedupe remains closed. Permission runtime remains
+unregistered.
+
+Ly do:
+
+- Tree browsing is a core genealogy workflow and needs clearer first-use
+  guidance for drag, zoom, fit and selection.
+- Selected person context helps users understand the tree without opening edit
+  flows.
+- Interaction polish must not be interpreted as authorization for schema,
+  database or merge/dedupe runtime work.
+
 ## Decision 171 - A-14C admin UX polish is UI-only
 
 Status: `ACTIVE`

@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-27 - A-14D - Tree Viewer Interaction Polish
+
+- Added `docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md`.
+- Polished public/admin tree viewer toolbar with explicit `Vừa màn hình`,
+  `Phóng to`, `Thu nhỏ` and `Đưa cây về giữa` controls.
+- Added mini help for drag/pan, scroll zoom and selecting a person.
+- Added read-only selected-person preview in tree viewer with public/admin CTA
+  split: public profile route for public mode and admin profile route for admin
+  mode.
+- Polished node cards with warmer selected state, `Đang chọn` badge and
+  keyboard focus ring.
+- Polished admin Tree Editor toolbar with `Chế độ chỉnh sửa`, clear layout-only
+  guidance and warm canvas/background styling.
+- Polished public/admin tree empty and error states without exposing raw
+  Supabase/SQL/policy details.
+- Added `scripts/check-a14d-tree-viewer-interaction-ux.cjs` and
+  `npm run check:a14d-tree-viewer-interaction-ux`.
+- Validation PASS: A-14D, A-14C, A-14B, A-14A, A-14, UI polish, Vietnamese UI
+  copy, Vietnamese cultural UI/UX, tree relationship picker, inline create,
+  duplicate suggestion, tree polish/dedupe/data-quality, A-10/A-11/A-12
+  merge/dedupe guards, env safe, migrations, typecheck, lint, root build and
+  diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip. Browser visual smoke was not run because no Browser navigation
+  tool was available in this Codex session.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; A-13B backup gate remains blocked and was not recreated by A-14D.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary: no migration, no `.sql`, no DB apply, no check SQL run on DB, no
+  seed/backfill, no runtime merge/dedupe, no route/action/service merge/dedupe,
+  no permission runtime registration, no Worker/OpenNext/Wrangler config
+  change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14C - Admin Dashboard / Layout UX Polish
 
 - Added `docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md`.

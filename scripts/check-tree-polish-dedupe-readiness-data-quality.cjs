@@ -135,6 +135,10 @@ const allowedChangedFiles = new Set([
   "components/ui/status-callout.tsx",
   "docs/PLAN_A14C_ADMIN_DASHBOARD_LAYOUT_UX.md",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
+  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
 ]);
 
 const packageJson = readJson("package.json");
@@ -151,7 +155,7 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "Người đang chọn",
+  "Đang chọn",
   "Chưa rõ năm sinh",
   "Chưa rõ năm mất",
   "Đời thứ",
@@ -165,7 +169,7 @@ for (const token of [
   "Vừa màn hình",
   "Phóng to",
   "Thu nhỏ",
-  "Sắp xếp lại cây",
+  "Đưa cây về giữa",
   "Lưu bố cục",
   "Khôi phục bố cục tự động",
 ]) {
