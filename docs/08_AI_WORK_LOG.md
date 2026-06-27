@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-06-27 - A-15A0 - Gemini Modern Heritage UI/UX Design Spec
+
+- Added `docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md`.
+- Copied the owner-provided Gemini UI/UX design output into the docs tree as
+  the accepted `Modern Heritage / Di sản Hiện đại` design reference for later
+  UI-only implementation phases.
+- Added A-15A0 status metadata:
+  `DESIGN_SPEC_ACCEPTED_FOR_UI_ONLY_IMPLEMENTATION`, source, scope and
+  deferred implementation boundary.
+- Added an implementation boundary note for ideas that require interaction
+  logic review before implementation: slide-over selected person panel, bottom
+  navigation, fixed mobile form action bar, drawer/bottom sheet animation,
+  pinch zoom gesture, new avatar/media behavior, new menu state and new
+  mutation path.
+- Added `scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs` and
+  `npm run check:a15a0-gemini-modern-heritage-design-spec`.
+- Validation PASS: A-15A0 checker, A-14G, A-14F, A-14E, A-14D, A-14C,
+  A-14B, A-14A, env safe, migrations, typecheck, lint, root build and diff
+  checks.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary: docs-only; no UI component/runtime JSX/class changes, no DB/API/
+  auth/permission/route/runtime changes, no migration, no `.sql`, no Worker/
+  OpenNext/Wrangler change, no dependency, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14G-R1 - Public Browser Visual Smoke Retry
 
 - Reran A-14G public browser visual smoke gate.

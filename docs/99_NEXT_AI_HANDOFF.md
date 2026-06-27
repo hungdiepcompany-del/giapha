@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-15A0 - Gemini Modern Heritage UI/UX Design Spec completed
+
+- Added `docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md`.
+- The doc records the Gemini `Modern Heritage / Di sản Hiện đại` UI/UX design
+  output as the accepted source design reference for later A-15A1+ phases.
+- A-15A0 is docs-only. It does not implement UI and does not authorize Codex
+  to invent design direction outside the spec.
+- Future UI work must be split by screen and should only implement ideas when
+  compatible state/layout already exists.
+- Items requiring later interaction logic review are marked/deferred:
+  slide-over selected person panel, bottom navigation, fixed mobile form
+  action bar, drawer/bottom sheet animation, pinch zoom gesture, new
+  avatar/media behavior, new menu state and new mutation path. Use
+  `DEFERRED_REQUIRES_INTERACTION_LOGIC_REVIEW` when new logic is needed.
+- Added `scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs` and
+  package command `check:a15a0-gemini-modern-heritage-design-spec`.
+- Validation PASS: A-15A0 checker, A-14G, A-14F, A-14E, A-14D, A-14C,
+  A-14B, A-14A, env safe, migrations, typecheck, lint, root build and diff
+  checks.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Decision 177 records that the Gemini Modern Heritage spec is UI-only source,
+  and A-15A0 does not authorize DB/API/auth/permission/route/runtime/deploy/
+  dependency changes.
+- Boundary confirmed: no UI component edit, no JSX/class Tailwind runtime
+  change, no DB apply, no migration, no `.sql`, no API/action/service logic,
+  no auth/permission, no route change, no Worker/OpenNext/Wrangler change, no
+  dependency, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14G-R1 - Public Browser Visual Smoke Retry completed (SAFE_SKIP)
 
 - Reran A-14G-R1 public/read-only visual smoke gate.

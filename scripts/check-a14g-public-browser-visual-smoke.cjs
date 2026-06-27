@@ -10,6 +10,8 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
+  "docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
   "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",

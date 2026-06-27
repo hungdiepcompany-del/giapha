@@ -1,5 +1,46 @@
 # Decision Log
 
+## Decision 177 - Gemini Modern Heritage design spec is UI-only source
+
+Status: `ACTIVE`
+
+Chon:
+
+The Gemini Modern Heritage / Di sản Hiện đại UI/UX design spec is accepted as
+the source design reference for later A-15A1+ UI implementation phases.
+
+A-15A0 is docs-only. Codex must not invent UI direction outside this spec when
+implementing later phases. UI implementation must be split by screen and must
+stay within existing state/layout unless a later reviewed phase explicitly
+opens interaction logic.
+
+Deferred until separate interaction review:
+
+- slide-over selected person panel;
+- bottom navigation;
+- fixed mobile form action bar;
+- drawer/bottom sheet animation;
+- pinch zoom gesture;
+- new avatar/media behavior;
+- any new menu state;
+- any new mutation path.
+
+Not authorized by A-15A0:
+
+- DB/schema/migration or DB apply;
+- API/action/service logic changes;
+- auth/permission changes;
+- route changes;
+- runtime UI/component implementation;
+- Worker/OpenNext/Wrangler changes;
+- dependency changes;
+- deploy or push.
+
+Ly do:
+
+The design spec should become a stable UI reference without being mistaken for
+runtime, schema, auth, route or deployment approval.
+
 ## Decision 176 - A-14G-R1 retry remains SAFE_SKIP without explicit base URL
 
 Status: `ACTIVE`
