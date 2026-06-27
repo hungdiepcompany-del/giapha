@@ -1,5 +1,62 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14G - Public Browser Visual Smoke completed (SAFE_SKIP)
+
+- Added `docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md`.
+- A-14G ran the public browser visual smoke only in static-readiness form;
+  no real visual PASS was claimed because no explicit base URL was set
+  in the Codex execution process.
+- Base URL resolution followed the A-14F priority
+  (`PUBLIC_VISUAL_SMOKE_BASE_URL` then `LOCAL_SMOKE_BASE_URL` then
+  `PROD_SMOKE_BASE_URL`); all three were absent, so the result was
+  `SAFE_SKIP_MISSING_PUBLIC_BASE_URL`.
+- `playwright` MCP server is registered locally but cannot be used to
+  navigate to any route without a base URL; the browser-tooling status
+  was therefore `SAFE_SKIP_BROWSER_TOOL_UNAVAILABLE` for this run.
+- Person profile smoke additionally returned
+  `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG` because no
+  `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` env was provided and the phase must
+  not query the database to discover a real public-safe slug.
+- Mobile viewport smoke returned
+  `SAFE_SKIP_MOBILE_VIEWPORT_TOOLING_UNAVAILABLE` because viewport
+  resize without a base URL cannot reach any route.
+- No screenshots were captured and no auth/session/token/cookie/
+  storage-state artifact was produced or committed.
+- Targets recorded: public home `/`, public tree `/tree`, public person
+  `/people/<slug>`, public error / not-found / private state, mobile
+  viewport. All targets stayed at the matching SAFE_SKIP.
+- Decision 175 records that A-14G is SAFE_SKIP without explicit base URL
+  and that static evidence must not be promoted to a real visual PASS.
+- Added `scripts/check-a14g-public-browser-visual-smoke.cjs` and package
+  command `check:a14g-public-browser-visual-smoke`.
+- Validation PASS: A-14G, A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14,
+  UI polish, Vietnamese UI copy, Vietnamese cultural UI/UX, tree
+  relationship picker, inline create, duplicate suggestion, tree
+  polish/dedupe/data-quality, A-10/A-11/A-12 merge/dedupe guards, env
+  safe, migrations, typecheck, lint, root build and diff checks.
+- A-09 authenticated browser smoke returned the expected
+  missing-explicit-auth safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14G.
+- Root `npm run build` passed directly; no clean temp-copy workaround
+  was required.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL
+  on DB, no seed/backfill, no data mutation, no runtime merge/dedupe, no
+  route/action/service merge/dedupe, no permission runtime registration,
+  no Worker/OpenNext/Wrangler config change, no dependency, no deploy and
+  no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+  DB merge/dedupe remains not applied. Runtime merge/dedupe remains
+  closed. Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+- Recommended next phase: A-14H (or a later phase) may attempt a real
+  public browser visual smoke only after the owner/operator provides an
+  explicit base URL (`PUBLIC_VISUAL_SMOKE_BASE_URL` or
+  `LOCAL_SMOKE_BASE_URL` for a local `next dev`/`next start` server, or
+  `PROD_SMOKE_BASE_URL` for the deployed production URL) and an
+  explicit `PUBLIC_VISUAL_SMOKE_PERSON_SLUG`. Until then, no claim of
+  visual PASS is allowed.
+
 ## 2026-06-27 - A-14F - Browser Visual Smoke Readiness completed
 
 - Added `docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md`.

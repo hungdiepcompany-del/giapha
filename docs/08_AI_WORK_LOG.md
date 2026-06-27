@@ -1,5 +1,50 @@
 # AI Work Log
 
+## 2026-06-27 - A-14G - Public Browser Visual Smoke
+
+- Added `docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md`.
+- Status: `SAFE_SKIP_MISSING_PUBLIC_BASE_URL` because none of
+  `PUBLIC_VISUAL_SMOKE_BASE_URL`, `LOCAL_SMOKE_BASE_URL` and
+  `PROD_SMOKE_BASE_URL` were set in the Codex execution context.
+- Browser tooling: `playwright` MCP server is registered locally but no base
+  URL was available; the run was therefore treated as
+  `SAFE_SKIP_BROWSER_TOOL_UNAVAILABLE` rather than a fake visual PASS.
+- `/people/<slug>` smoke also recorded
+  `SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG` because no
+  `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` env was provided and the phase must
+  not query the database to discover a real slug.
+- Mobile viewport smoke recorded
+  `SAFE_SKIP_MOBILE_VIEWPORT_TOOLING_UNAVAILABLE` because resize without
+  a base URL cannot reach a route.
+- No screenshots were captured, no auth/session/token/cookie/storage-state
+  artifact was produced or committed.
+- No real visual PASS was claimed for any route. Public home `/`, public
+  tree `/tree`, public person profile, public error/not-found/private
+  state and mobile viewports all remained unverified at runtime; only
+  static source-readiness inherited from A-14B/A-14D/A-14E/A-14F holds.
+- Added `scripts/check-a14g-public-browser-visual-smoke.cjs` and package
+  command `check:a14g-public-browser-visual-smoke`.
+- Validation: A-14G, A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI
+  polish, Vietnamese UI copy, Vietnamese cultural UI/UX, tree
+  relationship picker, inline create, duplicate suggestion, tree
+  polish/dedupe/data-quality, A-10/A-11/A-12 merge/dedupe guards, env
+  safe, migrations, typecheck, lint, root build and diff checks all PASS.
+- `check:tree-editor-auth-browser-smoke` returned the expected
+  missing-explicit-auth safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14G.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL
+  on DB, no seed/backfill, no data mutation, no runtime merge/dedupe, no
+  route/action/service merge/dedupe, no permission runtime registration,
+  no Worker/OpenNext/Wrangler config change, no dependency, no deploy,
+  no push, no secret/session/token/cookie/storage-state committed.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+  DB merge/dedupe remains not applied. Runtime merge/dedupe remains
+  closed. Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14F - Browser Visual Smoke Readiness
 
 - Added `docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md`.

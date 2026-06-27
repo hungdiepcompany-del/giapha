@@ -1,5 +1,50 @@
 # Decision Log
 
+## Decision 175 - A-14G public browser visual smoke is SAFE_SKIP without explicit base URL
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14G may run a public browser visual smoke for the polished public home,
+public tree viewer, public person profile and public error / not-found /
+private states when an explicit `PUBLIC_VISUAL_SMOKE_BASE_URL`,
+`LOCAL_SMOKE_BASE_URL` or `PROD_SMOKE_BASE_URL` is set in the execution
+process, an explicit `PUBLIC_VISUAL_SMOKE_PERSON_SLUG` is provided for
+person profile smoke, and approved Browser/Playwright tooling is
+available. The smoke must remain public/read-only, must not click any
+mutation action and must not run admin/auth-required routes.
+
+When any of those gates is missing, the only valid result is the matching
+SAFE_SKIP token (`SAFE_SKIP_MISSING_PUBLIC_BASE_URL`,
+`SAFE_SKIP_MISSING_PUBLIC_SAFE_PERSON_SLUG`,
+`SAFE_SKIP_BROWSER_TOOL_UNAVAILABLE`,
+`SAFE_SKIP_MOBILE_VIEWPORT_TOOLING_UNAVAILABLE`). Static source readiness
+or prior A-14F/A-14B/A-14D/A-14E polish evidence must never be promoted
+to a real visual PASS.
+
+Result:
+
+- A-14G in the current checkout stayed `SAFE_SKIP` because no explicit
+  base URL was set in the Codex execution process.
+- No screenshot, auth state, session, cookie, token or storage state was
+  committed.
+- No admin/auth route was smoked and no mutation was clicked.
+- A real visual PASS may be issued in a later run only after the
+  explicit base URL, public-safe slug and browser tooling gates are all
+  satisfied.
+
+Ly do:
+
+- Public browser visual smoke needs a real navigable target; a missing
+  base URL cannot produce honest visual evidence and must not be papered
+  over with a static PASS.
+- Public pages are read-only, so this phase can never authorize
+  admin/auth smoke, mutation, schema, DB, Worker, dependency, deploy or
+  push.
+- The SAFE_SKIP surface area keeps the boundary visible to owner/operator
+  so a future retry can be planned without claiming false coverage.
+
 ## Decision 174 - A-14F browser visual smoke readiness is not visual PASS
 
 Status: `ACTIVE`
