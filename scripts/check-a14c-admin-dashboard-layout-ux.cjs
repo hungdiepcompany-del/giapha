@@ -52,6 +52,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
   "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
   "docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md",
+  "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
+  "scripts/check-a14g-public-browser-visual-smoke.cjs",
   "components/public/public-person-profile.tsx",
   "components/public/public-home.tsx",
   "components/layout/public-shell.tsx",
