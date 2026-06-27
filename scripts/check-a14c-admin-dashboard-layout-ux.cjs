@@ -50,6 +50,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
   "scripts/check-a14e-mobile-ux-sweep.cjs",
   "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
+  "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
+  "docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md",
   "components/public/public-person-profile.tsx",
   "components/public/public-home.tsx",
   "components/layout/public-shell.tsx",

@@ -28,6 +28,8 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
+  "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
+  "docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14a-related-member-add-ux.cjs",

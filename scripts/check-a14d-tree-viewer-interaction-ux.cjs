@@ -24,6 +24,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14D_TREE_VIEWER_INTERACTION_UX.md",
   "scripts/check-a14e-mobile-ux-sweep.cjs",
   "docs/PLAN_A14E_MOBILE_UX_SWEEP.md",
+  "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
+  "docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md",
   "components/ui/section-card.tsx",
   "components/ui/page-header.tsx",
   "components/ui/empty-state.tsx",

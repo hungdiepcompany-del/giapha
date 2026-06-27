@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-27 - A-14F - Browser Visual Smoke Readiness
+
+- Added `docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md`.
+- Defined browser visual smoke scope for A-14A/B/C/D/E public, admin and
+  mobile/tablet surfaces.
+- Classified public routes as smokeable without auth when an explicit base URL
+  exists, while public person profile still needs a known public-safe slug.
+- Classified admin routes as requiring explicit owner/operator auth session/env
+  and safe-skipping without that evidence.
+- Documented safe dataset approval requirement for mutation-adjacent paths such
+  as person form submit and Tree Editor related-member add submit.
+- Documented browser environment requirements, viewports, screenshot guidance,
+  no-secret/no-session-commit rules and visual pass/fail criteria.
+- Added `scripts/check-a14f-browser-visual-smoke-readiness.cjs` and
+  `npm run check:a14f-browser-visual-smoke-readiness`.
+- Browser visual smoke itself was not run in this phase; readiness records
+  `SAFE_SKIP_BROWSER_TOOL_UNAVAILABLE` when Browser tooling is unavailable and
+  does not claim visual PASS.
+- Validation PASS: A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI polish,
+  Vietnamese UI copy, Vietnamese cultural UI/UX, tree relationship picker,
+  inline create, duplicate suggestion, tree polish/dedupe/data-quality,
+  A-10/A-11/A-12 merge/dedupe guards, env safe, migrations, typecheck, lint,
+  root build and diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; A-13B backup gate remains blocked and was not recreated by A-14F.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary: no migration, no `.sql`, no DB apply, no check SQL run on DB, no
+  seed/backfill, no data mutation, no runtime merge/dedupe, no
+  route/action/service merge/dedupe, no permission runtime registration, no
+  Worker/OpenNext/Wrangler config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14E - Mobile UX Sweep
 
 - Added `docs/PLAN_A14E_MOBILE_UX_SWEEP.md`.

@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-27 - A-14F - Browser Visual Smoke Readiness completed
+
+- Added `docs/PLAN_A14F_BROWSER_VISUAL_SMOKE_READINESS.md`.
+- A-14F prepared browser visual smoke readiness for A-14A/B/C/D/E public,
+  admin and mobile/tablet surfaces; it did not claim real visual PASS.
+- Public read-only candidates: `/`, `/tree`, `/people/[public-safe-slug]` and
+  safe public error/private/not-found states when an explicit base URL exists.
+- Admin candidates require explicit owner/operator auth session/env:
+  `/admin`, `/admin/people`, `/admin/people/new`, `/admin/people/[id]`,
+  `/admin/tree`, `/admin/tree/edit` and related-member add panel states.
+- Mutation-adjacent paths require separate safe dataset approval and must
+  safe-skip without it.
+- Browser tooling unavailable is recorded as
+  `SAFE_SKIP_BROWSER_TOOL_UNAVAILABLE`, not a fake visual PASS.
+- Added `scripts/check-a14f-browser-visual-smoke-readiness.cjs` and package
+  command `check:a14f-browser-visual-smoke-readiness`.
+- Validation PASS: A-14F, A-14E, A-14D, A-14C, A-14B, A-14A, A-14, UI polish,
+  Vietnamese UI copy, Vietnamese cultural UI/UX, tree relationship picker,
+  inline create, duplicate suggestion, tree polish/dedupe/data-quality,
+  A-10/A-11/A-12 merge/dedupe guards, env safe, migrations, typecheck, lint,
+  root build and diff checks.
+- A-09 authenticated browser smoke returned the expected missing-explicit-auth
+  safe-skip.
+- `check:merge-dedupe-backup-gate-readiness` is `NOT_AVAILABLE` in this
+  checkout; do not infer backup readiness from A-14F.
+- Root `npm run build` passed directly; no clean temp-copy workaround was
+  required.
+- Boundary confirmed: no migration, no `.sql`, no DB apply, no check SQL run on
+  DB, no seed/backfill, no data mutation, no runtime merge/dedupe, no
+  route/action/service merge/dedupe, no permission runtime registration, no
+  Worker/OpenNext/Wrangler config change, no dependency, no deploy and no push.
+- Backup gate remains `BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB
+  merge/dedupe remains not applied. Runtime merge/dedupe remains closed.
+  Permission runtime remains unregistered.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-14E - Mobile UX Sweep completed
 
 - Added `docs/PLAN_A14E_MOBILE_UX_SWEEP.md`.

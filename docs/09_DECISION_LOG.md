@@ -1,5 +1,50 @@
 # Decision Log
 
+## Decision 174 - A-14F browser visual smoke readiness is not visual PASS
+
+Status: `ACTIVE`
+
+Chon:
+
+A-14F may define browser visual smoke scope, environment requirements,
+safe-skip behavior, pass/fail criteria and a static readiness checker for the
+UI/UX work completed in A-14A through A-14E.
+
+A-14F must not claim real browser visual PASS unless a later run actually opens
+the target routes with approved Browser/Playwright tooling, an explicit base
+URL and explicit auth/session material where required.
+
+Public read-only smoke can run with an explicit base URL. Admin smoke requires
+an explicit owner/operator-managed auth session/env. Mutation-adjacent paths
+require separate safe dataset approval and must safe-skip without it.
+
+Not authorized:
+
+- schema change;
+- migration or `.sql`;
+- DB apply or check SQL execution;
+- data mutation;
+- runtime merge/dedupe;
+- route/action/service merge/dedupe;
+- permission runtime registration;
+- Worker/OpenNext/Wrangler/deploy change;
+- dependency change;
+- committing secret/session/token/cookie/storage state.
+
+Public tree remains read-only. Backup gate remains
+`BLOCKED_PENDING_OWNER_BACKUP_GATE_CONFIRMATION`. DB merge/dedupe remains not
+applied. Runtime merge/dedupe remains closed. Permission runtime remains
+unregistered.
+
+Ly do:
+
+- Visual smoke should be prepared with honest evidence boundaries before a real
+  browser run.
+- Missing Browser tooling, base URL or auth/session input must produce
+  SAFE_SKIP, not an inferred PASS.
+- Browser readiness must not blur into deploy, DB apply, mutation or
+  merge/dedupe runtime authorization.
+
 ## Decision 173 - A-14E mobile UX polish is UI-only
 
 Status: `ACTIVE`
