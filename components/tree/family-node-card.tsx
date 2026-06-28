@@ -25,14 +25,15 @@ function PersonCard({
         }`
       : "Chưa rõ năm sinh";
   const branchLabel = data.lineageBranchName ?? data.branchName;
+  const initial = (data.displayName || data.fullName).trim().charAt(0) || "G";
 
   return (
     <div
       tabIndex={0}
-      className={`w-[248px] max-w-[78vw] rounded-md border bg-[#fffaf0] px-4 py-3 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#245744] ${
+      className={`w-[184px] max-w-[72vw] rounded-lg border bg-[#fff8e8] px-3 py-3 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#245744] ${
         selected
           ? "border-[#245744] shadow-md ring-2 ring-emerald-100"
-          : "border-stone-300 hover:border-[#8a4b2a] hover:shadow-md"
+          : "border-amber-900/15 hover:border-[#8a4b2a] hover:shadow-md"
       }`}
     >
       <Handle type="target" position={Position.Top} className="opacity-0" />
@@ -41,18 +42,23 @@ function PersonCard({
           Đang chọn
         </div>
       ) : null}
-      <div className="min-w-0">
-        <div className="truncate text-base font-bold text-stone-950" title={data.displayName || data.fullName}>
-          {data.displayName || data.fullName}
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#7a2f24]/15 bg-[#f2dfbd] text-sm font-black text-[#7a2f24]">
+          {initial}
         </div>
-        {data.displayName ? (
-          <div className="truncate text-xs text-stone-500" title={data.fullName}>{data.fullName}</div>
-        ) : null}
+        <div className="min-w-0">
+          <div className="line-clamp-2 text-sm font-bold leading-5 text-stone-950" title={data.displayName || data.fullName}>
+            {data.displayName || data.fullName}
+          </div>
+          {data.displayName ? (
+            <div className="truncate text-xs text-stone-500" title={data.fullName}>{data.fullName}</div>
+          ) : null}
+        </div>
       </div>
-      <div className="mt-3 grid gap-1 text-xs text-stone-600">
+      <div className="mt-3 grid gap-1 text-xs leading-5 text-stone-600">
         <div>{dateRange}</div>
         {data.generationNumber ? (
-          <div>Đời thứ {data.generationNumber}</div>
+          <div className="font-semibold text-[#7a2f24]">Đời thứ {data.generationNumber}</div>
         ) : null}
         {data.lineageClanName ? (
           <div className="truncate">Dòng họ: {data.lineageClanName}</div>
@@ -61,7 +67,7 @@ function PersonCard({
           <div className="truncate">Chi nhánh: {branchLabel}</div>
         ) : null}
       </div>
-      <div className="mt-3 inline-flex rounded-md border border-stone-200 bg-white px-2 py-1 text-xs font-semibold text-stone-700">
+      <div className="mt-3 inline-flex rounded-full border border-stone-200 bg-white px-2 py-1 text-xs font-semibold text-stone-700">
         {data.isLiving ? "Còn sống" : "Đã mất"}
       </div>
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
@@ -75,12 +81,12 @@ function FamilyUnitCard({
   data: Extract<TreeGraphNode, { kind: "family" }>;
 }) {
   return (
-      <div className="w-[128px] max-w-[52vw] rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-center shadow-sm">
+      <div className="w-[118px] max-w-[52vw] rounded-lg border border-[#245744]/25 bg-[#e9f3ec] px-3 py-2 text-center shadow-sm">
       <Handle type="target" position={Position.Top} className="opacity-0" />
-      <div className="truncate text-xs font-bold text-emerald-950">
+      <div className="truncate text-xs font-bold text-[#245744]">
         {data.label}
       </div>
-      <div className="mt-1 text-[11px] font-semibold text-emerald-700">
+      <div className="mt-1 text-[11px] font-semibold text-[#245744]">
         Gia đình
       </div>
       <Handle type="source" position={Position.Bottom} className="opacity-0" />

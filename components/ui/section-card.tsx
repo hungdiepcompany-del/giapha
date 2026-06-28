@@ -8,7 +8,7 @@ type SectionCardProps = {
 export function SectionCard({ children, className = "" }: SectionCardProps) {
   return (
     <section
-      className={`min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm sm:p-5 ${className}`}
+      className={`min-w-0 rounded-xl border border-amber-900/10 bg-[#fff8e8] p-4 shadow-sm sm:p-5 ${className}`}
     >
       {children}
     </section>

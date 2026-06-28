@@ -13,8 +13,8 @@ type AdminShellProps = {
 
 const navGroups = [
   {
-    title: "Tổng quan",
-    description: "Bắt đầu công việc quản trị trong ngày.",
+    title: "Dòng họ",
+    description: "Hồ sơ người, quan hệ và metadata phả hệ.",
     items: [
       {
         href: "/admin",
@@ -22,12 +22,6 @@ const navGroups = [
         description: "Việc chính và lối tắt quản trị",
         exact: true,
       },
-    ],
-  },
-  {
-    title: "Thành viên / hồ sơ",
-    description: "Hồ sơ người, quan hệ và dòng họ.",
-    items: [
       {
         href: "/admin/people",
         label: "Thành viên",
@@ -46,7 +40,7 @@ const navGroups = [
     ],
   },
   {
-    title: "Cây gia phả",
+    title: "Phả đồ",
     description: "Xem cây trước, chỉnh sửa khi có chủ đích.",
     items: [
       {
@@ -60,17 +54,17 @@ const navGroups = [
         label: "Chỉnh sửa cây",
         description: "Lưu bố cục và thêm quan hệ có kiểm tra",
       },
-      {
-        href: "/admin/preview/public",
-        label: "Xem thử công khai",
-        description: "Kiểm tra dữ liệu đã lọc riêng tư",
-      },
     ],
   },
   {
-    title: "Nhập / xuất dữ liệu",
-    description: "Bảo vệ dữ liệu dài hạn.",
+    title: "Website",
+    description: "Kiểm tra trang công khai và xuất dữ liệu.",
     items: [
+      {
+        href: "/admin/preview/public",
+        label: "Xem thử website",
+        description: "Kiểm tra dữ liệu đã lọc riêng tư",
+      },
       {
         href: "/admin/exports",
         label: "Sao lưu / xuất dữ liệu",
@@ -79,7 +73,7 @@ const navGroups = [
     ],
   },
   {
-    title: "An toàn / hệ thống",
+    title: "Quản trị",
     description: "Theo dõi lịch sử, cảnh báo và dry-run.",
     items: [
       {
@@ -118,8 +112,8 @@ export function AdminShell({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-[#f4efe6] text-stone-900 lg:grid lg:grid-cols-[312px_minmax(0,1fr)]">
-      <aside className="border-b border-stone-200 bg-[#fffaf0] shadow-sm lg:sticky lg:top-0 lg:min-h-screen lg:border-b-0 lg:border-r">
+    <div className="min-h-screen bg-[#f5eddf] text-stone-900 lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
+      <aside className="border-b border-amber-900/10 bg-[#fff8e8] shadow-sm lg:sticky lg:top-0 lg:min-h-screen lg:border-b-0 lg:border-r">
         <div className="flex h-full flex-col gap-6 px-5 py-5">
           <div>
             <Link
@@ -127,7 +121,7 @@ export function AdminShell({
               className="flex min-w-0 items-center gap-3 text-base font-black uppercase tracking-normal text-stone-950"
             >
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[#d8c8ad] bg-[#fbf4e8] text-sm text-[#245744] shadow-sm">
-                Gia
+                Phả
               </span>
               <span className="min-w-0 break-words">
                 Quản trị GIA PHẢ
@@ -162,8 +156,8 @@ export function AdminShell({
                         aria-current={active ? "page" : undefined}
                         className={
                           active
-                            ? "block min-h-11 rounded-md border border-[#245744] bg-[#245744] px-3 py-2 font-bold text-white shadow-sm"
-                            : "block min-h-11 rounded-md border border-transparent px-3 py-2 font-semibold text-stone-700 transition hover:border-[#d8c8ad] hover:bg-[#f6efe2] hover:text-stone-950"
+                            ? "block min-h-11 rounded-lg border border-[#245744] bg-[#245744] px-3 py-2 font-bold text-white shadow-sm"
+                            : "block min-h-11 rounded-lg border border-transparent px-3 py-2 font-semibold text-stone-700 transition hover:border-[#d8c8ad] hover:bg-[#f2dfbd] hover:text-stone-950"
                         }
                       >
                         <span className="block">{item.label}</span>
@@ -186,7 +180,7 @@ export function AdminShell({
 
           <Link
             href="/"
-            className="mt-auto inline-flex min-h-11 items-center justify-center rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 transition hover:border-[#245744] hover:text-[#245744]"
+            className="mt-auto inline-flex min-h-11 items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 transition hover:border-[#245744] hover:text-[#245744]"
           >
             Trang công khai
           </Link>
@@ -194,7 +188,7 @@ export function AdminShell({
       </aside>
 
       <div className="min-w-0">
-        <header className="border-b border-stone-200 bg-[#fffaf0]/90 backdrop-blur">
+        <header className="border-b border-amber-900/10 bg-[#fff8e8]/90 backdrop-blur">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
             <div className="grid min-w-0 gap-1 text-sm text-stone-600">
               <div>
@@ -213,7 +207,7 @@ export function AdminShell({
             <form action="/auth/logout" method="post">
               <button
                 type="submit"
-                className="min-h-11 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]"
+                className="min-h-11 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]"
               >
                 Đăng xuất
               </button>

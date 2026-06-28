@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 179 - A-15A2 applies Vietnamese traditional genealogy UI polish
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A2 applies a Vietnamese traditional genealogy visual polish to existing
+public, admin and tree UI surfaces. The phase may update JSX layout, Tailwind
+classes, card/toolbar styling and Vietnamese user-facing copy on existing
+routes.
+
+The accepted visual direction is:
+
+- parchment-like stone/amber/cream background;
+- public header/banner with từ đường / dòng họ feeling;
+- deep teal and muted red-brown actions/accent;
+- compact tree nodes and larger phả đồ canvas area;
+- simple genealogy/list cards with `Xem phả đồ` and
+  `Danh sách thành viên` actions;
+- admin grouping as `Dòng họ`, `Phả đồ`, `Website`, `Quản trị`.
+
+Not authorized by A-15A2:
+
+- DB/schema/migration or DB apply;
+- API/action/service logic changes;
+- auth/permission/RLS changes;
+- new routes or route renames;
+- Worker/OpenNext/Wrangler/runtime boundary changes;
+- dependency changes;
+- external website image/logo/asset copying;
+- deploy or push.
+
+Ly do:
+
+The owner requested a broader UI reference polish after A-15A1. Keeping the
+work UI-only lets the app feel more like a Vietnamese genealogy product without
+opening data, permission, runtime or deployment risk.
+
 ## Decision 178 - A-15A1 applies Modern Heritage to Public Home only
 
 Status: `ACTIVE`

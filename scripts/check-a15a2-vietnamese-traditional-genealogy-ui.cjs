@@ -4,32 +4,16 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
+const marker = "A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI";
 
 const allowedChangedFiles = new Set([
-  "scripts/check-a14-ui-ux-overhaul.cjs",
-  "components/layout/public-shell.tsx",
-  "components/public/public-home.tsx",
-  "docs/00_INDEX.md",
-  "docs/08_AI_WORK_LOG.md",
-  "docs/09_DECISION_LOG.md",
-  "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md",
-  "package.json",
-  "scripts/check-a14a-related-member-add-ux.cjs",
-  "scripts/check-a14b-public-tree-home-ux.cjs",
-  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
-  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
-  "scripts/check-a14e-mobile-ux-sweep.cjs",
-  "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
-  "scripts/check-a14g-public-browser-visual-smoke.cjs",
-  "scripts/check-vietnamese-cultural-ui-ux.cjs",
-  "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
-  "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
   "app/(admin)/admin/genealogy/page.tsx",
   "app/(admin)/admin/page.tsx",
   "components/genealogy/lineage-admin.tsx",
   "components/layout/admin-shell.tsx",
+  "components/layout/public-shell.tsx",
   "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
   "components/public/public-tree-shell.tsx",
   "components/tree/family-node-card.tsx",
   "components/tree/family-tree-editor.tsx",
@@ -37,8 +21,24 @@ const allowedChangedFiles = new Set([
   "components/tree/family-tree-viewer.tsx",
   "components/tree/tree-editor-toolbar.tsx",
   "components/ui/section-card.tsx",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "package.json",
+  "scripts/check-a14-ui-ux-overhaul.cjs",
+  "scripts/check-a14b-public-tree-home-ux.cjs",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
+  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "scripts/check-a14e-mobile-ux-sweep.cjs",
+  "scripts/check-a14f-browser-visual-smoke-readiness.cjs",
+  "scripts/check-a14g-public-browser-visual-smoke.cjs",
+  "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
+  "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
+  "scripts/check-vietnamese-cultural-ui-ux.cjs",
+  "scripts/check-vietnamese-ui-copy.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -95,96 +95,20 @@ function gitShowHead(relativePath) {
 }
 
 const packageJson = readJson("package.json");
-const doc = readFile("docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md");
-const designSpec = readFile("docs/PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md");
+const doc = readFile("docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
-const publicHome = readFile("components/public/public-home.tsx");
-const publicShell = readFile("components/layout/public-shell.tsx");
-const publicUi = `${publicHome}\n${publicShell}`;
 
-for (const token of [
-  "A-15A1 - Public Home Modern Heritage UI",
-  "Public Home UI only",
-  "PLAN_A15A0_GEMINI_MODERN_HERITAGE_UI_UX_DESIGN_SPEC.md",
-  "Gemini Modern Heritage",
-  "UI-only",
-  "No DB/schema/migration",
-  "No API/action/service logic change",
-  "No auth/permission",
-  "No route change",
-  "No Worker/OpenNext/Wrangler change",
-  "No dependency",
-  "`PLANNING.MD` not read or committed",
-]) {
-  requireIncludes(doc, token, `A-15A1 doc token ${token}`);
-}
-
-for (const token of [
-  "Modern Heritage",
-  "Design direction",
-  "PublicHome",
-]) {
-  requireIncludes(designSpec, token, `A-15A0 source token ${token}`);
-}
-
-for (const token of [
-  "bg-[#f5eddf]",
-  "text-stone-900",
-  "text-stone-600",
-  "bg-[#245744]",
-  "hover:bg-[#1f4939]",
-  "bg-[#fff8e8]",
-  "text-[#7a2f24]",
-  "border-stone-200",
-  "rounded-xl",
-  "rounded-2xl",
-  "rounded-full",
-  "shadow-sm",
-  "shadow-md",
-  "min-h-11",
-  "Lưu giữ ký ức, kết nối các thế hệ.",
-  "Cội nguồn yêu thương của dòng họ",
-  "Xem phả đồ",
-  "Gia phả dòng họ Việt Nam",
-  "Bìa sổ phả hệ",
-]) {
-  requireIncludes(publicUi, token, `Public Home style/copy token ${token}`);
-}
-
-for (const [content, token, label] of [
-  [index, "PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md", "index entry"],
-  [workLog, "A-15A1 - Public Home Modern Heritage UI", "work log entry"],
-  [
-    decisionLog,
-    "Decision 178 - A-15A1 applies Modern Heritage to Public Home only",
-    "decision log entry",
-  ],
-  [handoff, "A-15A1 - Public Home Modern Heritage UI completed", "handoff entry"],
-]) {
-  requireIncludes(content, token, label);
-}
-
-if (
-  packageJson?.scripts?.["check:a15a1-public-home-modern-heritage-ui"] !==
-  "node scripts/check-a15a1-public-home-modern-heritage-ui.cjs"
-) {
-  failures.push("missing package script check:a15a1-public-home-modern-heritage-ui");
-}
-
-const changedFiles = gitOutput(["diff", "--name-only"])
-  .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter(Boolean);
-
-const a15a2UiFiles = new Set([
+const uiFiles = [
   "app/(admin)/admin/genealogy/page.tsx",
   "app/(admin)/admin/page.tsx",
   "components/genealogy/lineage-admin.tsx",
   "components/layout/admin-shell.tsx",
+  "components/layout/public-shell.tsx",
   "components/people/person-list.tsx",
+  "components/public/public-home.tsx",
   "components/public/public-tree-shell.tsx",
   "components/tree/family-node-card.tsx",
   "components/tree/family-tree-editor.tsx",
@@ -192,7 +116,73 @@ const a15a2UiFiles = new Set([
   "components/tree/family-tree-viewer.tsx",
   "components/tree/tree-editor-toolbar.tsx",
   "components/ui/section-card.tsx",
-]);
+];
+const ui = uiFiles.map(readFile).join("\n");
+
+for (const token of [
+  "A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish",
+  marker,
+  "UI/UX only",
+  "nền giấy cổ",
+  "banner công khai",
+  "Xem phả đồ",
+  "Danh sách thành viên",
+  "Dòng họ",
+  "Phả đồ",
+  "Website",
+  "Quản trị",
+  "không mở",
+  "database/schema/migration",
+  "Worker/OpenNext/Wrangler",
+  "external asset/logo/image",
+]) {
+  requireIncludes(doc, token, `A-15A2 doc token ${token}`);
+}
+
+for (const token of [
+  marker,
+  "Không gian từ đường số của dòng họ",
+  "Gia phả dòng họ Việt Nam",
+  "Bìa sổ phả hệ",
+  "Xem phả đồ",
+  "Cách xem phả đồ",
+  "Tìm trong phả đồ",
+  "Chào mừng trở lại. Hôm nay bạn muốn cập nhật thông tin nào?",
+  "Danh sách gia phả",
+  "Danh sách thành viên",
+  "bg-[#f5eddf]",
+  "bg-[#fff8e8]",
+  "bg-[#f2dfbd]",
+  "text-[#7a2f24]",
+  "bg-[#245744]",
+]) {
+  requireIncludes(ui, token, `UI/copy token ${token}`);
+}
+
+for (const [content, token, label] of [
+  [index, "PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md", "index entry"],
+  [workLog, "A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish", "work log entry"],
+  [
+    decisionLog,
+    "Decision 179 - A-15A2 applies Vietnamese traditional genealogy UI polish",
+    "decision log entry",
+  ],
+  [handoff, "A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish completed", "handoff entry"],
+]) {
+  requireIncludes(content, token, label);
+}
+
+if (
+  packageJson?.scripts?.["check:a15a2:vietnamese-traditional-genealogy-ui"] !==
+  "node scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs"
+) {
+  failures.push("missing package script check:a15a2:vietnamese-traditional-genealogy-ui");
+}
+
+const changedFiles = gitOutput(["diff", "--name-only"])
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter(Boolean);
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
@@ -200,33 +190,23 @@ for (const file of changedFiles) {
   if (file.startsWith("db/") || file.endsWith(".sql")) {
     failures.push(`database/sql file changed ${file}`);
   }
-  if (/wrangler|open-next|opennext/i.test(file)) {
-    failures.push(`Worker/OpenNext/Wrangler file changed ${file}`);
+  if (/schema|migration/i.test(file) && !file.startsWith("docs/")) {
+    failures.push(`schema/migration-like file changed ${file}`);
+  }
+  if (/wrangler|open-next|opennext|cloudflare-env|middleware|next\.config/i.test(file)) {
+    failures.push(`Worker/OpenNext/Wrangler/runtime config file changed ${file}`);
   }
   if (
-    file.startsWith("app/") ||
+    file.startsWith("app/api/") ||
     file.startsWith("lib/") ||
     file.startsWith("server/") ||
     file.startsWith("services/") ||
     file.startsWith("pages/")
   ) {
-    if (!a15a2UiFiles.has(file)) {
-      failures.push(`route/API/service/runtime file changed ${file}`);
-    }
+    failures.push(`API/service/runtime file changed ${file}`);
   }
-  if (
-    file.startsWith("components/") &&
-    ![
-      "components/layout/public-shell.tsx",
-      "components/public/public-home.tsx",
-    ].includes(file)
-  ) {
-    if (!a15a2UiFiles.has(file)) {
-      failures.push(`non-Public Home component changed ${file}`);
-    }
-  }
-  if (/storage-state|storage_state|session|cookie|token|secret|\.png$|\.jpg$|\.jpeg$/i.test(file)) {
-    failures.push(`possible secret/session/evidence artifact changed ${file}`);
+  if (/storage-state|storage_state|session|cookie|token|secret|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
+    failures.push(`possible secret/session/evidence/external asset artifact changed ${file}`);
   }
 }
 
@@ -260,15 +240,18 @@ for (const pattern of [
   /refresh_token["'\s:=]+[A-Za-z0-9._-]{12,}/i,
   /access_token["'\s:=]+[A-Za-z0-9._-]{12,}/i,
   /Cookie:\s*[^,\n]{12,}/i,
-  /mergePerson|dedupePerson|people\.merge\./i,
+  /https?:\/\/(?!localhost|127\.0\.0\.1)/i,
+  /<img\s/i,
+  /backgroundImage\s*:/i,
+  /url\(["']?https?:/i,
 ]) {
-  rejectPattern(publicUi, pattern, pattern.toString());
+  rejectPattern(ui, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15A1 Public Home Modern Heritage UI check failed:");
+  console.error("A-15A2 Vietnamese traditional genealogy UI check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15A1 Public Home Modern Heritage UI check passed.");
+console.log("A-15A2 Vietnamese traditional genealogy UI check passed.");

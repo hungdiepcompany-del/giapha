@@ -73,6 +73,12 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
   "scripts/check-a14g-public-browser-visual-smoke.cjs",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
+  "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -203,8 +209,8 @@ requireIncludes(
 
 for (const token of [
   "Tổng quan",
-  "Cây gia phả",
-  "An toàn / hệ thống",
+  "Phả đồ",
+  "Quản trị",
   "Dòng họ / chi / đời",
   "Người dùng:",
   "Số quyền:",

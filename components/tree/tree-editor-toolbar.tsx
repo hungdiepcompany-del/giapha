@@ -22,10 +22,10 @@ export function TreeEditorToolbar({
   onAutoLayout,
 }: TreeEditorToolbarProps) {
   const secondaryButton =
-    "min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 text-center text-sm font-semibold text-stone-900 transition hover:border-[#245744] hover:text-[#245744]";
+    "min-h-11 rounded-full border border-amber-900/15 bg-white px-3 py-2 text-center text-sm font-semibold text-stone-900 shadow-sm transition hover:border-[#245744] hover:text-[#245744]";
 
   return (
-    <div className="flex flex-col gap-4 border-b border-stone-200 bg-[#fffaf0] p-3 sm:p-4">
+    <div className="flex flex-col gap-4 border-b border-amber-900/10 bg-[#fff8e8] p-3 sm:p-4">
       <div className="min-w-0">
         <div className="break-words text-base font-bold text-stone-950">
           Cây gia phả · Chế độ chỉnh sửa
@@ -35,7 +35,7 @@ export function TreeEditorToolbar({
           quan hệ gia đình. Bấm một người để mở bảng chi tiết bên phải.
         </div>
       </div>
-      <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-900">
+      <div className="rounded-xl border border-[#7a2f24]/20 bg-[#f2dfbd] px-3 py-2 text-sm leading-6 text-[#7a2f24]">
         Sau khi kéo thẻ, bấm “Lưu bố cục” để ghi vị trí mới. Các nút thêm
         người thân nằm trong bảng chi tiết bên phải và dùng action hiện có.
       </div>
@@ -81,7 +81,7 @@ export function TreeEditorToolbar({
           <input type="hidden" name="positions_json" value={positionsJson} />
           <button
             type="submit"
-            className="min-h-11 w-full rounded-md border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#1f4939] sm:w-auto"
+            className="min-h-11 w-full rounded-full border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1f4939] sm:w-auto"
           >
             Lưu bố cục
           </button>

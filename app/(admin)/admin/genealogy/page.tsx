@@ -57,11 +57,11 @@ export default async function GenealogyPage({
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-6xl px-6 py-10">
+      <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <PageHeader
           eyebrow="Gia phả Việt Nam"
-          title="Dòng họ, chi nhánh và đời"
-          description="Quản lý metadata dòng họ đã được verify sau migration gia phả Việt Nam. Mọi gán thành viên đều nhập rõ ràng, không tự backfill."
+          title="Danh sách gia phả"
+          description="Theo dõi dòng họ, chi nhánh, số thế hệ và thành viên đã gán. Mọi gán thành viên đều nhập rõ ràng, không tự backfill."
         />
 
         {query.error ? (
@@ -76,30 +76,34 @@ export default async function GenealogyPage({
           </StatusCallout>
         ) : null}
 
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
-          <SectionCard>
-            <h2 className="text-2xl font-bold text-slate-950">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <SectionCard className="bg-[#fff8e8]/95">
+            <p className="text-sm font-semibold text-[#7a2f24]">Dòng họ</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#245744]">
               {result.ok ? result.data.clans.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Dòng họ</p>
-            <ActionLink href="/admin/genealogy/clans" className="mt-4">
-              Mở quản lý
-            </ActionLink>
+            <p className="mt-1 text-sm text-stone-600">tên họ đang quản lý</p>
+            <div className="mt-4 grid gap-2">
+              <ActionLink href="/admin/genealogy/clans">Mở quản lý</ActionLink>
+              <ActionLink href="/admin/tree">Xem phả đồ</ActionLink>
+            </div>
           </SectionCard>
-          <SectionCard>
-            <h2 className="text-2xl font-bold text-slate-950">
+          <SectionCard className="bg-[#fff8e8]/95">
+            <p className="text-sm font-semibold text-[#7a2f24]">Chi nhánh</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#245744]">
               {result.ok ? result.data.branches.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Chi</p>
+            <p className="mt-1 text-sm text-stone-600">nhánh trong dòng họ</p>
             <ActionLink href="/admin/genealogy/branches" className="mt-4">
               Mở quản lý
             </ActionLink>
           </SectionCard>
-          <SectionCard>
-            <h2 className="text-2xl font-bold text-slate-950">
+          <SectionCard className="bg-[#fff8e8]/95">
+            <p className="text-sm font-semibold text-[#7a2f24]">Số thế hệ</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#245744]">
               {result.ok ? result.data.generationRules.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Quy tắc đời</p>
+            <p className="mt-1 text-sm text-stone-600">quy tắc đời đã ghi</p>
             <ActionLink
               href="/admin/genealogy/generation-rules"
               className="mt-4"
@@ -107,14 +111,18 @@ export default async function GenealogyPage({
               Mở quản lý
             </ActionLink>
           </SectionCard>
-          <SectionCard>
-            <h2 className="text-2xl font-bold text-slate-950">
+          <SectionCard className="bg-[#fff8e8]/95">
+            <p className="text-sm font-semibold text-[#7a2f24]">Thành viên</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#245744]">
               {result.ok ? result.data.memberships.length : "-"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Gán thành viên</p>
-            <ActionLink href="/admin/genealogy/memberships" className="mt-4">
-              Mở quản lý
-            </ActionLink>
+            <p className="mt-1 text-sm text-stone-600">người đã gán dòng họ</p>
+            <div className="mt-4 grid gap-2">
+              <ActionLink href="/admin/genealogy/memberships">
+                Mở quản lý
+              </ActionLink>
+              <ActionLink href="/admin/people">Danh sách thành viên</ActionLink>
+            </div>
           </SectionCard>
         </div>
 

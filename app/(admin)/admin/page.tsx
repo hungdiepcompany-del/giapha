@@ -16,13 +16,13 @@ const quickActions = [
   },
   {
     href: "/admin/tree/edit",
-    title: "Mở Tree Editor",
+    title: "Chỉnh phả đồ",
     description: "Chỉnh bố cục và thêm quan hệ từ cây khi đã kiểm tra người liên quan.",
     variant: "secondary" as const,
   },
   {
     href: "/tree",
-    title: "Xem cây công khai",
+    title: "Xem phả đồ công khai",
     description: "Kiểm tra trải nghiệm người thân nhìn thấy sau lớp lọc riêng tư.",
     variant: "secondary" as const,
   },
@@ -47,12 +47,12 @@ const modules = [
   },
   {
     href: "/admin/genealogy",
-    title: "Dòng họ / chi / đời",
+    title: "Danh sách gia phả",
     description: "Quản lý dòng họ, chi nhánh, đời thứ và gán thành viên thủ công.",
   },
   {
     href: "/admin/tree",
-    title: "Cây gia phả",
+    title: "Phả đồ",
     description: "Xem cây từ dữ liệu thật; viewer chỉ đọc, Tree Editor mới lưu layout.",
   },
   {
@@ -94,21 +94,21 @@ export default async function AdminPage() {
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-7xl px-6 py-10">
+      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <PageHeader
           eyebrow="Sổ quản trị gia phả"
           title="Quản trị GIA PHẢ"
           description="Điểm bắt đầu để chăm sóc hồ sơ thành viên, quan hệ, cây gia phả, lịch sử chỉnh sửa và dữ liệu xuất khẩu dài hạn. Các thao tác dữ liệu quan trọng vẫn đi qua quyền và cổng an toàn riêng."
         />
 
-        <div className="mt-6 rounded-md border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
+        <div className="mt-6 rounded-xl border border-amber-900/10 bg-[#fff8e8] p-5 shadow-sm">
           <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-normal text-[#8a4b2a]">
-                Việc thường làm
+              <p className="text-sm font-semibold uppercase tracking-normal text-[#7a2f24]">
+                Bàn việc dòng họ
               </p>
               <h2 className="mt-2 text-xl font-bold text-stone-950">
-                Bắt đầu từ hồ sơ, sau đó nối quan hệ và kiểm tra cây
+                Chào mừng trở lại. Hôm nay bạn muốn cập nhật thông tin nào?
               </h2>
               <p className="mt-2 text-sm leading-6 text-stone-700">
                 Cách làm an toàn là thêm hoặc mở hồ sơ thành viên, đối chiếu
@@ -155,7 +155,7 @@ export default async function AdminPage() {
 
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {modules.map((module) => (
-            <SectionCard key={module.href} className="flex flex-col gap-4">
+            <SectionCard key={module.href} className="flex flex-col gap-4 bg-[#fff8e8]/95">
               <div>
                 <h2 className="text-lg font-bold text-stone-950">
                   {module.title}
@@ -164,9 +164,21 @@ export default async function AdminPage() {
                   {module.description}
                 </p>
               </div>
-              <ActionLink href={module.href} className="mt-auto w-fit">
-                Mở mục này
-              </ActionLink>
+              <div className="mt-auto flex flex-wrap gap-3">
+                <ActionLink href={module.href} className="w-fit">
+                  Mở mục này
+                </ActionLink>
+                {module.href === "/admin/genealogy" ? (
+                  <>
+                    <ActionLink href="/admin/tree" className="w-fit">
+                      Xem phả đồ
+                    </ActionLink>
+                    <ActionLink href="/admin/people" className="w-fit">
+                      Danh sách thành viên
+                    </ActionLink>
+                  </>
+                ) : null}
+              </div>
             </SectionCard>
           ))}
         </div>

@@ -63,6 +63,10 @@ const allowedChangedFiles = new Set([
   "components/public/public-home.tsx",
   "components/layout/public-shell.tsx",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -172,10 +176,10 @@ for (const token of [
 
 for (const token of [
   "Tổng quan",
-  "Thành viên / hồ sơ",
-  "Cây gia phả",
-  "Nhập / xuất dữ liệu",
-  "An toàn / hệ thống",
+  "Dòng họ",
+  "Phả đồ",
+  "Website",
+  "Quản trị",
   "Sổ gia phả nội bộ",
   "Điều hướng quản trị",
 ]) {
@@ -184,10 +188,10 @@ for (const token of [
 
 for (const token of [
   "Sổ quản trị gia phả",
-  "Việc thường làm",
+  "Bàn việc dòng họ",
   "Thêm thành viên",
-  "Mở Tree Editor",
-  "Xem cây công khai",
+  "Chỉnh phả đồ",
+  "Xem phả đồ công khai",
   "Xuất dữ liệu",
   "Merge/dedupe",
   "Đang đóng",
@@ -220,7 +224,7 @@ for (const token of [
 
 for (const [content, token, label] of [
   [actionLink, "rounded-md", "rounded action link"],
-  [sectionCard, "rounded-md", "rounded section card"],
+  [sectionCard, "rounded-xl", "rounded section card"],
   [emptyState, "rounded-md", "rounded empty state"],
   [statusCallout, "rounded-md", "rounded status callout"],
   [personForm, "focus:border-[#245744]", "admin form green focus"],

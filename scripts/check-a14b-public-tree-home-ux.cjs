@@ -65,6 +65,10 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A14G_PUBLIC_BROWSER_VISUAL_SMOKE.md",
   "scripts/check-a14g-public-browser-visual-smoke.cjs",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -204,15 +208,15 @@ requireIncludes(
 
 for (const token of [
   "Lưu giữ ký ức, kết nối các thế hệ.",
-  "Không gian gia phả cho cả gia đình",
-  "Xem cây gia phả",
+  "Gia phả dòng họ Việt Nam",
+  "Xem phả đồ",
   "Đăng nhập quản trị",
-  "Sổ gia phả công khai",
+  "Bìa sổ phả hệ",
   "Lưu giữ dòng họ",
-  "Xem cây trực quan",
+  "Xem phả đồ trực quan",
   "Bảo vệ riêng tư",
   "Dữ liệu lâu dài",
-  "Cách xem cây",
+  "Cách xem phả đồ",
   "Kéo nền để di chuyển",
   "cuộn để phóng to hoặc thu nhỏ",
   "Tìm người trong cây",
@@ -228,10 +232,10 @@ for (const token of [
 }
 
 for (const token of [
-  "bg-stone-50",
+  "bg-[#f5eddf]",
   "bg-white/90",
   "text-stone-900",
-  "text-[#8a4b2a]",
+  "text-[#7a2f24]",
   "rounded-md",
   "min-h-11",
   "title=\"Đưa toàn bộ cây vào khung nhìn\"",

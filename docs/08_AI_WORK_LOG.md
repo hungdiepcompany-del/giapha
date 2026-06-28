@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-06-28 - A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish
+
+- Applied Vietnamese traditional genealogy UI polish to existing public/admin/
+  tree surfaces while keeping data, auth, permission and runtime boundaries
+  closed.
+- Touched UI files: `components/layout/public-shell.tsx`,
+  `components/public/public-home.tsx`,
+  `components/public/public-tree-shell.tsx`,
+  `components/tree/family-node-card.tsx`,
+  `components/tree/family-tree-toolbar.tsx`,
+  `components/tree/family-tree-viewer.tsx`,
+  `components/tree/family-tree-editor.tsx`,
+  `components/tree/tree-editor-toolbar.tsx`,
+  `components/layout/admin-shell.tsx`,
+  `app/(admin)/admin/page.tsx`,
+  `app/(admin)/admin/genealogy/page.tsx`,
+  `components/genealogy/lineage-admin.tsx`,
+  `components/people/person-list.tsx` and
+  `components/ui/section-card.tsx`.
+- Public UI now uses warmer paper/amber/cream surfaces, a public banner,
+  lineage wording, and the primary CTA `Xem phả đồ`.
+- Tree UI gives the canvas more height, uses warmer toolbar/canvas colors, and
+  makes person nodes more compact with a text-avatar placeholder.
+- Admin sidebar is grouped as `Dòng họ`, `Phả đồ`, `Website`, `Quản trị`.
+- Admin dashboard and genealogy cards include clearer card-style actions:
+  `Xem phả đồ` and `Danh sách thành viên`.
+- Added `docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md`.
+- Added `scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs` and
+  package command `check:a15a2:vietnamese-traditional-genealogy-ui`.
+- Boundary: UI/UX only, no migration/schema/DB apply, no API/action/service
+  logic, no auth/permission/RLS, no new route, no Worker/OpenNext/Wrangler
+  change, no dependency, no external website asset, no deploy and no push.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-15A1 - Public Home Modern Heritage UI
 
 - Applied Gemini Modern Heritage / Di sản Hiện đại polish to Public Home only.

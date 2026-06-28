@@ -38,20 +38,22 @@ function publicTreeErrorMessage(error: string) {
 export function PublicTreeShell({ result }: PublicTreeShellProps) {
   return (
     <PublicShell>
-      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <PageHeader
-          eyebrow="Cây gia phả công khai"
-          title="Khám phá cây gia phả"
-          description="Chế độ công khai chỉ đọc và đã lọc dữ liệu riêng tư. Người còn sống không hiển thị thông tin nhạy cảm."
-        />
+      <section className="mx-auto w-full max-w-[1600px] px-3 py-6 sm:px-5 sm:py-8">
+        <div className="rounded-xl border border-amber-900/10 bg-[#fff8e8]/90 p-4 shadow-sm sm:p-5">
+          <PageHeader
+            eyebrow="Phả đồ công khai"
+            title="Khám phá cây gia phả"
+            description="Chế độ công khai chỉ đọc và đã lọc dữ liệu riêng tư. Người còn sống không hiển thị thông tin nhạy cảm."
+          />
 
-        <StatusCallout tone="info" title="Cách xem cây" className="mt-6">
-          Kéo nền để di chuyển, cuộn để phóng to hoặc thu nhỏ, dùng ô tìm kiếm
-          để tập trung vào một người. Trang này không cho chỉnh sửa cây hoặc lưu
-          bố cục.
-        </StatusCallout>
+          <StatusCallout tone="info" title="Cách xem phả đồ" className="mt-5">
+            Kéo nền để di chuyển, cuộn để phóng to hoặc thu nhỏ, dùng ô tìm
+            kiếm để tập trung vào một người. Trang này không cho chỉnh sửa cây
+            hoặc lưu bố cục.
+          </StatusCallout>
+        </div>
 
-        <div className="mt-6">
+        <div className="mt-4">
           {result.ok ? (
             result.data.nodes.length > 0 ? (
               <FamilyTreeViewer graph={result.data} />

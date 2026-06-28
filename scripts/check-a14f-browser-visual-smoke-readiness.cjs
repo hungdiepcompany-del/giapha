@@ -37,6 +37,20 @@ const allowedChangedFiles = new Set([
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
   "scripts/check-vietnamese-ui-copy.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "app/(admin)/admin/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "components/layout/admin-shell.tsx",
+  "components/people/person-list.tsx",
+  "components/public/public-tree-shell.tsx",
+  "components/tree/family-node-card.tsx",
+  "components/tree/family-tree-editor.tsx",
+  "components/tree/family-tree-toolbar.tsx",
+  "components/tree/family-tree-viewer.tsx",
+  "components/tree/tree-editor-toolbar.tsx",
+  "components/ui/section-card.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 function readFile(relativePath) {

@@ -48,7 +48,7 @@ export function PersonList({
 
   return (
     <div className="grid gap-4">
-      <div className="rounded-md border border-stone-200 bg-[#fffaf0] px-4 py-3 text-sm leading-6 text-stone-700 shadow-sm">
+      <div className="rounded-xl border border-amber-900/10 bg-[#fff8e8] px-4 py-3 text-sm leading-6 text-stone-700 shadow-sm">
         Đang hiển thị{" "}
         <span className="font-bold text-stone-950">{people.length}</span> thành
         viên. Mở hồ sơ trước khi sửa để tránh thay đổi nhầm thông tin gia phả.
@@ -58,7 +58,7 @@ export function PersonList({
         {people.map((person) => (
           <article
             key={person.id}
-            className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm"
+            className="min-w-0 rounded-xl border border-amber-900/10 bg-[#fff8e8] p-4 shadow-sm"
           >
             <div className="break-words font-bold text-stone-950">
               {person.display_name || person.full_name}
@@ -95,7 +95,7 @@ export function PersonList({
             ) : null}
             <div className="mt-4 grid gap-3 min-[380px]:flex min-[380px]:flex-wrap">
               <Link
-                className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#245744] bg-white px-3 py-2 text-sm font-semibold text-[#245744]"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#245744] bg-white px-3 py-2 text-sm font-semibold text-[#245744]"
                 href={`/admin/people/${person.id}`}
               >
                 {canUpdate ? "Sửa hồ sơ" : "Xem hồ sơ"}
@@ -119,7 +119,7 @@ export function PersonList({
 
       <div className="hidden overflow-x-auto rounded-md border border-stone-200 bg-white shadow-sm md:block">
         <table className="w-full min-w-[820px] border-collapse text-left text-sm">
-          <thead className="bg-[#f6efe2] text-stone-700">
+          <thead className="bg-[#f2dfbd] text-stone-800">
             <tr>
               <th className="border-b border-stone-200 px-4 py-3">Họ tên</th>
               <th className="border-b border-stone-200 px-4 py-3">Đời</th>

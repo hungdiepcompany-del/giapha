@@ -17,20 +17,26 @@ export function PublicShell({ children }: PublicShellProps) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900">
-      <header className="border-b border-stone-200 bg-white/90 shadow-sm">
+    <div
+      data-ui-phase="A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI"
+      className="min-h-screen bg-[#f5eddf] text-stone-900"
+    >
+      <header className="border-b border-amber-900/10 bg-[#fff8e8]/95 shadow-sm">
+        <div className="border-b border-amber-900/10 bg-[#7a2f24] px-4 py-2 text-center text-sm font-semibold text-amber-50">
+          Không gian từ đường số của dòng họ
+        </div>
         <div className="mx-auto flex min-h-16 max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Link
             href="/"
-            className="inline-flex min-w-0 items-center gap-3 text-base font-bold tracking-normal text-stone-900"
+            className="inline-flex min-w-0 items-center gap-3 text-base font-bold tracking-normal text-stone-950"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-sm font-semibold text-amber-800 shadow-sm">
-              Gia
+            <span className="flex size-12 items-center justify-center rounded-md border border-amber-900/20 bg-[#f2dfbd] text-sm font-black text-[#7a2f24] shadow-sm">
+              Phả
             </span>
             <span className="min-w-0 break-words">
               WEB GIA PHẢ
-              <span className="block text-sm font-medium text-stone-600">
-                Lưu giữ ký ức gia đình
+              <span className="block text-sm font-semibold text-[#245744]">
+                Gìn giữ cội nguồn dòng họ
               </span>
             </span>
           </Link>
@@ -41,8 +47,8 @@ export function PublicShell({ children }: PublicShellProps) {
                 href={item.href}
                 className={
                   pathname === item.href
-                    ? "inline-flex min-h-11 items-center justify-center rounded-full border border-teal-700 bg-teal-700 px-4 py-2 text-center text-white shadow-sm"
-                    : "inline-flex min-h-11 items-center justify-center rounded-full border border-stone-200 bg-white px-4 py-2 text-center text-stone-700 transition hover:bg-stone-100 hover:text-stone-900"
+                    ? "inline-flex min-h-11 items-center justify-center rounded-full border border-[#245744] bg-[#245744] px-4 py-2 text-center text-white shadow-sm"
+                    : "inline-flex min-h-11 items-center justify-center rounded-full border border-amber-900/10 bg-white/80 px-4 py-2 text-center text-stone-700 transition hover:bg-[#f2dfbd] hover:text-stone-950"
                 }
               >
                 {item.label}
@@ -50,7 +56,7 @@ export function PublicShell({ children }: PublicShellProps) {
             ))}
             <Link
               href="/auth/login"
-              className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-stone-200 bg-white px-4 py-2 text-center text-stone-700 shadow-sm transition hover:bg-stone-100 sm:col-span-1"
+              className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-[#7a2f24]/20 bg-white/80 px-4 py-2 text-center text-[#7a2f24] shadow-sm transition hover:bg-[#f2dfbd] sm:col-span-1"
             >
               Vào quản trị
             </Link>
@@ -58,7 +64,7 @@ export function PublicShell({ children }: PublicShellProps) {
         </div>
       </header>
       <main>{children}</main>
-      <footer className="border-t border-stone-200 bg-white/80">
+      <footer className="border-t border-amber-900/10 bg-[#fff8e8]/85">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-6 text-sm leading-6 text-stone-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>
             Không gian lưu giữ gia phả, câu chuyện và dữ liệu gia đình lâu dài.

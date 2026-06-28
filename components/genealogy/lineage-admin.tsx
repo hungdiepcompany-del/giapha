@@ -42,14 +42,14 @@ type LineageSelectData = {
 };
 
 const inputClass =
-  "mt-1 min-h-10 w-full border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none focus:border-slate-900 disabled:bg-slate-100";
+  "mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base text-stone-950 outline-none focus:border-[#245744] disabled:bg-stone-100";
 
 function FieldLabel({ children }: { children: string }) {
-  return <span className="text-sm font-semibold text-slate-800">{children}</span>;
+  return <span className="text-sm font-semibold text-stone-800">{children}</span>;
 }
 
 function FieldHelp({ children }: { children: string }) {
-  return <p className="mt-1 text-xs leading-5 text-slate-500">{children}</p>;
+  return <p className="mt-1 text-sm leading-6 text-stone-500">{children}</p>;
 }
 
 function nameForPerson(person?: Pick<Person, "full_name" | "display_name"> | null) {
@@ -663,26 +663,31 @@ export function ClanList({
   return (
     <div className="grid gap-4">
       {clans.map((clan) => (
-        <SectionCard key={clan.id}>
+        <SectionCard key={clan.id} className="bg-[#fff8e8]/95">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <h3 className="text-lg font-bold text-slate-950">
+              <p className="text-sm font-semibold text-[#7a2f24]">Tên họ</p>
+              <h3 className="mt-1 text-xl font-bold text-stone-950">
                 {clan.clan_name}
               </h3>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-stone-600">
                 {clan.clan_code} / {visibilityLabels[clan.visibility]}
               </p>
               {clan.origin_place ? (
-              <p className="mt-2 text-sm text-slate-700">
+              <p className="mt-2 text-sm text-stone-700">
                   Nơi phát tích: {clan.origin_place}
                 </p>
               ) : null}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <ActionLink href="/admin/tree">Xem phả đồ</ActionLink>
+              <ActionLink href="/admin/people">Danh sách thành viên</ActionLink>
             </div>
             <ActionLink href="/admin/genealogy/branches">
               Quản lý chi
             </ActionLink>
           </div>
-          <div className="mt-5 border-t border-slate-100 pt-5">
+          <div className="mt-5 border-t border-amber-900/10 pt-5">
             <ClanForm clan={clan} returnTo={returnTo} />
           </div>
         </SectionCard>
@@ -717,17 +722,18 @@ export function BranchList({
   return (
     <div className="grid gap-4">
       {branches.map((branch) => (
-        <SectionCard key={branch.id}>
+        <SectionCard key={branch.id} className="bg-[#fff8e8]/95">
           <div>
-            <h3 className="text-lg font-bold text-slate-950">
+            <p className="text-sm font-semibold text-[#7a2f24]">Chi nhánh</p>
+            <h3 className="mt-1 text-xl font-bold text-stone-950">
               {branch.branch_name}
             </h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-stone-600">
               {branch.branch_code} / {clanName(clans, branch.clan_id)} / Cấp{" "}
               {branch.branch_level}
             </p>
           </div>
-          <div className="mt-5 border-t border-slate-100 pt-5">
+          <div className="mt-5 border-t border-amber-900/10 pt-5">
             <BranchForm
               branch={branch}
               clans={clans}

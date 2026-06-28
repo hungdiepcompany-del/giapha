@@ -86,7 +86,7 @@ function SelectedPersonPreview({
 }) {
   if (!selectedNode || selectedNode.kind !== "person") {
     return (
-      <div className="min-w-0 rounded-md border border-dashed border-stone-300 bg-[#fffaf0] p-4 text-sm leading-6 text-stone-700">
+      <div className="min-w-0 rounded-xl border border-dashed border-amber-900/20 bg-[#fff8e8] p-4 text-sm leading-6 text-stone-700">
         <div className="break-words font-bold text-stone-950">Chọn một người trên cây</div>
         <p className="mt-1">
           Chọn một người trên cây để xem thông tin chính. Khung xem này không
@@ -103,7 +103,7 @@ function SelectedPersonPreview({
   const branchLabel = selectedNode.lineageBranchName ?? selectedNode.branchName;
 
   return (
-    <div className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm">
+    <div className="min-w-0 rounded-xl border border-amber-900/10 bg-[#fff8e8] p-4 shadow-sm">
       <div className="text-xs font-bold uppercase tracking-normal text-[#8a4b2a]">
         Đang chọn
       </div>
@@ -133,7 +133,7 @@ function SelectedPersonPreview({
       </dl>
       <Link
         href={profileHref}
-        className="mt-4 inline-flex min-h-11 max-w-full items-center justify-center rounded-md border border-[#245744] bg-white px-3 py-2 text-center text-sm font-semibold text-[#245744] transition hover:bg-[#f6efe2]"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center justify-center rounded-full border border-[#245744] bg-white px-3 py-2 text-center text-sm font-semibold text-[#245744] transition hover:bg-[#f6efe2]"
       >
         {mode === "public" ? "Xem hồ sơ công khai" : "Mở hồ sơ quản trị"}
       </Link>
@@ -242,7 +242,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-stone-200 bg-[#fffaf0] shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-amber-900/10 bg-[#fff8e8] shadow-sm">
       <FamilyTreeToolbar
         searchQuery={searchQuery}
         searchStatus={isLayouting ? "Đang tự sắp xếp" : searchStatus}
@@ -255,9 +255,9 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
         onZoomOut={() => flow?.zoomOut({ duration: 250 })}
         onResetLayout={resetLayout}
       />
-      <div className="grid gap-4 p-3 sm:p-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="min-w-0 overflow-hidden rounded-md border border-stone-200 bg-[#f7efe1]">
-          <div className="h-[58vh] min-h-[420px] sm:h-[680px] sm:min-h-[520px]">
+      <div className="grid gap-4 p-3 sm:p-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="min-w-0 overflow-hidden rounded-xl border border-amber-900/10 bg-[#f5eddf]">
+          <div className="h-[68vh] min-h-[480px] sm:h-[760px] sm:min-h-[560px]">
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -272,7 +272,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
               onPaneClick={() => setSelectedNodeId(null)}
               onInit={setFlow}
             >
-              <Background color="#d8c8ad" gap={24} />
+              <Background color="#cfb98f" gap={26} />
               <Controls showInteractive={false} />
               <MiniMap pannable zoomable nodeStrokeWidth={3} />
             </ReactFlow>

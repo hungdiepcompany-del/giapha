@@ -143,6 +143,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a0-gemini-modern-heritage-design-spec.cjs",
   "docs/PLAN_A15A1_PUBLIC_HOME_MODERN_HERITAGE_UI.md",
   "scripts/check-a15a1-public-home-modern-heritage-ui.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 const packageJson = readJson("package.json");
@@ -195,7 +199,7 @@ for (const token of [
 
 for (const token of [
   "Dòng họ / chi / đời",
-  "Cây gia phả",
+  "Phả đồ",
   "Quan hệ gia đình",
 ]) {
   requireIncludes(adminShell, token, `admin navigation Vietnamese token ${token}`);

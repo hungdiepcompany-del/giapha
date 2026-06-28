@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish completed
+
+- Applied Vietnamese traditional genealogy UI polish across existing public,
+  admin and tree surfaces.
+- Added `docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md`.
+- Added `scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs` and
+  package command `check:a15a2:vietnamese-traditional-genealogy-ui`.
+- Public shell/home now use a warmer parchment-like base, public banner
+  `Không gian từ đường số của dòng họ`, stronger lineage copy and primary CTA
+  `Xem phả đồ`.
+- Public tree shell and tree viewer give more screen area to the phả đồ canvas,
+  use warmer toolbar/card styling and keep public read-only behavior unchanged.
+- Family tree node cards are more compact, include a text-avatar placeholder,
+  and keep name, birth/death range, generation and branch labels visible.
+- Admin shell groups navigation as `Dòng họ`, `Phả đồ`, `Website`,
+  `Quản trị` without adding routes.
+- Admin dashboard, genealogy cards and person cards now use warmer card styling
+  and clear Vietnamese CTAs including `Xem phả đồ` and
+  `Danh sách thành viên`.
+- Boundary confirmed: UI/UX only; no DB/schema/migration, no `.sql`, no
+  API/action/service logic, no auth/permission/RLS, no route creation, no
+  Worker/OpenNext/Wrangler config, no dependency, no deploy and no push.
+- No external website image/logo/asset was copied or added.
+- `PLANNING.MD` was not read or committed.
+
 ## 2026-06-27 - A-15A1 - Public Home Modern Heritage UI completed
 
 - Applied Gemini Modern Heritage / Di sản Hiện đại polish to Public Home only.

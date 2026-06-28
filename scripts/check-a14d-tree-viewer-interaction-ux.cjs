@@ -59,6 +59,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-tree-relationship-picker-ux.cjs",
   "scripts/check-vietnamese-cultural-ui-ux.cjs",
   "scripts/check-vietnamese-ui-copy.cjs",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "app/(admin)/admin/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -203,8 +208,8 @@ for (const token of [
 }
 
 for (const token of [
-  "bg-[#f7efe1]",
-  "color=\"#d8c8ad\"",
+  "bg-[#f5eddf]",
+  "color=\"#cfb98f\"",
 ]) {
   requireIncludes(editor, token, `editor warm canvas token ${token}`);
 }
