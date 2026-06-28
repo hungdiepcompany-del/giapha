@@ -8,10 +8,14 @@ const marker = "A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI";
 
 const allowedChangedFiles = new Set([
   "components/layout/public-shell.tsx",
+  "app/(admin)/admin/people/[id]/page.tsx",
+  "app/(public)/people/[slug]/page.tsx",
   "app/(admin)/admin/page.tsx",
   "app/(admin)/admin/genealogy/page.tsx",
   "components/genealogy/lineage-admin.tsx",
+  "components/people/person-form.tsx",
   "components/layout/admin-shell.tsx",
+  "components/public/public-person-profile.tsx",
   "components/public/public-tree-shell.tsx",
   "components/tree/family-tree-empty-state.tsx",
   "components/tree/family-tree-error-state.tsx",
@@ -23,6 +27,7 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI.md",
   "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
+  "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
@@ -34,6 +39,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+  "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
 ]);
 
 function readFile(relativePath) {

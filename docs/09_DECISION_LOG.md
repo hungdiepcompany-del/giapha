@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 183 - A-15A5 member profile/person detail polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A5 Member Profile / Person Detail Vietnamese Heritage UI may polish existing
+public member profile and admin person detail presentation as a UI-only phase.
+
+Allowed:
+
+- warm Vietnamese heritage styling for public profile and admin detail;
+- profile hero/card, text-avatar, summary tiles and clearer section grouping;
+- Vietnamese copy for loading, empty, not-found and missing-value states;
+- responsive layout changes on existing routes;
+- visual grouping of existing relationship, lineage, revision and soft-delete
+  UI without changing their action/service contracts.
+
+Not authorized:
+
+- database/schema/migration/seed/RLS or DB apply;
+- auth, role, permission or API/server action contract change;
+- people/relationship/genealogy service runtime change;
+- route creation;
+- tree canvas/editor, public home, public tree viewer or admin dashboard redo;
+- dependency addition;
+- copied asset/logo/screenshot/CSS/layout from any reference website.
+
+Ly do:
+
+Member profiles are the main reading surface for family history, so they need a
+warmer and clearer Vietnamese heritage presentation. The phase must remain
+presentation-only because any real profile privacy, relationship model, media or
+data contract change needs separate approval.
+
 ## Decision 182 - A-15A4 family list and admin dashboard polish is UI-only
 
 Status: `ACTIVE`

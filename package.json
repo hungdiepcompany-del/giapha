@@ -188,7 +188,8 @@
     "check:a15a2:vietnamese-traditional-genealogy-ui": "node scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
     "check:a15a2:modern-vietnamese-genealogy-tree-editor-ui": "node scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
     "check:a15a3:vietnamese-heritage-public-tree-view-ui": "node scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
-    "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui": "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs"
+    "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui": "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+    "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui": "node scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

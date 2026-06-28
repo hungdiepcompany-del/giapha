@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15A5 - Member Profile / Person Detail Vietnamese Heritage UI completed
+
+- Marker: `A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI`.
+- Applied Vietnamese heritage polish to existing public `/people/[slug]` and
+  admin `/admin/people/[id]` person detail/profile surfaces only.
+- Added `docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md`.
+- Added `scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs`
+  and package command
+  `check:a15a5:member-profile-person-detail-vietnamese-heritage-ui`.
+- Public member profile now has a warm profile card, text-avatar, grouped
+  `Thông tin cơ bản`, `Gia đình & quan hệ`, `Ghi chú`, `Quyền riêng tư`, and
+  `Chưa cập nhật` placeholders. It keeps public privacy behavior and existing
+  route/query boundaries.
+- Admin person detail now has a clearer `Hồ sơ thành viên` header, quick links
+  to member list/phả đồ/relationships, a two-column desktop layout, summary
+  tiles, and preserved existing form/action/permission behavior.
+- `components/people/person-form.tsx` was restyled only; field names, submit
+  action, read-only state and data contract remain unchanged.
+- Boundary confirmed: UI-only; no DB/schema/migration/seed/RLS/auth/permission/
+  API/service runtime, no route creation, no tree/public-home/dashboard redo, no
+  dependency, no deploy and no push.
+- No external website code, asset, logo, screenshot, CSS, image or copied layout
+  was used.
+
 ## 2026-06-28 - A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI completed
 
 - Marker: `A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI`.

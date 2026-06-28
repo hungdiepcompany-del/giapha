@@ -4,29 +4,20 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI";
+const marker = "A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI";
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/genealogy/page.tsx",
   "app/(admin)/admin/people/[id]/page.tsx",
   "app/(public)/people/[slug]/page.tsx",
-  "components/genealogy/lineage-admin.tsx",
-  "components/layout/admin-shell.tsx",
   "components/people/person-form.tsx",
   "components/public/public-person-profile.tsx",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
   "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
   "package.json",
-  "scripts/check-a14-ui-ux-overhaul.cjs",
-  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
-  "scripts/check-a14e-mobile-ux-sweep.cjs",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
-  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
@@ -86,60 +77,82 @@ function gitShowHead(relativePath) {
 }
 
 const packageJson = readJson("package.json");
-const doc = readFile("docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md");
+const doc = readFile(
+  "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
+);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
-const a15a2Checker = readFile("scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs");
-const a15a3Checker = readFile("scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs");
+const a15a2Checker = readFile(
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+);
+const a15a3Checker = readFile(
+  "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
+);
+const a15a4Checker = readFile(
+  "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+);
 
 const uiFiles = [
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/genealogy/page.tsx",
-  "components/genealogy/lineage-admin.tsx",
-  "components/layout/admin-shell.tsx",
+  "app/(admin)/admin/people/[id]/page.tsx",
+  "app/(public)/people/[slug]/page.tsx",
+  "components/people/person-form.tsx",
+  "components/public/public-person-profile.tsx",
 ];
 const ui = uiFiles.map(readFile).join("\n");
 
 for (const token of [
-  "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI",
+  "A-15A5 - Member Profile / Person Detail Vietnamese Heritage UI",
   marker,
   "Phạm Vi UI-Only",
-  "Màn / Component Không Đụng",
+  "Màn Được Chỉnh",
+  "Màn Không Đụng",
   "Nguyên Tắc Không Copy Website Tham Khảo",
-  "Không copy code, asset, logo",
-  "Smoke Test Dự Kiến",
+  "không copy code, asset, logo",
+  "không mở runtime/service boundary",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
   marker,
-  "Quản trị gia phả",
-  "Dòng họ của tôi",
-  "Gia phả của tôi",
-  "Chưa có gia phả nào",
-  "Đang tải danh sách gia phả",
-  "Tạo gia phả đầu tiên",
-  "Xem phả đồ",
-  "Quản lý thành viên",
-  "Chỉnh sửa",
-  "Thiết lập riêng tư",
-  "Tài khoản hiện tại chưa có quyền quản trị khu vực này",
+  "Hồ sơ thành viên",
+  "Thông tin cơ bản",
+  "Gia đình & quan hệ",
+  "Chưa cập nhật",
+  "Không tìm thấy thành viên",
+  "Đang tải hồ sơ thành viên",
+  "Ghi chú",
+  "Quyền riêng tư",
+  "Thêm cha",
+  "Thêm vợ/chồng",
+  "Xem trong phả đồ",
 ]) {
   requireIncludes(ui, token, `UI token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md", "index entry"],
-  [workLog, "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI", "work log entry"],
-  [handoff, "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI completed", "handoff entry"],
+  [
+    index,
+    "PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
+    "index entry",
+  ],
+  [
+    workLog,
+    "A-15A5 - Member Profile / Person Detail Vietnamese Heritage UI",
+    "work log entry",
+  ],
+  [
+    handoff,
+    "A-15A5 - Member Profile / Person Detail Vietnamese Heritage UI completed",
+    "handoff entry",
+  ],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
   [
     decisionLog,
-    "Decision 182 - A-15A4 family list and admin dashboard polish is UI-only",
+    "Decision 183 - A-15A5 member profile/person detail polish is UI-only",
     "decision log entry",
   ],
   [
@@ -152,29 +165,39 @@ for (const [content, token, label] of [
     "A-15A3 Vietnamese heritage public tree view UI check passed.",
     "A-15A3 checker intact",
   ],
+  [
+    a15a4Checker,
+    "A-15A4 Vietnamese heritage family list/admin dashboard UI check passed.",
+    "A-15A4 checker intact",
+  ],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui"] !==
-  "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs"
+  packageJson?.scripts?.[
+    "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui"
+  ] !==
+  "node scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs"
 ) {
-  failures.push("missing package script check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui");
+  failures.push(
+    "missing package script check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
+  );
 }
 
 for (const scriptName of [
   "check:a15a2:modern-vietnamese-genealogy-tree-editor-ui",
   "check:a15a3:vietnamese-heritage-public-tree-view-ui",
+  "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui",
 ]) {
   if (!packageJson?.scripts?.[scriptName]) {
     failures.push(`${scriptName} was removed`);
   }
 }
 
-const changedFiles = gitOutput(["diff", "--name-only"])
+const changedFiles = gitOutput(["status", "--porcelain"])
   .split(/\r?\n/)
-  .map((line) => line.trim())
+  .map((line) => line.slice(3).trim())
   .filter(Boolean);
 
 for (const file of changedFiles) {
@@ -240,9 +263,9 @@ for (const pattern of [
 }
 
 if (failures.length > 0) {
-  console.error("A-15A4 Vietnamese heritage family list/admin dashboard UI check failed:");
+  console.error("A-15A5 member profile/person detail Vietnamese heritage UI check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15A4 Vietnamese heritage family list/admin dashboard UI check passed.");
+console.log("A-15A5 member profile/person detail Vietnamese heritage UI check passed.");
