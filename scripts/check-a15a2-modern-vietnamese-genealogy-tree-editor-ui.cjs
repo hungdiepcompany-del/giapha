@@ -9,6 +9,10 @@ const marker = "A15A2_MODERN_VIETNAMESE_TREE_EDITOR_UI";
 const allowedChangedFiles = new Set([
   "app/(admin)/admin/tree/page.tsx",
   "app/(admin)/admin/tree/edit/page.tsx",
+  "app/(admin)/admin/page.tsx",
+  "app/(admin)/admin/genealogy/page.tsx",
+  "components/genealogy/lineage-admin.tsx",
+  "components/layout/admin-shell.tsx",
   "components/layout/public-shell.tsx",
   "components/public/public-tree-shell.tsx",
   "components/tree/family-node-card.tsx",
@@ -25,14 +29,17 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
   "docs/PLAN_A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI.md",
+  "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14b-public-tree-home-ux.cjs",
+  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
   "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
   "scripts/check-a14e-mobile-ux-sweep.cjs",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
+  "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
 ]);
 

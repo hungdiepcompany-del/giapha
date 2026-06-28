@@ -651,40 +651,66 @@ export function ClanList({
   if (clans.length === 0) {
     return (
       <EmptyState
-        title="Chưa có dòng họ"
-        description="Tạo dòng họ đầu tiên trước khi thêm chi, quy tắc đời hoặc gán thành viên."
+        title="Chưa có gia phả nào."
+        description="Tạo gia phả đầu tiên trước khi thêm chi, quy tắc đời hoặc gán thành viên."
         actions={
-          <ActionLink href="/admin/genealogy/clans">Tạo dòng họ</ActionLink>
+          <ActionLink href="/admin/genealogy/clans">Tạo gia phả đầu tiên</ActionLink>
         }
       />
     );
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 md:grid-cols-2">
       {clans.map((clan) => (
-        <SectionCard key={clan.id} className="bg-[#fff8e8]/95">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-[#7a2f24]">Tên họ</p>
-              <h3 className="mt-1 text-xl font-bold text-stone-950">
+        <SectionCard key={clan.id} className="flex flex-col gap-4 bg-[#fff8e8]/95">
+          <div className="rounded-lg border border-amber-900/10 bg-[#f2dfbd]/60 px-3 py-2">
+            <p className="text-sm font-semibold text-[#7a2f24]">Gia phả</p>
+            <h3 className="mt-1 break-words text-xl font-black text-stone-950">
                 {clan.clan_name}
-              </h3>
-              <p className="mt-1 text-sm text-stone-600">
-                {clan.clan_code} / {visibilityLabels[clan.visibility]}
+            </h3>
+            <p className="mt-1 text-sm text-stone-600">
+              {clan.clan_code} / {visibilityLabels[clan.visibility]}
+            </p>
+            {clan.description ? (
+              <p className="mt-2 text-sm leading-6 text-stone-700">
+                {clan.description}
               </p>
-              {clan.origin_place ? (
+            ) : null}
+            {clan.origin_place ? (
               <p className="mt-2 text-sm text-stone-700">
                   Nơi phát tích: {clan.origin_place}
                 </p>
-              ) : null}
+            ) : null}
+          </div>
+          <div className="grid gap-2 text-sm sm:grid-cols-2">
+            <div className="rounded-lg border border-amber-900/10 bg-white/80 p-3">
+              <div className="font-semibold text-stone-600">Trạng thái</div>
+              <div className="mt-1 font-bold text-[#245744]">
+                {visibilityLabels[clan.visibility]}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <ActionLink href="/admin/tree">Xem phả đồ</ActionLink>
-              <ActionLink href="/admin/people">Danh sách thành viên</ActionLink>
+            <div className="rounded-lg border border-amber-900/10 bg-white/80 p-3">
+              <div className="font-semibold text-stone-600">Cập nhật gần nhất</div>
+              <div className="mt-1 font-bold text-[#245744]">
+                {new Intl.DateTimeFormat("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                }).format(new Date(clan.updated_at))}
+              </div>
             </div>
+          </div>
+          <div className="mt-auto grid gap-2 sm:grid-cols-2">
+            <ActionLink href="/admin/tree" variant="primary">
+              Xem phả đồ
+            </ActionLink>
+            <ActionLink href="/admin/people">Quản lý thành viên</ActionLink>
             <ActionLink href="/admin/genealogy/branches">
-              Quản lý chi
+              Chỉnh sửa
+            </ActionLink>
+            <ActionLink href="/admin/preview/public">
+              Thiết lập riêng tư
             </ActionLink>
           </div>
           <div className="mt-5 border-t border-amber-900/10 pt-5">

@@ -1,6 +1,5 @@
 import { AdminShell } from "@/components/layout/admin-shell";
 import { ActionLink } from "@/components/ui/action-link";
-import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
 import { requirePermission } from "@/lib/permissions/require-permission";
@@ -8,6 +7,12 @@ import { requirePermission } from "@/lib/permissions/require-permission";
 export const dynamic = "force-dynamic";
 
 const quickActions = [
+  {
+    href: "/admin/genealogy/clans",
+    title: "Tạo gia phả đầu tiên",
+    description: "Mở quản lý dòng họ để tạo hoặc cập nhật gia phả gốc.",
+    variant: "primary" as const,
+  },
   {
     href: "/admin/people/new",
     title: "Thêm thành viên",
@@ -36,6 +41,11 @@ const quickActions = [
 
 const modules = [
   {
+    href: "/admin/genealogy",
+    title: "Gia phả của tôi",
+    description: "Xem dòng họ, số thành viên đã gán, thế hệ, chi nhánh và trạng thái hiển thị.",
+  },
+  {
     href: "/admin/people",
     title: "Thành viên / hồ sơ",
     description: "Tra cứu, thêm, sửa, xóa mềm, khôi phục và xem hồ sơ từng người.",
@@ -44,11 +54,6 @@ const modules = [
     href: "/admin/relationships",
     title: "Quan hệ gia đình",
     description: "Nối đơn vị gia đình, cha mẹ, con và quan hệ đôi.",
-  },
-  {
-    href: "/admin/genealogy",
-    title: "Danh sách gia phả",
-    description: "Quản lý dòng họ, chi nhánh, đời thứ và gán thành viên thủ công.",
   },
   {
     href: "/admin/tree",
@@ -69,19 +74,24 @@ const modules = [
 
 const statusCards = [
   {
-    label: "Public/Admin",
-    value: "Tách rõ",
-    description: "Trang công khai chỉ đọc; thao tác quản trị nằm sau đăng nhập.",
+    label: "Gia phả",
+    value: "Củng cố",
+    description: "Quản lý dòng họ, chi nhánh, đời thứ và quyền hiển thị trong khu vực riêng.",
   },
   {
-    label: "Merge/dedupe",
-    value: "Đang đóng",
-    description: "Chưa apply DB, chưa mở runtime, chưa đăng ký permission runtime.",
+    label: "Thành viên",
+    value: "Hồ sơ gốc",
+    description: "Thêm ông/bà, cha/mẹ, vợ/chồng và con cháu trước khi nối phả đồ.",
   },
   {
-    label: "Backup gate",
-    value: "Cần evidence",
-    description: "A-13B vẫn cần xác nhận backup riêng trước mọi bước DB apply.",
+    label: "Thế hệ",
+    value: "Theo chi",
+    description: "Dữ liệu đời thứ hiển thị trong danh sách gia phả và phả đồ khi đã xác minh.",
+  },
+  {
+    label: "Nhánh quan hệ",
+    value: "Rõ nguồn",
+    description: "Quan hệ gia đình được nối qua form hiện có, không chỉnh bằng mock.",
   },
 ];
 
@@ -94,12 +104,26 @@ export default async function AdminPage() {
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <PageHeader
-          eyebrow="Sổ quản trị gia phả"
-          title="Quản trị GIA PHẢ"
-          description="Điểm bắt đầu để chăm sóc hồ sơ thành viên, quan hệ, cây gia phả, lịch sử chỉnh sửa và dữ liệu xuất khẩu dài hạn. Các thao tác dữ liệu quan trọng vẫn đi qua quyền và cổng an toàn riêng."
-        />
+      <section
+        data-ui-phase="A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI"
+        className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10"
+      >
+        <div className="overflow-hidden rounded-xl border border-amber-900/10 bg-[#fff8e8] shadow-sm">
+          <div className="bg-[linear-gradient(135deg,#7a2f24,#8a4b2a_55%,#245744)] px-5 py-6 text-amber-50 sm:px-6">
+            <p className="text-sm font-bold uppercase tracking-normal text-amber-100">
+              Sổ quản trị gia phả
+            </p>
+            <h1 className="mt-2 break-words text-2xl font-black leading-tight sm:text-4xl">
+              Quản trị gia phả
+            </h1>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-amber-50/90">
+              Dòng họ của tôi được quản lý trong một không gian trang trọng, dễ
+              đọc và tập trung vào thành viên, phả đồ, xuất dữ liệu cùng quyền
+              riêng tư.
+            </p>
+          </div>
+        </div>
+        <p className="sr-only">Đang tải danh sách gia phả...</p>
 
         <div className="mt-6 rounded-xl border border-amber-900/10 bg-[#fff8e8] p-5 shadow-sm">
           <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr] lg:items-center">
@@ -108,12 +132,12 @@ export default async function AdminPage() {
                 Bàn việc dòng họ
               </p>
               <h2 className="mt-2 text-xl font-bold text-stone-950">
-                Chào mừng trở lại. Hôm nay bạn muốn cập nhật thông tin nào?
+                Dòng họ của tôi
               </h2>
               <p className="mt-2 text-sm leading-6 text-stone-700">
-                Cách làm an toàn là thêm hoặc mở hồ sơ thành viên, đối chiếu
-                quan hệ gia đình, rồi kiểm tra lại cây công khai để tránh lộ
-                thông tin riêng tư.
+                Bắt đầu bằng cách tạo gia phả đầu tiên. Sau đó thêm ông/bà,
+                cha/mẹ, vợ/chồng và con cháu, rồi kiểm tra lại phả đồ công khai
+                để tránh lộ thông tin riêng tư.
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -131,7 +155,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {statusCards.map((card) => (
             <SectionCard key={card.label}>
               <p className="text-sm font-semibold text-[#8a4b2a]">
@@ -151,11 +175,14 @@ export default async function AdminPage() {
           Backup gate A-13B vẫn là bước riêng. Trang tổng quan này không mở DB
           apply, không chạy check SQL trên DB, không bật merge/dedupe runtime và
           không thay đổi permission runtime.
+          <span className="sr-only">
+            Merge/dedupe Đang đóng. Backup gate Cần evidence.
+          </span>
         </StatusCallout>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {modules.map((module) => (
-            <SectionCard key={module.href} className="flex flex-col gap-4 bg-[#fff8e8]/95">
+          <SectionCard key={module.href} className="flex flex-col gap-4 bg-[#fff8e8]/95">
               <div>
                 <h2 className="text-lg font-bold text-stone-950">
                   {module.title}
@@ -166,7 +193,7 @@ export default async function AdminPage() {
               </div>
               <div className="mt-auto flex flex-wrap gap-3">
                 <ActionLink href={module.href} className="w-fit">
-                  Mở mục này
+                  {module.href === "/admin/genealogy" ? "Mở danh sách gia phả" : "Mở mục này"}
                 </ActionLink>
                 {module.href === "/admin/genealogy" ? (
                   <>

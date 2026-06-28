@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI completed
+
+- Marker: `A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI`.
+- Applied Vietnamese heritage polish to existing `/admin`, `/admin/genealogy`,
+  `AdminShell` and genealogy list cards only.
+- Added `docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md`.
+- Added `scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs`
+  and package command
+  `check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui`.
+- Admin dashboard now uses a warm `Quản trị gia phả` banner, `Dòng họ của tôi`
+  quick-start copy, compact stats for `Gia phả`, `Thành viên`, `Thế hệ` and
+  `Nhánh quan hệ`, plus route-safe quick actions.
+- Admin genealogy now shows `Gia phả của tôi` cards with member count, generation
+  count, branch count, public/private status, last updated date and existing
+  actions: `Xem phả đồ`, `Quản lý thành viên`, `Chỉnh sửa`,
+  `Thiết lập riêng tư`.
+- Sidebar grouping is simplified to `Gia phả`, `Phả đồ`, `Xuất dữ liệu`,
+  `Cài đặt`; no route or permission logic was changed.
+- Boundary confirmed: UI-only; no DB/schema/migration/seed/RLS/auth/permission/
+  API/service runtime, no route creation, no tree canvas/editor logic, no
+  dependency, no deploy and no push.
+- No external website code, asset, logo, screenshot, CSS, image or copied layout
+  was used.
+
 ## 2026-06-28 - A-15A3 - Vietnamese Heritage Public Tree View UI completed
 
 - Marker: `A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI`.

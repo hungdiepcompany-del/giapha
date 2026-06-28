@@ -13,14 +13,19 @@ type AdminShellProps = {
 
 const navGroups = [
   {
-    title: "Dòng họ",
-    description: "Hồ sơ người, quan hệ và metadata phả hệ.",
+    title: "Gia phả",
+    description: "Dòng họ, thành viên và quan hệ thân tộc.",
     items: [
       {
         href: "/admin",
         label: "Tổng quan",
-        description: "Việc chính và lối tắt quản trị",
+        description: "Bàn làm việc quản trị gia phả",
         exact: true,
+      },
+      {
+        href: "/admin/genealogy",
+        label: "Gia phả",
+        description: "Dòng họ / chi / đời",
       },
       {
         href: "/admin/people",
@@ -31,11 +36,6 @@ const navGroups = [
         href: "/admin/relationships",
         label: "Quan hệ gia đình",
         description: "Nối cha mẹ, con và quan hệ đôi",
-      },
-      {
-        href: "/admin/genealogy",
-        label: "Dòng họ / chi / đời",
-        description: "Quản lý metadata gia phả Việt Nam",
       },
     ],
   },
@@ -57,8 +57,8 @@ const navGroups = [
     ],
   },
   {
-    title: "Website",
-    description: "Kiểm tra trang công khai và xuất dữ liệu.",
+    title: "Website / Xuất dữ liệu",
+    description: "Kiểm tra trang công khai và tải dữ liệu.",
     items: [
       {
         href: "/admin/preview/public",
@@ -73,8 +73,8 @@ const navGroups = [
     ],
   },
   {
-    title: "Quản trị",
-    description: "Theo dõi lịch sử, cảnh báo và dry-run.",
+    title: "Cài đặt",
+    description: "Theo dõi hệ thống, lịch sử và dry-run.",
     items: [
       {
         href: "/admin/backups",
@@ -131,8 +131,8 @@ export function AdminShell({
               </span>
             </Link>
             <p className="mt-2 text-sm leading-6 text-stone-600">
-              Quản lý hồ sơ, quan hệ, cây gia phả, sao lưu và lịch sử chỉnh sửa
-              trong một không gian trang trọng, dễ dùng.
+              Không gian quản lý dòng họ số: hồ sơ, phả đồ, thành viên, xuất dữ
+              liệu và lịch sử chỉnh sửa trong một bố cục gọn, dễ dùng.
             </p>
           </div>
 

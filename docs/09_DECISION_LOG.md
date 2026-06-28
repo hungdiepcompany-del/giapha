@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 182 - A-15A4 family list and admin dashboard polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A4 Vietnamese Heritage Family List / Admin Dashboard UI may polish existing
+admin dashboard, admin shell/sidebar and gia phả/dòng họ list card presentation
+as a UI-only phase.
+
+Allowed:
+
+- warm Vietnamese heritage dashboard styling;
+- compact admin stats and quick-start guidance;
+- card layout for gia phả/dòng họ list using data already loaded by existing
+  services;
+- clearer Vietnamese labels for existing actions and routes;
+- mobile-safe card/sidebar spacing.
+
+Not authorized:
+
+- database/schema/migration/seed/RLS or DB apply;
+- auth, role, permission or API contract change;
+- create/update/delete genealogy logic change;
+- service runtime, Worker/OpenNext/Wrangler or deploy config change;
+- route creation;
+- tree canvas/editor behavior change;
+- dependency addition;
+- copied asset/logo/screenshot/CSS/layout from any reference website.
+
+Ly do:
+
+The admin list/dashboard needs to feel like a dignified family-management
+workspace, but it must remain a presentation-layer polish. Any future real
+family creation flow, privacy setting workflow, permission change or data model
+change needs a separate approved phase.
+
 ## Decision 181 - A-15A3 public tree view polish is UI-only
 
 Status: `ACTIVE`
