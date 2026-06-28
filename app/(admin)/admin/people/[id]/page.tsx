@@ -248,7 +248,8 @@ export default async function PersonDetailPage({
                     readOnly={!canUpdate || Boolean(personResult.data.deleted_at)}
                     error={query.error}
                     saved={query.saved}
-                    submitLabel="Lưu thay đổi"
+                    submitLabel="Cập nhật thông tin"
+                    cancelHref={`/admin/people/${personResult.data.id}`}
                   />
                 </AdminPanel>
 

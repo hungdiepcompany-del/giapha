@@ -45,43 +45,48 @@ export default async function RelationshipsPage({
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-6xl px-6 py-10">
+      <section className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
         <PageHeader
-          eyebrow="Nền tảng quản lý quan hệ"
-          title="Quan hệ gia đình"
-          description="Gia đình là đơn vị nối cha/mẹ với con; quan hệ đôi lưu vợ/chồng/bạn đời riêng để giữ mô hình rõ ràng."
+          eyebrow="Phiếu quan hệ gia đình"
+          title="Gia đình & quan hệ"
+          description="Gắn cha, mẹ, vợ/chồng và con bằng các biểu mẫu rõ ràng. Mã nội bộ vẫn được hệ thống xử lý phía sau khi lưu."
         />
 
-        <div className="mt-6 grid gap-4 text-sm leading-6 text-slate-700 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 text-sm leading-6 text-stone-700 md:grid-cols-3">
           <SectionCard>
-            <h2 className="font-bold text-slate-950">Gia đình</h2>
+            <h2 className="font-bold text-stone-950">Gia đình</h2>
             <p className="mt-2">
-              Một đơn vị gia đình gom cha/mẹ và danh sách con.
+              Một đơn vị gia đình gom cha/mẹ và danh sách con để phả đồ đọc đúng
+              nhánh.
             </p>
           </SectionCard>
           <SectionCard>
-            <h2 className="font-bold text-slate-950">Cha mẹ / con</h2>
+            <h2 className="font-bold text-stone-950">Cha mẹ / con</h2>
             <p className="mt-2">
               Chọn gia đình và chọn thành viên theo tên để gắn cha/mẹ hoặc con.
             </p>
           </SectionCard>
           <SectionCard>
-            <h2 className="font-bold text-slate-950">Quan hệ đôi</h2>
+            <h2 className="font-bold text-stone-950">Vợ/chồng</h2>
             <p className="mt-2">
-              Vợ/chồng/bạn đời được lưu độc lập với gia đình.
+              Vợ/chồng hoặc bạn đời được lưu độc lập với gia đình cha/mẹ/con.
             </p>
           </SectionCard>
         </div>
 
         {query.error ? (
-          <StatusCallout tone="danger" className="mt-6">
+          <StatusCallout
+            tone="danger"
+            className="mt-6"
+            title="Không thể lưu thông tin thành viên"
+          >
             {query.error}
           </StatusCallout>
         ) : null}
 
         {query.saved ? (
           <StatusCallout tone="success" className="mt-6">
-            Đã lưu thay đổi: {query.saved}
+            Đã lưu thông tin thành viên. {query.saved}
           </StatusCallout>
         ) : null}
 
@@ -104,12 +109,16 @@ export default async function RelationshipsPage({
                       Bạn cần quyền xem thành viên để chọn người khi tạo quan hệ.
                     </StatusCallout>
                   ) : null}
-                  <div className="border-b border-slate-200 pb-3">
-                    <h2 className="text-xl font-bold text-slate-950">
+                  <div className="rounded-2xl border border-amber-900/10 bg-[#fff8e8] p-4 shadow-sm sm:p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+                      Thêm người thân
+                    </p>
+                    <h2 className="mt-2 text-xl font-bold text-stone-950">
                       Thêm quan hệ mới
                     </h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Nên tạo đơn vị gia đình trước, sau đó gắn cha/mẹ và con. Quan hệ đôi có thể tạo độc lập.
+                    <p className="mt-2 text-sm leading-6 text-stone-600">
+                      Nên tạo đơn vị gia đình trước, sau đó gắn cha/mẹ và con.
+                      Quan hệ vợ/chồng có thể tạo độc lập.
                     </p>
                   </div>
                   <RelationshipForm
@@ -117,10 +126,7 @@ export default async function RelationshipsPage({
                     people={people}
                     returnTo="/admin/relationships"
                   />
-                  <CoupleForm
-                    people={people}
-                    returnTo="/admin/relationships"
-                  />
+                  <CoupleForm people={people} returnTo="/admin/relationships" />
                 </div>
               ) : null}
             </div>

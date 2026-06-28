@@ -8,19 +8,27 @@ const marker = "A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI";
 
 const allowedChangedFiles = new Set([
   "app/(admin)/admin/people/[id]/page.tsx",
+  "app/(admin)/admin/people/new/page.tsx",
+  "app/(admin)/admin/relationships/page.tsx",
   "app/(public)/people/[slug]/page.tsx",
   "components/people/person-form.tsx",
+  "components/relationships/couple-form.tsx",
+  "components/relationships/relationship-form.tsx",
   "components/public/public-person-profile.tsx",
+  "components/tree/tree-editor-side-panel.tsx",
+  "components/ui/form-submit-button.tsx",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
+  "docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md",
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
+  "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
 ]);
 
 function readFile(relativePath) {

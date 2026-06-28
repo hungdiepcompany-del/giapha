@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-06-28 - A-15A6 - Add/Edit Member Form Vietnamese Heritage UX
+
+- Marker: `A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX`.
+- Polished add/edit member and relationship data-entry forms as warm Vietnamese
+  heritage UX while keeping field names, actions, services, permissions and
+  validation contracts unchanged.
+- Touched UI files: `app/(admin)/admin/people/new/page.tsx`,
+  `app/(admin)/admin/people/[id]/page.tsx`,
+  `components/people/person-form.tsx`,
+  `app/(admin)/admin/relationships/page.tsx`,
+  `components/relationships/relationship-form.tsx`,
+  `components/relationships/couple-form.tsx`,
+  `components/tree/tree-editor-side-panel.tsx` and
+  `components/ui/form-submit-button.tsx`.
+- Member form now reads like a `Phiếu ghi thông tin gia tộc số`, with clear
+  `Thêm thành viên` / `Sửa thông tin thành viên` context, grouped sections,
+  required/help copy, privacy guidance and pending state
+  `Đang lưu thông tin thành viên...`.
+- Relationship forms now use clear cards for creating a family, adding cha/mẹ,
+  adding con and adding vợ/chồng, with gentle warnings before changes that may
+  affect the phả đồ.
+- Tree Editor related-member entry keeps the existing flow and actions, but adds
+  clearer context, required-field help and privacy guidance.
+- Added `docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md`.
+- Added `scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs`
+  and package command `check:a15a6:add-edit-member-form-vietnamese-heritage-ux`.
+- Boundary: UI/UX-only, no migration/schema/seed/DB apply, no API/action/service
+  runtime contract change, no auth/permission/RLS, no route creation, no
+  dependency, no external website asset and no deploy/push.
+
 ## 2026-06-28 - A-15A5 - Member Profile / Person Detail Vietnamese Heritage UI
 
 - Marker: `A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI`.

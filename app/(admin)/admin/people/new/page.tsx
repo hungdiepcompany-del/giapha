@@ -1,6 +1,7 @@
 import { createPersonAction } from "@/app/(admin)/admin/people/actions";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { PersonForm } from "@/components/people/person-form";
+import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
@@ -24,18 +25,19 @@ export default async function NewPersonPage({ searchParams }: NewPersonPageProps
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-5xl px-6 py-10">
+      <section className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
         <PageHeader
-          eyebrow="Nền tảng quản lý thành viên"
+          eyebrow="Phiếu ghi thông tin gia tộc"
           title="Thêm thành viên"
-          description="Nhập thông tin theo từng nhóm để dễ kiểm tra trước khi lưu."
+          description="Nhập thông tin theo từng nhóm, ưu tiên dữ liệu đã chắc chắn. Các mục chưa rõ có thể bổ sung sau."
+          actions={<ActionLink href="/admin/people">Quay lại</ActionLink>}
         />
         <div className="mt-6">
           {canCreate ? (
             <PersonForm
               action={createPersonAction}
               error={params.error}
-              submitLabel="Tạo thành viên"
+              submitLabel="Thêm thành viên"
             />
           ) : (
             <StatusCallout tone="warning">

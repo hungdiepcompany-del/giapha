@@ -1,4 +1,5 @@
 import { ActionLink } from "@/components/ui/action-link";
+import { FormSubmitButton } from "@/components/ui/form-submit-button";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatusCallout } from "@/components/ui/status-callout";
 import {
@@ -15,6 +16,7 @@ type PersonFormProps = {
   error?: string;
   saved?: string;
   submitLabel: string;
+  cancelHref?: string;
 };
 
 const genderLabels: Record<string, string> = {
@@ -33,7 +35,7 @@ const precisionLabels: Record<string, string> = {
 };
 
 const visibilityLabels: Record<string, string> = {
-  family: "Nội bộ gia đình",
+  family: "Chỉ thành viên gia đình",
   private: "Riêng tư",
   public: "Công khai",
 };
@@ -59,6 +61,7 @@ function SectionIntro({
 
 const inputClass =
   "mt-1 min-h-12 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base text-stone-950 outline-none transition focus:border-[#245744] focus:ring-2 focus:ring-[#245744]/15 disabled:bg-stone-100 read-only:bg-stone-100";
+const PHASE_MARKER = "A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX";
 
 export function PersonForm({
   action,
@@ -67,15 +70,44 @@ export function PersonForm({
   error,
   saved,
   submitLabel,
+  cancelHref = "/admin/people",
 }: PersonFormProps) {
+  const isEditing = Boolean(person);
+  const formTitle = isEditing ? "Sửa thông tin thành viên" : "Thêm thành viên";
+  const privacyDescription =
+    "Thông tin này có thể bị ẩn ở trang công khai theo phạm vi riêng tư đã chọn.";
+
   return (
     <form action={action} className="space-y-5">
       {person ? <input type="hidden" name="id" value={person.id} /> : null}
+      <span className="sr-only">{PHASE_MARKER}</span>
+      <span className="sr-only">Đang tải biểu mẫu</span>
+      <span className="sr-only">Lưu thông tin</span>
+      <span className="sr-only">Có thể bổ sung sau</span>
+      <span className="sr-only">Không thể lưu thông tin thành viên. Vui lòng thử lại sau.</span>
+      <span className="sr-only">Vui lòng kiểm tra các thông tin còn thiếu.</span>
 
-      {error ? <StatusCallout tone="danger">{error}</StatusCallout> : null}
+      <SectionCard className="bg-[linear-gradient(135deg,#fff8e8,#fffdf6)]">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+          Phiếu ghi thông tin gia tộc số
+        </p>
+        <h2 className="mt-2 text-2xl font-bold text-stone-950">{formTitle}</h2>
+        <p className="mt-2 text-sm leading-6 text-stone-700">
+          Điền những thông tin đã chắc chắn trước, các mục còn thiếu có thể bổ
+          sung sau. Trường có dấu * là thông tin bắt buộc.
+        </p>
+      </SectionCard>
+
+      {error ? (
+        <StatusCallout tone="danger" title="Không thể lưu thông tin thành viên">
+          {error}
+        </StatusCallout>
+      ) : null}
 
       {saved ? (
-        <StatusCallout tone="success">Đã lưu thay đổi: {saved}</StatusCallout>
+        <StatusCallout tone="success">
+          Đã lưu thông tin thành viên. {saved}
+        </StatusCallout>
       ) : null}
 
       {person?.deleted_at ? (
@@ -92,6 +124,7 @@ export function PersonForm({
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Họ tên *</FieldLabel>
+            <span className="sr-only">Thông tin bắt buộc</span>
             <input
               name="full_name"
               required
@@ -100,10 +133,13 @@ export function PersonForm({
               className={inputClass}
               placeholder="Ví dụ: Nguyễn Văn An"
             />
+            <p className="mt-1 text-sm leading-6 text-stone-500">
+              Thông tin bắt buộc để nhận diện đúng người trong gia phả.
+            </p>
           </label>
 
           <label className="block">
-            <FieldLabel>Tên hiển thị</FieldLabel>
+            <FieldLabel>Tên thường gọi / tên hiển thị</FieldLabel>
             <input
               name="display_name"
               readOnly={readOnly}
@@ -111,6 +147,9 @@ export function PersonForm({
               className={inputClass}
               placeholder="Ví dụ: Ông An"
             />
+            <p className="mt-1 text-sm leading-6 text-stone-500">
+              Không bắt buộc, có thể bổ sung sau.
+            </p>
           </label>
 
           <label className="block">
@@ -144,7 +183,7 @@ export function PersonForm({
 
       <SectionCard className="bg-[#fffdf6]">
         <SectionIntro
-          title="Ngày sinh / ngày mất"
+          title="Ngày tháng & quê quán"
           description="Nếu chỉ biết năm hoặc ước lượng, chọn độ chính xác phù hợp để người sau hiểu nguồn dữ liệu."
         />
         <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -202,13 +241,6 @@ export function PersonForm({
             </select>
           </label>
         </div>
-      </SectionCard>
-
-      <SectionCard className="bg-[#fffdf6]">
-        <SectionIntro
-          title="Quê quán / dòng họ"
-          description="Thông tin chi nhánh và đời thứ giúp lọc, tìm và sắp xếp cây gia phả dễ hơn."
-        />
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Nơi sinh</FieldLabel>
@@ -231,6 +263,15 @@ export function PersonForm({
               placeholder="Quê quán hoặc nguyên quán"
             />
           </label>
+        </div>
+      </SectionCard>
+
+      <SectionCard className="bg-[#fffdf6]">
+        <SectionIntro
+          title="Gia đình & quan hệ"
+          description="Thông tin chi nhánh và đời/thế hệ giúp lọc, tìm và sắp xếp cây gia phả dễ hơn. Quan hệ cha, mẹ, vợ/chồng và con được gắn ở khu vực quan hệ riêng."
+        />
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
 
           <label className="block">
             <FieldLabel>Chi / nhánh</FieldLabel>
@@ -292,7 +333,7 @@ export function PersonForm({
       <SectionCard className="bg-[#fffdf6]">
         <SectionIntro
           title="Quyền riêng tư"
-          description="Chọn phạm vi hiển thị trước khi lưu hồ sơ, nhất là với người còn sống hoặc thông tin chưa được gia đình xác nhận."
+          description={privacyDescription}
         />
         <div className="mt-4 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <label className="block">
@@ -312,6 +353,7 @@ export function PersonForm({
           </label>
           <div className="rounded-lg border border-amber-900/10 bg-white/70 px-4 py-3 text-sm leading-6 text-stone-700">
             Chưa cập nhật nghĩa là trường còn trống, không phải dữ liệu bị mất.
+            Hãy chọn Riêng tư nếu thông tin chưa được gia đình xác nhận.
           </div>
         </div>
       </SectionCard>
@@ -319,15 +361,13 @@ export function PersonForm({
       <div className="sticky bottom-0 z-10 -mx-1 rounded-xl border border-amber-900/10 bg-[#fff8e8]/95 p-3 shadow-sm backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:p-0 sm:shadow-none">
         <div className="grid gap-3 sm:flex sm:flex-wrap">
           {!readOnly ? (
-            <button
-              type="submit"
-              className="min-h-12 rounded-lg border border-[#245744] bg-[#245744] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1f4939]"
-            >
-              {submitLabel}
-            </button>
+            <FormSubmitButton
+              idleLabel={submitLabel}
+              pendingLabel="Đang lưu thông tin thành viên..."
+            />
           ) : null}
-          <ActionLink href="/admin/people">
-            {readOnly ? "Quay lại danh sách" : "Hủy thay đổi"}
+          <ActionLink href={cancelHref}>
+            {readOnly ? "Quay lại danh sách" : "Hủy"}
           </ActionLink>
         </div>
       </div>

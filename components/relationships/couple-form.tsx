@@ -1,4 +1,5 @@
 import { createCoupleRelationshipAction } from "@/app/(admin)/admin/relationships/actions";
+import { FormSubmitButton } from "@/components/ui/form-submit-button";
 import type { Person } from "@/lib/family/people-types";
 import {
   COUPLE_RELATIONSHIP_STATUSES,
@@ -31,16 +32,27 @@ const precisionLabels: Record<string, string> = {
 };
 
 const visibilityLabels: Record<string, string> = {
-  family: "Nội bộ gia đình",
+  family: "Chỉ thành viên gia đình",
   private: "Riêng tư",
   public: "Công khai",
 };
+
+const inputClass =
+  "mt-1 min-h-12 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base text-stone-950 outline-none transition focus:border-[#245744] focus:ring-2 focus:ring-[#245744]/15";
 
 function personLabel(person: Pick<Person, "full_name" | "display_name" | "birth_date">) {
   const name = person.display_name || person.full_name;
   const birthYear = person.birth_date ? person.birth_date.slice(0, 4) : null;
 
   return birthYear ? `${name} - sinh ${birthYear}` : name;
+}
+
+function FieldLabel({ children }: { children: string }) {
+  return <span className="text-sm font-semibold text-stone-800">{children}</span>;
+}
+
+function FieldHelp({ children }: { children: string }) {
+  return <p className="mt-1 text-sm leading-6 text-stone-500">{children}</p>;
 }
 
 function PersonSelect({
@@ -60,13 +72,8 @@ function PersonSelect({
 
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-slate-800">{label}</span>
-      <select
-        name={name}
-        required
-        defaultValue=""
-        className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-      >
+      <FieldLabel>{label}</FieldLabel>
+      <select name={name} required defaultValue="" className={inputClass}>
         <option value="">Chọn thành viên</option>
         {candidates.map((person) => (
           <option key={person.id} value={person.id}>
@@ -75,10 +82,10 @@ function PersonSelect({
         ))}
       </select>
       {candidates.length === 0 ? (
-        <p className="mt-1 text-xs text-amber-700">
+        <FieldHelp>
           Chưa có danh sách thành viên để chọn. Cần quyền xem thành viên trước
           khi tạo quan hệ.
-        </p>
+        </FieldHelp>
       ) : null}
     </label>
   );
@@ -90,150 +97,138 @@ export function CoupleForm({
   returnTo,
 }: CoupleFormProps) {
   return (
-    <form
-      action={createCoupleRelationshipAction}
-      className="space-y-4 border border-slate-200 bg-white p-4"
-    >
-      <h3 className="text-base font-semibold text-slate-950">
-        Tạo quan hệ đôi
-      </h3>
-      <p className="text-sm leading-6 text-slate-600">
-        Dùng cho vợ/chồng/bạn đời. Quan hệ đôi được lưu riêng với đơn vị gia đình cha/mẹ/con.
-      </p>
-      <input type="hidden" name="return_to" value={returnTo} />
-      {contextPersonId ? (
-        <>
-          <input type="hidden" name="context_person_id" value={contextPersonId} />
-          <input type="hidden" name="person1_id" value={contextPersonId} />
-        </>
-      ) : (
-        <PersonSelect
-          label="Chọn thành viên thứ nhất"
-          name="person1_id"
-          people={people}
-        />
-      )}
-      <PersonSelect
-        label={
-          contextPersonId
-            ? "Chọn vợ/chồng/bạn đời"
-            : "Chọn thành viên thứ hai"
-        }
-        name="person2_id"
-        people={people}
-        excludePersonId={contextPersonId}
-      />
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Trạng thái</span>
-          <select
-            name="relationship_status"
-            defaultValue="married"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          >
-            {COUPLE_RELATIONSHIP_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {statusLabels[status]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Phạm vi hiển thị
-          </span>
-          <select
-            name="visibility"
-            defaultValue="family"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          >
-            {RELATIONSHIP_VISIBILITIES.map((visibility) => (
-              <option key={visibility} value={visibility}>
-                {visibilityLabels[visibility]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Ngày bắt đầu
-          </span>
-          <input
-            name="start_date"
-            type="date"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Độ chính xác ngày bắt đầu
-          </span>
-          <select
-            name="start_date_precision"
-            defaultValue="unknown"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          >
-            {RELATIONSHIP_DATE_PRECISIONS.map((precision) => (
-              <option key={precision} value={precision}>
-                {precisionLabels[precision]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Ngày kết thúc
-          </span>
-          <input
-            name="end_date"
-            type="date"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
-            Độ chính xác ngày kết thúc
-          </span>
-          <select
-            name="end_date_precision"
-            defaultValue="unknown"
-            className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          >
-            {RELATIONSHIP_DATE_PRECISIONS.map((precision) => (
-              <option key={precision} value={precision}>
-                {precisionLabels[precision]}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <label className="block">
-        <span className="text-sm font-semibold text-slate-800">
-          Gia đình liên kết
-        </span>
-        <input
-          name="family_id"
-          className="mt-1 min-h-11 w-full border border-slate-300 px-3 py-2"
-          placeholder="Có thể để trống"
-        />
-        <p className="mt-1 text-xs text-slate-500">
-          Chỉ nhập khi đã biết chính xác gia đình cần liên kết; nếu chưa chắc, hãy để trống.
+    <form action={createCoupleRelationshipAction} className="space-y-4">
+      <div className="rounded-2xl border border-amber-900/10 bg-[#fffdf6] p-4 shadow-sm sm:p-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+          Vợ/chồng
         </p>
-      </label>
-      <label className="block">
-        <span className="text-sm font-semibold text-slate-800">Ghi chú</span>
-        <textarea
-          name="notes"
-          rows={3}
-          className="mt-1 w-full border border-slate-300 px-3 py-2"
-        />
-      </label>
-      <button
-        type="submit"
-        className="min-h-11 border border-slate-900 bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
-      >
-        Tạo quan hệ đôi
-      </button>
+        <h3 className="mt-2 text-lg font-bold text-stone-950">
+          Thêm vợ/chồng
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-stone-600">
+          Dùng cho vợ/chồng hoặc bạn đời. Quan hệ đôi được lưu riêng với đơn vị
+          gia đình cha/mẹ/con.
+        </p>
+
+        <div className="mt-4 space-y-4">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+            Đang thêm vợ/chồng. Hãy kiểm tra đúng người trước khi lưu vì quan hệ
+            này có thể ảnh hưởng cách đọc phả đồ.
+          </div>
+          <input type="hidden" name="return_to" value={returnTo} />
+          {contextPersonId ? (
+            <>
+              <input type="hidden" name="context_person_id" value={contextPersonId} />
+              <input type="hidden" name="person1_id" value={contextPersonId} />
+            </>
+          ) : (
+            <PersonSelect
+              label="Chọn thành viên thứ nhất"
+              name="person1_id"
+              people={people}
+            />
+          )}
+          <PersonSelect
+            label={
+              contextPersonId
+                ? "Chọn vợ/chồng/bạn đời"
+                : "Chọn thành viên thứ hai"
+            }
+            name="person2_id"
+            people={people}
+            excludePersonId={contextPersonId}
+          />
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <FieldLabel>Trạng thái</FieldLabel>
+              <select
+                name="relationship_status"
+                defaultValue="married"
+                className={inputClass}
+              >
+                {COUPLE_RELATIONSHIP_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {statusLabels[status]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block">
+              <FieldLabel>Phạm vi hiển thị</FieldLabel>
+              <select name="visibility" defaultValue="family" className={inputClass}>
+                {RELATIONSHIP_VISIBILITIES.map((visibility) => (
+                  <option key={visibility} value={visibility}>
+                    {visibilityLabels[visibility]}
+                  </option>
+                ))}
+              </select>
+              <FieldHelp>Thông tin này có thể bị ẩn ở trang công khai.</FieldHelp>
+            </label>
+            <label className="block">
+              <FieldLabel>Ngày bắt đầu</FieldLabel>
+              <input name="start_date" type="date" className={inputClass} />
+            </label>
+            <label className="block">
+              <FieldLabel>Độ chính xác ngày bắt đầu</FieldLabel>
+              <select
+                name="start_date_precision"
+                defaultValue="unknown"
+                className={inputClass}
+              >
+                {RELATIONSHIP_DATE_PRECISIONS.map((precision) => (
+                  <option key={precision} value={precision}>
+                    {precisionLabels[precision]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block">
+              <FieldLabel>Ngày kết thúc</FieldLabel>
+              <input name="end_date" type="date" className={inputClass} />
+            </label>
+            <label className="block">
+              <FieldLabel>Độ chính xác ngày kết thúc</FieldLabel>
+              <select
+                name="end_date_precision"
+                defaultValue="unknown"
+                className={inputClass}
+              >
+                {RELATIONSHIP_DATE_PRECISIONS.map((precision) => (
+                  <option key={precision} value={precision}>
+                    {precisionLabels[precision]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <label className="block">
+            <FieldLabel>Gia đình liên kết</FieldLabel>
+            <input
+              name="family_id"
+              className={inputClass}
+              placeholder="Có thể để trống"
+            />
+            <FieldHelp>
+              Chỉ nhập khi đã biết chính xác gia đình cần liên kết; nếu chưa
+              chắc, hãy để trống.
+            </FieldHelp>
+          </label>
+          <label className="block">
+            <FieldLabel>Ghi chú</FieldLabel>
+            <textarea
+              name="notes"
+              rows={3}
+              className={`${inputClass} min-h-24`}
+              placeholder="Không bắt buộc, có thể bổ sung sau"
+            />
+          </label>
+          <FormSubmitButton
+            idleLabel="Thêm vợ/chồng"
+            pendingLabel="Đang lưu quan hệ gia đình..."
+            tone="dark"
+          />
+        </div>
+      </div>
     </form>
   );
 }

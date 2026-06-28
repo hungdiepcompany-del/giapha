@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 184 - A-15A6 add/edit member form polish is UI/UX-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A6 Add/Edit Member Form Vietnamese Heritage UX may polish existing member,
+relationship and related-member form presentation as a UI/UX-only phase.
+
+Allowed:
+
+- warm heritage form layout, section grouping and Vietnamese help text;
+- pending/idle submit button labels using existing form actions;
+- clearer labels for required fields, optional fields and privacy scope;
+- relationship form warnings before adding cha/mẹ, con or vợ/chồng;
+- responsive spacing and touch-friendly controls on existing routes.
+
+Not authorized:
+
+- database/schema/migration/seed/RLS or DB apply;
+- auth, role, permission or API/server action contract change;
+- people/relationship/genealogy service runtime change;
+- validation schema or submitted field-name contract change;
+- route creation;
+- public tree, dashboard or member profile redo;
+- dependency addition;
+- copied asset/logo/screenshot/CSS/layout from any reference website.
+
+Ly do:
+
+Add/edit forms are the main data-entry surface for the genealogy system. They
+need a calmer Vietnamese heritage experience for older users, but changing
+schema, validation or relationship behavior would be a separate data-contract
+phase.
+
 ## Decision 183 - A-15A5 member profile/person detail polish is UI-only
 
 Status: `ACTIVE`

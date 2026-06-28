@@ -670,13 +670,17 @@ function NewPersonFields({
   return (
     <div className="grid gap-4">
       <input type="hidden" name="form_mode" value={createMode} />
-      <div className="rounded-lg border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800">
+      <div className="rounded-xl border border-amber-900/10 bg-[#fff8e8] p-4 text-sm leading-6 text-stone-800">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+          Thêm người thân
+        </p>
         <div className="font-bold text-stone-950">
           Bạn đang thêm {selectedRelationLabel} cho: {selectedPersonName}
         </div>
         <div className="mt-1">{relationContext(relationKind, selectedPersonName)}</div>
         <div className="mt-1 text-stone-600">
-          Kiểm tra kỹ để tránh gắn nhầm quan hệ trong gia phả.
+          Kiểm tra kỹ để tránh gắn nhầm quan hệ trong gia phả. Thông tin chưa
+          chắc có thể bổ sung sau.
         </div>
       </div>
 
@@ -708,6 +712,7 @@ function NewPersonFields({
       <div className="grid gap-3">
         <label className="block">
           <span className="text-sm font-semibold text-stone-800">Họ và tên *</span>
+          <span className="sr-only">Thông tin bắt buộc</span>
           <input
             name="full_name"
             required
@@ -716,6 +721,9 @@ function NewPersonFields({
             className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Nhập họ và tên thành viên..."
           />
+          <p className="mt-1 text-sm leading-6 text-stone-500">
+            Thông tin bắt buộc để gắn đúng người thân vào phả đồ.
+          </p>
         </label>
 
         {isDetail ? (
@@ -784,7 +792,15 @@ function NewPersonFields({
       </div>
 
       {isDetail ? (
-        <div className="grid gap-3 border-t border-stone-200 pt-4">
+        <div className="grid gap-3 rounded-xl border border-amber-900/10 bg-[#fffdf6] p-4">
+          <div>
+            <h4 className="text-sm font-bold text-stone-950">
+              Ngày tháng & quê quán
+            </h4>
+            <p className="mt-1 text-sm leading-6 text-stone-600">
+              Nhập phần đã rõ trước. Các mục không bắt buộc có thể bổ sung sau.
+            </p>
+          </div>
           <label className="flex min-h-11 items-center gap-3 text-sm font-semibold text-slate-800">
             <input
               name="is_living"
@@ -879,6 +895,9 @@ function NewPersonFields({
               <option value="private">Riêng tư</option>
               <option value="public">Công khai</option>
             </select>
+            <p className="mt-1 text-sm leading-6 text-stone-500">
+              Thông tin này có thể bị ẩn ở trang công khai.
+            </p>
           </label>
         </div>
       ) : (
