@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 181 - A-15A3 public tree view polish is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A3 Vietnamese Heritage Public Tree View UI may polish the existing public
+`/tree` viewing experience and adjacent public shell/viewer components as a
+UI-only phase.
+
+Allowed:
+
+- warm Vietnamese heritage public tree banner and parchment-like surfaces;
+- compact public stats for visible graph data;
+- larger public phả đồ canvas and clearer read-only toolbar presentation;
+- Vietnamese empty/error/private/loading-adjacent copy;
+- responsive spacing and touch-friendly controls for public tree viewing.
+
+Not authorized:
+
+- database/schema/migration/seed/RLS or DB apply;
+- auth, permission, privacy filtering or API contract change;
+- service runtime, Worker/OpenNext/Wrangler or deploy config change;
+- route creation;
+- relationship model, graph builder or React Flow/ELK layout algorithm change;
+- admin tree editor mutation behavior;
+- dependency addition;
+- copied asset/logo/screenshot/CSS/layout from any reference website.
+
+Ly do:
+
+The public tree needs a warmer heritage experience after the admin tree editor
+polish, but it remains a readonly public surface. Future public member lists,
+about pages, media, tree export or privacy behavior changes require separate
+approval.
+
 ## Decision 180 - A-15A2 modern Vietnamese tree editor UI is UI-only
 
 Status: `ACTIVE`

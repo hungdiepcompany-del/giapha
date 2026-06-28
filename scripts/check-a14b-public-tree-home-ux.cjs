@@ -69,6 +69,10 @@ const allowedChangedFiles = new Set([
   "components/genealogy/lineage-admin.tsx",
   "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
+  "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+  "docs/PLAN_A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI.md",
+  "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
 ]);
 
 function readFile(relativePath) {

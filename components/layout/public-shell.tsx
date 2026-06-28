@@ -10,7 +10,7 @@ type PublicShellProps = {
 
 const navItems = [
   { href: "/", label: "Trang chủ" },
-  { href: "/tree", label: "Cây gia phả" },
+  { href: "/tree", label: "Phả đồ" },
 ];
 
 export function PublicShell({ children }: PublicShellProps) {
@@ -19,6 +19,7 @@ export function PublicShell({ children }: PublicShellProps) {
   return (
     <div
       data-ui-phase="A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI"
+      data-public-tree-phase="A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI"
       className="min-h-screen bg-[#f5eddf] text-stone-900"
     >
       <header className="border-b border-amber-900/10 bg-[#fff8e8]/95 shadow-sm">
@@ -58,7 +59,7 @@ export function PublicShell({ children }: PublicShellProps) {
               href="/auth/login"
               className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-[#7a2f24]/20 bg-white/80 px-4 py-2 text-center text-[#7a2f24] shadow-sm transition hover:bg-[#f2dfbd] sm:col-span-1"
             >
-              Vào quản trị
+              Quản trị gia phả
             </Link>
           </nav>
         </div>

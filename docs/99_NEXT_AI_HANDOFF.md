@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15A3 - Vietnamese Heritage Public Tree View UI completed
+
+- Marker: `A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI`.
+- Applied Vietnamese heritage public tree polish to existing `/tree` and
+  adjacent public shell/viewer components only.
+- Added `docs/PLAN_A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI.md`.
+- Added `scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs` and
+  package command `check:a15a3:vietnamese-heritage-public-tree-view-ui`.
+- Public tree now opens with a warm family banner, compact public stats, and a
+  larger parchment-toned phả đồ canvas.
+- Public shell menu is simpler: `Trang chủ`, `Phả đồ`, and a quiet
+  `Quản trị gia phả` link. No new public routes were created.
+- Viewer toolbar remains read-only and keeps search, zoom, fit and reset/căn
+  giữa actions; it does not add editor actions or layout persistence.
+- Empty/error/private copy now includes `Đang tải phả đồ`,
+  `Gia phả này chưa có thành viên`, `Gia phả này đang được giới hạn quyền xem`
+  and `Không thể tải phả đồ. Vui lòng thử lại sau.`.
+- Boundary confirmed: UI-only, public tree view only; no DB/schema/migration,
+  no seed/RLS/auth/permission/API/service runtime, no route creation, no
+  React Flow/ELK algorithm change, no dependency, no deploy and no push.
+- No external website code, asset, logo, screenshot, CSS, image or copied
+  layout was used.
+
 ## 2026-06-28 - A-15A2 - Modern Vietnamese Genealogy Tree Editor UI completed
 
 - Marker: `A15A2_MODERN_VIETNAMESE_TREE_EDITOR_UI`.

@@ -14,7 +14,7 @@ function safeTreeErrorMessage(message: string) {
     lowerMessage.includes("policy") ||
     lowerMessage.includes("unauthorized")
   ) {
-    return "Bạn chưa có quyền xem cây gia phả này.";
+    return "Gia phả này đang được giới hạn quyền xem. Bạn chưa có quyền xem cây gia phả này.";
   }
 
   if (
@@ -32,11 +32,15 @@ function safeTreeErrorMessage(message: string) {
 export function FamilyTreeErrorState({ message }: FamilyTreeErrorStateProps) {
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
-      <h2 className="text-lg font-bold">Không thể tải cây gia phả</h2>
+      <h2 className="text-lg font-bold">Không thể tải phả đồ</h2>
+      <p className="mt-2 text-sm font-semibold leading-6">
+        Không thể tải phả đồ. Vui lòng thử lại sau.
+      </p>
       <p className="mt-2 text-sm leading-6">{safeTreeErrorMessage(message)}</p>
       <p className="mt-3 text-sm leading-6">
-        Hãy thử tải lại trang hoặc quay về trang trước. Nếu bạn cần xem dữ liệu
-        gia đình nội bộ, hãy liên hệ người quản trị gia phả để được cấp quyền.
+        Không thể tải cây gia phả theo cách xem hiện tại. Hãy thử tải lại trang
+        hoặc quay về trang trước. Nếu bạn cần xem dữ liệu gia đình nội bộ, hãy
+        liên hệ người quản trị gia phả để được cấp quyền.
       </p>
     </div>
   );

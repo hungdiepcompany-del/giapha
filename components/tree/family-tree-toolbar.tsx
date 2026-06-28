@@ -26,18 +26,18 @@ export function FamilyTreeToolbar({
   onResetLayout,
 }: FamilyTreeToolbarProps) {
   const secondaryButton =
-    "min-h-11 rounded-full border border-amber-900/15 bg-white/90 px-3 py-2 text-center text-sm font-semibold text-stone-900 shadow-sm transition hover:border-[#245744] hover:text-[#245744]";
+    "min-h-11 rounded-full border border-amber-900/15 bg-white/90 px-3 py-2 text-center text-sm font-semibold text-stone-900 shadow-sm transition hover:border-[#245744] hover:bg-[#f6efe2] hover:text-[#245744]";
 
   return (
-    <div className="flex flex-col gap-4 border-b border-amber-900/10 bg-[#fff8e8]/90 p-3 backdrop-blur sm:p-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="flex flex-col gap-3 border-b border-amber-900/10 bg-[#fff8e8]/95 p-3 backdrop-blur sm:p-4 lg:flex-row lg:items-end lg:justify-between">
       <div className="min-w-0">
         <div className="text-base font-bold text-stone-950">Tìm trong phả đồ</div>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-stone-600">
           Kéo để di chuyển cây, cuộn để phóng to hoặc thu nhỏ, bấm vào một
-          người để xem thông tin. Dùng nút “Vừa màn hình” nếu cây bị lệch khỏi
-          khung.
+          người để xem thông tin. Dùng nút “Vừa màn hình” hoặc “Đưa cây về giữa”
+          khi muốn căn giữa phả đồ.
         </p>
-        <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(220px,360px)_auto]">
+        <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(220px,380px)_auto]">
           <label className="block">
             <span className="text-sm font-semibold text-stone-800">
               Tìm người trong cây
@@ -51,7 +51,7 @@ export function FamilyTreeToolbar({
                   onFocusSearch();
                 }
               }}
-              className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base outline-none focus:border-[#245744]"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base outline-none transition focus:border-[#245744] focus:ring-2 focus:ring-[#245744]/15"
               placeholder="Nhập họ tên hoặc tên thường gọi"
             />
           </label>
@@ -66,8 +66,8 @@ export function FamilyTreeToolbar({
         </div>
       </div>
 
-      <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center">
-        <div className="rounded-full border border-amber-900/10 bg-white px-3 py-2 text-center text-sm text-stone-700 shadow-sm">
+      <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
+        <div className="rounded-full border border-amber-900/10 bg-white px-3 py-2 text-center text-sm font-semibold text-stone-700 shadow-sm">
           {personCount} người / {nodeCount} nút
         </div>
         {searchStatus ? (
