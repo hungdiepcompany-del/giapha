@@ -58,6 +58,12 @@ const allowedChangedFiles = new Set([
   "components/genealogy/lineage-admin.tsx",
   "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "components/tree/family-tree-empty-state.tsx",
+  "components/tree/family-tree-error-state.tsx",
+  "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -197,8 +203,8 @@ for (const [content, token, label] of [
   [toolbar, "grid gap-2 sm:flex", "tree toolbar mobile grid"],
   [viewer, "h-[68vh]", "tree viewer mobile height"],
   [viewer, "min-h-[480px]", "tree viewer mobile min height"],
-  [nodeCard, "max-w-[72vw]", "node card mobile width cap"],
-  [editor, "h-[68vh]", "tree editor mobile height"],
+  [nodeCard, "max-w-[68vw]", "node card mobile width cap"],
+  [editor, "h-[70vh]", "tree editor mobile height"],
   [editorToolbar, "grid gap-2 sm:flex", "editor toolbar mobile grid"],
   [sidePanel, "min-[380px]:grid-cols-2", "related member mobile segmented controls"],
   [sidePanel, "text-base", "related member mobile inputs"],

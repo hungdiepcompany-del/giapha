@@ -74,11 +74,11 @@ export default async function AdminTreeEditPage({
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-7xl px-6 py-10">
+      <section className="mx-auto w-full max-w-[1720px] px-3 py-5 sm:px-5 sm:py-7">
         <PageHeader
-          eyebrow="Nền tảng chỉnh sửa cây gia phả"
-          title="Chỉnh sửa cây"
-          description="Bấm một thành viên để mở bảng chi tiết, kéo thẻ để chỉnh bố cục giao diện, rồi bấm lưu. Quan hệ thật chỉ đổi qua form có chủ đích."
+          eyebrow="Công cụ chỉnh sửa phả đồ"
+          title="Chỉnh sửa cây gia phả"
+          description="Bấm một thành viên để mở bảng thao tác, kéo thẻ để chỉnh bố cục giao diện, rồi bấm lưu. Quan hệ thật chỉ đổi qua form có chủ đích."
         />
 
         {query.error ? (

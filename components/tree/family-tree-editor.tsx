@@ -165,8 +165,11 @@ export function FamilyTreeEditor({
   }
 
   return (
-    <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_400px]">
-      <div className="min-w-0 overflow-hidden rounded-xl border border-amber-900/10 bg-[#fff8e8] shadow-sm">
+    <div
+      data-ui-phase="A15A2_MODERN_VIETNAMESE_TREE_EDITOR_UI"
+      className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]"
+    >
+      <div className="min-w-0 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
         <TreeEditorToolbar
           nodeCount={nodes.length}
           positionsJson={positionsJson}
@@ -177,7 +180,7 @@ export function FamilyTreeEditor({
           onZoomOut={() => flow?.zoomOut({ duration: 250 })}
           onAutoLayout={autoLayout}
         />
-        <div className="h-[68vh] min-h-[500px] bg-[#f5eddf] sm:h-[800px] sm:min-h-[620px]">
+        <div className="h-[70vh] min-h-[520px] bg-slate-50 sm:h-[calc(100vh-230px)] sm:min-h-[640px]">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -193,8 +196,13 @@ export function FamilyTreeEditor({
             nodesConnectable={false}
             elementsSelectable
           >
-            <Background color="#cfb98f" gap={26} />
-            <MiniMap pannable zoomable nodeStrokeWidth={3} />
+            <Background color="#d6dde5" gap={22} />
+            <MiniMap
+              pannable
+              zoomable
+              nodeStrokeWidth={3}
+              className="!rounded-lg !border !border-stone-200 !bg-white/90"
+            />
           </ReactFlow>
         </div>
       </div>

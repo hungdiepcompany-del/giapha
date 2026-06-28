@@ -98,6 +98,11 @@ const allowedChangedFiles = new Set([
   "components/tree/family-tree-toolbar.tsx",
   "components/tree/family-tree-empty-state.tsx",
   "components/tree/family-tree-error-state.tsx",
+  "app/(admin)/admin/tree/page.tsx",
+  "app/(admin)/admin/tree/edit/page.tsx",
+  "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "components/tree/family-tree-viewer.tsx",
   "components/ui/action-link.tsx",
   "components/ui/empty-state.tsx",
@@ -166,18 +171,18 @@ for (const token of [
   "Chưa rõ năm mất",
   "Đời thứ",
   "Chi nhánh:",
-  "Gia đình",
+  "Người liên quan",
 ]) {
   requireIncludes(nodeCard, token, `tree node/card copy ${token}`);
 }
 
 for (const token of [
-  "Vừa màn hình",
+  "Căn giữa",
   "Phóng to",
   "Thu nhỏ",
-  "Đưa cây về giữa",
+  "Sắp xếp lại",
   "Lưu bố cục",
-  "Khôi phục bố cục tự động",
+  "Khôi phục tự động",
 ]) {
   requireIncludes(toolbar, token, `tree toolbar copy ${token}`);
 }
@@ -187,8 +192,8 @@ for (const token of [
   "onZoomOut",
   "zoomIn",
   "zoomOut",
-  "2xl:grid-cols-[minmax(0,1fr)_400px]",
-  "h-[760px]",
+  "xl:grid-cols-[minmax(0,1fr)_380px]",
+  "h-[70vh]",
 ]) {
   requireIncludes(`${toolbar}\n${editor}`, token, `tree polish behavior ${token}`);
 }

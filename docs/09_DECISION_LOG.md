@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 180 - A-15A2 modern Vietnamese tree editor UI is UI-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15A2 Modern Vietnamese Genealogy Tree Editor UI may polish existing admin
+tree surfaces `/admin/tree` and `/admin/tree/edit`, plus directly used tree
+components, as a UI-only phase.
+
+Allowed:
+
+- compact professional toolbar/canvas styling;
+- smaller clearer member node cards;
+- selected/related visual distinction;
+- side panel grouping for basic information, family relationships, notes,
+  privacy and add-relative actions;
+- Vietnamese copy improvements for empty/error/loading-adjacent states.
+
+Not authorized:
+
+- database/schema/migration/seed or DB apply;
+- RLS/auth/permission changes;
+- API contract, server action contract or service runtime changes;
+- React Flow/ELK algorithm changes;
+- new route creation;
+- dependency changes;
+- copying website code, asset, logo, image, CSS or exact layout;
+- deploy or push.
+
+Ly do:
+
+The tree editor is the core working surface for genealogy operations. It needs
+to feel like a modern Vietnamese genealogy tool while preserving the existing
+safe action boundaries and data contracts.
+
 ## Decision 179 - A-15A2 applies Vietnamese traditional genealogy UI polish
 
 Status: `ACTIVE`

@@ -64,6 +64,8 @@ const allowedChangedFiles = new Set([
   "components/genealogy/lineage-admin.tsx",
   "docs/PLAN_A15A2_VIETNAMESE_TRADITIONAL_GENEALOGY_UI.md",
   "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
+  "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -197,10 +199,10 @@ for (const token of [
   "Chế độ chỉnh sửa",
   "Kéo thẻ chỉ đổi bố cục",
   "Lưu bố cục",
-  "Vừa màn hình",
+  "Căn giữa",
   "Phóng to",
   "Thu nhỏ",
-  "Đưa cây về giữa",
+  "Sắp xếp lại",
   "aria-label",
   "title=",
 ]) {
@@ -208,8 +210,8 @@ for (const token of [
 }
 
 for (const token of [
-  "bg-[#f5eddf]",
-  "color=\"#cfb98f\"",
+  "bg-slate-50",
+  "color=\"#d6dde5\"",
 ]) {
   requireIncludes(editor, token, `editor warm canvas token ${token}`);
 }
@@ -228,7 +230,7 @@ for (const token of [
 
 for (const token of [
   "Gia phả này chưa có dữ liệu công khai",
-  "Hãy thêm thành viên đầu tiên",
+  "Hãy thêm người đầu tiên",
 ]) {
   requireIncludes(emptyState, token, `empty state token ${token}`);
 }

@@ -29,23 +29,23 @@ export default async function AdminTreePage() {
       roles={context.roles.map((role) => role.code)}
       permissions={context.permissions}
     >
-      <section className="mx-auto w-full max-w-7xl px-6 py-10">
+      <section className="mx-auto w-full max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10">
         <PageHeader
           eyebrow="Nền tảng xem cây gia phả"
-          title="Cây gia phả"
-          description="Màn hình xem chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, vừa khung nhìn và đặt lại bố cục để xem nhanh toàn bộ cây."
+          title="Phả đồ gia đình"
+          description="Màn hình xem chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, căn giữa, phóng to và thu nhỏ để xem nhanh toàn bộ cây."
           actions={
             canEditLayout ? (
               <ActionLink href="/admin/tree/edit" variant="primary">
-                Chỉnh sửa cây
+                Mở công cụ chỉnh sửa
               </ActionLink>
             ) : null
           }
         />
 
         <StatusCallout tone="info" className="mt-6">
-          Trang này không sửa quan hệ. Nếu cần kéo node hoặc lưu layout, vào
-          chế độ chỉnh sửa cây.
+          Trang này không sửa quan hệ. Nếu cần kéo thẻ, lưu layout hoặc thêm
+          người thân, hãy vào chế độ chỉnh sửa cây.
         </StatusCallout>
 
         <div className="mt-6">

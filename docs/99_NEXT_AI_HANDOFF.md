@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15A2 - Modern Vietnamese Genealogy Tree Editor UI completed
+
+- Marker: `A15A2_MODERN_VIETNAMESE_TREE_EDITOR_UI`.
+- Applied modern Vietnamese genealogy Tree Editor polish to existing
+  `/admin/tree` and `/admin/tree/edit` surfaces only.
+- Added `docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md`.
+- Added `scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs`
+  and package command
+  `check:a15a2:modern-vietnamese-genealogy-tree-editor-ui`.
+- Tree Editor canvas is wider/taller and uses a clean tool-style background.
+- Toolbar is compact with clear controls: `Căn giữa`, `Phóng to`, `Thu nhỏ`,
+  `Sắp xếp lại`, `Lưu bố cục`, `Khôi phục tự động`.
+- Node cards are smaller and clearer; selected person has a strong teal ring,
+  while family/related nodes use a distinct light blue treatment.
+- Side panel now reads like a responsive drawer/panel and is grouped into
+  `Thông tin cơ bản`, `Quan hệ gia đình`, `Ghi chú`, `Quyền riêng tư`,
+  and `Thêm người thân`.
+- Relationship actions are explicit: `Thêm cha`, `Thêm mẹ`,
+  `Thêm vợ/chồng`, `Thêm con`. The existing profile link is labeled
+  `Sửa / xóa mềm hồ sơ`; no new delete runtime action was created in the tree.
+- Empty state points to `Thêm người đầu tiên` and `Thêm quan hệ gia đình`.
+- Boundary confirmed: UI-only; no DB/schema/migration/seed/RLS/auth/
+  permission/API/service runtime/route creation/dependency/deploy/push.
+- No external website code, asset, logo, image, CSS or copied layout was used.
+
 ## 2026-06-28 - A-15A2 - Vietnamese Traditional Genealogy UI Reference Polish completed
 
 - Applied Vietnamese traditional genealogy UI polish across existing public,

@@ -29,10 +29,10 @@ type TreeEditorSidePanelProps = {
 };
 
 const relationOptions: Array<{ value: RelationKind; label: string }> = [
-  { value: "father", label: "Cha" },
-  { value: "mother", label: "Mẹ" },
-  { value: "child", label: "Con" },
-  { value: "spouse", label: "Vợ/chồng/bạn đời" },
+  { value: "father", label: "Thêm cha" },
+  { value: "mother", label: "Thêm mẹ" },
+  { value: "spouse", label: "Thêm vợ/chồng" },
+  { value: "child", label: "Thêm con" },
 ];
 
 const genderOptions = [
@@ -344,12 +344,12 @@ function RelationList({
 }) {
   return (
     <div>
-      <h3 className="text-sm font-bold text-slate-900">{title}</h3>
-      <ul className="mt-2 space-y-1 text-sm text-slate-700">
+      <h3 className="text-sm font-bold text-stone-900">{title}</h3>
+      <ul className="mt-2 space-y-1 text-sm text-stone-700">
         {people.length > 0 ? (
           people.map((person) => <li key={person.id}>{personLabel(person)}</li>)
         ) : (
-          <li>Chưa có dữ liệu.</li>
+          <li>Chưa có dữ liệu. Hãy thêm quan hệ khi đã xác minh đúng.</li>
         )}
       </ul>
     </div>
@@ -400,14 +400,14 @@ function RelatedPersonPicker({
   return (
     <div className="space-y-2">
       <label className="block">
-        <span className="text-sm font-semibold text-slate-800">
+        <span className="text-sm font-semibold text-stone-800">
           Tìm thành viên
         </span>
         <input
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
+          className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base outline-none focus:border-[#245744]"
           placeholder="Tìm theo tên, năm sinh hoặc chi nhánh..."
           role="combobox"
           aria-expanded="true"
@@ -435,7 +435,7 @@ function RelatedPersonPicker({
       <div
         id={pickerId}
         role="listbox"
-        className="max-h-56 overflow-y-auto rounded-md border border-stone-200 bg-white"
+        className="max-h-56 overflow-y-auto rounded-lg border border-stone-200 bg-white"
       >
         {filteredCandidates.length > 0 ? (
           filteredCandidates.map((person) => {
@@ -453,8 +453,8 @@ function RelatedPersonPicker({
                 }}
                 className={`block min-h-11 w-full px-3 py-2 text-left text-sm ${
                   isSelected
-                    ? "bg-slate-900 text-white"
-                    : "bg-white text-slate-800 hover:bg-slate-50"
+                    ? "bg-[#245744] text-white"
+                    : "bg-white text-stone-800 hover:bg-stone-50"
                 }`}
               >
                 {personOptionLabel(person)}
@@ -468,7 +468,7 @@ function RelatedPersonPicker({
         )}
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-stone-500">
         Kết quả chọn:{" "}
         {selectedPerson
           ? personOptionLabel(selectedPerson)
@@ -491,7 +491,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="min-h-11 w-full rounded-md border border-[#245744] bg-[#245744] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-500 sm:w-auto"
+      className="min-h-11 w-full rounded-lg border border-[#245744] bg-[#245744] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-500 sm:w-auto"
     >
       {pending ? pendingLabel : label}
     </button>
@@ -598,7 +598,7 @@ function DuplicateSuggestionBox({
   }
 
   return (
-    <div className="border border-amber-200 bg-amber-50 p-3">
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
       <div className="text-xs font-semibold uppercase text-amber-800">
         Gợi ý tránh tạo trùng
       </div>
@@ -623,7 +623,7 @@ function DuplicateSuggestionBox({
                   <button
                     type="button"
                     onClick={() => onUseExistingPerson(person.personId)}
-                    className="min-h-11 rounded-md border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white"
+                    className="min-h-11 rounded-lg border border-[#245744] bg-[#245744] px-3 py-2 text-sm font-semibold text-white"
                   >
                     Dùng thành viên này để gắn quan hệ
                   </button>
@@ -670,7 +670,7 @@ function NewPersonFields({
   return (
     <div className="grid gap-4">
       <input type="hidden" name="form_mode" value={createMode} />
-      <div className="border border-stone-200 bg-[#fffaf0] p-3 text-sm leading-6 text-stone-800">
+      <div className="rounded-lg border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800">
         <div className="font-bold text-stone-950">
           Bạn đang thêm {selectedRelationLabel} cho: {selectedPersonName}
         </div>
@@ -686,7 +686,7 @@ function NewPersonFields({
           onClick={() => setCreateMode("quick")}
           className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
             createMode === "quick"
-              ? "border-stone-900 bg-stone-900 text-white"
+              ? "border-[#245744] bg-[#245744] text-white"
               : "border-stone-300 bg-white text-stone-800"
           }`}
         >
@@ -697,7 +697,7 @@ function NewPersonFields({
           onClick={() => setCreateMode("detail")}
           className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
             createMode === "detail"
-              ? "border-stone-900 bg-stone-900 text-white"
+              ? "border-[#245744] bg-[#245744] text-white"
               : "border-stone-300 bg-white text-stone-800"
           }`}
         >
@@ -707,39 +707,39 @@ function NewPersonFields({
 
       <div className="grid gap-3">
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">Họ và tên *</span>
+          <span className="text-sm font-semibold text-stone-800">Họ và tên *</span>
           <input
             name="full_name"
             required
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
-            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base"
             placeholder="Nhập họ và tên thành viên..."
           />
         </label>
 
         {isDetail ? (
           <label className="block">
-            <span className="text-sm font-semibold text-slate-800">
+            <span className="text-sm font-semibold text-stone-800">
               Tên thường gọi / tên hiển thị
             </span>
             <input
               name="display_name"
-              className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base"
               placeholder="Ví dụ: Ông Ba, Bà Tư..."
             />
           </label>
         ) : null}
 
         <label className="block">
-          <span className="text-sm font-semibold text-slate-800">
+          <span className="text-sm font-semibold text-stone-800">
             Chọn giới tính
           </span>
           <select
             key={relationKind}
             name="gender"
             defaultValue={defaultGender(relationKind)}
-            className="mt-1 min-h-11 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-base"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base"
           >
             {genderOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -947,13 +947,15 @@ export function TreeEditorSidePanel({
 
   if (!selectedNode) {
     return (
-      <aside className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4">
-        <h2 className="text-lg font-bold text-slate-950">Bảng chi tiết</h2>
-        <p className="mt-2 text-sm text-slate-600">
+      <aside className="min-w-0 rounded-t-2xl border border-stone-200 bg-white p-4 shadow-sm xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto xl:rounded-xl">
+        <h2 className="text-lg font-bold text-stone-950">Bảng thao tác cây</h2>
+        <p className="mt-2 text-sm text-stone-600">
           Chọn một thành viên để xem quan hệ và thao tác.
         </p>
-        <div className="mt-4 border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
-          Mẹo: kéo thẻ trên cây chỉ đổi bố cục hiển thị. Muốn thêm cha/mẹ, vợ/chồng/bạn đời hoặc con, hãy chọn một người rồi dùng form trong bảng này.
+        <div className="mt-4 rounded-lg border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-700">
+          Mẹo: kéo thẻ trên cây chỉ đổi bố cục hiển thị. Muốn thêm cha, thêm
+          mẹ, thêm vợ/chồng hoặc thêm con, hãy chọn một người rồi dùng form
+          trong bảng này.
         </div>
       </aside>
     );
@@ -961,9 +963,9 @@ export function TreeEditorSidePanel({
 
   if (selectedNode.kind !== "person") {
     return (
-      <aside className="min-w-0 rounded-md border border-stone-200 bg-[#fffaf0] p-4">
-        <h2 className="text-lg font-bold text-slate-950">Thẻ gia đình</h2>
-        <p className="mt-2 text-sm text-slate-600">
+      <aside className="min-w-0 rounded-t-2xl border border-stone-200 bg-white p-4 shadow-sm xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto xl:rounded-xl">
+        <h2 className="text-lg font-bold text-stone-950">Thẻ gia đình</h2>
+        <p className="mt-2 text-sm text-stone-600">
           Chọn một thành viên cụ thể để thêm người thân hoặc chỉnh quan hệ.
         </p>
       </aside>
@@ -994,39 +996,52 @@ export function TreeEditorSidePanel({
   const canUseNewPersonFlow = canCreateRelationships && canCreatePeople;
 
   return (
-    <aside className="min-w-0 space-y-5 rounded-md border border-stone-200 bg-[#fffaf0] p-4 shadow-sm">
-      <div className="border-l-4 border-emerald-700 pl-4">
-        <div className="text-xs font-bold text-emerald-800">
-          Người đang chọn
+    <aside className="min-w-0 space-y-4 rounded-t-2xl border border-stone-200 bg-white p-4 shadow-sm xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto xl:rounded-xl">
+      <div className="rounded-xl border border-[#245744]/20 bg-emerald-50 p-4">
+        <div className="text-xs font-bold uppercase text-[#245744]">
+          Thông tin cơ bản
         </div>
-        <h2 className="text-lg font-bold text-slate-950">
-          {personLabel(selectedNode)}
+        <h2 className="mt-2 text-lg font-bold text-stone-950">
+          Người đang chọn: {personLabel(selectedNode)}
         </h2>
         {selectedNode.displayName ? (
-          <p className="mt-1 text-sm text-slate-500">{selectedNode.fullName}</p>
+          <p className="mt-1 text-sm text-stone-500">{selectedNode.fullName}</p>
         ) : null}
-        <div className="mt-3 grid gap-1 text-sm text-slate-700">
-          <div>{dateRange}</div>
-          {selectedNode.generationNumber ? (
-            <div>Đời thứ {selectedNode.generationNumber}</div>
-          ) : null}
-          {selectedNode.branchName ? (
-            <div>Chi nhánh: {selectedNode.branchName}</div>
-          ) : null}
-          <div>{selectedNode.isLiving ? "Còn sống" : "Đã mất"}</div>
-        </div>
+        <dl className="mt-3 grid gap-2 text-sm text-stone-700">
+          <div>
+            <dt className="font-semibold text-stone-900">Năm sinh / mất</dt>
+            <dd>{dateRange}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-stone-900">Đời / thế hệ</dt>
+            <dd>{selectedNode.generationNumber ?? "Chưa rõ"}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-stone-900">Chi nhánh</dt>
+            <dd>{selectedNode.branchName ?? "Chưa rõ"}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-stone-900">Trạng thái</dt>
+            <dd>{selectedNode.isLiving ? "Còn sống" : "Đã mất"}</dd>
+          </div>
+        </dl>
         <Link
           href={`/admin/people/${selectedNode.personId}`}
-          className="mt-4 inline-flex min-h-11 items-center border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+          className="mt-4 inline-flex min-h-11 items-center rounded-lg border border-[#245744] bg-white px-4 py-2 text-sm font-semibold text-[#245744]"
         >
-          Mở hồ sơ
+          Sửa / xóa mềm hồ sơ
         </Link>
       </div>
 
-      <div className="grid gap-4 border-t border-slate-200 pt-4">
-        <RelationList title="Cha/mẹ" people={summary.parents} />
-        <RelationList title="Vợ/chồng/bạn đời" people={summary.spouses} />
-        <RelationList title="Con" people={summary.children} />
+      <div className="rounded-xl border border-stone-200 bg-stone-50 p-4">
+        <h3 className="text-base font-bold text-stone-950">
+          Quan hệ gia đình
+        </h3>
+        <div className="mt-3 grid gap-4">
+          <RelationList title="Cha/mẹ" people={summary.parents} />
+          <RelationList title="Vợ/chồng/bạn đời" people={summary.spouses} />
+          <RelationList title="Con" people={summary.children} />
+        </div>
       </div>
 
       <AdminWarningList
@@ -1038,22 +1053,40 @@ export function TreeEditorSidePanel({
         Đây chỉ là gợi ý kiểm tra, hệ thống không tự thay đổi dữ liệu.
       </p>
 
+      <div className="grid gap-3 rounded-xl border border-stone-200 bg-white p-4">
+        <h3 className="text-base font-bold text-stone-950">Ghi chú</h3>
+        <p className="text-sm leading-6 text-stone-600">
+          Ghi chú riêng tư và thông tin chi tiết được sửa trong hồ sơ thành
+          viên. Bảng này chỉ hiển thị tóm tắt để tránh rối khi thao tác trên
+          cây.
+        </p>
+      </div>
+
+      <div className="grid gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <h3 className="text-base font-bold text-amber-950">Quyền riêng tư</h3>
+        <p className="text-sm leading-6 text-amber-900">
+          Trước khi sửa hoặc xóa mềm, hãy mở hồ sơ để kiểm tra phạm vi hiển thị.
+          Không đưa ghi chú riêng tư hoặc dữ liệu người còn sống ra trang công
+          khai.
+        </p>
+      </div>
+
       {canCreateRelationships ? (
-        <div className="space-y-4 border-t border-slate-200 pt-5">
+        <div className="space-y-4 rounded-xl border border-stone-200 bg-white p-4">
           <div>
-            <h3 className="text-base font-bold text-slate-950">
+            <h3 className="text-base font-bold text-stone-950">
               Thêm người thân
             </h3>
-            <div className="mt-1 text-sm font-semibold text-slate-800">
+            <div className="mt-1 text-sm font-semibold text-stone-800">
               Quan hệ với người đang chọn
             </div>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-stone-600">
               Chọn quan hệ, sau đó dùng thành viên đã có hoặc tạo người mới.
             </p>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-800">
+            <div className="text-sm font-semibold text-stone-800">
               Chọn quan hệ
             </div>
             <div className="mt-2 grid gap-2 min-[380px]:grid-cols-2">
@@ -1067,8 +1100,8 @@ export function TreeEditorSidePanel({
                   }}
                   className={`min-h-11 rounded-md border px-3 py-2 text-sm font-semibold ${
                     relationKind === option.value
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-800 hover:border-slate-600"
+                      ? "border-[#245744] bg-[#245744] text-white"
+                      : "border-stone-300 bg-white text-stone-800 hover:border-[#245744]"
                   }`}
                 >
                   {option.label}
@@ -1078,10 +1111,10 @@ export function TreeEditorSidePanel({
           </div>
 
           <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-800">
+            <legend className="text-sm font-semibold text-stone-800">
               Chọn hoặc tạo thành viên
             </legend>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
+            <label className="flex items-center gap-2 text-sm text-stone-700">
               <input
                 type="radio"
                 name="tree_entry_mode"
@@ -1091,7 +1124,7 @@ export function TreeEditorSidePanel({
               />
               Chọn thành viên đã có
             </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
+            <label className="flex items-center gap-2 text-sm text-stone-700">
               <input
                 type="radio"
                 name="tree_entry_mode"
@@ -1124,7 +1157,9 @@ export function TreeEditorSidePanel({
               />
               {selectedRelatedPersonId ? (
                 <div className="border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
-                  Bạn đang gắn một thành viên đã có vào quan hệ mới. Hãy đối chiếu tên, năm sinh và chi nhánh trước khi lưu để tránh nối nhầm dữ liệu gia phả.
+                  Bạn đang gắn một thành viên đã có vào quan hệ mới. Hãy đối
+                  chiếu tên, năm sinh và chi nhánh trước khi lưu để tránh nối
+                  nhầm dữ liệu gia phả.
                 </div>
               ) : null}
               <SubmitButton label="Gắn thành viên đã có" pendingLabel="Đang gắn quan hệ..." />
