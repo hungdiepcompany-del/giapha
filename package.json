@@ -190,7 +190,8 @@
     "check:a15a3:vietnamese-heritage-public-tree-view-ui": "node scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
     "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui": "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
     "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui": "node scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
-    "check:a15a6:add-edit-member-form-vietnamese-heritage-ux": "node scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs"
+    "check:a15a6:add-edit-member-form-vietnamese-heritage-ux": "node scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+    "check:a15b:authenticated-heritage-ui-browser-smoke": "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

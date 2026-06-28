@@ -4,58 +4,22 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15A2_MODERN_VIETNAMESE_TREE_EDITOR_UI";
+const marker = "A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE";
+const docPath = "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md";
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/tree/page.tsx",
-  "app/(admin)/admin/tree/edit/page.tsx",
-  "app/(admin)/admin/people/[id]/page.tsx",
-  "app/(admin)/admin/people/new/page.tsx",
-  "app/(admin)/admin/relationships/page.tsx",
-  "app/(public)/people/[slug]/page.tsx",
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/genealogy/page.tsx",
-  "components/genealogy/lineage-admin.tsx",
-  "components/people/person-form.tsx",
-  "components/relationships/couple-form.tsx",
-  "components/relationships/relationship-form.tsx",
-  "components/layout/admin-shell.tsx",
-  "components/layout/public-shell.tsx",
-  "components/public/public-person-profile.tsx",
-  "components/public/public-tree-shell.tsx",
-  "components/tree/family-node-card.tsx",
-  "components/tree/family-tree-editor.tsx",
-  "components/tree/family-tree-empty-state.tsx",
-  "components/tree/family-tree-error-state.tsx",
-  "components/tree/family-tree-toolbar.tsx",
-  "components/tree/family-tree-viewer.tsx",
-  "components/tree/tree-editor-side-panel.tsx",
-  "components/tree/tree-editor-toolbar.tsx",
-  "components/ui/form-submit-button.tsx",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md",
-  "docs/PLAN_A15A3_VIETNAMESE_HERITAGE_PUBLIC_TREE_VIEW_UI.md",
-  "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
-  "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
-  "docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md",
-  "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md",
+  docPath,
   "package.json",
-  "scripts/check-a14-ui-ux-overhaul.cjs",
-  "scripts/check-a14b-public-tree-home-ux.cjs",
-  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
-  "scripts/check-a14d-tree-viewer-interaction-ux.cjs",
-  "scripts/check-a14e-mobile-ux-sweep.cjs",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
-  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
   "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-  "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
 ]);
 
 function readFile(relativePath) {
@@ -112,87 +76,109 @@ function gitShowHead(relativePath) {
 }
 
 const packageJson = readJson("package.json");
-const doc = readFile("docs/PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md");
+const doc = readFile(docPath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
-const uiFiles = [
-  "app/(admin)/admin/tree/page.tsx",
-  "app/(admin)/admin/tree/edit/page.tsx",
-  "components/tree/family-node-card.tsx",
-  "components/tree/family-tree-editor.tsx",
-  "components/tree/family-tree-empty-state.tsx",
-  "components/tree/family-tree-error-state.tsx",
-  "components/tree/tree-editor-side-panel.tsx",
-  "components/tree/tree-editor-toolbar.tsx",
-];
-const ui = uiFiles.map(readFile).join("\n");
-
 for (const token of [
-  "A-15A2 - Modern Vietnamese Genealogy Tree Editor UI",
+  "A-15B - Authenticated Heritage UI Browser Smoke",
   marker,
-  "Phạm vi UI-only",
-  "không copy code, asset, logo",
-  "màn xem/chỉnh sửa cây gia phả",
-  "Không đụng",
-  "database, migration, seed, schema",
-  "API contract, server action contract, service runtime",
+  "Verification-Only",
+  "Route Được Smoke",
+  "Quy Ước Kết Quả",
+  "Kết Quả Smoke Thực Tế",
+  "Public route group result",
+  "Admin route group result",
+  "Failure bucket result",
+  "Không submit form",
+  "không đổi database",
+  "không copy asset/logo",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const token of [
-  marker,
-  "Công cụ chỉnh sửa phả đồ",
-  "Chỉnh sửa cây gia phả",
-  "Căn giữa",
-  "Phóng to",
-  "Thu nhỏ",
-  "Sắp xếp lại",
-  "Lưu bố cục",
-  "Thông tin cơ bản",
-  "Quan hệ gia đình",
-  "Ghi chú",
-  "Quyền riêng tư",
-  "Thêm người thân",
-  "Thêm cha",
-  "Thêm mẹ",
-  "Thêm vợ/chồng",
-  "Thêm con",
-  "Sửa / xóa mềm hồ sơ",
-  "Thêm người đầu tiên",
-  "Người liên quan",
+for (const route of [
+  "/tree",
+  "/admin",
+  "/admin/genealogy",
+  "/admin/tree/edit",
+  "/admin/people/new",
+  "/admin/relationships",
 ]) {
-  requireIncludes(ui, token, `UI token ${token}`);
+  requireIncludes(doc, route, `route ${route}`);
+}
+
+for (const status of ["PASS", "PARTIAL", "SAFE_SKIP", "FAIL"]) {
+  requireIncludes(doc, status, `status ${status}`);
+}
+
+for (const token of [
+  "Gia phả",
+  "Phả đồ",
+  "Thêm thành viên",
+  "Quan hệ gia đình",
+  "Đăng nhập",
+  "Người dùng: Không rõ",
+  "Vai trò: Chưa có vai trò",
+]) {
+  requireIncludes(doc, token, `Vietnamese smoke text ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15A2_MODERN_VIETNAMESE_GENEALOGY_TREE_EDITOR_UI.md", "index entry"],
-  [workLog, "A-15A2 - Modern Vietnamese Genealogy Tree Editor UI", "work log entry"],
-  [
-    decisionLog,
-    "Decision 180 - A-15A2 modern Vietnamese tree editor UI is UI-only",
-    "decision log entry",
-  ],
-  [handoff, "A-15A2 - Modern Vietnamese Genealogy Tree Editor UI completed", "handoff entry"],
+  [index, "PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md", "index entry"],
+  [workLog, "A-15B - Authenticated Heritage UI Browser Smoke", "work log entry"],
+  [handoff, "A-15B - Authenticated Heritage UI Browser Smoke completed", "handoff entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
+  [
+    decisionLog,
+    "Decision 185 - A-15B authenticated heritage UI browser smoke is verification-only",
+    "decision log entry",
+  ],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15a2:modern-vietnamese-genealogy-tree-editor-ui"] !==
-  "node scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs"
+  packageJson?.scripts?.["check:a15b:authenticated-heritage-ui-browser-smoke"] !==
+  "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs"
 ) {
-  failures.push("missing package script check:a15a2:modern-vietnamese-genealogy-tree-editor-ui");
+  failures.push("missing package script check:a15b:authenticated-heritage-ui-browser-smoke");
 }
 
-const changedFiles = gitOutput(["diff", "--name-only"])
+for (const scriptName of [
+  "check:a15a2:modern-vietnamese-genealogy-tree-editor-ui",
+  "check:a15a3:vietnamese-heritage-public-tree-view-ui",
+  "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui",
+  "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
+  "check:a15a6:add-edit-member-form-vietnamese-heritage-ux",
+]) {
+  if (!packageJson?.scripts?.[scriptName]) {
+    failures.push(`${scriptName} was removed`);
+  }
+}
+
+for (const checker of [
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+  "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
+  "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+  "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
+  "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+]) {
+  const content = readFile(checker);
+  requireIncludes(content, docPath, `${checker} allows A-15B doc`);
+  requireIncludes(
+    content,
+    "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+    `${checker} allows A-15B checker`,
+  );
+}
+
+const changedFiles = gitOutput(["status", "--porcelain"])
   .split(/\r?\n/)
-  .map((line) => line.trim())
+  .map((line) => line.slice(3).trim())
   .filter(Boolean);
 
 for (const file of changedFiles) {
@@ -244,23 +230,20 @@ for (const pattern of [
   /\bTRUNCATE\s+TABLE\b/i,
   /\bCREATE\s+POLICY\b/i,
   /\bALTER\s+POLICY\b/i,
-  /\bservice_role\b/i,
   /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
   /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
   /Bearer\s+[A-Za-z0-9._-]{12,}/,
   /https?:\/\/(?!localhost|127\.0\.0\.1)/i,
-  /phatue|phả\s*tuệ/i,
-  /<img\s/i,
-  /backgroundImage\s*:/i,
-  /url\(["']?https?:/i,
+  /phatue|phả\s*tuệ|giad[aạ]iviet|gia\s*phả\s*đại\s*việt/i,
+  /\.png|\.jpg|\.jpeg|\.webp|\.svg/i,
 ]) {
-  rejectPattern(ui, pattern, pattern.toString());
+  rejectPattern(doc, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15A2 Modern Vietnamese Genealogy Tree Editor UI check failed:");
+  console.error("A-15B authenticated heritage UI browser smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15A2 Modern Vietnamese Genealogy Tree Editor UI check passed.");
+console.log("A-15B authenticated heritage UI browser smoke check passed.");

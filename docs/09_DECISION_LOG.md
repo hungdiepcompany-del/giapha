@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 185 - A-15B authenticated heritage UI browser smoke is verification-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15B may run read-only browser smoke over existing public/admin Vietnamese
+heritage UI routes after A-15A2-A15A6 and record PASS, PARTIAL, SAFE_SKIP or
+FAIL evidence.
+
+Allowed:
+
+- local browser navigation to existing routes;
+- desktop/mobile overflow checks;
+- read-only route, text, link, form-render and auth/session observation;
+- SELECT read-only lookup for safe slug/id discovery without printing secrets;
+- documentation and checker updates for the smoke phase.
+
+Not authorized:
+
+- form submit or create/update/delete action;
+- database/schema/migration/seed/RLS change or DB apply;
+- auth, role, permission or API/server action contract change;
+- service runtime, Worker/OpenNext/Wrangler or deploy config change;
+- UI polish or route creation;
+- dependency addition;
+- saved cookie, session, token, screenshot or browser evidence artifact;
+- copied asset/logo/screenshot/CSS/layout from any reference website.
+
+Ly do:
+
+The A-15A2-A15A6 UI polish needs real browser evidence, but authenticated PASS
+must not be invented when the browser lacks a verified owner/admin session. The
+phase therefore records safe skips and partial reads without widening runtime or
+data boundaries.
+
 ## Decision 184 - A-15A6 add/edit member form polish is UI/UX-only
 
 Status: `ACTIVE`

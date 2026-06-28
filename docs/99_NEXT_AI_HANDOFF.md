@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-06-28 - A-15B - Authenticated Heritage UI Browser Smoke completed
+
+- Marker: `A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE`.
+- Added `docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md`.
+- Added `scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs` and
+  package command `check:a15b:authenticated-heritage-ui-browser-smoke`.
+- Browser smoke ran read-only on local `http://localhost:3100`; no form submit,
+  no mutation, no auth/permission/API/service/runtime/schema change and no
+  browser/session artifact was saved.
+- Public result: `/tree` is `PASS` on desktop/mobile with no horizontal overflow,
+  public read-only Vietnamese copy and safe CTAs. `/people/[slug]` is
+  `SAFE_SKIP_NO_PUBLICLY_VISIBLE_PROFILE` because no public/anon-readable
+  profile was available for safe route smoke.
+- Auth/session result: `/admin` redirects to login with
+  `auth_session_missing!`, so a real owner/admin authenticated smoke was not
+  available in this browser session.
+- Admin result: `/admin/genealogy`, `/admin/tree/edit`, `/admin/people/new`,
+  `/admin/people/[id]` and `/admin/relationships` rendered read-only without
+  horizontal overflow, but only as `PARTIAL` because the admin shell showed
+  `Người dùng: Không rõ`, `Vai trò: Chưa có vai trò`, `Số quyền: 0`.
+- Next retry condition: run the same A-15B route matrix with an explicit safe
+  owner/admin browser session if the project owner wants full authenticated PASS.
+
 ## 2026-06-28 - A-15A6 - Add/Edit Member Form Vietnamese Heritage UX completed
 
 - Marker: `A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX`.

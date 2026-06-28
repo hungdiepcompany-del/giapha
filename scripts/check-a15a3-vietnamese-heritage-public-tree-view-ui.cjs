@@ -35,6 +35,7 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
   "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
   "docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md",
+  "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
@@ -48,6 +49,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+  "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
 ]);
 
 function readFile(relativePath) {
