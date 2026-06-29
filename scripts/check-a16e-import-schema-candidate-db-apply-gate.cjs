@@ -11,6 +11,8 @@ const checkerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cj
 const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 const a16e1DocPath = "docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md";
 const a16e1CheckerPath = "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs";
+const a16e2DocPath = "docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md";
+const a16e2CheckerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -25,6 +27,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
   a16e1DocPath,
   a16e1CheckerPath,
+  a16e2DocPath,
+  a16e2CheckerPath,
+  migrationPath,
   "package.json",
 ]);
 
@@ -175,7 +180,9 @@ for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
-  if (file.startsWith("db/") || file.endsWith(".sql")) failures.push(`database/sql file changed ${file}`);
+  if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
+    failures.push(`database/sql file changed ${file}`);
+  }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }

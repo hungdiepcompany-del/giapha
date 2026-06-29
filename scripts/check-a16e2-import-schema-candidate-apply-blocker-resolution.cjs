@@ -5,12 +5,10 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const marker = "A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE";
-const docPath = "docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md";
-const checkerPath = "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs";
+const marker = "A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION";
+const docPath = "docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md";
+const checkerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs";
 const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
-const a16e2DocPath = "docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md";
-const a16e2CheckerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -19,14 +17,13 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
+  migrationPath,
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
   "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
   "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
-  a16e2DocPath,
-  a16e2CheckerPath,
-  migrationPath,
+  "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
   "package.json",
 ]);
 
@@ -98,56 +95,67 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16E1",
+  "A-16E2",
   marker,
-  "A16E1_DB_APPLY_STATUS=NOT_APPLIED",
-  "A16E1_RECOMMENDATION=DO_NOT_APPLY_UNTIL_OWNER_MARKER_AND_TARGET_CONFIRMATION",
-  "A16E1_HARD_STOP_REASON=MISSING_APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
+  "A16E2_DB_APPLY_STATUS=NOT_APPLIED",
+  "A16E2_DB_WRITE_STATUS=NO_DB_WRITE",
+  "A16E2_SCHEMA_APPLY_RECOMMENDATION=READY_FOR_A16F_DB_APPLY_REVIEW",
+  "A16E2_A16F_MARKER_REQUIRED=APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
+  "Initial Blockers From A-16E1",
+  "Migration Candidate Changes",
+  "Remaining Blockers",
+  "Schema Apply Recommendation",
   "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
-  "A16E1_REVIEW_RESULT=PASS_WITH_OWNER_APPLY_GATE_BLOCKED",
-  "Pass List",
-  "Fail List",
-  "Blocker List",
-  "A16E1_APPLY_RECOMMENDATION=DO_NOT_APPLY_YET",
-  "A16E1_RLS_REVIEW=PASS_FAIL_CLOSED",
-  "SQL safety",
-  "RLS fail-closed",
-  "DO_NOT_APPLY_YET",
-  "does not apply DB",
-  "does not run `supabase db push`",
+  "A-16E2 did not apply DB",
+  "did not run `supabase db push`",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
+for (const token of [
+  "SCHEMA_BLOCKER",
+  "RLS_BLOCKER",
+  "PERMISSION_BLOCKER",
+  "PII_BLOCKER",
+  "RUNTIME_DEPENDENCY_BLOCKER",
+  "REVIEW_ONLY_CAUTION",
+]) {
+  requireIncludes(doc, token, `blocker category ${token}`);
+}
+
 for (const [content, token, label] of [
-  [index, "PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md", "index entry"],
+  [index, "PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md", "index entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
-  [decisionLog, "Decision 198 - A-16E1 recommends not applying Gia Pha 4 import schema until owner marker and target proof", "decision entry"],
+  [decisionLog, "Decision 199 - A-16E2 resolves schema-candidate blockers but still requires owner marker before apply", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16e1:owner-review-import-schema-apply-gate"] !==
-  "node scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs"
+  packageJson?.scripts?.["check:a16e2:import-schema-candidate-apply-blocker-resolution"] !==
+  "node scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs"
 ) {
-  failures.push("missing package script check:a16e1:owner-review-import-schema-apply-gate");
+  failures.push("missing package script check:a16e2:import-schema-candidate-apply-blocker-resolution");
 }
 
 for (const token of [
   "A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN",
-  "DO_NOT_RUN_SUPABASE_DB_PUSH",
-  "NO_EXCEL_FILE_STORAGE",
+  marker,
+  "SQL_CANDIDATE_STATUS=NOT_APPLIED",
+  "NO_RAW_EXCEL_CONTENT",
+  "NO_RAW_PII_ROW_STORAGE",
+  "RLS_FAIL_CLOSED_NO_POLICY_NO_GRANT",
   "create table if not exists public.import_sessions",
   "create table if not exists public.import_session_warnings",
   "create table if not exists public.import_duplicate_candidates",
   "create table if not exists public.import_relationship_candidates",
   "create table if not exists public.import_write_manifests",
+  "import_sessions_source_file_size_check",
+  "import_sessions_hash_presence_check",
+  "import_sessions_approval_marker_check",
+  "import_write_manifests_approval_consistency_check",
   "alter table public.import_sessions enable row level security",
-  "alter table public.import_session_warnings enable row level security",
-  "alter table public.import_duplicate_candidates enable row level security",
-  "alter table public.import_relationship_candidates enable row level security",
   "alter table public.import_write_manifests enable row level security",
 ]) {
   requireIncludes(migration, token, `migration token ${token}`);
@@ -164,6 +172,7 @@ for (const pattern of [
   /\bcreate\s+policy\b/i,
   /\balter\s+table\s+[^;]+disable\s+row\s+level\s+security\b/i,
   /\bgrant\s+/i,
+  /\bsupabase\s+db\s+(push|reset|remote|pull|diff)\b/i,
 ]) {
   rejectPattern(sqlWithoutComments, pattern, `migration ${pattern}`);
 }
@@ -233,9 +242,9 @@ for (const [file, content] of [
 }
 
 if (failures.length > 0) {
-  console.error("A-16E1 owner review import schema apply gate check failed:");
+  console.error("A-16E2 import schema candidate apply blocker resolution check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16E1 owner review import schema apply gate check passed.");
+console.log("A-16E2 import schema candidate apply blocker resolution check passed.");

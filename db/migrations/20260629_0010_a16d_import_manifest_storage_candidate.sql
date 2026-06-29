@@ -1,9 +1,14 @@
 -- A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN
+-- A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION
+-- SQL_CANDIDATE_STATUS=NOT_APPLIED
 -- OWNER_APPROVED_FILE_CREATION_ONLY
 -- DO_NOT_APPLY_WITHOUT_APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY
 -- DO_NOT_RUN_SUPABASE_DB_PUSH
 -- NO_RUNTIME_IMPORT_WRITE
 -- NO_EXCEL_FILE_STORAGE
+-- NO_RAW_EXCEL_CONTENT
+-- NO_RAW_PII_ROW_STORAGE
+-- RLS_FAIL_CLOSED_NO_POLICY_NO_GRANT
 -- A-16D creates a not-applied schema candidate for Gia Pha 4.0 import
 -- session, review state, duplicate candidate, relationship candidate and
 -- write manifest storage. It intentionally adds no RLS policies and no seed.
@@ -66,6 +71,33 @@ create table if not exists public.import_sessions (
     and duplicate_candidate_count >= 0
     and unmapped_column_count >= 0
     and held_row_count >= 0
+  ),
+  constraint import_sessions_source_file_size_check check (
+    source_file_size_bytes is null or source_file_size_bytes >= 0
+  ),
+  constraint import_sessions_hash_presence_check check (
+    status in ('preview_generated', 'owner_reviewing', 'rejected_needs_fix', 'expired_preview')
+    or preview_manifest_hash is not null
+  ),
+  constraint import_sessions_approval_marker_check check (
+    approval_marker is not null
+    or (
+      approved_by is null
+      and approved_at is null
+      and status not in (
+        'owner_approved_for_db_write',
+        'write_started',
+        'write_completed',
+        'rollback_required',
+        'rolled_back'
+      )
+    )
+  ),
+  constraint import_sessions_review_summary_object_check check (
+    jsonb_typeof(review_summary) = 'object'
+  ),
+  constraint import_sessions_privacy_summary_object_check check (
+    jsonb_typeof(privacy_summary) = 'object'
   )
 );
 
@@ -180,6 +212,28 @@ create table if not exists public.import_write_manifests (
       'rolled_back',
       'voided'
     )
+  ),
+  constraint import_write_manifests_approved_scope_object_check check (
+    jsonb_typeof(approved_scope) = 'object'
+  ),
+  constraint import_write_manifests_planned_counts_object_check check (
+    jsonb_typeof(planned_counts) = 'object'
+  ),
+  constraint import_write_manifests_held_rows_summary_object_check check (
+    jsonb_typeof(held_rows_summary) = 'object'
+  ),
+  constraint import_write_manifests_rollback_plan_object_check check (
+    jsonb_typeof(rollback_plan) = 'object'
+  ),
+  constraint import_write_manifests_created_record_ids_object_check check (
+    jsonb_typeof(created_record_ids) = 'object'
+  ),
+  constraint import_write_manifests_approval_consistency_check check (
+    status in ('draft', 'voided')
+    or (
+      approval_marker is not null
+      and manifest_hash is not null
+    )
   )
 );
 
@@ -218,16 +272,16 @@ alter table public.import_relationship_candidates enable row level security;
 alter table public.import_write_manifests enable row level security;
 
 comment on table public.import_sessions is
-  'A-16D not-applied candidate for Gia Pha 4.0 import session metadata and owner review state. Does not store Excel content.';
+  'A-16D/A-16E2 not-applied candidate for Gia Pha 4.0 import session metadata and owner review state. Does not store Excel content or raw PII rows.';
 
 comment on table public.import_session_warnings is
   'A-16D not-applied candidate for privacy-safe import warning codes and Vietnamese review messages.';
 
 comment on table public.import_duplicate_candidates is
-  'A-16D not-applied candidate for duplicate suggestions. Owner decision required; no automatic merge.';
+  'A-16D/A-16E2 not-applied candidate for duplicate suggestions. Owner decision required; no automatic merge and no raw source row storage.';
 
 comment on table public.import_relationship_candidates is
-  'A-16D not-applied candidate for reviewed relationship suggestions. Ambiguous links stay held.';
+  'A-16D/A-16E2 not-applied candidate for reviewed relationship suggestions. Ambiguous links stay held and no raw source row storage is required.';
 
 comment on table public.import_write_manifests is
   'A-16D not-applied candidate for owner-approved write manifest and rollback scope.';

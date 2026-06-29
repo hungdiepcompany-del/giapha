@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-06-29 - A-16E2 - Import Schema Candidate Apply Blocker Resolution
+
+- Marker: `A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `22c58b1`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- Created
+  `docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md` and
+  `scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs`.
+- Added package command
+  `check:a16e2:import-schema-candidate-apply-blocker-resolution`.
+- Updated A-16/A-16B/A-16C/A-16D/A-16E/A-16E1 checker allowlists narrowly for
+  the A-16E2 doc/checker/package-script and not-applied SQL candidate edits.
+- Updated
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  while it remains `NOT_APPLIED`.
+- Candidate changes: added A-16E2 marker, `SQL_CANDIDATE_STATUS=NOT_APPLIED`,
+  no raw Excel/PII guard comments, RLS fail-closed guard comment, source file
+  size check, manifest hash/approval consistency checks and JSON object checks.
+- Blocker classification recorded:
+  `SCHEMA_BLOCKER`, `RLS_BLOCKER`, `PERMISSION_BLOCKER`, `PII_BLOCKER`,
+  `RUNTIME_DEPENDENCY_BLOCKER` and `REVIEW_ONLY_CAUTION`.
+- Updated recommendation:
+  `A16E2_SCHEMA_APPLY_RECOMMENDATION=READY_FOR_A16F_DB_APPLY_REVIEW`.
+- Remaining blockers: owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`, target Supabase project,
+  backup/rollback/no-go confirmation, A-16F dry-run/apply verification and
+  later runtime RLS/grant approach.
+- A-16E2 did not apply DB, did not run `supabase db push`, did not run dry-run,
+  did not connect production DB, did not seed, did not mutate data, did not add
+  dependency, did not deploy and did not push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E1 - Owner Review Import Schema Apply Gate
 
 - Marker: `A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE`.

@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16E2 - Import Schema Candidate Apply Blocker Resolution recorded
+
+- Marker: `A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION`.
+- Added
+  `docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md`,
+  `scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs`
+  and package command
+  `check:a16e2:import-schema-candidate-apply-blocker-resolution`.
+- Updated
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  while it remains `NOT_APPLIED`. No DB apply, no dry-run and no
+  `supabase db push` were run.
+- Candidate hardening added A-16E2 marker, explicit `NOT_APPLIED` marker,
+  no raw Excel/PII guard comments, RLS fail-closed guard comment, source file
+  size check, manifest hash/approval consistency checks and JSON object checks.
+- Blocker categories recorded: `SCHEMA_BLOCKER`, `RLS_BLOCKER`,
+  `PERMISSION_BLOCKER`, `PII_BLOCKER`, `RUNTIME_DEPENDENCY_BLOCKER` and
+  `REVIEW_ONLY_CAUTION`.
+- Updated schema recommendation:
+  `A16E2_SCHEMA_APPLY_RECOMMENDATION=READY_FOR_A16F_DB_APPLY_REVIEW`.
+- This means the schema candidate is ready for owner review of A-16F, not that
+  DB apply is authorized. A-16F still requires the exact marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- Remaining apply blockers: target Supabase project confirmation,
+  backup/rollback/no-go position, A-16F dry-run/apply verification and later
+  runtime RLS/grant approach.
+- A-16G remains blocked until A-16F apply/verification PASS. A-16H remains
+  blocked until parser dependency marker. A-16I remains blocked until schema
+  apply PASS, parser or approved preview source, owner-approved manifest and
+  DB-write marker.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E1 - Owner Review Import Schema Apply Gate recorded
 
 - Marker: `A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE`.

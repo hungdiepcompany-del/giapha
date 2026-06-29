@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 199 - A-16E2 resolves schema-candidate blockers but still requires owner marker before apply
+
+Status: `ACTIVE`
+
+Chon:
+
+- Keep A-16E2 as schema-candidate blocker resolution only, not a DB apply
+  phase.
+- Update the not-applied A-16D SQL candidate with clearer no raw Excel/PII
+  guard comments, fail-closed RLS guard comment, size/hash/approval consistency
+  checks and JSON object checks.
+- Classify blockers explicitly as `SCHEMA_BLOCKER`, `RLS_BLOCKER`,
+  `PERMISSION_BLOCKER`, `PII_BLOCKER`, `RUNTIME_DEPENDENCY_BLOCKER` and
+  `REVIEW_ONLY_CAUTION`.
+- Set schema recommendation to
+  `READY_FOR_A16F_DB_APPLY_REVIEW`.
+- Keep A-16F blocked until owner provides
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` and confirms target project,
+  backup/rollback/no-go position and dry-run/apply verification scope.
+- Keep runtime grants/RLS policy and service-role vs client Data API access in a
+  later approved runtime/policy phase.
+
+Ly do:
+
+- A-16E1 found no direct SQL safety failure, but the candidate needed stronger
+  guard comments and consistency checks before owner review of apply.
+- Import manifest storage can hold sensitive review state, so no raw workbook
+  rows, no public policy and no broad grants should be introduced in the schema
+  candidate.
+- Schema readiness is separate from apply authorization; target DB, backup,
+  dry-run and owner marker are operational gates, not static-doc assumptions.
+- This decision does not apply DB, run Supabase CLI, change deployed
+  RLS/auth/permission runtime, add dependency, change OpenNext/Wrangler config,
+  deploy, push or mutate production data.
+
 ## Decision 198 - A-16E1 recommends not applying Gia Pha 4 import schema until owner marker and target proof
 
 Status: `ACTIVE`
