@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 196 - A-16D keeps Gia Pha 4 import manifest storage as a not-applied schema candidate
+
+Status: `ACTIVE`
+
+Chon:
+
+- Create a real SQL migration candidate file for import manifest/review storage
+  because the repository migration convention is clear.
+- Keep the candidate `NOT_APPLIED` in A-16D. Do not run `supabase db push`,
+  connect to production DB, seed permissions or mutate real data.
+- Model import storage with five candidate tables:
+  `import_sessions`, `import_session_warnings`,
+  `import_duplicate_candidates`, `import_relationship_candidates` and
+  `import_write_manifests`.
+- Enable RLS in the candidate but create no policies and no permission seed, so
+  the storage remains fail-closed until a future approved policy/runtime phase.
+- Store import review metadata, hashes, counts, fingerprints, owner decisions,
+  approved scope and rollback manifest information; do not store Excel file
+  content or raw workbook rows in the candidate design.
+- Require A-16E with `APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY` before any DB
+  apply, and A-16F with `APPROVE_A16F_GIAPHA4_IMPORT_DB_WRITE_RUNTIME` before
+  any real import write runtime.
+
+Ly do:
+
+- A-16C identified persistent manifest/review state as the next safe design
+  step before any Gia Pha 4.0 import write.
+- Import review state can include privacy-sensitive family evidence, duplicate
+  suggestions and ambiguous relationships, so storage must be explicit,
+  reviewable and fail-closed.
+- Approval markers must bind to exact source hashes/manifests and cannot imply
+  auto merge, auto delete, ambiguous relationship auto-link, production deploy
+  or runtime import permission.
+- This decision does not change deployed DB, RLS/auth/permission runtime,
+  OpenNext/Wrangler config, dependencies, service Worker boundary or production
+  data.
+
 ## Decision 195 - A-16C requires owner-bound approval marker before Gia Pha 4 DB write
 
 Status: `ACTIVE`

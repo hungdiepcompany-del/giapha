@@ -9,6 +9,9 @@ const docPath = "docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md";
 const checkerPath = "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs";
 const packagePath = "package.json";
 const marker = "A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI";
+const a16dDocPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
+const a16dCheckerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
+const a16dMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 
 const previewFiles = [
   "app/(admin)/admin/exports/import/page.tsx",
@@ -30,6 +33,9 @@ const allowedChangedFiles = new Set([
   checkerPath,
   "docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
+  a16dDocPath,
+  a16dCheckerPath,
+  a16dMigrationPath,
   "package.json",
   ...previewFiles,
 ]);
@@ -161,8 +167,10 @@ for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
-  if (file.startsWith("db/") || file.endsWith(".sql")) failures.push(`database/sql file changed ${file}`);
-  if (/schema|migration|seed/i.test(file) && !file.startsWith("docs/")) {
+  if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
+    failures.push(`database/sql file changed ${file}`);
+  }
+  if (!allowedChangedFiles.has(file) && /schema|migration|seed/i.test(file) && !file.startsWith("docs/")) {
     failures.push(`schema/migration/seed-like file changed ${file}`);
   }
   if (

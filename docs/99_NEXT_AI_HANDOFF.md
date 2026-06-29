@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16D - Import Schema Candidate / Manifest Storage Design recorded
+
+- Marker: `A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN`.
+- Added
+  `docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md`,
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`,
+  `scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs`
+  and package command
+  `check:a16d:import-schema-candidate-manifest-storage-design`.
+- A-16D is schema candidate/design/checker only. The SQL file is
+  `NOT_APPLIED`; no `supabase db push`, DB connection, migration apply, seed,
+  production mutation, dependency, deploy or push was performed.
+- Candidate tables are `import_sessions`, `import_session_warnings`,
+  `import_duplicate_candidates`, `import_relationship_candidates` and
+  `import_write_manifests`.
+- Candidate RLS is fail-closed: RLS is enabled on all five tables, but A-16D
+  creates no policies and no permission seed. Future policy/permission design
+  requires separate approval.
+- Privacy boundary: no real Gia Pha 4.0 Excel/CSV file, raw workbook content,
+  screenshot or real personal data was committed. Candidate storage is intended
+  for metadata, source hashes, counts, fingerprints, owner decisions, approved
+  scope and rollback manifest data.
+- Updated A-16/A-16B/A-16C checker allowlists narrowly so their old checks pass
+  while accepting only the A-16D doc/checker/not-applied SQL candidate.
+- Next possible phase: A-16E DB apply verification gate for the import manifest
+  schema candidate, requiring explicit owner approval marker
+  `APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY`, backup readiness, target project
+  confirmation, one-file apply plan, rollback/no-go plan and post-apply catalog
+  verification.
+- Real import DB write runtime remains blocked until A-16F or a later explicit
+  approval marker `APPROVE_A16F_GIAPHA4_IMPORT_DB_WRITE_RUNTIME` after parser,
+  owner review, schema apply verification and rollback evidence are complete.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO, deploy NO.
+
 ## 2026-06-29 - A-16C - Owner Review Import Preview DB Write Approval Design recorded
 
 - Marker: `A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN`.

@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-29 - A-16D - Import Schema Candidate / Manifest Storage Design
+
+- Marker: `A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN`.
+- Precondition checked: A-16 commit `f824cbe`, A-16B commit `a05f1a9`
+  and A-16C commit `b58ee98` exist locally; repo started
+  `main...origin/main [ahead 3]`; `.env.local` remains ignored by
+  `.gitignore:17:.env.*`; no staged `.xls`, `.xlsx` or `.csv` file.
+- Created
+  `docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md`,
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  and
+  `scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs`.
+- Added package command
+  `check:a16d:import-schema-candidate-manifest-storage-design`.
+- Updated A-16/A-16B/A-16C checkers with a narrow allowlist exception for the
+  A-16D doc/checker/not-applied SQL candidate only.
+- Migration status: SQL candidate file created, `NOT_APPLIED`; no
+  `supabase db push`, no production DB connection and no database mutation was
+  run.
+- Candidate tables: `import_sessions`, `import_session_warnings`,
+  `import_duplicate_candidates`, `import_relationship_candidates` and
+  `import_write_manifests`.
+- RLS status: candidate enables RLS on all five tables but creates no policies
+  and no permission seed, keeping storage fail-closed until a future approved
+  phase.
+- Privacy status: no real Gia Pha 4.0 Excel/CSV file, screenshot, raw source
+  rows or real personal data committed; candidate is metadata/hash/count/
+  fingerprint oriented and records `NO_EXCEL_FILE_STORAGE`.
+- Future gates recorded:
+  `APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY` for DB apply verification and
+  `APPROVE_A16F_GIAPHA4_IMPORT_DB_WRITE_RUNTIME` for real import write
+  runtime.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO, deploy NO.
+
 ## 2026-06-29 - A-16C - Owner Review Import Preview DB Write Approval Design
 
 - Marker: `A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN`.

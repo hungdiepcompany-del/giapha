@@ -5,12 +5,10 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md";
-const checkerPath = "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs";
-const marker = "A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN";
-const a16dDocPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
-const a16dCheckerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
-const a16dMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const marker = "A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN";
+const docPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
+const checkerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
+const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -18,12 +16,11 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
+  migrationPath,
   checkerPath,
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
-  a16dDocPath,
-  a16dCheckerPath,
-  a16dMigrationPath,
+  "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
   "package.json",
 ]);
 
@@ -80,7 +77,14 @@ function gitShowHead(relativePath) {
   }
 }
 
+function stripSqlComments(sql) {
+  return sql
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/--.*$/gm, "");
+}
+
 const doc = readFile(docPath);
+const migration = readFile(migrationPath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -88,54 +92,81 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16C",
+  "A-16D",
   marker,
-  "NO_DB_WRITE",
-  "owner review workflow",
-  "approval states",
-  "approval marker",
-  "import manifest",
-  "rollback strategy",
-  "duplicate policy",
-  "Khong auto merge",
-  "Khong auto delete",
-  "relationship ambiguity policy",
-  "privacy/PII policy",
-  "UI Vietnamese review flow",
-  "Future Phase Gate A-16D/A-16E",
-  "APPROVE_A16D_GIAPHA4_IMPORT_SCHEMA_CANDIDATE",
-  "APPROVE_A16E_GIAPHA4_IMPORT_DB_WRITE_RUNTIME",
-  "held_rows",
-  "source_file_hash",
-  "rollback manifest",
+  "A16D_DB_APPLY_STATUS=NOT_APPLIED",
+  "A16D_DB_WRITE_STATUS=NO_DB_WRITE",
+  "A16D_EXCEL_STORAGE_STATUS=NO_EXCEL_FILE_STORAGE",
+  "schema candidate",
+  "import_sessions",
+  "import_session_warnings",
+  "import_duplicate_candidates",
+  "import_relationship_candidates",
+  "import_write_manifests",
+  "Duplicate Candidate Storage",
+  "Relationship Candidate Storage",
+  "Approval Marker Policy",
+  "Retention And Cleanup Policy",
+  "Rollback And Audit Strategy",
+  "RLS And Permission Candidate",
+  "APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY",
+  "APPROVE_A16F_GIAPHA4_IMPORT_DB_WRITE_RUNTIME",
+  "no automatic merge",
+  "ambiguous relationships must not be auto-linked",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const token of [
-  "Xem lại dữ liệu nhập",
-  "Xác nhận đã kiểm tra cảnh báo",
-  "Xác nhận đã kiểm tra người trùng",
-  "Xác nhận đã kiểm tra quan hệ gia đình",
-  "Ghi dữ liệu thật sẽ được mở ở phase sau sau khi owner phê duyệt",
-]) {
-  requireIncludes(doc, token, `Vietnamese UI token ${token}`);
-}
-
 for (const [content, token, label] of [
-  [index, "PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md", "index entry"],
+  [index, "PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md", "index entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
-  [decisionLog, "Decision 195 - A-16C requires owner-bound approval marker before Gia Pha 4 DB write", "decision entry"],
+  [decisionLog, "Decision 196 - A-16D keeps Gia Pha 4 import manifest storage as a not-applied schema candidate", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16c:owner-review-import-preview-db-write-approval-design"] !==
-  "node scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs"
+  packageJson?.scripts?.["check:a16d:import-schema-candidate-manifest-storage-design"] !==
+  "node scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs"
 ) {
-  failures.push("missing package script check:a16c:owner-review-import-preview-db-write-approval-design");
+  failures.push("missing package script check:a16d:import-schema-candidate-manifest-storage-design");
+}
+
+for (const token of [
+  marker,
+  "OWNER_APPROVED_FILE_CREATION_ONLY",
+  "DO_NOT_APPLY_WITHOUT_APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY",
+  "DO_NOT_RUN_SUPABASE_DB_PUSH",
+  "NO_RUNTIME_IMPORT_WRITE",
+  "NO_EXCEL_FILE_STORAGE",
+  "create table if not exists public.import_sessions",
+  "create table if not exists public.import_session_warnings",
+  "create table if not exists public.import_duplicate_candidates",
+  "create table if not exists public.import_relationship_candidates",
+  "create table if not exists public.import_write_manifests",
+  "alter table public.import_sessions enable row level security",
+  "alter table public.import_session_warnings enable row level security",
+  "alter table public.import_duplicate_candidates enable row level security",
+  "alter table public.import_relationship_candidates enable row level security",
+  "alter table public.import_write_manifests enable row level security",
+]) {
+  requireIncludes(migration, token, `migration token ${token}`);
+}
+
+const sqlWithoutComments = stripSqlComments(migration);
+for (const pattern of [
+  /\bdrop\s+table\b/i,
+  /\btruncate\b/i,
+  /\bdelete\s+from\b/i,
+  /\binsert\s+into\b/i,
+  /\bupsert\b/i,
+  /\bupdate\s+[a-z_".]+\s+set\b/i,
+  /\bcreate\s+policy\b/i,
+  /\bgrant\s+/i,
+  /\bsupabase\s+db\s+(push|reset|remote|pull|diff)\b/i,
+]) {
+  rejectPattern(sqlWithoutComments, pattern, `migration ${pattern}`);
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -148,19 +179,8 @@ for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
-  if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
-    failures.push(`database/sql file changed ${file}`);
-  }
-  if (!allowedChangedFiles.has(file) && /schema|migration|seed/i.test(file) && !file.startsWith("docs/")) {
-    failures.push(`schema/migration/seed-like file changed ${file}`);
-  }
-  if (
-    /app\/api\/.*import.*write|app\/api\/.*giapha4.*write|actions\.ts|service\.ts|route\.ts$/i.test(
-      file,
-    ) &&
-    !allowedChangedFiles.has(file)
-  ) {
-    failures.push(`runtime write/import route changed ${file}`);
+  if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
+    failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }
   if (
     /wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(
@@ -169,8 +189,16 @@ for (const file of changedFiles) {
   ) {
     failures.push(`runtime/deploy config changed ${file}`);
   }
-  if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
-    failures.push(`possible secret/session/evidence artifact changed ${file}`);
+  if (
+    !allowedChangedFiles.has(file) &&
+    (file.startsWith("app/api/") ||
+      file.startsWith("app/actions") ||
+      file.startsWith("lib/") ||
+      file.startsWith("server/") ||
+      file.startsWith("services/") ||
+      file.startsWith("pages/"))
+  ) {
+    failures.push(`API/service/runtime file changed ${file}`);
   }
 }
 
@@ -189,6 +217,7 @@ if (packageHead) {
 
 for (const [file, content] of [
   [docPath, doc],
+  [migrationPath, migration],
   [checkerPath, readFile(checkerPath)],
 ]) {
   for (const pattern of [
@@ -201,31 +230,10 @@ for (const [file, content] of [
   }
 }
 
-const importRuntimeFiles = changedFiles.filter((file) =>
-  /app\/api\/.*import|lib\/import|components\/imports|app\/\(admin\)\/admin\/exports\/import/.test(
-    file,
-  ),
-);
-
-for (const file of importRuntimeFiles) {
-  const content = readFile(file);
-  for (const pattern of [
-    /\.insert\s*\(/,
-    /\.update\s*\(/,
-    /\.upsert\s*\(/,
-    /\.delete\s*\(/,
-    /\binsert\s+into\b/i,
-    /\bupdate\s+[a-z_"]+\s+set\b/i,
-    /\bdelete\s+from\b/i,
-  ]) {
-    rejectPattern(content, pattern, `${file} ${pattern}`);
-  }
-}
-
 if (failures.length > 0) {
-  console.error("A-16C owner review import approval design check failed:");
+  console.error("A-16D import schema candidate manifest storage design check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16C owner review import approval design check passed.");
+console.log("A-16D import schema candidate manifest storage design check passed.");
