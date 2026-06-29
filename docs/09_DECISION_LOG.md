@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 200 - A-16F blocks DB apply because Supabase CLI and project link are not confirmed
+
+Status: `ACTIVE`
+
+Chon:
+
+- Accept the owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` as present for this phase.
+- Stop before DB dry-run/apply because `supabase --version` failed and no
+  safe local project-link metadata exists in the checkout.
+- Record `A16F_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Do not run `npx` or a guessed CLI path because the target Supabase project
+  cannot be confirmed safely.
+- Keep the A-16D/A-16E2 candidate unapplied until a later retry has approved
+  Supabase CLI availability, exact project target, backup/rollback/no-go
+  evidence and dry-run proof.
+
+Ly do:
+
+- A schema apply phase must prove the target project before any command that can
+  mutate DB state.
+- A missing CLI and absent project link make `supabase db push --dry-run
+  --linked` impossible to run safely from this checkout.
+- Claiming schema/RLS verification without apply would be misleading, so this
+  phase records static candidate evidence only.
+- This decision does not apply DB, seed, mutate `people` or relationships,
+  import Excel, enable runtime import write, add dependency, deploy or push.
+
 ## Decision 199 - A-16E2 resolves schema-candidate blockers but still requires owner marker before apply
 
 Status: `ACTIVE`

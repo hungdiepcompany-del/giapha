@@ -5,18 +5,9 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const marker = "A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN";
-const docPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
-const checkerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
-const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
-const a16eDocPath = "docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md";
-const a16eCheckerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs";
-const a16e1DocPath = "docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md";
-const a16e1CheckerPath = "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs";
-const a16e2DocPath = "docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md";
-const a16e2CheckerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs";
-const a16fDocPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
-const a16fCheckerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
+const docPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
+const checkerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
+const packagePath = "package.json";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -24,20 +15,15 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  migrationPath,
   checkerPath,
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
-  a16eDocPath,
-  a16eCheckerPath,
-  a16e1DocPath,
-  a16e1CheckerPath,
-  a16e2DocPath,
-  a16e2CheckerPath,
-  a16fDocPath,
-  a16fCheckerPath,
-  "package.json",
+  "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
+  "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
+  "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
+  "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
+  packagePath,
 ]);
 
 function readFile(relativePath) {
@@ -93,96 +79,53 @@ function gitShowHead(relativePath) {
   }
 }
 
-function stripSqlComments(sql) {
-  return sql
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/--.*$/gm, "");
-}
-
 const doc = readFile(docPath);
-const migration = readFile(migrationPath);
-const packageJson = readJson("package.json");
+const checker = readFile(checkerPath);
+const packageJson = readJson(packagePath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16D",
-  marker,
-  "A16D_DB_APPLY_STATUS=NOT_APPLIED",
-  "A16D_DB_WRITE_STATUS=NO_DB_WRITE",
-  "A16D_EXCEL_STORAGE_STATUS=NO_EXCEL_FILE_STORAGE",
-  "schema candidate",
-  "import_sessions",
-  "import_session_warnings",
-  "import_duplicate_candidates",
-  "import_relationship_candidates",
-  "import_write_manifests",
-  "Duplicate Candidate Storage",
-  "Relationship Candidate Storage",
-  "Approval Marker Policy",
-  "Retention And Cleanup Policy",
-  "Rollback And Audit Strategy",
-  "RLS And Permission Candidate",
-  "APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY",
-  "APPROVE_A16F_GIAPHA4_IMPORT_DB_WRITE_RUNTIME",
-  "no automatic merge",
-  "ambiguous relationships must not be auto-linked",
+  "A-16F",
+  "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED",
+  "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
+  "A16F_STATUS=SAFE_SKIP_OR_BLOCKED",
+  "A16F_DB_DRY_RUN_RESULT=BLOCKED_SUPABASE_CLI_NOT_AVAILABLE",
+  "A16F_DB_APPLY_RESULT=NOT_RUN",
+  "A16F_SCHEMA_VERIFICATION_RESULT=NOT_RUN_NO_APPLY",
+  "A16F_RLS_VERIFICATION_RESULT=STATIC_CANDIDATE_ONLY_NOT_LIVE_DB",
+  "A16F_SEED_STATUS=NO_SEED",
+  "A16F_PEOPLE_RELATIONSHIPS_WRITE_STATUS=NO_WRITE",
+  "A16F_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "supabase --version",
+  "supabase db push --dry-run --linked",
+  "supabase db push --linked",
+  "No DB apply was attempted",
+  "No seed",
+  "No write to `people`",
+  "No write to relationship tables",
+  "No real Excel import",
+  "A16F_BLOCKER=SUPABASE_CLI_NOT_AVAILABLE_AND_PROJECT_LINK_NOT_CONFIRMED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md", "index entry"],
-  [workLog, marker, "work log marker"],
-  [handoff, marker, "handoff marker"],
-  [decisionLog, "Decision 196 - A-16D keeps Gia Pha 4 import manifest storage as a not-applied schema candidate", "decision entry"],
+  [index, "PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md", "index entry"],
+  [workLog, "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED", "work log marker"],
+  [handoff, "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED", "handoff marker"],
+  [decisionLog, "Decision 200 - A-16F blocks DB apply because Supabase CLI and project link are not confirmed", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16d:import-schema-candidate-manifest-storage-design"] !==
-  "node scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs"
+  packageJson?.scripts?.["check:a16f:import-schema-db-apply-verification"] !==
+  "node scripts/check-a16f-import-schema-db-apply-verification.cjs"
 ) {
-  failures.push("missing package script check:a16d:import-schema-candidate-manifest-storage-design");
-}
-
-for (const token of [
-  marker,
-  "OWNER_APPROVED_FILE_CREATION_ONLY",
-  "DO_NOT_APPLY_WITHOUT_APPROVE_A16E_IMPORT_MANIFEST_SCHEMA_APPLY",
-  "DO_NOT_RUN_SUPABASE_DB_PUSH",
-  "NO_RUNTIME_IMPORT_WRITE",
-  "NO_EXCEL_FILE_STORAGE",
-  "create table if not exists public.import_sessions",
-  "create table if not exists public.import_session_warnings",
-  "create table if not exists public.import_duplicate_candidates",
-  "create table if not exists public.import_relationship_candidates",
-  "create table if not exists public.import_write_manifests",
-  "alter table public.import_sessions enable row level security",
-  "alter table public.import_session_warnings enable row level security",
-  "alter table public.import_duplicate_candidates enable row level security",
-  "alter table public.import_relationship_candidates enable row level security",
-  "alter table public.import_write_manifests enable row level security",
-]) {
-  requireIncludes(migration, token, `migration token ${token}`);
-}
-
-const sqlWithoutComments = stripSqlComments(migration);
-for (const pattern of [
-  /\bdrop\s+table\b/i,
-  /\btruncate\b/i,
-  /\bdelete\s+from\b/i,
-  /\binsert\s+into\b/i,
-  /\bupsert\b/i,
-  /\bupdate\s+[a-z_".]+\s+set\b/i,
-  /\bcreate\s+policy\b/i,
-  /\bgrant\s+/i,
-  /\bsupabase\s+db\s+(push|reset|remote|pull|diff)\b/i,
-]) {
-  rejectPattern(sqlWithoutComments, pattern, `migration ${pattern}`);
+  failures.push("missing package script check:a16f:import-schema-db-apply-verification");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -195,6 +138,9 @@ for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
+  if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
+    failures.push(`database/sql file changed ${file}`);
+  }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }
@@ -218,7 +164,14 @@ for (const file of changedFiles) {
   }
 }
 
-const packageHead = gitShowHead("package.json");
+const trackedDataFiles = gitOutput(["ls-files"])
+  .split(/\r?\n/)
+  .filter((file) => /\.(xls|xlsx|csv)$/i.test(file));
+for (const file of trackedDataFiles) {
+  failures.push(`tracked real import file not allowed ${file}`);
+}
+
+const packageHead = gitShowHead(packagePath);
 if (packageHead) {
   const before = JSON.parse(packageHead);
   const beforeDeps = JSON.stringify(before.dependencies ?? {});
@@ -233,8 +186,7 @@ if (packageHead) {
 
 for (const [file, content] of [
   [docPath, doc],
-  [migrationPath, migration],
-  [checkerPath, readFile(checkerPath)],
+  [checkerPath, checker],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -246,10 +198,17 @@ for (const [file, content] of [
   }
 }
 
+for (const pattern of [
+  /\bA16F_STATUS=PASS_SCHEMA_APPLIED_AND_VERIFIED\b/,
+  /\bA16F_DB_APPLY_RESULT=PASS\b/,
+]) {
+  rejectPattern(doc, pattern, `doc ${pattern}`);
+}
+
 if (failures.length > 0) {
-  console.error("A-16D import schema candidate manifest storage design check failed:");
+  console.error("A-16F import schema DB apply verification check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16D import schema candidate manifest storage design check passed.");
+console.log("A-16F import schema DB apply verification check passed.");

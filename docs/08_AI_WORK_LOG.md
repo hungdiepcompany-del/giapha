@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F - Import Schema DB Apply Verification
+
+- Marker: `A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED`.
+- Owner approval marker was present exactly:
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `54a22bb`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files; no staged/tracked `.xls`, `.xlsx` or `.csv` file.
+- `supabase --version` failed because the `supabase` command is not available
+  in PATH.
+- Project link check was blocked because the checkout has no `.supabase/` or
+  `supabase/` project-link metadata to confirm the target project safely.
+- Dry-run result:
+  `A16F_DB_DRY_RUN_RESULT=BLOCKED_SUPABASE_CLI_NOT_AVAILABLE`.
+- Apply result: `A16F_DB_APPLY_RESULT=NOT_RUN`.
+- Schema verification result: `A16F_SCHEMA_VERIFICATION_RESULT=NOT_RUN_NO_APPLY`.
+- RLS verification result:
+  `A16F_RLS_VERIFICATION_RESULT=STATIC_CANDIDATE_ONLY_NOT_LIVE_DB`.
+- Final status: `A16F_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Created `docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md` and
+  `scripts/check-a16f-import-schema-db-apply-verification.cjs`.
+- Added package command
+  `check:a16f:import-schema-db-apply-verification`.
+- Updated A-16/A-16B/A-16C/A-16D/A-16E/A-16E1/A-16E2 checker allowlists
+  narrowly for the A-16F doc/checker/package-script changes.
+- A-16F did not run `supabase db push --dry-run --linked`, did not run
+  `supabase db push --linked`, did not apply DB, did not seed, did not mutate
+  people or relationships, did not import Excel, did not enable runtime import
+  write, did not add dependency, did not deploy and did not push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E2 - Import Schema Candidate Apply Blocker Resolution
 
 - Marker: `A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION`.

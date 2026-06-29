@@ -9,6 +9,8 @@ const marker = "A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION";
 const docPath = "docs/PLAN_A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION.md";
 const checkerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs";
 const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const a16fDocPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
+const a16fCheckerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -24,6 +26,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
   "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
   "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
+  a16fDocPath,
+  a16fCheckerPath,
   "package.json",
 ]);
 

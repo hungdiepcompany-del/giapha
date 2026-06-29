@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16F - Import Schema DB Apply Verification blocked safely
+
+- Marker: `A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED`.
+- Owner approval marker was present exactly:
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- Added `docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md`,
+  `scripts/check-a16f-import-schema-db-apply-verification.cjs` and package
+  command `check:a16f:import-schema-db-apply-verification`.
+- Final status: `A16F_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Dry-run result:
+  `A16F_DB_DRY_RUN_RESULT=BLOCKED_SUPABASE_CLI_NOT_AVAILABLE`.
+- Apply result: `A16F_DB_APPLY_RESULT=NOT_RUN`.
+- Schema verification result: `A16F_SCHEMA_VERIFICATION_RESULT=NOT_RUN_NO_APPLY`.
+- RLS verification result:
+  `A16F_RLS_VERIFICATION_RESULT=STATIC_CANDIDATE_ONLY_NOT_LIVE_DB`.
+- `supabase --version` failed because the `supabase` command is not available
+  in PATH.
+- Project link check is blocked: no `.supabase/` or `supabase/` project-link
+  metadata exists in the checkout, so the target project cannot be confirmed
+  safely.
+- No `npx` fallback was used; no secret was read or printed; `.env.local` was
+  not read.
+- A-16F did not run `supabase db push --dry-run --linked`, did not run
+  `supabase db push --linked`, did not apply DB, did not seed, did not mutate
+  people/relationships, did not import Excel, did not enable runtime import
+  write, did not add dependency, did not deploy and did not push.
+- To retry A-16F, owner/operator must provide an approved Supabase CLI path or
+  install CLI, confirm the exact GIA PHA Supabase project link safely, confirm
+  backup/rollback/no-go position and rerun dry-run before any apply.
+- A-16G/A-16H/A-16I remain blocked because schema apply verification did not
+  PASS.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E2 - Import Schema Candidate Apply Blocker Resolution recorded
 
 - Marker: `A16E2_IMPORT_SCHEMA_CANDIDATE_APPLY_BLOCKER_RESOLUTION`.
