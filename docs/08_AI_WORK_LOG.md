@@ -1,5 +1,29 @@
 # AI Work Log
 
+## 2026-06-29 - A-15E - Heritage UI Production Deploy Readiness & Smoke
+
+- Marker: `A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE`.
+- Added `docs/PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md`.
+- Added `scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs`
+  and package command
+  `check:a15e:heritage-ui-production-deploy-readiness-smoke`.
+- Git/GitHub status before A-15E edits: `GIT_STATUS=PASS_SYNCED_CLEAN`,
+  local `main` and `origin/main` were `0_AHEAD_0_BEHIND`, `.env.local` ignored.
+- Env/secret status: local env presence check can pass, but production
+  Cloudflare secret readiness is `UNKNOWN`; `npx wrangler secret list` did not
+  return the `web-gia-pha` secret list in this local account/context.
+- Service role rotation after prior exposure is not owner-confirmed, so deploy
+  was blocked with `DEPLOY_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED` and
+  `PRODUCTION_DEPLOY_READINESS_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED`.
+- Existing production read-only smoke against
+  `https://web-gia-pha.hungdiepcompany.workers.dev` was partial: `/`, `/tree`
+  and `/auth/login` returned 200; `/admin` returned 307 to login; no forbidden
+  secret/privacy marker was counted. This is current-production evidence only,
+  not proof that the new heritage UI was deployed.
+- Boundary: no deploy, no push, no UI change, no DB migration, no seed, no data
+  mutation, no env commit, no secret log, no auth/runtime/API/service change, no
+  dependency and no OpenNext/Wrangler config change.
+
 ## 2026-06-29 - A-15B2 - Manual Authenticated Admin Heritage UI Smoke
 
 - Marker: `A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE`.

@@ -19,6 +19,7 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   "docs/PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md",
+  "docs/PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md",
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -31,6 +32,7 @@ const allowedChangedFiles = new Set([
   smokePath,
   checkerPath,
   "scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs",
+  "scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs",
 ]);
 
 function readFile(relativePath) {

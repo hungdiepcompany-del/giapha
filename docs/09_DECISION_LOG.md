@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 190 - A-15E production deploy blocked until secret rotation and owner approval
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15E may record deploy readiness and current production read-only smoke, but
+must not deploy until service role key rotation is owner-confirmed, production
+secrets are known ready and owner provides `APPROVE_A15E_PRODUCTION_DEPLOY`.
+
+Allowed:
+
+- git/GitHub sync checks;
+- local build/readiness checks;
+- local env presence checks without values;
+- Cloudflare/Wrangler secret-name readiness checks without values;
+- existing production read-only smoke on public/protected redirect routes;
+- phase doc/checker/package script and handoff updates.
+
+Not authorized:
+
+- production deploy or upload;
+- Git push after the report commit unless separately requested;
+- DB migration, SQL apply, seed, role assignment or data mutation;
+- production form submit;
+- secret, token, cookie or key logging;
+- UI/runtime/auth/API/service change;
+- dependency addition;
+- OpenNext/Wrangler config change;
+- new service Worker.
+
+Ly do:
+
+The heritage UI can only be deployed safely after the owner confirms rotated
+service-role material is installed in production and explicitly approves the
+deploy. Without those gates, the correct outcome is a documented safe-skip, not
+a speculative deploy.
+
 ## Decision 189 - A-15B2 closes auth fix path based on owner manual confirmation
 
 Status: `ACTIVE`

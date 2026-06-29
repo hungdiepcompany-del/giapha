@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15E - Heritage UI Production Deploy Readiness & Smoke recorded
+
+- Marker: `A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE`.
+- Added `docs/PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md`.
+- Added `scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs`
+  and package command
+  `check:a15e:heritage-ui-production-deploy-readiness-smoke`.
+- Git/GitHub status before A-15E edits: `GIT_STATUS=PASS_SYNCED_CLEAN`;
+  `HEAD...origin/main` was `0 0`; `.env.local` remains ignored.
+- Production deploy status:
+  `PRODUCTION_DEPLOY_READINESS_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED`,
+  `DEPLOY_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED`.
+- Blockers: no `APPROVE_A15E_PRODUCTION_DEPLOY` marker, service role key
+  rotation not owner-confirmed after prior exposure, and local Wrangler context
+  could not verify production secret list for `web-gia-pha`.
+- Existing production read-only smoke was partial only: `/`, `/tree` and
+  `/auth/login` returned 200, `/admin` returned 307 to login, and no forbidden
+  secret/privacy marker was counted. No authenticated production smoke was run.
+- No deploy, push, UI change, DB migration, seed, data mutation, env commit,
+  secret log, auth/runtime/API/service change, dependency or OpenNext/Wrangler
+  config change.
+- Next deploy attempt requires owner confirmation that service role key has been
+  rotated and production secrets updated, then explicit marker
+  `APPROVE_A15E_PRODUCTION_DEPLOY`.
+
 ## 2026-06-29 - A-15B2 - Manual Authenticated Admin Heritage UI Smoke recorded
 
 - Marker: `A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE`.

@@ -4,54 +4,30 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI";
+const marker = "A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE";
+const docPath =
+  "docs/PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md";
+const checkerPath =
+  "scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs";
 
 const allowedChangedFiles = new Set([
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/genealogy/page.tsx",
-  "app/(admin)/admin/people/[id]/page.tsx",
-  "app/(admin)/admin/people/new/page.tsx",
-  "app/(admin)/admin/relationships/page.tsx",
-  "app/(public)/people/[slug]/page.tsx",
-  "components/genealogy/lineage-admin.tsx",
-  "components/layout/admin-shell.tsx",
-  "components/people/person-form.tsx",
-  "components/relationships/couple-form.tsx",
-  "components/relationships/relationship-form.tsx",
-  "components/public/public-person-profile.tsx",
-  "components/tree/tree-editor-side-panel.tsx",
-  "components/ui/form-submit-button.tsx",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  "docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md",
-  "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
-  "docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md",
-  "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md",
-  "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md",
-  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md",
-  "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md",
-  "docs/PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md",
-  "docs/PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md",
+  docPath,
   "package.json",
-  "scripts/check-a14-ui-ux-overhaul.cjs",
-  "scripts/check-a14c-admin-dashboard-layout-ux.cjs",
-  "scripts/check-a14e-mobile-ux-sweep.cjs",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
-  "scripts/check-a15a2-vietnamese-traditional-genealogy-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
   "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-  "scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs",
   "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
   "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
-  "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs",
   "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
   "scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs",
-  "scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs",
+  checkerPath,
 ]);
 
 function readFile(relativePath) {
@@ -108,99 +84,94 @@ function gitShowHead(relativePath) {
 }
 
 const packageJson = readJson("package.json");
-const doc = readFile("docs/PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md");
+const doc = readFile(docPath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
-const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
-const a15a2Checker = readFile("scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs");
-const a15a3Checker = readFile("scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs");
-
-const uiFiles = [
-  "app/(admin)/admin/page.tsx",
-  "app/(admin)/admin/genealogy/page.tsx",
-  "components/genealogy/lineage-admin.tsx",
-  "components/layout/admin-shell.tsx",
-];
-const ui = uiFiles.map(readFile).join("\n");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI",
+  "A-15E - Heritage UI Production Deploy Readiness & Smoke",
   marker,
-  "Phạm Vi UI-Only",
-  "Màn / Component Không Đụng",
-  "Nguyên Tắc Không Copy Website Tham Khảo",
-  "Không copy code, asset, logo",
-  "Smoke Test Dự Kiến",
+  "PRODUCTION_DEPLOY_READINESS_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED",
+  "GIT_STATUS=PASS_SYNCED_CLEAN",
+  "ENV_SECRET_READINESS_STATUS=SAFE_SKIP_PROD_SECRET_UNKNOWN_AND_ROTATION_UNCONFIRMED",
+  "BUILD_READINESS_STATUS=PASS_LOCAL",
+  "DEPLOY_STATUS=SAFE_SKIP_SECRET_ROTATION_REQUIRED",
+  "PRODUCTION_SMOKE_STATUS=PARTIAL_EXISTING_PRODUCTION_HTTP_READONLY",
+  "no DB migration",
+  "no seed",
+  "no data mutation",
+  "no env commit",
+  "no secret log",
+  "APPROVE_A15E_PRODUCTION_DEPLOY",
+  "SERVICE_ROLE_ROTATION_OWNER_CONFIRMED=UNKNOWN",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const token of [
-  marker,
-  "Quản trị gia phả",
-  "Dòng họ của tôi",
-  "Gia phả của tôi",
-  "Chưa có gia phả nào",
-  "Đang tải danh sách gia phả",
-  "Tạo gia phả đầu tiên",
-  "Xem phả đồ",
-  "Quản lý thành viên",
-  "Chỉnh sửa",
-  "Thiết lập riêng tư",
-  "Tài khoản hiện tại chưa có quyền quản trị khu vực này",
-]) {
-  requireIncludes(ui, token, `UI token ${token}`);
+for (const route of ["/", "/tree", "/auth/login", "/admin", "/admin/genealogy", "/people/[slug]"]) {
+  requireIncludes(doc, route, `route ${route}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15A4_VIETNAMESE_HERITAGE_FAMILY_LIST_ADMIN_DASHBOARD_UI.md", "index entry"],
-  [workLog, "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI", "work log entry"],
-  [handoff, "A-15A4 - Vietnamese Heritage Family List / Admin Dashboard UI completed", "handoff entry"],
+  [index, "PLAN_A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE.md", "index entry"],
+  [workLog, "A-15E - Heritage UI Production Deploy Readiness & Smoke", "work log entry"],
+  [handoff, "A-15E - Heritage UI Production Deploy Readiness & Smoke recorded", "handoff entry"],
+  [decisionLog, "Decision 190 - A-15E production deploy blocked until secret rotation and owner approval", "decision log entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
-  [
-    decisionLog,
-    "Decision 182 - A-15A4 family list and admin dashboard polish is UI-only",
-    "decision log entry",
-  ],
-  [
-    a15a2Checker,
-    "A-15A2 Modern Vietnamese Genealogy Tree Editor UI check passed.",
-    "A-15A2 checker intact",
-  ],
-  [
-    a15a3Checker,
-    "A-15A3 Vietnamese heritage public tree view UI check passed.",
-    "A-15A3 checker intact",
-  ],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui"] !==
-  "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs"
+  packageJson?.scripts?.["check:a15e:heritage-ui-production-deploy-readiness-smoke"] !==
+  "node scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs"
 ) {
-  failures.push("missing package script check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui");
+  failures.push("missing package script check:a15e:heritage-ui-production-deploy-readiness-smoke");
 }
 
 for (const scriptName of [
   "check:a15a2:modern-vietnamese-genealogy-tree-editor-ui",
   "check:a15a3:vietnamese-heritage-public-tree-view-ui",
+  "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui",
+  "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
+  "check:a15a6:add-edit-member-form-vietnamese-heritage-ux",
+  "check:a15b:authenticated-heritage-ui-browser-smoke",
+  "check:a15c:owner-admin-session-permission-smoke-readiness",
+  "check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun",
+  "check:a15c2:supabase-auth-browser-session-binding-diagnostics",
+  "check:a15b2:manual-authenticated-admin-heritage-ui-smoke",
 ]) {
-  if (!packageJson?.scripts?.[scriptName]) {
-    failures.push(`${scriptName} was removed`);
-  }
+  if (!packageJson?.scripts?.[scriptName]) failures.push(`${scriptName} was removed`);
 }
 
-const changedFiles = gitOutput(["diff", "--name-only"])
+for (const checker of [
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+  "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
+  "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+  "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
+  "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+  "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+  "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
+  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
+  "scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs",
+]) {
+  const content = readFile(checker);
+  requireIncludes(content, docPath, `${checker} allows A-15E doc`);
+  requireIncludes(content, checkerPath, `${checker} allows A-15E checker`);
+}
+
+const changedFiles = gitOutput(["status", "--porcelain"])
   .split(/\r?\n/)
-  .map((line) => line.trim())
+  .map((line) => line.slice(3).trim())
   .filter(Boolean);
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
+  if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (file.startsWith("db/") || file.endsWith(".sql")) {
     failures.push(`database/sql file changed ${file}`);
@@ -221,7 +192,7 @@ for (const file of changedFiles) {
     failures.push(`API/service/runtime file changed ${file}`);
   }
   if (/storage-state|storage_state|cookie|token|secret|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
-    failures.push(`possible secret/session/evidence/external asset artifact changed ${file}`);
+    failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }
 }
 
@@ -248,23 +219,17 @@ for (const pattern of [
   /\bTRUNCATE\s+TABLE\b/i,
   /\bCREATE\s+POLICY\b/i,
   /\bALTER\s+POLICY\b/i,
-  /\bservice_role\b/i,
   /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
   /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
   /Bearer\s+[A-Za-z0-9._-]{12,}/,
-  /https?:\/\/(?!localhost|127\.0\.0\.1)/i,
-  /<img\s/i,
-  /backgroundImage\s*:/i,
-  /url\(["']?https?:/i,
-  /phatue|phả\s*tuệ|giad[aạ]iviet|gia\s*phả\s*đại\s*việt/i,
 ]) {
-  rejectPattern(ui, pattern, pattern.toString());
+  rejectPattern(doc, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15A4 Vietnamese heritage family list/admin dashboard UI check failed:");
+  console.error("A-15E heritage UI production deploy readiness smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15A4 Vietnamese heritage family list/admin dashboard UI check passed.");
+console.log("A-15E heritage UI production deploy readiness smoke check passed.");

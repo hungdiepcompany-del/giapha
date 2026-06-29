@@ -197,7 +197,8 @@
     "check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun": "node scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
     "smoke:a15c2:supabase-auth-browser-session-binding-diagnostics": "node scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs",
     "check:a15c2:supabase-auth-browser-session-binding-diagnostics": "node scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
-    "check:a15b2:manual-authenticated-admin-heritage-ui-smoke": "node scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs"
+    "check:a15b2:manual-authenticated-admin-heritage-ui-smoke": "node scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs",
+    "check:a15e:heritage-ui-production-deploy-readiness-smoke": "node scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
