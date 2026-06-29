@@ -4,8 +4,13 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE";
-const docPath = "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md";
+const marker = "A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS";
+const docPath =
+  "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md";
+const smokePath =
+  "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs";
+const checkerPath =
+  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -13,9 +18,6 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md",
-  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md",
-  "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md",
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -23,11 +25,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
   "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-  "scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs",
   "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
   "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
-  "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs",
-  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
+  smokePath,
+  checkerPath,
 ]);
 
 function readFile(relativePath) {
@@ -85,75 +86,92 @@ function gitShowHead(relativePath) {
 
 const packageJson = readJson("package.json");
 const doc = readFile(docPath);
+const smoke = readFile(smokePath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
-const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-15B - Authenticated Heritage UI Browser Smoke",
+  "A-15C2 - Supabase Auth Browser Session Binding Diagnostics",
   marker,
-  "Verification-Only",
-  "Route Được Smoke",
-  "Quy Ước Kết Quả",
-  "Kết Quả Smoke Thực Tế",
-  "Public route group result",
-  "Admin route group result",
-  "Failure bucket result",
-  "Không submit form",
-  "không đổi database",
-  "không copy asset/logo",
+  "A-15C readiness PASS",
+  "A-15B1 browser session FAIL",
+  "Auth Flow Hien Tai",
+  "Login route",
+  "Callback route",
+  "Cookie / Session Observations",
+  "Server Client Va Guard Observations",
+  "Supabase Redirect URL Checklist",
+  "Diagnostic Conclusion",
+  "DIAGNOSTIC_STATUS: `PARTIAL`",
+  "DIAGNOSTIC_REASON: `AUTH_FLOW_STATIC_PRESENT_BROWSER_SESSION_NOT_BOUND`",
+  "Khong mutate du lieu",
+  "Khong seed",
+  "Khong gan role",
+  "Khong commit `.env.local`",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const route of [
-  "/tree",
-  "/admin",
-  "/admin/genealogy",
-  "/admin/tree/edit",
-  "/admin/people/new",
-  "/admin/relationships",
+for (const token of [
+  "LOGIN_ROUTE_PRESENT=true",
+  "CALLBACK_ROUTE_PRESENT=true",
+  "EXCHANGE_CODE_FOR_SESSION_PRESENT=true",
+  "LOGIN_REDIRECT_TO_CALLBACK_PRESENT=true",
+  "SERVER_COOKIE_CLIENT_PRESENT=true",
+  "MIDDLEWARE_AUTH_GUARD_PRESENT=false",
+  "BROWSER_CONTEXT_NOT_LOGGED_IN",
+  "COOKIE_NOT_SET_AFTER_CALLBACK",
+  "COOKIE_SET_BUT_SERVER_NOT_READING",
+  "SUPABASE_REDIRECT_URL_MISMATCH",
 ]) {
-  requireIncludes(doc, route, `route ${route}`);
-}
-
-for (const status of ["PASS", "PARTIAL", "SAFE_SKIP", "FAIL"]) {
-  requireIncludes(doc, status, `status ${status}`);
+  requireIncludes(doc, token, `diagnostic token ${token}`);
 }
 
 for (const token of [
-  "Gia phả",
-  "Phả đồ",
-  "Thêm thành viên",
-  "Quan hệ gia đình",
-  "Đăng nhập",
-  "Người dùng: Không rõ",
-  "Vai trò: Chưa có vai trò",
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "CALLBACK_EXCHANGE_CODE_PRESENT",
+  "LOGIN_REDIRECT_TO_CALLBACK_PRESENT",
+  "SERVER_COOKIE_CLIENT_PRESENT",
+  "HTTP_ADMIN_REDIRECTS_AUTH_SESSION_MISSING",
+  "DIAGNOSTIC_STATUS",
+  "DIAGNOSTIC_REASON",
 ]) {
-  requireIncludes(doc, token, `Vietnamese smoke text ${token}`);
+  requireIncludes(smoke, token, `smoke token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md", "index entry"],
-  [workLog, "A-15B - Authenticated Heritage UI Browser Smoke", "work log entry"],
-  [handoff, "A-15B - Authenticated Heritage UI Browser Smoke completed", "handoff entry"],
+  [index, "PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md", "index entry"],
+  [workLog, "A-15C2 - Supabase Auth Browser Session Binding Diagnostics", "work log entry"],
+  [handoff, "A-15C2 - Supabase Auth Browser Session Binding Diagnostics recorded", "handoff entry"],
+  [decisionLog, "Decision 188 - A-15C2 auth browser session diagnostics remain read-only", "decision log entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
-  [
-    decisionLog,
-    "Decision 185 - A-15B authenticated heritage UI browser smoke is verification-only",
-    "decision log entry",
-  ],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15b:authenticated-heritage-ui-browser-smoke"] !==
-  "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs"
+  packageJson?.scripts?.[
+    "check:a15c2:supabase-auth-browser-session-binding-diagnostics"
+  ] !== "node scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs"
 ) {
-  failures.push("missing package script check:a15b:authenticated-heritage-ui-browser-smoke");
+  failures.push(
+    "missing package script check:a15c2:supabase-auth-browser-session-binding-diagnostics",
+  );
+}
+
+if (
+  packageJson?.scripts?.[
+    "smoke:a15c2:supabase-auth-browser-session-binding-diagnostics"
+  ] !== "node scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs"
+) {
+  failures.push(
+    "missing package script smoke:a15c2:supabase-auth-browser-session-binding-diagnostics",
+  );
 }
 
 for (const scriptName of [
@@ -162,10 +180,11 @@ for (const scriptName of [
   "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui",
   "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
   "check:a15a6:add-edit-member-form-vietnamese-heritage-ux",
+  "check:a15b:authenticated-heritage-ui-browser-smoke",
+  "check:a15c:owner-admin-session-permission-smoke-readiness",
+  "check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun",
 ]) {
-  if (!packageJson?.scripts?.[scriptName]) {
-    failures.push(`${scriptName} was removed`);
-  }
+  if (!packageJson?.scripts?.[scriptName]) failures.push(`${scriptName} was removed`);
 }
 
 for (const checker of [
@@ -174,14 +193,14 @@ for (const checker of [
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+  "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+  "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
 ]) {
   const content = readFile(checker);
-  requireIncludes(content, docPath, `${checker} allows A-15B doc`);
-  requireIncludes(
-    content,
-    "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-    `${checker} allows A-15B checker`,
-  );
+  requireIncludes(content, docPath, `${checker} allows A-15C2 doc`);
+  requireIncludes(content, smokePath, `${checker} allows A-15C2 smoke`);
+  requireIncludes(content, checkerPath, `${checker} allows A-15C2 checker`);
 }
 
 const changedFiles = gitOutput(["status", "--porcelain"])
@@ -191,6 +210,7 @@ const changedFiles = gitOutput(["status", "--porcelain"])
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
+  if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (file.startsWith("db/") || file.endsWith(".sql")) {
     failures.push(`database/sql file changed ${file}`);
@@ -245,13 +265,15 @@ for (const pattern of [
   /phatue|phả\s*tuệ|giad[aạ]iviet|gia\s*phả\s*đại\s*việt/i,
   /\.png|\.jpg|\.jpeg|\.webp|\.svg/i,
 ]) {
-  rejectPattern(doc, pattern, pattern.toString());
+  rejectPattern(doc + "\n" + smoke, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15B authenticated heritage UI browser smoke check failed:");
+  console.error(
+    "A-15C2 Supabase auth browser session binding diagnostics check failed:",
+  );
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15B authenticated heritage UI browser smoke check passed.");
+console.log("A-15C2 Supabase auth browser session binding diagnostics check passed.");

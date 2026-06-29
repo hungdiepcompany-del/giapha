@@ -1,5 +1,32 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15C2 - Supabase Auth Browser Session Binding Diagnostics recorded
+
+- Marker: `A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS`.
+- Added `docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md`.
+- Added `scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs`,
+  `scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs`,
+  package commands `smoke:a15c2:supabase-auth-browser-session-binding-diagnostics`
+  and `check:a15c2:supabase-auth-browser-session-binding-diagnostics`.
+- A-15C remains PASS at DB/auth/profile/role/permission readiness:
+  `OWNER_ADMIN_PERMISSION_READY_READ_ONLY`, `ROLE_COUNT=1`,
+  `PERMISSION_COUNT=25`, `REQUIRED_ADMIN_PERMISSION_MISSING_COUNT=0`.
+- A-15B1 remains FAIL at browser session binding: `/admin` redirects to
+  `/auth/login?reason=auth_session_missing`; admin shell can render unauthenticated
+  routes with unknown user, no role and 0 permissions.
+- Static code diagnostics: login/callback/logout routes exist, callback has
+  `exchangeCodeForSession`, login redirects to `/auth/callback`, server client
+  uses cookie-backed `createServerClient`, and no `middleware.ts` auth guard exists.
+- Diagnostic status: `PARTIAL`; reason:
+  `AUTH_FLOW_STATIC_PRESENT_BROWSER_SESSION_NOT_BOUND`.
+- Next step: owner should confirm Supabase Dashboard URL config for
+  `http://localhost:3000/auth/callback` and perform a manual owner/admin login
+  trace without sharing cookie values. If callback/cookie binding is wrong in
+  code, open A-15C3; if the browser context simply was not logged in, rerun A-15B
+  style smoke as A-15B2 with a real session.
+- No UI polish, mutation, seed, role assignment, schema/RLS/auth/permission/API/
+  service runtime change, dependency, `.env.local` commit, deploy or push.
+
 ## 2026-06-29 - A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun completed
 
 - Marker: `A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN`.

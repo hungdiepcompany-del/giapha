@@ -12,6 +12,12 @@ const b1DocPath =
   "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md";
 const b1CheckerPath =
   "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs";
+const c2DocPath =
+  "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md";
+const c2SmokePath =
+  "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs";
+const c2CheckerPath =
+  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -20,6 +26,7 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   b1DocPath,
+  c2DocPath,
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -30,6 +37,8 @@ const allowedChangedFiles = new Set([
   smokePath,
   checkerPath,
   b1CheckerPath,
+  c2SmokePath,
+  c2CheckerPath,
 ]);
 
 function readFile(relativePath) {

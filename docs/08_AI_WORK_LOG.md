@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-06-29 - A-15C2 - Supabase Auth Browser Session Binding Diagnostics
+
+- Marker: `A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS`.
+- Added `docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md`.
+- Added `scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs`,
+  `scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs`,
+  package commands `smoke:a15c2:supabase-auth-browser-session-binding-diagnostics`
+  and `check:a15c2:supabase-auth-browser-session-binding-diagnostics`.
+- Static auth flow observation: `/auth/login`, `/auth/callback` and
+  `/auth/logout` exist; callback reads `code`, handles callback errors and calls
+  `supabase.auth.exchangeCodeForSession(code)`.
+- Login redirect observation: magic link uses `/auth/callback` from
+  `NEXT_PUBLIC_APP_URL`; Google OAuth uses `window.location.origin/auth/callback`.
+- Cookie/server observation: server client uses `@supabase/ssr` with
+  `cookies().getAll()` and `setAll`; `/admin` has no `middleware.ts` guard and
+  instead redirects through server-side `requirePermission("people.view")`.
+- Diagnostic result recorded as `DIAGNOSTIC_STATUS=PARTIAL`,
+  `DIAGNOSTIC_REASON=AUTH_FLOW_STATIC_PRESENT_BROWSER_SESSION_NOT_BOUND`: A-15C
+  permission readiness is PASS, `/auth/login` and `/tree` return 200 locally, but
+  `/admin` returns 307 to login with `auth_session_missing`; cookie after a real
+  owner/admin callback still requires manual browser trace without printing cookie
+  values.
+- Boundary: diagnostics/read-only only; no UI polish, no login submission, no
+  mutation, no seed, no role assignment, no database/schema/RLS/auth/permission/
+  API/service runtime change, no dependency and no `.env.local` commit.
+
 ## 2026-06-29 - A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun
 
 - Marker: `A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN`.

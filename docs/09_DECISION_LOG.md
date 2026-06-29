@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 188 - A-15C2 auth browser session diagnostics remain read-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15C2 may diagnose Supabase browser session binding after A-15C readiness PASS
+and A-15B1 browser session FAIL, but it must not change auth/runtime behavior.
+
+Allowed:
+
+- static source review of login, callback, logout, server Supabase client and
+  permission guard;
+- local HTTP read-only checks for `/auth/login`, `/tree` and `/admin`;
+- boolean/count/status/reason output without secret, cookie value, token, email
+  or private id output;
+- Supabase Dashboard redirect URL checklist for owner manual confirmation;
+- documentation, checker, smoke script and package script updates.
+
+Not authorized:
+
+- OAuth or magic-link form submission by automation;
+- seed, role assignment or profile/permission mutation;
+- database/schema/migration/RLS/auth/permission/API/service runtime change;
+- dependency addition, route creation, UI polish, deploy or push;
+- saved cookie, storage state, screenshot or session artifact.
+
+Ly do:
+
+A-15C proves owner/admin permission readiness in the database, while A-15B1 proves
+the current browser context is not bound as an authenticated admin session. The
+safe next move is a narrow diagnostic record plus manual callback/cookie trace,
+not a speculative auth fix.
+
 ## Decision 187 - A-15B1 browser smoke rerun remains verification-only
 
 Status: `ACTIVE`
