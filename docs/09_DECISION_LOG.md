@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 202 - A-16F2 records project ref but keeps DB apply blocked until link and migration path are bridged
+
+Status: `ACTIVE`
+
+Chon:
+
+- Record owner-confirmed Supabase project ref `frkyeuxrlcflmsxxsolp`.
+- Keep A-16F2 readiness-only: no `supabase init`, no `supabase link`, no
+  `supabase db push --dry-run --linked` and no `supabase db push --linked`.
+- Treat the current state as blocked because local project link metadata is
+  still absent and the migration candidate lives in `db/migrations` rather
+  than Supabase CLI's expected `supabase/migrations`.
+- Recommend A-16F3 create Supabase metadata, link the confirmed project only
+  after account confirmation, and bridge the A-16D candidate into
+  `supabase/migrations` with an explicit equivalence checker.
+- Require the owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` again before any later
+  dry-run/apply phase.
+
+Ly do:
+
+- Project ref alone is not enough to run link/apply commands safely; the
+  operator account and resulting metadata must be confirmed.
+- The repo has historically used `db/migrations`; silently changing the apply
+  path during a readiness phase would make the next DB operation harder to
+  audit.
+- A bridge phase can keep `db/migrations` as the reviewed source while giving
+  Supabase CLI the expected `supabase/migrations` path.
+- This decision does not apply DB, run dry-run, seed, mutate data, import
+  Excel, add runtime dependency, deploy or push.
+
 ## Decision 201 - A-16F1 confirms npx Supabase CLI but blocks DB apply until project link is confirmed
 
 Status: `ACTIVE`

@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16F2 - Supabase Project Link Migration Path Readiness blocked on link/path bridge
+
+- Marker: `A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED`.
+- Added
+  `docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md`,
+  `scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs`
+  and package command
+  `check:a16f2:supabase-project-link-migration-path-readiness`.
+- `npx --yes supabase --version`: available, version `2.108.0`.
+- Owner-confirmed project ref: `frkyeuxrlcflmsxxsolp`.
+- Final status: `A16F2_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Project link readiness: `A16F2_PROJECT_LINK_READINESS=BLOCKED_NOT_LINKED`.
+- Migration path readiness:
+  `A16F2_MIGRATION_PATH_READINESS=BLOCKED_PATH_STRATEGY_NOT_APPLIED`.
+- Missing metadata: `.supabase/`, `supabase/`, `supabase/config.toml`,
+  `supabase/migrations`, `.supabase/project-ref` and
+  `.supabase/.temp/project-ref`.
+- Existing candidate remains in
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`.
+- Recommendation for A-16F3:
+  `A16F2_A16F3_RECOMMENDATION=CREATE_SUPABASE_METADATA_AND_BRIDGE_CANDIDATE_WITH_EXPLICIT_CHECKER`.
+- A-16F2 did not run `supabase init`, did not run `supabase link`, did not run
+  `supabase db push`, did not run `supabase db push --dry-run --linked`, did
+  not apply DB, did not seed, did not insert/update/delete/upsert, did not
+  import Excel, did not write people/relationships, did not deploy and did not
+  push.
+- To continue safely, A-16F3 should confirm owner/operator Supabase account,
+  run/init link metadata if approved, create `supabase/migrations`, copy the
+  A-16D candidate there with a byte-for-byte equivalence checker, and still
+  avoid db push until a later apply-verification phase with marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- A-16G/A-16H/A-16I remain blocked because schema apply verification has not
+  passed.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F1 - Supabase CLI Project Link Readiness blocked on project link
 
 - Marker: `A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED`.

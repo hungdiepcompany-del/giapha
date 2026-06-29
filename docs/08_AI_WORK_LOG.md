@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F2 - Supabase Project Link Migration Path Readiness
+
+- Marker: `A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `0b8d44b`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- `npx --yes supabase --version` result: `2.108.0`.
+- Owner-confirmed project ref recorded: `frkyeuxrlcflmsxxsolp`.
+- Local metadata check: `.supabase/`, `supabase/`, `supabase/config.toml`,
+  `supabase/migrations`, `.supabase/project-ref` and
+  `.supabase/.temp/project-ref` are missing.
+- Existing repo migration path remains `db/migrations`; A-16D candidate remains
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`.
+- Supabase CLI expected migration path recorded as `supabase/migrations`.
+- Final status: `A16F2_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Main blockers: project is not linked and migration path strategy is not yet
+  applied.
+- Recommendation for A-16F3:
+  `A16F2_A16F3_RECOMMENDATION=CREATE_SUPABASE_METADATA_AND_BRIDGE_CANDIDATE_WITH_EXPLICIT_CHECKER`.
+- Created
+  `docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md` and
+  `scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs`.
+- Added package command
+  `check:a16f2:supabase-project-link-migration-path-readiness`.
+- Updated A-16 through A-16F1 checker allowlists narrowly for the A-16F2
+  doc/checker/package-script changes.
+- A-16F2 did not run `supabase init`, did not run `supabase link`, did not run
+  `supabase db push`, did not run `supabase db push --dry-run --linked`, did
+  not apply DB, did not seed, did not insert/update/delete/upsert, did not
+  import Excel, did not write people/relationships, did not deploy and did not
+  push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F1 - Supabase CLI Project Link Readiness
 
 - Marker: `A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED`.

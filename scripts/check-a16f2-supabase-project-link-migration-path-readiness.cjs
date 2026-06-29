@@ -5,10 +5,8 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
-const checkerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
-const a16f2DocPath = "docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md";
-const a16f2CheckerPath = "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs";
+const docPath = "docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md";
+const checkerPath = "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -25,8 +23,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
   "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
   "scripts/check-a16f-import-schema-db-apply-verification.cjs",
-  a16f2DocPath,
-  a16f2CheckerPath,
+  "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
   "package.json",
 ]);
 
@@ -92,23 +89,25 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16F1",
-  "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED",
-  "A16F1_STATUS=SAFE_SKIP_OR_BLOCKED",
-  "A16F1_GLOBAL_SUPABASE_CLI=UNAVAILABLE",
-  "A16F1_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
-  "A16F1_PROJECT_LINK_READINESS=BLOCKED_MISSING_SUPABASE_PROJECT_LINK",
-  "A16F1_BLOCKER=MISSING_SUPABASE_PROJECT_LINK",
-  "A16F1_DB_PUSH_STATUS=NOT_RUN",
-  "A16F1_DB_DRY_RUN_STATUS=NOT_RUN",
-  "A16F1_DB_APPLY_STATUS=NOT_RUN",
-  "A16F1_SEED_STATUS=NO_SEED",
-  "A16F1_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
-  "A16F1_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
-  "A16F1_ENV_SAFE_CHECK=PASS_NAMES_ONLY",
-  "supabase --version",
+  "A-16F2",
+  "A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED",
+  "A16F2_STATUS=SAFE_SKIP_OR_BLOCKED",
+  "A16F2_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
+  "A16F2_OWNER_CONFIRMED_PROJECT_REF=frkyeuxrlcflmsxxsolp",
+  "A16F2_PROJECT_LINK_READINESS=BLOCKED_NOT_LINKED",
+  "A16F2_MIGRATION_PATH_READINESS=BLOCKED_PATH_STRATEGY_NOT_APPLIED",
+  "A16F2_DB_PUSH_STATUS=NOT_RUN",
+  "A16F2_DB_DRY_RUN_STATUS=NOT_RUN",
+  "A16F2_DB_APPLY_STATUS=NOT_RUN",
+  "A16F2_SEED_STATUS=NO_SEED",
+  "A16F2_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
+  "A16F2_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "frkyeuxrlcflmsxxsolp",
   "npx --yes supabase --version",
-  "supabase link --project-ref",
+  "npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp",
+  "db/migrations",
+  "supabase/migrations",
+  "A16F2_A16F3_RECOMMENDATION=CREATE_SUPABASE_METADATA_AND_BRIDGE_CANDIDATE_WITH_EXPLICIT_CHECKER",
   "did not run `supabase db push`",
   "did not run `supabase db push --dry-run --linked`",
   "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
@@ -117,19 +116,19 @@ for (const token of [
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md", "index entry"],
-  [workLog, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "work log marker"],
-  [handoff, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "handoff marker"],
-  [decisionLog, "Decision 201 - A-16F1 confirms npx Supabase CLI but blocks DB apply until project link is confirmed", "decision entry"],
+  [index, "PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md", "index entry"],
+  [workLog, "A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED", "work log marker"],
+  [handoff, "A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED", "handoff marker"],
+  [decisionLog, "Decision 202 - A-16F2 records project ref but keeps DB apply blocked until link and migration path are bridged", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16f1:supabase-cli-project-link-readiness"] !==
-  "node scripts/check-a16f1-supabase-cli-project-link-readiness.cjs"
+  packageJson?.scripts?.["check:a16f2:supabase-project-link-migration-path-readiness"] !==
+  "node scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs"
 ) {
-  failures.push("missing package script check:a16f1:supabase-cli-project-link-readiness");
+  failures.push("missing package script check:a16f2:supabase-project-link-migration-path-readiness");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -144,6 +143,9 @@ for (const file of changedFiles) {
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
   if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
     failures.push(`database/sql file changed ${file}`);
+  }
+  if (!allowedChangedFiles.has(file) && (file.startsWith("supabase/") || file.startsWith(".supabase/"))) {
+    failures.push(`supabase metadata changed unexpectedly ${file}`);
   }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
@@ -205,18 +207,18 @@ for (const [file, content] of [
 }
 
 for (const pattern of [
-  /\bA16F1_STATUS=PASS\b/,
-  /\bA16F1_PROJECT_LINK_READINESS=PASS\b/,
-  /\bA16F1_DB_APPLY_STATUS=PASS\b/,
-  /\bA16F1_DB_DRY_RUN_STATUS=PASS\b/,
+  /\bA16F2_STATUS=PASS\b/,
+  /\bA16F2_PROJECT_LINK_READINESS=PASS\b/,
+  /\bA16F2_DB_APPLY_STATUS=PASS\b/,
+  /\bA16F2_DB_DRY_RUN_STATUS=PASS\b/,
 ]) {
   rejectPattern(doc, pattern, `doc ${pattern}`);
 }
 
 if (failures.length > 0) {
-  console.error("A-16F1 Supabase CLI project link readiness check failed:");
+  console.error("A-16F2 Supabase project link migration path readiness check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16F1 Supabase CLI project link readiness check passed.");
+console.log("A-16F2 Supabase project link migration path readiness check passed.");

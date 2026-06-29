@@ -21,6 +21,8 @@ const a16fDocPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
 const a16fCheckerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
 const a16f1DocPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
 const a16f1CheckerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
+const a16f2DocPath = "docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md";
+const a16f2CheckerPath = "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -44,6 +46,8 @@ const allowedChangedFiles = new Set([
   a16fCheckerPath,
   a16f1DocPath,
   a16f1CheckerPath,
+  a16f2DocPath,
+  a16f2CheckerPath,
   "package.json",
 ]);
 
