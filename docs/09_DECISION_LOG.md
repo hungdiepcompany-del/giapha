@@ -1,5 +1,69 @@
 # Decision Log
 
+## Decision 187 - A-15B1 browser smoke rerun remains verification-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15B1 may rerun browser smoke after A-15C readiness PASS, but it must record
+the actual browser session result and must not create or force an auth session.
+
+Allowed:
+
+- local browser navigation to existing public/admin routes;
+- desktop/mobile overflow checks;
+- read-only DOM observation of session, role, permission, CTA and form render;
+- SELECT/read-only lookup for safe person id or public slug discovery;
+- documentation, checker and package script updates.
+
+Not authorized:
+
+- form submit or create/update/delete action;
+- seed or role assignment;
+- database/schema/migration/RLS/auth/permission/API contract change;
+- service runtime, Worker/OpenNext/Wrangler or deploy config change;
+- UI polish or route creation;
+- dependency addition;
+- saved cookie, token, screenshot or browser session artifact.
+
+Ly do:
+
+A-15C can prove owner/admin permission readiness in the database, but browser
+smoke PASS requires a real bound browser session. If the browser still redirects
+or shows unknown user/role/permission zero, the correct result is FAIL/PARTIAL,
+not an invented authenticated PASS.
+
+## Decision 186 - A-15C owner/admin readiness is SELECT-only
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15C may verify owner/admin auth/profile/role/permission readiness with a
+shell-local script, but only through SELECT/read-only checks and boolean/count
+output.
+
+Allowed:
+
+- read `.env.local` locally for smoke-only env presence;
+- use Supabase admin APIs/server-side reads to locate the configured owner/admin
+  account, profile, roles and permissions;
+- print only readiness booleans, counts and reason codes;
+- safe-skip when required env or target user is absent.
+
+Not authorized:
+
+- seed, insert, update, delete or role assignment;
+- raw secret, token, cookie, email or private id output;
+- auth, permission, RLS, API or service runtime change;
+- browser session creation.
+
+Ly do:
+
+The browser smoke rerun needs a truthful readiness gate before testing UI. The
+gate must avoid changing authorization state because A-15B1 is verification-only.
+
 ## Decision 185 - A-15B authenticated heritage UI browser smoke is verification-only
 
 Status: `ACTIVE`

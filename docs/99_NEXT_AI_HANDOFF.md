@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun completed
+
+- Marker: `A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN`.
+- Added `docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md`.
+- Added `scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs`
+  and package command
+  `check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun`.
+- A-15C readiness was rerun and PASS:
+  `READINESS_REASON=OWNER_ADMIN_PERMISSION_READY_READ_ONLY`, `ROLE_COUNT=1`,
+  `PERMISSION_COUNT=25`, `REQUIRED_ADMIN_PERMISSION_MISSING_COUNT=0`.
+- Browser rerun used a fresh local dev server at `http://localhost:3000`.
+- Browser session result: `FAIL_AUTH_SESSION_NOT_BOUND`; `/admin` still
+  redirected to `/auth/login?reason=auth_session_missing!`.
+- Admin shell result: `FAIL_UNKNOWN_USER_ROLE_PERMISSION_ZERO`; rendered admin
+  routes still showed `Người dùng: Không rõ`, `Vai trò: Chưa có vai trò`,
+  `Số quyền: 0`.
+- Route matrix: `/tree` PASS; `/people/[slug]`
+  `SAFE_SKIP_NO_PUBLICLY_VISIBLE_PROFILE`; `/admin` FAIL auth session not bound;
+  `/admin/genealogy`, `/admin/tree/edit`, `/admin/people/new`,
+  `/admin/relationships`, `/admin/people/[id]` PARTIAL read-only render.
+- Desktop/mobile: no horizontal overflow observed on opened routes.
+- No form submit, no mutation, no seed, no role assignment, no dependency, no
+  runtime/service/schema change and no push.
+- Next retry condition: bind a real owner/admin browser session on localhost and
+  rerun A-15B1 route matrix.
+
+## 2026-06-29 - A-15C - Owner/Admin Session Permission Smoke Readiness recorded
+
+- Marker: `A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS`.
+- Added `docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md`.
+- Added `scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs`,
+  `scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs`,
+  package commands `smoke:a15c:owner-admin-session-permission-readiness` and
+  `check:a15c:owner-admin-session-permission-smoke-readiness`.
+- Result: `READINESS_STATUS=PASS`,
+  `READINESS_REASON=OWNER_ADMIN_PERMISSION_READY_READ_ONLY`.
+- This is SELECT/read-only readiness only; it proves DB auth/profile/role/
+  permission readiness, not browser cookie/session binding.
+
 ## 2026-06-28 - A-15B - Authenticated Heritage UI Browser Smoke completed
 
 - Marker: `A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE`.

@@ -4,17 +4,17 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE";
-const docPath = "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md";
+const marker = "A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN";
+const docPath =
+  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  docPath,
   "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md",
-  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md",
+  docPath,
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -84,33 +84,33 @@ const packageJson = readJson("package.json");
 const doc = readFile(docPath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
-const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-15B - Authenticated Heritage UI Browser Smoke",
+  "A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun",
   marker,
+  "A-15C readiness rerun result: `PASS`",
+  "OWNER_ADMIN_PERMISSION_READY_READ_ONLY",
   "Verification-Only",
-  "Route Được Smoke",
-  "Quy Ước Kết Quả",
-  "Kết Quả Smoke Thực Tế",
-  "Public route group result",
-  "Admin route group result",
-  "Failure bucket result",
+  "Không mutate dữ liệu",
   "Không submit form",
-  "không đổi database",
-  "không copy asset/logo",
+  "Không seed",
+  "Không gán role",
+  "Browser session result: `FAIL_AUTH_SESSION_NOT_BOUND`",
+  "Admin shell result: `FAIL_UNKNOWN_USER_ROLE_PERMISSION_ZERO`",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const route of [
-  "/tree",
   "/admin",
   "/admin/genealogy",
   "/admin/tree/edit",
   "/admin/people/new",
   "/admin/relationships",
+  "/admin/people/[id]",
+  "/tree",
 ]) {
   requireIncludes(doc, route, `route ${route}`);
 }
@@ -120,37 +120,35 @@ for (const status of ["PASS", "PARTIAL", "SAFE_SKIP", "FAIL"]) {
 }
 
 for (const token of [
+  "Quản trị gia phả",
+  "Dòng họ của tôi",
   "Gia phả",
-  "Phả đồ",
-  "Thêm thành viên",
-  "Quan hệ gia đình",
-  "Đăng nhập",
+  "Thành viên",
+  "Thế hệ",
+  "Nhánh quan hệ",
   "Người dùng: Không rõ",
   "Vai trò: Chưa có vai trò",
+  "Số quyền: 0",
 ]) {
   requireIncludes(doc, token, `Vietnamese smoke text ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md", "index entry"],
-  [workLog, "A-15B - Authenticated Heritage UI Browser Smoke", "work log entry"],
-  [handoff, "A-15B - Authenticated Heritage UI Browser Smoke completed", "handoff entry"],
+  [index, "PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md", "index entry"],
+  [workLog, "A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun", "work log entry"],
+  [handoff, "A-15B1 - Authenticated Admin Heritage UI Browser Smoke Rerun completed", "handoff entry"],
+  [decisionLog, "Decision 187 - A-15B1 browser smoke rerun remains verification-only", "decision log entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
-  [
-    decisionLog,
-    "Decision 185 - A-15B authenticated heritage UI browser smoke is verification-only",
-    "decision log entry",
-  ],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a15b:authenticated-heritage-ui-browser-smoke"] !==
-  "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs"
+  packageJson?.scripts?.["check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun"] !==
+  "node scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs"
 ) {
-  failures.push("missing package script check:a15b:authenticated-heritage-ui-browser-smoke");
+  failures.push("missing package script check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun");
 }
 
 for (const scriptName of [
@@ -159,6 +157,8 @@ for (const scriptName of [
   "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui",
   "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
   "check:a15a6:add-edit-member-form-vietnamese-heritage-ux",
+  "check:a15b:authenticated-heritage-ui-browser-smoke",
+  "check:a15c:owner-admin-session-permission-smoke-readiness",
 ]) {
   if (!packageJson?.scripts?.[scriptName]) {
     failures.push(`${scriptName} was removed`);
@@ -171,13 +171,14 @@ for (const checker of [
   "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+  "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
 ]) {
   const content = readFile(checker);
-  requireIncludes(content, docPath, `${checker} allows A-15B doc`);
+  requireIncludes(content, docPath, `${checker} allows A-15B1 doc`);
   requireIncludes(
     content,
-    "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-    `${checker} allows A-15B checker`,
+    "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
+    `${checker} allows A-15B1 checker`,
   );
 }
 
@@ -188,6 +189,7 @@ const changedFiles = gitOutput(["status", "--porcelain"])
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
+  if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (file.startsWith("db/") || file.endsWith(".sql")) {
     failures.push(`database/sql file changed ${file}`);
@@ -246,9 +248,9 @@ for (const pattern of [
 }
 
 if (failures.length > 0) {
-  console.error("A-15B authenticated heritage UI browser smoke check failed:");
+  console.error("A-15B1 authenticated admin heritage UI browser smoke rerun check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15B authenticated heritage UI browser smoke check passed.");
+console.log("A-15B1 authenticated admin heritage UI browser smoke rerun check passed.");

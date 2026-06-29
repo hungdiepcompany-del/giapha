@@ -191,7 +191,10 @@
     "check:a15a4:vietnamese-heritage-family-list-admin-dashboard-ui": "node scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
     "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui": "node scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
     "check:a15a6:add-edit-member-form-vietnamese-heritage-ux": "node scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
-    "check:a15b:authenticated-heritage-ui-browser-smoke": "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs"
+    "check:a15b:authenticated-heritage-ui-browser-smoke": "node scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+    "smoke:a15c:owner-admin-session-permission-readiness": "node scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs",
+    "check:a15c:owner-admin-session-permission-smoke-readiness": "node scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+    "check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun": "node scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

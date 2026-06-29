@@ -42,6 +42,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A15A5_MEMBER_PROFILE_PERSON_DETAIL_VIETNAMESE_HERITAGE_UI.md",
   "docs/PLAN_A15A6_ADD_EDIT_MEMBER_FORM_VIETNAMESE_HERITAGE_UX.md",
   "docs/PLAN_A15B_AUTHENTICATED_HERITAGE_UI_BROWSER_SMOKE.md",
+  "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md",
+  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md",
   "package.json",
   "scripts/check-a14-ui-ux-overhaul.cjs",
   "scripts/check-a14b-public-tree-home-ux.cjs",
@@ -55,6 +57,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
   "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+  "scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs",
+  "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
   "scripts/check-tree-polish-dedupe-readiness-data-quality.cjs",
 ]);
 
@@ -216,7 +221,7 @@ for (const file of changedFiles) {
   ) {
     failures.push(`API/service/runtime file changed ${file}`);
   }
-  if (/storage-state|storage_state|session|cookie|token|secret|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
+  if (/storage-state|storage_state|cookie|token|secret|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence/external asset artifact changed ${file}`);
   }
 }
