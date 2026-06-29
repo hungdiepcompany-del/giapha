@@ -4,23 +4,10 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const marker = "A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS";
-const docPath = "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md";
-const smokePath = "scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs";
-const checkerPath = "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs";
-const b1DocPath =
-  "docs/PLAN_A15B1_AUTHENTICATED_ADMIN_HERITAGE_UI_BROWSER_SMOKE_RERUN.md";
-const b1CheckerPath =
-  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs";
-const c2DocPath =
-  "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md";
-const c2SmokePath =
-  "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs";
-const c2CheckerPath =
-  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs";
-const b2DocPath =
+const marker = "A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE";
+const docPath =
   "docs/PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md";
-const b2CheckerPath =
+const checkerPath =
   "scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs";
 
 const allowedChangedFiles = new Set([
@@ -29,9 +16,6 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  b1DocPath,
-  c2DocPath,
-  b2DocPath,
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -39,12 +23,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
   "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
   "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
-  smokePath,
+  "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
+  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
   checkerPath,
-  b1CheckerPath,
-  c2SmokePath,
-  c2CheckerPath,
-  b2CheckerPath,
 ]);
 
 function readFile(relativePath) {
@@ -102,47 +84,39 @@ function gitShowHead(relativePath) {
 
 const packageJson = readJson("package.json");
 const doc = readFile(docPath);
-const smoke = readFile(smokePath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-15C - Owner/Admin Session Permission Smoke Readiness",
+  "A-15B2 - Manual Authenticated Admin Heritage UI Smoke",
   marker,
-  "READINESS_STATUS=PASS",
-  "OWNER_ADMIN_PERMISSION_READY_READ_ONLY",
-  "ENV_SUPABASE_URL_PRESENT=true",
-  "AUTH_USER_FOUND=true",
-  "PROFILE_FOUND=true",
-  "ROLE_COUNT=1",
-  "PERMISSION_COUNT=25",
-  "REQUIRED_ADMIN_PERMISSION_MISSING_COUNT=0",
-  "SELECT/read-only",
-  "Không seed",
-  "Không gán role",
+  "Documentation/Checker-Only",
+  "PASS_OWNER_CONFIRMED",
+  "AUTH_RUNTIME_STATUS=PASS_OWNER_CONFIRMED",
+  "AUTOMATED_BROWSER_SMOKE_STATUS=NEEDS_PERSISTED_SESSION_CONTEXT",
+  "A15C3_AUTH_FIX_NEEDED=false",
+  "A15D_PERMISSION_SEED_NEEDED=false",
+  "/admin",
+  "/admin/genealogy",
+  "/admin/tree/edit",
+  "/admin/people/new",
+  "/admin/relationships",
+  "/admin/people/[id]",
+  "no mutation",
+  "no seed",
+  "no role assignment",
+  "no env commit",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const token of [
-  "A15C_OWNER_EMAIL",
-  "NEXT_PUBLIC_SUPABASE_URL",
-  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "SUPABASE_SERVICE_ROLE_KEY",
-  "OWNER_ADMIN_PERMISSION_READY_READ_ONLY",
-  "requiredAdminPermissions",
-  "printResult(result)",
-]) {
-  requireIncludes(smoke, token, `smoke token ${token}`);
-}
-
 for (const [content, token, label] of [
-  [index, "PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md", "index entry"],
-  [workLog, "A-15C - Owner/Admin Session Permission Smoke Readiness", "work log entry"],
-  [handoff, "A-15C - Owner/Admin Session Permission Smoke Readiness recorded", "handoff entry"],
-  [decisionLog, "Decision 186 - A-15C owner/admin readiness is SELECT-only", "decision log entry"],
+  [index, "PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md", "index entry"],
+  [workLog, "A-15B2 - Manual Authenticated Admin Heritage UI Smoke", "work log entry"],
+  [handoff, "A-15B2 - Manual Authenticated Admin Heritage UI Smoke recorded", "handoff entry"],
+  [decisionLog, "Decision 189 - A-15B2 closes auth fix path based on owner manual confirmation", "decision log entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
 ]) {
@@ -150,17 +124,10 @@ for (const [content, token, label] of [
 }
 
 if (
-  packageJson?.scripts?.["smoke:a15c:owner-admin-session-permission-readiness"] !==
-  "node scripts/smoke-a15c-owner-admin-session-permission-readiness.cjs"
+  packageJson?.scripts?.["check:a15b2:manual-authenticated-admin-heritage-ui-smoke"] !==
+  "node scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs"
 ) {
-  failures.push("missing package script smoke:a15c:owner-admin-session-permission-readiness");
-}
-
-if (
-  packageJson?.scripts?.["check:a15c:owner-admin-session-permission-smoke-readiness"] !==
-  "node scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs"
-) {
-  failures.push("missing package script check:a15c:owner-admin-session-permission-smoke-readiness");
+  failures.push("missing package script check:a15b2:manual-authenticated-admin-heritage-ui-smoke");
 }
 
 for (const scriptName of [
@@ -170,10 +137,27 @@ for (const scriptName of [
   "check:a15a5:member-profile-person-detail-vietnamese-heritage-ui",
   "check:a15a6:add-edit-member-form-vietnamese-heritage-ux",
   "check:a15b:authenticated-heritage-ui-browser-smoke",
+  "check:a15c:owner-admin-session-permission-smoke-readiness",
+  "check:a15b1:authenticated-admin-heritage-ui-browser-smoke-rerun",
+  "check:a15c2:supabase-auth-browser-session-binding-diagnostics",
 ]) {
-  if (!packageJson?.scripts?.[scriptName]) {
-    failures.push(`${scriptName} was removed`);
-  }
+  if (!packageJson?.scripts?.[scriptName]) failures.push(`${scriptName} was removed`);
+}
+
+for (const checker of [
+  "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
+  "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
+  "scripts/check-a15a4-vietnamese-heritage-family-list-admin-dashboard-ui.cjs",
+  "scripts/check-a15a5-member-profile-person-detail-vietnamese-heritage-ui.cjs",
+  "scripts/check-a15a6-add-edit-member-form-vietnamese-heritage-ux.cjs",
+  "scripts/check-a15b-authenticated-heritage-ui-browser-smoke.cjs",
+  "scripts/check-a15c-owner-admin-session-permission-smoke-readiness.cjs",
+  "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
+  "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
+]) {
+  const content = readFile(checker);
+  requireIncludes(content, docPath, `${checker} allows A-15B2 doc`);
+  requireIncludes(content, checkerPath, `${checker} allows A-15B2 checker`);
 }
 
 const changedFiles = gitOutput(["status", "--porcelain"])
@@ -204,7 +188,7 @@ for (const file of changedFiles) {
     failures.push(`API/service/runtime file changed ${file}`);
   }
   if (/storage-state|storage_state|cookie|token|secret|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
-    failures.push(`possible secret/session/evidence/external asset artifact changed ${file}`);
+    failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }
 }
 
@@ -234,14 +218,15 @@ for (const pattern of [
   /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
   /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
   /Bearer\s+[A-Za-z0-9._-]{12,}/,
+  /https?:\/\/(?!localhost|127\.0\.0\.1)/i,
 ]) {
-  rejectPattern(doc + "\n" + smoke, pattern, pattern.toString());
+  rejectPattern(doc, pattern, pattern.toString());
 }
 
 if (failures.length > 0) {
-  console.error("A-15C owner/admin session permission smoke readiness check failed:");
+  console.error("A-15B2 manual authenticated admin heritage UI smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-15C owner/admin session permission smoke readiness check passed.");
+console.log("A-15B2 manual authenticated admin heritage UI smoke check passed.");

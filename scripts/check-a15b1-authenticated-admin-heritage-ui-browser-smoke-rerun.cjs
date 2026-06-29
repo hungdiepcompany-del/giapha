@@ -16,6 +16,7 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A15C_OWNER_ADMIN_SESSION_PERMISSION_SMOKE_READINESS.md",
   docPath,
   "docs/PLAN_A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS.md",
+  "docs/PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md",
   "package.json",
   "scripts/check-a15a2-modern-vietnamese-genealogy-tree-editor-ui.cjs",
   "scripts/check-a15a3-vietnamese-heritage-public-tree-view-ui.cjs",
@@ -28,6 +29,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a15b1-authenticated-admin-heritage-ui-browser-smoke-rerun.cjs",
   "scripts/smoke-a15c2-auth-browser-session-binding-diagnostics.cjs",
   "scripts/check-a15c2-supabase-auth-browser-session-binding-diagnostics.cjs",
+  "scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs",
 ]);
 
 function readFile(relativePath) {

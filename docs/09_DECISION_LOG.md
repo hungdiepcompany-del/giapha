@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 189 - A-15B2 closes auth fix path based on owner manual confirmation
+
+Status: `ACTIVE`
+
+Chon:
+
+A-15B2 may record owner-confirmed manual authenticated `/admin` smoke PASS and
+close A-15C3/A-15D as not needed, but it remains documentation/checker-only.
+
+Allowed:
+
+- record owner manual confirmation of browser login, `/admin` access and
+  Supabase callback URL configuration;
+- add phase doc and checker;
+- add package checker script;
+- update docs index, work log, decision log and handoff;
+- update checker allowlists for this exact phase.
+
+Not authorized:
+
+- UI change;
+- auth runtime, callback, cookie or middleware change;
+- seed, role assignment, profile/permission mutation or data mutation;
+- database/schema/migration/RLS/API/service runtime change;
+- dependency addition;
+- form submission;
+- committed `.env.local`, cookie, token, screenshot or storage-state artifact.
+
+Ly do:
+
+A-15C already proved owner/admin permission readiness, and owner manual browser
+confirmation proves the auth runtime works. The remaining automated smoke gap is
+session-context persistence, which belongs in a separate safe handoff phase if
+automation is needed.
+
 ## Decision 188 - A-15C2 auth browser session diagnostics remain read-only
 
 Status: `ACTIVE`

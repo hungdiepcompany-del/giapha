@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15B2 - Manual Authenticated Admin Heritage UI Smoke recorded
+
+- Marker: `A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE`.
+- Added `docs/PLAN_A15B2_MANUAL_AUTHENTICATED_ADMIN_HERITAGE_UI_SMOKE.md`.
+- Added `scripts/check-a15b2-manual-authenticated-admin-heritage-ui-smoke.cjs`
+  and package command
+  `check:a15b2:manual-authenticated-admin-heritage-ui-smoke`.
+- Owner manual confirmation recorded:
+  `Manual owner/admin login: PASS_OWNER_CONFIRMED`,
+  `Supabase callback URL config: PASS_OWNER_CONFIRMED`, `/admin real browser
+  session: PASS_OWNER_CONFIRMED`.
+- Current conclusion: `AUTH_RUNTIME_STATUS=PASS_OWNER_CONFIRMED`;
+  `AUTOMATED_BROWSER_SMOKE_STATUS=NEEDS_PERSISTED_SESSION_CONTEXT`;
+  `A15C3_AUTH_FIX_NEEDED=false`; `A15D_PERMISSION_SEED_NEEDED=false`.
+- A-15B1/A-15C2 `auth_session_missing` is treated as the automated smoke browser
+  context not carrying the owner/admin session, not as an auth runtime defect.
+- If future authenticated automation is needed, open a separate persisted browser
+  storage-state/manual session handoff phase without committing cookie/token/
+  storage-state artifacts.
+- No UI polish, auth runtime change, mutation, seed, role assignment, schema/RLS/
+  permission/API/service runtime change, dependency, `.env.local` commit, deploy
+  or push.
+
 ## 2026-06-29 - A-15C2 - Supabase Auth Browser Session Binding Diagnostics recorded
 
 - Marker: `A15C2_SUPABASE_AUTH_BROWSER_SESSION_BINDING_DIAGNOSTICS`.
