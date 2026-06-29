@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16F3 - Supabase Metadata Link Migration Path Bridge ready, link blocked
+
+- Marker: `A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED`.
+- Added
+  `docs/PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md`,
+  `scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs`
+  and package command
+  `check:a16f3:supabase-metadata-link-migration-path-bridge`.
+- `npx --yes supabase --version`: available, version `2.108.0`.
+- Owner-confirmed project ref remains `frkyeuxrlcflmsxxsolp`.
+- Ran `npx --yes supabase init --yes`, creating local metadata:
+  `supabase/config.toml` and `supabase/.gitignore`.
+- Local Supabase seed config is disabled: `[db.seed] enabled = false` and
+  `sql_paths = []`.
+- Did not run `npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp`
+  because Supabase account/login state was not confirmed in this shell.
+- Link result:
+  `A16F3_PROJECT_LINK_RESULT=BLOCKED_SUPABASE_AUTH_REQUIRED_OR_ACCOUNT_NOT_CONFIRMED`.
+- Created `supabase/migrations` and mirrored
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  to
+  `supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`.
+- Byte-for-byte bridge PASS, SHA256 for both files:
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Final status: `A16F3_STATUS=BRIDGE_READY_LINK_BLOCKED`.
+- Canonical source remains `db/migrations`; `supabase/migrations` is the CLI
+  mirror path and must stay byte-for-byte equivalent.
+- A-16F3 did not run `supabase db push`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not insert/update/delete/upsert, did not import Excel, did not write
+  people/relationships, did not deploy and did not push.
+- Next planned phase: `A16F4_DRY_RUN_ONLY`. It should confirm Supabase
+  account/login, link to `frkyeuxrlcflmsxxsolp`, verify project-ref metadata,
+  run dry-run only if gates pass and still not apply DB.
+- Any later apply phase still requires:
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- A-16G/A-16H/A-16I remain blocked because schema apply verification has not
+  passed.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F2 - Supabase Project Link Migration Path Readiness blocked on link/path bridge
 
 - Marker: `A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED`.

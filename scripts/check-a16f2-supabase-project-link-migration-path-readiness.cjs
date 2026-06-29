@@ -7,6 +7,9 @@ const failures = [];
 
 const docPath = "docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md";
 const checkerPath = "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs";
+const a16f3DocPath = "docs/PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md";
+const a16f3CheckerPath = "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs";
+const a16f3MirrorMigrationPath = "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -24,6 +27,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
   "scripts/check-a16f-import-schema-db-apply-verification.cjs",
   "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
+  a16f3DocPath,
+  a16f3CheckerPath,
+  a16f3MirrorMigrationPath,
+  "supabase/config.toml",
+  "supabase/.gitignore",
   "package.json",
 ]);
 

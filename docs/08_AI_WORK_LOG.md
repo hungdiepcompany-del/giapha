@@ -1,5 +1,44 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F3 - Supabase Metadata Link Migration Path Bridge
+
+- Marker: `A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `71c6f96`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- `npx --yes supabase --version` result: `2.108.0`.
+- Ran `npx --yes supabase init --yes`; this created local metadata only:
+  `supabase/config.toml` and `supabase/.gitignore`.
+- Adjusted local Supabase metadata so `[db.seed] enabled = false` and
+  `sql_paths = []`.
+- Project ref remains owner-confirmed as `frkyeuxrlcflmsxxsolp`.
+- Did not run `npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp`
+  because the active Supabase account/login state was not confirmed in this
+  shell.
+- Created `supabase/migrations` and copied
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  to
+  `supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`.
+- Byte-for-byte bridge verification PASS:
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE` for
+  both source and mirror.
+- Final status: `A16F3_STATUS=BRIDGE_READY_LINK_BLOCKED`.
+- Created
+  `docs/PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md` and
+  `scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs`.
+- Added package command
+  `check:a16f3:supabase-metadata-link-migration-path-bridge`.
+- Updated A-16 through A-16F2 checker allowlists narrowly for the A-16F3
+  doc/checker/package-script/supabase metadata and mirror migration changes.
+- A-16F3 did not run `supabase db push`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not insert/update/delete/upsert, did not import Excel, did not write
+  people/relationships, did not deploy and did not push.
+- Next planned phase: `A16F4_DRY_RUN_ONLY`.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F2 - Supabase Project Link Migration Path Readiness
 
 - Marker: `A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS_RECORDED`.

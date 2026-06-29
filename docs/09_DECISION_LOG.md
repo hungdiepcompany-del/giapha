@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 203 - A-16F3 creates local Supabase metadata and byte-for-byte migration bridge but leaves project link blocked
+
+Status: `ACTIVE`
+
+Chon:
+
+- Create local Supabase CLI metadata with `npx --yes supabase init --yes`.
+- Keep seed disabled in local metadata by setting `[db.seed] enabled = false`
+  and `sql_paths = []`.
+- Preserve `db/migrations` as the canonical reviewed SQL source.
+- Create `supabase/migrations` as a Supabase CLI mirror path.
+- Copy
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  to
+  `supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`
+  byte-for-byte and enforce equivalence by checker.
+- Do not run `supabase link` because the active Supabase account/login state was
+  not confirmed in this shell.
+- Keep the next phase as `A16F4_DRY_RUN_ONLY`; any future apply still requires
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+
+Ly do:
+
+- Supabase CLI expects project metadata and migrations under `supabase/`, while
+  the repo's reviewed source migration has lived under `db/migrations`.
+- A mirror with byte-for-byte verification avoids silently changing the
+  reviewed SQL while making the next CLI dry-run path explicit.
+- Disabling seed in local metadata prevents the bridge from implying seed
+  execution in future reset-style commands.
+- Link and DB dry-run/apply remain operationally sensitive and require account
+  confirmation and a later phase.
+- This decision does not apply DB, run dry-run, seed, mutate data, import
+  Excel, add runtime dependency, deploy or push.
+
 ## Decision 202 - A-16F2 records project ref but keeps DB apply blocked until link and migration path are bridged
 
 Status: `ACTIVE`
