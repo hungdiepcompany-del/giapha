@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16E - Import Schema Candidate / DB Apply Gate recorded
+
+- Marker: `A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE`.
+- Added
+  `docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md`,
+  `scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs` and package
+  command `check:a16e:import-schema-candidate-db-apply-gate`.
+- A-16E is review/design/checker only. It did not apply DB, did not run
+  `supabase db push`, did not connect to production DB, did not seed, did not
+  mutate data, did not add dependency, did not deploy and did not push.
+- Reviewed A-16D SQL candidate static safety: additive candidate tables/indexes
+  only; no `DROP`, `TRUNCATE`, `DELETE FROM`, data `UPDATE`, seed/data
+  `INSERT`, broad `GRANT`, `CREATE POLICY` or RLS disable statement.
+- Reviewed schema logic as sufficient for import sessions, warnings, duplicate
+  candidates, relationship candidates and write manifests, including hashes,
+  lifecycle status, owner decisions and rollback/write manifest shape.
+- Reviewed RLS as fail-closed: RLS is enabled on the five import tables and no
+  policies/grants are created. Future runtime/Data API access must approve
+  exact grants and RLS policies together.
+- Supabase docs/changelog note: new public-schema tables may require explicit
+  grants for Data API access in current/future Supabase behavior; A-16E
+  intentionally does not grant access.
+- Hard stop: required owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` is not present. Do not run
+  A-16F, do not apply DB, do not create a fake marker.
+- A-16G remains blocked until A-16F schema apply/verification PASS. A-16H
+  remains blocked until explicit Excel parser dependency marker. A-16I remains
+  blocked until schema apply PASS, parser/preview evidence, owner-approved
+  manifest and DB-write marker.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16D - Import Schema Candidate / Manifest Storage Design recorded
 
 - Marker: `A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN`.

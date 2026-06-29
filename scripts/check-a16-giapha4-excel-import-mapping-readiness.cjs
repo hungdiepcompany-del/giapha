@@ -15,6 +15,8 @@ const a16cCheckerPath = "scripts/check-a16c-owner-review-import-preview-db-write
 const a16dDocPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
 const a16dCheckerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
 const a16dMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const a16eDocPath = "docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md";
+const a16eCheckerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -31,6 +33,8 @@ const allowedChangedFiles = new Set([
   a16dDocPath,
   a16dCheckerPath,
   a16dMigrationPath,
+  a16eDocPath,
+  a16eCheckerPath,
   "app/(admin)/admin/exports/import/page.tsx",
   "app/api/admin/import/giapha4/preview/route.ts",
   "components/imports/giapha4-import-preview-form.tsx",

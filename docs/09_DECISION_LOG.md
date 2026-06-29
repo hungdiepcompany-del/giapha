@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 197 - A-16E blocks import manifest schema apply until explicit owner marker
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat A-16E as SQL candidate review and DB apply gate documentation only.
+- Keep the A-16D import manifest SQL candidate unapplied until owner provides
+  the exact marker `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- Record A-16E static review as sufficient for candidate safety: additive
+  tables/indexes, no seed/data mutation statements, no broad grants, no
+  policies and no RLS disablement.
+- Preserve fail-closed RLS in the candidate: RLS enabled, no policy/grant in
+  A-16E.
+- Require a separate A-16F phase for Supabase CLI/project confirmation,
+  dry-run, apply, read-only catalog verification, RLS verification and no-seed
+  evidence.
+- Keep A-16G/A-16H/A-16I blocked until their prerequisite markers/results are
+  present.
+
+Ly do:
+
+- The import manifest tables can hold sensitive review state, duplicate
+  suggestions, relationship ambiguity and rollback/write manifests.
+- A-16D created a candidate file only; A-16E must not silently promote that
+  candidate into a live schema without owner approval and target-project
+  confirmation.
+- Current Supabase Data API behavior can require explicit grants for new
+  public-schema tables, so grants and RLS policies must be designed together in
+  a later approved runtime/policy phase.
+- This decision does not change deployed DB, auth/RLS/permission runtime,
+  OpenNext/Wrangler config, dependencies, service Worker boundary, production
+  data, deploy policy or push policy.
+
 ## Decision 196 - A-16D keeps Gia Pha 4 import manifest storage as a not-applied schema candidate
 
 Status: `ACTIVE`

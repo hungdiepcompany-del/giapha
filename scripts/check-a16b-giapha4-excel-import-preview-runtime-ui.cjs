@@ -12,6 +12,8 @@ const marker = "A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI";
 const a16dDocPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
 const a16dCheckerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
 const a16dMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const a16eDocPath = "docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md";
+const a16eCheckerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs";
 
 const previewFiles = [
   "app/(admin)/admin/exports/import/page.tsx",
@@ -36,6 +38,8 @@ const allowedChangedFiles = new Set([
   a16dDocPath,
   a16dCheckerPath,
   a16dMigrationPath,
+  a16eDocPath,
+  a16eCheckerPath,
   "package.json",
   ...previewFiles,
 ]);

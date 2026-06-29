@@ -9,6 +9,8 @@ const marker = "A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN";
 const docPath = "docs/PLAN_A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN.md";
 const checkerPath = "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs";
 const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const a16eDocPath = "docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md";
+const a16eCheckerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -21,6 +23,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
+  a16eDocPath,
+  a16eCheckerPath,
   "package.json",
 ]);
 

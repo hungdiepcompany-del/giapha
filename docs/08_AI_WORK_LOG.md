@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-06-29 - A-16E - Import Schema Candidate / DB Apply Gate
+
+- Marker: `A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `4677ec2`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- Created
+  `docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md` and
+  `scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs`.
+- Added package command
+  `check:a16e:import-schema-candidate-db-apply-gate`.
+- Updated A-16/A-16B/A-16C/A-16D checker allowlists narrowly for the A-16E
+  doc/checker/package-script change.
+- Reviewed
+  `db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql`:
+  additive candidate tables only, no `DROP`, no `TRUNCATE`, no `DELETE FROM`,
+  no data `UPDATE`, no seed/data `INSERT`, no broad `GRANT`, no `CREATE POLICY`
+  and no RLS disable statement.
+- Schema review PASS for import sessions, warnings, duplicate candidates,
+  relationship candidates, write manifests, source/manifest hashes, lifecycle
+  status, owner decision state and rollback/write manifest shape.
+- RLS review PASS fail-closed: A-16D candidate enables RLS on all five import
+  tables and intentionally adds no policies or grants.
+- Supabase platform note recorded: future Data API/client access may require
+  explicit grants plus RLS policies, but A-16E intentionally does not add them.
+- A-16E did not apply DB, did not run `supabase db push`, did not connect to
+  production DB, did not seed, did not mutate app data, did not add dependency,
+  did not deploy and did not push.
+- Hard stop: marker `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` is missing,
+  so A-16F/A-16G/A-16H/A-16I remain blocked.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16D - Import Schema Candidate / Manifest Storage Design
 
 - Marker: `A16D_IMPORT_SCHEMA_CANDIDATE_MANIFEST_STORAGE_DESIGN`.
