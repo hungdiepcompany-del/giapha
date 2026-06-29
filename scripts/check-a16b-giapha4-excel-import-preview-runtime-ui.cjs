@@ -14,6 +14,8 @@ const a16dCheckerPath = "scripts/check-a16d-import-schema-candidate-manifest-sto
 const a16dMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 const a16eDocPath = "docs/PLAN_A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE.md";
 const a16eCheckerPath = "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs";
+const a16e1DocPath = "docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md";
+const a16e1CheckerPath = "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs";
 
 const previewFiles = [
   "app/(admin)/admin/exports/import/page.tsx",
@@ -40,6 +42,8 @@ const allowedChangedFiles = new Set([
   a16dMigrationPath,
   a16eDocPath,
   a16eCheckerPath,
+  a16e1DocPath,
+  a16e1CheckerPath,
   "package.json",
   ...previewFiles,
 ]);

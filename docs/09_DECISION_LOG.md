@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 198 - A-16E1 recommends not applying Gia Pha 4 import schema until owner marker and target proof
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat A-16E1 as owner review/docs/checker only, not a DB apply phase.
+- Accept the A-16D SQL candidate as structurally suitable for a later apply
+  phase, while keeping the current recommendation `DO_NOT_APPLY_YET`.
+- Require the exact owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` before running A-16F.
+- Require target Supabase project confirmation, backup/rollback/no-go position,
+  dry-run plan and RLS/grant/runtime access approach before apply.
+- Keep import storage fail-closed: RLS enabled, no policies and no grants in
+  A-16E1.
+- Keep A-16G/A-16H/A-16I blocked until their explicit prerequisites are met.
+
+Ly do:
+
+- Static review found no direct SQL safety failure, but import manifest storage
+  can contain sensitive family review evidence, duplicate suggestions and
+  relationship ambiguity.
+- The current schema has `clans` and `clan_branches`, not a single
+  `genealogy_id`/`family_tree_id`; runtime scope must be confirmed before real
+  import workflow writes sessions.
+- Supabase Data API access depends on grants and RLS together, so runtime access
+  must be decided explicitly instead of inferred from table creation.
+- This decision does not apply DB, change deployed RLS/auth/permission runtime,
+  add dependency, alter OpenNext/Wrangler config, deploy, push or mutate
+  production data.
+
 ## Decision 197 - A-16E blocks import manifest schema apply until explicit owner marker
 
 Status: `ACTIVE`

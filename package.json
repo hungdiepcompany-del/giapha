@@ -206,7 +206,8 @@
     "check:a16b:giapha4-excel-import-preview-runtime-ui": "node scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
     "check:a16c:owner-review-import-preview-db-write-approval-design": "node scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
     "check:a16d:import-schema-candidate-manifest-storage-design": "node scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
-    "check:a16e:import-schema-candidate-db-apply-gate": "node scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs"
+    "check:a16e:import-schema-candidate-db-apply-gate": "node scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
+    "check:a16e1:owner-review-import-schema-apply-gate": "node scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

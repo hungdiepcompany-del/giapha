@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16E1 - Owner Review Import Schema Apply Gate recorded
+
+- Marker: `A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE`.
+- Added
+  `docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md`,
+  `scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs` and package
+  command `check:a16e1:owner-review-import-schema-apply-gate`.
+- A-16E1 is owner review/docs/checker only. It did not apply DB, did not run
+  `supabase db push`, did not run dry-run, did not connect production DB, did
+  not seed, did not mutate data, did not add dependency, did not deploy and did
+  not push.
+- Reviewed A-16D SQL candidate and A-16E apply gate. Result:
+  `A16E1_REVIEW_RESULT=PASS_WITH_OWNER_APPLY_GATE_BLOCKED`.
+- Apply recommendation remains `DO_NOT_APPLY_YET` until owner provides
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` plus target Supabase project
+  confirmation, backup/rollback/no-go position, dry-run plan and RLS/grant
+  runtime approach.
+- Static SQL review found no direct safety failure: no dangerous `DROP TABLE`,
+  `TRUNCATE`, `DELETE FROM`, data `UPDATE`, seed/data `INSERT`, broad `GRANT`,
+  `CREATE POLICY` or RLS disable statement.
+- Naming/schema review: migration path follows `db/migrations` convention; the
+  five import tables do not conflict with current people/family/lineage tables;
+  optional `clan_id`/`branch_id` are reasonable but later runtime must confirm
+  exact import scope because there is no single `genealogy_id`/`family_tree_id`.
+- RLS/Data API note: the candidate stays fail-closed with RLS enabled and no
+  policies/grants. Later runtime must approve grants and RLS policies together
+  if client/Data API access is needed.
+- A-16F remains blocked until exact owner marker appears. A-16G remains blocked
+  until A-16F apply/verification PASS. A-16H remains blocked until parser
+  dependency marker. A-16I remains blocked until schema apply PASS, parser or
+  approved preview data source, owner-approved manifest and DB-write marker.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E - Import Schema Candidate / DB Apply Gate recorded
 
 - Marker: `A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE`.

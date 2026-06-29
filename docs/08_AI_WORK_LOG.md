@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-29 - A-16E1 - Owner Review Import Schema Apply Gate
+
+- Marker: `A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `1ba9279`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- Created
+  `docs/PLAN_A16E1_OWNER_REVIEW_IMPORT_SCHEMA_APPLY_GATE.md` and
+  `scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs`.
+- Added package command
+  `check:a16e1:owner-review-import-schema-apply-gate`.
+- Updated A-16/A-16B/A-16C/A-16D/A-16E checker allowlists narrowly for the
+  A-16E1 doc/checker/package-script change.
+- Reviewed A-16D SQL candidate and A-16E apply gate. Result:
+  `A16E1_REVIEW_RESULT=PASS_WITH_OWNER_APPLY_GATE_BLOCKED`.
+- Apply recommendation recorded:
+  `A16E1_APPLY_RECOMMENDATION=DO_NOT_APPLY_YET` because owner marker, target
+  Supabase project confirmation, backup/rollback position and final
+  RLS/grant/runtime approach are missing.
+- Static SQL safety review: no dangerous `DROP TABLE`, no `TRUNCATE`, no
+  `DELETE FROM`, no data `UPDATE`, no seed/data `INSERT`, no broad `GRANT`, no
+  `CREATE POLICY` and no RLS disable statement.
+- Naming/schema review: migration path follows `db/migrations` convention,
+  import table names do not conflict with existing people/family/lineage tables,
+  and optional `clan_id`/`branch_id` are appropriate for the current schema
+  while exact runtime scope remains a later decision.
+- RLS review: fail-closed remains correct; no grants/policies are added.
+- A-16E1 did not apply DB, did not run `supabase db push`, did not run dry-run,
+  did not connect production DB, did not seed, did not mutate data, did not add
+  dependency, did not deploy and did not push.
+- Hard stop: marker `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` is missing,
+  so A-16F/A-16G/A-16H/A-16I remain blocked.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16E - Import Schema Candidate / DB Apply Gate
 
 - Marker: `A16E_IMPORT_SCHEMA_CANDIDATE_DB_APPLY_GATE`.
