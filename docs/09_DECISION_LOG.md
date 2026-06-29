@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 191 - A-15E2 blocks Windows redeploy after production 500 rollback
+
+Status: `ACTIVE`
+
+Chon:
+
+- Do not deploy again in A-15E2 after owner-confirmed rollback restored
+  production.
+- Treat Windows/OpenNext deploy as a suspected risk path until A-15E3 validates a
+  safer WSL or GitHub Actions Linux path.
+- Keep the current production rollback version
+  `4134298b-ef89-4099-b20b-b13995f397c8` as the known-good version for this
+  incident record.
+- Require A-15E3 owner approval before any deploy retry, with env/secret
+  names-only verification, one documented deploy command, immediate route smoke
+  and rollback plan.
+
+Ly do:
+
+- Owner reported a deploy from Windows caused HTTP 500 on all main routes.
+- Rollback restored `/`, `/tree` and `/auth/login` to HTTP 200.
+- A-15E2 diagnostics observed production public routes healthy and `/admin`
+  redirecting to login, so another rollback or redeploy would add risk without a
+  clear recovery need.
+- The repo already has `npm run deploy` as the standard OpenNext deploy script;
+  a future retry should avoid mixed build/deploy order and avoid unverified
+  Windows artifact behavior.
+- This decision does not change DB, auth, permission, API, Worker config,
+  dependency or service boundary.
+
 ## Decision 190 - A-15E production deploy blocked until secret rotation and owner approval
 
 Status: `ACTIVE`

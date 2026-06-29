@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-06-29 - A-15E2 - Production 500 Rollback & Deploy Failure Diagnostics
+
+- Marker: `A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS`.
+- Created
+  `docs/PLAN_A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS.md`,
+  `scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs`
+  and package command
+  `check:a15e2:production-500-rollback-deploy-failure-diagnostics`.
+- Scope: diagnostics/documentation/checker only after owner reported that a
+  production deploy from Windows caused HTTP 500 on `/`, `/tree`, `/auth/login`
+  and `/admin`, then rollback restored production.
+- Recorded owner-confirmed rollback target:
+  `4134298b-ef89-4099-b20b-b13995f397c8`.
+- Read-only evidence collected:
+  `git status -sb`, `git log --oneline --decorate -12`,
+  `npx wrangler deployments list`, package deploy script discovery,
+  config reads for `wrangler.toml`, `open-next.config.ts`, `next.config.ts`,
+  `.open-next` directory metadata, `npx wrangler secret list`, Wrangler version
+  and read-only production route status.
+- Production post-rollback route status observed:
+  `/` 200, `/tree` 200, `/auth/login` 200, `/admin` 307 to login.
+- Secret check was names-only. `SUPABASE_SERVICE_ROLE_KEY` was listed as a
+  secret; no secret value was printed or written.
+- Likely cause candidates recorded: Windows OpenNext runtime bundle issue,
+  missing/mismatched production vars or secrets, wrong deploy command/order,
+  stale or incompatible `.open-next` output and Wrangler/OpenNext version
+  mismatch.
+- Safe direction: no redeploy in A-15E2; prefer A-15E3 with owner approval,
+  WSL or GitHub Actions Linux deploy path, env/secret verification and rollback
+  plan.
+- No deploy, no extra rollback, no DB migration, no seed, no production data
+  mutation, no dependency and no OpenNext/Wrangler config change.
+
 ## 2026-06-29 - A-15E - Heritage UI Production Deploy Readiness & Smoke
 
 - Marker: `A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE`.

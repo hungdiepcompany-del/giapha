@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15E2 - Production 500 Rollback & Deploy Failure Diagnostics recorded
+
+- Marker: `A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS`.
+- Added
+  `docs/PLAN_A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS.md`,
+  `scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs`
+  and package command
+  `check:a15e2:production-500-rollback-deploy-failure-diagnostics`.
+- Owner-reported incident: a new production deploy using `npx wrangler deploy`
+  after `npm run build` caused HTTP 500 on `/`, `/tree`, `/auth/login` and
+  `/admin`. Wrangler reported OpenNext project detection and OpenNext warned
+  Windows is not fully compatible.
+- Owner rollback succeeded to Worker version
+  `4134298b-ef89-4099-b20b-b13995f397c8`.
+- A-15E2 read-only production check after rollback observed:
+  `/` 200, `/tree` 200, `/auth/login` 200 and `/admin` 307 redirect to login.
+- `npx wrangler deployments list` showed final rollback traffic on
+  `4134298b-ef89-4099-b20b-b13995f397c8`; it also showed failed candidate
+  versions around the incident window. Do not redeploy from this phase.
+- `npx wrangler secret list` was names-only and showed
+  `SUPABASE_SERVICE_ROLE_KEY`; no secret values were logged. Public Supabase/App
+  vars still need explicit verification in A-15E3 before any retry.
+- Next safe step: create a separate A-15E3 owner-approved deploy retry/preflight
+  phase, preferably using WSL or GitHub Actions Linux, one documented deploy
+  path, env/secret verification, immediate route smoke and rollback plan.
+- Runtime guardrail status: Main Worker touched NO, dependency added NO, new
+  service Worker NO, OpenNext/Wrangler config changed NO, deploy NO.
+
 ## 2026-06-29 - A-15E - Heritage UI Production Deploy Readiness & Smoke recorded
 
 - Marker: `A15E_HERITAGE_UI_PRODUCTION_DEPLOY_READINESS_SMOKE`.
