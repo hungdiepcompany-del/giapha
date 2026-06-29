@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 195 - A-16C requires owner-bound approval marker before Gia Pha 4 DB write
+
+Status: `ACTIVE`
+
+Chon:
+
+- Keep A-16C as design/documentation/checker only.
+- Require owner review of summary, people, relationships, duplicates,
+  ambiguity, privacy notes and import scope before any DB-write phase.
+- Require a marker bound to an exact preview summary hash or manifest id before
+  opening the next phase:
+  `APPROVE_A16D_GIAPHA4_IMPORT_SCHEMA_CANDIDATE` or
+  `APPROVE_A16E_GIAPHA4_IMPORT_DB_WRITE_RUNTIME`.
+- Require future DB-write runtime to preserve `held_rows`, no auto merge, no
+  auto delete, no ambiguous relationship auto-link and rollback manifest scope.
+
+Ly do:
+
+- Gia Pha 4.0 Excel data can contain real family personal data and ambiguous
+  relationship references.
+- A-16B currently provides safe-skip preview runtime because no Excel parser is
+  approved, so DB-write planning must not outrun parser/preview evidence.
+- Approval must be tied to a specific file/manifest/mapping result; a generic
+  approval marker would be unsafe if the workbook or mapping changes.
+- This decision does not change DB, RLS, auth, permission runtime, dependency,
+  OpenNext/Wrangler config, deploy policy or service Worker boundary.
+
 ## Decision 194 - A-16B keeps Gia Pha 4 Excel preview safe-skip until parser approval
 
 Status: `ACTIVE`

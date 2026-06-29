@@ -4,14 +4,10 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const docPath = "docs/PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md";
-const inspectPath = "scripts/inspect-giapha4-excel-import.cjs";
-const checkerPath = "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs";
-const marker = "A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS";
-const a16bDocPath = "docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md";
-const a16bCheckerPath = "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs";
-const a16cDocPath = "docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md";
-const a16cCheckerPath = "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs";
+
+const docPath = "docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md";
+const checkerPath = "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs";
+const marker = "A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -19,19 +15,9 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  inspectPath,
   checkerPath,
-  a16bDocPath,
-  a16bCheckerPath,
-  a16cDocPath,
-  a16cCheckerPath,
-  "app/(admin)/admin/exports/import/page.tsx",
-  "app/api/admin/import/giapha4/preview/route.ts",
-  "components/imports/giapha4-import-preview-form.tsx",
-  "lib/import/giapha4/types.ts",
-  "lib/import/giapha4/normalize.ts",
-  "lib/import/giapha4/parser.ts",
-  "lib/import/giapha4/preview.ts",
+  "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
+  "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "package.json",
 ]);
 
@@ -88,84 +74,62 @@ function gitShowHead(relativePath) {
   }
 }
 
-const packageJson = readJson("package.json");
 const doc = readFile(docPath);
-const inspectScript = readFile(inspectPath);
+const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone",
-  "A-16",
+  "A-16C",
   marker,
-  "preview-only",
   "NO_DB_WRITE",
-  "khong commit file Excel that",
-  "khong commit du lieu ca nhan that",
-  "privacy/PII policy",
+  "owner review workflow",
+  "approval states",
+  "approval marker",
+  "import manifest",
+  "rollback strategy",
   "duplicate policy",
-  "relationship mapping",
-  "future owner approval gate",
-  "SAFE_SKIP_EXCEL_DEPENDENCY_MISSING",
-  "A16B runtime preview/import UI",
-  "DB write later phase",
+  "Khong auto merge",
+  "Khong auto delete",
+  "relationship ambiguity policy",
+  "privacy/PII policy",
+  "UI Vietnamese review flow",
+  "Future Phase Gate A-16D/A-16E",
+  "APPROVE_A16D_GIAPHA4_IMPORT_SCHEMA_CANDIDATE",
+  "APPROVE_A16E_GIAPHA4_IMPORT_DB_WRITE_RUNTIME",
+  "held_rows",
+  "source_file_hash",
+  "rollback manifest",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
-  "full_name / display_name",
-  "gender",
-  "birth_date",
-  "death_date",
-  "is_living",
-  "birth_place",
-  "home_town",
-  "branch_name",
-  "generation_number",
-  "notes_private",
-  "visibility",
-  "parent-child",
-  "spouse/couple",
+  "Xem lại dữ liệu nhập",
+  "Xác nhận đã kiểm tra cảnh báo",
+  "Xác nhận đã kiểm tra người trùng",
+  "Xác nhận đã kiểm tra quan hệ gia đình",
+  "Ghi dữ liệu thật sẽ được mở ở phase sau sau khi owner phê duyệt",
 ]) {
-  requireIncludes(doc, token, `mapping token ${token}`);
-}
-
-for (const token of [
-  "GIAPHA4_EXCEL_PATH",
-  "SAFE_SKIP_EXCEL_DEPENDENCY_MISSING",
-  "printed_pii",
-  "db_write",
-  "masked_sample_shape",
-]) {
-  requireIncludes(inspectScript, token, `inspect token ${token}`);
+  requireIncludes(doc, token, `Vietnamese UI token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md", "index entry"],
-  [workLog, "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone", "work log entry"],
-  [handoff, "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone recorded", "handoff entry"],
-  [decisionLog, "Decision 193 - A-16 keeps Gia Pha 4.0 Excel import preview-only until owner approval", "decision log entry"],
+  [index, "PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md", "index entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
+  [decisionLog, "Decision 195 - A-16C requires owner-bound approval marker before Gia Pha 4 DB write", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16:giapha4-excel-import-mapping-readiness"] !==
-  "node scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs"
+  packageJson?.scripts?.["check:a16c:owner-review-import-preview-db-write-approval-design"] !==
+  "node scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs"
 ) {
-  failures.push("missing package script check:a16:giapha4-excel-import-mapping-readiness");
-}
-
-if (
-  packageJson?.scripts?.["inspect:giapha4-excel"] !==
-  "node scripts/inspect-giapha4-excel-import.cjs"
-) {
-  failures.push("missing package script inspect:giapha4-excel");
+  failures.push("missing package script check:a16c:owner-review-import-preview-db-write-approval-design");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -183,21 +147,19 @@ for (const file of changedFiles) {
     failures.push(`schema/migration/seed-like file changed ${file}`);
   }
   if (
+    /app\/api\/.*import.*write|app\/api\/.*giapha4.*write|actions\.ts|service\.ts|route\.ts$/i.test(
+      file,
+    ) &&
+    !allowedChangedFiles.has(file)
+  ) {
+    failures.push(`runtime write/import route changed ${file}`);
+  }
+  if (
     /wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(
       file,
     )
   ) {
     failures.push(`runtime/deploy config changed ${file}`);
-  }
-  if (
-    !allowedChangedFiles.has(file) &&
-    (file.startsWith("app/api/") ||
-      file.startsWith("lib/") ||
-      file.startsWith("server/") ||
-      file.startsWith("services/") ||
-      file.startsWith("pages/"))
-  ) {
-    failures.push(`API/service/runtime file changed ${file}`);
   }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
@@ -217,20 +179,45 @@ if (packageHead) {
   }
 }
 
-for (const pattern of [
-  /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
-  /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
-  /Bearer\s+[A-Za-z0-9._-]{12,}/,
-  /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+for (const [file, content] of [
+  [docPath, doc],
+  [checkerPath, readFile(checkerPath)],
 ]) {
-  rejectPattern(doc, pattern, pattern.toString());
-  rejectPattern(inspectScript, pattern, pattern.toString());
+  for (const pattern of [
+    /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
+    /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
+    /Bearer\s+[A-Za-z0-9._-]{12,}/,
+    /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+  ]) {
+    rejectPattern(content, pattern, `${file} ${pattern}`);
+  }
+}
+
+const importRuntimeFiles = changedFiles.filter((file) =>
+  /app\/api\/.*import|lib\/import|components\/imports|app\/\(admin\)\/admin\/exports\/import/.test(
+    file,
+  ),
+);
+
+for (const file of importRuntimeFiles) {
+  const content = readFile(file);
+  for (const pattern of [
+    /\.insert\s*\(/,
+    /\.update\s*\(/,
+    /\.upsert\s*\(/,
+    /\.delete\s*\(/,
+    /\binsert\s+into\b/i,
+    /\bupdate\s+[a-z_"]+\s+set\b/i,
+    /\bdelete\s+from\b/i,
+  ]) {
+    rejectPattern(content, pattern, `${file} ${pattern}`);
+  }
 }
 
 if (failures.length > 0) {
-  console.error("A-16 Gia Pha 4 Excel import mapping readiness check failed:");
+  console.error("A-16C owner review import approval design check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16 Gia Pha 4 Excel import mapping readiness check passed.");
+console.log("A-16C owner review import approval design check passed.");

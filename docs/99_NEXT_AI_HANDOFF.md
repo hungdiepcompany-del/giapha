@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16C - Owner Review Import Preview DB Write Approval Design recorded
+
+- Marker: `A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN`.
+- Added
+  `docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md`,
+  `scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs`
+  and package command
+  `check:a16c:owner-review-import-preview-db-write-approval-design`.
+- A-16C is design/documentation/checker only. It does not add import write
+  runtime, migration, seed, dependency, deploy, DB mutation, Excel file or real
+  personal data.
+- Owner review workflow now covers summary, person candidates, parent-child,
+  spouse/couple, duplicate/ambiguity, privacy/private notes, scope confirmation
+  and owner approval marker.
+- Future approval states are design-only:
+  `preview_generated`, `owner_reviewing`, `warnings_acknowledged`,
+  `duplicates_reviewed`, `relationships_reviewed`, `privacy_reviewed`,
+  `ready_for_owner_approval`, `owner_approved_for_db_write`,
+  `rejected_needs_fix`, `expired_preview`.
+- Future approval markers:
+  `APPROVE_A16D_GIAPHA4_IMPORT_SCHEMA_CANDIDATE` for schema candidate work or
+  `APPROVE_A16E_GIAPHA4_IMPORT_DB_WRITE_RUNTIME` for DB-write runtime if no
+  schema is needed. Marker must bind to exact preview summary hash/manifest id
+  and cannot be reused for a different Excel file or changed mapping.
+- Future write design requires held rows, no auto merge/delete, no ambiguous
+  relationship auto-link, rollback manifest, source manifest/hash, actor and
+  timestamp.
+- Next likely step: A-16D schema candidate if persistent import manifest/review
+  state is needed; otherwise A-16E can only open with explicit owner approval,
+  parser/offline conversion approval, backup/rollback plan and completed review
+  evidence.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added NO,
+  new service Worker NO, OpenNext/Wrangler config changed NO, Worker size risk
+  NO.
+
 ## 2026-06-29 - A-16B - Gia Pha 4.0 Excel Import Preview Runtime UI recorded
 
 - Marker: `A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI`.

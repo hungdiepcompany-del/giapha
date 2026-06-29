@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-29 - A-16C - Owner Review Import Preview DB Write Approval Design
+
+- Marker: `A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN`.
+- Precondition checked: A-16 commit `f824cbe` and A-16B commit `a05f1a9`
+  exist locally; repo started `main...origin/main [ahead 2]`; `.env.local`
+  remains ignored by `.gitignore:17:.env.*`; no staged `.xls`, `.xlsx` or
+  `.csv` file.
+- Created
+  `docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md`
+  and
+  `scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs`.
+- Added package command
+  `check:a16c:owner-review-import-preview-db-write-approval-design`.
+- Scope: design/documentation/checker only for owner review and DB-write
+  approval gates. No runtime import write route/action/service was created.
+- Designed review steps for summary, person candidates, parent-child
+  relationships, spouse/couple relationships, duplicate/ambiguity, privacy
+  notes, import scope and owner approval marker.
+- Designed approval states, manifest fields, future DB write groups,
+  duplicate/merge policy, relationship ambiguity policy, privacy/PII policy and
+  rollback manifest policy.
+- Required future markers recorded:
+  `APPROVE_A16D_GIAPHA4_IMPORT_SCHEMA_CANDIDATE` and
+  `APPROVE_A16E_GIAPHA4_IMPORT_DB_WRITE_RUNTIME`.
+- No DB insert/update/delete/upsert, no migration, no seed, no RLS/auth/
+  permission runtime change, no dependency, no deploy, no push, no real Excel
+  file and no real personal data committed.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added NO,
+  new service Worker NO, OpenNext/Wrangler config changed NO, Worker size risk
+  NO.
+
 ## 2026-06-29 - A-16B - Gia Pha 4.0 Excel Import Preview Runtime UI
 
 - Marker: `A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI`.

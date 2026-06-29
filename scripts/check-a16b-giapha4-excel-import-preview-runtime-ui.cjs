@@ -28,6 +28,8 @@ const allowedChangedFiles = new Set([
   docPath,
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   checkerPath,
+  "docs/PLAN_A16C_OWNER_REVIEW_IMPORT_PREVIEW_DB_WRITE_APPROVAL_DESIGN.md",
+  "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
   "package.json",
   ...previewFiles,
 ]);
