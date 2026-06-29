@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F1 - Supabase CLI Project Link Readiness
+
+- Marker: `A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `aa123fa`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  files and no staged `.xls`, `.xlsx` or `.csv` file.
+- `supabase --version` result: global Supabase CLI unavailable in PATH.
+- `npx --yes supabase --version` result: `2.108.0`.
+- Project link metadata check: `.supabase/`, `supabase/`,
+  `supabase/config.toml`, `.supabase/project-ref` and
+  `.supabase/.temp/project-ref` are missing; only `db/` exists.
+- Env presence check used `npm run check:env:safe`; it reported names-only
+  presence and printed no secret values.
+- Final status: `A16F1_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- Main blocker: `A16F1_BLOCKER=MISSING_SUPABASE_PROJECT_LINK`.
+- Created `docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md` and
+  `scripts/check-a16f1-supabase-cli-project-link-readiness.cjs`.
+- Added package command
+  `check:a16f1:supabase-cli-project-link-readiness`.
+- Updated A-16 through A-16F checker allowlists narrowly for the A-16F1
+  doc/checker/package-script changes.
+- A-16F1 did not run `supabase db push`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not insert/update/delete/upsert, did not import Excel, did not write
+  production data, did not deploy and did not push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F - Import Schema DB Apply Verification
 
 - Marker: `A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED`.

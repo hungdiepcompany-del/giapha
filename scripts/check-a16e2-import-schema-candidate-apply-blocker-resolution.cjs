@@ -11,6 +11,8 @@ const checkerPath = "scripts/check-a16e2-import-schema-candidate-apply-blocker-r
 const migrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 const a16fDocPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
 const a16fCheckerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
+const a16f1DocPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
+const a16f1CheckerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -28,6 +30,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
   a16fDocPath,
   a16fCheckerPath,
+  a16f1DocPath,
+  a16f1CheckerPath,
   "package.json",
 ]);
 

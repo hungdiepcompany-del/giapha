@@ -5,11 +5,8 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md";
-const checkerPath = "scripts/check-a16f-import-schema-db-apply-verification.cjs";
-const packagePath = "package.json";
-const a16f1DocPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
-const a16f1CheckerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
+const docPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
+const checkerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -25,9 +22,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
   "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
   "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
-  a16f1DocPath,
-  a16f1CheckerPath,
-  packagePath,
+  "scripts/check-a16f-import-schema-db-apply-verification.cjs",
+  "package.json",
 ]);
 
 function readFile(relativePath) {
@@ -85,51 +81,51 @@ function gitShowHead(relativePath) {
 
 const doc = readFile(docPath);
 const checker = readFile(checkerPath);
-const packageJson = readJson(packagePath);
+const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16F",
-  "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED",
-  "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
-  "A16F_STATUS=SAFE_SKIP_OR_BLOCKED",
-  "A16F_DB_DRY_RUN_RESULT=BLOCKED_SUPABASE_CLI_NOT_AVAILABLE",
-  "A16F_DB_APPLY_RESULT=NOT_RUN",
-  "A16F_SCHEMA_VERIFICATION_RESULT=NOT_RUN_NO_APPLY",
-  "A16F_RLS_VERIFICATION_RESULT=STATIC_CANDIDATE_ONLY_NOT_LIVE_DB",
-  "A16F_SEED_STATUS=NO_SEED",
-  "A16F_PEOPLE_RELATIONSHIPS_WRITE_STATUS=NO_WRITE",
-  "A16F_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "A-16F1",
+  "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED",
+  "A16F1_STATUS=SAFE_SKIP_OR_BLOCKED",
+  "A16F1_GLOBAL_SUPABASE_CLI=UNAVAILABLE",
+  "A16F1_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
+  "A16F1_PROJECT_LINK_READINESS=BLOCKED_MISSING_SUPABASE_PROJECT_LINK",
+  "A16F1_BLOCKER=MISSING_SUPABASE_PROJECT_LINK",
+  "A16F1_DB_PUSH_STATUS=NOT_RUN",
+  "A16F1_DB_DRY_RUN_STATUS=NOT_RUN",
+  "A16F1_DB_APPLY_STATUS=NOT_RUN",
+  "A16F1_SEED_STATUS=NO_SEED",
+  "A16F1_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
+  "A16F1_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "A16F1_ENV_SAFE_CHECK=PASS_NAMES_ONLY",
   "supabase --version",
-  "supabase db push --dry-run --linked",
-  "supabase db push --linked",
-  "No DB apply was attempted",
-  "No seed",
-  "No write to `people`",
-  "No write to relationship tables",
-  "No real Excel import",
-  "A16F_BLOCKER=SUPABASE_CLI_NOT_AVAILABLE_AND_PROJECT_LINK_NOT_CONFIRMED",
+  "npx --yes supabase --version",
+  "supabase link --project-ref",
+  "did not run `supabase db push`",
+  "did not run `supabase db push --dry-run --linked`",
+  "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION.md", "index entry"],
-  [workLog, "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED", "work log marker"],
-  [handoff, "A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED", "handoff marker"],
-  [decisionLog, "Decision 200 - A-16F blocks DB apply because Supabase CLI and project link are not confirmed", "decision entry"],
+  [index, "PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md", "index entry"],
+  [workLog, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "work log marker"],
+  [handoff, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "handoff marker"],
+  [decisionLog, "Decision 201 - A-16F1 confirms npx Supabase CLI but blocks DB apply until project link is confirmed", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16f:import-schema-db-apply-verification"] !==
-  "node scripts/check-a16f-import-schema-db-apply-verification.cjs"
+  packageJson?.scripts?.["check:a16f1:supabase-cli-project-link-readiness"] !==
+  "node scripts/check-a16f1-supabase-cli-project-link-readiness.cjs"
 ) {
-  failures.push("missing package script check:a16f:import-schema-db-apply-verification");
+  failures.push("missing package script check:a16f1:supabase-cli-project-link-readiness");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -168,14 +164,14 @@ for (const file of changedFiles) {
   }
 }
 
-const trackedDataFiles = gitOutput(["ls-files"])
+const stagedDataFiles = gitOutput(["diff", "--cached", "--name-only"])
   .split(/\r?\n/)
   .filter((file) => /\.(xls|xlsx|csv)$/i.test(file));
-for (const file of trackedDataFiles) {
-  failures.push(`tracked real import file not allowed ${file}`);
+for (const file of stagedDataFiles) {
+  failures.push(`staged real import file not allowed ${file}`);
 }
 
-const packageHead = gitShowHead(packagePath);
+const packageHead = gitShowHead("package.json");
 if (packageHead) {
   const before = JSON.parse(packageHead);
   const beforeDeps = JSON.stringify(before.dependencies ?? {});
@@ -197,22 +193,26 @@ for (const [file, content] of [
     /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
     /Bearer\s+[A-Za-z0-9._-]{12,}/,
     /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+    /SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^`\s]+/,
+    /NEXT_PUBLIC_SUPABASE_ANON_KEY\s*=\s*[^`\s]+/,
   ]) {
     rejectPattern(content, pattern, `${file} ${pattern}`);
   }
 }
 
 for (const pattern of [
-  /\bA16F_STATUS=PASS_SCHEMA_APPLIED_AND_VERIFIED\b/,
-  /\bA16F_DB_APPLY_RESULT=PASS\b/,
+  /\bA16F1_STATUS=PASS\b/,
+  /\bA16F1_PROJECT_LINK_READINESS=PASS\b/,
+  /\bA16F1_DB_APPLY_STATUS=PASS\b/,
+  /\bA16F1_DB_DRY_RUN_STATUS=PASS\b/,
 ]) {
   rejectPattern(doc, pattern, `doc ${pattern}`);
 }
 
 if (failures.length > 0) {
-  console.error("A-16F import schema DB apply verification check failed:");
+  console.error("A-16F1 Supabase CLI project link readiness check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16F import schema DB apply verification check passed.");
+console.log("A-16F1 Supabase CLI project link readiness check passed.");

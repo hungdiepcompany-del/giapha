@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16F1 - Supabase CLI Project Link Readiness blocked on project link
+
+- Marker: `A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED`.
+- Added `docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md`,
+  `scripts/check-a16f1-supabase-cli-project-link-readiness.cjs` and package
+  command `check:a16f1:supabase-cli-project-link-readiness`.
+- Final status: `A16F1_STATUS=SAFE_SKIP_OR_BLOCKED`.
+- `supabase --version`: unavailable in PATH.
+- `npx --yes supabase --version`: available, version `2.108.0`.
+- Project link readiness:
+  `A16F1_PROJECT_LINK_READINESS=BLOCKED_MISSING_SUPABASE_PROJECT_LINK`.
+- Missing link metadata: `.supabase/`, `supabase/`, `supabase/config.toml`,
+  `.supabase/project-ref` and `.supabase/.temp/project-ref`.
+- Env presence was checked by `npm run check:env:safe` names-only; no secret
+  values were printed and `.env.local` was not read directly.
+- Owner did not provide an exact GIA PHA project ref in this phase, so no
+  `supabase link` command was run.
+- A-16F1 did not run `supabase db push`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not insert/update/delete/upsert, did not import Excel, did not write
+  people/relationships, did not deploy and did not push.
+- To retry A-16F apply verification safely, owner/operator must confirm exact
+  GIA PHA Supabase project ref, confirm the logged-in Supabase account, create
+  or verify project link metadata, confirm backup/rollback/no-go position and
+  provide the apply marker again:
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY`.
+- A-16G/A-16H/A-16I remain blocked because schema apply verification still has
+  not passed.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F - Import Schema DB Apply Verification blocked safely
 
 - Marker: `A16F_IMPORT_SCHEMA_DB_APPLY_VERIFICATION_RECORDED`.

@@ -209,7 +209,8 @@
     "check:a16e:import-schema-candidate-db-apply-gate": "node scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
     "check:a16e1:owner-review-import-schema-apply-gate": "node scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
     "check:a16e2:import-schema-candidate-apply-blocker-resolution": "node scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
-    "check:a16f:import-schema-db-apply-verification": "node scripts/check-a16f-import-schema-db-apply-verification.cjs"
+    "check:a16f:import-schema-db-apply-verification": "node scripts/check-a16f-import-schema-db-apply-verification.cjs",
+    "check:a16f1:supabase-cli-project-link-readiness": "node scripts/check-a16f1-supabase-cli-project-link-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

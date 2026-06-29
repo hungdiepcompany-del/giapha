@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 201 - A-16F1 confirms npx Supabase CLI but blocks DB apply until project link is confirmed
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat A-16F1 as Supabase CLI/project-link readiness only, not a DB dry-run or
+  apply phase.
+- Record global `supabase` CLI as unavailable and `npx --yes supabase` as
+  available at version `2.108.0`.
+- Keep the DB apply path blocked because no `.supabase/` or `supabase/`
+  project-link metadata exists and owner did not provide an exact GIA PHA
+  project ref in this phase.
+- Do not run `supabase link`, `supabase db push --dry-run --linked` or
+  `supabase db push --linked` in A-16F1.
+- Require the existing A-16F owner marker
+  `APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY` again when retrying the actual
+  dry-run/apply verification phase.
+
+Ly do:
+
+- Supabase CLI docs state `supabase db push` requires a linked project and that
+  `--dry-run` shows pending changes before apply.
+- CLI availability alone is not enough; target project proof is the operational
+  safety boundary before any command that can touch remote DB state.
+- Linking a project without an explicit project ref/account confirmation could
+  bind the checkout to the wrong Supabase project.
+- This decision does not apply DB, run dry-run, seed, mutate data, import
+  Excel, add runtime dependency, deploy or push.
+
 ## Decision 200 - A-16F blocks DB apply because Supabase CLI and project link are not confirmed
 
 Status: `ACTIVE`
