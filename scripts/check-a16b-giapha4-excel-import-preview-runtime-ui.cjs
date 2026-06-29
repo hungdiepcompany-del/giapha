@@ -4,12 +4,21 @@ const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
-const docPath = "docs/PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md";
-const inspectPath = "scripts/inspect-giapha4-excel-import.cjs";
-const checkerPath = "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs";
-const marker = "A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS";
-const a16bDocPath = "docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md";
-const a16bCheckerPath = "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs";
+
+const docPath = "docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md";
+const checkerPath = "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs";
+const packagePath = "package.json";
+const marker = "A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI";
+
+const previewFiles = [
+  "app/(admin)/admin/exports/import/page.tsx",
+  "components/imports/giapha4-import-preview-form.tsx",
+  "app/api/admin/import/giapha4/preview/route.ts",
+  "lib/import/giapha4/types.ts",
+  "lib/import/giapha4/normalize.ts",
+  "lib/import/giapha4/parser.ts",
+  "lib/import/giapha4/preview.ts",
+];
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -17,18 +26,10 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  inspectPath,
+  "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   checkerPath,
-  a16bDocPath,
-  a16bCheckerPath,
-  "app/(admin)/admin/exports/import/page.tsx",
-  "app/api/admin/import/giapha4/preview/route.ts",
-  "components/imports/giapha4-import-preview-form.tsx",
-  "lib/import/giapha4/types.ts",
-  "lib/import/giapha4/normalize.ts",
-  "lib/import/giapha4/parser.ts",
-  "lib/import/giapha4/preview.ts",
   "package.json",
+  ...previewFiles,
 ]);
 
 function readFile(relativePath) {
@@ -84,85 +85,69 @@ function gitShowHead(relativePath) {
   }
 }
 
-const packageJson = readJson("package.json");
 const doc = readFile(docPath);
-const inspectScript = readFile(inspectPath);
+const packageJson = readJson(packagePath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
+const previewContents = previewFiles.map((file) => [file, readFile(file)]);
 
 for (const token of [
-  "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone",
-  "A-16",
+  "A-16B",
   marker,
   "preview-only",
   "NO_DB_WRITE",
   "khong commit file Excel that",
-  "khong commit du lieu ca nhan that",
   "privacy/PII policy",
   "duplicate policy",
-  "relationship mapping",
-  "future owner approval gate",
-  "SAFE_SKIP_EXCEL_DEPENDENCY_MISSING",
-  "A16B runtime preview/import UI",
-  "DB write later phase",
+  "warning/ambiguity policy",
+  "khong co nut nhap that hoat dong",
+  "future owner approval gate cho A-16C",
+  "A16B_PREVIEW_RUNTIME_STATUS=SAFE_SKIP_MISSING_EXCEL_PARSER_DEPENDENCY",
+  "parser architecture",
+  "UI flow",
+  "API/server action flow",
+  "dependency status",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
-for (const token of [
-  "full_name / display_name",
-  "gender",
-  "birth_date",
-  "death_date",
-  "is_living",
-  "birth_place",
-  "home_town",
-  "branch_name",
-  "generation_number",
-  "notes_private",
-  "visibility",
-  "parent-child",
-  "spouse/couple",
-]) {
-  requireIncludes(doc, token, `mapping token ${token}`);
-}
-
-for (const token of [
-  "GIAPHA4_EXCEL_PATH",
-  "SAFE_SKIP_EXCEL_DEPENDENCY_MISSING",
-  "printed_pii",
-  "db_write",
-  "masked_sample_shape",
-]) {
-  requireIncludes(inspectScript, token, `inspect token ${token}`);
-}
-
 for (const [content, token, label] of [
-  [index, "PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md", "index entry"],
-  [workLog, "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone", "work log entry"],
-  [handoff, "A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone recorded", "handoff entry"],
-  [decisionLog, "Decision 193 - A-16 keeps Gia Pha 4.0 Excel import preview-only until owner approval", "decision log entry"],
+  [index, docPath, "index entry"],
   [workLog, marker, "work log marker"],
   [handoff, marker, "handoff marker"],
+  [decisionLog, "Decision 194 - A-16B keeps Gia Pha 4 Excel preview safe-skip until parser approval", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16:giapha4-excel-import-mapping-readiness"] !==
-  "node scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs"
+  packageJson?.scripts?.["check:a16b:giapha4-excel-import-preview-runtime-ui"] !==
+  "node scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs"
 ) {
-  failures.push("missing package script check:a16:giapha4-excel-import-mapping-readiness");
+  failures.push("missing package script check:a16b:giapha4-excel-import-preview-runtime-ui");
 }
 
-if (
-  packageJson?.scripts?.["inspect:giapha4-excel"] !==
-  "node scripts/inspect-giapha4-excel-import.cjs"
-) {
-  failures.push("missing package script inspect:giapha4-excel");
+const uiContent = readFile("components/imports/giapha4-import-preview-form.tsx");
+for (const token of [
+  "Xem trước dữ liệu",
+  "Tải lại file",
+  "Nhập dữ liệu thật",
+  "Nhập dữ liệu thật sẽ được mở ở phase sau sau khi owner phê duyệt.",
+  "ghi database",
+]) {
+  requireIncludes(uiContent, token, `UI token ${token}`);
 }
+
+const routeContent = readFile("app/api/admin/import/giapha4/preview/route.ts");
+requireIncludes(routeContent, "previewGiaPha4ExcelImport", "API route preview service");
+requireIncludes(routeContent, "POST", "API route POST");
+
+const parserContent = readFile("lib/import/giapha4/parser.ts");
+requireIncludes(parserContent, "SAFE_SKIP_MISSING_EXCEL_PARSER_DEPENDENCY", "parser safe-skip status");
+requireIncludes(parserContent, "db_write: false", "parser no DB write");
+requireIncludes(parserContent, "printed_pii: false", "parser no PII log contract");
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
@@ -185,22 +170,12 @@ for (const file of changedFiles) {
   ) {
     failures.push(`runtime/deploy config changed ${file}`);
   }
-  if (
-    !allowedChangedFiles.has(file) &&
-    (file.startsWith("app/api/") ||
-      file.startsWith("lib/") ||
-      file.startsWith("server/") ||
-      file.startsWith("services/") ||
-      file.startsWith("pages/"))
-  ) {
-    failures.push(`API/service/runtime file changed ${file}`);
-  }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
   }
 }
 
-const packageHead = gitShowHead("package.json");
+const packageHead = gitShowHead(packagePath);
 if (packageHead) {
   const before = JSON.parse(packageHead);
   const beforeDeps = JSON.stringify(before.dependencies ?? {});
@@ -213,20 +188,40 @@ if (packageHead) {
   }
 }
 
-for (const pattern of [
-  /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
-  /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
-  /Bearer\s+[A-Za-z0-9._-]{12,}/,
-  /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+for (const [file, content] of previewContents) {
+  for (const pattern of [
+    /\.insert\s*\(/,
+    /\.update\s*\(/,
+    /\.upsert\s*\(/,
+    /\.delete\s*\(/,
+    /\binsert\s+into\b/i,
+    /\bupdate\s+[a-z_"]+\s+set\b/i,
+    /\bdelete\s+from\b/i,
+    /console\.(log|info|warn|error)\s*\(/,
+  ]) {
+    rejectPattern(content, pattern, `${file} ${pattern}`);
+  }
+}
+
+for (const [file, content] of [
+  [docPath, doc],
+  [checkerPath, readFile(checkerPath)],
+  ...previewContents,
 ]) {
-  rejectPattern(doc, pattern, pattern.toString());
-  rejectPattern(inspectScript, pattern, pattern.toString());
+  for (const pattern of [
+    /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
+    /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/,
+    /Bearer\s+[A-Za-z0-9._-]{12,}/,
+    /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+  ]) {
+    rejectPattern(content, pattern, `${file} ${pattern}`);
+  }
 }
 
 if (failures.length > 0) {
-  console.error("A-16 Gia Pha 4 Excel import mapping readiness check failed:");
+  console.error("A-16B Gia Pha 4 Excel import preview runtime/UI check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16 Gia Pha 4 Excel import mapping readiness check passed.");
+console.log("A-16B Gia Pha 4 Excel import preview runtime/UI check passed.");

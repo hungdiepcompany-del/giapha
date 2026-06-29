@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16B - Gia Pha 4.0 Excel Import Preview Runtime UI recorded
+
+- Marker: `A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI`.
+- Added
+  `docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md`,
+  `scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs`,
+  `lib/import/giapha4/types.ts`, `lib/import/giapha4/normalize.ts`,
+  `lib/import/giapha4/parser.ts`, `lib/import/giapha4/preview.ts`,
+  `app/api/admin/import/giapha4/preview/route.ts` and
+  `components/imports/giapha4-import-preview-form.tsx`.
+- Updated `/admin/exports/import` to include a Gia Pha 4.0 Excel preview panel
+  before the existing `family.json` import preview.
+- A-16B remains preview-only and safe-skip because no approved Excel parser
+  dependency exists. No `xlsx`/`exceljs` dependency was added.
+- Runtime status:
+  `A16B_PREVIEW_RUNTIME_STATUS=SAFE_SKIP_MISSING_EXCEL_PARSER_DEPENDENCY`.
+- API route: `POST /api/admin/import/giapha4/preview`. It uses existing
+  permission context, accepts multipart file metadata, enforces a 5MB limit and
+  returns preview JSON with `db_write: false`, `printed_pii: false` and
+  `stored_file: false`.
+- UI does not show raw filename; it shows extension and size only. It has
+  `Xem trước dữ liệu`, `Tải lại file` and disabled `Nhập dữ liệu thật` with
+  copy that real import opens only after owner approval in a later phase.
+- No real Excel/CSV file, no real personal data, no DB mutation, no migration,
+  no seed, no auth/RLS/permission/API contract expansion, no deploy and no push.
+- Next A-16C can open only after owner approves a parser dependency or offline
+  conversion path, sanitized fixture rules, privacy-safe preview evidence and
+  explicit separate DB-write/import approval gates.
+- Runtime guardrail status: Main Worker touched YES for small admin UI/API
+  coordination only, runtime dependency added NO, new service Worker NO,
+  OpenNext/Wrangler config changed NO, Worker size risk LOW.
+
 ## 2026-06-29 - A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone recorded
 
 - Marker: `A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS`.

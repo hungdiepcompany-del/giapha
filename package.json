@@ -202,7 +202,8 @@
     "check:a15e2:production-500-rollback-deploy-failure-diagnostics": "node scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs",
     "check:a15e3:safe-github-actions-linux-production-deploy-verification": "node scripts/check-a15e3-safe-github-actions-linux-production-deploy-verification.cjs",
     "check:a16:giapha4-excel-import-mapping-readiness": "node scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
-    "inspect:giapha4-excel": "node scripts/inspect-giapha4-excel-import.cjs"
+    "inspect:giapha4-excel": "node scripts/inspect-giapha4-excel-import.cjs",
+    "check:a16b:giapha4-excel-import-preview-runtime-ui": "node scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

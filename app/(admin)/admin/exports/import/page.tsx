@@ -1,4 +1,5 @@
 import { JsonImportPreviewForm } from "@/components/imports/json-import-preview-form";
+import { GiaPha4ImportPreviewForm } from "@/components/imports/giapha4-import-preview-form";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
@@ -44,7 +45,10 @@ export default async function AdminImportPage() {
                 ? message
                 : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
             </StatusCallout>
-            <JsonImportPreviewForm />
+            <div className="grid gap-8">
+              <GiaPha4ImportPreviewForm />
+              <JsonImportPreviewForm />
+            </div>
           </div>
         )}
       </section>

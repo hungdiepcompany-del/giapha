@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-06-29 - A-16B - Gia Pha 4.0 Excel Import Preview Runtime UI
+
+- Marker: `A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI`.
+- Precondition checked: A-16 is complete at local commit `f824cbe` with
+  mapping/readiness docs and PASS validation recorded. Current repo started
+  from `main...origin/main [ahead 1]`, with no staged `.xls`, `.xlsx` or
+  `.csv` file and `.env.local` ignored by `.gitignore:17:.env.*`.
+- Added
+  `docs/PLAN_A16B_GIAPHA4_EXCEL_IMPORT_PREVIEW_RUNTIME_UI.md`,
+  `scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs`,
+  `lib/import/giapha4/types.ts`, `lib/import/giapha4/normalize.ts`,
+  `lib/import/giapha4/parser.ts`, `lib/import/giapha4/preview.ts`,
+  `app/api/admin/import/giapha4/preview/route.ts` and
+  `components/imports/giapha4-import-preview-form.tsx`.
+- Updated existing `/admin/exports/import` to show a Gia Pha 4.0 Excel preview
+  panel before the existing `family.json` preview form.
+- Dependency status remains unchanged: no `xlsx`, no `exceljs`, no new parser
+  dependency and no package dependency change.
+- Runtime status:
+  `A16B_PREVIEW_RUNTIME_STATUS=SAFE_SKIP_MISSING_EXCEL_PARSER_DEPENDENCY`.
+  The API returns structured safe-skip preview JSON with `db_write: false`,
+  `printed_pii: false`, `stored_file: false`, zero parsed rows and Vietnamese
+  warnings.
+- UI actions: `Xem trước dữ liệu`, `Tải lại file` and disabled
+  `Nhập dữ liệu thật`. There is no active real-import button in A-16B.
+- No DB insert/update/delete/upsert, no migration, no seed, no RLS/auth/
+  permission contract change, no production data mutation, no deploy, no push,
+  no real Excel file and no real personal data committed.
+- Runtime guardrail status: Main Worker touched YES for small admin UI/API
+  coordination only, runtime dependency added NO, new service Worker NO,
+  OpenNext/Wrangler config changed NO, Worker size risk LOW.
+
 ## 2026-06-29 - A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone
 
 - Marker: `A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS`.

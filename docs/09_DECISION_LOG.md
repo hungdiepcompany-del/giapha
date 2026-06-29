@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 194 - A-16B keeps Gia Pha 4 Excel preview safe-skip until parser approval
+
+Status: `ACTIVE`
+
+Chon:
+
+- Add the admin Gia Pha 4.0 Excel preview surface as a safe-skip runtime/UI
+  shell instead of adding an unapproved Excel parser dependency.
+- Keep the preview API in the main app only as light coordination that returns
+  metadata/counts/warnings and never writes database rows.
+- Keep `Nhập dữ liệu thật` disabled and require a future owner-approved A-16C
+  before parser dependency, row-level preview parsing or import-write work.
+
+Ly do:
+
+- A-16 confirmed no direct `xlsx` or `exceljs` dependency is currently present.
+- The real workbook can contain sensitive family data, so A-16B must not log raw
+  rows, commit files or fake a parse result.
+- The current main app may coordinate small preview UI/API work, but large Excel
+  parsing and validation can affect Worker size/startup and should be reviewed
+  for offline tooling or `genealogy-import-service`.
+- This decision does not change DB, RLS, auth, permission model, dependency,
+  OpenNext/Wrangler config or service Worker deployment.
+
 ## Decision 193 - A-16 keeps Gia Pha 4.0 Excel import preview-only until owner approval
 
 Status: `ACTIVE`
