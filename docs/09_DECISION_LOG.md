@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 204 - A-16F4 blocks dry-run because Supabase project link lacks required privileges
+
+Status: `ACTIVE`
+
+Chon:
+
+- Attempt project link to owner-confirmed project ref
+  `frkyeuxrlcflmsxxsolp`.
+- Stop before dry-run because `supabase link` failed while retrieving remote
+  project status due to insufficient privileges for the current Supabase
+  account.
+- Record `A16F4_STATUS=BLOCKED_SUPABASE_AUTH_REQUIRED` and
+  `A16F4_BLOCKER=SUPABASE_LINK_PRIVILEGE_REQUIRED`.
+- Do not run `supabase db push --dry-run --linked` without verified link
+  metadata.
+- Keep expected dry-run migration list limited to
+  `20260629_0010_a16d_import_manifest_storage_candidate.sql` for a future retry.
+
+Ly do:
+
+- A dry-run against the wrong or unverified project would be unsafe even though
+  it is not an apply.
+- Supabase CLI link requires account privileges to the remote project endpoint;
+  the current shell account could not prove that access.
+- No DB apply, seed, import, people/relationship write, deploy or push is
+  allowed in this phase.
+
 ## Decision 203 - A-16F3 creates local Supabase metadata and byte-for-byte migration bridge but leaves project link blocked
 
 Status: `ACTIVE`

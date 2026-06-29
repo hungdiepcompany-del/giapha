@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F4 - Supabase DB Dry-run Only
+
+- Marker: `A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED`.
+- Preflight checked: repo started clean at `main...origin/main [ahead 1]`,
+  HEAD `ecf4104`; `.env.local` is ignored by `.gitignore:17:.env.*`; no
+  staged files and no staged `.xls`, `.xlsx` or `.csv` file.
+- `npx --yes supabase --version` result: `2.108.0`.
+- Source/mirror migration hash remains
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Project ref remains owner-confirmed as `frkyeuxrlcflmsxxsolp`.
+- Link metadata before link was missing: `.supabase/`,
+  `.supabase/.temp/` and `.supabase/.temp/project-ref`.
+- Attempted
+  `npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp`.
+- Link failed with sanitized summary: current account lacks necessary
+  privileges to access the Supabase remote project status endpoint.
+- Final status: `A16F4_STATUS=BLOCKED_SUPABASE_AUTH_REQUIRED`.
+- Blocker: `A16F4_BLOCKER=SUPABASE_LINK_PRIVILEGE_REQUIRED`.
+- Dry-run command `npx --yes supabase db push --dry-run --linked` was not run
+  because project link did not succeed.
+- Created `docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md` and
+  `scripts/check-a16f4-supabase-db-dry-run-only.cjs`.
+- Added package command `check:a16f4:supabase-db-dry-run-only`.
+- A-16F4 did not run `supabase db push --linked`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not import Excel, did not write people/relationships, did not deploy and did
+  not push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F3 - Supabase Metadata Link Migration Path Bridge
 
 - Marker: `A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED`.

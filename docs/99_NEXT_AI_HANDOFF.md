@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16F4 - Supabase DB dry-run only blocked before dry-run
+
+- Marker: `A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED`.
+- Added `docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md`,
+  `scripts/check-a16f4-supabase-db-dry-run-only.cjs` and package command
+  `check:a16f4:supabase-db-dry-run-only`.
+- `npx --yes supabase --version`: available, version `2.108.0`.
+- Owner-confirmed project ref remains `frkyeuxrlcflmsxxsolp`.
+- Source/mirror migration hash remains
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Attempted
+  `npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp`.
+- Link failed with sanitized reason: current Supabase account lacks necessary
+  privileges to access the remote project status endpoint.
+- Link metadata remains missing: `.supabase/` and `.supabase/.temp/project-ref`
+  were not created.
+- Final status: `A16F4_STATUS=BLOCKED_SUPABASE_AUTH_REQUIRED`.
+- Blocker: `A16F4_BLOCKER=SUPABASE_LINK_PRIVILEGE_REQUIRED`.
+- Dry-run command `npx --yes supabase db push --dry-run --linked` was not run
+  because the project link gate failed.
+- Expected migration for future retry:
+  `20260629_0010_a16d_import_manifest_storage_candidate.sql` only.
+- A-16F4 did not run `supabase db push --linked`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not import Excel, did not write people/relationships, did not deploy and did
+  not push.
+- To retry, owner/operator must use a Supabase account with privileges on
+  project `frkyeuxrlcflmsxxsolp`, confirm link metadata, then run a dry-run-only
+  phase again.
+- A-16G/A-16H/A-16I remain blocked because schema dry-run/apply verification
+  has not passed.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F3 - Supabase Metadata Link Migration Path Bridge ready, link blocked
 
 - Marker: `A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED`.

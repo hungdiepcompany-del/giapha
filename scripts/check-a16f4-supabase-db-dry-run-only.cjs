@@ -6,14 +6,10 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md";
-const checkerPath = "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs";
+const docPath = "docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md";
+const checkerPath = "scripts/check-a16f4-supabase-db-dry-run-only.cjs";
 const sourceMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 const mirrorMigrationPath = "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
-const supabaseConfigPath = "supabase/config.toml";
-const supabaseGitignorePath = "supabase/.gitignore";
-const a16f4DocPath = "docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md";
-const a16f4CheckerPath = "scripts/check-a16f4-supabase-db-dry-run-only.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -22,9 +18,6 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
-  mirrorMigrationPath,
-  supabaseConfigPath,
-  supabaseGitignorePath,
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
@@ -35,8 +28,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16f-import-schema-db-apply-verification.cjs",
   "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
   "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs",
-  a16f4DocPath,
-  a16f4CheckerPath,
+  "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs",
   "package.json",
 ]);
 
@@ -114,11 +106,9 @@ function sha256(bytes) {
 
 const doc = readFile(docPath);
 const checker = readFile(checkerPath);
-const mirrorSql = readFile(mirrorMigrationPath);
 const sourceBytes = readBytes(sourceMigrationPath);
 const mirrorBytes = readBytes(mirrorMigrationPath);
-const supabaseConfig = readFile(supabaseConfigPath);
-const supabaseGitignore = readFile(supabaseGitignorePath);
+const mirrorSql = readFile(mirrorMigrationPath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -126,49 +116,52 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16F3",
-  "A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED",
-  "A16F3_STATUS=BRIDGE_READY_LINK_BLOCKED",
-  "A16F3_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
-  "A16F3_OWNER_CONFIRMED_PROJECT_REF=frkyeuxrlcflmsxxsolp",
-  "A16F3_SUPABASE_INIT_RESULT=PASS_LOCAL_METADATA_CREATED",
-  "A16F3_PROJECT_LINK_RESULT=BLOCKED_SUPABASE_AUTH_REQUIRED_OR_ACCOUNT_NOT_CONFIRMED",
-  "A16F3_MIGRATION_BRIDGE_RESULT=PASS_BYTE_FOR_BYTE",
-  "A16F3_SOURCE_CANONICAL_PATH=db/migrations",
-  "A16F3_MIRROR_PATH=supabase/migrations",
-  "A16F3_DB_PUSH_STATUS=NOT_RUN",
-  "A16F3_DB_DRY_RUN_STATUS=NOT_RUN",
-  "A16F3_DB_APPLY_STATUS=NOT_RUN",
-  "A16F3_SEED_STATUS=NO_SEED",
-  "A16F3_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
-  "A16F3_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "A-16F4",
+  "A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED",
+  "A16F4_STATUS=BLOCKED_SUPABASE_AUTH_REQUIRED",
+  "A16F4_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
+  "A16F4_PROJECT_REF=frkyeuxrlcflmsxxsolp",
+  "A16F4_LINK_RESULT=FAIL_SUPABASE_LINK_PRIVILEGE_REQUIRED",
+  "A16F4_DRY_RUN_RESULT=NOT_RUN_LINK_BLOCKED",
+  "A16F4_DB_APPLY_STATUS=NOT_RUN",
+  "A16F4_SEED_STATUS=NO_SEED",
+  "A16F4_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "A16F4_PEOPLE_WRITE_STATUS=NO_WRITE",
+  "A16F4_RELATIONSHIP_WRITE_STATUS=NO_WRITE",
+  "A16F4_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
   "frkyeuxrlcflmsxxsolp",
-  "supabase/config.toml",
-  "supabase/migrations",
-  "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql",
-  "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql",
-  "A16F4_DRY_RUN_ONLY",
-  "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
-  "did not run `supabase db push`",
+  "npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp",
+  "npx --yes supabase db push --dry-run --linked",
+  "A16F4_SOURCE_SHA256=D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE",
+  "A16F4_MIRROR_SHA256=D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE",
+  "EXPECTED_ONLY_MIGRATION=20260629_0010_a16d_import_manifest_storage_candidate.sql",
+  "EXPECTED_NO_OUT_OF_SCOPE_MIGRATIONS=true",
+  "A16F4_BLOCKER=SUPABASE_LINK_PRIVILEGE_REQUIRED",
+  "did not run `supabase db push --linked`",
   "did not run `supabase db push --dry-run --linked`",
+  "did not apply DB",
+  "did not seed",
+  "did not import Excel",
+  "did not write `people`",
+  "did not write relationships",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md", "index entry"],
-  [workLog, "A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED", "work log marker"],
-  [handoff, "A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE_RECORDED", "handoff marker"],
-  [decisionLog, "Decision 203 - A-16F3 creates local Supabase metadata and byte-for-byte migration bridge but leaves project link blocked", "decision entry"],
+  [index, "PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md", "index entry"],
+  [workLog, "A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED", "work log marker"],
+  [handoff, "A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED", "handoff marker"],
+  [decisionLog, "Decision 204 - A-16F4 blocks dry-run because Supabase project link lacks required privileges", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16f3:supabase-metadata-link-migration-path-bridge"] !==
-  "node scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs"
+  packageJson?.scripts?.["check:a16f4:supabase-db-dry-run-only"] !==
+  "node scripts/check-a16f4-supabase-db-dry-run-only.cjs"
 ) {
-  failures.push("missing package script check:a16f3:supabase-metadata-link-migration-path-bridge");
+  failures.push("missing package script check:a16f4:supabase-db-dry-run-only");
 }
 
 if (!sourceBytes.equals(mirrorBytes)) {
@@ -176,23 +169,8 @@ if (!sourceBytes.equals(mirrorBytes)) {
 }
 
 const expectedHash = "D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE";
-if (sha256(sourceBytes) !== expectedHash) failures.push("source migration hash does not match recorded A-16F3 hash");
-if (sha256(mirrorBytes) !== expectedHash) failures.push("mirror migration hash does not match recorded A-16F3 hash");
-requireIncludes(doc, `A16F3_SOURCE_SHA256=${expectedHash}`, "source hash in doc");
-requireIncludes(doc, `A16F3_MIRROR_SHA256=${expectedHash}`, "mirror hash in doc");
-
-for (const token of [
-  'project_id = "GIA_PH_"',
-  "[db.seed]",
-  "enabled = false",
-  "sql_paths = []",
-]) {
-  requireIncludes(supabaseConfig, token, `supabase config token ${token}`);
-}
-
-for (const token of [".temp", ".env.local", ".env.*.local"]) {
-  requireIncludes(supabaseGitignore, token, `supabase .gitignore token ${token}`);
-}
+if (sha256(sourceBytes) !== expectedHash) failures.push("source migration hash does not match expected");
+if (sha256(mirrorBytes) !== expectedHash) failures.push("mirror migration hash does not match expected");
 
 const mirrorSqlWithoutComments = stripSqlComments(mirrorSql);
 for (const pattern of [
@@ -274,7 +252,6 @@ if (packageHead) {
 for (const [file, content] of [
   [docPath, doc],
   [checkerPath, checker],
-  [supabaseConfigPath, supabaseConfig],
   [mirrorMigrationPath, mirrorSql],
 ]) {
   for (const pattern of [
@@ -284,23 +261,24 @@ for (const [file, content] of [
     /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
     /SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^`\s]+/,
     /NEXT_PUBLIC_SUPABASE_ANON_KEY\s*=\s*[^`\s]+/,
+    /postgresql:\/\/[^`\s]+/i,
   ]) {
     rejectPattern(content, pattern, `${file} ${pattern}`);
   }
 }
 
 for (const pattern of [
-  /\bA16F3_DB_APPLY_STATUS=PASS\b/,
-  /\bA16F3_DB_DRY_RUN_STATUS=PASS\b/,
-  /\bA16F3_PROJECT_LINK_RESULT=PASS\b/,
+  /\bA16F4_STATUS=READY_FOR_A16F5_DB_APPLY_VERIFICATION\b/,
+  /\bA16F4_DRY_RUN_RESULT=PASS\b/,
+  /\bA16F4_DB_APPLY_STATUS=PASS\b/,
 ]) {
   rejectPattern(doc, pattern, `doc ${pattern}`);
 }
 
 if (failures.length > 0) {
-  console.error("A-16F3 Supabase metadata link migration path bridge check failed:");
+  console.error("A-16F4 Supabase DB dry-run only check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16F3 Supabase metadata link migration path bridge check passed.");
+console.log("A-16F4 Supabase DB dry-run only check passed.");
