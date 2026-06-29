@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 192 - A-15E3 standardizes manual GitHub Actions Linux deploy verification
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat manual GitHub Actions Linux Cloudflare Deploy as the preferred
+  production deploy path after the Windows/OpenNext 500 incident.
+- Do not deploy production from Windows unless a later owner-approved phase
+  specifically revalidates that path.
+- Keep Cloudflare Deploy manual-only via `workflow_dispatch`; do not enable auto
+  deploy on push yet.
+- Treat the GitHub Actions Node.js 20 deprecation/actions forced-to-Node-24
+  warning as a non-blocking runner advisory if the workflow status is success.
+
+Ly do:
+
+- A Windows deploy caused HTTP 500 on `/`, `/tree`, `/auth/login` and `/admin`.
+- A-15E2 rollback restored production using Worker version
+  `4134298b-ef89-4099-b20b-b13995f397c8`.
+- A-15E3 production smoke after owner-reported GitHub Actions Linux deploy
+  returned `/` 200, `/tree` 200, `/auth/login` 200 and `/admin` 307 redirect to
+  login.
+- `npx wrangler deployments list` showed current active version
+  `f8287634-ecfa-45f6-ac8a-d519e1b4e30b` with 100% traffic.
+- This decision does not change DB, auth, permission, API, OpenNext/Wrangler
+  config, dependency or service boundary.
+
 ## Decision 191 - A-15E2 blocks Windows redeploy after production 500 rollback
 
 Status: `ACTIVE`

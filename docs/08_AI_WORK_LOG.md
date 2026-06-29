@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-06-29 - A-15E3 - Safe GitHub Actions Linux Production Deploy Verification
+
+- Marker: `A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION`.
+- Created
+  `docs/PLAN_A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION.md`,
+  `scripts/check-a15e3-safe-github-actions-linux-production-deploy-verification.cjs`
+  and package command
+  `check:a15e3:safe-github-actions-linux-production-deploy-verification`.
+- Scope: verification/documentation/checker only after owner ran the manual
+  GitHub Actions Cloudflare Deploy workflow; no deploy rerun and no rollback.
+- Local state before edits: `git status -sb` was clean on
+  `main...origin/main`, HEAD `9b6383e`, and `.env.local` is ignored by
+  `.gitignore:17:.env.*`.
+- Verified `.github/workflows/cloudflare-deploy.yml`: `workflow_dispatch`,
+  `ubuntu-latest`, Node.js `24`, required Cloudflare/Supabase env contract, and
+  deploy step `npm run deploy`.
+- Verified `.github/workflows/opennext-build-gate.yml`: can run on push, but
+  only builds/checks OpenNext and does not deploy production.
+- Recorded owner-reported GitHub Actions warning:
+  Node.js 20 deprecated / actions forced to Node.js 24. Classified as
+  `NON_BLOCKING_GITHUB_ACTIONS_RUNNER_ADVISORY_IF_WORKFLOW_SUCCESS`; workflow
+  run status was not independently read via GitHub API in this phase.
+- Production smoke after the owner-reported GitHub Actions deploy:
+  `/` 200, `/tree` 200, `/auth/login` 200, `/admin` 307 redirect to login.
+  Result: `A15E3_STATUS=PASS_GITHUB_ACTIONS_LINUX_DEPLOY_VERIFIED`.
+- `npx wrangler deployments list` was read-only and showed current active
+  version `f8287634-ecfa-45f6-ac8a-d519e1b4e30b` with 100% traffic.
+- Recommendation recorded: do not deploy production from Windows again; keep
+  manual GitHub Actions Linux deploy; do not enable auto deploy on push until
+  several manual deploys pass.
+- No DB migration, seed, RLS/auth/permission/API contract change, production
+  data mutation, dependency, `.env.local` commit or OpenNext/Wrangler config
+  change.
+
 ## 2026-06-29 - A-15E2 - Production 500 Rollback & Deploy Failure Diagnostics
 
 - Marker: `A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS`.

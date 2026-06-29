@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-15E3 - Safe GitHub Actions Linux Production Deploy Verification recorded
+
+- Marker: `A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION`.
+- Added
+  `docs/PLAN_A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION.md`,
+  `scripts/check-a15e3-safe-github-actions-linux-production-deploy-verification.cjs`
+  and package command
+  `check:a15e3:safe-github-actions-linux-production-deploy-verification`.
+- Owner reported running the manual GitHub Actions Cloudflare Deploy workflow
+  after A-15E2. This phase did not call GitHub API and did not independently
+  read workflow run status; owner success/failure confirmation is still the
+  source for the workflow UI result.
+- Verified deploy workflow locally: `.github/workflows/cloudflare-deploy.yml`
+  is `workflow_dispatch`, `ubuntu-latest`, Node.js `24`, has the Cloudflare and
+  Supabase env contract, and deploys with `npm run deploy`.
+- Verified OpenNext Build Gate: `.github/workflows/opennext-build-gate.yml`
+  can run on push, but it does not deploy production.
+- GitHub Actions warning about Node.js 20 deprecation/actions being forced to
+  Node.js 24 is recorded as
+  `NON_BLOCKING_GITHUB_ACTIONS_RUNNER_ADVISORY_IF_WORKFLOW_SUCCESS`.
+- Production smoke after owner-reported GitHub Actions deploy PASS:
+  `/` 200, `/tree` 200, `/auth/login` 200, `/admin` 307 redirect to login.
+- `npx wrangler deployments list` showed current active version
+  `f8287634-ecfa-45f6-ac8a-d519e1b4e30b` with 100% traffic; prior known good
+  rollback version remains `4134298b-ef89-4099-b20b-b13995f397c8`.
+- A-15E3 status:
+  `A15E3_STATUS=PASS_GITHUB_ACTIONS_LINUX_DEPLOY_VERIFIED`.
+- Next policy: do not deploy production from Windows; use manual GitHub Actions
+  Linux deploy; do not enable auto deploy on push until a separate owner-approved
+  phase after several manual deploys pass.
+- Runtime guardrail status: Main Worker touched NO, dependency added NO, new
+  service Worker NO, OpenNext/Wrangler config changed NO, deploy NO from this
+  phase.
+
 ## 2026-06-29 - A-15E2 - Production 500 Rollback & Deploy Failure Diagnostics recorded
 
 - Marker: `A15E2_PRODUCTION_500_ROLLBACK_DEPLOY_FAILURE_DIAGNOSTICS`.
