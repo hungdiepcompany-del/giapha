@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-06-29 - A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone
+
+- Marker: `A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS`.
+- Created
+  `docs/PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md`,
+  `scripts/inspect-giapha4-excel-import.cjs`,
+  `scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs`
+  and package commands
+  `check:a16:giapha4-excel-import-mapping-readiness` and
+  `inspect:giapha4-excel`.
+- Scope: analysis/design/checker and optional privacy-safe workbook inspection
+  only. The phase is `NO_DB_WRITE`, with no insert/update/delete, no migration,
+  no seed, no RLS/auth/permission/API contract change, no deploy and no
+  production data mutation.
+- Checked safe sample locations: `data/import-samples/`, `tmp/`, `private/`
+  and project root. No `.xls`, `.xlsx` or `.csv` input file was found in the
+  inspected locations, and no real workbook or real personal data was added.
+- Checked direct package/runtime parser availability: `xlsx`, `exceljs`,
+  `csv-parse` and `papaparse` are not present. No dependency was added.
+- Added a safe-skip inspector that accepts a local path or
+  `GIAPHA4_EXCEL_PATH`, prints metadata/header/sample-shape only when a parser
+  dependency is available, and otherwise returns
+  `SAFE_SKIP_EXCEL_DEPENDENCY_MISSING` or `SAFE_SKIP_NO_INPUT_PATH` without
+  printing raw PII or writing output files.
+- Recorded proposed Gia Pha 4.0 mapping to current people/family relationship
+  fields, duplicate policy, relationship preview behavior, privacy rules and
+  A16B approval gates before any real import or DB mutation.
+- Runtime guardrail status: Main Worker touched NO, dependency added NO, new
+  service Worker NO, OpenNext/Wrangler config changed NO.
+
 ## 2026-06-29 - A-15E3 - Safe GitHub Actions Linux Production Deploy Verification
 
 - Marker: `A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION`.

@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 193 - A-16 keeps Gia Pha 4.0 Excel import preview-only until owner approval
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat Gia Pha 4.0 Excel/iPhone import work in A-16 as mapping readiness and
+  privacy-safe preview only.
+- Keep `NO_DB_WRITE`: no insert/update/delete, migration, seed, RLS/auth/
+  permission/API contract change or production mutation in this phase.
+- Do not add an Excel parser dependency in A-16. The inspector may safe-skip
+  when `xlsx`/`exceljs` or equivalent is absent.
+- Require a later A16B approval gate before any parser dependency, sanitized
+  fixture expansion, runtime import flow or database write is introduced.
+
+Ly do:
+
+- Real Gia Pha 4.0 workbooks can contain personal data and relationship data,
+  so raw rows must not be logged or committed.
+- The current repository has family.json preview infrastructure, but Excel
+  import needs explicit field mapping, duplicate handling, privacy review and
+  relationship validation before mutation is safe.
+- Large or repeated import/validation work may need a future import service or
+  offline operator tool instead of growing the main OpenNext Worker.
+- This decision does not change DB, auth, permission, API, dependency,
+  OpenNext/Wrangler config or service boundary.
+
 ## Decision 192 - A-15E3 standardizes manual GitHub Actions Linux deploy verification
 
 Status: `ACTIVE`

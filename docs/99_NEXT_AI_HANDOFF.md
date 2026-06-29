@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-06-29 - A-16 - Import Du Lieu Gia Pha 4.0 Tu File Excel iPhone recorded
+
+- Marker: `A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS`.
+- Added `docs/PLAN_A16_GIAPHA4_EXCEL_IMPORT_MAPPING_READINESS.md`,
+  `scripts/inspect-giapha4-excel-import.cjs`,
+  `scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs`
+  and package commands
+  `check:a16:giapha4-excel-import-mapping-readiness` and
+  `inspect:giapha4-excel`.
+- A-16 is preview/design/readiness only. It does not import rows, mutate
+  Supabase, create migrations, seed data, change RLS/auth/permission/API
+  contracts, deploy, push or commit a real Gia Pha 4.0 workbook.
+- Safe sample search checked `data/import-samples/`, `tmp/`, `private/` and the
+  project root. No `.xls`, `.xlsx` or `.csv` source file was found in those
+  inspected locations.
+- Direct parser dependency status: `xlsx` MISSING, `exceljs` MISSING,
+  `csv-parse` MISSING, `papaparse` MISSING. No dependency was added in A-16.
+- The inspector safe-skips without a path (`SAFE_SKIP_NO_INPUT_PATH`) and, if a
+  workbook path is provided while no parser is installed, reports
+  `SAFE_SKIP_EXCEL_DEPENDENCY_MISSING` with file metadata only. It must not
+  print raw PII, write output files or perform DB writes.
+- Mapping plan covers person fields (`full_name` / `display_name`, gender,
+  birth/death dates, hometown, generation, notes), parent/child links,
+  spouse/couple links, duplicate candidate policy, privacy handling and manual
+  review gates.
+- Next phase A16B can be considered only with owner approval for a parser
+  dependency or offline parsing path, sanitized fixture rules, preview evidence
+  and an explicit separate DB-write/import approval gate.
+- Runtime guardrail status: Main Worker touched NO, dependency added NO, new
+  service Worker NO, OpenNext/Wrangler config changed NO.
+
 ## 2026-06-29 - A-15E3 - Safe GitHub Actions Linux Production Deploy Verification recorded
 
 - Marker: `A15E3_SAFE_GITHUB_ACTIONS_LINUX_PRODUCTION_DEPLOY_VERIFICATION`.
