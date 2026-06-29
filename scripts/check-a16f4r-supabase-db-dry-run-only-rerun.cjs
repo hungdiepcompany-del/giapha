@@ -1,21 +1,15 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const childProcess = require("node:child_process");
 
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md";
-const checkerPath = "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs";
-const a16f2DocPath = "docs/PLAN_A16F2_SUPABASE_PROJECT_LINK_MIGRATION_PATH_READINESS.md";
-const a16f2CheckerPath = "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs";
-const a16f3DocPath = "docs/PLAN_A16F3_SUPABASE_METADATA_LINK_MIGRATION_PATH_BRIDGE.md";
-const a16f3CheckerPath = "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs";
-const a16f3MirrorMigrationPath = "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
-const a16f4DocPath = "docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md";
-const a16f4CheckerPath = "scripts/check-a16f4-supabase-db-dry-run-only.cjs";
-const a16f4rDocPath = "docs/PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md";
-const a16f4rCheckerPath = "scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs";
+const docPath = "docs/PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md";
+const checkerPath = "scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs";
+const sourceMigrationPath = "db/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
+const mirrorMigrationPath = "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -32,17 +26,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
   "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
   "scripts/check-a16f-import-schema-db-apply-verification.cjs",
-  a16f2DocPath,
-  a16f2CheckerPath,
-  a16f3DocPath,
-  a16f3CheckerPath,
-  a16f3MirrorMigrationPath,
-  a16f4DocPath,
-  a16f4CheckerPath,
-  a16f4rDocPath,
-  a16f4rCheckerPath,
-  "supabase/config.toml",
-  "supabase/.gitignore",
+  "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
+  "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs",
+  "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs",
+  "scripts/check-a16f4-supabase-db-dry-run-only.cjs",
   "package.json",
 ]);
 
@@ -53,6 +40,15 @@ function readFile(relativePath) {
     return "";
   }
   return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readBytes(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return Buffer.from("");
+  }
+  return fs.readFileSync(absolutePath);
 }
 
 function readJson(relativePath) {
@@ -99,8 +95,21 @@ function gitShowHead(relativePath) {
   }
 }
 
+function stripSqlComments(sql) {
+  return sql
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/--.*$/gm, "");
+}
+
+function sha256(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex").toUpperCase();
+}
+
 const doc = readFile(docPath);
 const checker = readFile(checkerPath);
+const sourceBytes = readBytes(sourceMigrationPath);
+const mirrorBytes = readBytes(mirrorMigrationPath);
+const mirrorSql = readFile(mirrorMigrationPath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -108,44 +117,76 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16F1",
-  "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED",
-  "A16F1_STATUS=SAFE_SKIP_OR_BLOCKED",
-  "A16F1_GLOBAL_SUPABASE_CLI=UNAVAILABLE",
-  "A16F1_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
-  "A16F1_PROJECT_LINK_READINESS=BLOCKED_MISSING_SUPABASE_PROJECT_LINK",
-  "A16F1_BLOCKER=MISSING_SUPABASE_PROJECT_LINK",
-  "A16F1_DB_PUSH_STATUS=NOT_RUN",
-  "A16F1_DB_DRY_RUN_STATUS=NOT_RUN",
-  "A16F1_DB_APPLY_STATUS=NOT_RUN",
-  "A16F1_SEED_STATUS=NO_SEED",
-  "A16F1_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
-  "A16F1_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
-  "A16F1_ENV_SAFE_CHECK=PASS_NAMES_ONLY",
-  "supabase --version",
-  "npx --yes supabase --version",
-  "supabase link --project-ref",
-  "did not run `supabase db push`",
+  "A-16F4R",
+  "A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED",
+  "A16F4R_STATUS=BLOCKED_SUPABASE_PROJECT_ACCESS_DENIED",
+  "A16F4R_NPX_SUPABASE_CLI=AVAILABLE_VERSION_2_108_0",
+  "A16F4R_PROJECT_REF=frkyeuxrlcflmsxxsolp",
+  "A16F4R_LINK_RESULT=FAIL_SUPABASE_PROJECT_ACCESS_DENIED",
+  "A16F4R_DRY_RUN_RESULT=NOT_RUN_LINK_BLOCKED",
+  "A16F4R_DB_APPLY_STATUS=NOT_RUN",
+  "A16F4R_SEED_STATUS=NO_SEED",
+  "A16F4R_EXCEL_IMPORT_STATUS=NO_EXCEL_IMPORT",
+  "A16F4R_PEOPLE_WRITE_STATUS=NO_WRITE",
+  "A16F4R_RELATIONSHIP_WRITE_STATUS=NO_WRITE",
+  "A16F4R_DATA_WRITE_STATUS=NO_INSERT_UPDATE_DELETE_UPSERT",
+  "frkyeuxrlcflmsxxsolp",
+  "npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp",
+  "npx --yes supabase db push --dry-run --linked",
+  "A16F4R_SOURCE_SHA256=D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE",
+  "A16F4R_MIRROR_SHA256=D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE",
+  "EXPECTED_ONLY_MIGRATION=20260629_0010_a16d_import_manifest_storage_candidate.sql",
+  "EXPECTED_NO_OUT_OF_SCOPE_MIGRATIONS=true",
+  "A16F4R_BLOCKER=SUPABASE_PROJECT_ACCESS_DENIED",
+  "LegacyLinkProjectStatusError",
+  "did not run `supabase db push --linked`",
   "did not run `supabase db push --dry-run --linked`",
-  "APPROVE_A16F_GIAPHA4_IMPORT_SCHEMA_DB_APPLY",
+  "did not apply DB",
+  "did not seed",
+  "did not import Excel",
+  "did not write `people`",
+  "did not write relationships",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS.md", "index entry"],
-  [workLog, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "work log marker"],
-  [handoff, "A16F1_SUPABASE_CLI_PROJECT_LINK_READINESS_RECORDED", "handoff marker"],
-  [decisionLog, "Decision 201 - A-16F1 confirms npx Supabase CLI but blocks DB apply until project link is confirmed", "decision entry"],
+  [index, "PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md", "index entry"],
+  [workLog, "A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED", "work log marker"],
+  [handoff, "A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED", "handoff marker"],
+  [decisionLog, "Decision 205 - A-16F4R dry-run rerun remains blocked because Supabase project access is denied", "decision entry"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16f1:supabase-cli-project-link-readiness"] !==
-  "node scripts/check-a16f1-supabase-cli-project-link-readiness.cjs"
+  packageJson?.scripts?.["check:a16f4r:supabase-db-dry-run-only-rerun"] !==
+  "node scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs"
 ) {
-  failures.push("missing package script check:a16f1:supabase-cli-project-link-readiness");
+  failures.push("missing package script check:a16f4r:supabase-db-dry-run-only-rerun");
+}
+
+if (!sourceBytes.equals(mirrorBytes)) {
+  failures.push("source and mirror migration differ byte-for-byte");
+}
+
+const expectedHash = "D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE";
+if (sha256(sourceBytes) !== expectedHash) failures.push("source migration hash does not match expected");
+if (sha256(mirrorBytes) !== expectedHash) failures.push("mirror migration hash does not match expected");
+
+const mirrorSqlWithoutComments = stripSqlComments(mirrorSql);
+for (const pattern of [
+  /\bdrop\s+table\b/i,
+  /\btruncate\b/i,
+  /\bdelete\s+from\b/i,
+  /\binsert\s+into\b/i,
+  /\bupsert\b/i,
+  /\bupdate\s+[a-z_".]+\s+set\b/i,
+  /\bcreate\s+policy\b/i,
+  /\balter\s+table\s+[^;]+disable\s+row\s+level\s+security\b/i,
+  /\bgrant\s+/i,
+]) {
+  rejectPattern(mirrorSqlWithoutComments, pattern, `mirror migration ${pattern}`);
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -160,6 +201,12 @@ for (const file of changedFiles) {
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
   if (!allowedChangedFiles.has(file) && (file.startsWith("db/") || file.endsWith(".sql"))) {
     failures.push(`database/sql file changed ${file}`);
+  }
+  if (
+    !allowedChangedFiles.has(file) &&
+    (file.startsWith("supabase/") || file.startsWith(".supabase/"))
+  ) {
+    failures.push(`unexpected supabase metadata changed ${file}`);
   }
   if (/storage-state|storage_state|cookie|token|secret|\.env|\.png$|\.jpg$|\.jpeg$|\.webp$/i.test(file)) {
     failures.push(`possible secret/session/evidence artifact changed ${file}`);
@@ -207,6 +254,7 @@ if (packageHead) {
 for (const [file, content] of [
   [docPath, doc],
   [checkerPath, checker],
+  [mirrorMigrationPath, mirrorSql],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -215,24 +263,24 @@ for (const [file, content] of [
     /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
     /SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^`\s]+/,
     /NEXT_PUBLIC_SUPABASE_ANON_KEY\s*=\s*[^`\s]+/,
+    /postgresql:\/\/[^`\s]+/i,
   ]) {
     rejectPattern(content, pattern, `${file} ${pattern}`);
   }
 }
 
 for (const pattern of [
-  /\bA16F1_STATUS=PASS\b/,
-  /\bA16F1_PROJECT_LINK_READINESS=PASS\b/,
-  /\bA16F1_DB_APPLY_STATUS=PASS\b/,
-  /\bA16F1_DB_DRY_RUN_STATUS=PASS\b/,
+  /\bA16F4R_STATUS=READY_FOR_A16F5_DB_APPLY_VERIFICATION\b/,
+  /\bA16F4R_DRY_RUN_RESULT=PASS\b/,
+  /\bA16F4R_DB_APPLY_STATUS=PASS\b/,
 ]) {
   rejectPattern(doc, pattern, `doc ${pattern}`);
 }
 
 if (failures.length > 0) {
-  console.error("A-16F1 Supabase CLI project link readiness check failed:");
+  console.error("A-16F4R Supabase DB dry-run only rerun check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16F1 Supabase CLI project link readiness check passed.");
+console.log("A-16F4R Supabase DB dry-run only rerun check passed.");

@@ -32,6 +32,8 @@ const a16f3CheckerPath = "scripts/check-a16f3-supabase-metadata-link-migration-p
 const a16f3MirrorMigrationPath = "supabase/migrations/20260629_0010_a16d_import_manifest_storage_candidate.sql";
 const a16f4DocPath = "docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md";
 const a16f4CheckerPath = "scripts/check-a16f4-supabase-db-dry-run-only.cjs";
+const a16f4rDocPath = "docs/PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md";
+const a16f4rCheckerPath = "scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -65,6 +67,8 @@ const allowedChangedFiles = new Set([
   a16f3MirrorMigrationPath,
   a16f4DocPath,
   a16f4CheckerPath,
+  a16f4rDocPath,
+  a16f4rCheckerPath,
   "supabase/config.toml",
   "supabase/.gitignore",
   "app/(admin)/admin/exports/import/page.tsx",

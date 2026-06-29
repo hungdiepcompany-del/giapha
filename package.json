@@ -213,7 +213,8 @@
     "check:a16f1:supabase-cli-project-link-readiness": "node scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
     "check:a16f2:supabase-project-link-migration-path-readiness": "node scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs",
     "check:a16f3:supabase-metadata-link-migration-path-bridge": "node scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs",
-    "check:a16f4:supabase-db-dry-run-only": "node scripts/check-a16f4-supabase-db-dry-run-only.cjs"
+    "check:a16f4:supabase-db-dry-run-only": "node scripts/check-a16f4-supabase-db-dry-run-only.cjs",
+    "check:a16f4r:supabase-db-dry-run-only-rerun": "node scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

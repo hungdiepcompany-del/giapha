@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 205 - A-16F4R dry-run rerun remains blocked because Supabase project access is denied
+
+Status: `ACTIVE`
+
+Chon:
+
+- Rerun the project link gate for owner-confirmed project ref
+  `frkyeuxrlcflmsxxsolp`.
+- Stop before dry-run because `supabase link` returned
+  `LegacyLinkProjectStatusError` while retrieving remote project status due to
+  insufficient privileges for the current Supabase account.
+- Record `A16F4R_STATUS=BLOCKED_SUPABASE_PROJECT_ACCESS_DENIED` and
+  `A16F4R_BLOCKER=SUPABASE_PROJECT_ACCESS_DENIED`.
+- Do not run `supabase db push --dry-run --linked` without verified link
+  metadata.
+- Keep expected dry-run migration list limited to
+  `20260629_0010_a16d_import_manifest_storage_candidate.sql` for a future retry.
+
+Ly do:
+
+- The link gate still cannot prove that the CLI account is operating on the
+  intended GIA PHA Supabase project.
+- Even dry-run-only DB commands must not be run against an unverified linked
+  target.
+- No DB apply, seed, import, people/relationship write, deploy or push is
+  allowed in this phase.
+
 ## Decision 204 - A-16F4 blocks dry-run because Supabase project link lacks required privileges
 
 Status: `ACTIVE`

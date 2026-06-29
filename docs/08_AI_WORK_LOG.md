@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-06-29 - A-16F4R - Supabase DB Dry-run Only Rerun
+
+- Marker: `A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED`.
+- Preflight checked: repo started clean at `main...origin/main [ahead 1]`,
+  HEAD `1ac5412`; `.env.local` is ignored by `.gitignore:17:.env.*`; no
+  staged files and no staged `.xls`, `.xlsx` or `.csv` file.
+- `npx --yes supabase --version` result: `2.108.0`.
+- Source/mirror migration hash remains
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Project ref remains owner-confirmed as `frkyeuxrlcflmsxxsolp`.
+- Link metadata before rerun was missing: `.supabase/`,
+  `.supabase/.temp/` and `.supabase/.temp/project-ref`.
+- Attempted
+  `npx --yes supabase link --project-ref frkyeuxrlcflmsxxsolp`.
+- Link failed with sanitized summary: `LegacyLinkProjectStatusError`; current
+  account lacks necessary privileges to access the Supabase remote project
+  status endpoint.
+- Final status: `A16F4R_STATUS=BLOCKED_SUPABASE_PROJECT_ACCESS_DENIED`.
+- Blocker: `A16F4R_BLOCKER=SUPABASE_PROJECT_ACCESS_DENIED`.
+- Dry-run command `npx --yes supabase db push --dry-run --linked` was not run
+  because project link did not succeed.
+- Created `docs/PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md` and
+  `scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs`.
+- Added package command `check:a16f4r:supabase-db-dry-run-only-rerun`.
+- Updated A-16 through A-16F4 checker allowlists narrowly for the A-16F4R
+  doc/checker/package-script/docs changes.
+- A-16F4R did not run `supabase db push --linked`, did not run
+  `supabase db push --dry-run --linked`, did not apply DB, did not seed, did
+  not import Excel, did not write people/relationships, did not deploy and did
+  not push.
+- Runtime guardrail status: Main Worker touched NO, runtime dependency added
+  NO, new service Worker NO, OpenNext/Wrangler config changed NO, Worker size
+  risk NO.
+
 ## 2026-06-29 - A-16F4 - Supabase DB Dry-run Only
 
 - Marker: `A16F4_SUPABASE_DB_DRY_RUN_ONLY_RECORDED`.
