@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16H - Authenticated Browser Smoke for Import Manifest Read Screen
+
+- Marker: `A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE`.
+- Added `docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md`,
+  `scripts/smoke-a16h-import-manifest-auth-browser.cjs`,
+  `scripts/check-a16h-import-manifest-auth-browser-smoke.cjs` and package
+  commands `smoke:a16h-import-manifest-auth-browser` plus
+  `check:a16h-import-manifest-auth-browser-smoke`.
+- Smoke env contract:
+  `A16H_IMPORT_MANIFEST_SMOKE_BASE_URL` and
+  `A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE`.
+- Missing env safe-skips before browser navigation with
+  `A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV`.
+- With env and browser runtime, smoke opens `/admin/exports/import`, confirms no
+  unexpected login/unauthorized redirect, checks Vietnamese copy including
+  `Phiên nhập dữ liệu`, `Manifest dữ liệu`, preview-only warning text and
+  disabled `Xác nhận nhập chính thức`, then fails on dangerous mutation network
+  requests.
+- A-16H did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL, did not seed/import data, did not upload/parse Gia Phả 4, did
+  not create real import sessions, did not write people/relationships, did not
+  write tree layout/revisions, did not enable official import, did not deploy
+  and did not push.
+- If current machine lacks explicit smoke env, expected result is checker PASS
+  plus `A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV`. Current run
+  produced that SAFE_SKIP because `A16H_IMPORT_MANIFEST_SMOKE_BASE_URL` was not
+  set. A true
+  authenticated PASS requires owner/operator-provided storage state outside the
+  repo.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`, `typecheck`, `lint` and
+  `build` passed; A-16H browser smoke safe-skipped for missing explicit env.
+- Next options: A-16H2 authenticated rerun with explicit storage state, or a
+  separate A-16I staging parser/upload phase that still forbids real
+  people/relationship writes until owner approval.
+
 ## 2026-06-30 - A-16G - Import session read manifest runtime
 
 - Marker: `A-16G`.

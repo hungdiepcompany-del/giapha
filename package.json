@@ -216,7 +216,9 @@
     "check:a16f4:supabase-db-dry-run-only": "node scripts/check-a16f4-supabase-db-dry-run-only.cjs",
     "check:a16f4r:supabase-db-dry-run-only-rerun": "node scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs",
     "check:a16f5m:manual-sql-apply-verification-migration-state-reconciliation": "node scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs",
-    "check:a16g-import-session-read-manifest-runtime": "node scripts/check-a16g-import-session-read-manifest-runtime.cjs"
+    "check:a16g-import-session-read-manifest-runtime": "node scripts/check-a16g-import-session-read-manifest-runtime.cjs",
+    "smoke:a16h-import-manifest-auth-browser": "node scripts/smoke-a16h-import-manifest-auth-browser.cjs",
+    "check:a16h-import-manifest-auth-browser-smoke": "node scripts/check-a16h-import-manifest-auth-browser-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

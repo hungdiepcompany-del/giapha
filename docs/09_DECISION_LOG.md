@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 208 - A-16H authenticated import manifest browser smoke uses explicit session env or safe-skip
+
+Decision:
+
+- Add an authenticated browser smoke script for `/admin/exports/import`.
+- Require explicit shell env for authenticated browser context:
+  `A16H_IMPORT_MANIFEST_SMOKE_BASE_URL` and
+  `A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE`.
+- If explicit env is missing, return
+  `A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV` before browser
+  navigation.
+- Keep official import disabled and fail the smoke on dangerous
+  POST/PUT/PATCH/DELETE import/admin mutation requests.
+
+Reason:
+
+- A-16G opened a read-only import manifest screen, but authenticated UI evidence
+  needs a browser/session gate that does not store credentials in the repo.
+- Auto-login or hardcoded cookies would violate the secret boundary.
+- SAFE_SKIP is more honest than claiming browser PASS without an explicit
+  owner/operator session.
+
+Boundaries:
+
+- No migration, no DB push, no SQL apply, no seed/import data, no Gia Phả 4 file
+  upload/parse, no real import session creation, no people/relationship writes,
+  no layout/revision writes, no official import action, no deploy and no push.
+
 ## Decision 207 - A-16G opens read-only import manifest runtime without real genealogy writes
 
 Status: `ACTIVE`

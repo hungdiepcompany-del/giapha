@@ -5,15 +5,9 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME.md";
-const checkerPath = "scripts/check-a16g-import-session-read-manifest-runtime.cjs";
-const servicePath = "lib/import/giapha4/manifest-read-service.ts";
-const panelPath = "components/imports/import-session-manifest-panel.tsx";
-const importPagePath = "app/(admin)/admin/exports/import/page.tsx";
-const listRoutePath = "app/api/admin/import-sessions/route.ts";
-const detailRoutePath = "app/api/admin/import-sessions/[sessionId]/route.ts";
-const manifestRoutePath =
-  "app/api/admin/import-sessions/[sessionId]/manifest/route.ts";
+const docPath = "docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md";
+const smokePath = "scripts/smoke-a16h-import-manifest-auth-browser.cjs";
+const checkerPath = "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -21,30 +15,9 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
+  smokePath,
   checkerPath,
-  servicePath,
-  panelPath,
-  importPagePath,
-  listRoutePath,
-  detailRoutePath,
-  manifestRoutePath,
-  "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
-  "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
-  "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",
-  "scripts/check-a16d-import-schema-candidate-manifest-storage-design.cjs",
-  "scripts/check-a16e-import-schema-candidate-db-apply-gate.cjs",
-  "scripts/check-a16e1-owner-review-import-schema-apply-gate.cjs",
-  "scripts/check-a16e2-import-schema-candidate-apply-blocker-resolution.cjs",
-  "scripts/check-a16f-import-schema-db-apply-verification.cjs",
-  "scripts/check-a16f1-supabase-cli-project-link-readiness.cjs",
-  "scripts/check-a16f2-supabase-project-link-migration-path-readiness.cjs",
-  "scripts/check-a16f3-supabase-metadata-link-migration-path-bridge.cjs",
-  "scripts/check-a16f4-supabase-db-dry-run-only.cjs",
-  "scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs",
-  "scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs",
-  "docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md",
-  "scripts/smoke-a16h-import-manifest-auth-browser.cjs",
-  "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
+  "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "package.json",
 ]);
 
@@ -102,13 +75,7 @@ function gitShowHead(relativePath) {
 }
 
 const doc = readFile(docPath);
-const checker = readFile(checkerPath);
-const service = readFile(servicePath);
-const panel = readFile(panelPath);
-const importPage = readFile(importPagePath);
-const listRoute = readFile(listRoutePath);
-const detailRoute = readFile(detailRoutePath);
-const manifestRoute = readFile(manifestRoutePath);
+const smoke = readFile(smokePath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -116,82 +83,65 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16G",
-  "A16G_STATUS=IMPORT_SESSION_READ_MANIFEST_RUNTIME_READY",
-  "A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME",
-  "GET /api/admin/import-sessions",
-  "GET /api/admin/import-sessions/[sessionId]",
-  "GET /api/admin/import-sessions/[sessionId]/manifest",
-  "A16G_MIGRATION_STATUS=NO_NEW_MIGRATION",
-  "A16G_DB_PUSH_STATUS=NOT_RUN",
-  "A16G_DB_DRY_RUN_STATUS=NOT_RUN",
-  "A16G_SQL_APPLY_STATUS=NOT_RUN",
-  "A16G_SEED_STATUS=NO_SEED",
-  "A16G_EXCEL_IMPORT_STATUS=NO_REAL_EXCEL_IMPORT",
-  "A16G_PEOPLE_WRITE_STATUS=NO_WRITE",
-  "A16G_RELATIONSHIP_WRITE_STATUS=NO_WRITE",
-  "A16G_TREE_LAYOUT_WRITE_STATUS=NO_WRITE",
-  "A16G_REVISION_WRITE_STATUS=NO_WRITE",
-  "A16G_CAN_IMPORT=false",
-  "A16G_IMPORT_CONFIRM_ACTION=DISABLED_READ_ONLY",
-  "did not run `supabase db push`",
-  "did not run `supabase db push --dry-run`",
-  "did not run SQL apply",
-  "did not import Excel into DB",
-  "did not create real people",
-  "did not create real relationships",
+  "A-16H",
+  "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE",
+  "Authenticated Browser Smoke for Import Manifest Read Screen",
+  "A16H_BROWSER_SMOKE_STATUS=PASS",
+  "A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV",
+  "A16H_BROWSER_SMOKE_STATUS=FAIL",
+  "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
+  "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
+  "/admin/exports/import",
+  "Phiên nhập dữ liệu",
+  "Manifest dữ liệu",
+  "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
+  "Xác nhận nhập chính thức",
+  "chưa mở",
+  "không tạo import session thật",
+  "không tạo person thật",
+  "không tạo relationship thật",
+  "không ghi layout/revision",
+  "không deploy",
+  "không push",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
-  "A16G_IMPORT_MANIFEST_READ_MARKER",
-  "listImportSessions",
-  "getImportSession",
-  "getImportManifest",
-  "maybeCreateServerSupabaseClient",
-  "getPermissionContext",
-  "import_sessions",
-  "import_session_warnings",
-  "import_duplicate_candidates",
-  "import_relationship_candidates",
-  "import_write_manifests",
-  "canImport: false",
-  "peopleWrite: false",
-  "relationshipWrite: false",
-]) {
-  requireIncludes(service, token, `service token ${token}`);
-}
-
-for (const token of [
+  "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE",
+  "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
+  "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
+  "SAFE_SKIP_MISSING_EXPLICIT_ENV",
+  "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
+  "/admin/exports/import",
   "Phiên nhập dữ liệu",
   "Manifest dữ liệu",
-  "Chưa có dữ liệu manifest",
   "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
-  "Chưa mở bước xác nhận nhập chính thức.",
-  "Xác nhận nhập chính thức — chưa mở",
-  "Không tạo thành viên",
-  "không tạo quan hệ",
+  "Xác nhận nhập chính thức",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "confirm",
+  "commit",
+  "finalize",
+  "official-import",
+  "import-now",
+  "create-person",
+  "relationship",
+  "layout",
+  "revision",
 ]) {
-  requireIncludes(panel + importPage + service, token, `UI token ${token}`);
-}
-
-for (const [file, content] of [
-  [listRoutePath, listRoute],
-  [detailRoutePath, detailRoute],
-  [manifestRoutePath, manifestRoute],
-]) {
-  requireIncludes(content, "export async function GET", `${file} GET handler`);
-  rejectPattern(content, /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/, `${file} mutation handler`);
+  requireIncludes(smoke, token, `smoke token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME.md", "index entry"],
-  [workLog, "A16G_STATUS=IMPORT_SESSION_READ_MANIFEST_RUNTIME_READY", "work log marker"],
-  [handoff, "A16G_STATUS=IMPORT_SESSION_READ_MANIFEST_RUNTIME_READY", "handoff marker"],
+  [index, "PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md", "index entry"],
+  [workLog, "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE", "work log marker"],
+  [handoff, "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE", "handoff marker"],
   [
     decisionLog,
-    "Decision 207 - A-16G opens read-only import manifest runtime without real genealogy writes",
+    "Decision 208 - A-16H authenticated import manifest browser smoke uses explicit session env or safe-skip",
     "decision entry",
   ],
 ]) {
@@ -199,10 +149,17 @@ for (const [content, token, label] of [
 }
 
 if (
-  packageJson?.scripts?.["check:a16g-import-session-read-manifest-runtime"] !==
-  "node scripts/check-a16g-import-session-read-manifest-runtime.cjs"
+  packageJson?.scripts?.["smoke:a16h-import-manifest-auth-browser"] !==
+  "node scripts/smoke-a16h-import-manifest-auth-browser.cjs"
 ) {
-  failures.push("missing package script check:a16g-import-session-read-manifest-runtime");
+  failures.push("missing package script smoke:a16h-import-manifest-auth-browser");
+}
+
+if (
+  packageJson?.scripts?.["check:a16h-import-manifest-auth-browser-smoke"] !==
+  "node scripts/check-a16h-import-manifest-auth-browser-smoke.cjs"
+) {
+  failures.push("missing package script check:a16h-import-manifest-auth-browser-smoke");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -223,6 +180,14 @@ for (const file of changedFiles) {
   }
   if (/wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(file)) {
     failures.push(`runtime/deploy config changed ${file}`);
+  }
+  if (
+    file.startsWith("app/api/") ||
+    file.startsWith("lib/") ||
+    file.startsWith("server/") ||
+    file.startsWith("services/")
+  ) {
+    failures.push(`API/service/runtime file changed ${file}`);
   }
 }
 
@@ -249,17 +214,21 @@ if (packageHead) {
 const runtimePatch = gitOutput([
   "diff",
   "--",
-  servicePath,
-  panelPath,
-  importPagePath,
-  listRoutePath,
-  detailRoutePath,
-  manifestRoutePath,
+  "app",
+  "components",
+  "lib",
+  "server",
+  "services",
 ]);
 for (const pattern of [
   /\bsupabase\s+db\s+push\b/i,
   /\bmigration\s+repair\b/i,
-  /\bservice[_-]?role\b/i,
+  /\bCREATE\s+TABLE\b/i,
+  /\bALTER\s+TABLE\b/i,
+  /\bDROP\s+TABLE\b/i,
+  /\bINSERT\s+INTO\b/i,
+  /\bUPDATE\s+[a-z_]/i,
+  /\bDELETE\s+FROM\b/i,
   /\.from\(["']people["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']families["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_parents["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
@@ -267,20 +236,15 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize).*import\b/i,
+  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }
 
 for (const [file, content] of [
   [docPath, doc],
-  [checkerPath, checker],
-  [servicePath, service],
-  [panelPath, panel],
-  [importPagePath, importPage],
-  [listRoutePath, listRoute],
-  [detailRoutePath, detailRoute],
-  [manifestRoutePath, manifestRoute],
+  [smokePath, smoke],
+  [checkerPath, readFile(checkerPath)],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -290,15 +254,16 @@ for (const [file, content] of [
     /SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^`\s]+/,
     /NEXT_PUBLIC_SUPABASE_ANON_KEY\s*=\s*[^`\s]+/,
     /postgresql:\/\/[^`\s]+/i,
+    /storageState\s*:\s*["'][^"']+["']/,
   ]) {
     rejectPattern(content, pattern, `${file} ${pattern}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("A-16G import session read manifest runtime check failed:");
+  console.error("A-16H import manifest authenticated browser smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16G import session read manifest runtime check passed.");
+console.log("A-16H import manifest authenticated browser smoke check passed.");

@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-06-30 - A-16H - Authenticated Browser Smoke for Import Manifest Read Screen
+
+- Marker: `A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE`.
+- Added `docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md`.
+- Added `scripts/smoke-a16h-import-manifest-auth-browser.cjs`.
+- Added `scripts/check-a16h-import-manifest-auth-browser-smoke.cjs`.
+- Updated the A-16G checker allowlist so the existing
+  `check:a16g-import-session-read-manifest-runtime` gate remains compatible
+  with the new A-16H doc/smoke/checker files.
+- Added package commands:
+  `smoke:a16h-import-manifest-auth-browser` and
+  `check:a16h-import-manifest-auth-browser-smoke`.
+- Smoke uses explicit shell env only:
+  `A16H_IMPORT_MANIFEST_SMOKE_BASE_URL` and
+  `A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE`.
+- Missing explicit env safe-skips before browser navigation with
+  `A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV`.
+- With env and browser runtime, smoke opens `/admin/exports/import`, checks
+  Vietnamese read-only copy, checks the official import CTA remains disabled and
+  fails on dangerous mutation requests.
+- A-16H did not create or modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not seed/import data, did not upload/parse Gia Phả 4,
+  did not create real import sessions, did not write people/relationships,
+  did not write layout/revision, did not enable official import, did not deploy
+  and did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `smoke:a16h-import-manifest-auth-browser` SAFE_SKIP with
+  `A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV`, `typecheck` PASS,
+  `lint` PASS and `build` PASS.
+
 ## 2026-06-30 - A-16G - Import Session / Read Manifest Runtime
 
 - Marker: `A-16G`.
