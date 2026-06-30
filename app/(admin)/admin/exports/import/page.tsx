@@ -1,9 +1,14 @@
 import { JsonImportPreviewForm } from "@/components/imports/json-import-preview-form";
 import { GiaPha4ImportPreviewForm } from "@/components/imports/giapha4-import-preview-form";
+import { ImportSessionManifestPanel } from "@/components/imports/import-session-manifest-panel";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
+import {
+  getImportManifest,
+  listImportSessions,
+} from "@/lib/import/giapha4/manifest-read-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +24,12 @@ export default async function AdminImportPage() {
     : !context.user
       ? "Bạn cần đăng nhập để kiểm tra nhập dữ liệu."
       : "Bạn chưa có quyền imports.create.";
+  const importSessionsResult = canPreview
+    ? await listImportSessions()
+    : null;
+  const importManifestResult = importSessionsResult?.sessions[0]
+    ? await getImportManifest(importSessionsResult.sessions[0].id)
+    : importSessionsResult;
 
   return (
     <AdminShell
@@ -46,6 +57,9 @@ export default async function AdminImportPage() {
                 : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
             </StatusCallout>
             <div className="grid gap-8">
+              {importManifestResult ? (
+                <ImportSessionManifestPanel result={importManifestResult} />
+              ) : null}
               <GiaPha4ImportPreviewForm />
               <JsonImportPreviewForm />
             </div>

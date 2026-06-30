@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-30 - A-16G - Import Session / Read Manifest Runtime
+
+- Marker: `A-16G`.
+- Final status: `A16G_STATUS=IMPORT_SESSION_READ_MANIFEST_RUNTIME_READY`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `720e30f`.
+- Read `docs/PLAN_A16F5M_MANUAL_SQL_APPLY_VERIFICATION_MIGRATION_STATE_RECONCILIATION.md`
+  and kept the manual apply/migration-history reconciliation boundary.
+- Added read-only service
+  `lib/import/giapha4/manifest-read-service.ts` with marker
+  `A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME`.
+- Added GET-only API routes:
+  `/api/admin/import-sessions`,
+  `/api/admin/import-sessions/[sessionId]` and
+  `/api/admin/import-sessions/[sessionId]/manifest`.
+- Added read-only admin panel on `/admin/exports/import` via
+  `components/imports/import-session-manifest-panel.tsx`.
+- Runtime uses existing auth/permission context and Supabase server client with
+  user cookies so RLS is respected. It does not use service role in client code.
+- UI/API return safe Vietnamese empty/error states when no session exists,
+  manifest rows are empty, permission is missing or RLS blocks reads.
+- Response shape keeps `canImport: false`, `peoplePreview: []`,
+  `relationshipsPreview`, `warnings` and manifest summary fields.
+- Added checker
+  `scripts/check-a16g-import-session-read-manifest-runtime.cjs` and package
+  command `check:a16g-import-session-read-manifest-runtime`.
+- A-16G did not create or modify migrations, did not run `supabase db push`, did
+  not run SQL, did not seed, did not import Excel into DB, did not create real
+  people/relationships, did not update tree layout/revisions, did not deploy
+  and did not push.
+
 ## 2026-06-30 - A-16F5M - Manual SQL Apply Verification & Migration State Reconciliation
 
 - Marker: `A-16F5M`.

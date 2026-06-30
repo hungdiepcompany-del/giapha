@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16G - Import session read manifest runtime
+
+- Marker: `A-16G`.
+- Final status: `A16G_STATUS=IMPORT_SESSION_READ_MANIFEST_RUNTIME_READY`.
+- Added read-only service
+  `lib/import/giapha4/manifest-read-service.ts` with marker
+  `A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME`.
+- Added GET-only API routes:
+  `/api/admin/import-sessions`,
+  `/api/admin/import-sessions/[sessionId]` and
+  `/api/admin/import-sessions/[sessionId]/manifest`.
+- Added read-only admin UI panel on `/admin/exports/import` via
+  `components/imports/import-session-manifest-panel.tsx`.
+- Runtime uses existing auth/permission context and Supabase server client with
+  user cookies, not service role in client code, so RLS remains authoritative.
+- Empty/RLS-blocked states are safe and Vietnamese:
+  `Chưa có phiên nhập dữ liệu`, `Chưa có dữ liệu manifest`,
+  `Không tìm thấy phiên nhập hoặc bạn không có quyền truy cập.`
+- API/UI keeps `canImport: false`; official import CTA is disabled:
+  `Xác nhận nhập chính thức — chưa mở`.
+- Added
+  `docs/PLAN_A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME.md`,
+  `scripts/check-a16g-import-session-read-manifest-runtime.cjs` and package
+  command `check:a16g-import-session-read-manifest-runtime`.
+- A-16G did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL, did not seed, did not import Excel into DB, did not create real
+  people/relationships, did not update tree layout/revisions, did not deploy
+  and did not push.
+- Next A-16H options: authenticated browser smoke for this read-only manifest
+  screen, or upload/parse Gia Pha 4 file into manifest staging only with a new
+  explicit boundary.
+
 ## 2026-06-30 - A-16F5M - Manual SQL apply verified, migration reconciliation required
 
 - Marker: `A-16F5M`.

@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 207 - A-16G opens read-only import manifest runtime without real genealogy writes
+
+Status: `ACTIVE`
+
+Chon:
+
+- Add a small read-only runtime layer for import sessions and import manifest
+  rows after A-16F5M owner manual SQL verification.
+- Use existing auth/permission context and Supabase server client with user
+  cookies so RLS remains authoritative.
+- Add only GET routes for session list, session detail and manifest detail.
+- Surface the read-only state in the existing admin import page with
+  `canImport: false` and a disabled official import CTA.
+- Keep real `people`, relationship, tree layout and revision writes forbidden.
+
+Ly do:
+
+- Owner needs a way to inspect import manifest/session state before any real
+  import.
+- The schema has been manually verified but Supabase CLI migration history still
+  needs reconciliation, so A-16G must not create migrations or rerun CLI apply.
+- Read-only manifest review is a safe next step that does not bypass RLS and
+  does not mutate genealogy data.
+
 ## Decision 206 - A-16F5M accepts owner manual SQL verification while requiring migration history reconciliation
 
 Status: `ACTIVE`
