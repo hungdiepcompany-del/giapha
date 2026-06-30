@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-06-30 - A-16SQL - Import Staging Write RLS Candidate
+
+- Marker: `A-16SQL-RLS-IMPORT-STAGING-WRITE`.
+- Final status: `A16SQL_STATUS=SQL_CANDIDATE_READY_NOT_APPLIED`.
+- Recorded the production/runtime symptom from A-16I upload:
+  `Không đọc được file Gia Phả 4` and
+  `Không tạo được import session staging. Bảng có thể đang được RLS bảo vệ hoặc bạn chưa có quyền ghi staging.`
+- Added SQL candidate
+  `db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql`.
+- Added byte-for-byte Supabase mirror
+  `supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql`.
+- Candidate opens owner-scoped staging RLS policies only:
+  `SELECT/INSERT/UPDATE` on `import_sessions`, and `SELECT/INSERT` on
+  `import_session_warnings`, `import_duplicate_candidates`,
+  `import_relationship_candidates` and `import_write_manifests`.
+- Policies require `to authenticated`, `public.has_permission('imports.create')`
+  and session ownership via `created_by = public.current_profile_id()`.
+- No `DELETE`, no anon/public policy, no grant, no service-role bypass, no RLS
+  disable, no policy on real genealogy tables.
+- Added SELECT-only verification SQL:
+  `db/checks/20260630_check_a16sql_import_staging_write_rls.sql`.
+- Added checker `scripts/check-a16sql-rls-import-staging-write.cjs` and package
+  command `check:a16sql-rls-import-staging-write`.
+- Updated A-16G/A-16H/A-16I/A-16J/A-16I2/A-16K/A-16L checkers with a narrow
+  allowlist for the exact A-16SQL candidate and verification SQL.
+- A-16SQL did not run `supabase db push`, did not run
+  `supabase db push --dry-run`, did not run SQL apply, did not run
+  `supabase migration repair`, did not seed, did not import Excel, did not write
+  people/person rows, did not write relationships, did not update
+  layout/tree/revision, did not open official import, did not deploy and did not
+  push.
+
 ## 2026-06-30 - A-16L - Dry-run Mapping Preview from Manifest Staging
 
 - Marker: `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.

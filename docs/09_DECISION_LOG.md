@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 214 - A-16SQL adds import staging write RLS candidate without DB apply
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add a not-applied SQL candidate for import staging RLS policies.
+- Keep canonical file under `db/migrations` and mirror it byte-for-byte under
+  `supabase/migrations`.
+- Open only authenticated, owner-scoped staging access for users with
+  `imports.create`.
+- Add SELECT-only verification SQL for owner/operator use after manual apply.
+- Keep official import and real genealogy writes closed.
+
+Lý do:
+
+- A-16I upload can fail at `import_sessions.insert(...).select("id")` when
+  RLS is enabled but no matching INSERT/SELECT policy exists.
+- A-16F5M confirmed the staging schema was manually applied; adding a candidate
+  keeps the next DB step reviewable without running Supabase CLI apply.
+
+Boundaries:
+
+- No `supabase db push`, no `supabase db push --dry-run`, no
+  `supabase migration repair`, no SQL apply, no seed, no Excel import, no
+  service-role bypass, no anon/public grant or policy, no RLS disable, no real
+  people/person write, no relationship write, no layout/tree/revision write,
+  no official import action, no deploy and no push.
+
 ## Decision 213 - A-16L opens dry-run mapping preview without real genealogy writes
 
 Status: `ACTIVE`

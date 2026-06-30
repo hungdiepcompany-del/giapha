@@ -14,6 +14,10 @@ const listRoutePath = "app/api/admin/import-sessions/route.ts";
 const detailRoutePath = "app/api/admin/import-sessions/[sessionId]/route.ts";
 const manifestRoutePath =
   "app/api/admin/import-sessions/[sessionId]/manifest/route.ts";
+const a16sqlAllowedSqlFiles = new Set([
+  "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+]);
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -66,6 +70,11 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/dry-run-mapping-preview-service.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
+  "docs/PLAN_A16SQL_RLS_IMPORT_STAGING_WRITE.md",
+  "scripts/check-a16sql-rls-import-staging-write.cjs",
+  "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
   "package.json",
 ]);
 
@@ -250,7 +259,11 @@ for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") ||
+      file.startsWith("supabase/migrations/")) &&
+    !a16sqlAllowedSqlFiles.has(file)
+  ) {
     failures.push(`migration file changed ${file}`);
   }
   if (file.startsWith(".supabase/") || file === "supabase/config.toml") {

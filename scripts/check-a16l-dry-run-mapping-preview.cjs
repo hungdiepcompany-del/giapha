@@ -11,6 +11,10 @@ const servicePath = "lib/import/giapha4/dry-run-mapping-preview-service.ts";
 const routePath =
   "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const a16sqlAllowedSqlFiles = new Set([
+  "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+]);
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -28,6 +32,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
+  "docs/PLAN_A16SQL_RLS_IMPORT_STAGING_WRITE.md",
+  "scripts/check-a16sql-rls-import-staging-write.cjs",
+  "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
   "package.json",
 ]);
 
@@ -213,7 +222,11 @@ for (const file of changedFiles) {
   ) {
     failures.push(`real data/storage/screenshot file must not be changed ${file}`);
   }
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") ||
+      file.startsWith("supabase/migrations/")) &&
+    !a16sqlAllowedSqlFiles.has(file)
+  ) {
     failures.push(`migration file changed ${file}`);
   }
   if (file.startsWith(".supabase/") || file === "supabase/config.toml") {

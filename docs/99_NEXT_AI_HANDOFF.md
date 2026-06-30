@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16SQL - Import Staging Write RLS Candidate
+
+- Marker: `A-16SQL-RLS-IMPORT-STAGING-WRITE`.
+- Final status: `A16SQL_STATUS=SQL_CANDIDATE_READY_NOT_APPLIED`.
+- Actual A-16I symptom recorded:
+  `Không đọc được file Gia Phả 4` and
+  `Không tạo được import session staging. Bảng có thể đang được RLS bảo vệ hoặc bạn chưa có quyền ghi staging.`
+- Added candidate:
+  `db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql`.
+- Added Supabase mirror:
+  `supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql`.
+- Added SELECT-only verification SQL:
+  `db/checks/20260630_check_a16sql_import_staging_write_rls.sql`.
+- Added doc:
+  `docs/PLAN_A16SQL_RLS_IMPORT_STAGING_WRITE.md`.
+- Added checker:
+  `scripts/check-a16sql-rls-import-staging-write.cjs`.
+- Added package command:
+  `check:a16sql-rls-import-staging-write`.
+- Candidate policy scope:
+  `to authenticated`, requires `public.has_permission('imports.create')`,
+  limits rows by `created_by = public.current_profile_id()`, opens
+  `SELECT/INSERT/UPDATE` on `import_sessions` and `SELECT/INSERT` on child
+  staging tables only.
+- No `DELETE`, no anon/public policy, no grant, no service-role bypass, no RLS
+  disable, no policy on real genealogy tables.
+- A-16SQL did not run `supabase db push`, did not run
+  `supabase db push --dry-run`, did not run SQL apply, did not run
+  `supabase migration repair`, did not seed, did not import Excel, did not write
+  people/person rows, did not write relationships, did not update
+  layout/tree/revision, did not open official import, did not deploy and did not
+  push.
+- Next safe step: owner reviews/applies the SQL manually only in a separate
+  approved DB phase, then runs the SELECT-only verification SQL and reruns
+  A-16I/A-16I2 upload staging smoke.
+
 ## 2026-06-30 - A-16L - Dry-run Mapping Preview from Manifest Staging
 
 - Marker: `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.
