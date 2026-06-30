@@ -1,5 +1,51 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16L - Dry-run Mapping Preview from Manifest Staging
+
+- Marker: `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.
+- Owner marker received for opening read-only preview:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Added server-only dry-run preview service:
+  `lib/import/giapha4/dry-run-mapping-preview-service.ts`.
+- Added GET-only API:
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-preview`.
+- `/admin/exports/import` now shows `Bản xem trước dry-run`,
+  `Dữ liệu này chỉ là bản mô phỏng, chưa được ghi vào cây gia phả thật.`,
+  `Người dự kiến tạo`, `Quan hệ dự kiến tạo` and
+  `Không thể dry-run vì còn lỗi dữ liệu staging`.
+- The preview derives proposed people/relationships from manifest staging and
+  A-16J validation issues only in runtime/API response.
+- Summary includes staged/proposed people and relationship counts,
+  `blockedByErrorCount`, `warningCount` and
+  `canProceedToOfficialImport: false`.
+- Official import remains disabled:
+  `Xác nhận nhập chính thức — chưa mở`.
+- Added doc:
+  `docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md`.
+- Added checker:
+  `scripts/check-a16l-dry-run-mapping-preview.cjs`.
+- Added package command:
+  `check:a16l-dry-run-mapping-preview`.
+- A-16L did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not upload/parse a real file, did not write people/person rows, did not write
+  relationships, did not update layout/tree/revision, did not open official
+  import, did not deploy and did not push.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`,
+  `check:a16i-upload-parse-giapha4-manifest-staging`,
+  `check:a16j-manifest-staging-review-validation-warnings`,
+  `check:a16i2-real-giapha4-upload-smoke`,
+  `check:a16k-owner-approval-gate-dry-run-import`,
+  `check:a16l-dry-run-mapping-preview`, `typecheck`, `lint` and `build`
+  passed.
+- `smoke:a16i2-real-giapha4-upload-staging` returned
+  `SAFE_SKIP_MISSING_EXPLICIT_ENV` because owner base URL, storage state and
+  real file path env were absent.
+- Next options: owner reviews the preview and validation blockers; any official
+  import still needs a separate approval/transaction/rollback/audit phase.
+
 ## 2026-06-30 - A-16K - Owner Approval Gate for Dry-run Import
 
 - Marker: `A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT`.

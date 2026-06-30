@@ -38,6 +38,10 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/import-dry-run-approval-gate.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
+  "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "package.json",
 ]);
 
@@ -219,7 +223,8 @@ for (const file of changedFiles) {
     file.startsWith("app/api/") &&
     file !== "app/api/admin/import-sessions/upload/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
   ) {
     failures.push(`API file changed outside A-16I upload staging route ${file}`);
   }
@@ -233,6 +238,7 @@ for (const file of changedFiles) {
       "lib/import/giapha4/manifest-read-service.ts",
       "lib/import/giapha4/manifest-validation-service.ts",
       "lib/import/giapha4/import-dry-run-approval-gate.ts",
+      "lib/import/giapha4/dry-run-mapping-preview-service.ts",
     ].includes(file)
   ) {
     failures.push(`API/service/runtime file changed ${file}`);

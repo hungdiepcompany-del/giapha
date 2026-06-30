@@ -41,6 +41,10 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/import-dry-run-approval-gate.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
+  "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "package.json",
 ]);
 
@@ -288,6 +292,8 @@ const runtimePatch = gitOutput([
   "lib/import/giapha4/manifest-read-service.ts",
   "lib/import/giapha4/import-dry-run-approval-gate.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
 ]);
 
 for (const pattern of [
@@ -320,7 +326,8 @@ for (const file of uploadRouteNames) {
   if (
     file !== routePath &&
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
   ) {
     failures.push(`unexpected API/action changed ${file}`);
   }

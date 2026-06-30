@@ -5,11 +5,11 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md";
-const checkerPath = "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs";
-const gateServicePath = "lib/import/giapha4/import-dry-run-approval-gate.ts";
-const gateRoutePath =
-  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts";
+const docPath = "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md";
+const checkerPath = "scripts/check-a16l-dry-run-mapping-preview.cjs";
+const servicePath = "lib/import/giapha4/dry-run-mapping-preview-service.ts";
+const routePath =
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
 
 const allowedChangedFiles = new Set([
@@ -19,18 +19,15 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
-  gateServicePath,
-  gateRoutePath,
+  servicePath,
+  routePath,
   panelPath,
-  "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md",
-  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
-  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
-  "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
+  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "package.json",
 ]);
 
@@ -89,8 +86,8 @@ function gitShowHead(relativePath) {
 
 const doc = readFile(docPath);
 const checker = readFile(checkerPath);
-const gateService = readFile(gateServicePath);
-const gateRoute = readFile(gateRoutePath);
+const service = readFile(servicePath);
+const route = readFile(routePath);
 const panel = readFile(panelPath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
@@ -99,11 +96,10 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
-  "A-16K",
-  "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT",
+  "A-16L",
+  "A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING",
   "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
-  "Dry-run hiện vẫn locked",
-  "Official import vẫn closed",
+  "GET /api/admin/import-sessions/[sessionId]/dry-run-preview",
   "Không migration",
   "Không DB push",
   "Không SQL apply",
@@ -111,67 +107,70 @@ for (const token of [
   "Không upload/parse file thật",
   "Không ghi people/relationships thật",
   "Không layout/tree/revision",
-  "Không dry-run mapping",
   "Không official import",
-  "A16K_STATUS=OWNER_APPROVAL_GATE_LOCKED",
+  "A16L_STATUS=DRY_RUN_MAPPING_PREVIEW_READY",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
   "server-only",
-  "A16K_OWNER_APPROVAL_GATE_MARKER",
-  "A16K_IMPORT_DRY_RUN_REQUIRED_MARKER",
+  "A16L_DRY_RUN_MAPPING_PREVIEW_MARKER",
   "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
-  "status: \"locked\"",
-  "canRunDryRun: false",
-  "dryRunMappingOpen: false",
-  "officialImportOpen: false",
+  "getImportManifest",
+  "buildManifestValidationReview",
+  "buildDryRunMappingPreview",
+  "getDryRunMappingPreview",
+  "ProposedPersonPayload",
+  "ProposedRelationshipPayload",
+  "stagedPeopleCount",
+  "proposedPeopleCount",
+  "stagedRelationshipCount",
+  "proposedRelationshipCount",
+  "blockedByErrorCount",
+  "warningCount",
+  "canProceedToOfficialImport: false",
   "dbWrite: false",
   "peopleWrite: false",
   "relationshipWrite: false",
   "treeLayoutWrite: false",
   "revisionWrite: false",
 ]) {
-  requireIncludes(gateService, token, `gate service token ${token}`);
+  requireIncludes(service, token, `service token ${token}`);
 }
 
 for (const token of [
   "export async function GET",
-  "getImportDryRunApprovalGate",
+  "getDryRunMappingPreview",
   "sessionId",
 ]) {
-  requireIncludes(gateRoute, token, `gate route token ${token}`);
+  requireIncludes(route, token, `route token ${token}`);
 }
-
 rejectPattern(
-  gateRoute,
+  route,
   /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/,
-  "dry-run gate mutation handler",
+  "dry-run preview mutation handler",
 );
 
 for (const token of [
-  "Cổng phê duyệt dry-run",
-  "Dry-run import chưa được mở",
-  "Cần owner phê duyệt trước khi chạy dry-run.",
-  "Marker yêu cầu:",
-  "Dữ liệu staging vẫn",
-  "chưa được nhập vào cây gia phả thật",
-  "Chạy dry-run — cần phê duyệt",
-  "disabled",
-  "aria-disabled=\"true\"",
+  "Bản xem trước dry-run",
+  "Dữ liệu này chỉ là bản mô phỏng, chưa được ghi vào cây gia phả",
+  "Người dự kiến tạo",
+  "Quan hệ dự kiến tạo",
+  "Không thể dry-run vì còn lỗi dữ liệu staging",
   "Xác nhận nhập chính thức — chưa mở",
+  "buildDryRunMappingPreview",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md", "index entry"],
-  [workLog, "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT", "work log marker"],
-  [handoff, "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT", "handoff marker"],
+  [index, "PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md", "index entry"],
+  [workLog, "A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING", "work log marker"],
+  [handoff, "A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING", "handoff marker"],
   [
     decisionLog,
-    "Decision 212 - A-16K keeps dry-run import locked behind owner approval marker",
+    "Decision 213 - A-16L opens dry-run mapping preview without real genealogy writes",
     "decision entry",
   ],
 ]) {
@@ -179,10 +178,10 @@ for (const [content, token, label] of [
 }
 
 if (
-  packageJson?.scripts?.["check:a16k-owner-approval-gate-dry-run-import"] !==
-  "node scripts/check-a16k-owner-approval-gate-dry-run-import.cjs"
+  packageJson?.scripts?.["check:a16l-dry-run-mapping-preview"] !==
+  "node scripts/check-a16l-dry-run-mapping-preview.cjs"
 ) {
-  failures.push("missing package script check:a16k-owner-approval-gate-dry-run-import");
+  failures.push("missing package script check:a16l-dry-run-mapping-preview");
 }
 
 for (const previousChecker of [
@@ -191,9 +190,10 @@ for (const previousChecker of [
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
+  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
 ]) {
   const content = readFile(previousChecker);
-  for (const token of [docPath, checkerPath, gateServicePath, gateRoutePath]) {
+  for (const token of [docPath, checkerPath, servicePath, routePath]) {
     requireIncludes(content, token, `${previousChecker} allowlist token ${token}`);
   }
 }
@@ -222,11 +222,7 @@ for (const file of changedFiles) {
   if (/wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(file)) {
     failures.push(`runtime/deploy config changed ${file}`);
   }
-  if (
-    file.startsWith("app/api/") &&
-    file !== gateRoutePath &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
-  ) {
+  if (file.startsWith("app/api/") && file !== routePath) {
     failures.push(`unexpected API route changed ${file}`);
   }
 }
@@ -255,14 +251,7 @@ if (packageHead) {
   }
 }
 
-const runtimePatch = gitOutput([
-  "diff",
-  "--",
-  gateServicePath,
-  gateRoutePath,
-  panelPath,
-]);
-
+const runtimePatch = gitOutput(["diff", "--", servicePath, routePath, panelPath]);
 for (const pattern of [
   /\bsupabase\s+db\s+push\b/i,
   /\bmigration\s+repair\b/i,
@@ -282,7 +271,6 @@ for (const pattern of [
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
-  /\b(runDryRunImport|executeDryRun|createDryRunResult|applyDryRunMapping)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }
@@ -290,8 +278,8 @@ for (const pattern of [
 for (const [file, content] of [
   [docPath, doc],
   [checkerPath, checker],
-  [gateServicePath, gateService],
-  [gateRoutePath, gateRoute],
+  [servicePath, service],
+  [routePath, route],
   [panelPath, panel],
 ]) {
   for (const pattern of [
@@ -308,9 +296,9 @@ for (const [file, content] of [
 }
 
 if (failures.length > 0) {
-  console.error("A-16K owner approval gate dry-run import check failed:");
+  console.error("A-16L dry-run mapping preview check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16K owner approval gate dry-run import check passed.");
+console.log("A-16L dry-run mapping preview check passed.");

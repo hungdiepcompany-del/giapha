@@ -1,4 +1,5 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
+import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -82,6 +83,7 @@ export function ImportSessionManifestPanel({
   );
   const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
   const dryRunGate = getImportDryRunApprovalGate();
+  const dryRunPreview = buildDryRunMappingPreview(result);
 
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
@@ -221,6 +223,97 @@ export function ImportSessionManifestPanel({
             >
               Chạy dry-run — cần phê duyệt
             </button>
+          </section>
+
+          <section className="grid gap-4 rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-indigo-800">
+                Bản xem trước dry-run
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Mô phỏng mapping từ staging
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Dữ liệu này chỉ là bản mô phỏng, chưa được ghi vào cây gia phả
+                thật.
+              </p>
+              {dryRunPreview.summary.blockedByErrorCount > 0 ? (
+                <div className="rounded-md border border-rose-200 bg-white p-3 text-sm font-semibold text-rose-900">
+                  Không thể dry-run vì còn lỗi dữ liệu staging
+                </div>
+              ) : (
+                <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm font-semibold text-emerald-900">
+                  Bản xem trước dry-run đã sẵn sàng để owner xem lại
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <MetricCard
+                label="Người dự kiến tạo"
+                value={dryRunPreview.summary.proposedPeopleCount}
+              />
+              <MetricCard
+                label="Quan hệ dự kiến tạo"
+                value={dryRunPreview.summary.proposedRelationshipCount}
+              />
+              <MetricCard
+                label="Lỗi chặn dry-run"
+                value={dryRunPreview.summary.blockedByErrorCount}
+              />
+              <MetricCard
+                label="Cảnh báo dry-run"
+                value={dryRunPreview.summary.warningCount}
+              />
+            </div>
+
+            {dryRunPreview.proposedPeople.length > 0 ? (
+              <div className="grid gap-2">
+                <h4 className="text-sm font-bold text-stone-950">
+                  Người dự kiến tạo
+                </h4>
+                {dryRunPreview.proposedPeople.slice(0, 10).map((person) => (
+                  <div
+                    key={person.sourceFingerprint}
+                    className="rounded-md border border-indigo-100 bg-white p-3 text-sm leading-6 text-stone-800"
+                  >
+                    <div className="font-bold text-stone-950">
+                      Dòng {person.sourceRowIndex}: {person.fullName}
+                    </div>
+                    <div className="text-stone-600">
+                      Đời: {person.generationNumber ?? "chưa rõ"}. Chi/nhánh:{" "}
+                      {person.branchName ?? "chưa rõ"}. Mã staging:{" "}
+                      {person.sourceFingerprint}.
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {dryRunPreview.proposedRelationships.length > 0 ? (
+              <div className="grid gap-2">
+                <h4 className="text-sm font-bold text-stone-950">
+                  Quan hệ dự kiến tạo
+                </h4>
+                {dryRunPreview.proposedRelationships
+                  .slice(0, 10)
+                  .map((relationship) => (
+                    <div
+                      key={relationship.sourceReference.fingerprint}
+                      className="rounded-md border border-indigo-100 bg-white p-3 text-sm leading-6 text-stone-800"
+                    >
+                      <div className="font-bold text-stone-950">
+                        Dòng {relationship.sourceRowIndex}:{" "}
+                        {relationship.relationshipLabelVi}
+                      </div>
+                      <div className="text-stone-600">
+                        Độ chắc chắn: {relationship.confidence}. Trạng thái:{" "}
+                        {relationship.ambiguityStatus}.
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ) : null}
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

@@ -26,6 +26,10 @@ const allowedChangedFiles = new Set([
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
   "components/imports/import-session-manifest-panel.tsx",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
+  "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "package.json",
 ]);
 

@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-06-30 - A-16L - Dry-run Mapping Preview from Manifest Staging
+
+- Marker: `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.
+- Owner marker received for read-only preview:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Added server-only preview service
+  `lib/import/giapha4/dry-run-mapping-preview-service.ts`.
+- Added GET-only route
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-preview`.
+- Updated `/admin/exports/import` panel with `Bản xem trước dry-run`,
+  `Dữ liệu này chỉ là bản mô phỏng, chưa được ghi vào cây gia phả thật.`,
+  `Người dự kiến tạo`, `Quan hệ dự kiến tạo` and
+  `Không thể dry-run vì còn lỗi dữ liệu staging`.
+- Preview maps manifest staging people/relationships to proposed payload objects
+  in runtime response only, including source row/fingerprint references and
+  related A-16J issues.
+- Summary includes `stagedPeopleCount`, `proposedPeopleCount`,
+  `stagedRelationshipCount`, `proposedRelationshipCount`,
+  `blockedByErrorCount`, `warningCount` and
+  `canProceedToOfficialImport: false`.
+- Added checker `scripts/check-a16l-dry-run-mapping-preview.cjs` and package
+  command `check:a16l-dry-run-mapping-preview`.
+- Updated A-16G/A-16H/A-16I/A-16J/A-16I2/A-16K checkers narrowly to allow the
+  A-16L read-only preview service/API/doc/checker while preserving no official
+  import/no real genealogy mutation checks.
+- A-16L did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not upload/parse a real file, did not write real people/person rows, did not
+  write real relationships, did not update layout/tree/revision, did not open
+  official import, did not deploy and did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `check:a16i-upload-parse-giapha4-manifest-staging` PASS,
+  `check:a16j-manifest-staging-review-validation-warnings` PASS,
+  `check:a16i2-real-giapha4-upload-smoke` PASS,
+  `check:a16k-owner-approval-gate-dry-run-import` PASS,
+  `check:a16l-dry-run-mapping-preview` PASS,
+  `smoke:a16i2-real-giapha4-upload-staging` SAFE_SKIP_MISSING_EXPLICIT_ENV,
+  `typecheck` PASS, `lint` PASS and `build` PASS.
+
 ## 2026-06-30 - A-16K - Owner Approval Gate for Dry-run Import
 
 - Marker: `A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT`.

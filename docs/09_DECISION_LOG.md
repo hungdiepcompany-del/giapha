@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 213 - A-16L opens dry-run mapping preview without real genealogy writes
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Open a read-only dry-run mapping preview after owner marker
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Derive proposed people/relationships from existing manifest staging and A-16J
+  validation issues in memory.
+- Expose only `GET /api/admin/import-sessions/[sessionId]/dry-run-preview`.
+- Show the preview on `/admin/exports/import`.
+- Keep `canProceedToOfficialImport: false` and official import disabled.
+
+Lý do:
+
+- Owner needs a concrete mapping preview before any official import phase.
+- Existing A-16G/A-16I/A-16J data is enough to build an in-memory preview
+  without schema changes or real genealogy writes.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no
+  `supabase migration repair`, no seed, no upload/parse real file, no real
+  people/person write, no real relationship write, no layout/tree/revision
+  write, no DB persistence of preview, no official import action, no deploy and
+  no push.
+
 ## Decision 212 - A-16K keeps dry-run import locked behind owner approval marker
 
 Status: `ACTIVE`

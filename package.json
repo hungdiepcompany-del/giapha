@@ -223,7 +223,8 @@
     "check:a16j-manifest-staging-review-validation-warnings": "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
     "smoke:a16i2-real-giapha4-upload-staging": "node scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
     "check:a16i2-real-giapha4-upload-smoke": "node scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
-    "check:a16k-owner-approval-gate-dry-run-import": "node scripts/check-a16k-owner-approval-gate-dry-run-import.cjs"
+    "check:a16k-owner-approval-gate-dry-run-import": "node scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
+    "check:a16l-dry-run-mapping-preview": "node scripts/check-a16l-dry-run-mapping-preview.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
