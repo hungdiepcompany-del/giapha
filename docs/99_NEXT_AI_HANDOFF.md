@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16K - Owner Approval Gate for Dry-run Import
+
+- Marker: `A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT`.
+- Required owner approval marker for a later phase:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Added server-only gate service:
+  `lib/import/giapha4/import-dry-run-approval-gate.ts`.
+- Added GET-only status API:
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-gate`.
+- `/admin/exports/import` now shows `Cổng phê duyệt dry-run`,
+  `Dry-run import chưa được mở`, `Cần owner phê duyệt trước khi chạy dry-run.`,
+  `Marker yêu cầu: APPROVE_A16K_IMPORT_DRY_RUN_GATE`,
+  `Dữ liệu staging vẫn chưa được nhập vào cây gia phả thật.` and disabled
+  `Chạy dry-run — cần phê duyệt`.
+- Official import remains disabled:
+  `Xác nhận nhập chính thức — chưa mở`.
+- Added doc:
+  `docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md`.
+- Added checker:
+  `scripts/check-a16k-owner-approval-gate-dry-run-import.cjs`.
+- Added package command:
+  `check:a16k-owner-approval-gate-dry-run-import`.
+- A-16K did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not upload/parse a real file, did not write people/person rows, did not write
+  relationships, did not update layout/tree/revision, did not run dry-run
+  mapping, did not open official import, did not deploy and did not push.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`,
+  `check:a16i-upload-parse-giapha4-manifest-staging`,
+  `check:a16j-manifest-staging-review-validation-warnings`,
+  `check:a16i2-real-giapha4-upload-smoke`,
+  `check:a16k-owner-approval-gate-dry-run-import`, `typecheck`, `lint`,
+  `build`, `git diff --check` and `git diff --cached --check` passed.
+- `smoke:a16i2-real-giapha4-upload-staging` returned
+  `SAFE_SKIP_MISSING_EXPLICIT_ENV` because owner base URL, storage state and
+  real file path env were absent.
+- Next options:
+  - A-16L only after owner explicitly provides
+    `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+  - A-16I2-RUN if a real `.xlsx` staging smoke still needs owner-provided file
+    and storage state outside git.
+
 ## 2026-06-30 - A-16I2 - Real Gia Phả 4 Upload Smoke
 
 - Marker: `A16I2_REAL_GIAPHA4_UPLOAD_SMOKE`.

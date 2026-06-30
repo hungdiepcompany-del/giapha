@@ -33,6 +33,10 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md",
   "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
+  "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md",
+  "lib/import/giapha4/import-dry-run-approval-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
+  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "package.json",
 ]);
 

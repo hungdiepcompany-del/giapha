@@ -1,3 +1,4 @@
+import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -80,6 +81,7 @@ export function ImportSessionManifestPanel({
     (issue) => issue.severity === "warning",
   );
   const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
+  const dryRunGate = getImportDryRunApprovalGate();
 
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
@@ -193,6 +195,32 @@ export function ImportSessionManifestPanel({
             <IssueList title="Lỗi cần xử lý" issues={errorIssues} />
             <IssueList title="Cảnh báo dữ liệu" issues={warningIssues} />
             <IssueList title="Gợi ý kiểm tra" issues={infoIssues} />
+          </section>
+
+          <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-rose-800">
+                Cổng phê duyệt dry-run
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Dry-run import chưa được mở
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Cần owner phê duyệt trước khi chạy dry-run. Dữ liệu staging vẫn
+                chưa được nhập vào cây gia phả thật.
+              </p>
+              <p className="text-sm font-semibold text-rose-900">
+                Marker yêu cầu: {dryRunGate.dryRunGate.requiredMarker}
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
+            >
+              Chạy dry-run — cần phê duyệt
+            </button>
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

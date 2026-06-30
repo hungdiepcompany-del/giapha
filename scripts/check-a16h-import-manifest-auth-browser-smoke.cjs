@@ -34,6 +34,10 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md",
   "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
+  "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md",
+  "lib/import/giapha4/import-dry-run-approval-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
+  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "package.json",
 ]);
 
@@ -214,7 +218,8 @@ for (const file of changedFiles) {
   if (
     file.startsWith("app/api/") &&
     file !== "app/api/admin/import-sessions/upload/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts"
   ) {
     failures.push(`API file changed outside A-16I upload staging route ${file}`);
   }
@@ -227,6 +232,7 @@ for (const file of changedFiles) {
       "lib/import/giapha4/manifest-upload-service.ts",
       "lib/import/giapha4/manifest-read-service.ts",
       "lib/import/giapha4/manifest-validation-service.ts",
+      "lib/import/giapha4/import-dry-run-approval-gate.ts",
     ].includes(file)
   ) {
     failures.push(`API/service/runtime file changed ${file}`);

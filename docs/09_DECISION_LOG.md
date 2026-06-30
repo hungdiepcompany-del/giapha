@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 212 - A-16K keeps dry-run import locked behind owner approval marker
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add a server-only static approval gate for Gia Phả 4 dry-run import.
+- Expose only `GET /api/admin/import-sessions/[sessionId]/dry-run-gate`.
+- Show a disabled dry-run approval block on `/admin/exports/import`.
+- Require owner marker `APPROVE_A16K_IMPORT_DRY_RUN_GATE` before any later
+  dry-run mapping phase can open.
+- Keep official import disabled.
+
+Lý do:
+
+- A-16G through A-16J/A-16I2 prepared read/staging/review capability, but no
+  phase has approved dry-run mapping or real genealogy writes.
+- A visible locked gate makes the next approval boundary explicit for owner and
+  operator review.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no
+  `supabase migration repair`, no seed, no upload/parse real file, no real
+  people/person write, no real relationship write, no layout/tree/revision
+  write, no dry-run mapping execution, no official import action, no deploy and
+  no push.
+
 ## Decision 211 - A-16I2 real file upload smoke stays staging-only and explicit-env gated
 
 Status: `ACTIVE`

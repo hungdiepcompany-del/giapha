@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-06-30 - A-16K - Owner Approval Gate for Dry-run Import
+
+- Marker: `A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT`.
+- Required owner approval marker for any later dry-run phase:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Added server-only static gate service
+  `lib/import/giapha4/import-dry-run-approval-gate.ts`.
+- Added GET-only route
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-gate`.
+- Updated `/admin/exports/import` panel with `Cổng phê duyệt dry-run`,
+  `Dry-run import chưa được mở`, the required marker, and disabled
+  `Chạy dry-run — cần phê duyệt`.
+- Official import remains disabled with
+  `Xác nhận nhập chính thức — chưa mở`.
+- Added checker
+  `scripts/check-a16k-owner-approval-gate-dry-run-import.cjs` and package
+  command `check:a16k-owner-approval-gate-dry-run-import`.
+- Updated A-16G/A-16H/A-16I/A-16J/A-16I2 checkers narrowly to allow the A-16K
+  gate files while preserving no dry-run mapping/no official import/no real
+  genealogy mutation checks.
+- A-16K did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not upload/parse a real file, did not write real people/person rows, did not
+  write real relationships, did not update layout/tree/revision, did not run
+  dry-run mapping, did not open official import, did not deploy and did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `check:a16i-upload-parse-giapha4-manifest-staging` PASS,
+  `check:a16j-manifest-staging-review-validation-warnings` PASS,
+  `check:a16i2-real-giapha4-upload-smoke` PASS,
+  `check:a16k-owner-approval-gate-dry-run-import` PASS,
+  `smoke:a16i2-real-giapha4-upload-staging` SAFE_SKIP_MISSING_EXPLICIT_ENV,
+  `typecheck` PASS, `lint` PASS, `build` PASS, `git diff --check` PASS and
+  `git diff --cached --check` PASS.
+
 ## 2026-06-30 - A-16I2 - Real Gia Phả 4 Upload Smoke
 
 - Marker: `A16I2_REAL_GIAPHA4_UPLOAD_SMOKE`.

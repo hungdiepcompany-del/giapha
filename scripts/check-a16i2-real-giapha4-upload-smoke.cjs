@@ -21,6 +21,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
+  "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md",
+  "lib/import/giapha4/import-dry-run-approval-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "package.json",
 ]);
 

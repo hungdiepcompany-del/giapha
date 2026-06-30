@@ -5,14 +5,12 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING.md";
-const checkerPath = "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs";
-const parserPath = "lib/import/giapha4/xlsx-staging-parser.ts";
-const servicePath = "lib/import/giapha4/manifest-upload-service.ts";
-const routePath = "app/api/admin/import-sessions/upload/route.ts";
-const uploadFormPath = "components/imports/giapha4-manifest-upload-form.tsx";
+const docPath = "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md";
+const checkerPath = "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs";
+const gateServicePath = "lib/import/giapha4/import-dry-run-approval-gate.ts";
+const gateRoutePath =
+  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
-const pagePath = "app/(admin)/admin/exports/import/page.tsx";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -21,26 +19,14 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
-  parserPath,
-  servicePath,
-  routePath,
-  uploadFormPath,
+  gateServicePath,
+  gateRoutePath,
   panelPath,
-  pagePath,
-  "lib/import/giapha4/manifest-read-service.ts",
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
-  "docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md",
-  "lib/import/giapha4/manifest-validation-service.ts",
-  "app/api/admin/import-sessions/[sessionId]/validation/route.ts",
+  "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
-  "docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md",
-  "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
-  "docs/PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md",
-  "lib/import/giapha4/import-dry-run-approval-gate.ts",
-  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
-  "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "package.json",
 ]);
 
@@ -98,114 +84,90 @@ function gitShowHead(relativePath) {
 }
 
 const doc = readFile(docPath);
-const parser = readFile(parserPath);
-const service = readFile(servicePath);
-const route = readFile(routePath);
-const uploadForm = readFile(uploadFormPath);
+const checker = readFile(checkerPath);
+const gateService = readFile(gateServicePath);
+const gateRoute = readFile(gateRoutePath);
 const panel = readFile(panelPath);
-const page = readFile(pagePath);
-const manifestReadService = readFile("lib/import/giapha4/manifest-read-service.ts");
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
-const a16gChecker = readFile("scripts/check-a16g-import-session-read-manifest-runtime.cjs");
-const a16hChecker = readFile("scripts/check-a16h-import-manifest-auth-browser-smoke.cjs");
 
 for (const token of [
-  "A-16I",
-  "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING",
-  "POST /api/admin/import-sessions/upload",
-  "staging-only",
-  "XLSX",
-  "XLS",
+  "A-16K",
+  "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT",
+  "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
+  "Dry-run hiện vẫn locked",
+  "Official import vẫn closed",
   "Không migration",
   "Không DB push",
   "Không SQL apply",
-  "Không seed/import vào bảng thật",
-  "Không tạo people/person thật",
-  "Không tạo relationship thật",
-  "Không cập nhật layout/tree/revision thật",
-  "Không mở import chính thức",
-  "Không deploy",
-  "Không push",
-  "A-16J",
+  "Không seed",
+  "Không upload/parse file thật",
+  "Không ghi people/relationships thật",
+  "Không layout/tree/revision",
+  "Không dry-run mapping",
+  "Không official import",
+  "A16K_STATUS=OWNER_APPROVAL_GATE_LOCKED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
-  "A16I_GIAPHA4_STAGING_PARSER_MARKER",
-  "JSZip",
-  "parseGiaPha4XlsxForStaging",
-  "A16I_XLS_NOT_SUPPORTED_WITHOUT_PARSER_DEPENDENCY",
-  "A16I_HEADER_NOT_RECOGNIZED",
-  "personCandidates",
-  "relationshipCandidates",
-  "duplicateCandidates",
-  "warnings",
-]) {
-  requireIncludes(parser, token, `parser token ${token}`);
-}
-
-for (const token of [
-  "uploadGiaPha4ManifestStaging",
-  "maybeCreateServerSupabaseClient",
-  "getPermissionContext",
-  "imports.create",
-  "import_sessions",
-  "import_session_warnings",
-  "import_duplicate_candidates",
-  "import_relationship_candidates",
-  "import_write_manifests",
-  "A16I_STAGING_ONLY_NOT_APPROVED",
-  "canImport: false",
+  "server-only",
+  "A16K_OWNER_APPROVAL_GATE_MARKER",
+  "A16K_IMPORT_DRY_RUN_REQUIRED_MARKER",
+  "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
+  "status: \"locked\"",
+  "canRunDryRun: false",
+  "dryRunMappingOpen: false",
+  "officialImportOpen: false",
+  "dbWrite: false",
   "peopleWrite: false",
   "relationshipWrite: false",
   "treeLayoutWrite: false",
   "revisionWrite: false",
 ]) {
-  requireIncludes(service, token, `service token ${token}`);
+  requireIncludes(gateService, token, `gate service token ${token}`);
 }
 
 for (const token of [
-  "export async function POST",
-  "uploadGiaPha4ManifestStaging",
+  "export async function GET",
+  "getImportDryRunApprovalGate",
+  "sessionId",
 ]) {
-  requireIncludes(route, token, `route token ${token}`);
+  requireIncludes(gateRoute, token, `gate route token ${token}`);
 }
 
+rejectPattern(
+  gateRoute,
+  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/,
+  "dry-run gate mutation handler",
+);
+
 for (const token of [
-  "Tải lên file Gia Phả 4",
-  "Chỉ ghi vào vùng staging, chưa nhập vào cây gia phả thật.",
-  "Chọn file",
-  "Đọc file và tạo manifest",
-  "Đang đọc file...",
-  "Đã tạo manifest staging",
-  "Không đọc được file Gia Phả 4",
+  "Cổng phê duyệt dry-run",
+  "Dry-run import chưa được mở",
+  "Cần owner phê duyệt trước khi chạy dry-run.",
+  "Marker yêu cầu:",
+  "Dữ liệu staging vẫn",
+  "chưa được nhập vào cây gia phả thật",
+  "Chạy dry-run — cần phê duyệt",
+  "disabled",
+  "aria-disabled=\"true\"",
   "Xác nhận nhập chính thức — chưa mở",
-  "/api/admin/import-sessions/upload",
 ]) {
-  requireIncludes(uploadForm + page, token, `UI token ${token}`);
-}
-
-for (const token of [
-  "peoplePreview",
-  "Thành viên staging",
-  "Quan hệ staging",
-  "Xác nhận nhập chính thức — chưa mở",
-]) {
-  requireIncludes(panel + manifestReadService, token, `manifest read UI token ${token}`);
+  requireIncludes(panel, token, `UI token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING.md", "index entry"],
-  [workLog, "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING", "work log marker"],
-  [handoff, "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING", "handoff marker"],
+  [index, "PLAN_A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT.md", "index entry"],
+  [workLog, "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT", "work log marker"],
+  [handoff, "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT", "handoff marker"],
   [
     decisionLog,
-    "Decision 209 - A-16I stages Gia Phả 4 uploads without opening official import",
+    "Decision 212 - A-16K keeps dry-run import locked behind owner approval marker",
     "decision entry",
   ],
 ]) {
@@ -213,26 +175,23 @@ for (const [content, token, label] of [
 }
 
 if (
-  packageJson?.scripts?.["check:a16i-upload-parse-giapha4-manifest-staging"] !==
-  "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs"
+  packageJson?.scripts?.["check:a16k-owner-approval-gate-dry-run-import"] !==
+  "node scripts/check-a16k-owner-approval-gate-dry-run-import.cjs"
 ) {
-  failures.push("missing package script check:a16i-upload-parse-giapha4-manifest-staging");
+  failures.push("missing package script check:a16k-owner-approval-gate-dry-run-import");
 }
 
-if (
-  packageJson?.scripts?.["check:a16j-manifest-staging-review-validation-warnings"] !==
-  "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
-) {
-  failures.push("missing package script check:a16j-manifest-staging-review-validation-warnings");
-}
-
-for (const token of [
-  "check:a16i-upload-parse-giapha4-manifest-staging",
-  routePath,
-  servicePath,
+for (const previousChecker of [
+  "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
+  "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
+  "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+  "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
+  "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
 ]) {
-  requireIncludes(a16gChecker, token, `A-16G checker allowlist token ${token}`);
-  requireIncludes(a16hChecker, token, `A-16H checker allowlist token ${token}`);
+  const content = readFile(previousChecker);
+  for (const token of [docPath, checkerPath, gateServicePath, gateRoutePath]) {
+    requireIncludes(content, token, `${previousChecker} allowlist token ${token}`);
+  }
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -244,7 +203,12 @@ for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
-  if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
+  if (
+    /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip)$/i.test(file) ||
+    (/\.json$/i.test(file) && file !== "package.json")
+  ) {
+    failures.push(`real data/storage/screenshot file must not be changed ${file}`);
+  }
   if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
     failures.push(`migration file changed ${file}`);
   }
@@ -254,13 +218,23 @@ for (const file of changedFiles) {
   if (/wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(file)) {
     failures.push(`runtime/deploy config changed ${file}`);
   }
+  if (
+    file.startsWith("app/api/") &&
+    file !== gateRoutePath
+  ) {
+    failures.push(`unexpected API route changed ${file}`);
+  }
 }
 
-const stagedDataFiles = gitOutput(["diff", "--cached", "--name-only"])
+const stagedSensitiveFiles = gitOutput(["diff", "--cached", "--name-only"])
   .split(/\r?\n/)
-  .filter((file) => /\.(xls|xlsx|csv)$/i.test(file));
-for (const file of stagedDataFiles) {
-  failures.push(`staged real import file not allowed ${file}`);
+  .filter(
+    (file) =>
+      /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip)$/i.test(file) ||
+      (/\.json$/i.test(file) && file !== "package.json"),
+  );
+for (const file of stagedSensitiveFiles) {
+  failures.push(`staged real data/storage/screenshot file not allowed ${file}`);
 }
 
 const packageHead = gitShowHead("package.json");
@@ -279,15 +253,9 @@ if (packageHead) {
 const runtimePatch = gitOutput([
   "diff",
   "--",
-  parserPath,
-  servicePath,
-  routePath,
-  uploadFormPath,
+  gateServicePath,
+  gateRoutePath,
   panelPath,
-  pagePath,
-  "lib/import/giapha4/manifest-read-service.ts",
-  "lib/import/giapha4/import-dry-run-approval-gate.ts",
-  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
 ]);
 
 for (const pattern of [
@@ -301,6 +269,7 @@ for (const pattern of [
   /\bDELETE\s+FROM\b/i,
   /\.from\(["']people["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']person["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
+  /\.from\(["']relationships?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']families["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_parents["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_children["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
@@ -308,33 +277,17 @@ for (const pattern of [
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(runDryRunImport|executeDryRun|createDryRunResult|applyDryRunMapping)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }
 
-const uploadRouteNames = gitOutput(["status", "--porcelain", "--untracked-files=all"])
-  .split(/\r?\n/)
-  .map((line) => line.slice(3).trim())
-  .filter((file) => file.startsWith("app/api/") || file.includes("actions."));
-for (const file of uploadRouteNames) {
-  if (
-    file !== routePath &&
-    file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts"
-  ) {
-    failures.push(`unexpected API/action changed ${file}`);
-  }
-}
-
 for (const [file, content] of [
   [docPath, doc],
-  [checkerPath, readFile(checkerPath)],
-  [parserPath, parser],
-  [servicePath, service],
-  [routePath, route],
-  [uploadFormPath, uploadForm],
+  [checkerPath, checker],
+  [gateServicePath, gateService],
+  [gateRoutePath, gateRoute],
   [panelPath, panel],
-  [pagePath, page],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -350,9 +303,9 @@ for (const [file, content] of [
 }
 
 if (failures.length > 0) {
-  console.error("A-16I upload/parse Gia Pha 4 manifest staging check failed:");
+  console.error("A-16K owner approval gate dry-run import check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16I upload/parse Gia Pha 4 manifest staging check passed.");
+console.log("A-16K owner approval gate dry-run import check passed.");
