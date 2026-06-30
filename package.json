@@ -219,7 +219,8 @@
     "check:a16g-import-session-read-manifest-runtime": "node scripts/check-a16g-import-session-read-manifest-runtime.cjs",
     "smoke:a16h-import-manifest-auth-browser": "node scripts/smoke-a16h-import-manifest-auth-browser.cjs",
     "check:a16h-import-manifest-auth-browser-smoke": "node scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
-    "check:a16i-upload-parse-giapha4-manifest-staging": "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs"
+    "check:a16i-upload-parse-giapha4-manifest-staging": "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+    "check:a16j-manifest-staging-review-validation-warnings": "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

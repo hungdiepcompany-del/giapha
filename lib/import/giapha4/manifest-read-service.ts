@@ -101,9 +101,13 @@ export type ImportPersonCandidatePreview = {
   gender: string;
   birthDateText: string | null;
   deathDateText: string | null;
+  isLiving: boolean | null;
+  birthPlace: string | null;
   homeTown: string | null;
   branchName: string | null;
   generationNumber: number | null;
+  shortBio: string | null;
+  notesPrivate: string | null;
   visibility: string;
 };
 
@@ -263,6 +267,43 @@ function isPersonCandidatePreview(
   );
 }
 
+function stringOrNull(value: unknown) {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function booleanOrNull(value: unknown) {
+  return typeof value === "boolean" ? value : null;
+}
+
+function numberOrNull(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function normalizePersonCandidatePreview(
+  candidate: ImportPersonCandidatePreview,
+): ImportPersonCandidatePreview {
+  return {
+    sourceRowIndex: candidate.sourceRowIndex,
+    fingerprint: candidate.fingerprint,
+    fullName: candidate.fullName,
+    displayName: stringOrNull(candidate.displayName),
+    gender: typeof candidate.gender === "string" ? candidate.gender : "unknown",
+    birthDateText: stringOrNull(candidate.birthDateText),
+    deathDateText: stringOrNull(candidate.deathDateText),
+    isLiving: booleanOrNull(candidate.isLiving),
+    birthPlace: stringOrNull(candidate.birthPlace),
+    homeTown: stringOrNull(candidate.homeTown),
+    branchName: stringOrNull(candidate.branchName),
+    generationNumber: numberOrNull(candidate.generationNumber),
+    shortBio: stringOrNull(candidate.shortBio),
+    notesPrivate: stringOrNull(candidate.notesPrivate),
+    visibility:
+      typeof candidate.visibility === "string" && candidate.visibility.trim()
+        ? candidate.visibility
+        : "family",
+  };
+}
+
 function extractPeoplePreview(writeManifests: ImportWriteManifestPreview[]) {
   const people: ImportPersonCandidatePreview[] = [];
 
@@ -271,7 +312,9 @@ function extractPeoplePreview(writeManifests: ImportWriteManifestPreview[]) {
     if (!Array.isArray(candidates)) continue;
 
     for (const candidate of candidates) {
-      if (isPersonCandidatePreview(candidate)) people.push(candidate);
+      if (isPersonCandidatePreview(candidate)) {
+        people.push(normalizePersonCandidatePreview(candidate));
+      }
       if (people.length >= 100) return people;
     }
   }

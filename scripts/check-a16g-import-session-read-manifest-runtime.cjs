@@ -51,6 +51,10 @@ const allowedChangedFiles = new Set([
   "app/api/admin/import-sessions/upload/route.ts",
   "components/imports/giapha4-manifest-upload-form.tsx",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+  "docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md",
+  "lib/import/giapha4/manifest-validation-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/validation/route.ts",
+  "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "package.json",
 ]);
 
@@ -216,6 +220,13 @@ if (
   "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs"
 ) {
   failures.push("missing package script check:a16i-upload-parse-giapha4-manifest-staging");
+}
+
+if (
+  packageJson?.scripts?.["check:a16j-manifest-staging-review-validation-warnings"] !==
+  "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
+) {
+  failures.push("missing package script check:a16j-manifest-staging-review-validation-warnings");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

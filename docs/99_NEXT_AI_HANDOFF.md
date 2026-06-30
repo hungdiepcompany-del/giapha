@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16J - Manifest Staging Review / Validation Warnings
+
+- Marker: `A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS`.
+- Final status target: `A16J_STATUS=MANIFEST_STAGING_VALIDATION_REVIEW_READY`.
+- Added read-only validation service:
+  `lib/import/giapha4/manifest-validation-service.ts`.
+- Added GET-only API:
+  `GET /api/admin/import-sessions/[sessionId]/validation`.
+- `/admin/exports/import` now shows `Kiểm tra dữ liệu staging`, `Số người
+  staging`, `Số quan hệ staging`, `Số lỗi`, `Số cảnh báo`, `Số thông tin`,
+  `Lỗi cần xử lý`, `Cảnh báo dữ liệu` and `Gợi ý kiểm tra`.
+- The UI still states `Dữ liệu này vẫn chưa được nhập vào cây gia phả thật.`
+  and keeps `Xác nhận nhập chính thức — chưa mở` disabled.
+- A-16J derives warnings/errors at runtime/read-only from the A-16I staging
+  manifest. It does not write summary warnings back to DB.
+- Added checker
+  `scripts/check-a16j-manifest-staging-review-validation-warnings.cjs` and
+  package command `check:a16j-manifest-staging-review-validation-warnings`.
+- Updated A-16G/A-16H/A-16I checkers only to allow the explicit A-16J
+  read-only files and route while preserving no official import/no real
+  genealogy mutation checks.
+- A-16J did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not create people/person thật, did not create relationship thật, did not
+  update layout/tree/revision, did not open official import, did not deploy and
+  did not push.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`,
+  `check:a16i-upload-parse-giapha4-manifest-staging`,
+  `check:a16j-manifest-staging-review-validation-warnings`, `typecheck`,
+  `lint`, `build`, `git diff --check` and `git diff --cached --check` all
+  passed.
+- Next recommended step after PASS: owner reviews real staging warnings in an
+  authenticated environment; any official import still needs a separate
+  approval/transaction/rollback phase.
+
 ## 2026-06-30 - A-16I - Upload/Parse Gia Phả 4 Into Manifest Staging
 
 - Marker: `A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING`.

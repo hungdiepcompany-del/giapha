@@ -1,4 +1,8 @@
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
+import {
+  buildManifestValidationReview,
+  type ManifestValidationIssue,
+} from "@/lib/import/giapha4/manifest-validation-service";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "Chưa có";
@@ -15,6 +19,36 @@ function MetricCard({ label, value }: { label: string; value: number }) {
         {label}
       </div>
       <div className="mt-2 text-2xl font-bold text-stone-950">{value}</div>
+    </div>
+  );
+}
+
+function IssueList({
+  title,
+  issues,
+}: {
+  title: string;
+  issues: ManifestValidationIssue[];
+}) {
+  if (issues.length === 0) return null;
+
+  return (
+    <div className="grid gap-2">
+      <h4 className="text-sm font-bold text-stone-950">{title}</h4>
+      {issues.slice(0, 12).map((issue) => (
+        <div
+          key={`${issue.code}-${issue.entityKey ?? "session"}-${issue.rowNumber ?? "all"}`}
+          className="rounded-md border border-stone-200 bg-white p-3 text-sm leading-6 text-stone-800"
+        >
+          <div className="font-bold text-stone-950">{issue.titleVi}</div>
+          <div>{issue.messageVi}</div>
+          <div className="mt-1 text-stone-600">
+            {issue.rowNumber ? `Dòng ${issue.rowNumber}. ` : ""}
+            Mã: {issue.code}.
+          </div>
+          <div className="mt-1 text-teal-800">{issue.suggestionVi}</div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -38,6 +72,14 @@ export function ImportSessionManifestPanel({
   result: ImportManifestReadResult;
 }) {
   const session = result.session ?? result.sessions[0] ?? null;
+  const validation = buildManifestValidationReview(result);
+  const errorIssues = validation.issues.filter(
+    (issue) => issue.severity === "error",
+  );
+  const warningIssues = validation.issues.filter(
+    (issue) => issue.severity === "warning",
+  );
+  const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
 
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
@@ -113,6 +155,46 @@ export function ImportSessionManifestPanel({
 
       {session ? (
         <div className="grid gap-4">
+          <section className="grid gap-4 rounded-lg border border-teal-200 bg-teal-50 p-4">
+            <div className="grid gap-2">
+              <h3 className="text-base font-bold text-stone-950">
+                Kiểm tra dữ liệu staging
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Dữ liệu này vẫn chưa được nhập vào cây gia phả thật. Mục này
+                chỉ đọc manifest staging và gom cảnh báo để owner kiểm tra trước
+                khi có phase nhập chính thức riêng.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              <MetricCard
+                label="Số người staging"
+                value={validation.summary.peopleCount}
+              />
+              <MetricCard
+                label="Số quan hệ staging"
+                value={validation.summary.relationshipCount}
+              />
+              <MetricCard label="Số lỗi" value={validation.summary.errorCount} />
+              <MetricCard
+                label="Số cảnh báo"
+                value={validation.summary.warningCount}
+              />
+              <MetricCard label="Số thông tin" value={validation.summary.infoCount} />
+            </div>
+
+            {validation.summary.errorCount === 0 &&
+            validation.summary.warningCount === 0 ? (
+              <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm font-semibold text-emerald-900">
+                Chưa phát hiện cảnh báo nghiêm trọng
+              </div>
+            ) : null}
+
+            <IssueList title="Lỗi cần xử lý" issues={errorIssues} />
+            <IssueList title="Cảnh báo dữ liệu" issues={warningIssues} />
+            <IssueList title="Gợi ý kiểm tra" issues={infoIssues} />
+          </section>
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <MetricCard
               label="Cảnh báo manifest"

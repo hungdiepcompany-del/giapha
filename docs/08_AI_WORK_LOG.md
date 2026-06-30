@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-06-30 - A-16J - Manifest Staging Review / Validation Warnings
+
+- Marker: `A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS`.
+- Added `docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md`.
+- Added server-only read-only validation service
+  `lib/import/giapha4/manifest-validation-service.ts`.
+- Added GET-only route
+  `GET /api/admin/import-sessions/[sessionId]/validation`.
+- Updated `components/imports/import-session-manifest-panel.tsx` to show
+  `Kiểm tra dữ liệu staging`, summary counts, `Lỗi cần xử lý`,
+  `Cảnh báo dữ liệu`, `Gợi ý kiểm tra` and the disabled official import CTA.
+- Validation is runtime/read-only. A-16J does not persist warning summaries to
+  staging tables and does not write real genealogy data.
+- Added checker
+  `scripts/check-a16j-manifest-staging-review-validation-warnings.cjs` and
+  package command `check:a16j-manifest-staging-review-validation-warnings`.
+- Updated A-16G/A-16H/A-16I checkers narrowly so their guardrails remain
+  compatible with the A-16J read-only validation route/files.
+- A-16J did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not import into real people/person tables, did not create real relationships,
+  did not update layout/tree/revision, did not open official import, did not
+  deploy and did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `check:a16i-upload-parse-giapha4-manifest-staging` PASS,
+  `check:a16j-manifest-staging-review-validation-warnings` PASS,
+  `typecheck` PASS, `lint` PASS, `build` PASS, `git diff --check` PASS and
+  `git diff --cached --check` PASS.
+
 ## 2026-06-30 - A-16I - Upload/Parse Gia Phả 4 Into Manifest Staging
 
 - Marker: `A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING`.

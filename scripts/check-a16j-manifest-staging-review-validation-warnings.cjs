@@ -5,9 +5,16 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md";
-const smokePath = "scripts/smoke-a16h-import-manifest-auth-browser.cjs";
-const checkerPath = "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs";
+const docPath =
+  "docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md";
+const checkerPath =
+  "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs";
+const validationServicePath =
+  "lib/import/giapha4/manifest-validation-service.ts";
+const readServicePath = "lib/import/giapha4/manifest-read-service.ts";
+const routePath =
+  "app/api/admin/import-sessions/[sessionId]/validation/route.ts";
+const panelPath = "components/imports/import-session-manifest-panel.tsx";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -15,22 +22,14 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
-  smokePath,
   checkerPath,
+  validationServicePath,
+  readServicePath,
+  routePath,
+  panelPath,
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
-  "docs/PLAN_A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING.md",
-  "lib/import/giapha4/xlsx-staging-parser.ts",
-  "lib/import/giapha4/manifest-upload-service.ts",
-  "lib/import/giapha4/manifest-read-service.ts",
-  "app/api/admin/import-sessions/upload/route.ts",
-  "app/(admin)/admin/exports/import/page.tsx",
-  "components/imports/giapha4-manifest-upload-form.tsx",
-  "components/imports/import-session-manifest-panel.tsx",
+  "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
-  "docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md",
-  "lib/import/giapha4/manifest-validation-service.ts",
-  "app/api/admin/import-sessions/[sessionId]/validation/route.ts",
-  "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "package.json",
 ]);
 
@@ -88,73 +87,119 @@ function gitShowHead(relativePath) {
 }
 
 const doc = readFile(docPath);
-const smoke = readFile(smokePath);
+const checker = readFile(checkerPath);
+const validationService = readFile(validationServicePath);
+const readService = readFile(readServicePath);
+const route = readFile(routePath);
+const panel = readFile(panelPath);
 const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
+const a16gChecker = readFile(
+  "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
+);
+const a16hChecker = readFile(
+  "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
+);
+const a16iChecker = readFile(
+  "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+);
 
 for (const token of [
-  "A-16H",
-  "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE",
-  "Authenticated Browser Smoke for Import Manifest Read Screen",
-  "A16H_BROWSER_SMOKE_STATUS=PASS",
-  "A16H_BROWSER_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV",
-  "A16H_BROWSER_SMOKE_STATUS=FAIL",
-  "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
-  "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
-  "/admin/exports/import",
-  "Phiên nhập dữ liệu",
-  "Manifest dữ liệu",
-  "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
-  "Xác nhận nhập chính thức",
-  "chưa mở",
-  "không tạo import session thật",
-  "không tạo person thật",
-  "không tạo relationship thật",
-  "không ghi layout/revision",
-  "không deploy",
-  "không push",
+  "A-16J",
+  "A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS",
+  "GET /api/admin/import-sessions/[sessionId]/validation",
+  "runtime/read-only",
+  "Không migration",
+  "Không DB push",
+  "Không SQL apply",
+  "Không seed/import vào bảng thật",
+  "Không tạo people/person thật",
+  "Không tạo relationship thật",
+  "Không cập nhật layout/tree/revision",
+  "Không mở import chính thức",
+  "Không deploy",
+  "Không push",
+  "A16J_MIGRATION_STATUS=NO_NEW_MIGRATION",
+  "A16J_DB_PUSH_STATUS=NOT_RUN",
+  "A16J_SQL_APPLY_STATUS=NOT_RUN",
+  "A16J_OFFICIAL_IMPORT_STATUS=DISABLED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
-  "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE",
-  "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
-  "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
-  "SAFE_SKIP_MISSING_EXPLICIT_ENV",
-  "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
-  "/admin/exports/import",
-  "Phiên nhập dữ liệu",
-  "Manifest dữ liệu",
-  "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
-  "Xác nhận nhập chính thức",
-  "POST",
-  "PUT",
-  "PATCH",
-  "DELETE",
-  "confirm",
-  "commit",
-  "finalize",
-  "official-import",
-  "import-now",
-  "create-person",
-  "relationship",
-  "layout",
-  "revision",
+  "A16J_MANIFEST_STAGING_VALIDATION_MARKER",
+  "buildManifestValidationReview",
+  "validateImportManifestStaging",
+  "getImportManifest",
+  "readOnly: true",
+  "dbWrite: false",
+  "canImport: false",
+  "canProceedToDryRun: false",
+  "no_people_rows",
+  "duplicate_person_candidate",
+  "invalid_birth_date",
+  "invalid_death_date",
+  "death_before_birth",
+  "living_status_conflict",
+  "missing_relationship_target",
+  "relationship_target_not_found",
+  "self_relationship_candidate",
+  "duplicate_relationship_candidate",
+  "parse_warning_",
 ]) {
-  requireIncludes(smoke, token, `smoke token ${token}`);
+  requireIncludes(validationService, token, `validation service token ${token}`);
+}
+
+for (const token of [
+  "isLiving: boolean | null",
+  "birthPlace: string | null",
+  "shortBio: string | null",
+  "notesPrivate: string | null",
+]) {
+  requireIncludes(readService, token, `read service person field ${token}`);
+}
+
+for (const token of [
+  "export async function GET",
+  "validateImportManifestStaging",
+]) {
+  requireIncludes(route, token, `validation route token ${token}`);
+}
+rejectPattern(
+  route,
+  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/,
+  "validation route mutation handler",
+);
+
+for (const token of [
+  "buildManifestValidationReview",
+  "Kiểm tra dữ liệu staging",
+  "Cảnh báo dữ liệu",
+  "Lỗi cần xử lý",
+  "Gợi ý kiểm tra",
+  "Chưa phát hiện cảnh báo nghiêm trọng",
+  "Dữ liệu này vẫn chưa được nhập vào cây gia phả thật.",
+  "Xác nhận nhập chính thức — chưa mở",
+  "Số người staging",
+  "Số quan hệ staging",
+  "Số lỗi",
+  "Số cảnh báo",
+  "Số thông tin",
+]) {
+  requireIncludes(panel, token, `UI token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md", "index entry"],
-  [workLog, "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE", "work log marker"],
-  [handoff, "A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE", "handoff marker"],
+  [index, "PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md", "index entry"],
+  [workLog, "A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS", "work log marker"],
+  [handoff, "A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS", "handoff marker"],
   [
     decisionLog,
-    "Decision 208 - A-16H authenticated import manifest browser smoke uses explicit session env or safe-skip",
+    "Decision 210 - A-16J reviews manifest staging warnings without opening official import",
     "decision entry",
   ],
 ]) {
@@ -162,31 +207,24 @@ for (const [content, token, label] of [
 }
 
 if (
-  packageJson?.scripts?.["smoke:a16h-import-manifest-auth-browser"] !==
-  "node scripts/smoke-a16h-import-manifest-auth-browser.cjs"
+  packageJson?.scripts?.[
+    "check:a16j-manifest-staging-review-validation-warnings"
+  ] !== "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
 ) {
-  failures.push("missing package script smoke:a16h-import-manifest-auth-browser");
+  failures.push(
+    "missing package script check:a16j-manifest-staging-review-validation-warnings",
+  );
 }
 
-if (
-  packageJson?.scripts?.["check:a16h-import-manifest-auth-browser-smoke"] !==
-  "node scripts/check-a16h-import-manifest-auth-browser-smoke.cjs"
-) {
-  failures.push("missing package script check:a16h-import-manifest-auth-browser-smoke");
-}
-
-if (
-  packageJson?.scripts?.["check:a16i-upload-parse-giapha4-manifest-staging"] !==
-  "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs"
-) {
-  failures.push("missing package script check:a16i-upload-parse-giapha4-manifest-staging");
-}
-
-if (
-  packageJson?.scripts?.["check:a16j-manifest-staging-review-validation-warnings"] !==
-  "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
-) {
-  failures.push("missing package script check:a16j-manifest-staging-review-validation-warnings");
+for (const token of [
+  "check:a16j-manifest-staging-review-validation-warnings",
+  validationServicePath,
+  routePath,
+  checkerPath,
+]) {
+  requireIncludes(a16gChecker, token, `A-16G checker allowlist token ${token}`);
+  requireIncludes(a16hChecker, token, `A-16H checker allowlist token ${token}`);
+  requireIncludes(a16iChecker, token, `A-16I checker allowlist token ${token}`);
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -198,7 +236,9 @@ for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
-  if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`real import file must not be staged ${file}`);
+  if (/\.(xls|xlsx|csv)$/i.test(file)) {
+    failures.push(`real import file must not be staged ${file}`);
+  }
   if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
     failures.push(`migration file changed ${file}`);
   }
@@ -207,26 +247,6 @@ for (const file of changedFiles) {
   }
   if (/wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(file)) {
     failures.push(`runtime/deploy config changed ${file}`);
-  }
-  if (
-    file.startsWith("app/api/") &&
-    file !== "app/api/admin/import-sessions/upload/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts"
-  ) {
-    failures.push(`API file changed outside A-16I upload staging route ${file}`);
-  }
-  if (
-    (file.startsWith("lib/") ||
-      file.startsWith("server/") ||
-      file.startsWith("services/")) &&
-    ![
-      "lib/import/giapha4/xlsx-staging-parser.ts",
-      "lib/import/giapha4/manifest-upload-service.ts",
-      "lib/import/giapha4/manifest-read-service.ts",
-      "lib/import/giapha4/manifest-validation-service.ts",
-    ].includes(file)
-  ) {
-    failures.push(`API/service/runtime file changed ${file}`);
   }
 }
 
@@ -253,12 +273,12 @@ if (packageHead) {
 const runtimePatch = gitOutput([
   "diff",
   "--",
-  "app",
-  "components",
-  "lib",
-  "server",
-  "services",
+  validationServicePath,
+  readServicePath,
+  routePath,
+  panelPath,
 ]);
+
 for (const pattern of [
   /\bsupabase\s+db\s+push\b/i,
   /\bmigration\s+repair\b/i,
@@ -269,6 +289,7 @@ for (const pattern of [
   /\bUPDATE\s+[a-z_]/i,
   /\bDELETE\s+FROM\b/i,
   /\.from\(["']people["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
+  /\.from\(["']person["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']families["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_parents["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_children["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
@@ -282,8 +303,11 @@ for (const pattern of [
 
 for (const [file, content] of [
   [docPath, doc],
-  [smokePath, smoke],
-  [checkerPath, readFile(checkerPath)],
+  [checkerPath, checker],
+  [validationServicePath, validationService],
+  [readServicePath, readService],
+  [routePath, route],
+  [panelPath, panel],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -293,16 +317,19 @@ for (const [file, content] of [
     /SUPABASE_SERVICE_ROLE_KEY\s*=\s*[^`\s]+/,
     /NEXT_PUBLIC_SUPABASE_ANON_KEY\s*=\s*[^`\s]+/,
     /postgresql:\/\/[^`\s]+/i,
-    /storageState\s*:\s*["'][^"']+["']/,
   ]) {
     rejectPattern(content, pattern, `${file} ${pattern}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error("A-16H import manifest authenticated browser smoke check failed:");
+  console.error(
+    "A-16J manifest staging review validation warnings check failed:",
+  );
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16H import manifest authenticated browser smoke check passed.");
+console.log(
+  "A-16J manifest staging review validation warnings check passed.",
+);

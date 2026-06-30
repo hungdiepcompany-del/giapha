@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 210 - A-16J reviews manifest staging warnings without opening official import
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add runtime/read-only validation for import manifest staging after A-16I.
+- Expose only `GET /api/admin/import-sessions/[sessionId]/validation`.
+- Compute validation issues from the existing A-16G/A-16I manifest read result.
+- Show Vietnamese warning/error/info groups on `/admin/exports/import`.
+- Keep `canImport: false`, `dbWrite: false` and the official import CTA
+  disabled.
+
+Lý do:
+
+- Owner needs staging review before any future official import approval.
+- Current schema already stores sessions, parser warnings, duplicate candidates,
+  relationship candidates and draft write manifests; A-16J can derive useful
+  review warnings without adding migration or writing another staging summary.
+- Read-only derivation keeps RLS authoritative and avoids accidental real
+  genealogy mutation.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no
+  `supabase migration repair`, no seed/import into real tables, no
+  people/person creation, no real relationship creation, no layout/tree/revision
+  update, no official import action, no deploy and no push.
+- Any future official import must be a separate approved phase with transaction,
+  rollback, audit and checker coverage.
+
 ## Decision 209 - A-16I stages Gia Phả 4 uploads without opening official import
 
 Status: `ACTIVE`

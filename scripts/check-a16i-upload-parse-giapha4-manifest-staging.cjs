@@ -30,6 +30,10 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/manifest-read-service.ts",
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
+  "docs/PLAN_A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS.md",
+  "lib/import/giapha4/manifest-validation-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/validation/route.ts",
+  "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "package.json",
 ]);
 
@@ -208,6 +212,13 @@ if (
   failures.push("missing package script check:a16i-upload-parse-giapha4-manifest-staging");
 }
 
+if (
+  packageJson?.scripts?.["check:a16j-manifest-staging-review-validation-warnings"] !==
+  "node scripts/check-a16j-manifest-staging-review-validation-warnings.cjs"
+) {
+  failures.push("missing package script check:a16j-manifest-staging-review-validation-warnings");
+}
+
 for (const token of [
   "check:a16i-upload-parse-giapha4-manifest-staging",
   routePath,
@@ -297,7 +308,12 @@ const uploadRouteNames = gitOutput(["status", "--porcelain", "--untracked-files=
   .map((line) => line.slice(3).trim())
   .filter((file) => file.startsWith("app/api/") || file.includes("actions."));
 for (const file of uploadRouteNames) {
-  if (file !== routePath) failures.push(`unexpected API/action changed ${file}`);
+  if (
+    file !== routePath &&
+    file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts"
+  ) {
+    failures.push(`unexpected API/action changed ${file}`);
+  }
 }
 
 for (const [file, content] of [
