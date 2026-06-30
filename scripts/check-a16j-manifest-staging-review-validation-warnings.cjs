@@ -30,6 +30,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+  "docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md",
+  "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
+  "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
   "package.json",
 ]);
 

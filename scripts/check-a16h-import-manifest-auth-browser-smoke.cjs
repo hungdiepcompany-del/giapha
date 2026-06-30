@@ -31,6 +31,9 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/manifest-validation-service.ts",
   "app/api/admin/import-sessions/[sessionId]/validation/route.ts",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
+  "docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md",
+  "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
+  "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
   "package.json",
 ]);
 

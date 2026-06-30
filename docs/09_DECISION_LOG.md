@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 211 - A-16I2 real file upload smoke stays staging-only and explicit-env gated
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add a smoke script for owner/operator-provided real Gia Phả 4 `.xlsx` files.
+- Require explicit base URL, Playwright storage state and real file path env.
+- Require the real file to stay outside the repo.
+- Safe-skip before browser/file read when explicit env is missing.
+- Allow only `POST /api/admin/import-sessions/upload` as the staging mutation.
+- Keep official import disabled and keep A-16J validation read-only.
+
+Lý do:
+
+- A-16I parser and A-16J validation need a safe path to test real owner files
+  without committing sensitive data or opening real genealogy mutation.
+- Explicit env keeps ownership of session/file selection with the operator.
+- Summary-only output lets the team record counts and warning codes without
+  logging personal rows.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no
+  `supabase migration repair`, no seed, no real people/person write, no real
+  relationship write, no layout/tree/revision write, no official import action,
+  no deploy and no push.
+- `.xls` remains unsupported until a separate parser/dependency approval phase.
+
 ## Decision 210 - A-16J reviews manifest staging warnings without opening official import
 
 Status: `ACTIVE`

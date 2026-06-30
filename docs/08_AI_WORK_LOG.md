@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-06-30 - A-16I2 - Real Gia Phả 4 Upload Smoke
+
+- Marker: `A16I2_REAL_GIAPHA4_UPLOAD_SMOKE`.
+- Added `docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md`.
+- Added explicit-env gated smoke:
+  `scripts/smoke-a16i2-real-giapha4-upload-staging.cjs`.
+- Added checker:
+  `scripts/check-a16i2-real-giapha4-upload-smoke.cjs`.
+- Added package commands:
+  `smoke:a16i2-real-giapha4-upload-staging` and
+  `check:a16i2-real-giapha4-upload-smoke`.
+- Smoke runs only with
+  `A16I2_GIAPHA4_REAL_UPLOAD_BASE_URL`,
+  `A16I2_GIAPHA4_REAL_UPLOAD_STORAGE_STATE` and
+  `A16I2_GIAPHA4_REAL_FILE_PATH`.
+- Current local smoke result:
+  `A16I2_REAL_UPLOAD_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV` and
+  `A16I2_COUNTS_AVAILABLE=false`.
+- The real Gia Phả 4 file was not provided in shell env, was not read, was not
+  copied into repo and was not committed.
+- A-16I2 allows only manifest staging/session staging writes through
+  `POST /api/admin/import-sessions/upload` when explicit env is provided.
+- A-16I2 did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not write real people/person rows, did not write real relationships, did not
+  update layout/tree/revision, did not open official import, did not deploy and
+  did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `check:a16i-upload-parse-giapha4-manifest-staging` PASS,
+  `check:a16j-manifest-staging-review-validation-warnings` PASS,
+  `check:a16i2-real-giapha4-upload-smoke` PASS,
+  `smoke:a16i2-real-giapha4-upload-staging` SAFE_SKIP,
+  `typecheck` PASS, `lint` PASS, `build` PASS, `git diff --check` PASS and
+  `git diff --cached --check` PASS.
+
 ## 2026-06-30 - A-16J - Manifest Staging Review / Validation Warnings
 
 - Marker: `A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS`.

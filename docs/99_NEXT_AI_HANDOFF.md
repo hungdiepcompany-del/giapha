@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16I2 - Real Gia Phả 4 Upload Smoke
+
+- Marker: `A16I2_REAL_GIAPHA4_UPLOAD_SMOKE`.
+- Added explicit-env gated real-file staging smoke:
+  `scripts/smoke-a16i2-real-giapha4-upload-staging.cjs`.
+- Added checker:
+  `scripts/check-a16i2-real-giapha4-upload-smoke.cjs`.
+- Added doc:
+  `docs/PLAN_A16I2_REAL_GIAPHA4_UPLOAD_SMOKE.md`.
+- Added package commands:
+  `smoke:a16i2-real-giapha4-upload-staging` and
+  `check:a16i2-real-giapha4-upload-smoke`.
+- Required env for a real run:
+  `A16I2_GIAPHA4_REAL_UPLOAD_BASE_URL`,
+  `A16I2_GIAPHA4_REAL_UPLOAD_STORAGE_STATE` and
+  `A16I2_GIAPHA4_REAL_FILE_PATH`.
+- Current local result:
+  `A16I2_REAL_UPLOAD_SMOKE_STATUS=SAFE_SKIP_MISSING_EXPLICIT_ENV`.
+- `A16I2_COUNTS_AVAILABLE=false` because no explicit owner file/session env was
+  present, so the smoke did not open browser and did not read a real file.
+- Real Gia Phả 4 file rule: must stay outside `D:\CODE\GIA PHẢ`; do not commit
+  workbook, storage state, cookie/session file, screenshot or raw data log.
+- `.xlsx` is the only real upload format supported by A-16I2. `.xls` returns
+  `SAFE_SKIP_UNSUPPORTED_XLS` until a separate parser/dependency phase.
+- Allowed mutation during real smoke: only
+  `POST /api/admin/import-sessions/upload`.
+- A-16I2 did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not write real people/person rows, did not write real relationships, did not
+  update layout/tree/revision, did not open official import, did not deploy and
+  did not push.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`,
+  `check:a16i-upload-parse-giapha4-manifest-staging`,
+  `check:a16j-manifest-staging-review-validation-warnings`,
+  `check:a16i2-real-giapha4-upload-smoke`, `typecheck`, `lint`, `build`,
+  `git diff --check` and `git diff --cached --check` passed. The smoke command
+  safe-skipped due to missing explicit env.
+- Next options: rerun A-16I2 with owner-provided `.xlsx` outside repo and
+  storage state, open A-16I3 if parser/validation hardening is needed, or open
+  A-16K for owner approval gate design before any official import.
+
 ## 2026-06-30 - A-16J - Manifest Staging Review / Validation Warnings
 
 - Marker: `A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS`.
