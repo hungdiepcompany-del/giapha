@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-06-30 - A-16I - Upload/Parse Gia Phả 4 Into Manifest Staging
+
+- Marker: `A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING`.
+- Added `docs/PLAN_A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING.md`.
+- Added server-only `.xlsx` staging parser
+  `lib/import/giapha4/xlsx-staging-parser.ts` using existing `jszip`; no new
+  package was added.
+- Added upload/staging service
+  `lib/import/giapha4/manifest-upload-service.ts` and route
+  `POST /api/admin/import-sessions/upload`.
+- Added admin UI upload component
+  `components/imports/giapha4-manifest-upload-form.tsx` on
+  `/admin/exports/import`.
+- Extended A-16G manifest panel/read service to show staged person candidates
+  from draft `import_write_manifests.approved_scope.person_candidates` and
+  staged relationship candidates from `import_relationship_candidates`.
+- Actual supported format: `.xlsx`. `.xls` returns a Vietnamese blocker because
+  no binary `.xls` parser dependency is installed or approved in this phase.
+- Staging writes are limited to `import_sessions`,
+  `import_session_warnings`, `import_duplicate_candidates`,
+  `import_relationship_candidates` and `import_write_manifests`; RLS remains
+  authoritative through the Supabase server client with user cookies.
+- Official import CTA remains disabled:
+  `Xác nhận nhập chính thức — chưa mở`.
+- Added checker
+  `scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs` and package
+  command `check:a16i-upload-parse-giapha4-manifest-staging`.
+- Updated A-16G/A-16H checkers narrowly so their guardrails remain compatible
+  with the A-16I staging-only route/files.
+- A-16I did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not import into real people/person tables, did not create real relationships,
+  did not update layout/tree/revision, did not open official import, did not
+  deploy and did not push.
+- Validation: `check:env:safe` PASS, `check:migrations` PASS,
+  `check:a16g-import-session-read-manifest-runtime` PASS,
+  `check:a16h-import-manifest-auth-browser-smoke` PASS,
+  `check:a16i-upload-parse-giapha4-manifest-staging` PASS, `typecheck` PASS,
+  `lint` PASS, `build` PASS, `git diff --check` PASS and
+  `git diff --cached --check` PASS.
+
 ## 2026-06-30 - A-16H - Authenticated Browser Smoke for Import Manifest Read Screen
 
 - Marker: `A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE`.

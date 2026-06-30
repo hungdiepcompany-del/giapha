@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 209 - A-16I stages Gia Phả 4 uploads without opening official import
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add `POST /api/admin/import-sessions/upload` for A-16I staging-only upload.
+- Parse `.xlsx` server-side with existing `jszip` instead of adding a new Excel
+  parser dependency to the main app.
+- Keep `.xls` unsupported in A-16I with a clear Vietnamese blocker.
+- Write only existing import manifest staging tables verified in A-16F5M.
+- Store normalized person candidates in draft
+  `import_write_manifests.approved_scope.person_candidates` because the current
+  applied schema has no separate `import_person_candidates` table.
+- Keep `canImport: false` and the official import CTA disabled.
+
+Lý do:
+
+- The owner explicitly opened upload/parse into manifest staging but still
+  forbids migrations, DB push, SQL apply, real people/relationship writes,
+  layout/revision mutation, deploy and push.
+- `jszip` already exists for backup ZIP handling, so `.xlsx` can be parsed
+  lightly without dependency drift.
+- `.xls` binary parsing would require a separate parser dependency or offline
+  conversion decision, which is outside A-16I.
+- RLS must remain authoritative; using the Supabase server client with user
+  cookies is safer than bypassing policies with service role.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no
+  `supabase migration repair`, no seed/import into real tables, no
+  people/person creation, no real relationship creation, no layout/tree/revision
+  update, no official import action, no deploy and no push.
+- Main Worker touched only for small upload/parse coordination with 5MB limit;
+  large import validation or `.xls` parser support should be reconsidered under
+  `genealogy-import-service` or offline tooling.
+
 ## Decision 208 - A-16H authenticated import manifest browser smoke uses explicit session env or safe-skip
 
 Decision:

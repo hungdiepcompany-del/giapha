@@ -133,12 +133,63 @@ export function ImportSessionManifestPanel({
           </div>
 
           {result.manifestSummary.warningCount === 0 &&
+          result.peoplePreview.length === 0 &&
           result.manifestSummary.duplicateCandidateCount === 0 &&
           result.manifestSummary.relationshipCandidateCount === 0 &&
           result.manifestSummary.writeManifestCount === 0 ? (
             <EmptyManifestState />
           ) : (
             <div className="grid gap-3">
+              {result.peoplePreview.length > 0 ? (
+                <section className="rounded-lg border border-stone-200 bg-white p-4">
+                  <h3 className="text-base font-bold text-stone-950">
+                    Thành viên staging
+                  </h3>
+                  <div className="mt-3 grid gap-2">
+                    {result.peoplePreview.slice(0, 20).map((person) => (
+                      <div
+                        key={`${person.fingerprint}-${person.sourceRowIndex}`}
+                        className="rounded-md border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800"
+                      >
+                        <div className="font-bold text-stone-950">
+                          Dòng {person.sourceRowIndex}: {person.fullName}
+                        </div>
+                        <div className="text-stone-600">
+                          Giới tính: {person.gender}. Đời:{" "}
+                          {person.generationNumber ?? "chưa rõ"}. Chi/nhánh:{" "}
+                          {person.branchName ?? "chưa rõ"}.
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {result.relationshipsPreview.length > 0 ? (
+                <section className="rounded-lg border border-stone-200 bg-white p-4">
+                  <h3 className="text-base font-bold text-stone-950">
+                    Quan hệ staging
+                  </h3>
+                  <div className="mt-3 grid gap-2">
+                    {result.relationshipsPreview.slice(0, 20).map((relationship) => (
+                      <div
+                        key={relationship.id}
+                        className="rounded-md border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800"
+                      >
+                        <div className="font-bold text-stone-950">
+                          Dòng {relationship.sourceRowIndex}:{" "}
+                          {relationship.relationshipLabelVi}
+                        </div>
+                        <div className="text-stone-600">
+                          Độ chắc chắn: {relationship.confidence}. Trạng thái:{" "}
+                          {relationship.ambiguityStatus}.
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
               {result.warnings.map((warning) => (
                 <div
                   key={warning.id}

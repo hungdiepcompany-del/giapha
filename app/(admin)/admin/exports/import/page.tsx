@@ -1,5 +1,6 @@
 import { JsonImportPreviewForm } from "@/components/imports/json-import-preview-form";
 import { GiaPha4ImportPreviewForm } from "@/components/imports/giapha4-import-preview-form";
+import { GiaPha4ManifestUploadForm } from "@/components/imports/giapha4-manifest-upload-form";
 import { ImportSessionManifestPanel } from "@/components/imports/import-session-manifest-panel";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { ActionLink } from "@/components/ui/action-link";
@@ -39,9 +40,9 @@ export default async function AdminImportPage() {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Nền tảng nhập JSON"
-          title="Kiểm tra backup JSON"
-          description="Tải lên hoặc dán nội dung family.json để xem trước schema, quan hệ, vòng tổ tiên và xung đột. Xác nhận nhập dữ liệu vẫn đang tắt."
+          eyebrow="Nhập dữ liệu an toàn"
+          title="Kiểm tra và staging dữ liệu nhập"
+          description="Tải lên Gia Phả 4 hoặc kiểm tra family.json trong vùng an toàn. Xác nhận nhập dữ liệu chính thức vẫn đang tắt."
           actions={<ActionLink href="/admin/exports">Quay lại Sao lưu / Xuất dữ liệu</ActionLink>}
         />
 
@@ -57,6 +58,7 @@ export default async function AdminImportPage() {
                 : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
             </StatusCallout>
             <div className="grid gap-8">
+              <GiaPha4ManifestUploadForm />
               {importManifestResult ? (
                 <ImportSessionManifestPanel result={importManifestResult} />
               ) : null}

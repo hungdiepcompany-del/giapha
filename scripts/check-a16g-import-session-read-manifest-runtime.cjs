@@ -45,6 +45,12 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE.md",
   "scripts/smoke-a16h-import-manifest-auth-browser.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
+  "docs/PLAN_A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING.md",
+  "lib/import/giapha4/xlsx-staging-parser.ts",
+  "lib/import/giapha4/manifest-upload-service.ts",
+  "app/api/admin/import-sessions/upload/route.ts",
+  "components/imports/giapha4-manifest-upload-form.tsx",
+  "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
   "package.json",
 ]);
 
@@ -203,6 +209,13 @@ if (
   "node scripts/check-a16g-import-session-read-manifest-runtime.cjs"
 ) {
   failures.push("missing package script check:a16g-import-session-read-manifest-runtime");
+}
+
+if (
+  packageJson?.scripts?.["check:a16i-upload-parse-giapha4-manifest-staging"] !==
+  "node scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs"
+) {
+  failures.push("missing package script check:a16i-upload-parse-giapha4-manifest-staging");
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

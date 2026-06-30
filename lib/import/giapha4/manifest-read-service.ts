@@ -93,6 +93,20 @@ export type ImportWriteManifestPreview = {
   createdAt: string;
 };
 
+export type ImportPersonCandidatePreview = {
+  sourceRowIndex: number;
+  fingerprint: string;
+  fullName: string;
+  displayName: string | null;
+  gender: string;
+  birthDateText: string | null;
+  deathDateText: string | null;
+  homeTown: string | null;
+  branchName: string | null;
+  generationNumber: number | null;
+  visibility: string;
+};
+
 export type ImportManifestSummary = {
   warningCount: number;
   duplicateCandidateCount: number;
@@ -117,7 +131,7 @@ export type ImportManifestReadResult = {
   session: ImportSessionSummary | null;
   manifestSummary: ImportManifestSummary;
   warnings: ImportSessionWarningPreview[];
-  peoplePreview: [];
+  peoplePreview: ImportPersonCandidatePreview[];
   duplicateCandidates: ImportDuplicateCandidatePreview[];
   relationshipsPreview: ImportRelationshipCandidatePreview[];
   writeManifests: ImportWriteManifestPreview[];
@@ -235,6 +249,34 @@ function baseResult(
     writeManifests: [],
     ...overrides,
   };
+}
+
+function isPersonCandidatePreview(
+  value: unknown,
+): value is ImportPersonCandidatePreview {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<ImportPersonCandidatePreview>;
+  return (
+    typeof candidate.sourceRowIndex === "number" &&
+    typeof candidate.fingerprint === "string" &&
+    typeof candidate.fullName === "string"
+  );
+}
+
+function extractPeoplePreview(writeManifests: ImportWriteManifestPreview[]) {
+  const people: ImportPersonCandidatePreview[] = [];
+
+  for (const manifest of writeManifests) {
+    const candidates = manifest.approvedScope.person_candidates;
+    if (!Array.isArray(candidates)) continue;
+
+    for (const candidate of candidates) {
+      if (isPersonCandidatePreview(candidate)) people.push(candidate);
+      if (people.length >= 100) return people;
+    }
+  }
+
+  return people;
 }
 
 function mapSession(row: ImportSessionRow): ImportSessionSummary {
@@ -520,9 +562,11 @@ export async function getImportManifest(
     createdRecordIds: row.created_record_ids ?? {},
     createdAt: row.created_at,
   }));
+  const peoplePreview = extractPeoplePreview(writeManifests);
 
   const hasManifestRows =
     warnings.length > 0 ||
+    peoplePreview.length > 0 ||
     duplicateCandidates.length > 0 ||
     relationshipsPreview.length > 0 ||
     writeManifests.length > 0;
@@ -543,6 +587,7 @@ export async function getImportManifest(
         : "Chưa có dữ liệu manifest.",
     },
     warnings,
+    peoplePreview,
     duplicateCandidates,
     relationshipsPreview,
     writeManifests,

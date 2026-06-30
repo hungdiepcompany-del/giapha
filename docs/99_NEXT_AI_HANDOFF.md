@@ -1,5 +1,56 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16I - Upload/Parse Gia Phả 4 Into Manifest Staging
+
+- Marker: `A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING`.
+- Final status target: `A16I_STATUS=UPLOAD_PARSE_MANIFEST_STAGING_READY`.
+- Added staging-only upload route:
+  `POST /api/admin/import-sessions/upload`.
+- Added parser/service/UI:
+  `lib/import/giapha4/xlsx-staging-parser.ts`,
+  `lib/import/giapha4/manifest-upload-service.ts` and
+  `components/imports/giapha4-manifest-upload-form.tsx`.
+- Parser uses existing `jszip`; no runtime dependency was added.
+- Supported format in A-16I: `.xlsx` only. `.xls` returns a clear Vietnamese
+  blocker until owner approves a binary `.xls` parser or converts the file to
+  `.xlsx`.
+- Upload route creates an import session staging and writes only the existing
+  import manifest tables:
+  `import_sessions`, `import_session_warnings`,
+  `import_duplicate_candidates`, `import_relationship_candidates` and
+  `import_write_manifests`.
+- Because current schema has no `import_person_candidates` table, normalized
+  person candidates are stored in draft
+  `import_write_manifests.approved_scope.person_candidates` with marker
+  `A16I_STAGING_ONLY_NOT_APPROVED`; this is for owner review only, not approval
+  to import.
+- A-16G read service/panel now surfaces staged people and relationships while
+  keeping `canImport: false`.
+- Official import remains disabled with
+  `Xác nhận nhập chính thức — chưa mở`.
+- RLS remains authoritative. The route uses Supabase server client with user
+  cookies; if DB policies do not allow staging inserts, it returns a Vietnamese
+  error instead of using service role to bypass RLS.
+- Added checker
+  `scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs` and package
+  command `check:a16i-upload-parse-giapha4-manifest-staging`.
+- Updated A-16G/A-16H checkers only to allow the explicit A-16I staging files
+  and route while preserving no official import/no real genealogy mutation
+  checks.
+- A-16I did not create/modify migrations, did not run `supabase db push`, did
+  not run SQL apply, did not run `supabase migration repair`, did not seed, did
+  not create people/person thật, did not create relationship thật, did not
+  update layout/tree/revision, did not open official import, did not deploy and
+  did not push.
+- Validation completed: `check:env:safe`, `check:migrations`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16h-import-manifest-auth-browser-smoke`,
+  `check:a16i-upload-parse-giapha4-manifest-staging`, `typecheck`, `lint`,
+  `build`, `git diff --check` and `git diff --cached --check` all passed.
+- Next recommended step: A-16J validate/review manifest warnings before owner
+  approval, or A-16I2 authenticated dev upload with owner-provided real Gia Phả
+  4 file kept outside git.
+
 ## 2026-06-30 - A-16H - Authenticated Browser Smoke for Import Manifest Read Screen
 
 - Marker: `A16H_IMPORT_MANIFEST_AUTH_BROWSER_SMOKE`.
