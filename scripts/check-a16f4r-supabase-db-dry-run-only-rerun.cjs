@@ -18,6 +18,8 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
+  "docs/PLAN_A16F5M_MANUAL_SQL_APPLY_VERIFICATION_MIGRATION_STATE_RECONCILIATION.md",
+  "scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs",
   "scripts/check-a16-giapha4-excel-import-mapping-readiness.cjs",
   "scripts/check-a16b-giapha4-excel-import-preview-runtime-ui.cjs",
   "scripts/check-a16c-owner-review-import-preview-db-write-approval-design.cjs",

@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-06-30 - A-16F5M - Manual SQL Apply Verification & Migration State Reconciliation
+
+- Marker: `A-16F5M`.
+- Final status:
+  `A16F5M_STATUS=PASS_MANUAL_SQL_APPLY_VERIFIED_RECONCILIATION_REQUIRED`.
+- Preflight checked: repo started clean at `main...origin/main`, HEAD
+  `1997774`; `.env.local` is ignored by `.gitignore:17:.env.*`; no staged
+  `.xls`, `.xlsx` or `.csv` file.
+- Source/mirror migration hash remains
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Owner reported manual Supabase Dashboard SQL apply PASS for
+  `20260629_0010_a16d_import_manifest_storage_candidate.sql`.
+- Owner reported read-only verification PASS:
+  `import_sessions`, `import_session_warnings`,
+  `import_duplicate_candidates`, `import_relationship_candidates` and
+  `import_write_manifests` exist.
+- Owner reported RLS enabled, no unintended public/anon policy and row_count = 0
+  for all five import manifest tables.
+- Recorded migration-history reconciliation risk because manual Dashboard SQL
+  apply may not be represented in Supabase CLI migration history.
+- Created
+  `docs/PLAN_A16F5M_MANUAL_SQL_APPLY_VERIFICATION_MIGRATION_STATE_RECONCILIATION.md`
+  and
+  `scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs`.
+- Added package command
+  `check:a16f5m:manual-sql-apply-verification-migration-state-reconciliation`.
+- A-16F5M did not run `supabase db push`, did not run
+  `supabase db push --dry-run`, did not apply DB, did not rerun SQL, did not
+  seed, did not import Excel, did not write people/relationships, did not
+  deploy and did not push.
+- A-16G can open only as a separate phase limited to import manifest/session
+  tables; real people/relationship writes remain forbidden.
+
 ## 2026-06-29 - A-16F4R - Supabase DB Dry-run Only Rerun
 
 - Marker: `A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED`.

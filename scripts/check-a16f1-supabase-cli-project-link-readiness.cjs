@@ -16,6 +16,8 @@ const a16f4DocPath = "docs/PLAN_A16F4_SUPABASE_DB_DRY_RUN_ONLY.md";
 const a16f4CheckerPath = "scripts/check-a16f4-supabase-db-dry-run-only.cjs";
 const a16f4rDocPath = "docs/PLAN_A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN.md";
 const a16f4rCheckerPath = "scripts/check-a16f4r-supabase-db-dry-run-only-rerun.cjs";
+const a16f5mDocPath = "docs/PLAN_A16F5M_MANUAL_SQL_APPLY_VERIFICATION_MIGRATION_STATE_RECONCILIATION.md";
+const a16f5mCheckerPath = "scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs";
 
 const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
@@ -41,6 +43,8 @@ const allowedChangedFiles = new Set([
   a16f4CheckerPath,
   a16f4rDocPath,
   a16f4rCheckerPath,
+  a16f5mDocPath,
+  a16f5mCheckerPath,
   "supabase/config.toml",
   "supabase/.gitignore",
   "package.json",

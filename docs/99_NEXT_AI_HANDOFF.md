@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-06-30 - A-16F5M - Manual SQL apply verified, migration reconciliation required
+
+- Marker: `A-16F5M`.
+- Final status:
+  `A16F5M_STATUS=PASS_MANUAL_SQL_APPLY_VERIFIED_RECONCILIATION_REQUIRED`.
+- Added
+  `docs/PLAN_A16F5M_MANUAL_SQL_APPLY_VERIFICATION_MIGRATION_STATE_RECONCILIATION.md`,
+  `scripts/check-a16f5m-manual-sql-apply-verification-migration-state-reconciliation.cjs`
+  and package command
+  `check:a16f5m:manual-sql-apply-verification-migration-state-reconciliation`.
+- Owner reported manually applying
+  `20260629_0010_a16d_import_manifest_storage_candidate.sql` in Supabase
+  Dashboard after A-16F4R CLI link remained blocked.
+- Owner reported read-only verification PASS:
+  five import manifest tables exist, RLS is enabled, no unintended public/anon
+  policy exists and row_count = 0 for all five tables.
+- Verified locally that source/mirror migration remain byte-for-byte with hash
+  `D22593729092FEF43C295126E74D5FDCD41ABD696A08DFEC63218C7E1851ABBE`.
+- Important migration-history boundary: because SQL was applied manually in
+  Dashboard, Supabase CLI migration history may not know this migration is
+  already applied.
+- Do not run this migration again through `supabase db push` and do not rerun
+  the SQL file until a migration-history reconciliation plan exists.
+- A-16F5M did not run `supabase db push`, did not run
+  `supabase db push --dry-run`, did not apply DB, did not rerun SQL, did not
+  seed, did not import Excel, did not write people/relationships, did not deploy
+  and did not push.
+- A-16G can open only as a separate phase limited to import manifest/session
+  runtime behavior. Real people/relationship writes remain forbidden.
+
 ## 2026-06-29 - A-16F4R - Supabase DB dry-run only rerun blocked before dry-run
 
 - Marker: `A16F4R_SUPABASE_DB_DRY_RUN_ONLY_RERUN_RECORDED`.

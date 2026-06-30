@@ -1,5 +1,31 @@
 # Decision Log
 
+## Decision 206 - A-16F5M accepts owner manual SQL verification while requiring migration history reconciliation
+
+Status: `ACTIVE`
+
+Chon:
+
+- Accept the owner-reported manual Supabase Dashboard SQL apply verification as
+  the A-16F5M evidence for the Gia Pha 4 import manifest schema.
+- Record that all five import manifest tables exist, RLS is enabled, no
+  unintended public/anon policy exists and all five tables have zero rows.
+- Treat the schema as manually applied, but not reconciled with Supabase CLI
+  migration history.
+- Do not rerun the same SQL file or run `supabase db push` until a migration
+  history reconciliation plan exists.
+- Allow a later A-16G phase only for import manifest/session runtime scope; real
+  `people` and relationship writes remain forbidden.
+
+Ly do:
+
+- The owner used Supabase Dashboard because CLI project link remained blocked in
+  A-16F4R.
+- Manual SQL can make the schema correct while leaving CLI migration history
+  unaware of the applied migration.
+- Running the same migration again via CLI without reconciliation could attempt
+  duplicate object creation or confuse future migration state.
+
 ## Decision 205 - A-16F4R dry-run rerun remains blocked because Supabase project access is denied
 
 Status: `ACTIVE`
