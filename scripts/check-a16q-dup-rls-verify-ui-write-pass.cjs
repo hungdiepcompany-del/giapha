@@ -247,6 +247,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
   "docs/PLAN_A16Q_DUP_SAVE_FIX.md",
   "scripts/check-a16q-dup-save-fix.cjs",
+  "docs/PLAN_A16Q_DUP_LIVE_SAVE_FIX.md",
+  "scripts/check-a16q-dup-live-save-fix.cjs",
 ]);
 
 for (const file of changedFiles) {

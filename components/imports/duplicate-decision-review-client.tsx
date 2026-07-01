@@ -108,6 +108,19 @@ function getVisibleDecisionOptions(candidate: ImportDuplicateCandidatePreview) {
   );
 }
 
+function buildDuplicateListKey(
+  sessionId: string,
+  candidates: ImportDuplicateCandidatePreview[],
+) {
+  return `${sessionId}:${candidates.map((candidate) => candidate.id).join("|")}`;
+}
+
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+}
+
 export function DuplicateDecisionReviewClient({
   sessionId,
   duplicateCandidates,
@@ -119,8 +132,14 @@ export function DuplicateDecisionReviewClient({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const incomingDuplicateListKey = useMemo(
+    () => buildDuplicateListKey(sessionId, duplicateCandidates),
+    [sessionId, duplicateCandidates],
+  );
   const [candidates, setCandidates] = useState(duplicateCandidates);
   const [drafts, setDrafts] = useState(() => createInitialDrafts(duplicateCandidates));
+  const [activeSessionId] = useState(sessionId);
+  const [activeDuplicateListKey] = useState(incomingDuplicateListKey);
   const [saveNotice, setSaveNotice] = useState<SaveNotice | null>(null);
   const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
@@ -131,6 +150,8 @@ export function DuplicateDecisionReviewClient({
       ).length,
     [candidates],
   );
+  const isStaleDuplicateList =
+    activeSessionId !== sessionId || activeDuplicateListKey !== incomingDuplicateListKey;
 
   if (totalDuplicateCandidates === 0) return null;
 
@@ -140,6 +161,24 @@ export function DuplicateDecisionReviewClient({
 
     setSaveNotice(null);
     setLastSavedId(null);
+
+    if (isStaleDuplicateList) {
+      setSaveNotice({
+        tone: "error",
+        text: "Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.",
+        diagnosticCode: "DUPLICATE_DECISION_NOT_IN_SESSION",
+      });
+      return;
+    }
+
+    if (!isUuid(candidate.id)) {
+      setSaveNotice({
+        tone: "error",
+        text: "Mã ứng viên trùng không hợp lệ. Vui lòng tải lại phiên nhập trước khi lưu.",
+        diagnosticCode: "DUPLICATE_DECISION_NOT_IN_SESSION",
+      });
+      return;
+    }
 
     const response = await fetch(
       `/api/admin/import-sessions/${sessionId}/duplicates/${candidate.id}`,
@@ -213,6 +252,12 @@ export function DuplicateDecisionReviewClient({
         <MetricCard label="Đang hiển thị" value={candidates.length} />
         <MetricCard label="Có thể nhập chính thức" value={0} />
       </div>
+
+      {isStaleDuplicateList ? (
+        <div className="rounded-md border border-rose-200 bg-white p-3 text-sm font-semibold text-rose-900">
+          Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.
+        </div>
+      ) : null}
 
       {saveNotice ? (
         <div
@@ -325,7 +370,7 @@ export function DuplicateDecisionReviewClient({
                   <button
                     type="button"
                     onClick={() => void saveDecision(candidate)}
-                    disabled={isPending}
+                    disabled={isPending || isStaleDuplicateList}
                     className="inline-flex min-h-11 items-center justify-center rounded-md border border-teal-700 bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:border-stone-300 disabled:bg-stone-200 disabled:text-stone-500"
                   >
                     Lưu quyết định

@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-DUP-LIVE-SAVE-FIX - Live Duplicate Decision Session Binding
+
+- Marker: `A-16Q-DUP-LIVE-SAVE-FIX`.
+- Current status:
+  `A16Q_DUP_LIVE_SAVE_FIX_STATUS=LIVE_SESSION_BINDING_REPAIRED`.
+- Scope correction: do not revalidate A-16G for this issue; the live bug is in
+  duplicate decision save/session binding.
+- Live UI error addressed:
+  `DUPLICATE_DECISION_NOT_IN_SESSION`.
+- Root cause: after a new upload/session refresh, the duplicate review client
+  could retain old `duplicateCandidates`/draft state while receiving the current
+  `sessionId`, causing PATCH to send an old duplicate candidate id under the new
+  session.
+- Fixed:
+  - `components/imports/import-session-manifest-panel.tsx` keys
+    `DuplicateDecisionReviewClient` by current session id and `session.updatedAt`.
+  - `components/imports/duplicate-decision-review-client.tsx` snapshots the
+    active session/list for the mounted component; the keyed parent remount
+    resets candidates, drafts, save notice and saved marker for a new session.
+  - The client detects stale list state, disables save, and shows:
+    `Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.`
+  - PATCH URL uses duplicate candidate UUID from `candidate.id`, not
+    `sourceRowIndex`.
+- Retest target: upload/refresh a manifest, then save one duplicate decision
+  with `create_new`, `ignore_candidate` or `needs_review`. The UI should no
+  longer send an old duplicate id for the active session.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no real people/relationships/families/layout/tree/revision/profile write, no
+  auto duplicate decision, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-DUP-SAVE-FIX - Duplicate Decision Save Diagnostics
 
 - Marker: `A-16Q-DUP-SAVE-FIX`.

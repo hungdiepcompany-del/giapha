@@ -214,6 +214,7 @@ export function ImportSessionManifestPanel({
           </section>
 
           <DuplicateDecisionReviewClient
+            key={`duplicate-review-${session.id}-${session.updatedAt}`}
             sessionId={session.id}
             duplicateCandidates={result.duplicateCandidates}
             totalDuplicateCandidates={totalDuplicateCandidates}

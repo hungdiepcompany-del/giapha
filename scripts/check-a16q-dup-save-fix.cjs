@@ -232,11 +232,14 @@ const allowedChangedFiles = new Set([
   routePath,
   servicePath,
   clientPath,
+  panelPath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs",
+  "docs/PLAN_A16Q_DUP_LIVE_SAVE_FIX.md",
+  "scripts/check-a16q-dup-live-save-fix.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

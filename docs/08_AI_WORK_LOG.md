@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-DUP-LIVE-SAVE-FIX - Live Duplicate Decision Session Binding
+
+- Marker: `A-16Q-DUP-LIVE-SAVE-FIX`.
+- Final status:
+  `A16Q_DUP_LIVE_SAVE_FIX_STATUS=LIVE_SESSION_BINDING_REPAIRED`.
+- Live UI error addressed:
+  `DUPLICATE_DECISION_NOT_IN_SESSION`.
+- Root cause: the duplicate review client kept local `duplicateCandidates` and
+  draft state from a previous render. After a new manifest upload/session
+  refresh, the UI could call PATCH with the current `sessionId` but an old
+  duplicate candidate id.
+- Fixed `components/imports/import-session-manifest-panel.tsx` so
+  `DuplicateDecisionReviewClient` remounts by current session id and
+  `session.updatedAt`.
+- Fixed `components/imports/duplicate-decision-review-client.tsx` so the mounted
+  component snapshots the active session/list; the keyed parent remount resets
+  candidate state, drafts, notice and saved marker for a new session.
+- If incoming props ever differ from the mounted snapshot before remount, the UI
+  fails closed with the stale-list warning and disables save.
+- Added stale-state guard copy:
+  `Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.`
+- PATCH continues to use duplicate candidate UUID from `candidate.id`; it does
+  not use `sourceRowIndex`.
+- The UI still shows one save notice at a time and does not show success and
+  error together.
+- The UI does not auto decide duplicate candidates; owner must choose and press
+  `Lưu quyết định`.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP-LIVE-SAVE-FIX did not run SQL, did not run DB push, did not repair
+  migrations, did not seed, did not write people/relationships/families/layout/
+  tree/revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-DUP-SAVE-FIX - Duplicate Decision Save Diagnostics
 
 - Marker: `A-16Q-DUP-SAVE-FIX`.

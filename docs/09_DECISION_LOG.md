@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 229 - A-16Q-DUP-LIVE-SAVE-FIX binds duplicate save UI to the active session
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Treat live `DUPLICATE_DECISION_NOT_IN_SESSION` as a stale UI session/list
+  binding failure, not as permission escalation.
+- Remount duplicate decision UI by current `session.id` and `session.updatedAt`.
+- Reset local duplicate candidates, drafts, save notice and saved marker whenever
+  the active session or duplicate candidate list changes.
+- Show `Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.` and
+  disable saving if the client detects stale duplicate list state.
+- Keep PATCH using duplicate candidate UUID from `candidate.id`; never use
+  `sourceRowIndex` as the duplicate route id.
+- Keep owner-driven decisions only; no auto `create_new`, `link_existing` or
+  `ignore_candidate`.
+
+Lý do:
+
+- After a new manifest upload, the visible session can change faster than the
+  client-local duplicate state. Sending an old duplicate id under a new
+  `sessionId` correctly triggers `DUPLICATE_DECISION_NOT_IN_SESSION`.
+- The safe repair is to bind UI state to the active session and fail closed with
+  a reload message, while preserving server-side session membership checks.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto duplicate decision, no
+  deploy and no push.
+
 ## Decision 228 - A-16Q-DUP-SAVE-FIX keeps RLS and adds duplicate save diagnostics
 
 Status: `ACTIVE`
