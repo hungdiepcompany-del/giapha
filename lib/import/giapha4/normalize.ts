@@ -82,6 +82,14 @@ export function normalizeGiaPha4DateText(value: unknown): {
   const normalized = normalizeGiaPha4Text(value);
   if (!normalized) return {};
 
+  if (/^\d{4}$/.test(normalized)) {
+    return {
+      value: normalized,
+      warning:
+        "Ngày chỉ có năm, cần chủ nhà xác nhận trước khi nhập thật.",
+    };
+  }
+
   if (/^\d+(\.\d+)?$/.test(normalized)) {
     const serialDate = excelSerialDateToIso(Number(normalized));
     if (serialDate) return { value: serialDate };
@@ -89,14 +97,6 @@ export function normalizeGiaPha4DateText(value: unknown): {
 
   if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
     return { value: normalized };
-  }
-
-  if (/^\d{4}$/.test(normalized)) {
-    return {
-      value: normalized,
-      warning:
-        "Ngày chỉ có năm, cần chủ nhà xác nhận trước khi nhập thật.",
-    };
   }
 
   const slashYear = /^\/(\d{4})$/.exec(normalized);

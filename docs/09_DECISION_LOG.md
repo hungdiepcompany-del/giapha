@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 221 - A-16Q-FIX uses precision-aware death date validation
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Treat Gia Phả 4 birth/death date comparisons as precision-aware.
+- Keep `death_before_birth` as an ERROR only when `deathYear < birthYear`, or
+  when both birth/death share the same known calendar type, are full precision
+  and `deathDate < birthDate`.
+- Treat same-year death with year-only, missing month/day, different calendar
+  type or unknown death calendar type as a warning, not a blocker.
+- Treat `Ngày Sinh` as solar, `Ngày mất` as solar/lunar/unknown, and
+  `Ngày giỗ` as lunar in Gia Phả 4 staging metadata where available.
+- Document owner-confirmed rows 19 and 95 as same-year infant death cases that
+  should not block on incomplete date precision.
+- Assess `crxlauncher=""` hydration mismatch on `<html>` as likely browser
+  extension injection; do not change `app/layout.tsx` without app-side evidence.
+- Keep official import locked with `canRunOfficialImport=false` and disabled UI
+  button.
+
+Lý do:
+
+- Year-only source data cannot prove the death date is before the birth date.
+- Solar birth dates and lunar/unknown death dates cannot be compared directly as
+  one calendar.
+- Defaulting missing month/day to January 1 creates false blockers for valid
+  same-year infant death cases.
+- Hydration suppression would hide a browser-extension symptom without evidence
+  that the app layout is wrong.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 220 - A-16Q remains blocked without session-specific approval data
 
 Status: `ACTIVE`

@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-FIX - Import Session UI Evidence + Date Precision Fix + Hydration Assessment
+
+- Marker: `A-16Q-FIX`.
+- Current status:
+  `A16Q_FIX_STATUS=VALIDATION_FIX_READY_UI_SMOKE_SAFE_SKIP_CAPABLE`.
+- Gia Phả 4 date validation is now precision-aware:
+  `death_before_birth` is ERROR only when `deathYear < birthYear`, or when both
+  birth/death share the same known calendar type, are full precision and
+  `deathDate < birthDate`.
+- Gia Phả 4 calendar handling is now explicit in staging metadata where
+  available: birth date is solar, death date is solar/lunar/unknown and death
+  anniversary is lunar.
+- Unknown or different calendar type for death date produces warning only; it
+  must not create `death_before_birth`.
+- Same-year death with year-only or missing month/day is warning
+  `death_same_year_incomplete_precision`, not blocker.
+- Owner-confirmed rows 19 and 95 are same-year infant death cases and should no
+  longer block dry-run/review as `death_before_birth`.
+- Read-only UI smoke is available:
+  `npm run smoke:a16q-import-session-ui-evidence`.
+  It requires `A16Q_FIX_IMPORT_SESSION_SMOKE_BASE_URL` and
+  `A16Q_FIX_IMPORT_SESSION_SMOKE_STORAGE_STATE`; otherwise it returns
+  `SAFE_SKIP`.
+- Owner UI evidence recorded: 102 staging rows, 102 staging members, 134
+  staging relationships and 44 warnings. Previous two blockers were rows 19 and
+  95.
+- Hydration warning `crxlauncher=""` on `<html>` is assessed as likely browser
+  extension injection. `app/layout.tsx` was not changed and
+  `suppressHydrationWarning` was not added.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no RPC call, no POST official import call, no real people/relationships/
+  families/layout/tree/revision/profile write, no deploy and no push.
+
 ## 2026-07-01 - A-16Q - Session-specific Official Import Execution Approval Blocked
 
 - Marker: `A-16Q`.

@@ -145,6 +145,7 @@ type HeaderKey =
 type HeaderMapping = {
   headerRowIndex: number;
   columnToKey: Map<number, HeaderKey>;
+  headerTextByKey: Map<HeaderKey, string>;
   unmappedColumns: string[];
 };
 
@@ -363,6 +364,7 @@ function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
 
   for (const [rowIndex, row] of sheet.rows.slice(0, 20).entries()) {
     const columnToKey = new Map<number, HeaderKey>();
+    const headerTextByKey = new Map<HeaderKey, string>();
     const unmappedColumns: string[] = [];
 
     for (const [columnIndex, value] of row.entries()) {
@@ -371,6 +373,7 @@ function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
       const key = aliasToKey.get(normalized);
       if (key) {
         columnToKey.set(columnIndex, key);
+        if (!headerTextByKey.has(key)) headerTextByKey.set(key, value);
       } else {
         unmappedColumns.push(value);
       }
@@ -381,6 +384,7 @@ function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
       return {
         headerRowIndex: rowIndex,
         columnToKey,
+        headerTextByKey,
         unmappedColumns,
       };
     }
@@ -401,6 +405,19 @@ function getRawCellValue(row: string[], mapping: HeaderMapping, key: HeaderKey) 
     if (mappedKey === key) return normalizeGiaPha4Text(row[columnIndex]);
   }
   return "";
+}
+
+function inferDateCalendarFromHeader(
+  mapping: HeaderMapping,
+  key: "birthDate" | "deathDate" | "memorialLunarDate",
+): "solar" | "lunar" | "unknown" {
+  if (key === "birthDate") return "solar";
+  if (key === "memorialLunarDate") return "lunar";
+
+  const headerText = normalizeHeader(mapping.headerTextByKey.get(key) ?? "");
+  if (headerText.includes("duong lich")) return "solar";
+  if (headerText.includes("am lich")) return "lunar";
+  return "unknown";
 }
 
 function parseLiving(deathDateText: string | null) {
@@ -450,6 +467,16 @@ function selectMemberSheet(sheets: WorkbookSheet[]) {
 
 function buildRawMetadata(row: string[], mapping: HeaderMapping) {
   return {
+    birth_date_calendar: inferDateCalendarFromHeader(mapping, "birthDate"),
+    birth_date_header: mapping.headerTextByKey.get("birthDate") ?? null,
+    death_date_calendar: inferDateCalendarFromHeader(mapping, "deathDate"),
+    death_date_header: mapping.headerTextByKey.get("deathDate") ?? null,
+    death_anniversary_calendar: inferDateCalendarFromHeader(
+      mapping,
+      "memorialLunarDate",
+    ),
+    death_anniversary_header:
+      mapping.headerTextByKey.get("memorialLunarDate") ?? null,
     marital_status: getCellValue(row, mapping, "maritalStatus") || null,
     phone: getCellValue(row, mapping, "phone") || null,
     education: getCellValue(row, mapping, "education") || null,

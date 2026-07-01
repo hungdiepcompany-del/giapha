@@ -1,5 +1,43 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-FIX - Import Session UI Evidence + Date Precision Fix + Hydration Assessment
+
+- Marker: `A-16Q-FIX`.
+- Final status: `A16Q_FIX_STATUS=VALIDATION_FIX_READY_UI_SMOKE_SAFE_SKIP_CAPABLE`.
+- Updated Gia Phả 4 date normalization so four-digit values such as `2020`
+  remain year-only dates and are not interpreted as Excel serial dates.
+- Updated Gia Phả 4 parser to persist/suggest calendar metadata:
+  `birth_date_calendar=solar`, `death_date_calendar=solar|lunar|unknown` and
+  `death_anniversary_calendar=lunar`.
+- Updated manifest validation to track date precision:
+  `year`, `year_month` and `full`.
+- Updated manifest validation to track calendar type:
+  `solar`, `lunar` and `unknown`.
+- `death_before_birth` remains an ERROR only when `deathYear < birthYear` or
+  both birth/death share the same known calendar type, are full precision and
+  `deathDate < birthDate`.
+- Birth date is treated as solar. Death date may be lunar, solar or unknown.
+  Death anniversary is treated as lunar. Unknown/different calendar death dates
+  produce warning only, not a blocker.
+- Same-year death with missing month/day is now warning
+  `death_same_year_incomplete_precision`, not a blocker.
+- Owner-confirmed rows 19 and 95 are same-year infant death cases and should be
+  warning cases, not blocking `death_before_birth` errors.
+- Added read-only smoke script
+  `scripts/smoke-a16q-import-session-ui-evidence.cjs`; it safe-skips without
+  explicit base URL and auth storage state.
+- Recorded owner UI evidence: 102 staging rows, 102 staging members, 134
+  staging relationships and 44 warnings; previous two blockers were the
+  same-year `death_before_birth` rows 19 and 95.
+- Hydration warning with `crxlauncher=""` on `<html>` is documented as likely
+  browser extension injection. `app/layout.tsx` was not changed and no
+  `suppressHydrationWarning` was added.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-FIX did not run SQL, did not run DB push, did not repair migrations,
+  did not seed, did not write people/relationships/families/layout/tree/
+  revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q - Session-specific Official Import Execution Approval Blocked
 
 - Marker: `A-16Q`.

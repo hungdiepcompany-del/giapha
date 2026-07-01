@@ -53,6 +53,8 @@ type DateParts = {
   year: number;
   month: number | null;
   day: number | null;
+  precision: "year" | "year_month" | "full";
+  calendarType: "solar" | "lunar" | "unknown";
 };
 
 function normalizeText(value: string | null | undefined) {
@@ -64,7 +66,41 @@ function normalizeText(value: string | null | undefined) {
     .toLowerCase();
 }
 
-function parseDateParts(value: string | null | undefined): DateParts | null {
+function normalizeCalendarType(value: unknown): DateParts["calendarType"] {
+  if (typeof value !== "string") return "unknown";
+  const text = normalizeText(value);
+  if (text === "solar" || text.includes("duong lich")) return "solar";
+  if (text === "lunar" || text.includes("am lich")) return "lunar";
+  return "unknown";
+}
+
+function readRawMetadataText(
+  person: ImportPersonCandidatePreview,
+  key: string,
+): string | null {
+  const value = person.rawMetadata?.[key];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function inferBirthDateCalendar(
+  person: ImportPersonCandidatePreview,
+): DateParts["calendarType"] {
+  const stored = normalizeCalendarType(readRawMetadataText(person, "birth_date_calendar"));
+  return stored === "unknown" ? "solar" : stored;
+}
+
+function inferDeathDateCalendar(
+  person: ImportPersonCandidatePreview,
+): DateParts["calendarType"] {
+  const stored = normalizeCalendarType(readRawMetadataText(person, "death_date_calendar"));
+  if (stored !== "unknown") return stored;
+  return normalizeCalendarType(readRawMetadataText(person, "death_date_header"));
+}
+
+function parseDateParts(
+  value: string | null | undefined,
+  calendarType: DateParts["calendarType"],
+): DateParts | null {
   const text = (value ?? "").trim();
   if (!text) return null;
 
@@ -79,18 +115,24 @@ function parseDateParts(value: string | null | undefined): DateParts | null {
   if (month !== null && (month < 1 || month > 12)) return null;
   if (day !== null && (day < 1 || day > 31)) return null;
 
-  return { year, month, day };
+  const precision =
+    month === null ? "year" : day === null ? "year_month" : "full";
+
+  return { year, month, day, precision, calendarType };
 }
 
-function compareDateParts(left: DateParts, right: DateParts) {
-  const leftMonth = left.month ?? 1;
-  const rightMonth = right.month ?? 1;
-  const leftDay = left.day ?? 1;
-  const rightDay = right.day ?? 1;
+function isFullDatePrecision(value: DateParts) {
+  return value.precision === "full";
+}
 
+function compareFullDateParts(left: DateParts, right: DateParts) {
   if (left.year !== right.year) return left.year - right.year;
-  if (leftMonth !== rightMonth) return leftMonth - rightMonth;
-  return leftDay - rightDay;
+  if (left.month !== right.month) return Number(left.month) - Number(right.month);
+  return Number(left.day) - Number(right.day);
+}
+
+function hasSameKnownCalendar(left: DateParts, right: DateParts) {
+  return left.calendarType !== "unknown" && left.calendarType === right.calendarType;
 }
 
 function issue(
@@ -196,8 +238,14 @@ function validatePerson(
     );
   }
 
-  const birthParts = parseDateParts(person.birthDateText);
-  const deathParts = parseDateParts(person.deathDateText);
+  const birthParts = parseDateParts(
+    person.birthDateText,
+    inferBirthDateCalendar(person),
+  );
+  const deathParts = parseDateParts(
+    person.deathDateText,
+    inferDeathDateCalendar(person),
+  );
 
   if (person.birthDateText && !birthParts) {
     issues.push(
@@ -231,7 +279,76 @@ function validatePerson(
     );
   }
 
-  if (birthParts && deathParts && compareDateParts(deathParts, birthParts) < 0) {
+  if (birthParts && birthParts.precision !== "full") {
+    issues.push(
+      issue(
+        "warning",
+        "birth_date_precision_needs_review",
+        "person",
+        key,
+        rowNumber,
+        "birthDateText",
+        "Ngày sinh cần rà soát độ chính xác",
+        "Ngày sinh staging chỉ có năm hoặc thiếu ngày/tháng nên chưa đủ chính xác để kết luận theo thứ tự ngày.",
+        "Owner cần xác nhận thêm ngày/tháng nếu muốn dùng ngày sinh trong các kiểm tra chính xác.",
+      ),
+    );
+  }
+
+  if (deathParts && deathParts.precision !== "full") {
+    issues.push(
+      issue(
+        "warning",
+        "death_date_precision_needs_review",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất cần rà soát độ chính xác",
+        "Ngày mất staging chỉ có năm hoặc thiếu ngày/tháng nên chưa đủ chính xác để kết luận theo thứ tự ngày.",
+        "Owner cần xác nhận thêm ngày/tháng nếu muốn dùng ngày mất trong các kiểm tra chính xác.",
+      ),
+    );
+  }
+
+  if (
+    birthParts &&
+    deathParts &&
+    deathParts.calendarType !== "unknown" &&
+    birthParts.calendarType !== deathParts.calendarType
+  ) {
+    issues.push(
+      issue(
+        "warning",
+        "death_date_calendar_mismatch_needs_review",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất khác hệ lịch với ngày sinh",
+        "Ngày sinh được hiểu là dương lịch, còn ngày mất có thể thuộc hệ lịch khác nên không so sánh trực tiếp như cùng một lịch.",
+        "Chủ nhà cần xác nhận ngày mất là âm lịch hay dương lịch trước khi kết luận thứ tự ngày chính xác.",
+      ),
+    );
+  }
+
+  if (birthParts && deathParts && deathParts.calendarType === "unknown") {
+    issues.push(
+      issue(
+        "warning",
+        "death_date_calendar_unknown_needs_review",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất cần xác nhận hệ lịch",
+        "Trong gia phả Việt, ngày mất hoặc ngày giỗ có thể là âm lịch; khi chưa rõ hệ lịch thì không kết luận ngày mất trước ngày sinh bằng so sánh trực tiếp.",
+        "Chủ nhà cần xác nhận ngày mất là âm lịch hay dương lịch trước khi nhập chính thức.",
+      ),
+    );
+  }
+
+  if (birthParts && deathParts && deathParts.year < birthParts.year) {
     issues.push(
       issue(
         "error",
@@ -243,6 +360,52 @@ function validatePerson(
         "Ngày mất trước ngày sinh",
         "Dữ liệu staging có ngày mất nhỏ hơn ngày sinh.",
         "Kiểm tra lại năm/ngày tháng trong file nguồn trước khi tiếp tục.",
+      ),
+    );
+  }
+
+  if (
+    birthParts &&
+    deathParts &&
+    deathParts.year === birthParts.year &&
+    (!hasSameKnownCalendar(birthParts, deathParts) ||
+      !isFullDatePrecision(birthParts) ||
+      !isFullDatePrecision(deathParts))
+  ) {
+    issues.push(
+      issue(
+        "warning",
+        "death_same_year_incomplete_precision",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất cùng năm sinh cần rà soát",
+        "Ngày sinh/ngày mất cùng năm nhưng thiếu ngày/tháng hoặc khác/chưa rõ hệ lịch, nên không thể kết luận ngày mất trước ngày sinh.",
+        "Owner đã xác nhận trường hợp mất cùng năm sinh có thể hợp lệ; bổ sung ngày/tháng và hệ lịch nếu cần kiểm tra chính xác hơn.",
+      ),
+    );
+  }
+
+  if (
+    birthParts &&
+    deathParts &&
+    hasSameKnownCalendar(birthParts, deathParts) &&
+    isFullDatePrecision(birthParts) &&
+    isFullDatePrecision(deathParts) &&
+    compareFullDateParts(deathParts, birthParts) < 0
+  ) {
+    issues.push(
+      issue(
+        "error",
+        "death_before_birth",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất trước ngày sinh",
+        "Dữ liệu staging có ngày mất nhỏ hơn ngày sinh và cả hai ngày đều đủ ngày/tháng/năm.",
+        "Kiểm tra lại ngày tháng đầy đủ trong file nguồn trước khi tiếp tục.",
       ),
     );
   }
