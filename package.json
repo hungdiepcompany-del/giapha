@@ -240,6 +240,7 @@
     "smoke:a16q-import-session-ui-evidence": "node scripts/smoke-a16q-import-session-ui-evidence.cjs",
     "check:a16q-fix-import-session-ui-date-hydration": "node scripts/check-a16q-fix-import-session-ui-date-hydration.cjs",
     "check:a16q-fix2-row95-date-count-consistency": "node scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
+    "check:a16q-fix3-lunar-death-date-contradiction": "node scripts/check-a16q-fix3-lunar-death-date-contradiction.cjs",
     "smoke:a16q-local-ui-import-guided": "node scripts/smoke-a16q-local-ui-import-guided.cjs",
     "check:a16q-local-ui-import-smoke-gate-copy-refresh": "node scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
     "check:a16q-dup-duplicate-candidate-owner-decision-review": "node scripts/check-a16q-dup-duplicate-candidate-owner-decision-review.cjs",

@@ -240,6 +240,11 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16q-dup-duplicate-candidate-owner-decision-review.cjs",
   "scripts/check-a16q-dup-rls-verify-ui-write-blocked.cjs",
+  "lib/import/giapha4/manifest-validation-service.ts",
+  "docs/PLAN_A16Q_FIX3_LUNAR_DEATH_DATE_CONTRADICTION.md",
+  "scripts/check-a16q-fix3-lunar-death-date-contradiction.cjs",
+  "scripts/check-a16q-fix-import-session-ui-date-hydration.cjs",
+  "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
 ]);
 
 for (const file of changedFiles) {

@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-FIX3 - Lunar Death Date Contradiction
+
+- Marker: `A-16Q-FIX3`.
+- Final status:
+  `A16Q_FIX3_STATUS=LUNAR_DEATH_CONTRADICTION_WARNING_DUP_SAVE_VERIFIED`.
+- Row 95 sanitized regression:
+  `A16Q_FIX3_ROW95_LUNAR_CONTRADICTION_REGRESSION_CASE`.
+- Owner evidence for row 95: birth date `26/5/2014`, death value
+  `28/4/2014`, lunar anniversary `28/4/2014`, and notes pattern
+  `tức ngày ... âm lịch`.
+- Updated Gia Phả 4 validation so a death date that matches lunar anniversary
+  or notes indicating lunar date is inferred as `calendar_conflict`.
+- `calendar_conflict`, `unknown` and calendar mismatch death dates now produce
+  warning review issues, not blocker `death_before_birth`.
+- `death_before_birth` remains an error only when the data is certain enough:
+  same known calendar, full precision and death date before birth date, or a
+  certain year-before-birth case.
+- Duplicate decision save UI remains enabled from A-16Q-DUP-RLS PASS, but
+  requires owner action through “Lưu quyết định”; Codex did not auto decide any
+  duplicate candidate.
+- Current owner evidence still has `unresolved_duplicate_rows=8`.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-FIX3 did not run SQL, did not run DB push, did not repair migrations,
+  did not seed, did not write people/relationships/families/layout/tree/
+  revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS - Staging Decision Write Enabled
 
 - Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS`.

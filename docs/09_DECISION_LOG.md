@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 227 - A-16Q-FIX3 treats lunar death date contradiction as review warning
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add `calendar_conflict` for Gia Phả 4 death date validation when the death
+  value matches lunar anniversary or notes include a pattern like
+  `tức ngày ... âm lịch`.
+- Treat row 95 sanitized case as warning
+  `death_date_calendar_conflict_needs_review`, not error
+  `death_before_birth`.
+- Keep `death_before_birth` as an error only for certain same-calendar checks
+  with full precision or a certain year-before-birth condition.
+- Keep duplicate decision save owner-driven; no automatic duplicate decision
+  is made by code.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+
+Lý do:
+
+- Owner evidence shows the death value `28/4/2014` conflicts with the column
+  label because it also appears as lunar anniversary and notes say
+  `tức ngày ... âm lịch`.
+- Comparing a likely lunar or calendar-conflicted death value directly against
+  solar birth date would create a false blocker.
+- The safe action is to preserve the source data and ask the owner to confirm
+  the calendar before official import.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto duplicate decision, no
+  deploy and no push.
+
 ## Decision 226 - A-16Q-DUP-RLS-VERIFY enables staging-only duplicate decision write
 
 Status: `ACTIVE`

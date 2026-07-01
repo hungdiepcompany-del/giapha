@@ -1,5 +1,34 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-FIX3 - Lunar Death Date Contradiction
+
+- Marker: `A-16Q-FIX3`.
+- Current status:
+  `A16Q_FIX3_STATUS=LUNAR_DEATH_CONTRADICTION_WARNING_DUP_SAVE_VERIFIED`.
+- Row 95 sanitized regression marker:
+  `A16Q_FIX3_ROW95_LUNAR_CONTRADICTION_REGRESSION_CASE`.
+- Owner evidence for row 95:
+  - Birth date: `26/5/2014`.
+  - Death value: `28/4/2014`.
+  - Lunar anniversary: `28/4/2014`.
+  - Notes pattern: `tức ngày ... âm lịch`.
+- Validation now treats this as `calendar_conflict` and emits warning
+  `death_date_calendar_conflict_needs_review` instead of blocker
+  `death_before_birth`.
+- After owner uploads/revalidates, row 95 should no longer be a blocker if the
+  only issue is this lunar/solar contradiction.
+- Duplicate decision save UI remains enabled, but owner must explicitly choose
+  and press “Lưu quyết định”; Codex/code does not auto choose duplicate
+  decisions.
+- Current owner evidence still has `unresolved_duplicate_rows=8`; official
+  import must remain blocked until duplicate decisions are completed and a
+  later explicit execution phase is approved.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no real people/relationships/families/layout/tree/revision/profile
+  write, no auto duplicate decision, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS - Staging Duplicate Decision Write Enabled
 
 - Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS`.

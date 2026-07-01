@@ -56,7 +56,7 @@ type DateParts = {
   month: number | null;
   day: number | null;
   precision: "year" | "year_month" | "full";
-  calendarType: "solar" | "lunar" | "unknown";
+  calendarType: "solar" | "lunar" | "unknown" | "calendar_conflict";
 };
 
 type DateOrderDiagnosis =
@@ -70,7 +70,8 @@ type DateOrderDiagnosis =
       code:
         | "death_same_year_incomplete_precision"
         | "death_date_calendar_mismatch_needs_review"
-        | "death_date_calendar_unknown_needs_review";
+        | "death_date_calendar_unknown_needs_review"
+        | "death_date_calendar_conflict_needs_review";
     }
   | {
       status: "error";
@@ -97,6 +98,24 @@ export const A16Q_FIX2_ROW95_SANITIZED_REGRESSION_CASE = {
   },
 } as const;
 
+export const A16Q_FIX3_ROW95_LUNAR_CONTRADICTION_REGRESSION_CASE = {
+  marker: "A16Q_FIX3_ROW95_LUNAR_CONTRADICTION_REGRESSION_CASE",
+  rowNumber: 95,
+  pii: "redacted",
+  birthDateText: "2014-05-26",
+  birthDateCalendar: "solar",
+  deathDateText: "2014-04-28",
+  deathDateColumnLabel: "Ngày mất (Dương lịch)",
+  deathAnniversaryLunarDate: "28/4/2014",
+  notesPattern: "tức ngày ... âm lịch",
+  inferredDeathCalendar: "calendar_conflict",
+  expected: {
+    code: "death_date_calendar_conflict_needs_review",
+    severity: "warning",
+    blocker: false,
+  },
+} as const;
+
 function normalizeText(value: string | null | undefined) {
   return (value ?? "")
     .normalize("NFD")
@@ -109,6 +128,7 @@ function normalizeText(value: string | null | undefined) {
 function normalizeCalendarType(value: unknown): DateParts["calendarType"] {
   if (typeof value !== "string") return "unknown";
   const text = normalizeText(value);
+  if (text === "calendar_conflict") return "calendar_conflict";
   if (text === "solar" || text.includes("duong lich")) return "solar";
   if (text === "lunar" || text.includes("am lich")) return "lunar";
   return "unknown";
@@ -132,9 +152,57 @@ function inferBirthDateCalendar(
 function inferDeathDateCalendar(
   person: ImportPersonCandidatePreview,
 ): DateParts["calendarType"] {
+  if (hasDeathDateCalendarContradiction(person)) return "calendar_conflict";
   const stored = normalizeCalendarType(readRawMetadataText(person, "death_date_calendar"));
   if (stored !== "unknown") return stored;
   return normalizeCalendarType(readRawMetadataText(person, "death_date_header"));
+}
+
+function slashDateToIso(value: string | null | undefined) {
+  const text = (value ?? "").trim();
+  const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(text);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  if (day < 1 || day > 31 || month < 1 || month > 12) return null;
+  return `${year}-${`${month}`.padStart(2, "0")}-${`${day}`.padStart(2, "0")}`;
+}
+
+function extractVietnameseDateMentionIso(value: string | null | undefined) {
+  const text = normalizeText(value);
+  const match = /(?:tuc ngay|am lich).*?(\d{1,2})\s*(?:\/|thang)\s*(\d{1,2})\s*(?:\/|nam)\s*(\d{4})/.exec(
+    text,
+  );
+  if (!match) return null;
+  return slashDateToIso(`${match[1]}/${match[2]}/${match[3]}`);
+}
+
+function notesMentionSameSolarBirthAndDeath(person: ImportPersonCandidatePreview) {
+  const birthIso = person.birthDateText?.trim();
+  if (!birthIso) return false;
+  const text = normalizeText([person.shortBio, person.notesPrivate].filter(Boolean).join(" "));
+  const match = /sinh ngay\s+(\d{1,2}\/\d{1,2}\/\d{4})\s+mat ngay\s+(\d{1,2}\/\d{1,2}\/\d{4})/.exec(
+    text,
+  );
+  if (!match) return false;
+  return slashDateToIso(match[1]) === birthIso && slashDateToIso(match[2]) === birthIso;
+}
+
+function hasDeathDateCalendarContradiction(person: ImportPersonCandidatePreview) {
+  const deathIso = person.deathDateText?.trim();
+  if (!deathIso) return false;
+
+  const anniversaryIso = slashDateToIso(person.memorialLunarDate);
+  const notesLunarIso = extractVietnameseDateMentionIso(
+    [person.shortBio, person.notesPrivate].filter(Boolean).join(" "),
+  );
+
+  return (
+    (anniversaryIso !== null && anniversaryIso === deathIso) ||
+    (notesLunarIso !== null && notesLunarIso === deathIso) ||
+    notesMentionSameSolarBirthAndDeath(person)
+  );
 }
 
 function parseDateParts(
@@ -185,6 +253,13 @@ function diagnoseDeathBeforeBirth(
     return {
       status: "warning",
       code: "death_date_calendar_unknown_needs_review",
+    };
+  }
+
+  if (deathParts.calendarType === "calendar_conflict") {
+    return {
+      status: "warning",
+      code: "death_date_calendar_conflict_needs_review",
     };
   }
 
@@ -434,6 +509,22 @@ function validatePerson(
         "Ngày mất cần xác nhận hệ lịch",
         "Trong gia phả Việt, ngày mất hoặc ngày giỗ có thể là âm lịch; khi chưa rõ hệ lịch thì không kết luận ngày mất trước ngày sinh bằng so sánh trực tiếp.",
         "Chủ nhà cần xác nhận ngày mất là âm lịch hay dương lịch trước khi nhập chính thức.",
+      ),
+    );
+  }
+
+  if (dateOrderDiagnosis.code === "death_date_calendar_conflict_needs_review") {
+    issues.push(
+      issue(
+        "warning",
+        "death_date_calendar_conflict_needs_review",
+        "person",
+        key,
+        rowNumber,
+        "deathDateText",
+        "Ngày mất có dấu hiệu khác hệ lịch với ngày sinh",
+        "Ngày mất có dấu hiệu trùng ngày giỗ âm lịch hoặc tiểu sử ghi đây là ngày âm lịch, nên không so sánh trực tiếp với ngày sinh dương lịch.",
+        "Chủ nhà cần xác nhận ngày mất dương lịch và ngày giỗ âm lịch trước khi nhập chính thức.",
       ),
     );
   }
