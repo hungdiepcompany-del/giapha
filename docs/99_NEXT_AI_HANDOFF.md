@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16P - Official Import Runtime Candidate
+
+- Marker present in prompt:
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`.
+- Runtime marker: `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`.
+- Current status: `A16P_STATUS=BLOCKED_TRANSACTION_HELPER_MISSING`.
+- Added locked service candidate:
+  `lib/import/giapha4/official-import-service.ts`.
+- Added POST route candidate:
+  `POST /api/admin/import-sessions/[sessionId]/official-import`.
+- Route is fail-closed by server flag
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`; default is false and
+  returns HTTP 423 with `Nhập chính thức chưa được bật trong môi trường này.`
+- Future execution would still require body confirmations:
+  `confirmMarker`, `confirmSessionId`, `confirmNoValidationErrors`,
+  `confirmRollbackReviewed` and `confirmAuditReviewed`.
+- Permission boundary uses existing strict set:
+  `imports.create`, `people.create`, `relationships.create` and
+  `permissions.manage`; no new permission seed or migration was created.
+- Service candidate reads staging manifest, validation, dry-run preview and
+  review pack only. It does not read Excel again and does not write real
+  people/relationships/families/layout/revisions/profiles.
+- Transaction capability is blocked: existing people/relationship/revision
+  services use separate Supabase client writes and there is no safe
+  all-or-nothing transaction helper/RPC.
+- Blocker code: `A16P_BLOCKED_TRANSACTION_HELPER_MISSING`.
+- UI remains disabled; no active button, no onClick and no form submit calls
+  official import.
+- Added doc/checker:
+  `docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md` and
+  `scripts/check-a16p-official-import-runtime-candidate.cjs`.
+- Boundaries preserved: no import run, no POST official import call, no
+  migration, no DB push, no SQL apply, no seed, no deploy, no push, no Excel or
+  secret committed.
+- Next safe step: A-16P-TX transaction RPC/schema readiness for official import.
+  A-16Q should wait until transaction, rollback, audit and exact session-specific
+  owner approval are complete.
+
 ## 2026-07-01 - A-16I4U/A-16M/A-16N/A-16O - Official Import Readiness Handoff
 
 - Markers: `A-16I4U`, `A-16M`, `A-16N`, `A-16O`.

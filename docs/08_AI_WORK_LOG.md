@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-07-01 - A-16P - Official Import Runtime Candidate
+
+- Marker present in prompt:
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`.
+- Runtime marker: `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`.
+- Final status: `A16P_STATUS=BLOCKED_TRANSACTION_HELPER_MISSING`.
+- Added locked service candidate:
+  `lib/import/giapha4/official-import-service.ts`.
+- Added POST route candidate:
+  `POST /api/admin/import-sessions/[sessionId]/official-import`.
+- Route is fail-closed by server flag
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`; default is false and
+  returns HTTP 423 with `Nhập chính thức chưa được bật trong môi trường này.`
+- Even if enabled in a future phase, route requires `confirmMarker`,
+  `confirmSessionId`, `confirmNoValidationErrors`,
+  `confirmRollbackReviewed` and `confirmAuditReviewed`.
+- Service reads staging manifest, validation, dry-run preview and review pack
+  only; it does not read Excel again and does not write real genealogy tables.
+- Transaction capability check found no safe all-or-nothing transaction helper
+  or RPC for people, relationships, revisions and rollback in one boundary.
+- Service returns blocker `A16P_BLOCKED_TRANSACTION_HELPER_MISSING`; it does
+  not fake best-effort multi-table inserts.
+- `/admin/exports/import` still keeps official import disabled and adds locked
+  copy: candidate prepared, not enabled, no official import run, rollback/audit
+  review required.
+- Added doc/checker:
+  `docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md` and
+  `scripts/check-a16p-official-import-runtime-candidate.cjs`.
+- A-16P did not call POST official import, did not run import, did not write
+  people/person rows, did not write relationships/families, did not update
+  layout/tree/revision/profile data, did not create migration, did not DB push,
+  did not SQL apply, did not seed, did not deploy and did not push.
+
 ## 2026-07-01 - A-16I4U/A-16M/A-16N/A-16O - Manual Gia Pha 4 Staging Verification and Official Import Readiness Gate
 
 - Markers: `A-16I4U`, `A-16M`, `A-16N`, `A-16O`.

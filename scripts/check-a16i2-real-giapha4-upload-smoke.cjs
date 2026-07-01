@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -59,6 +59,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -94,7 +98,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -168,18 +172,18 @@ for (const token of [
   "SAFE_SKIP_UNSUPPORTED_XLS",
   ".xlsx",
   ".xls",
-  "chá»‰ manifest staging/session staging",
-  "khÃ´ng ghi people/person tháº­t",
-  "khÃ´ng ghi relationships tháº­t",
-  "khÃ´ng cáº­p nháº­t layout/tree/revision tháº­t",
-  "khÃ´ng má»Ÿ official import",
-  "khÃ´ng log dá»¯ liá»‡u cÃ¡ nhÃ¢n thÃ´",
-  "KhÃ´ng migration",
-  "KhÃ´ng DB push",
-  "KhÃ´ng SQL apply",
-  "KhÃ´ng seed",
-  "KhÃ´ng deploy",
-  "KhÃ´ng push",
+  "chÃ¡Â»â€° manifest staging/session staging",
+  "khÃƒÂ´ng ghi people/person thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng ghi relationships thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t layout/tree/revision thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng mÃ¡Â»Å¸ official import",
+  "khÃƒÂ´ng log dÃ¡Â»Â¯ liÃ¡Â»â€¡u cÃƒÂ¡ nhÃƒÂ¢n thÃƒÂ´",
+  "KhÃƒÂ´ng migration",
+  "KhÃƒÂ´ng DB push",
+  "KhÃƒÂ´ng SQL apply",
+  "KhÃƒÂ´ng seed",
+  "KhÃƒÂ´ng deploy",
+  "KhÃƒÂ´ng push",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
@@ -264,7 +268,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b[\s\S]{0,200}(confirm|commit|finalize|official-import(?!-gate)|import-now)/i,
+  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b[\s\S]{0,200}(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now)/i,
 ]) {
   rejectPattern(smoke + checker, pattern, `A-16I2 script ${pattern}`);
 }

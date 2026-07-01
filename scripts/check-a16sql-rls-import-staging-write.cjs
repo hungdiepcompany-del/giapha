@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -35,6 +35,10 @@ const legacyCheckerPaths = [
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
 ];
 
 const allowedChangedFiles = new Set([
@@ -101,7 +105,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -153,18 +157,18 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
   "A-16SQL-RLS-IMPORT-STAGING-WRITE",
-  "KhÃ´ng cháº¡y `supabase db push`",
-  "KhÃ´ng cháº¡y `supabase db push --dry-run`",
-  "KhÃ´ng cháº¡y `supabase migration repair`",
-  "KhÃ´ng apply SQL trong phase nÃ y",
-  "KhÃ´ng seed",
-  "KhÃ´ng import Excel",
-  "KhÃ´ng ghi people/person tháº­t",
-  "KhÃ´ng ghi relationships tháº­t",
-  "KhÃ´ng dÃ¹ng service role Ä‘á»ƒ bypass RLS",
-  "KhÃ´ng disable RLS",
-  "KhÃ´ng cáº¥p anon/public",
-  "KhÃ´ng má»Ÿ official import",
+  "KhÃƒÂ´ng chÃ¡ÂºÂ¡y `supabase db push`",
+  "KhÃƒÂ´ng chÃ¡ÂºÂ¡y `supabase db push --dry-run`",
+  "KhÃƒÂ´ng chÃ¡ÂºÂ¡y `supabase migration repair`",
+  "KhÃƒÂ´ng apply SQL trong phase nÃƒÂ y",
+  "KhÃƒÂ´ng seed",
+  "KhÃƒÂ´ng import Excel",
+  "KhÃƒÂ´ng ghi people/person thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng ghi relationships thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng dÃƒÂ¹ng service role Ã„â€˜Ã¡Â»Æ’ bypass RLS",
+  "KhÃƒÂ´ng disable RLS",
+  "KhÃƒÂ´ng cÃ¡ÂºÂ¥p anon/public",
+  "KhÃƒÂ´ng mÃ¡Â»Å¸ official import",
   "A16SQL_STATUS=SQL_CANDIDATE_READY_NOT_APPLIED",
   dbMigrationPath,
   supabaseMigrationPath,
@@ -298,7 +302,7 @@ for (const pattern of [
 
 for (const previousChecker of legacyCheckerPaths) {
   if (!previousChecker.startsWith("scripts/check-a16")) continue;
-  if (/check-a16(i4u|m|n|o)-/i.test(previousChecker)) continue;
+  if (/check-a16(i4u|m|n|o|p)-/i.test(previousChecker)) continue;
   const content = readFile(previousChecker);
   for (const token of [
     docPath,

@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -69,6 +69,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -104,7 +108,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -170,16 +174,16 @@ for (const token of [
   "A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS",
   "GET /api/admin/import-sessions/[sessionId]/validation",
   "runtime/read-only",
-  "KhÃ´ng migration",
-  "KhÃ´ng DB push",
-  "KhÃ´ng SQL apply",
-  "KhÃ´ng seed/import vÃ o báº£ng tháº­t",
-  "KhÃ´ng táº¡o people/person tháº­t",
-  "KhÃ´ng táº¡o relationship tháº­t",
-  "KhÃ´ng cáº­p nháº­t layout/tree/revision",
-  "KhÃ´ng má»Ÿ import chÃ­nh thá»©c",
-  "KhÃ´ng deploy",
-  "KhÃ´ng push",
+  "KhÃƒÂ´ng migration",
+  "KhÃƒÂ´ng DB push",
+  "KhÃƒÂ´ng SQL apply",
+  "KhÃƒÂ´ng seed/import vÃƒÂ o bÃ¡ÂºÂ£ng thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o people/person thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o relationship thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t layout/tree/revision",
+  "KhÃƒÂ´ng mÃ¡Â»Å¸ import chÃƒÂ­nh thÃ¡Â»Â©c",
+  "KhÃƒÂ´ng deploy",
+  "KhÃƒÂ´ng push",
   "A16J_MIGRATION_STATUS=NO_NEW_MIGRATION",
   "A16J_DB_PUSH_STATUS=NOT_RUN",
   "A16J_SQL_APPLY_STATUS=NOT_RUN",
@@ -235,18 +239,18 @@ rejectPattern(
 
 for (const token of [
   "buildManifestValidationReview",
-  "Kiá»ƒm tra dá»¯ liá»‡u staging",
-  "Cáº£nh bÃ¡o dá»¯ liá»‡u",
-  "Lá»—i cáº§n xá»­ lÃ½",
-  "Gá»£i Ã½ kiá»ƒm tra",
-  "ChÆ°a phÃ¡t hiá»‡n cáº£nh bÃ¡o nghiÃªm trá»ng",
-  "Dá»¯ liá»‡u nÃ y váº«n chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£ tháº­t.",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
-  "Sá»‘ ngÆ°á»i staging",
-  "Sá»‘ quan há»‡ staging",
-  "Sá»‘ lá»—i",
-  "Sá»‘ cáº£nh bÃ¡o",
-  "Sá»‘ thÃ´ng tin",
+  "KiÃ¡Â»Æ’m tra dÃ¡Â»Â¯ liÃ¡Â»â€¡u staging",
+  "CÃ¡ÂºÂ£nh bÃƒÂ¡o dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "LÃ¡Â»â€”i cÃ¡ÂºÂ§n xÃ¡Â»Â­ lÃƒÂ½",
+  "GÃ¡Â»Â£i ÃƒÂ½ kiÃ¡Â»Æ’m tra",
+  "ChÃ†Â°a phÃƒÂ¡t hiÃ¡Â»â€¡n cÃ¡ÂºÂ£nh bÃƒÂ¡o nghiÃƒÂªm trÃ¡Â»Âng",
+  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u nÃƒÂ y vÃ¡ÂºÂ«n chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£ thÃ¡ÂºÂ­t.",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
+  "SÃ¡Â»â€˜ ngÃ†Â°Ã¡Â»Âi staging",
+  "SÃ¡Â»â€˜ quan hÃ¡Â»â€¡ staging",
+  "SÃ¡Â»â€˜ lÃ¡Â»â€”i",
+  "SÃ¡Â»â€˜ cÃ¡ÂºÂ£nh bÃƒÂ¡o",
+  "SÃ¡Â»â€˜ thÃƒÂ´ng tin",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
 }
@@ -358,7 +362,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

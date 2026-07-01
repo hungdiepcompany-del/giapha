@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -91,6 +91,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -126,7 +130,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -229,14 +233,14 @@ for (const token of [
 }
 
 for (const token of [
-  "PhiÃªn nháº­p dá»¯ liá»‡u",
-  "Manifest dá»¯ liá»‡u",
-  "ChÆ°a cÃ³ dá»¯ liá»‡u manifest",
-  "Dá»¯ liá»‡u bÃªn dÆ°á»›i chá»‰ lÃ  báº£n xem trÆ°á»›c, chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£.",
-  "ChÆ°a má»Ÿ bÆ°á»›c xÃ¡c nháº­n nháº­p chÃ­nh thá»©c.",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
-  "KhÃ´ng táº¡o thÃ nh viÃªn",
-  "khÃ´ng táº¡o quan há»‡",
+  "PhiÃƒÂªn nhÃ¡ÂºÂ­p dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "Manifest dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "ChÃ†Â°a cÃƒÂ³ dÃ¡Â»Â¯ liÃ¡Â»â€¡u manifest",
+  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u bÃƒÂªn dÃ†Â°Ã¡Â»â€ºi chÃ¡Â»â€° lÃƒÂ  bÃ¡ÂºÂ£n xem trÃ†Â°Ã¡Â»â€ºc, chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£.",
+  "ChÃ†Â°a mÃ¡Â»Å¸ bÃ†Â°Ã¡Â»â€ºc xÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c.",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o thÃƒÂ nh viÃƒÂªn",
+  "khÃƒÂ´ng tÃ¡ÂºÂ¡o quan hÃ¡Â»â€¡",
 ]) {
   requireIncludes(panel + importPage + service, token, `UI token ${token}`);
 }

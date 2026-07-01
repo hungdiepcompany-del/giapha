@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -67,6 +67,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -102,7 +106,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -160,17 +164,17 @@ for (const token of [
   "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
   "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
   "/admin/exports/import",
-  "PhiÃªn nháº­p dá»¯ liá»‡u",
-  "Manifest dá»¯ liá»‡u",
-  "Dá»¯ liá»‡u bÃªn dÆ°á»›i chá»‰ lÃ  báº£n xem trÆ°á»›c, chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£.",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c",
-  "chÆ°a má»Ÿ",
-  "khÃ´ng táº¡o import session tháº­t",
-  "khÃ´ng táº¡o person tháº­t",
-  "khÃ´ng táº¡o relationship tháº­t",
-  "khÃ´ng ghi layout/revision",
-  "khÃ´ng deploy",
-  "khÃ´ng push",
+  "PhiÃƒÂªn nhÃ¡ÂºÂ­p dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "Manifest dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u bÃƒÂªn dÃ†Â°Ã¡Â»â€ºi chÃ¡Â»â€° lÃƒÂ  bÃ¡ÂºÂ£n xem trÃ†Â°Ã¡Â»â€ºc, chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£.",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c",
+  "chÃ†Â°a mÃ¡Â»Å¸",
+  "khÃƒÂ´ng tÃ¡ÂºÂ¡o import session thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng tÃ¡ÂºÂ¡o person thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng tÃ¡ÂºÂ¡o relationship thÃ¡ÂºÂ­t",
+  "khÃƒÂ´ng ghi layout/revision",
+  "khÃƒÂ´ng deploy",
+  "khÃƒÂ´ng push",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
@@ -182,10 +186,10 @@ for (const token of [
   "SAFE_SKIP_MISSING_EXPLICIT_ENV",
   "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
   "/admin/exports/import",
-  "PhiÃªn nháº­p dá»¯ liá»‡u",
-  "Manifest dá»¯ liá»‡u",
-  "Dá»¯ liá»‡u bÃªn dÆ°á»›i chá»‰ lÃ  báº£n xem trÆ°á»›c, chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£.",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c",
+  "PhiÃƒÂªn nhÃ¡ÂºÂ­p dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "Manifest dÃ¡Â»Â¯ liÃ¡Â»â€¡u",
+  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u bÃƒÂªn dÃ†Â°Ã¡Â»â€ºi chÃ¡Â»â€° lÃƒÂ  bÃ¡ÂºÂ£n xem trÃ†Â°Ã¡Â»â€ºc, chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£.",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c",
   "POST",
   "PUT",
   "PATCH",
@@ -274,7 +278,8 @@ for (const file of changedFiles) {
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import/route.ts"
   ) {
     failures.push(`API file changed outside A-16I upload staging route ${file}`);
   }
@@ -292,6 +297,7 @@ for (const file of changedFiles) {
       "lib/import/giapha4/normalize.ts",
       "lib/import/giapha4/import-review-pack-service.ts",
       "lib/import/giapha4/official-import-preflight-gate.ts",
+      "lib/import/giapha4/official-import-service.ts",
     ].includes(file)
   ) {
     failures.push(`API/service/runtime file changed ${file}`);
@@ -343,7 +349,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

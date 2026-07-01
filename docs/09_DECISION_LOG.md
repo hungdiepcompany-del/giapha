@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 217 - A-16P creates a locked official import candidate and blocks on missing transaction helper
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Accept the owner marker
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE` as approval to create a
+  runtime candidate for review.
+- Add POST route candidate
+  `/api/admin/import-sessions/[sessionId]/official-import`, but keep it
+  fail-closed by `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=false`.
+- Require strict server-side confirmation body before any future execution:
+  `confirmMarker`, `confirmSessionId`, `confirmNoValidationErrors`,
+  `confirmRollbackReviewed` and `confirmAuditReviewed`.
+- Add official import service candidate that reads staging/review/dry-run data
+  and returns blocker `A16P_BLOCKED_TRANSACTION_HELPER_MISSING`.
+- Keep UI disabled and avoid any client caller for POST official import.
+
+Lý do:
+
+- Existing people, relationship and revision services use separate Supabase
+  client writes; the repo does not currently have a safe RPC/transaction helper
+  for all-or-nothing people, relationships, audit and rollback.
+- A best-effort multi-table insert would violate the A-16P boundary and could
+  create partial import risk.
+
+Boundaries:
+
+- No official import executed, no POST route called, no people/person write, no
+  relationship/family write, no layout/tree/revision/profile write, no
+  migration, no `supabase db push`, no SQL apply, no seed, no deploy and no
+  push.
+- Execution requires a later phase: either A-16P-TX for transaction
+  RPC/schema readiness or A-16Q after transaction, rollback, audit and exact
+  session-specific owner approval are complete.
+
 ## Decision 216 - A-16I4U/A-16M/A-16N/A-16O keeps official Gia Pha 4 import locked until A-16P
 
 Status: `ACTIVE`

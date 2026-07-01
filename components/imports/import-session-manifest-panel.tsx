@@ -215,6 +215,12 @@ export function ImportSessionManifestPanel({
                 Cần owner phê duyệt trước khi chạy dry-run. Dữ liệu staging vẫn
                 chưa được nhập vào cây gia phả thật.
               </p>
+              <p className="text-sm leading-6 text-stone-700">
+                Ứng viên nhập chính thức đã được chuẩn bị nhưng chưa được bật.
+                Chưa chạy nhập chính thức. Cần xác nhận phiên nhập, lỗi/cảnh
+                báo, rollback và audit trước khi chạy. Nút nhập chính thức vẫn
+                khóa trong phase này.
+              </p>
               <p className="text-sm font-semibold text-rose-900">
                 Marker yêu cầu: {dryRunGate.dryRunGate.requiredMarker}
               </p>

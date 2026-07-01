@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -61,7 +61,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -93,14 +93,14 @@ for (const token of a16sqlAllowlistTokens) {
 
 for (const token of [
   "A-16I3",
-  "Gia Pháº£ 4",
-  "ThÃ nh viÃªn",
-  "MÃ£ GP",
-  "MÃ£ GP Bá»‘",
-  "MÃ£ GP Máº¹",
-  "KhÃ´ng táº¡o migration",
-  "KhÃ´ng ghi `people/person` tháº­t",
-  "KhÃ´ng má»Ÿ Ä‘Æ°á»ng `confirm`, `import-now`, `finalize`, hoáº·c nháº­p chÃ­nh thá»©c",
+  "Gia PhÃ¡ÂºÂ£ 4",
+  "ThÃƒÂ nh viÃƒÂªn",
+  "MÃƒÂ£ GP",
+  "MÃƒÂ£ GP BÃ¡Â»â€˜",
+  "MÃƒÂ£ GP MÃ¡ÂºÂ¹",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o migration",
+  "KhÃƒÂ´ng ghi `people/person` thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng mÃ¡Â»Å¸ Ã„â€˜Ã†Â°Ã¡Â»Âng `confirm`, `import-now`, `finalize`, hoÃ¡ÂºÂ·c nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c",
   "A16I3_STATUS=XLSX_COLUMN_MAPPING_READY_STAGING_ONLY",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -111,10 +111,10 @@ for (const token of [
   "a16i3-giapha4-manifest-staging-v2",
   "a16i3-jszip-xlsx-thanh-vien-v2",
   "MAIN_MEMBER_SHEET_NAME",
-  "MÃ£ GP",
-  "Há» tÃªn",
-  "MÃ£ GP Bá»‘",
-  "MÃ£ GP Máº¹",
+  "MÃƒÂ£ GP",
+  "HÃ¡Â»Â tÃƒÂªn",
+  "MÃƒÂ£ GP BÃ¡Â»â€˜",
+  "MÃƒÂ£ GP MÃ¡ÂºÂ¹",
   "A16I3_MEMBER_SHEET_MISSING",
   "A16I3_REQUIRED_HEADERS_MISSING",
   "parseSummary",
@@ -145,9 +145,9 @@ for (const token of [
 }
 
 for (const token of [
-  "ÄÃ£ nháº­n diá»‡n sheet ThÃ nh viÃªn",
-  "MÃ£ GP",
-  "Quan há»‡ cha/máº¹",
+  "Ã„ÂÃƒÂ£ nhÃ¡ÂºÂ­n diÃ¡Â»â€¡n sheet ThÃƒÂ nh viÃƒÂªn",
+  "MÃƒÂ£ GP",
+  "Quan hÃ¡Â»â€¡ cha/mÃ¡ÂºÂ¹",
 ]) {
   requireIncludes(uploadForm, token, `upload UI token ${token}`);
 }
@@ -204,7 +204,7 @@ for (const pattern of [
   /\.from\(["']people["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']person["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']family_children["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

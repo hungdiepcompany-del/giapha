@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -62,7 +62,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -94,12 +94,12 @@ for (const token of a16sqlAllowlistTokens) {
 
 for (const token of [
   "A-16I5",
-  "GÃ³i rÃ  soÃ¡t",
+  "GÃƒÂ³i rÃƒÂ  soÃƒÂ¡t",
   "GET /api/admin/import-sessions/[sessionId]/review-pack",
   "canProceedToOfficialImport=false",
   "readyForOfficialImport=false",
-  "KhÃ´ng ghi `people/person`",
-  "KhÃ´ng má»Ÿ route/action `confirm`, `import-now`, `finalize`, hoáº·c nháº­p chÃ­nh thá»©c",
+  "KhÃƒÂ´ng ghi `people/person`",
+  "KhÃƒÂ´ng mÃ¡Â»Å¸ route/action `confirm`, `import-now`, `finalize`, hoÃ¡ÂºÂ·c nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c",
   "A16I5_STATUS=OWNER_REVIEW_PACK_READY_OFFICIAL_IMPORT_CLOSED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -130,9 +130,9 @@ for (const token of [
 }
 
 for (const token of [
-  "GÃ³i rÃ  soÃ¡t trÆ°á»›c khi nháº­p",
-  "Sáºµn sÃ ng Ä‘á»ƒ owner rÃ  soÃ¡t",
-  "ChÆ°a Ä‘á»§ Ä‘iá»u kiá»‡n nháº­p chÃ­nh thá»©c",
+  "GÃƒÂ³i rÃƒÂ  soÃƒÂ¡t trÃ†Â°Ã¡Â»â€ºc khi nhÃ¡ÂºÂ­p",
+  "SÃ¡ÂºÂµn sÃƒÂ ng Ã„â€˜Ã¡Â»Æ’ owner rÃƒÂ  soÃƒÂ¡t",
+  "ChÃ†Â°a Ã„â€˜Ã¡Â»Â§ Ã„â€˜iÃ¡Â»Âu kiÃ¡Â»â€¡n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c",
   "reviewPack.marker",
 ]) {
   requireIncludes(panel, token, `panel token ${token}`);
@@ -188,7 +188,8 @@ for (const file of changedFiles) {
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import/route.ts"
   ) {
     failures.push(`unexpected API/action changed ${file}`);
   }
@@ -213,7 +214,7 @@ for (const pattern of [
   /\.from\(["']relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

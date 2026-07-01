@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -58,6 +58,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -93,7 +97,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -149,14 +153,14 @@ for (const token of [
   "A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING",
   "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
   "GET /api/admin/import-sessions/[sessionId]/dry-run-preview",
-  "KhÃ´ng migration",
-  "KhÃ´ng DB push",
-  "KhÃ´ng SQL apply",
-  "KhÃ´ng seed",
-  "KhÃ´ng upload/parse file tháº­t",
-  "KhÃ´ng ghi people/relationships tháº­t",
-  "KhÃ´ng layout/tree/revision",
-  "KhÃ´ng official import",
+  "KhÃƒÂ´ng migration",
+  "KhÃƒÂ´ng DB push",
+  "KhÃƒÂ´ng SQL apply",
+  "KhÃƒÂ´ng seed",
+  "KhÃƒÂ´ng upload/parse file thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng ghi people/relationships thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng layout/tree/revision",
+  "KhÃƒÂ´ng official import",
   "A16L_STATUS=DRY_RUN_MAPPING_PREVIEW_READY",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -202,12 +206,12 @@ rejectPattern(
 );
 
 for (const token of [
-  "Báº£n xem trÆ°á»›c dry-run",
-  "Dá»¯ liá»‡u nÃ y chá»‰ lÃ  báº£n mÃ´ phá»ng, chÆ°a Ä‘Æ°á»£c ghi vÃ o cÃ¢y gia pháº£",
-  "NgÆ°á»i dá»± kiáº¿n táº¡o",
-  "Quan há»‡ dá»± kiáº¿n táº¡o",
-  "KhÃ´ng thá»ƒ dry-run vÃ¬ cÃ²n lá»—i dá»¯ liá»‡u staging",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
+  "BÃ¡ÂºÂ£n xem trÃ†Â°Ã¡Â»â€ºc dry-run",
+  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u nÃƒÂ y chÃ¡Â»â€° lÃƒÂ  bÃ¡ÂºÂ£n mÃƒÂ´ phÃ¡Â»Âng, chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c ghi vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£",
+  "NgÃ†Â°Ã¡Â»Âi dÃ¡Â»Â± kiÃ¡ÂºÂ¿n tÃ¡ÂºÂ¡o",
+  "Quan hÃ¡Â»â€¡ dÃ¡Â»Â± kiÃ¡ÂºÂ¿n tÃ¡ÂºÂ¡o",
+  "KhÃƒÂ´ng thÃ¡Â»Æ’ dry-run vÃƒÂ¬ cÃƒÂ²n lÃ¡Â»â€”i dÃ¡Â»Â¯ liÃ¡Â»â€¡u staging",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
   "buildDryRunMappingPreview",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
@@ -279,7 +283,8 @@ for (const file of changedFiles) {
     file.startsWith("app/api/") &&
     file !== routePath &&
     file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import/route.ts"
   ) {
     failures.push(`unexpected API route changed ${file}`);
   }
@@ -328,7 +333,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

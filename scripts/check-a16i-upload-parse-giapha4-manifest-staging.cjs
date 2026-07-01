@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 
@@ -70,6 +70,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
+  "docs/PLAN_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE.md",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "scripts/check-a16p-official-import-runtime-candidate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -105,7 +109,7 @@ function decodeLegacyMojibake(value) {
 }
 
 function isLegacyMojibakeToken(token) {
-  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+  return /[ÃƒÃ„Ã‚]/.test(token) || /Ã¡[ÂºÂ»]/.test(token);
 }
 
 function requireIncludes(content, token, label = token) {
@@ -168,16 +172,16 @@ for (const token of [
   "staging-only",
   "XLSX",
   "XLS",
-  "KhÃ´ng migration",
-  "KhÃ´ng DB push",
-  "KhÃ´ng SQL apply",
-  "KhÃ´ng seed/import vÃ o báº£ng tháº­t",
-  "KhÃ´ng táº¡o people/person tháº­t",
-  "KhÃ´ng táº¡o relationship tháº­t",
-  "KhÃ´ng cáº­p nháº­t layout/tree/revision tháº­t",
-  "KhÃ´ng má»Ÿ import chÃ­nh thá»©c",
-  "KhÃ´ng deploy",
-  "KhÃ´ng push",
+  "KhÃƒÂ´ng migration",
+  "KhÃƒÂ´ng DB push",
+  "KhÃƒÂ´ng SQL apply",
+  "KhÃƒÂ´ng seed/import vÃƒÂ o bÃ¡ÂºÂ£ng thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o people/person thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng tÃ¡ÂºÂ¡o relationship thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t layout/tree/revision thÃ¡ÂºÂ­t",
+  "KhÃƒÂ´ng mÃ¡Â»Å¸ import chÃƒÂ­nh thÃ¡Â»Â©c",
+  "KhÃƒÂ´ng deploy",
+  "KhÃƒÂ´ng push",
   "A-16J",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -225,14 +229,14 @@ for (const token of [
 }
 
 for (const token of [
-  "Táº£i lÃªn file Gia Pháº£ 4",
-  "Chá»‰ ghi vÃ o vÃ¹ng staging, chÆ°a nháº­p vÃ o cÃ¢y gia pháº£ tháº­t.",
-  "Chá»n file",
-  "Äá»c file vÃ  táº¡o manifest",
-  "Äang Ä‘á»c file...",
-  "ÄÃ£ táº¡o manifest staging",
-  "KhÃ´ng Ä‘á»c Ä‘Æ°á»£c file Gia Pháº£ 4",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
+  "TÃ¡ÂºÂ£i lÃƒÂªn file Gia PhÃ¡ÂºÂ£ 4",
+  "ChÃ¡Â»â€° ghi vÃƒÂ o vÃƒÂ¹ng staging, chÃ†Â°a nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£ thÃ¡ÂºÂ­t.",
+  "ChÃ¡Â»Ân file",
+  "Ã„ÂÃ¡Â»Âc file vÃƒÂ  tÃ¡ÂºÂ¡o manifest",
+  "Ã„Âang Ã„â€˜Ã¡Â»Âc file...",
+  "Ã„ÂÃƒÂ£ tÃ¡ÂºÂ¡o manifest staging",
+  "KhÃƒÂ´ng Ã„â€˜Ã¡Â»Âc Ã„â€˜Ã†Â°Ã¡Â»Â£c file Gia PhÃ¡ÂºÂ£ 4",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
   "/api/admin/import-sessions/upload",
 ]) {
   requireIncludes(uploadForm + page, token, `UI token ${token}`);
@@ -240,9 +244,9 @@ for (const token of [
 
 for (const token of [
   "peoplePreview",
-  "ThÃ nh viÃªn staging",
-  "Quan há»‡ staging",
-  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
+  "ThÃƒÂ nh viÃƒÂªn staging",
+  "Quan hÃ¡Â»â€¡ staging",
+  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
 ]) {
   requireIncludes(panel + manifestReadService, token, `manifest read UI token ${token}`);
 }
@@ -253,7 +257,7 @@ for (const [content, token, label] of [
   [handoff, "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING", "handoff marker"],
   [
     decisionLog,
-    "Decision 209 - A-16I stages Gia Pháº£ 4 uploads without opening official import",
+    "Decision 209 - A-16I stages Gia PhÃ¡ÂºÂ£ 4 uploads without opening official import",
     "decision entry",
   ],
 ]) {
@@ -361,7 +365,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight|-service|\/route))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }
@@ -377,7 +381,8 @@ for (const file of uploadRouteNames) {
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import/route.ts"
   ) {
     failures.push(`unexpected API/action changed ${file}`);
   }
