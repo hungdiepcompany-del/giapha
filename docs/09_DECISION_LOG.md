@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 223 - A-16Q-LOCAL-UI refreshes official import gate to A-16R wording
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Record localhost import UI smoke as `SAFE_SKIP_MISSING_AUTH` because
+  `/admin/exports/import` loaded but the auth gate blocked the import panel.
+- Prefer Chrome logged-in smoke through CDP when available, while forbidding
+  cookie/localStorage/token/profile/storage-state reads or writes.
+- Replace stale official import gate copy that referenced the A-16P runtime
+  candidate marker with current session-specific A-16R wording.
+- Keep the official import button disabled and keep `canRunOfficialImport=false`.
+- Require a future marker of the form
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>` before any real
+  execution phase.
+
+Lý do:
+
+- A-16P runtime candidate and A-16P-TX transaction helper verification are no
+  longer the current blocker wording.
+- The next risky step is session-specific execution approval, not generic A-16P
+  readiness.
+- Without auth, local UI smoke cannot safely read session id or counts.
+- Without Playwright runtime or Chrome CDP availability, the CDP smoke must
+  safe-skip rather than fail or open a separate auth context.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 222 - A-16Q-FIX2 separates uncertain row 95 dates and preview sample counts
 
 Status: `ACTIVE`

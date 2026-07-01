@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-LOCAL-UI - Localhost Import UI Smoke and Gate Copy Refresh
+
+- Marker: `A-16Q-LOCAL-UI`.
+- Current status:
+  `A16Q_LOCAL_UI_STATUS=SAFE_SKIP_MISSING_AUTH_GATE_COPY_REFRESHED`.
+- Browser smoke target:
+  `http://localhost:3001/admin/exports/import`.
+- Browser smoke result: `SAFE_SKIP_MISSING_AUTH`; the page displayed
+  `Bạn cần đăng nhập để kiểm tra nhập dữ liệu.`
+- Session id and counts were not readable because the auth gate blocked the
+  import panel; all evidence counts remain `UNKNOWN` for this smoke.
+- Scripted smoke:
+  `npm run smoke:a16q-local-ui-import-guided`.
+- The smoke prefers Chrome logged-in access through CDP using
+  `A16Q_LOCAL_UI_CDP_URL` or default `http://127.0.0.1:9222`; it does not read
+  or save cookies, localStorage, token, profile data or storage state.
+- Latest scripted result:
+  `SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE` because Playwright runtime is not
+  available in this checkout. If Playwright becomes available but CDP is not,
+  expected status is `SAFE_SKIP_MISSING_CHROME_CDP`.
+- Official import gate copy now reflects the current state:
+  A-16P runtime candidate prepared, A-16P-TX transaction helper apply/verify
+  PASS, official import still not run, and future execution requires
+  session-specific A-16R approval.
+- Required future marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>`.
+- Required future conditions: exact session id, validation errors = 0, dry-run
+  blockers = 0, rollback reviewed and audit reviewed.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no RPC call, no POST official import call, no real people/relationships/
+  families/layout/tree/revision/profile write, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-FIX2 - Row 95 Date Diagnosis and Count Consistency
 
 - Marker: `A-16Q-FIX2`.

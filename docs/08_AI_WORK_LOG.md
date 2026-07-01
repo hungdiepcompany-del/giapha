@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-LOCAL-UI - Localhost Import UI Smoke and Gate Copy Refresh
+
+- Marker: `A-16Q-LOCAL-UI`.
+- Final status:
+  `A16Q_LOCAL_UI_STATUS=SAFE_SKIP_MISSING_AUTH_GATE_COPY_REFRESHED`.
+- Opened `http://localhost:3001/admin/exports/import` in the in-app browser.
+- Browser smoke result: `SAFE_SKIP_MISSING_AUTH`; page loaded but displayed
+  `Bạn cần đăng nhập để kiểm tra nhập dữ liệu.`
+- Session id and counts were not readable because the auth gate blocked the
+  import panel: session id, total members, total relationships, preview sample
+  counts, validation errors, warnings, dry-run blockers and duplicate
+  candidates are `UNKNOWN`.
+- Added `scripts/smoke-a16q-local-ui-import-guided.cjs`; it prefers Chrome CDP
+  at `A16Q_LOCAL_UI_CDP_URL`/`http://127.0.0.1:9222`, reuses the existing
+  Chrome context/page, and does not read or save cookies, localStorage, tokens,
+  profile data or storage state.
+- Scripted smoke result in this checkout:
+  `SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE` because Playwright runtime is not
+  available. If Playwright is available but CDP is not, the script returns
+  `SAFE_SKIP_MISSING_CHROME_CDP`.
+- Refreshed official import gate copy: stale A-16P/A-16N marker wording was
+  replaced by the current A-16R session-specific approval wording.
+- Gate now states that runtime candidate and transaction helper are prepared,
+  official import has not run, and future execution requires exact session id,
+  validation errors = 0, dry-run blockers = 0, rollback reviewed and audit
+  reviewed.
+- Required future marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>`.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-LOCAL-UI did not run SQL, did not run DB push, did not repair
+  migrations, did not seed, did not write people/relationships/families/layout/
+  tree/revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-FIX2 - Row 95 Date Diagnosis and Count Consistency
 
 - Marker: `A-16Q-FIX2`.

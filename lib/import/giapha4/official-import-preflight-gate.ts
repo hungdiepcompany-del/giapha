@@ -12,8 +12,8 @@ import {
 export const A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE_MARKER =
   "A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE";
 
-export const A16P_REQUIRED_OFFICIAL_IMPORT_MARKER =
-  "APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE";
+export const A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER =
+  "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>";
 
 export type OfficialImportPreflightGate = {
   marker: typeof A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE_MARKER;
@@ -21,7 +21,7 @@ export type OfficialImportPreflightGate = {
   readOnly: true;
   canOpenOfficialImport: false;
   officialImportEnabled: false;
-  requiredFutureMarker: typeof A16P_REQUIRED_OFFICIAL_IMPORT_MARKER;
+  requiredFutureMarker: typeof A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER;
   requiredBeforeRuntime: string[];
   noGoReasons: string[];
   message: string;
@@ -29,13 +29,12 @@ export type OfficialImportPreflightGate = {
 };
 
 const requiredBeforeRuntime = [
-  "Owner rà soát số lượng staging đã đọc từ UI.",
-  "Validation errors phải được xử lý hoặc owner chấp nhận no-go.",
-  "Duplicate/conflict phải có quyết định owner.",
-  "Thiết kế rollback phải được chấp nhận.",
-  "Thiết kế audit/revision phải được chấp nhận.",
-  "Thiết kế transaction all-or-nothing phải được chấp nhận.",
-  "Phase runtime riêng phải được phê duyệt bằng marker tương lai.",
+  "Phải có session id cụ thể cho phiên nhập được duyệt.",
+  "Validation errors phải bằng 0.",
+  "Dry-run blockers phải bằng 0.",
+  "Rollback plan phải được owner rà soát.",
+  "Audit/revision plan phải được owner rà soát.",
+  "Owner phải phê duyệt phase chạy thật bằng marker session-specific A-16R.",
 ];
 
 export function buildOfficialImportPreflightGateFromManifest(
@@ -43,18 +42,18 @@ export function buildOfficialImportPreflightGateFromManifest(
 ): OfficialImportPreflightGate {
   const reviewPack = buildImportReviewPackFromManifest(manifest);
   const noGoReasons: string[] = [
-    "A-16N chỉ là cổng khóa read-only, chưa mở nhập chính thức.",
-    `Thiếu marker tương lai ${A16P_REQUIRED_OFFICIAL_IMPORT_MARKER}.`,
+    "Runtime candidate và transaction helper đã được chuẩn bị/verify, nhưng chưa có phê duyệt thực thi cho phiên nhập cụ thể.",
+    `Marker tiếp theo phải là ${A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER}.`,
   ];
 
   if (!manifest.ok || !manifest.session) {
     noGoReasons.push("Chưa có import session staging hợp lệ để owner rà soát.");
   }
   if (reviewPack.validationSummary.errorCount > 0) {
-    noGoReasons.push("Còn lỗi validation trong dữ liệu staging.");
+    noGoReasons.push("Validation errors chưa bằng 0.");
   }
   if (reviewPack.dryRunSummary.blockedByErrorCount > 0) {
-    noGoReasons.push("Dry-run preview còn lỗi chặn.");
+    noGoReasons.push("Dry-run blockers chưa bằng 0.");
   }
   if (reviewPack.readiness !== "READY_FOR_OWNER_REVIEW") {
     noGoReasons.push("Review pack chưa ở trạng thái sẵn sàng để owner rà soát.");
@@ -66,11 +65,11 @@ export function buildOfficialImportPreflightGateFromManifest(
     readOnly: true,
     canOpenOfficialImport: false,
     officialImportEnabled: false,
-    requiredFutureMarker: A16P_REQUIRED_OFFICIAL_IMPORT_MARKER,
+    requiredFutureMarker: A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER,
     requiredBeforeRuntime,
     noGoReasons,
     message:
-      "Nhập chính thức chưa được mở. Dữ liệu staging đã đọc được nhưng chưa ghi vào cây gia phả thật.",
+      "Nhập chính thức vẫn đang khóa. Runtime và transaction helper đã được chuẩn bị, nhưng chưa có phê duyệt thực thi cho phiên nhập cụ thể. Cần xác nhận session id, lỗi dữ liệu = 0, dry-run không còn blocker, rollback/audit đã rà soát trước khi mở phase chạy thật.",
     reviewPackReadiness: reviewPack.readiness,
   };
 }

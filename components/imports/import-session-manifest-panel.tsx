@@ -408,12 +408,10 @@ export function ImportSessionManifestPanel({
                 Nhập chính thức chưa được mở
               </h3>
               <p className="text-sm leading-6 text-stone-700">
-                Dữ liệu staging đã đọc được, nhưng chưa ghi vào cây gia phả thật.
-                Cần thiết kế transaction, rollback, audit và owner approval riêng
-                trước khi mở.
+                {officialImportGate.message}
               </p>
               <p className="text-sm font-semibold text-rose-900">
-                Marker yêu cầu cho phase sau:{" "}
+                Marker session-specific cho phase chạy thật: {" "}
                 {officialImportGate.requiredFutureMarker}
               </p>
               {officialImportGate.noGoReasons.length > 0 ? (

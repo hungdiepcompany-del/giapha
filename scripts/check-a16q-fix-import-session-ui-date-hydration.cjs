@@ -243,8 +243,14 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/dry-run-mapping-preview-service.ts",
   "lib/import/giapha4/import-review-pack-service.ts",
   "lib/import/giapha4/manifest-read-service.ts",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "lib/import/giapha4/official-import-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "docs/PLAN_A16Q_FIX2_ROW95_DATE_AND_COUNT_CONSISTENCY.md",
   "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
+  "docs/PLAN_A16Q_LOCAL_UI_IMPORT_SMOKE_GATE_COPY_REFRESH.md",
+  "scripts/smoke-a16q-local-ui-import-guided.cjs",
+  "scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

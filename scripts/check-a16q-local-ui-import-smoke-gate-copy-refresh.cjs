@@ -5,13 +5,12 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16Q_FIX2_ROW95_DATE_AND_COUNT_CONSISTENCY.md";
-const checkerPath = "scripts/check-a16q-fix2-row95-date-count-consistency.cjs";
+const docPath = "docs/PLAN_A16Q_LOCAL_UI_IMPORT_SMOKE_GATE_COPY_REFRESH.md";
+const checkerPath =
+  "scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs";
+const smokePath = "scripts/smoke-a16q-local-ui-import-guided.cjs";
 const packagePath = "package.json";
-const validationPath = "lib/import/giapha4/manifest-validation-service.ts";
-const readServicePath = "lib/import/giapha4/manifest-read-service.ts";
-const dryRunPath = "lib/import/giapha4/dry-run-mapping-preview-service.ts";
-const reviewPackPath = "lib/import/giapha4/import-review-pack-service.ts";
+const gatePath = "lib/import/giapha4/official-import-preflight-gate.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
 const officialServicePath = "lib/import/giapha4/official-import-service.ts";
 
@@ -52,17 +51,19 @@ function requireIncludes(content, token, label = token) {
   if (!content.includes(token)) failures.push(`missing ${label}`);
 }
 
+function rejectIncludes(content, token, label = token) {
+  if (content.includes(token)) failures.push(`forbidden ${label}`);
+}
+
 function rejectPattern(content, pattern, label = String(pattern)) {
   if (pattern.test(content)) failures.push(`forbidden ${label}`);
 }
 
 const doc = readFile(docPath);
 readFile(checkerPath);
+const smoke = readFile(smokePath);
 const packageJson = readJson(packagePath);
-const validation = readFile(validationPath);
-const readService = readFile(readServicePath);
-const dryRun = readFile(dryRunPath);
-const reviewPack = readFile(reviewPackPath);
+const gate = readFile(gatePath);
 const panel = readFile(panelPath);
 const officialService = readFile(officialServicePath);
 const index = readFile("docs/00_INDEX.md");
@@ -71,108 +72,78 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "A-16Q-FIX2",
-  "A16Q_FIX2_STATUS=ROW95_WARNING_AND_COUNTS_ALIGNED",
-  "Row number: 95",
-  "PII: redacted",
-  "Death calendar: `unknown`",
-  "Expected severity: `warning`",
-  "Expected blocker: `false`",
-  "same-year",
-  "calendar mismatch",
-  "Death calendar unknown",
-  "102 people, 134 relationships",
-  "100 people, 100 relationships",
-  "canRunOfficialImport=false",
-  "UI button disabled",
+  "A-16Q-LOCAL-UI",
+  "A16Q_LOCAL_UI_STATUS=SAFE_SKIP_MISSING_AUTH_GATE_COPY_REFRESHED",
+  "SAFE_SKIP_MISSING_AUTH",
+  "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
+  "SAFE_SKIP_MISSING_CHROME_CDP",
+  "http://localhost:3001/admin/exports/import",
+  "Session id: `UNKNOWN`",
+  "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>",
+  "validation errors = 0",
+  "dry-run blockers = 0",
+  "rollback reviewed",
+  "audit reviewed",
+  "UI button remains disabled",
+  "No script calls RPC",
+  "No script calls POST official import",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 if (
-  packageJson?.scripts?.["check:a16q-fix2-row95-date-count-consistency"] !==
-  "node scripts/check-a16q-fix2-row95-date-count-consistency.cjs"
+  packageJson?.scripts?.["check:a16q-local-ui-import-smoke-gate-copy-refresh"] !==
+  "node scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs"
 ) {
-  failures.push("missing package script check:a16q-fix2-row95-date-count-consistency");
+  failures.push("missing package script check:a16q-local-ui-import-smoke-gate-copy-refresh");
+}
+if (
+  packageJson?.scripts?.["smoke:a16q-local-ui-import-guided"] !==
+  "node scripts/smoke-a16q-local-ui-import-guided.cjs"
+) {
+  failures.push("missing package script smoke:a16q-local-ui-import-guided");
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16Q_FIX2_ROW95_DATE_AND_COUNT_CONSISTENCY.md", "index entry"],
-  [workLog, "A16Q_FIX2_STATUS=ROW95_WARNING_AND_COUNTS_ALIGNED", "work log status"],
-  [decisionLog, "Decision 222", "decision log entry"],
-  [handoff, "A16Q_FIX2_STATUS=ROW95_WARNING_AND_COUNTS_ALIGNED", "handoff status"],
+  [index, "PLAN_A16Q_LOCAL_UI_IMPORT_SMOKE_GATE_COPY_REFRESH.md", "index entry"],
+  [workLog, "A16Q_LOCAL_UI_STATUS=SAFE_SKIP_MISSING_AUTH_GATE_COPY_REFRESHED", "work log status"],
+  [decisionLog, "Decision 223", "decision log entry"],
+  [handoff, "A16Q_LOCAL_UI_STATUS=SAFE_SKIP_MISSING_AUTH_GATE_COPY_REFRESHED", "handoff status"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 for (const token of [
-  "A16Q_FIX2_ROW95_SANITIZED_REGRESSION_CASE",
-  "rowNumber: 95",
-  "pii: \"redacted\"",
-  "death_date_calendar_unknown_needs_review",
-  "severity: \"warning\"",
-  "blocker: false",
-  "diagnoseDeathBeforeBirth",
-  "deathParts.calendarType === \"unknown\"",
-  "!hasSameKnownCalendar(birthParts, deathParts)",
-  "reason: \"year_before_birth\"",
-  "reason: \"full_date_before_birth\"",
+  "A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER",
+  "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>",
+  "Runtime candidate",
+  "transaction helper",
+  "Validation errors phải bằng 0",
+  "Dry-run blockers phải bằng 0",
+  "Rollback plan",
+  "Audit/revision plan",
+  "canOpenOfficialImport: false",
+  "officialImportEnabled: false",
 ]) {
-  requireIncludes(validation, token, `validation token ${token}`);
-}
-
-rejectPattern(
-  validation,
-  /birthParts\s*&&\s*deathParts\s*&&\s*deathParts\.year\s*<\s*birthParts\.year[\s\S]{0,240}"error"/,
-  "direct year-before-birth error must go through diagnosis",
-);
-
-for (const token of [
-  "peoplePreviewCount",
-  "relationshipPreviewCount",
-  "manifest.session?.personCandidateCount",
-  "manifest.session?.relationshipCandidateCount",
-]) {
-  requireIncludes(validation, token, `validation count token ${token}`);
+  requireIncludes(gate, token, `gate token ${token}`);
 }
 
 for (const token of [
-  "sessionResult.session.relationshipCandidateCount",
-  "extractPeoplePreview",
-  "if (people.length >= 100) return people",
+  "APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE",
+  "A-16N chỉ là cổng khóa read-only",
+  "Thiếu marker tương lai",
 ]) {
-  requireIncludes(readService, token, `read service token ${token}`);
+  rejectIncludes(gate, token, `stale gate copy ${token}`);
+  rejectIncludes(panel, token, `stale panel copy ${token}`);
 }
 
 for (const token of [
-  "stagedPeoplePreviewCount",
-  "proposedPeoplePreviewCount",
-  "stagedRelationshipPreviewCount",
-  "proposedRelationshipPreviewCount",
-  "manifest.session?.personCandidateCount",
-  "manifest.session?.relationshipCandidateCount",
+  "officialImportGate.message",
+  "Marker session-specific",
+  "disabled",
+  "aria-disabled=\"true\"",
 ]) {
-  requireIncludes(dryRun, token, `dry-run count token ${token}`);
-}
-
-for (const token of [
-  "peoplePreviewCount",
-  "relationshipPreviewCount",
-  "proposedPeoplePreviewCount",
-  "proposedRelationshipPreviewCount",
-]) {
-  requireIncludes(reviewPack, token, `review pack token ${token}`);
   requireIncludes(panel, token, `panel token ${token}`);
-}
-
-for (const token of [
-  "Máº«u",
-  "value={validation.summary.peopleCount}",
-  "value={validation.summary.peoplePreviewCount}",
-  "value={validation.summary.relationshipCount}",
-  "value={validation.summary.relationshipPreviewCount}",
-]) {
-  requireIncludes(panel, token, `panel count label token ${token}`);
 }
 
 for (const token of [
@@ -183,13 +154,33 @@ for (const token of [
 }
 rejectPattern(officialService, /\.rpc\s*\(/i, "official import service must not call RPC");
 
+for (const token of [
+  "SAFE_SKIP_MISSING_LOCALHOST",
+  "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
+  "SAFE_SKIP_MISSING_CHROME_CDP",
+  "SAFE_SKIP_MISSING_AUTH",
+  "A16Q_LOCAL_UI_CDP_URL",
+  "connectOverCDP",
+  "browser.contexts()[0]",
+  "official_import_locked",
+]) {
+  requireIncludes(smoke, token, `smoke token ${token}`);
+}
+rejectPattern(smoke, /\.rpc\s*\(/i, "smoke must not call RPC");
+rejectPattern(smoke, /storageState|userDataDir|localStorage/i, "smoke must not read or save auth storage");
+rejectPattern(
+  smoke,
+  /method\s*:\s*["']POST["'][\s\S]{0,240}official-import(?!-gate)/i,
+  "smoke must not POST official import",
+);
+
 const scriptFiles = gitOutput(["ls-files", "scripts"])
   .split(/\r?\n/)
   .filter(Boolean)
   .filter((file) => !path.basename(file).startsWith("check-"));
 
 for (const file of scriptFiles) {
-  const content = readFile(file);
+  const content = file === smokePath ? smoke : readFile(file);
   rejectPattern(
     content,
     /\.rpc\s*\(\s*["']a16p_tx_execute_giapha4_official_import["']/i,
@@ -205,23 +196,18 @@ for (const file of scriptFiles) {
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  smokePath,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  validationPath,
-  readServicePath,
-  dryRunPath,
-  reviewPackPath,
+  gatePath,
   panelPath,
-  "lib/import/giapha4/official-import-preflight-gate.ts",
   "lib/import/giapha4/official-import-service.ts",
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "scripts/check-a16q-fix-import-session-ui-date-hydration.cjs",
-  "docs/PLAN_A16Q_LOCAL_UI_IMPORT_SMOKE_GATE_COPY_REFRESH.md",
-  "scripts/smoke-a16q-local-ui-import-guided.cjs",
-  "scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
+  "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -245,14 +231,14 @@ for (const file of changedFiles) {
   }
 }
 
-for (const content of [doc]) {
+for (const content of [doc, smoke]) {
   rejectPattern(content, /service_role|SUPABASE_SERVICE_ROLE|eyJ[A-Za-z0-9_-]{20,}\./, "secret-like token");
 }
 
 if (failures.length > 0) {
-  console.error("A-16Q-FIX2 checker failed:");
+  console.error("A-16Q-LOCAL-UI checker failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16Q-FIX2 checker PASS");
+console.log("A-16Q-LOCAL-UI checker PASS");

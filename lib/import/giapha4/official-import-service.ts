@@ -7,7 +7,7 @@ import {
   type ImportManifestReadResult,
 } from "@/lib/import/giapha4/manifest-read-service";
 import { buildManifestValidationReview } from "@/lib/import/giapha4/manifest-validation-service";
-import { A16P_REQUIRED_OFFICIAL_IMPORT_MARKER } from "@/lib/import/giapha4/official-import-preflight-gate";
+import { A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER } from "@/lib/import/giapha4/official-import-preflight-gate";
 import type { PermissionContext } from "@/lib/permissions/permission-service";
 
 export const A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER =
@@ -39,7 +39,7 @@ export type OfficialImportConfirmation = {
 export type OfficialImportCandidateResult = {
   ok: false;
   marker: typeof A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER;
-  requiredMarker: typeof A16P_REQUIRED_OFFICIAL_IMPORT_MARKER;
+  requiredMarker: typeof A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER;
   status: OfficialImportCandidateStatus;
   sessionId: string;
   importedPeopleCount: 0;
@@ -79,8 +79,8 @@ function validateConfirmation(
 ) {
   const reasons: string[] = [];
 
-  if (confirmation.confirmMarker !== A16P_REQUIRED_OFFICIAL_IMPORT_MARKER) {
-    reasons.push("confirmMarker không khớp marker owner của A-16P.");
+  if (confirmation.confirmMarker !== A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER) {
+    reasons.push("confirmMarker không khớp marker session-specific A-16R.");
   }
   if (confirmation.confirmSessionId !== sessionId) {
     reasons.push("confirmSessionId không khớp phiên import đang được yêu cầu.");
@@ -176,7 +176,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
   return {
     ok: false,
     marker: A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER,
-    requiredMarker: A16P_REQUIRED_OFFICIAL_IMPORT_MARKER,
+    requiredMarker: A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER,
     status: "BLOCKED",
     sessionId,
     importedPeopleCount: 0,
