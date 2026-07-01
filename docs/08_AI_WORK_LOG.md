@@ -1,5 +1,33 @@
 # AI Work Log
 
+## 2026-07-01 - A-16P-TX-APPLY-VERIFY - Manual SQL Apply Verification Record
+
+- Marker: `A-16P-TX-APPLY-VERIFY`.
+- Final status: `A16P_TX_APPLY_VERIFY_STATUS=PASS_OWNER_CONFIRMED`.
+- Recorded owner confirmation that SQL from
+  `db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`
+  was manually applied in Supabase Dashboard.
+- Recorded owner confirmation that SELECT-only verification from
+  `db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql`
+  PASS.
+- Verification evidence reported by owner:
+  `public.a16p_tx_execute_giapha4_official_import` exists, is not
+  `SECURITY DEFINER`, has fixed `search_path=public, pg_temp`, has no
+  `EXECUTE` for `anon`/`public`, fails closed, has no A-16P policy on real
+  tables and has no auto import trigger.
+- Function comment still includes `NOT_APPLIED` from the original guardrail
+  candidate; this phase documents that owner manually applied it while the
+  function remains fail-closed.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Next phase remains A-16Q Session-specific Official Import Execution Approval
+  and requires `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+- A-16P-TX-APPLY-VERIFY did not run SQL, did not run `supabase db push`, did
+  not run migration repair, did not seed, did not call RPC, did not call POST
+  official import, did not write people/person rows, did not write
+  relationships/families, did not update layout/tree/revision/profile data, did
+  not deploy and did not push.
+
 ## 2026-07-01 - A-16P-TX - Official Import Transaction Helper / RPC Schema Readiness
 
 - Marker: `A-16P-TX`.

@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16P-TX-APPLY-VERIFY - Manual SQL Apply Verification Record
+
+- Marker: `A-16P-TX-APPLY-VERIFY`.
+- Current status: `A16P_TX_APPLY_VERIFY_STATUS=PASS_OWNER_CONFIRMED`.
+- Owner confirmed manual apply of:
+  `db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`.
+- Owner confirmed SELECT-only verification PASS from:
+  `db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql`.
+- Verification PASS evidence: function
+  `public.a16p_tx_execute_giapha4_official_import` exists, is not
+  `SECURITY DEFINER`, has fixed `search_path=public, pg_temp`, has no execute
+  for `anon`/`public`, fails closed, has no A-16P policy on real tables and has
+  no auto import trigger.
+- Function comment still contains `NOT_APPLIED` from the original SQL candidate
+  guardrail. This is documented as a stale safety comment; owner manual apply
+  has been recorded, and the function still fails closed.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16P-TX-APPLY-VERIFY did not run SQL, did not run DB push, did not run
+  migration repair, did not seed, did not call RPC, did not call POST official
+  import, did not write people/relationships/families/layout/tree/revision or
+  profile data, did not deploy and did not push.
+- Next safe phase: A-16Q Session-specific Official Import Execution Approval.
+  Required future marker:
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+
 ## 2026-07-01 - A-16P-TX - Official Import Transaction Helper / RPC Schema Readiness
 
 - Marker: `A-16P-TX`.

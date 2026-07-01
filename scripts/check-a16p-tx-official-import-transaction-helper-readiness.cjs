@@ -281,6 +281,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
   "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "scripts/check-a16p-official-import-runtime-candidate.cjs",
+  "docs/PLAN_A16P_TX_APPLY_VERIFY.md",
+  "scripts/check-a16p-tx-apply-verify.cjs",
 ]);
 
 for (const file of changedFiles) {

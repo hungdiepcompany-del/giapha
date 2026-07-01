@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 219 - A-16P-TX manual apply is recorded as verified but official import remains locked
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Accept owner-provided evidence that the A-16P-TX SQL candidate was manually
+  applied through Supabase Dashboard.
+- Accept owner-provided SELECT-only verification PASS for
+  `public.a16p_tx_execute_giapha4_official_import`.
+- Keep runtime behavior unchanged: no RPC call, no POST official import call,
+  `canRunOfficialImport=false` and UI official import button disabled.
+- Treat the function comment `NOT_APPLIED` as a preserved candidate guardrail
+  comment, not as the current operational status.
+
+Lý do:
+
+- Owner already performed manual SQL apply and verification outside this phase.
+- The verified function still fails closed and does not open real genealogy
+  writes, so this phase should record evidence only rather than re-run DB work.
+- A-16Q needs a session-specific execution approval marker before any official
+  import execution can be considered.
+
+Boundaries:
+
+- No SQL run, no `supabase db push`, no migration repair, no seed, no RPC call,
+  no POST official import call, no real people/person write, no
+  relationship/family write, no layout/tree/revision/profile write, no deploy
+  and no push.
+- Future execution requires:
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+
 ## Decision 218 - A-16P-TX creates transaction helper SQL candidate only
 
 Status: `ACTIVE`
