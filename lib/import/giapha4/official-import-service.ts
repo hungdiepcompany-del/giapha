@@ -1,6 +1,7 @@
 import "server-only";
 
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
+import { buildDuplicateDecisionSummary } from "@/lib/import/giapha4/duplicate-decision-review-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import {
   getImportManifest,
@@ -115,6 +116,7 @@ function buildNoGoReasons(params: {
   const validation = buildManifestValidationReview(params.manifest);
   const dryRun = buildDryRunMappingPreview(params.manifest);
   const reviewPack = buildImportReviewPackFromManifest(params.manifest);
+  const duplicateDecisionSummary = buildDuplicateDecisionSummary(params.manifest);
   const reasons: string[] = [
     A16P_TRANSACTION_HELPER_MISSING_BLOCKER,
     A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER,
@@ -144,8 +146,11 @@ function buildNoGoReasons(params: {
   if (reviewPack.readiness !== "READY_FOR_OWNER_REVIEW") {
     reasons.push("Review pack chưa sẵn sàng cho owner review.");
   }
-  if (params.manifest.duplicateCandidates.some((item) => item.ownerDecision === "pending")) {
-    reasons.push("Còn duplicate/conflict chưa có quyết định owner.");
+  if (duplicateDecisionSummary.unresolvedDuplicateCandidates > 0) {
+    reasons.push("Còn ứng viên trùng chưa có quyết định owner.");
+  }
+  if (duplicateDecisionSummary.needsReviewDuplicateCandidates > 0) {
+    reasons.push("Còn ứng viên trùng đang ở trạng thái cần chủ nhà rà soát.");
   }
   if (
     params.manifest.relationshipsPreview.some(

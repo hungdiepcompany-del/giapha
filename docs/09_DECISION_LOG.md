@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 224 - A-16Q-DUP keeps duplicate decision save locked until UPDATE RLS is applied
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add read-only duplicate candidate review UI/API for import session
+  `8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Do not create an active PATCH route because `import_duplicate_candidates`
+  currently has owner-scoped SELECT/INSERT but no safe UPDATE policy for
+  decision fields.
+- Record blocker:
+  `A16Q_DUP_STATUS=BLOCKED_DUPLICATE_DECISION_RLS_UPDATE_MISSING`.
+- Create a not-applied SQL candidate that narrows UPDATE to
+  `owner_decision`, `decided_by`, `decided_at` and `decision_note`, owner-scoped
+  by `imports.create` and `created_by=current_profile_id()`.
+- Treat `unresolved`, `needs_review` and legacy `hold` duplicate decisions as
+  blockers for official import.
+- Keep `canRunOfficialImport=false` and UI official import buttons disabled.
+
+Lý do:
+
+- Owner evidence shows 8 duplicate candidates and 8 unresolved duplicate rows,
+  so A-16R cannot safely run.
+- Saving duplicate decisions is a staging write and needs an explicit RLS
+  update policy before the UI can enable it.
+- The current schema used legacy `hold/skip`; the candidate adds
+  `needs_review/ignore_candidate` while preserving legacy aliases to avoid
+  breaking existing staging rows.
+- Read-only review is useful now, but active writes must wait for a separate
+  apply/verify phase.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 223 - A-16Q-LOCAL-UI refreshes official import gate to A-16R wording
 
 Status: `ACTIVE`

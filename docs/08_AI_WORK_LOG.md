@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-DUP - Duplicate Candidate Owner Decision Review
+
+- Marker: `A-16Q-DUP`.
+- Final status:
+  `A16Q_DUP_STATUS=BLOCKED_DUPLICATE_DECISION_RLS_UPDATE_MISSING`.
+- Session under review:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Owner evidence recorded: 102 staging rows, 102 person candidates, 134
+  relationship candidates, 0 blocker rows, 45 warning rows, 1 info row,
+  0 unmapped columns, 0 held rows, 0 unclear relationships, 8 duplicate
+  candidates and 8 unresolved duplicate rows.
+- Inspected `import_duplicate_candidates`: the table has review columns
+  `owner_decision`, `decided_by`, `decided_at` and `decision_note`, but the
+  currently applied/candidate RLS only shows owner-scoped SELECT/INSERT and no
+  safe UPDATE policy.
+- Added read-only duplicate review service and GET route:
+  `GET /api/admin/import-sessions/[sessionId]/duplicates`.
+- The duplicate review response is staging-only and returns
+  `canEditDecisions=false`, `canRunOfficialImport=false`, total duplicates,
+  unresolved duplicates and edit blocked reasons.
+- Updated the import session panel with “Ứng viên trùng cần quyết định”,
+  duplicate metrics, blocked save copy and disabled “Lưu quyết định ứng viên
+  trùng — chưa mở” button.
+- Updated review pack, preflight gate and official import candidate gate so
+  `unresolved`, `needs_review` and legacy `hold` duplicate decisions block the
+  future official import path.
+- Created not-applied SQL candidate:
+  `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`
+  and mirrored it byte-for-byte to `supabase/migrations/`.
+- Created SELECT-only verification SQL:
+  `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP did not run SQL, did not run DB push, did not repair migrations,
+  did not seed, did not write people/relationships/families/layout/tree/
+  revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-LOCAL-UI - Localhost Import UI Smoke and Gate Copy Refresh
 
 - Marker: `A-16Q-LOCAL-UI`.

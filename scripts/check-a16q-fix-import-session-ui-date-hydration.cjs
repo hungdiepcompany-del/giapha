@@ -251,6 +251,19 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16Q_LOCAL_UI_IMPORT_SMOKE_GATE_COPY_REFRESH.md",
   "scripts/smoke-a16q-local-ui-import-guided.cjs",
   "scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
+  "docs/PLAN_A16Q_DUPLICATE_CANDIDATE_OWNER_DECISION_REVIEW.md",
+  "scripts/check-a16q-dup-duplicate-candidate-owner-decision-review.cjs",
+  "lib/import/giapha4/duplicate-decision-review-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/duplicates/route.ts",
+  "db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql",
+  "supabase/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql",
+  "db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql",
+]);
+
+const allowedA16qDupSqlFiles = new Set([
+  "db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql",
+  "supabase/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql",
+  "db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -263,10 +276,13 @@ for (const file of changedFiles) {
   if (file === ".env.local" || file.endsWith(".env.local")) {
     failures.push(".env.local must not be changed");
   }
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    !allowedA16qDupSqlFiles.has(file)
+  ) {
     failures.push(`migration must not change ${file}`);
   }
-  if (file.startsWith("db/checks/")) {
+  if (file.startsWith("db/checks/") && !allowedA16qDupSqlFiles.has(file)) {
     failures.push(`SQL check file must not change ${file}`);
   }
   if (/\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip)$/i.test(file)) {

@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-DUP - Duplicate Candidate Owner Decision Review
+
+- Marker: `A-16Q-DUP`.
+- Current status:
+  `A16Q_DUP_STATUS=BLOCKED_DUPLICATE_DECISION_RLS_UPDATE_MISSING`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Owner evidence:
+  row_count=102, person_candidate_count=102, relationship_candidate_count=134,
+  parent_child_relationship_rows=134, blocker_rows=0, warning_rows=45,
+  info_rows=1, unmapped_column_count=0, held_row_count=0,
+  unclear_relationship_rows=0, duplicate_candidate_count=8 and
+  unresolved_duplicate_rows=8.
+- A-16R must not run while unresolved duplicate rows are greater than 0.
+- Current app state:
+  - `GET /api/admin/import-sessions/[sessionId]/duplicates` is read-only.
+  - `canEditDecisions=false`.
+  - Duplicate decision save button is disabled in the import session panel.
+  - `canRunOfficialImport=false`.
+  - Official import button remains disabled.
+- RLS/update blocker:
+  `import_duplicate_candidates` has owner-scoped SELECT/INSERT from A-16SQL,
+  but no safe UPDATE policy for `owner_decision`, `decided_by`, `decided_at`
+  and `decision_note`.
+- SQL candidate created but not applied:
+  `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`
+  and mirrored to `supabase/migrations/`.
+- SELECT-only post-apply verification file:
+  `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`.
+- Next safe phase before active decision saving: owner manually apply the
+  A-16Q-DUP SQL candidate and run the SELECT-only verification; only after PASS
+  should a PATCH route be opened.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no RPC call, no POST official import call, no real people/relationships/
+  families/layout/tree/revision/profile write, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-LOCAL-UI - Localhost Import UI Smoke and Gate Copy Refresh
 
 - Marker: `A-16Q-LOCAL-UI`.

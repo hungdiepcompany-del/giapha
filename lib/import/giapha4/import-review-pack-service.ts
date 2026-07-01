@@ -1,6 +1,7 @@
 import "server-only";
 
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
+import { buildDuplicateDecisionSummary } from "@/lib/import/giapha4/duplicate-decision-review-service";
 import {
   getImportManifest,
   type ImportManifestReadResult,
@@ -43,6 +44,13 @@ export type ImportReviewPack = {
     blockedByErrorCount: number;
     warningCount: number;
   };
+  duplicateDecisionSummary: {
+    totalDuplicateCandidates: number;
+    unresolvedDuplicateCandidates: number;
+    needsReviewDuplicateCandidates: number;
+    finalizedDuplicateCandidates: number;
+    canRunOfficialImport: false;
+  };
   ownerReviewNotes: string[];
 };
 
@@ -70,6 +78,7 @@ export function buildImportReviewPackFromManifest(
   const session = result.session ?? null;
   const validation = buildManifestValidationReview(result);
   const dryRunPreview = buildDryRunMappingPreview(result);
+  const duplicateDecisionSummary = buildDuplicateDecisionSummary(result);
   const parseSummary = extractParseSummary(result);
   const topIssueCodes = validation.issues
     .map((issue) => issue.code)
@@ -79,6 +88,8 @@ export function buildImportReviewPackFromManifest(
     Boolean(result.ok && session) &&
     validation.summary.errorCount === 0 &&
     dryRunPreview.summary.blockedByErrorCount === 0 &&
+    duplicateDecisionSummary.unresolvedDuplicateCandidates === 0 &&
+    duplicateDecisionSummary.needsReviewDuplicateCandidates === 0 &&
     dryRunPreview.summary.proposedPeopleCount > 0;
 
   return {
@@ -112,8 +123,10 @@ export function buildImportReviewPackFromManifest(
       blockedByErrorCount: dryRunPreview.summary.blockedByErrorCount,
       warningCount: dryRunPreview.summary.warningCount,
     },
+    duplicateDecisionSummary,
     ownerReviewNotes: [
       "Gói rà soát này chỉ đọc dữ liệu import staging.",
+      "Ứng viên trùng phải có quyết định cuối cùng trước khi xét nhập chính thức.",
       "Chưa ghi thành viên thật, quan hệ thật, layout cây hoặc revision.",
       "Chưa mở bước nhập chính thức; cần phase riêng và phê duyệt owner.",
     ],

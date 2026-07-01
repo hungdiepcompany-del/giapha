@@ -4,6 +4,7 @@ import {
   buildImportReviewPackFromManifest,
   type ImportReviewPack,
 } from "@/lib/import/giapha4/import-review-pack-service";
+import { buildDuplicateDecisionSummary } from "@/lib/import/giapha4/duplicate-decision-review-service";
 import {
   getImportManifest,
   type ImportManifestReadResult,
@@ -41,6 +42,7 @@ export function buildOfficialImportPreflightGateFromManifest(
   manifest: ImportManifestReadResult,
 ): OfficialImportPreflightGate {
   const reviewPack = buildImportReviewPackFromManifest(manifest);
+  const duplicateDecisionSummary = buildDuplicateDecisionSummary(manifest);
   const noGoReasons: string[] = [
     "Runtime candidate và transaction helper đã được chuẩn bị/verify, nhưng chưa có phê duyệt thực thi cho phiên nhập cụ thể.",
     `Marker tiếp theo phải là ${A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER}.`,
@@ -54,6 +56,16 @@ export function buildOfficialImportPreflightGateFromManifest(
   }
   if (reviewPack.dryRunSummary.blockedByErrorCount > 0) {
     noGoReasons.push("Dry-run blockers chưa bằng 0.");
+  }
+  if (duplicateDecisionSummary.unresolvedDuplicateCandidates > 0) {
+    noGoReasons.push(
+      `Còn ${duplicateDecisionSummary.unresolvedDuplicateCandidates} ứng viên trùng chưa có quyết định owner.`,
+    );
+  }
+  if (duplicateDecisionSummary.needsReviewDuplicateCandidates > 0) {
+    noGoReasons.push(
+      `Còn ${duplicateDecisionSummary.needsReviewDuplicateCandidates} ứng viên trùng cần chủ nhà rà soát.`,
+    );
   }
   if (reviewPack.readiness !== "READY_FOR_OWNER_REVIEW") {
     noGoReasons.push("Review pack chưa ở trạng thái sẵn sàng để owner rà soát.");

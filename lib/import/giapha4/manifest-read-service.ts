@@ -60,6 +60,8 @@ export type ImportDuplicateCandidatePreview = {
   matchStrength: string;
   matchReasonCodes: string[];
   ownerDecision: string;
+  decidedBy: string | null;
+  decidedAt: string | null;
   decisionNote: string | null;
   createdAt: string;
 };
@@ -192,6 +194,8 @@ type ImportDuplicateCandidateRow = {
   match_strength: string;
   match_reason_codes: string[] | null;
   owner_decision: string;
+  decided_by: string | null;
+  decided_at: string | null;
   decision_note: string | null;
   created_at: string;
 };
@@ -530,7 +534,7 @@ export async function getImportManifest(
       access.supabase
         .from("import_duplicate_candidates")
         .select(
-          "id, source_row_index, source_person_fingerprint, existing_person_id, match_strength, match_reason_codes, owner_decision, decision_note, created_at",
+          "id, source_row_index, source_person_fingerprint, existing_person_id, match_strength, match_reason_codes, owner_decision, decided_by, decided_at, decision_note, created_at",
         )
         .eq("import_session_id", sessionId)
         .order("source_row_index", { ascending: true })
@@ -590,6 +594,8 @@ export async function getImportManifest(
     matchStrength: row.match_strength,
     matchReasonCodes: row.match_reason_codes ?? [],
     ownerDecision: row.owner_decision,
+    decidedBy: row.decided_by,
+    decidedAt: row.decided_at,
     decisionNote: row.decision_note,
     createdAt: row.created_at,
   }));
