@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-DUP-SAVE-FIX - Duplicate Decision Save Diagnostics
+
+- Marker: `A-16Q-DUP-SAVE-FIX`.
+- Final status:
+  `A16Q_DUP_SAVE_FIX_STATUS=PATCH_DIAGNOSTICS_AND_UI_SAVE_REPAIRED`.
+- Owner evidence: session `8158711d-1c3c-4208-987d-6fec6a1c5a1a`
+  still has 8 duplicate rows with `owner_decision=unresolved`,
+  `decided_by=null`, `decided_at=null` and `decision_note=null`.
+- Owner evidence: all 8 duplicate rows have `existing_person_id=null`, so
+  `link_existing` must be rejected and hidden from the UI.
+- Cause addressed: the previous PATCH flow returned a generic not-found/no
+  access message before separating duplicate-not-in-session from RLS/update
+  failure.
+- PATCH now verifies membership through the duplicate review list for the
+  session, then updates `import_duplicate_candidates` with filters
+  `id + import_session_id`.
+- PATCH returns diagnostic codes such as
+  `DUPLICATE_DECISION_NOT_IN_SESSION`,
+  `DUPLICATE_DECISION_LINK_EXISTING_REQUIRES_EXISTING_PERSON` and
+  `DUPLICATE_DECISION_UPDATE_RLS_DENIED`.
+- UI now shows a single save notice at a time, displays diagnostic codes only
+  for errors and hides “Liên kết với người đã có” when no existing person is
+  attached.
+- Owner should retest by saving one duplicate with `create_new`,
+  `ignore_candidate` or `needs_review`; do not use `link_existing` for the
+  current 8 rows.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP-SAVE-FIX did not run SQL, did not run DB push, did not repair
+  migrations, did not seed, did not write people/relationships/families/layout/
+  tree/revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-FIX3 - Lunar Death Date Contradiction
 
 - Marker: `A-16Q-FIX3`.

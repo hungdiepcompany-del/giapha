@@ -22,9 +22,16 @@ type DuplicateDecisionSaveResult = {
   decidedAt: string | null;
   unresolvedDuplicateCount: number;
   needsReviewDuplicateCount: number;
+  diagnosticCode?: string;
   canProceedToOfficialImport: false;
   canRunOfficialImport: false;
   message: string;
+};
+
+type SaveNotice = {
+  tone: "success" | "error";
+  text: string;
+  diagnosticCode?: string;
 };
 
 function getDuplicateDecisionLabel(ownerDecision: string) {
@@ -84,11 +91,21 @@ function createInitialDrafts(candidates: ImportDuplicateCandidatePreview[]) {
     candidates.map((candidate) => [
       candidate.id,
       {
-        ownerDecision: normalizeInitialDecision(candidate.ownerDecision),
+        ownerDecision:
+          normalizeInitialDecision(candidate.ownerDecision) === "link_existing" &&
+          !candidate.existingPersonId
+            ? "unresolved"
+            : normalizeInitialDecision(candidate.ownerDecision),
         decisionNote: candidate.decisionNote ?? "",
       },
     ]),
   ) as DraftState;
+}
+
+function getVisibleDecisionOptions(candidate: ImportDuplicateCandidatePreview) {
+  return decisionOptions.filter(
+    (option) => option.value !== "link_existing" || Boolean(candidate.existingPersonId),
+  );
 }
 
 export function DuplicateDecisionReviewClient({
@@ -104,7 +121,7 @@ export function DuplicateDecisionReviewClient({
   const [isPending, startTransition] = useTransition();
   const [candidates, setCandidates] = useState(duplicateCandidates);
   const [drafts, setDrafts] = useState(() => createInitialDrafts(duplicateCandidates));
-  const [message, setMessage] = useState<string | null>(null);
+  const [saveNotice, setSaveNotice] = useState<SaveNotice | null>(null);
   const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
   const currentUnresolvedCount = useMemo(
@@ -121,7 +138,7 @@ export function DuplicateDecisionReviewClient({
     const draft = drafts[candidate.id];
     if (!draft) return;
 
-    setMessage(null);
+    setSaveNotice(null);
     setLastSavedId(null);
 
     const response = await fetch(
@@ -140,7 +157,11 @@ export function DuplicateDecisionReviewClient({
     const result = (await response.json()) as DuplicateDecisionSaveResult;
 
     if (!response.ok || !result.ok || !result.ownerDecision) {
-      setMessage(result.message || "Chưa lưu được quyết định ứng viên trùng.");
+      setSaveNotice({
+        tone: "error",
+        text: result.message || "Chưa lưu được quyết định ứng viên trùng.",
+        diagnosticCode: result.diagnosticCode,
+      });
       return;
     }
 
@@ -156,7 +177,11 @@ export function DuplicateDecisionReviewClient({
           : item,
       ),
     );
-    setMessage(result.message);
+    setSaveNotice({
+      tone: "success",
+      text: result.message,
+      diagnosticCode: result.diagnosticCode,
+    });
     setLastSavedId(result.duplicateId);
     startTransition(() => router.refresh());
   }
@@ -189,9 +214,20 @@ export function DuplicateDecisionReviewClient({
         <MetricCard label="Có thể nhập chính thức" value={0} />
       </div>
 
-      {message ? (
-        <div className="rounded-md border border-teal-200 bg-white p-3 text-sm font-semibold text-teal-900">
-          {message}
+      {saveNotice ? (
+        <div
+          className={
+            saveNotice.tone === "success"
+              ? "rounded-md border border-teal-200 bg-white p-3 text-sm font-semibold text-teal-900"
+              : "rounded-md border border-rose-200 bg-white p-3 text-sm font-semibold text-rose-900"
+          }
+        >
+          <div>{saveNotice.text}</div>
+          {saveNotice.diagnosticCode && saveNotice.tone === "error" ? (
+            <div className="mt-1 text-xs font-semibold uppercase tracking-normal text-rose-700">
+              Mã chẩn đoán: {saveNotice.diagnosticCode}
+            </div>
+          ) : null}
         </div>
       ) : null}
 
@@ -207,7 +243,7 @@ export function DuplicateDecisionReviewClient({
             ownerDecision: normalizeInitialDecision(candidate.ownerDecision),
             decisionNote: candidate.decisionNote ?? "",
           };
-          const linkExistingDisabled = !candidate.existingPersonId;
+          const visibleDecisionOptions = getVisibleDecisionOptions(candidate);
 
           return (
             <div
@@ -257,11 +293,10 @@ export function DuplicateDecisionReviewClient({
                       }
                       className="min-h-11 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-950"
                     >
-                      {decisionOptions.map((option) => (
+                      {visibleDecisionOptions.map((option) => (
                         <option
                           key={option.value}
                           value={option.value}
-                          disabled={option.value === "link_existing" && linkExistingDisabled}
                         >
                           {option.label}
                         </option>

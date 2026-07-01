@@ -42,6 +42,18 @@ export type DuplicateOwnerDecision =
   | "ignore_candidate"
   | "needs_review";
 
+export type DuplicateDecisionDiagnosticCode =
+  | "DUPLICATE_DECISION_INVALID_VALUE"
+  | "DUPLICATE_DECISION_UNAUTHENTICATED"
+  | "DUPLICATE_DECISION_FORBIDDEN"
+  | "DUPLICATE_DECISION_SUPABASE_UNAVAILABLE"
+  | "DUPLICATE_DECISION_READ_RLS_DENIED"
+  | "DUPLICATE_DECISION_NOT_IN_SESSION"
+  | "DUPLICATE_DECISION_LINK_EXISTING_REQUIRES_EXISTING_PERSON"
+  | "DUPLICATE_DECISION_UPDATE_RLS_DENIED"
+  | "DUPLICATE_DECISION_UPDATE_NO_ROW_RETURNED"
+  | "DUPLICATE_DECISION_SAVED";
+
 export type DuplicateDecisionSummary = {
   totalDuplicateCandidates: number;
   unresolvedDuplicateCandidates: number;
@@ -99,6 +111,7 @@ export type DuplicateDecisionUpdateResult = {
   decidedAt: string | null;
   unresolvedDuplicateCount: number;
   needsReviewDuplicateCount: number;
+  diagnosticCode: DuplicateDecisionDiagnosticCode;
   message: string;
 };
 
@@ -132,6 +145,7 @@ function duplicateUpdateResult(
     decidedAt: null,
     unresolvedDuplicateCount: 0,
     needsReviewDuplicateCount: 0,
+    diagnosticCode: "DUPLICATE_DECISION_UPDATE_RLS_DENIED",
     message: "Chưa lưu được quyết định ứng viên trùng.",
     ...overrides,
   };
@@ -252,6 +266,19 @@ function countBlockingDecisions(rows: DuplicateDecisionCountRow[]) {
   };
 }
 
+function isPermissionOrRlsError(error: { code?: string; message?: string } | null) {
+  if (!error) return false;
+  const code = error.code ?? "";
+  const message = (error.message ?? "").toLowerCase();
+  return (
+    code === "42501" ||
+    code === "PGRST301" ||
+    message.includes("permission denied") ||
+    message.includes("row-level security") ||
+    message.includes("rls")
+  );
+}
+
 export async function updateDuplicateOwnerDecision(input: {
   sessionId: string;
   duplicateId: string;
@@ -265,6 +292,7 @@ export async function updateDuplicateOwnerDecision(input: {
     return duplicateUpdateResult({
       httpStatus: 400,
       duplicateId: input.duplicateId,
+      diagnosticCode: "DUPLICATE_DECISION_INVALID_VALUE",
       message: "Quyết định ứng viên trùng không hợp lệ.",
     });
   }
@@ -279,6 +307,7 @@ export async function updateDuplicateOwnerDecision(input: {
       httpStatus: 401,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_UNAUTHENTICATED",
       message: "Bạn cần đăng nhập để lưu quyết định ứng viên trùng.",
     });
   }
@@ -292,6 +321,7 @@ export async function updateDuplicateOwnerDecision(input: {
       httpStatus: 403,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_FORBIDDEN",
       message: "Bạn chưa có quyền imports.create để lưu quyết định staging.",
     });
   }
@@ -301,6 +331,7 @@ export async function updateDuplicateOwnerDecision(input: {
       httpStatus: 503,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_SUPABASE_UNAVAILABLE",
       message:
         "Chưa đủ cấu hình Supabase hoặc hồ sơ đăng nhập để lưu quyết định.",
     });
@@ -312,42 +343,44 @@ export async function updateDuplicateOwnerDecision(input: {
       httpStatus: 503,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_SUPABASE_UNAVAILABLE",
       message: "Chưa cấu hình Supabase nên chưa thể lưu quyết định.",
     });
   }
 
-  const { data: existingRow, error: readError } = await supabase
-    .from("import_duplicate_candidates")
-    .select("id, import_session_id, existing_person_id, owner_decision, decided_at")
-    .eq("id", input.duplicateId)
-    .eq("import_session_id", input.sessionId)
-    .maybeSingle<DuplicateCandidateDecisionRow>();
-
-  if (readError) {
+  const review = await getDuplicateDecisionReview(input.sessionId);
+  if (!review.ok) {
     return duplicateUpdateResult({
       httpStatus: 503,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_READ_RLS_DENIED",
       message:
-        "Không đọc được ứng viên trùng. RLS hoặc quyền staging có thể chưa sẵn sàng.",
+        "Không đọc được danh sách ứng viên trùng trong phiên này. RLS hoặc quyền staging có thể chưa sẵn sàng.",
     });
   }
+
+  const existingRow = review.candidates.find(
+    (candidate) => candidate.id === input.duplicateId,
+  );
 
   if (!existingRow) {
     return duplicateUpdateResult({
       httpStatus: 404,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_NOT_IN_SESSION",
       message:
-        "Không tìm thấy ứng viên trùng trong phiên nhập này hoặc bạn không có quyền truy cập.",
+        "Ứng viên trùng không thuộc phiên nhập này. Vui lòng tải lại danh sách rồi lưu lại.",
     });
   }
 
-  if (ownerDecision === "link_existing" && !existingRow.existing_person_id) {
+  if (ownerDecision === "link_existing" && !existingRow.existingPersonId) {
     return duplicateUpdateResult({
       httpStatus: 422,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode: "DUPLICATE_DECISION_LINK_EXISTING_REQUIRES_EXISTING_PERSON",
       message:
         "Chỉ được chọn liên kết người đã có khi ứng viên trùng đã có hồ sơ hiện hữu.",
     });
@@ -368,12 +401,20 @@ export async function updateDuplicateOwnerDecision(input: {
     .maybeSingle<Pick<DuplicateCandidateDecisionRow, "id" | "owner_decision" | "decided_at">>();
 
   if (updateError || !updatedRow) {
+    const diagnosticCode: DuplicateDecisionDiagnosticCode = updateError
+      ? isPermissionOrRlsError(updateError)
+        ? "DUPLICATE_DECISION_UPDATE_RLS_DENIED"
+        : "DUPLICATE_DECISION_UPDATE_NO_ROW_RETURNED"
+      : "DUPLICATE_DECISION_UPDATE_RLS_DENIED";
     return duplicateUpdateResult({
       httpStatus: 409,
       duplicateId: input.duplicateId,
       ownerDecision,
+      diagnosticCode,
       message:
-        "Chưa lưu được quyết định. RLS UPDATE có thể chưa được apply hoặc row không thuộc phiên nhập này.",
+        diagnosticCode === "DUPLICATE_DECISION_UPDATE_RLS_DENIED"
+          ? "Chưa lưu được quyết định vì RLS UPDATE hoặc quyền staging chưa cho phép cập nhật row này."
+          : "Chưa lưu được quyết định vì Supabase không trả về row sau khi cập nhật.",
     });
   }
 
@@ -390,6 +431,7 @@ export async function updateDuplicateOwnerDecision(input: {
       duplicateId: updatedRow.id,
       ownerDecision: updatedRow.owner_decision as DuplicateOwnerDecision,
       decidedAt: updatedRow.decided_at,
+      diagnosticCode: "DUPLICATE_DECISION_SAVED",
       message:
         "Đã lưu quyết định staging, nhưng chưa đọc lại được tổng số ứng viên trùng.",
     });
@@ -405,6 +447,7 @@ export async function updateDuplicateOwnerDecision(input: {
     decidedAt: updatedRow.decided_at,
     unresolvedDuplicateCount: counts.unresolvedDuplicateCount,
     needsReviewDuplicateCount: counts.needsReviewDuplicateCount,
+    diagnosticCode: "DUPLICATE_DECISION_SAVED",
     message:
       "Đã lưu quyết định ứng viên trùng vào vùng staging. Chưa ghi vào cây gia phả thật.",
   });

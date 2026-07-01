@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-DUP-SAVE-FIX - Duplicate Decision Save Diagnostics
+
+- Marker: `A-16Q-DUP-SAVE-FIX`.
+- Current status:
+  `A16Q_DUP_SAVE_FIX_STATUS=PATCH_DIAGNOSTICS_AND_UI_SAVE_REPAIRED`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Owner evidence before fix: 8 duplicate rows remained unresolved, with
+  `owner_decision=unresolved`, `decided_by=null`, `decided_at=null` and
+  `decision_note=null`.
+- Owner evidence: all 8 duplicate rows have `existing_person_id=null`; the UI
+  now hides “Liên kết với người đã có” for those rows and the API still rejects
+  `link_existing`.
+- PATCH route remains:
+  `/api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]`.
+- PATCH still updates only `import_duplicate_candidates` and only:
+  `owner_decision`, `decided_by`, `decided_at`, `decision_note`.
+- PATCH now returns diagnostic codes:
+  `DUPLICATE_DECISION_NOT_IN_SESSION`,
+  `DUPLICATE_DECISION_LINK_EXISTING_REQUIRES_EXISTING_PERSON`,
+  `DUPLICATE_DECISION_UPDATE_RLS_DENIED`,
+  `DUPLICATE_DECISION_UPDATE_NO_ROW_RETURNED` and
+  `DUPLICATE_DECISION_SAVED`.
+- Owner should retest one row with `create_new`, `ignore_candidate` or
+  `needs_review`. Do not choose `link_existing` for the current 8 rows.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no real people/relationships/families/layout/tree/revision/profile
+  write, no auto duplicate decision, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-FIX3 - Lunar Death Date Contradiction
 
 - Marker: `A-16Q-FIX3`.

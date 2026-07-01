@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 228 - A-16Q-DUP-SAVE-FIX keeps RLS and adds duplicate save diagnostics
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Keep duplicate decision writes on the normal user-scoped Supabase client and
+  do not bypass RLS.
+- Verify duplicate membership from the session review list before attempting
+  the staging update.
+- Keep the update constrained to `import_duplicate_candidates` and only
+  `owner_decision`, `decided_by`, `decided_at`, `decision_note`.
+- Return explicit diagnostic codes for invalid value, duplicate not in session,
+  link-existing without existing person, RLS/update denial and save success.
+- Hide `link_existing` in the UI when `existing_person_id=null`.
+- Keep official import locked.
+
+Lý do:
+
+- Owner evidence showed the old UI message mixed not-found and permission
+  cases, making the save failure hard to diagnose.
+- Supabase UPDATE under RLS can fail by returning no row, especially if the row
+  is not visible/updatable for the authenticated user.
+- The current 8 duplicate candidates have `existing_person_id=null`, so
+  `link_existing` should not be offered for those rows.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto duplicate decision, no
+  deploy and no push.
+
 ## Decision 227 - A-16Q-FIX3 treats lunar death date contradiction as review warning
 
 Status: `ACTIVE`

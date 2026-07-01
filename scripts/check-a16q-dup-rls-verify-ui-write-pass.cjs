@@ -245,6 +245,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16q-fix3-lunar-death-date-contradiction.cjs",
   "scripts/check-a16q-fix-import-session-ui-date-hydration.cjs",
   "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
+  "docs/PLAN_A16Q_DUP_SAVE_FIX.md",
+  "scripts/check-a16q-dup-save-fix.cjs",
 ]);
 
 for (const file of changedFiles) {
