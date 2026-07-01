@@ -180,8 +180,16 @@ export function ImportSessionManifestPanel({
                 value={validation.summary.peopleCount}
               />
               <MetricCard
+                label="Máº«u ngÆ°á»i Ä‘ang Ä‘á»c"
+                value={validation.summary.peoplePreviewCount}
+              />
+              <MetricCard
                 label="Số quan hệ staging"
                 value={validation.summary.relationshipCount}
+              />
+              <MetricCard
+                label="Máº«u quan há»‡ Ä‘ang Ä‘á»c"
+                value={validation.summary.relationshipPreviewCount}
               />
               <MetricCard label="Số lỗi" value={validation.summary.errorCount} />
               <MetricCard
@@ -264,8 +272,16 @@ export function ImportSessionManifestPanel({
                 value={dryRunPreview.summary.proposedPeopleCount}
               />
               <MetricCard
+                label="Máº«u ngÆ°á»i hiá»ƒn thá»‹"
+                value={dryRunPreview.summary.proposedPeoplePreviewCount}
+              />
+              <MetricCard
                 label="Quan hệ dự kiến tạo"
                 value={dryRunPreview.summary.proposedRelationshipCount}
+              />
+              <MetricCard
+                label="Máº«u quan há»‡ hiá»ƒn thá»‹"
+                value={dryRunPreview.summary.proposedRelationshipPreviewCount}
               />
               <MetricCard
                 label="Lỗi chặn dry-run"
@@ -356,8 +372,16 @@ export function ImportSessionManifestPanel({
                 value={reviewPack.validationSummary.peopleCount}
               />
               <MetricCard
+                label="Máº«u ngÆ°á»i Ä‘ang Ä‘á»c"
+                value={reviewPack.validationSummary.peoplePreviewCount}
+              />
+              <MetricCard
                 label="Quan hệ cha mẹ"
                 value={reviewPack.validationSummary.relationshipCount}
+              />
+              <MetricCard
+                label="Máº«u quan há»‡ Ä‘ang Ä‘á»c"
+                value={reviewPack.validationSummary.relationshipPreviewCount}
               />
               <MetricCard
                 label="Lỗi cần xử lý"

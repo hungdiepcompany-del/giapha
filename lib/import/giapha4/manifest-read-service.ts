@@ -637,7 +637,8 @@ export async function getImportManifest(
     manifestSummary: {
       warningCount: warnings.length,
       duplicateCandidateCount: duplicateCandidates.length,
-      relationshipCandidateCount: relationshipsPreview.length,
+      relationshipCandidateCount:
+        sessionResult.session.relationshipCandidateCount,
       writeManifestCount: writeManifests.length,
       canImport: false,
       message: hasManifestRows

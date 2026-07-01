@@ -239,6 +239,12 @@ const allowedChangedFiles = new Set([
   normalizePath,
   parserPath,
   validationPath,
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
+  "docs/PLAN_A16Q_FIX2_ROW95_DATE_AND_COUNT_CONSISTENCY.md",
+  "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

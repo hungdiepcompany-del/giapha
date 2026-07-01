@@ -68,9 +68,13 @@ export type ProposedRelationshipPayload = {
 
 export type DryRunMappingPreviewSummary = {
   stagedPeopleCount: number;
+  stagedPeoplePreviewCount: number;
   proposedPeopleCount: number;
+  proposedPeoplePreviewCount: number;
   stagedRelationshipCount: number;
+  stagedRelationshipPreviewCount: number;
   proposedRelationshipCount: number;
+  proposedRelationshipPreviewCount: number;
   blockedByErrorCount: number;
   warningCount: number;
   canProceedToOfficialImport: false;
@@ -192,6 +196,11 @@ export function buildDryRunMappingPreview(
       )
     : [];
   const sessionId = manifest.session?.id ?? null;
+  const stagedPeopleCount =
+    manifest.session?.personCandidateCount ?? manifest.peoplePreview.length;
+  const stagedRelationshipCount =
+    manifest.session?.relationshipCandidateCount ??
+    manifest.relationshipsPreview.length;
 
   return {
     ok: manifest.ok,
@@ -214,10 +223,14 @@ export function buildDryRunMappingPreview(
         ? "Không thể dry-run vì còn lỗi dữ liệu staging."
         : "Đã tạo bản xem trước dry-run ở chế độ chỉ đọc.",
     summary: {
-      stagedPeopleCount: manifest.peoplePreview.length,
-      proposedPeopleCount: proposedPeople.length,
-      stagedRelationshipCount: manifest.relationshipsPreview.length,
-      proposedRelationshipCount: proposedRelationships.length,
+      stagedPeopleCount,
+      stagedPeoplePreviewCount: manifest.peoplePreview.length,
+      proposedPeopleCount: stagedPeopleCount,
+      proposedPeoplePreviewCount: proposedPeople.length,
+      stagedRelationshipCount,
+      stagedRelationshipPreviewCount: manifest.relationshipsPreview.length,
+      proposedRelationshipCount: stagedRelationshipCount,
+      proposedRelationshipPreviewCount: proposedRelationships.length,
       blockedByErrorCount,
       warningCount,
       canProceedToOfficialImport: false,

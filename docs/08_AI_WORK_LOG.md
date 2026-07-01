@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-FIX2 - Row 95 Date Diagnosis and Count Consistency
+
+- Marker: `A-16Q-FIX2`.
+- Final status: `A16Q_FIX2_STATUS=ROW95_WARNING_AND_COUNTS_ALIGNED`.
+- Added sanitized row 95 regression metadata:
+  `A16Q_FIX2_ROW95_SANITIZED_REGRESSION_CASE`; no full name or raw personal
+  row data is logged.
+- Date order validation now goes through `diagnoseDeathBeforeBirth`.
+- Death calendar `unknown`, calendar mismatch, same-year partial precision and
+  other uncertain cases return warning, not blocker.
+- `death_before_birth` remains an error only when the date order is certain in
+  a known shared calendar: same calendar with `deathYear < birthYear`, or same
+  calendar with full date precision and `deathDate < birthDate`.
+- Count inconsistency was caused by preview/sample limits: person preview is
+  capped at 100 and relationship query reads 100, while session totals are 102
+  people and 134 relationships.
+- Validation, dry-run preview and review pack now use session total counts for
+  staging totals and separate preview sample counts for the 100/100 sample.
+- UI now exposes sample count labels beside total staging counts so 100/100 is
+  not mistaken for the real total.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-FIX2 did not run SQL, did not run DB push, did not repair migrations,
+  did not seed, did not write people/relationships/families/layout/tree/
+  revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-FIX - Import Session UI Evidence + Date Precision Fix + Hydration Assessment
 
 - Marker: `A-16Q-FIX`.

@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 222 - A-16Q-FIX2 separates uncertain row 95 dates and preview sample counts
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Route date-order validation through `diagnoseDeathBeforeBirth` so uncertain
+  cases are warnings before any `death_before_birth` blocker is created.
+- Keep row 95 regression evidence sanitized: row number, precision/calendar
+  metadata and expected severity only; no full name or raw personal row data.
+- Treat unknown death calendar, calendar mismatch and same-year partial
+  precision as warning-only cases.
+- Use session total counts for total staging people/relationships and expose
+  preview sample counts separately.
+- Keep official import locked with `canRunOfficialImport=false` and disabled UI
+  button.
+
+Lý do:
+
+- Owner confirmed row 95 is not safe to block as a definite
+  `death_before_birth` case without calendar/precision certainty.
+- The apparent 102/134 vs 100/100 mismatch came from a preview limit, not from
+  the import losing rows.
+- UI must show total staging and preview sample count as separate concepts.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 221 - A-16Q-FIX uses precision-aware death date validation
 
 Status: `ACTIVE`

@@ -28,6 +28,8 @@ export type ManifestValidationIssue = {
 export type ManifestValidationSummary = {
   peopleCount: number;
   relationshipCount: number;
+  peoplePreviewCount: number;
+  relationshipPreviewCount: number;
   errorCount: number;
   warningCount: number;
   infoCount: number;
@@ -56,6 +58,44 @@ type DateParts = {
   precision: "year" | "year_month" | "full";
   calendarType: "solar" | "lunar" | "unknown";
 };
+
+type DateOrderDiagnosis =
+  | {
+      status: "ok";
+      code?: never;
+      reason?: never;
+    }
+  | {
+      status: "warning";
+      code:
+        | "death_same_year_incomplete_precision"
+        | "death_date_calendar_mismatch_needs_review"
+        | "death_date_calendar_unknown_needs_review";
+    }
+  | {
+      status: "error";
+      code: "death_before_birth";
+      reason: "year_before_birth" | "full_date_before_birth";
+    };
+
+export const A16Q_FIX2_ROW95_SANITIZED_REGRESSION_CASE = {
+  marker: "A16Q_FIX2_ROW95_SANITIZED_REGRESSION_CASE",
+  rowNumber: 95,
+  pii: "redacted",
+  birth: {
+    calendarType: "solar",
+    precision: "year",
+  },
+  death: {
+    calendarType: "unknown",
+    precision: "year",
+  },
+  expected: {
+    code: "death_date_calendar_unknown_needs_review",
+    severity: "warning",
+    blocker: false,
+  },
+} as const;
 
 function normalizeText(value: string | null | undefined) {
   return (value ?? "")
@@ -133,6 +173,59 @@ function compareFullDateParts(left: DateParts, right: DateParts) {
 
 function hasSameKnownCalendar(left: DateParts, right: DateParts) {
   return left.calendarType !== "unknown" && left.calendarType === right.calendarType;
+}
+
+function diagnoseDeathBeforeBirth(
+  birthParts: DateParts | null,
+  deathParts: DateParts | null,
+): DateOrderDiagnosis {
+  if (!birthParts || !deathParts) return { status: "ok" };
+
+  if (deathParts.calendarType === "unknown") {
+    return {
+      status: "warning",
+      code: "death_date_calendar_unknown_needs_review",
+    };
+  }
+
+  if (!hasSameKnownCalendar(birthParts, deathParts)) {
+    return {
+      status: "warning",
+      code: "death_date_calendar_mismatch_needs_review",
+    };
+  }
+
+  if (deathParts.year < birthParts.year) {
+    return {
+      status: "error",
+      code: "death_before_birth",
+      reason: "year_before_birth",
+    };
+  }
+
+  if (
+    deathParts.year === birthParts.year &&
+    (!isFullDatePrecision(birthParts) || !isFullDatePrecision(deathParts))
+  ) {
+    return {
+      status: "warning",
+      code: "death_same_year_incomplete_precision",
+    };
+  }
+
+  if (
+    isFullDatePrecision(birthParts) &&
+    isFullDatePrecision(deathParts) &&
+    compareFullDateParts(deathParts, birthParts) < 0
+  ) {
+    return {
+      status: "error",
+      code: "death_before_birth",
+      reason: "full_date_before_birth",
+    };
+  }
+
+  return { status: "ok" };
 }
 
 function issue(
@@ -311,12 +404,9 @@ function validatePerson(
     );
   }
 
-  if (
-    birthParts &&
-    deathParts &&
-    deathParts.calendarType !== "unknown" &&
-    birthParts.calendarType !== deathParts.calendarType
-  ) {
+  const dateOrderDiagnosis = diagnoseDeathBeforeBirth(birthParts, deathParts);
+
+  if (dateOrderDiagnosis.code === "death_date_calendar_mismatch_needs_review") {
     issues.push(
       issue(
         "warning",
@@ -332,7 +422,7 @@ function validatePerson(
     );
   }
 
-  if (birthParts && deathParts && deathParts.calendarType === "unknown") {
+  if (dateOrderDiagnosis.code === "death_date_calendar_unknown_needs_review") {
     issues.push(
       issue(
         "warning",
@@ -348,7 +438,10 @@ function validatePerson(
     );
   }
 
-  if (birthParts && deathParts && deathParts.year < birthParts.year) {
+  if (
+    dateOrderDiagnosis.status === "error" &&
+    dateOrderDiagnosis.reason === "year_before_birth"
+  ) {
     issues.push(
       issue(
         "error",
@@ -364,14 +457,7 @@ function validatePerson(
     );
   }
 
-  if (
-    birthParts &&
-    deathParts &&
-    deathParts.year === birthParts.year &&
-    (!hasSameKnownCalendar(birthParts, deathParts) ||
-      !isFullDatePrecision(birthParts) ||
-      !isFullDatePrecision(deathParts))
-  ) {
+  if (dateOrderDiagnosis.code === "death_same_year_incomplete_precision") {
     issues.push(
       issue(
         "warning",
@@ -388,12 +474,8 @@ function validatePerson(
   }
 
   if (
-    birthParts &&
-    deathParts &&
-    hasSameKnownCalendar(birthParts, deathParts) &&
-    isFullDatePrecision(birthParts) &&
-    isFullDatePrecision(deathParts) &&
-    compareFullDateParts(deathParts, birthParts) < 0
+    dateOrderDiagnosis.status === "error" &&
+    dateOrderDiagnosis.reason === "full_date_before_birth"
   ) {
     issues.push(
       issue(
@@ -625,11 +707,15 @@ function validateDuplicateRelationships(
 function summarize(
   peopleCount: number,
   relationshipCount: number,
+  peoplePreviewCount: number,
+  relationshipPreviewCount: number,
   issues: ManifestValidationIssue[],
 ): ManifestValidationSummary {
   return {
     peopleCount,
     relationshipCount,
+    peoplePreviewCount,
+    relationshipPreviewCount,
     errorCount: issues.filter((item) => item.severity === "error").length,
     warningCount: issues.filter((item) => item.severity === "warning").length,
     infoCount: issues.filter((item) => item.severity === "info").length,
@@ -644,7 +730,7 @@ export function buildManifestValidationReview(
   const sessionId = manifest.session?.id ?? null;
 
   if (!manifest.ok) {
-    const summary = summarize(0, 0, issues);
+    const summary = summarize(0, 0, 0, 0, issues);
 
     return {
       ok: false,
@@ -749,6 +835,9 @@ export function buildManifestValidationReview(
   }
 
   const summary = summarize(
+    manifest.session?.personCandidateCount ?? manifest.peoplePreview.length,
+    manifest.session?.relationshipCandidateCount ??
+      manifest.relationshipsPreview.length,
     manifest.peoplePreview.length,
     manifest.relationshipsPreview.length,
     issues,

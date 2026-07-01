@@ -28,6 +28,8 @@ export type ImportReviewPack = {
   validationSummary: {
     peopleCount: number;
     relationshipCount: number;
+    peoplePreviewCount: number;
+    relationshipPreviewCount: number;
     errorCount: number;
     warningCount: number;
     infoCount: number;
@@ -35,7 +37,9 @@ export type ImportReviewPack = {
   };
   dryRunSummary: {
     proposedPeopleCount: number;
+    proposedPeoplePreviewCount: number;
     proposedRelationshipCount: number;
+    proposedRelationshipPreviewCount: number;
     blockedByErrorCount: number;
     warningCount: number;
   };
@@ -91,6 +95,8 @@ export function buildImportReviewPackFromManifest(
     validationSummary: {
       peopleCount: validation.summary.peopleCount,
       relationshipCount: validation.summary.relationshipCount,
+      peoplePreviewCount: validation.summary.peoplePreviewCount,
+      relationshipPreviewCount: validation.summary.relationshipPreviewCount,
       errorCount: validation.summary.errorCount,
       warningCount: validation.summary.warningCount,
       infoCount: validation.summary.infoCount,
@@ -98,7 +104,11 @@ export function buildImportReviewPackFromManifest(
     },
     dryRunSummary: {
       proposedPeopleCount: dryRunPreview.summary.proposedPeopleCount,
+      proposedPeoplePreviewCount:
+        dryRunPreview.summary.proposedPeoplePreviewCount,
       proposedRelationshipCount: dryRunPreview.summary.proposedRelationshipCount,
+      proposedRelationshipPreviewCount:
+        dryRunPreview.summary.proposedRelationshipPreviewCount,
       blockedByErrorCount: dryRunPreview.summary.blockedByErrorCount,
       warningCount: dryRunPreview.summary.warningCount,
     },
