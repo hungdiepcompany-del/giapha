@@ -1,11 +1,9 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
+import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-decision-review-client";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
-import type {
-  ImportDuplicateCandidatePreview,
-  ImportManifestReadResult,
-} from "@/lib/import/giapha4/manifest-read-service";
+import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
   type ManifestValidationIssue,
@@ -73,150 +71,6 @@ function EmptyManifestState() {
   );
 }
 
-function getDuplicateDecisionLabel(ownerDecision: string) {
-  const labels: Record<string, string> = {
-    unresolved: "Chưa quyết định",
-    create_new: "Tạo người mới",
-    link_existing: "Liên kết người đã có",
-    needs_review: "Cần chủ nhà rà soát",
-    ignore_candidate: "Bỏ qua ứng viên trùng",
-    hold: "Cần chủ nhà rà soát",
-    skip: "Bỏ qua ứng viên trùng",
-  };
-
-  return labels[ownerDecision] ?? ownerDecision;
-}
-
-function getMatchStrengthLabel(matchStrength: string) {
-  const labels: Record<string, string> = {
-    strong: "Rất giống",
-    medium: "Có khả năng trùng",
-    weak: "Dấu hiệu yếu",
-    ambiguous: "Chưa rõ",
-  };
-
-  return labels[matchStrength] ?? matchStrength;
-}
-
-function isBlockingDuplicateDecision(ownerDecision: string) {
-  return (
-    ownerDecision === "unresolved" ||
-    ownerDecision === "needs_review" ||
-    ownerDecision === "hold"
-  );
-}
-
-function getExistingPersonSummary(candidate: ImportDuplicateCandidatePreview) {
-  if (!candidate.existingPersonId) return "Chưa gắn hồ sơ hiện hữu.";
-  return `Có hồ sơ hiện hữu: ${candidate.existingPersonId.slice(0, 8)}...`;
-}
-
-function DuplicateDecisionReviewSection({
-  duplicateCandidates,
-  totalDuplicateCandidates,
-  unresolvedDuplicateCandidates,
-}: {
-  duplicateCandidates: ImportDuplicateCandidatePreview[];
-  totalDuplicateCandidates: number;
-  unresolvedDuplicateCandidates: number;
-}) {
-  if (totalDuplicateCandidates === 0) return null;
-
-  return (
-    <section className="grid gap-4 rounded-lg border border-amber-300 bg-amber-50 p-4">
-      <div className="grid gap-2">
-        <div className="text-sm font-semibold uppercase tracking-normal text-amber-900">
-          A-16Q-DUP - Rà soát trùng
-        </div>
-        <h3 className="text-base font-bold text-stone-950">
-          Ứng viên trùng cần quyết định
-        </h3>
-        <p className="text-sm leading-6 text-stone-700">
-          Owner cần xử lý hết ứng viên trùng trước khi xét nhập chính thức.
-          Phase này chỉ đọc staging; chưa ghi quyết định vào database.
-        </p>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          label="Tổng ứng viên trùng"
-          value={totalDuplicateCandidates}
-        />
-        <MetricCard
-          label="Chưa có quyết định"
-          value={unresolvedDuplicateCandidates}
-        />
-        <MetricCard
-          label="Đang hiển thị"
-          value={duplicateCandidates.length}
-        />
-        <MetricCard label="Có thể nhập chính thức" value={0} />
-      </div>
-
-      <div className="rounded-md border border-amber-200 bg-white p-3 text-sm leading-6 text-amber-950">
-        <div className="font-bold">Cổng quyết định đang khóa</div>
-        <div>
-          Thiếu policy UPDATE an toàn cho bảng ứng viên trùng. SQL candidate
-          A-16Q-DUP chưa được owner apply và verify, nên nút lưu quyết định đang
-          bị tắt.
-        </div>
-      </div>
-
-      <div className="grid gap-2">
-        {duplicateCandidates.slice(0, 20).map((candidate) => (
-          <div
-            key={candidate.id}
-            className="rounded-md border border-amber-200 bg-white p-3 text-sm leading-6 text-stone-800"
-          >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <div className="font-bold text-stone-950">
-                  Dòng {candidate.sourceRowIndex}:{" "}
-                  {getDuplicateDecisionLabel(candidate.ownerDecision)}
-                </div>
-                <div className="text-stone-600">
-                  Độ giống: {getMatchStrengthLabel(candidate.matchStrength)}.
-                  {candidate.matchReasonCodes.length > 0
-                    ? ` Lý do: ${candidate.matchReasonCodes.join(", ")}.`
-                    : " Chưa có mã lý do."}
-                </div>
-                <div className="text-stone-600">
-                  {getExistingPersonSummary(candidate)}
-                </div>
-                {candidate.decisionNote ? (
-                  <div className="text-stone-600">
-                    Ghi chú quyết định: {candidate.decisionNote}
-                  </div>
-                ) : null}
-              </div>
-              <span
-                className={
-                  isBlockingDuplicateDecision(candidate.ownerDecision)
-                    ? "rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-900"
-                    : "rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900"
-                }
-              >
-                {isBlockingDuplicateDecision(candidate.ownerDecision)
-                  ? "Đang chặn"
-                  : "Đã có quyết định"}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <button
-        type="button"
-        disabled
-        aria-disabled="true"
-        className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-amber-300 bg-white px-5 py-3 text-sm font-semibold text-amber-950 sm:w-fit"
-      >
-        Lưu quyết định ứng viên trùng — chưa mở
-      </button>
-    </section>
-  );
-}
-
 export function ImportSessionManifestPanel({
   result,
 }: {
@@ -237,10 +91,6 @@ export function ImportSessionManifestPanel({
   const officialImportGate = buildOfficialImportPreflightGateFromManifest(result);
   const totalDuplicateCandidates =
     session?.duplicateCandidateCount ?? result.duplicateCandidates.length;
-  const unresolvedDuplicateCandidates = result.duplicateCandidates.filter(
-    (candidate) => isBlockingDuplicateDecision(candidate.ownerDecision),
-  ).length;
-
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -363,10 +213,10 @@ export function ImportSessionManifestPanel({
             <IssueList title="Gợi ý kiểm tra" issues={infoIssues} />
           </section>
 
-          <DuplicateDecisionReviewSection
+          <DuplicateDecisionReviewClient
+            sessionId={session.id}
             duplicateCandidates={result.duplicateCandidates}
             totalDuplicateCandidates={totalDuplicateCandidates}
-            unresolvedDuplicateCandidates={unresolvedDuplicateCandidates}
           />
 
           <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">

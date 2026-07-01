@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 226 - A-16Q-DUP-RLS-VERIFY enables staging-only duplicate decision write
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Accept owner evidence markers:
+  `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED` and
+  `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`.
+- Enable
+  `PATCH /api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]` only
+  after owner-confirmed manual RLS apply and verification PASS.
+- Limit the PATCH implementation to staging table
+  `import_duplicate_candidates`.
+- Limit writable columns to `owner_decision`, `decided_by`, `decided_at` and
+  `decision_note`.
+- Enable the UI “Lưu quyết định” action for duplicate candidates.
+- Keep `canRunOfficialImport=false` and keep the official import button
+  disabled.
+
+Lý do:
+
+- Owner has confirmed the RLS UPDATE candidate was manually applied and the
+  SELECT-only verification passed, so the staging write path can open.
+- Duplicate decision save is still not an official import; it only records
+  owner intent in the import staging area.
+- There are still 8 unresolved duplicate rows in the owner evidence, so the
+  future official import gate must remain locked.
+
+Boundaries:
+
+- No SQL run by Codex, no DB push, no migration repair, no seed, no RPC call,
+  no POST official import call, no real people/person write, no relationship/
+  family write, no layout/tree/revision/profile write, no auto merge, no auto
+  link, no deploy and no push.
+
 ## Decision 225 - A-16Q-DUP-RLS-VERIFY keeps UI write blocked without owner apply/verify evidence
 
 Status: `ACTIVE`

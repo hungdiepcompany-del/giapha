@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS - Staging Duplicate Decision Write Enabled
+
+- Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS`.
+- Current status:
+  `A16Q_DUP_RLS_UI_WRITE_STATUS=OWNER_RLS_VERIFY_PASS_UI_WRITE_ENABLED`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Owner evidence received:
+  - `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED`
+  - `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`
+- Owner manually applied the RLS candidate and confirmed the SELECT-only
+  verification PASS:
+  - `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`
+  - `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`
+- Active staging-only route:
+  `PATCH /api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]`.
+- PATCH updates only `import_duplicate_candidates` and only:
+  `owner_decision`, `decided_by`, `decided_at`, `decision_note`.
+- UI duplicate decision save is enabled in “Ứng viên trùng cần quyết định”.
+- Owner evidence still shows `unresolved_duplicate_rows=8`; owner must choose
+  staging decisions before duplicate blockers can pass.
+- `unresolved` and `needs_review` still block official import.
+- `create_new`, `link_existing` and `ignore_candidate` only store staging
+  decisions in this phase; they do not create, link, merge or delete real
+  genealogy records.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no real people/relationships/families/layout/tree/revision/profile
+  write, no auto merge, no auto link, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE - Blocked Evidence Gate
 
 - Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE`.

@@ -23,6 +23,9 @@ const mirrorMigrationPath =
   "supabase/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql";
 const sqlCheckPath =
   "db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql";
+const passDocPath = "docs/PLAN_A16Q_DUP_RLS_VERIFY_UI_WRITE_PASS.md";
+const passCheckerPath = "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs";
+const clientPanelPath = "components/imports/duplicate-decision-review-client.tsx";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -85,6 +88,8 @@ const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const passBranchActive = fs.existsSync(path.join(root, passDocPath));
+const clientPanel = passBranchActive ? readFile(clientPanelPath) : "";
 
 for (const token of [
   "A-16Q-DUP-RLS-VERIFY-UI-WRITE",
@@ -142,23 +147,48 @@ rejectPattern(getRoute, /\.rpc\s*\(/i, "GET route must not call RPC");
 
 if (fs.existsSync(path.join(root, patchRoutePath))) {
   const patchRoute = readFile(patchRoutePath);
-  if (/export\s+async\s+function\s+PATCH/i.test(patchRoute)) {
+  if (passBranchActive) {
+    requireIncludes(patchRoute, "export async function PATCH", "PASS branch PATCH route");
+    requireIncludes(patchRoute, "updateDuplicateOwnerDecision", "PASS branch PATCH service call");
+    rejectPattern(patchRoute, /\.rpc\s*\(/i, "PATCH route must not call RPC");
+  } else if (/export\s+async\s+function\s+PATCH/i.test(patchRoute)) {
     failures.push("PATCH duplicate route must not be active without owner RLS evidence");
   }
 }
 
-for (const token of [
-  "canEditDecisions: false",
+const duplicateServiceTokens = [
   "canRunOfficialImport: false",
   "officialImportButtonDisabled: true",
-  "editBlockedReasons",
-  "Thiếu policy UPDATE an toàn",
-]) {
+];
+if (passBranchActive) {
+  duplicateServiceTokens.push("canEditDecisions: true", "updateDuplicateOwnerDecision");
+} else {
+  duplicateServiceTokens.push(
+    "canEditDecisions: false",
+    "editBlockedReasons",
+    "Thiếu policy UPDATE an toàn",
+  );
+}
+for (const token of duplicateServiceTokens) {
   requireIncludes(duplicateService, token, `duplicate service token ${token}`);
 }
-rejectPattern(duplicateService, /\.update\s*\(/i, "duplicate service must not update in blocked branch");
+if (!passBranchActive) {
+  rejectPattern(duplicateService, /\.update\s*\(/i, "duplicate service must not update in blocked branch");
+}
 rejectPattern(duplicateService, /\.rpc\s*\(/i, "duplicate service must not call RPC");
 
+if (passBranchActive) {
+  requireIncludes(panel, "DuplicateDecisionReviewClient", "PASS branch duplicate client panel");
+  for (const token of [
+    "Ứng viên trùng cần quyết định",
+    "Quyết định này chỉ lưu ở vùng staging",
+    "Lưu quyết định",
+    "Đã lưu quyết định",
+    "method: \"PATCH\"",
+  ]) {
+    requireIncludes(clientPanel, token, `client panel token ${token}`);
+  }
+} else {
 for (const token of [
   "Lưu quyết định ứng viên trùng — chưa mở",
   "Cổng quyết định đang khóa",
@@ -173,6 +203,7 @@ rejectPattern(
   /fetch\s*\([\s\S]{0,240}duplicates[\s\S]{0,240}method\s*:\s*["']PATCH["']/i,
   "panel must not call PATCH duplicate decision in blocked branch",
 );
+}
 
 for (const token of [
   "unresolvedDuplicateCandidates === 0",
@@ -237,6 +268,13 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  passDocPath,
+  passCheckerPath,
+  clientPanelPath,
+  duplicateServicePath,
+  panelPath,
+  patchRoutePath,
+  "scripts/check-a16q-dup-duplicate-candidate-owner-decision-review.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

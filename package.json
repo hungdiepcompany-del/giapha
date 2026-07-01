@@ -243,7 +243,8 @@
     "smoke:a16q-local-ui-import-guided": "node scripts/smoke-a16q-local-ui-import-guided.cjs",
     "check:a16q-local-ui-import-smoke-gate-copy-refresh": "node scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
     "check:a16q-dup-duplicate-candidate-owner-decision-review": "node scripts/check-a16q-dup-duplicate-candidate-owner-decision-review.cjs",
-    "check:a16q-dup-rls-verify-ui-write-blocked": "node scripts/check-a16q-dup-rls-verify-ui-write-blocked.cjs"
+    "check:a16q-dup-rls-verify-ui-write-blocked": "node scripts/check-a16q-dup-rls-verify-ui-write-blocked.cjs",
+    "check:a16q-dup-rls-verify-ui-write-pass": "node scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

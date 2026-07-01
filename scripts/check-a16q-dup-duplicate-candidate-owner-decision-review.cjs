@@ -25,6 +25,9 @@ const mirrorMigrationPath =
   "supabase/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql";
 const checkSqlPath =
   "db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql";
+const passDocPath = "docs/PLAN_A16Q_DUP_RLS_VERIFY_UI_WRITE_PASS.md";
+const passCheckerPath = "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs";
+const clientPanelPath = "components/imports/duplicate-decision-review-client.tsx";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -84,6 +87,8 @@ const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+const passBranchActive = fs.existsSync(path.join(root, passDocPath));
+const clientPanel = passBranchActive ? readFile(clientPanelPath) : "";
 
 for (const token of [
   "A-16Q-DUP",
@@ -126,10 +131,8 @@ for (const [content, token, label] of [
 for (const token of [
   "A16Q_DUPLICATE_DECISION_REVIEW_MARKER",
   "A16Q_DUP_STATUS=BLOCKED_DUPLICATE_DECISION_RLS_UPDATE_MISSING",
-  "canEditDecisions: false",
   "canRunOfficialImport: false",
   "officialImportButtonDisabled: true",
-  "editBlockedReasons",
   "unresolvedDuplicateCandidates",
   "needsReviewDuplicateCandidates",
   "owner_decision",
@@ -142,7 +145,14 @@ for (const token of [
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
-rejectPattern(service, /\.update\s*\(/i, "duplicate review service must not update");
+if (passBranchActive) {
+  requireIncludes(service, "canEditDecisions: true", "PASS branch canEditDecisions true");
+  requireIncludes(service, "updateDuplicateOwnerDecision", "PASS branch update service");
+} else {
+  requireIncludes(service, "canEditDecisions: false", "blocked branch canEditDecisions false");
+  requireIncludes(service, "editBlockedReasons", "blocked branch edit blocked reasons");
+  rejectPattern(service, /\.update\s*\(/i, "duplicate review service must not update");
+}
 rejectPattern(service, /\.rpc\s*\(/i, "duplicate review service must not call RPC");
 
 for (const token of [
@@ -157,11 +167,17 @@ rejectPattern(route, /method\s*:\s*["']POST["']/i, "GET route must not POST");
 
 if (fs.existsSync(path.join(root, patchRoutePath))) {
   const patchRoute = readFile(patchRoutePath);
-  rejectPattern(
-    patchRoute,
-    /export\s+async\s+function\s+PATCH/i,
-    "PATCH duplicate route must not exist before RLS update apply",
-  );
+  if (passBranchActive) {
+    requireIncludes(patchRoute, "export async function PATCH", "PASS branch PATCH route");
+    requireIncludes(patchRoute, "updateDuplicateOwnerDecision", "PASS branch PATCH service call");
+    rejectPattern(patchRoute, /\.rpc\s*\(/i, "PATCH route must not call RPC");
+  } else {
+    rejectPattern(
+      patchRoute,
+      /export\s+async\s+function\s+PATCH/i,
+      "PATCH duplicate route must not exist before RLS update apply",
+    );
+  }
 }
 
 for (const token of [
@@ -174,17 +190,30 @@ for (const token of [
   requireIncludes(readService, token, `read service token ${token}`);
 }
 
-for (const token of [
-  "Ứng viên trùng cần quyết định",
-  "Cổng quyết định đang khóa",
-  "Lưu quyết định ứng viên trùng — chưa mở",
-  "disabled",
-  "aria-disabled=\"true\"",
-  "Trùng chưa quyết định",
-  "Mẫu người đang đọc",
-  "Mẫu quan hệ đang đọc",
-]) {
-  requireIncludes(panel, token, `panel token ${token}`);
+if (passBranchActive) {
+  requireIncludes(panel, "DuplicateDecisionReviewClient", "server panel client duplicate review");
+  for (const token of [
+    "Ứng viên trùng cần quyết định",
+    "Quyết định này chỉ lưu ở vùng staging",
+    "Lưu quyết định",
+    "Đã lưu quyết định",
+    "method: \"PATCH\"",
+  ]) {
+    requireIncludes(clientPanel, token, `client panel token ${token}`);
+  }
+} else {
+  for (const token of [
+    "Ứng viên trùng cần quyết định",
+    "Cổng quyết định đang khóa",
+    "Lưu quyết định ứng viên trùng — chưa mở",
+    "disabled",
+    "aria-disabled=\"true\"",
+    "Trùng chưa quyết định",
+    "Mẫu người đang đọc",
+    "Mẫu quan hệ đang đọc",
+  ]) {
+    requireIncludes(panel, token, `panel token ${token}`);
+  }
 }
 
 for (const token of [
@@ -278,6 +307,10 @@ const allowedChangedFiles = new Set([
   officialServicePath,
   reviewPackPath,
   routePath,
+  patchRoutePath,
+  passDocPath,
+  passCheckerPath,
+  clientPanelPath,
   migrationPath,
   mirrorMigrationPath,
   checkSqlPath,
@@ -289,6 +322,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16q-fix-import-session-ui-date-hydration.cjs",
   "scripts/check-a16q-fix2-row95-date-count-consistency.cjs",
   "scripts/check-a16q-local-ui-import-smoke-gate-copy-refresh.cjs",
+  "scripts/check-a16q-dup-rls-verify-ui-write-blocked.cjs",
 ]);
 
 for (const file of changedFiles) {

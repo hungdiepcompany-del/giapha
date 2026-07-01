@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS - Staging Decision Write Enabled
+
+- Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS`.
+- Final status:
+  `A16Q_DUP_RLS_UI_WRITE_STATUS=OWNER_RLS_VERIFY_PASS_UI_WRITE_ENABLED`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Owner provided both evidence markers:
+  `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED` and
+  `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`.
+- Owner manually applied:
+  `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`.
+- Owner ran and confirmed PASS:
+  `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`.
+- Enabled staging-only route:
+  `PATCH /api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]`.
+- PATCH writes only `import_duplicate_candidates` and only the columns
+  `owner_decision`, `decided_by`, `decided_at` and `decision_note`.
+- The route validates `sessionId` + `duplicateId`, allowed decisions, and only
+  permits `link_existing` when the staging row has `existing_person_id`.
+- UI block “Ứng viên trùng cần quyết định” now lets owner save a staging
+  decision with “Lưu quyết định”.
+- Current owner evidence still says `unresolved_duplicate_rows=8`, so owner
+  must review the remaining duplicate candidates before any later execution
+  phase.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP-RLS-VERIFY-UI-WRITE-PASS did not run SQL, did not run DB push, did
+  not repair migrations, did not seed, did not write people/relationships/
+  families/layout/tree/revision/profile data, did not auto merge, did not auto
+  link, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE - Blocked Evidence Gate
 
 - Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE`.
