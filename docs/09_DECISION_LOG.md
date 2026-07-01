@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 225 - A-16Q-DUP-RLS-VERIFY keeps UI write blocked without owner apply/verify evidence
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Treat A-16Q-DUP-RLS-VERIFY-UI-WRITE as blocked because the prompt lacks both
+  required owner evidence markers:
+  `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED` and
+  `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`.
+- Do not create active
+  `PATCH /api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]`.
+- Keep duplicate decision UI save disabled and read-only.
+- Keep `canEditDecisions=false`, `canRunOfficialImport=false` and the official
+  import button disabled.
+- Require a later prompt with both markers before opening staging decision write
+  behavior.
+
+Lý do:
+
+- UPDATE RLS for duplicate decision is a staging write capability and cannot be
+  assumed from a candidate file alone.
+- Supabase UPDATE policies need appropriate SELECT visibility plus UPDATE
+  policy checks; without owner-confirmed apply/verify, enabling UI write would
+  be misleading and unsafe.
+- There are still 8 unresolved duplicate rows, so A-16R cannot run.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 224 - A-16Q-DUP keeps duplicate decision save locked until UPDATE RLS is applied
 
 Status: `ACTIVE`

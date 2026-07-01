@@ -1,5 +1,29 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE - Blocked Evidence Gate
+
+- Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE`.
+- Final status:
+  `A16Q_DUP_RLS_UI_WRITE_STATUS=BLOCKED_MISSING_OWNER_RLS_APPLY_VERIFY_EVIDENCE`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Prompt did not include both required owner evidence markers:
+  `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED` and
+  `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`.
+- Because the evidence gate is incomplete, no PATCH route was created for
+  `/api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]`.
+- UI duplicate decision save remains disabled/read-only. Existing duplicate
+  review still returns `canEditDecisions=false`.
+- SQL candidate remains present in repo, but Codex did not run it:
+  `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`.
+- SELECT-only verification remains present in repo, but Codex did not run SQL:
+  `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP-RLS-VERIFY-UI-WRITE did not run SQL, did not run DB push, did not
+  repair migrations, did not seed, did not write people/relationships/families/
+  layout/tree/revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16Q-DUP - Duplicate Candidate Owner Decision Review
 
 - Marker: `A-16Q-DUP`.

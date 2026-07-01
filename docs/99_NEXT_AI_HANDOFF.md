@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q-DUP-RLS-VERIFY-UI-WRITE - Blocked Evidence Gate
+
+- Marker: `A-16Q-DUP-RLS-VERIFY-UI-WRITE`.
+- Current status:
+  `A16Q_DUP_RLS_UI_WRITE_STATUS=BLOCKED_MISSING_OWNER_RLS_APPLY_VERIFY_EVIDENCE`.
+- Target session:
+  `A16Q_DUP_IMPORT_SESSION_ID=8158711d-1c3c-4208-987d-6fec6a1c5a1a`.
+- Required owner markers were not both present in the prompt:
+  - `A16Q_DUP_RLS_OWNER_APPLY_CONFIRMED`
+  - `A16Q_DUP_RLS_VERIFY_PASS_CONFIRMED`
+- Because evidence is missing:
+  - No PATCH route is active for duplicate owner decisions.
+  - UI save decision remains disabled/read-only.
+  - `canEditDecisions=false`.
+  - `canRunOfficialImport=false`.
+  - Official import button remains disabled.
+- Existing SQL candidate remains not run by Codex:
+  `db/migrations/20260701_0013_a16q_dup_duplicate_decision_rls_candidate.sql`
+  and mirrored `supabase/migrations/...`.
+- Existing SELECT-only check remains not run by Codex:
+  `db/checks/20260701_check_a16q_dup_duplicate_decision_rls.sql`.
+- Next safe step: owner must provide both markers after manual SQL apply and
+  SELECT-only verification PASS. Only then should a later phase enable PATCH
+  staging write and UI save decision.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no RPC call, no POST official import call, no real people/relationships/
+  families/layout/tree/revision/profile write, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-DUP - Duplicate Candidate Owner Decision Review
 
 - Marker: `A-16Q-DUP`.
