@@ -50,6 +50,63 @@ function sanitizeError(error) {
     .replace(/[A-Za-z]:\\[^\r\n]+/g, "[REDACTED_PATH]");
 }
 
+function failWith(reasonCode, message) {
+  const error = new Error(message);
+  error.reasonCode = reasonCode;
+  throw error;
+}
+
+function classifyUploadFailure(status, uploadJson) {
+  const warningCodes = Array.isArray(uploadJson?.warnings)
+    ? uploadJson.warnings.map((item) => item?.warningCode).filter(Boolean)
+    : [];
+  const text = [
+    uploadJson?.message,
+    uploadJson?.errorCode,
+    uploadJson?.reason,
+    warningCodes.join(" "),
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  if (status === 401) return "AUTH_SESSION_MISSING";
+  if (status === 403 || /imports\.create|permission|forbidden|không có quyền/i.test(text)) {
+    return "PERMISSION_IMPORTS_CREATE_MISSING";
+  }
+  if (/RLS|row-level|import session staging|không tạo được import session/i.test(text)) {
+    return "RLS_STAGING_WRITE_BLOCKED";
+  }
+  if (/A16I3_REQUIRED_HEADERS_MISSING|A16I_HEADER_NOT_RECOGNIZED/i.test(text)) {
+    return "PARSER_HEADER_MISSING";
+  }
+  if (/A16I3_MEMBER_SHEET_MISSING/i.test(text)) return "PARSER_SHEET_MISSING";
+  if (/A16I_XLS_NOT_SUPPORTED_WITHOUT_PARSER_DEPENDENCY|unsupported xls/i.test(text)) {
+    return "PARSER_UNSUPPORTED_XLS";
+  }
+  return "UNKNOWN_UPLOAD_ERROR";
+}
+
+function classifyFailure(error) {
+  if (error?.reasonCode) return error.reasonCode;
+  const message = error instanceof Error ? error.message : String(error);
+  if (/unexpected redirect to \/auth\/login|unexpected redirect to \/unauthorized/i.test(message)) {
+    return "AUTH_SESSION_MISSING";
+  }
+  if (/ECONNREFUSED|ENOTFOUND|network|page returned|no response|timeout/i.test(message)) {
+    return "NETWORK_OR_BASE_URL_ERROR";
+  }
+  if (/A16I3_REQUIRED_HEADERS_MISSING|A16I_HEADER_NOT_RECOGNIZED/i.test(message)) {
+    return "PARSER_HEADER_MISSING";
+  }
+  if (/A16I3_MEMBER_SHEET_MISSING/i.test(message)) return "PARSER_SHEET_MISSING";
+  if (/\.xls|unsupported xls/i.test(message)) return "PARSER_UNSUPPORTED_XLS";
+  if (/imports\.create|forbidden|permission/i.test(message)) {
+    return "PERMISSION_IMPORTS_CREATE_MISSING";
+  }
+  if (/RLS|row-level|staging write/i.test(message)) return "RLS_STAGING_WRITE_BLOCKED";
+  return "UNKNOWN_UPLOAD_ERROR";
+}
+
 function isMutation(method) {
   return ["POST", "PUT", "PATCH", "DELETE"].includes(method.toUpperCase());
 }
@@ -158,6 +215,7 @@ async function main() {
   const extension = path.extname(realFilePath).toLowerCase();
   if (extension === ".xls") {
     printStatus("SAFE_SKIP_UNSUPPORTED_XLS", {
+      reason_code: "PARSER_UNSUPPORTED_XLS",
       file_extension: ".xls",
       counts_available: false,
     });
@@ -211,12 +269,15 @@ async function main() {
     });
 
     if (!response || response.status() >= 500) {
-      throw new Error(`page returned ${response ? response.status() : "no response"}`);
+      failWith(
+        "NETWORK_OR_BASE_URL_ERROR",
+        `page returned ${response ? response.status() : "no response"}`,
+      );
     }
 
     const finalUrl = page.url();
     if (/\/auth\/login|\/unauthorized/i.test(finalUrl)) {
-      throw new Error(`unexpected redirect to ${new URL(finalUrl).pathname}`);
+      failWith("AUTH_SESSION_MISSING", `unexpected redirect to ${new URL(finalUrl).pathname}`);
     }
 
     const bodyText = await page.locator("body").innerText({ timeout: 10000 });
@@ -254,7 +315,10 @@ async function main() {
     const uploadJson = await uploadResponse.json().catch(() => null);
 
     if (!uploadResponse.ok() || !uploadJson?.ok) {
-      throw new Error(`upload staging failed with status ${uploadResponse.status()}`);
+      failWith(
+        classifyUploadFailure(uploadResponse.status(), uploadJson),
+        `upload staging failed with status ${uploadResponse.status()}`,
+      );
     }
 
     const sessionId = uploadJson.summary?.sessionId;
@@ -268,19 +332,30 @@ async function main() {
       `/api/admin/import-sessions/${sessionId}/validation`,
       baseUrl,
     ).toString();
+    const dryRunPreviewUrl = new URL(
+      `/api/admin/import-sessions/${sessionId}/dry-run-preview`,
+      baseUrl,
+    ).toString();
 
-    const [manifestResponse, validationResponse] = await Promise.all([
+    const [manifestResponse, validationResponse, dryRunPreviewResponse] = await Promise.all([
       page.request.get(manifestUrl),
       page.request.get(validationUrl),
+      page.request.get(dryRunPreviewUrl),
     ]);
     const manifestJson = await manifestResponse.json().catch(() => null);
     const validationJson = await validationResponse.json().catch(() => null);
+    const dryRunPreviewJson = await dryRunPreviewResponse.json().catch(() => null);
 
     if (!manifestResponse.ok() || !manifestJson?.ok) {
       throw new Error(`manifest read failed with status ${manifestResponse.status()}`);
     }
     if (!validationResponse.ok() || !validationJson?.ok) {
       throw new Error(`validation read failed with status ${validationResponse.status()}`);
+    }
+    if (!dryRunPreviewResponse.ok() || !dryRunPreviewJson?.ok) {
+      throw new Error(
+        `dry-run preview read failed with status ${dryRunPreviewResponse.status()}`,
+      );
     }
 
     await page.reload({ waitUntil: "networkidle", timeout: 30000 });
@@ -309,11 +384,17 @@ async function main() {
       warning_count: counts.warningCount,
       info_count: counts.infoCount,
       warning_codes: counts.warningCodes.join(","),
+      dry_run_preview_status: dryRunPreviewJson.ok ? "available" : "unavailable",
+      dry_run_people_count: dryRunPreviewJson.summary?.proposedPeopleCount,
+      dry_run_relationship_count: dryRunPreviewJson.summary?.proposedRelationshipCount,
+      can_proceed_to_official_import:
+        dryRunPreviewJson.summary?.canProceedToOfficialImport ?? false,
       counts_available: true,
       file_extension: ".xlsx",
     });
   } catch (error) {
     printStatus("FAIL", {
+      reason_code: classifyFailure(error),
       reason: sanitizeError(error),
       counts_available: false,
     });

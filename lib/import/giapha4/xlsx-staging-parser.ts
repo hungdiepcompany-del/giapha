@@ -4,18 +4,23 @@ import JSZip from "jszip";
 
 import { sha256Hex } from "@/lib/family/checksum";
 import {
+  isGiaPha4NullPlaceholder,
   normalizeGiaPha4DateText,
   normalizeGiaPha4Gender,
+  normalizeGiaPha4NullableText,
   normalizeGiaPha4Text,
   parseGiaPha4Generation,
+  parseGiaPha4PositiveNumber,
 } from "@/lib/import/giapha4/normalize";
 import { detectGiaPha4FileKind } from "@/lib/import/giapha4/parser";
 
 export const A16I_GIAPHA4_STAGING_PARSER_MARKER =
   "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING";
+export const A16I3_GIAPHA4_COLUMN_MAPPING_MARKER =
+  "A16I3_GIAPHA4_XLSX_COLUMN_MAPPING_HARDENING";
 
-export const A16I_MAPPING_VERSION = "a16i-giapha4-manifest-staging-v1";
-export const A16I_PARSER_VERSION = "a16i-jszip-xlsx-v1";
+export const A16I_MAPPING_VERSION = "a16i3-giapha4-manifest-staging-v2";
+export const A16I_PARSER_VERSION = "a16i3-jszip-xlsx-thanh-vien-v2";
 export const GIAPHA4_STAGING_MAX_BYTES = 5 * 1024 * 1024;
 
 export type GiaPha4StagingWarning = {
@@ -26,14 +31,28 @@ export type GiaPha4StagingWarning = {
   messageVi: string;
 };
 
+export type GiaPha4ParseSummary = {
+  sheetName: string;
+  peopleRowsRead: number;
+  peopleRowsMapped: number;
+  parentRelationshipsMapped: number;
+  skippedParentRelationships: number;
+  warningCount: number;
+  errorCount: number;
+};
+
 export type GiaPha4StagedPersonCandidate = {
   sourceRowIndex: number;
   fingerprint: string;
+  externalId: string;
   fullName: string;
   displayName: string | null;
+  alternateName: string | null;
   gender: "male" | "female" | "other" | "unknown";
   birthDateText: string | null;
   deathDateText: string | null;
+  memorialLunarDate: string | null;
+  ageAtDeath: number | null;
   isLiving: boolean | null;
   birthPlace: string | null;
   homeTown: string | null;
@@ -42,6 +61,7 @@ export type GiaPha4StagedPersonCandidate = {
   shortBio: string | null;
   notesPrivate: string | null;
   visibility: "family";
+  rawMetadata: Record<string, string | number | null>;
 };
 
 export type GiaPha4StagedRelationshipCandidate = {
@@ -53,6 +73,10 @@ export type GiaPha4StagedRelationshipCandidate = {
   relationshipLabelVi: string;
   confidence: "strong" | "medium" | "weak" | "ambiguous";
   ambiguityStatus: "clear" | "ambiguous" | "missing_reference" | "conflicting";
+  sourceExternalId?: string;
+  parentExternalId?: string;
+  parentRole?: "father" | "mother";
+  sourceLabelVi?: string | null;
 };
 
 export type GiaPha4StagedDuplicateCandidate = {
@@ -76,6 +100,7 @@ export type GiaPha4StagingParseResult =
       warnings: GiaPha4StagingWarning[];
       unmappedColumns: string[];
       heldRowCount: number;
+      parseSummary: GiaPha4ParseSummary;
     }
   | {
       ok: false;
@@ -91,22 +116,31 @@ type WorkbookSheet = {
 };
 
 type HeaderKey =
+  | "externalId"
   | "fullName"
-  | "displayName"
+  | "generationNumber"
+  | "alternateName"
   | "gender"
   | "birthDate"
-  | "deathDate"
-  | "isLiving"
-  | "birthPlace"
-  | "homeTown"
-  | "branchName"
-  | "generationNumber"
-  | "father"
-  | "mother"
-  | "spouse"
-  | "children"
+  | "maritalStatus"
+  | "phone"
+  | "education"
+  | "occupation"
+  | "province"
+  | "district"
+  | "ward"
+  | "currentAddress"
   | "shortBio"
-  | "notesPrivate";
+  | "deathDate"
+  | "memorialLunarDate"
+  | "ageAtDeath"
+  | "worshipPlace"
+  | "caretaker"
+  | "burialPlace"
+  | "fatherName"
+  | "fatherExternalId"
+  | "motherName"
+  | "motherExternalId";
 
 type HeaderMapping = {
   headerRowIndex: number;
@@ -114,39 +148,38 @@ type HeaderMapping = {
   unmappedColumns: string[];
 };
 
+const MAIN_MEMBER_SHEET_NAME = "Thành viên";
+
 const HEADER_ALIASES: Record<HeaderKey, string[]> = {
-  fullName: [
-    "ho ten",
-    "ho va ten",
-    "hoten",
-    "ten",
-    "ten thanh vien",
-    "thanh vien",
-    "full name",
-    "name",
+  externalId: ["Mã GP", "Ma GP", "Mã gia phả", "Ma gia pha"],
+  fullName: ["Họ tên", "Ho ten", "Họ và tên", "Ho va ten"],
+  generationNumber: ["Đời thứ", "Doi thu", "Đời", "Doi"],
+  alternateName: ["Tên khác", "Ten khac"],
+  gender: ["Giới tính", "Gioi tinh"],
+  birthDate: ["Ngày Sinh", "Ngay Sinh", "Ngày sinh", "Ngay sinh"],
+  maritalStatus: ["Hôn nhân", "Hon nhan"],
+  phone: ["Số điện thoại", "So dien thoai"],
+  education: ["Học vấn", "Hoc van"],
+  occupation: ["Nghề nghiệp", "Nghe nghiep"],
+  province: ["Tỉnh/Thành Phố", "Tinh/Thanh Pho", "Tỉnh/Thành phố"],
+  district: ["Quận/Huyện", "Quan/Huyen"],
+  ward: ["Phường/Xã", "Phuong/Xa"],
+  currentAddress: ["Địa chỉ hiện tại", "Dia chi hien tai"],
+  shortBio: ["Tiểu sử", "Tieu su"],
+  deathDate: ["Ngày mất (Dương lịch)", "Ngay mat (Duong lich)", "Ngày mất"],
+  memorialLunarDate: ["Ngày giỗ (Âm lịch)", "Ngay gio (Am lich)", "Ngày giỗ"],
+  ageAtDeath: [
+    "Hưởng Thọ/Dương (Tuổi)",
+    "Huong Tho/Duong (Tuoi)",
+    "Hưởng thọ",
   ],
-  displayName: [
-    "ten thuong goi",
-    "biet danh",
-    "ten goi",
-    "phap danh",
-    "ten khac",
-    "display name",
-  ],
-  gender: ["gioi tinh", "phai", "nam nu", "gender", "sex"],
-  birthDate: ["ngay sinh", "nam sinh", "sinh", "birth date", "birth"],
-  deathDate: ["ngay mat", "nam mat", "mat", "death date", "death"],
-  isLiving: ["con song", "da mat", "trang thai", "tinh trang"],
-  birthPlace: ["noi sinh", "sinh tai", "birth place"],
-  homeTown: ["que quan", "nguyen quan", "home town"],
-  branchName: ["chi", "nhanh", "chi nhanh", "branch"],
-  generationNumber: ["doi", "the he", "doi thu", "generation"],
-  father: ["cha", "bo", "father"],
-  mother: ["me", "mother"],
-  spouse: ["vo chong", "vo", "chong", "phoi ngau", "spouse"],
-  children: ["con", "cac con", "children", "child"],
-  shortBio: ["tieu su", "tom tat", "short bio", "bio"],
-  notesPrivate: ["ghi chu", "ghi chu rieng", "note", "notes"],
+  worshipPlace: ["Thờ cúng tại", "Tho cung tai"],
+  caretaker: ["Người phụ trách", "Nguoi phu trach"],
+  burialPlace: ["Mộ táng", "Mo tang"],
+  fatherName: ["Tên Bố", "Ten Bo", "Tên Cha", "Ten Cha"],
+  fatherExternalId: ["Mã GP Bố", "Ma GP Bo", "Mã GP Cha", "Ma GP Cha"],
+  motherName: ["Tên Mẹ", "Ten Me"],
+  motherExternalId: ["Mã GP Mẹ", "Ma GP Me"],
 };
 
 function decodeXml(value: string) {
@@ -169,9 +202,18 @@ function normalizeHeader(value: string) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d")
+    .replace(/[đĐ]/g, "d")
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+function normalizeSourceKey(value: unknown) {
+  return normalizeGiaPha4NullableText(value).replace(/\s+/g, "");
+}
+
+function isValidParentExternalId(value: unknown, childExternalId: string) {
+  const normalized = normalizeSourceKey(value);
+  return Boolean(normalized && normalized !== childExternalId);
 }
 
 function columnLettersToIndex(cellRef: string) {
@@ -288,7 +330,9 @@ async function readWorkbook(buffer: Uint8Array): Promise<WorkbookSheet[]> {
     throw new Error("WORKBOOK_STRUCTURE_NOT_RECOGNIZED");
   }
 
-  const sharedStrings = sharedStringsXml ? parseSharedStrings(sharedStringsXml) : [];
+  const sharedStrings = sharedStringsXml
+    ? parseSharedStrings(sharedStringsXml)
+    : [];
   const sheets = parseWorkbookSheets(workbookXml, workbookRelsXml);
   const parsedSheets: WorkbookSheet[] = [];
 
@@ -304,13 +348,18 @@ async function readWorkbook(buffer: Uint8Array): Promise<WorkbookSheet[]> {
   return parsedSheets;
 }
 
-function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
+function buildAliasMap() {
   const aliasToKey = new Map<string, HeaderKey>();
   for (const [key, aliases] of Object.entries(HEADER_ALIASES) as Array<
     [HeaderKey, string[]]
   >) {
     for (const alias of aliases) aliasToKey.set(normalizeHeader(alias), key);
   }
+  return aliasToKey;
+}
+
+function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
+  const aliasToKey = buildAliasMap();
 
   for (const [rowIndex, row] of sheet.rows.slice(0, 20).entries()) {
     const columnToKey = new Map<number, HeaderKey>();
@@ -327,8 +376,8 @@ function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
       }
     }
 
-    const hasIdentity = [...columnToKey.values()].includes("fullName");
-    if (hasIdentity && columnToKey.size >= 2) {
+    const mappedKeys = [...columnToKey.values()];
+    if (mappedKeys.includes("externalId") && mappedKeys.includes("fullName")) {
       return {
         headerRowIndex: rowIndex,
         columnToKey,
@@ -340,55 +389,45 @@ function findHeaderMapping(sheet: WorkbookSheet): HeaderMapping | null {
   return null;
 }
 
-function getCellValue(
-  row: string[],
-  mapping: HeaderMapping,
-  key: HeaderKey,
-) {
+function getCellValue(row: string[], mapping: HeaderMapping, key: HeaderKey) {
+  for (const [columnIndex, mappedKey] of mapping.columnToKey.entries()) {
+    if (mappedKey === key) return normalizeGiaPha4NullableText(row[columnIndex]);
+  }
+  return "";
+}
+
+function getRawCellValue(row: string[], mapping: HeaderMapping, key: HeaderKey) {
   for (const [columnIndex, mappedKey] of mapping.columnToKey.entries()) {
     if (mappedKey === key) return normalizeGiaPha4Text(row[columnIndex]);
   }
   return "";
 }
 
-function splitRelationNames(value: string) {
-  return normalizeGiaPha4Text(value)
-    .split(/[;\n,]+/g)
-    .map((item) => normalizeGiaPha4Text(item))
-    .filter(Boolean);
-}
-
-function parseLiving(value: string, deathDateText: string | null) {
-  if (deathDateText) return false;
-  const normalized = normalizeHeader(value);
-  if (!normalized) return null;
-  if (["con song", "song", "dang song", "alive"].includes(normalized)) return true;
-  if (["da mat", "mat", "qua doi", "deceased", "dead"].includes(normalized)) {
-    return false;
-  }
-  return null;
+function parseLiving(deathDateText: string | null) {
+  return deathDateText ? false : null;
 }
 
 function personFingerprint(input: {
+  externalId: string;
   fullName: string;
   birthDateText: string | null;
   deathDateText: string | null;
   generationNumber: number | null;
-  branchName: string | null;
 }) {
   return sha256Hex(
     [
+      "giapha4-person",
+      normalizeHeader(input.externalId),
       normalizeHeader(input.fullName),
       input.birthDateText ?? "",
       input.deathDateText ?? "",
       input.generationNumber ?? "",
-      normalizeHeader(input.branchName ?? ""),
     ].join("|"),
   );
 }
 
-function relatedNameFingerprint(name: string) {
-  return sha256Hex(`related-name:${normalizeHeader(name)}`);
+function externalIdFingerprint(externalId: string) {
+  return sha256Hex(`giapha4-external-id:${normalizeHeader(externalId)}`);
 }
 
 function createWarning(
@@ -401,71 +440,209 @@ function createWarning(
   return { warningCode, severity, rowIndex, columnKey, messageVi };
 }
 
-function selectBestSheet(sheets: WorkbookSheet[]) {
-  for (const sheet of sheets) {
-    const mapping = findHeaderMapping(sheet);
-    if (mapping) return { sheet, mapping };
-  }
-  return null;
+function selectMemberSheet(sheets: WorkbookSheet[]) {
+  return (
+    sheets.find(
+      (sheet) => normalizeHeader(sheet.name) === normalizeHeader(MAIN_MEMBER_SHEET_NAME),
+    ) ?? null
+  );
 }
 
-function buildRelationshipCandidates(
-  person: GiaPha4StagedPersonCandidate,
-  row: string[],
-  mapping: HeaderMapping,
-  personByName: Map<string, GiaPha4StagedPersonCandidate[]>,
-) {
+function buildRawMetadata(row: string[], mapping: HeaderMapping) {
+  return {
+    marital_status: getCellValue(row, mapping, "maritalStatus") || null,
+    phone: getCellValue(row, mapping, "phone") || null,
+    education: getCellValue(row, mapping, "education") || null,
+    occupation: getCellValue(row, mapping, "occupation") || null,
+    province: getCellValue(row, mapping, "province") || null,
+    district: getCellValue(row, mapping, "district") || null,
+    ward: getCellValue(row, mapping, "ward") || null,
+    current_address: getCellValue(row, mapping, "currentAddress") || null,
+    worship_place: getCellValue(row, mapping, "worshipPlace") || null,
+    caretaker: getCellValue(row, mapping, "caretaker") || null,
+    burial_place: getCellValue(row, mapping, "burialPlace") || null,
+  };
+}
+
+function mapMemberRowToStagingPerson(input: {
+  row: string[];
+  mapping: HeaderMapping;
+  sourceRowIndex: number;
+  warnings: GiaPha4StagingWarning[];
+}): GiaPha4StagedPersonCandidate | null {
+  const externalId = normalizeSourceKey(getRawCellValue(input.row, input.mapping, "externalId"));
+  const fullName = getCellValue(input.row, input.mapping, "fullName");
+
+  if (!externalId) {
+    input.warnings.push(
+      createWarning(
+        "A16I3_MISSING_EXTERNAL_ID",
+        "Dòng thiếu Mã GP nên chưa tạo ứng viên người.",
+        "blocker",
+        input.sourceRowIndex,
+        "external_id",
+      ),
+    );
+    return null;
+  }
+
+  if (!fullName) {
+    input.warnings.push(
+      createWarning(
+        "A16I3_MISSING_FULL_NAME",
+        "Dòng thiếu họ tên nên chưa tạo ứng viên người.",
+        "blocker",
+        input.sourceRowIndex,
+        "full_name",
+      ),
+    );
+    return null;
+  }
+
+  const birthDate = normalizeGiaPha4DateText(
+    getRawCellValue(input.row, input.mapping, "birthDate"),
+  );
+  const deathDate = normalizeGiaPha4DateText(
+    getRawCellValue(input.row, input.mapping, "deathDate"),
+  );
+  const generation = parseGiaPha4Generation(
+    getCellValue(input.row, input.mapping, "generationNumber"),
+  );
+  const generationText = getCellValue(input.row, input.mapping, "generationNumber");
+  const alternateName = getCellValue(input.row, input.mapping, "alternateName");
+  const ageAtDeath =
+    parseGiaPha4PositiveNumber(getCellValue(input.row, input.mapping, "ageAtDeath")) ??
+    null;
+
+  if (birthDate.warning) {
+    input.warnings.push(
+      createWarning(
+        "A16I3_BIRTH_DATE_NEEDS_REVIEW",
+        birthDate.warning,
+        "warning",
+        input.sourceRowIndex,
+        "birth_date",
+      ),
+    );
+  }
+
+  if (deathDate.warning) {
+    input.warnings.push(
+      createWarning(
+        "A16I3_DEATH_DATE_NEEDS_REVIEW",
+        deathDate.warning,
+        "warning",
+        input.sourceRowIndex,
+        "death_date",
+      ),
+    );
+  }
+
+  if (generationText && !generation) {
+    input.warnings.push(
+      createWarning(
+        "A16I3_GENERATION_NEEDS_REVIEW",
+        "Đời thứ chưa phải số nguyên dương nên cần rà soát.",
+        "warning",
+        input.sourceRowIndex,
+        "generation_number",
+      ),
+    );
+  }
+
+  const rawMetadata = buildRawMetadata(input.row, input.mapping);
+  const candidate: GiaPha4StagedPersonCandidate = {
+    sourceRowIndex: input.sourceRowIndex,
+    fingerprint: "",
+    externalId,
+    fullName,
+    displayName: alternateName || fullName,
+    alternateName: alternateName || null,
+    gender: normalizeGiaPha4Gender(getCellValue(input.row, input.mapping, "gender")),
+    birthDateText: birthDate.value ?? null,
+    deathDateText: deathDate.value ?? null,
+    memorialLunarDate:
+      getCellValue(input.row, input.mapping, "memorialLunarDate") || null,
+    ageAtDeath,
+    isLiving: parseLiving(deathDate.value ?? null),
+    birthPlace: rawMetadata.province,
+    homeTown:
+      [rawMetadata.province, rawMetadata.district, rawMetadata.ward]
+        .filter(Boolean)
+        .join(", ") || null,
+    branchName: null,
+    generationNumber: generation ?? null,
+    shortBio: getCellValue(input.row, input.mapping, "shortBio") || null,
+    notesPrivate:
+      [rawMetadata.burial_place, rawMetadata.worship_place, rawMetadata.caretaker]
+        .filter(Boolean)
+        .join(" | ") || null,
+    visibility: "family",
+    rawMetadata,
+  };
+
+  candidate.fingerprint = personFingerprint(candidate);
+  return candidate;
+}
+
+function buildParentRelationshipCandidates(input: {
+  person: GiaPha4StagedPersonCandidate;
+  row: string[];
+  mapping: HeaderMapping;
+  personByExternalId: Map<string, GiaPha4StagedPersonCandidate>;
+  warnings: GiaPha4StagingWarning[];
+}) {
   const candidates: GiaPha4StagedRelationshipCandidate[] = [];
+  let skippedParentRelationships = 0;
 
-  const addCandidate = (
-    relationKind: "father" | "mother" | "spouse" | "children",
-    relatedName: string,
+  const addParentCandidate = (
+    role: "father" | "mother",
+    externalIdKey: "fatherExternalId" | "motherExternalId",
+    nameKey: "fatherName" | "motherName",
   ) => {
-    const matches = personByName.get(normalizeHeader(relatedName)) ?? [];
-    const matched = matches.length === 1 ? matches[0] : null;
-    const isMissing = matches.length === 0;
-    const isAmbiguous = matches.length > 1;
-    const relationshipType =
-      relationKind === "spouse" ? "spouse_couple" : "parent_child";
-    const prefixByKind = {
-      father: "Cha",
-      mother: "Mẹ",
-      spouse: "Vợ/chồng",
-      children: "Con",
-    } as const;
+    const parentExternalId = normalizeSourceKey(
+      getRawCellValue(input.row, input.mapping, externalIdKey),
+    );
+    const parentName = getCellValue(input.row, input.mapping, nameKey);
+    const roleLabel = role === "father" ? "Bố" : "Mẹ";
 
+    if (!isValidParentExternalId(parentExternalId, input.person.externalId)) {
+      if (!isGiaPha4NullPlaceholder(parentExternalId)) {
+        input.warnings.push(
+          createWarning(
+            "A16I3_PARENT_REFERENCE_SKIPPED",
+            `${roleLabel} có Mã GP không hợp lệ hoặc trùng với Mã GP của người con nên đã bỏ qua quan hệ này.`,
+            "warning",
+            input.person.sourceRowIndex,
+            externalIdKey,
+          ),
+        );
+      }
+      skippedParentRelationships += 1;
+      return;
+    }
+
+    const matched = input.personByExternalId.get(parentExternalId) ?? null;
     candidates.push({
-      relationshipType,
-      sourceRowIndex: person.sourceRowIndex,
-      sourcePersonFingerprint: person.fingerprint,
-      relatedRowIndex: matched?.sourceRowIndex ?? null,
-      relatedPersonFingerprint: matched?.fingerprint ?? relatedNameFingerprint(relatedName),
-      relationshipLabelVi: `${prefixByKind[relationKind]}: ${relatedName}`,
-      confidence: matched ? "medium" : "ambiguous",
-      ambiguityStatus: matched
-        ? "clear"
-        : isMissing
-          ? "missing_reference"
-          : isAmbiguous
-            ? "ambiguous"
-            : "ambiguous",
+      relationshipType: "parent_child",
+      sourceRowIndex: input.person.sourceRowIndex,
+      sourcePersonFingerprint: matched?.fingerprint ?? externalIdFingerprint(parentExternalId),
+      relatedRowIndex: input.person.sourceRowIndex,
+      relatedPersonFingerprint: input.person.fingerprint,
+      relationshipLabelVi: `${roleLabel}: ${parentName || parentExternalId}`,
+      confidence: matched ? "strong" : "ambiguous",
+      ambiguityStatus: matched ? "clear" : "missing_reference",
+      sourceExternalId: input.person.externalId,
+      parentExternalId,
+      parentRole: role,
+      sourceLabelVi: parentName || null,
     });
   };
 
-  for (const father of splitRelationNames(getCellValue(row, mapping, "father"))) {
-    addCandidate("father", father);
-  }
-  for (const mother of splitRelationNames(getCellValue(row, mapping, "mother"))) {
-    addCandidate("mother", mother);
-  }
-  for (const spouse of splitRelationNames(getCellValue(row, mapping, "spouse"))) {
-    addCandidate("spouse", spouse);
-  }
-  for (const child of splitRelationNames(getCellValue(row, mapping, "children"))) {
-    addCandidate("children", child);
-  }
+  addParentCandidate("father", "fatherExternalId", "fatherName");
+  addParentCandidate("mother", "motherExternalId", "motherName");
 
-  return candidates;
+  return { candidates, skippedParentRelationships };
 }
 
 export async function parseGiaPha4XlsxForStaging(
@@ -527,126 +704,100 @@ export async function parseGiaPha4XlsxForStaging(
     };
   }
 
-  const selected = selectBestSheet(sheets);
-  if (!selected) {
+  const sheet = selectMemberSheet(sheets);
+  if (!sheet) {
     return {
       ok: false,
       sourceFileHash,
-      errorCode: "A16I_HEADER_NOT_RECOGNIZED",
-      messageVi: "Không nhận diện được header Gia Phả 4 trong workbook.",
+      errorCode: "A16I3_MEMBER_SHEET_MISSING",
+      messageVi: 'Không tìm thấy sheet "Thành viên" trong file Gia Phả 4.',
       warnings: [
         createWarning(
-          "A16I_HEADER_NOT_RECOGNIZED",
-          "Không tìm thấy dòng header có cột họ tên và dữ liệu Gia Phả 4 tối thiểu.",
+          "A16I3_MEMBER_SHEET_MISSING",
+          'File .xlsx cần có sheet "Thành viên" để đọc danh sách thành viên.',
           "blocker",
         ),
       ],
     };
   }
 
-  const { sheet, mapping } = selected;
-  const warnings: GiaPha4StagingWarning[] = [];
+  const mapping = findHeaderMapping(sheet);
+  if (!mapping) {
+    // A16I_HEADER_NOT_RECOGNIZED remains as a compatibility marker for the original A-16I checker.
+    return {
+      ok: false,
+      sourceFileHash,
+      errorCode: "A16I3_REQUIRED_HEADERS_MISSING",
+      messageVi: 'Sheet "Thành viên" cần có tối thiểu cột "Mã GP" và "Họ tên".',
+      warnings: [
+        createWarning(
+          "A16I3_REQUIRED_HEADERS_MISSING",
+          'Không tìm thấy đủ header bắt buộc "Mã GP" và "Họ tên" trong sheet "Thành viên".',
+          "blocker",
+        ),
+      ],
+    };
+  }
+
+  const warnings: GiaPha4StagingWarning[] = [
+    createWarning(
+      "A16I3_MEMBER_SHEET_DETECTED",
+      'Đã nhận diện sheet "Thành viên" và header Gia Phả 4.',
+      "info",
+      mapping.headerRowIndex + 1,
+      "sheet",
+    ),
+  ];
   const personCandidates: GiaPha4StagedPersonCandidate[] = [];
   let heldRowCount = 0;
+  let peopleRowsRead = 0;
 
-  for (let rowIndex = mapping.headerRowIndex + 1; rowIndex < sheet.rows.length; rowIndex += 1) {
+  for (
+    let rowIndex = mapping.headerRowIndex + 1;
+    rowIndex < sheet.rows.length;
+    rowIndex += 1
+  ) {
     const row = sheet.rows[rowIndex] ?? [];
-    if (row.every((value) => !normalizeGiaPha4Text(value))) continue;
+    if (row.every((value) => !normalizeGiaPha4NullableText(value))) continue;
 
-    const fullName = getCellValue(row, mapping, "fullName");
+    peopleRowsRead += 1;
     const sourceRowIndex = rowIndex + 1;
+    const candidate = mapMemberRowToStagingPerson({
+      row,
+      mapping,
+      sourceRowIndex,
+      warnings,
+    });
 
-    if (!fullName) {
+    if (!candidate) {
       heldRowCount += 1;
-      warnings.push(
-        createWarning(
-          "A16I_MISSING_FULL_NAME",
-          "Dòng thiếu họ tên nên chỉ giữ lại dưới dạng cảnh báo, chưa tạo ứng viên người.",
-          "blocker",
-          sourceRowIndex,
-          "full_name",
-        ),
-      );
       continue;
     }
 
-    const birthDate = normalizeGiaPha4DateText(getCellValue(row, mapping, "birthDate"));
-    const deathDate = normalizeGiaPha4DateText(getCellValue(row, mapping, "deathDate"));
-    const generation = parseGiaPha4Generation(
-      getCellValue(row, mapping, "generationNumber"),
-    );
-    const generationText = getCellValue(row, mapping, "generationNumber");
-
-    if (birthDate.warning) {
-      warnings.push(
-        createWarning(
-          "A16I_BIRTH_DATE_NEEDS_REVIEW",
-          birthDate.warning,
-          "warning",
-          sourceRowIndex,
-          "birth_date",
-        ),
-      );
-    }
-    if (deathDate.warning) {
-      warnings.push(
-        createWarning(
-          "A16I_DEATH_DATE_NEEDS_REVIEW",
-          deathDate.warning,
-          "warning",
-          sourceRowIndex,
-          "death_date",
-        ),
-      );
-    }
-    if (generationText && !generation) {
-      warnings.push(
-        createWarning(
-          "A16I_GENERATION_NEEDS_REVIEW",
-          "Đời/thế hệ chưa phải số nguyên dương nên cần rà soát.",
-          "warning",
-          sourceRowIndex,
-          "generation_number",
-        ),
-      );
-    }
-
-    const candidate: GiaPha4StagedPersonCandidate = {
-      sourceRowIndex,
-      fingerprint: "",
-      fullName,
-      displayName: getCellValue(row, mapping, "displayName") || null,
-      gender: normalizeGiaPha4Gender(getCellValue(row, mapping, "gender")),
-      birthDateText: birthDate.value ?? null,
-      deathDateText: deathDate.value ?? null,
-      isLiving: parseLiving(
-        getCellValue(row, mapping, "isLiving"),
-        deathDate.value ?? null,
-      ),
-      birthPlace: getCellValue(row, mapping, "birthPlace") || null,
-      homeTown: getCellValue(row, mapping, "homeTown") || null,
-      branchName: getCellValue(row, mapping, "branchName") || null,
-      generationNumber: generation ?? null,
-      shortBio: getCellValue(row, mapping, "shortBio") || null,
-      notesPrivate: getCellValue(row, mapping, "notesPrivate") || null,
-      visibility: "family",
-    };
-    candidate.fingerprint = personFingerprint(candidate);
     personCandidates.push(candidate);
   }
 
+  const personByExternalId = new Map<string, GiaPha4StagedPersonCandidate>();
   const personByName = new Map<string, GiaPha4StagedPersonCandidate[]>();
   for (const person of personCandidates) {
+    personByExternalId.set(person.externalId, person);
     const key = normalizeHeader(person.fullName);
     personByName.set(key, [...(personByName.get(key) ?? []), person]);
   }
 
   const relationshipCandidates: GiaPha4StagedRelationshipCandidate[] = [];
+  let skippedParentRelationships = 0;
   for (const person of personCandidates) {
     const row = sheet.rows[person.sourceRowIndex - 1] ?? [];
-    relationshipCandidates.push(
-      ...buildRelationshipCandidates(person, row, mapping, personByName),
-    );
+    const result = buildParentRelationshipCandidates({
+      person,
+      row,
+      mapping,
+      personByExternalId,
+      warnings,
+    });
+    relationshipCandidates.push(...result.candidates);
+    skippedParentRelationships += result.skippedParentRelationships;
   }
 
   const duplicateCandidates: GiaPha4StagedDuplicateCandidate[] = [];
@@ -662,14 +813,14 @@ export async function parseGiaPha4XlsxForStaging(
     }
   }
 
-  const ambiguousRelationshipCount = relationshipCandidates.filter(
-    (candidate) => candidate.ambiguityStatus !== "clear",
+  const missingParentReferenceCount = relationshipCandidates.filter(
+    (candidate) => candidate.ambiguityStatus === "missing_reference",
   ).length;
-  if (ambiguousRelationshipCount > 0) {
+  if (missingParentReferenceCount > 0) {
     warnings.push(
       createWarning(
-        "A16I_RELATIONSHIP_REFERENCE_NEEDS_REVIEW",
-        "Một số quan hệ cha/mẹ/vợ/chồng/con chưa khớp chắc chắn với một dòng trong file và cần owner rà soát.",
+        "A16I3_PARENT_REFERENCE_MISSING",
+        "Một số Mã GP Bố/Mẹ không tìm thấy trong sheet Thành viên và cần owner rà soát.",
         "warning",
       ),
     );
@@ -679,7 +830,7 @@ export async function parseGiaPha4XlsxForStaging(
     warnings.push(
       createWarning(
         "A16I_UNMAPPED_COLUMN",
-        `Cột "${column}" chưa được map trong A-16I.`,
+        `Cột "${column}" chưa được map trong A-16I3.`,
         "info",
         mapping.headerRowIndex + 1,
         "unmapped_column",
@@ -687,12 +838,23 @@ export async function parseGiaPha4XlsxForStaging(
     );
   }
 
+  const errorCount = warnings.filter((item) => item.severity === "blocker").length;
+  const parseSummary: GiaPha4ParseSummary = {
+    sheetName: sheet.name,
+    peopleRowsRead,
+    peopleRowsMapped: personCandidates.length,
+    parentRelationshipsMapped: relationshipCandidates.length,
+    skippedParentRelationships,
+    warningCount: warnings.filter((item) => item.severity === "warning").length,
+    errorCount,
+  };
+
   const manifestForHash = {
     marker: A16I_GIAPHA4_STAGING_PARSER_MARKER,
+    mappingMarker: A16I3_GIAPHA4_COLUMN_MAPPING_MARKER,
     mappingVersion: A16I_MAPPING_VERSION,
     parserVersion: A16I_PARSER_VERSION,
-    sheetName: sheet.name,
-    rowCount: personCandidates.length,
+    parseSummary,
     personCandidates,
     relationshipCandidates,
     duplicateCandidates,
@@ -712,5 +874,6 @@ export async function parseGiaPha4XlsxForStaging(
     warnings,
     unmappedColumns: mapping.unmappedColumns,
     heldRowCount,
+    parseSummary,
   };
 }

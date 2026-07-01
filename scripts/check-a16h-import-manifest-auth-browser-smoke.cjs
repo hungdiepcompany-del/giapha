@@ -48,6 +48,15 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "docs/PLAN_A16SQL_RLS_IMPORT_STAGING_WRITE.md",
   "scripts/check-a16sql-rls-import-staging-write.cjs",
+  "docs/PLAN_A16I3_GIAPHA4_XLSX_COLUMN_MAPPING.md",
+  "docs/PLAN_A16I4_REAL_GIAPHA4_STAGING_UPLOAD_RUN.md",
+  "docs/PLAN_A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE.md",
+  "lib/import/giapha4/normalize.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts",
+  "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
+  "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
+  "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -237,7 +246,8 @@ for (const file of changedFiles) {
     file !== "app/api/admin/import-sessions/upload/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts"
   ) {
     failures.push(`API file changed outside A-16I upload staging route ${file}`);
   }
@@ -252,6 +262,8 @@ for (const file of changedFiles) {
       "lib/import/giapha4/manifest-validation-service.ts",
       "lib/import/giapha4/import-dry-run-approval-gate.ts",
       "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+      "lib/import/giapha4/normalize.ts",
+      "lib/import/giapha4/import-review-pack-service.ts",
     ].includes(file)
   ) {
     failures.push(`API/service/runtime file changed ${file}`);

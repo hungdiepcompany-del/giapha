@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-07-01 - A-16I3/A-16I4/A-16I5 - Gia Phả 4 Mapping, Real Staging Smoke, Owner Review Pack
+
+- Markers: `A-16I3`, `A-16I4`, `A-16I5`.
+- A-16I3 final status: `A16I3_STATUS=XLSX_COLUMN_MAPPING_READY_STAGING_ONLY`.
+- A-16I4 final status: `A16I4_STATUS=REAL_STAGING_UPLOAD_SMOKE_READY_OR_SAFE_SKIP`.
+- A-16I5 final status: `A16I5_STATUS=OWNER_REVIEW_PACK_READY_OFFICIAL_IMPORT_CLOSED`.
+- Hardened Gia Phả 4 `.xlsx` parser for sheet `Thành viên`, `Mã GP`, `Họ tên`,
+  `Mã GP Bố`, `Mã GP Mẹ`, placeholder values, Excel serial/year/date parsing and
+  parent-reference warnings.
+- Added staging `parseSummary` and surfaced Vietnamese upload summary copy for
+  `Đã nhận diện sheet Thành viên`, `Mã GP`, and `Quan hệ cha/mẹ`.
+- Hardened real staging smoke reason codes:
+  `AUTH_SESSION_MISSING`, `PERMISSION_IMPORTS_CREATE_MISSING`,
+  `RLS_STAGING_WRITE_BLOCKED`, `PARSER_HEADER_MISSING`,
+  `PARSER_SHEET_MISSING`, `PARSER_UNSUPPORTED_XLS`,
+  `NETWORK_OR_BASE_URL_ERROR`, `UNKNOWN_UPLOAD_ERROR`.
+- Owner reported A-16SQL manual Supabase Dashboard apply verification PASS:
+  RLS enabled, authenticated staging SELECT/INSERT policies, authenticated
+  UPDATE only on `import_sessions`, no anon/public staging policy,
+  `imports.create` exists, and no A-16SQL policy on real genealogy tables.
+- Added read-only owner review pack service/API:
+  `GET /api/admin/import-sessions/[sessionId]/review-pack`.
+- `/admin/exports/import` now shows `Gói rà soát trước khi nhập` and keeps
+  `canProceedToOfficialImport=false`, `readyForOfficialImport=false`.
+- Added docs/checkers:
+  `docs/PLAN_A16I3_GIAPHA4_XLSX_COLUMN_MAPPING.md`,
+  `docs/PLAN_A16I4_REAL_GIAPHA4_STAGING_UPLOAD_RUN.md`,
+  `docs/PLAN_A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE.md`,
+  `scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs`,
+  `scripts/check-a16i4-real-giapha4-staging-upload-run.cjs`,
+  `scripts/check-a16i5-import-review-pack-official-import-gate.cjs`.
+- A-16I3/I4/I5 did not create migrations, did not run `supabase db push`, did
+  not run SQL apply, did not seed, did not deploy, did not push, did not write
+  real people/person rows, did not write real relationships, did not update
+  layout/tree/revision, and did not open official import.
+
 ## 2026-06-30 - A-16SQL - Import Staging Write RLS Candidate
 
 - Marker: `A-16SQL-RLS-IMPORT-STAGING-WRITE`.

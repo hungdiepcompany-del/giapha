@@ -33,10 +33,24 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16g-import-session-read-manifest-runtime.cjs",
   "scripts/check-a16h-import-manifest-auth-browser-smoke.cjs",
   "scripts/check-a16i-upload-parse-giapha4-manifest-staging.cjs",
+  "lib/import/giapha4/xlsx-staging-parser.ts",
+  "lib/import/giapha4/manifest-upload-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
+  "components/imports/giapha4-manifest-upload-form.tsx",
   "scripts/check-a16j-manifest-staging-review-validation-warnings.cjs",
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
+  "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
   "docs/PLAN_A16SQL_RLS_IMPORT_STAGING_WRITE.md",
   "scripts/check-a16sql-rls-import-staging-write.cjs",
+  "docs/PLAN_A16I3_GIAPHA4_XLSX_COLUMN_MAPPING.md",
+  "docs/PLAN_A16I4_REAL_GIAPHA4_STAGING_UPLOAD_RUN.md",
+  "docs/PLAN_A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE.md",
+  "lib/import/giapha4/normalize.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts",
+  "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
+  "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
+  "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -238,7 +252,8 @@ for (const file of changedFiles) {
   if (
     file.startsWith("app/api/") &&
     file !== gateRoutePath &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts"
   ) {
     failures.push(`unexpected API route changed ${file}`);
   }

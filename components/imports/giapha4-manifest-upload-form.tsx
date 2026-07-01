@@ -202,6 +202,22 @@ export function GiaPha4ManifestUploadForm() {
             />
           </div>
 
+          {state.data.summary.parseSummary ? (
+            <div className="rounded-lg border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-950">
+              <div className="font-bold">Đã nhận diện sheet Thành viên</div>
+              <div className="mt-1">
+                Đã đọc mã Gia Phả 4 cho{" "}
+                {state.data.summary.parseSummary.peopleRowsMapped} thành viên.
+                Quan hệ cha/mẹ được tạo từ Mã GP Bố/Mã GP Mẹ:{" "}
+                {state.data.summary.parseSummary.parentRelationshipsMapped}.
+              </div>
+              <div className="mt-1">
+                Dữ liệu này vẫn chỉ nằm ở staging, chưa nhập vào cây gia phả
+                thật.
+              </div>
+            </div>
+          ) : null}
+
           {state.data.warnings.length > 0 ? (
             <div className="grid gap-2">
               {state.data.warnings.slice(0, 6).map((warning, index) => (

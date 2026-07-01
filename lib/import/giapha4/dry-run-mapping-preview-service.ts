@@ -26,11 +26,15 @@ const approvalMarker: typeof A16K_IMPORT_DRY_RUN_REQUIRED_MARKER =
 export type ProposedPersonPayload = {
   sourceRowIndex: number;
   sourceFingerprint: string;
+  externalId: string | null;
   fullName: string;
   displayName: string | null;
+  alternateName: string | null;
   gender: string;
   birthDateText: string | null;
   deathDateText: string | null;
+  memorialLunarDate: string | null;
+  ageAtDeath: number | null;
   isLiving: boolean | null;
   birthPlace: string | null;
   homeTown: string | null;
@@ -124,11 +128,15 @@ function mapPerson(
   return {
     sourceRowIndex: person.sourceRowIndex,
     sourceFingerprint: person.fingerprint,
+    externalId: person.externalId,
     fullName: person.fullName,
     displayName: person.displayName,
+    alternateName: person.alternateName,
     gender: person.gender,
     birthDateText: person.birthDateText,
     deathDateText: person.deathDateText,
+    memorialLunarDate: person.memorialLunarDate,
+    ageAtDeath: person.ageAtDeath,
     isLiving: person.isLiving,
     birthPlace: person.birthPlace,
     homeTown: person.homeTown,

@@ -96,11 +96,15 @@ export type ImportWriteManifestPreview = {
 export type ImportPersonCandidatePreview = {
   sourceRowIndex: number;
   fingerprint: string;
+  externalId: string | null;
   fullName: string;
   displayName: string | null;
+  alternateName: string | null;
   gender: string;
   birthDateText: string | null;
   deathDateText: string | null;
+  memorialLunarDate: string | null;
+  ageAtDeath: number | null;
   isLiving: boolean | null;
   birthPlace: string | null;
   homeTown: string | null;
@@ -109,6 +113,7 @@ export type ImportPersonCandidatePreview = {
   shortBio: string | null;
   notesPrivate: string | null;
   visibility: string;
+  rawMetadata: Record<string, unknown>;
 };
 
 export type ImportManifestSummary = {
@@ -285,11 +290,15 @@ function normalizePersonCandidatePreview(
   return {
     sourceRowIndex: candidate.sourceRowIndex,
     fingerprint: candidate.fingerprint,
+    externalId: stringOrNull(candidate.externalId),
     fullName: candidate.fullName,
     displayName: stringOrNull(candidate.displayName),
+    alternateName: stringOrNull(candidate.alternateName),
     gender: typeof candidate.gender === "string" ? candidate.gender : "unknown",
     birthDateText: stringOrNull(candidate.birthDateText),
     deathDateText: stringOrNull(candidate.deathDateText),
+    memorialLunarDate: stringOrNull(candidate.memorialLunarDate),
+    ageAtDeath: numberOrNull(candidate.ageAtDeath),
     isLiving: booleanOrNull(candidate.isLiving),
     birthPlace: stringOrNull(candidate.birthPlace),
     homeTown: stringOrNull(candidate.homeTown),
@@ -301,6 +310,12 @@ function normalizePersonCandidatePreview(
       typeof candidate.visibility === "string" && candidate.visibility.trim()
         ? candidate.visibility
         : "family",
+    rawMetadata:
+      candidate.rawMetadata &&
+      typeof candidate.rawMetadata === "object" &&
+      !Array.isArray(candidate.rawMetadata)
+        ? candidate.rawMetadata
+        : {},
   };
 }
 

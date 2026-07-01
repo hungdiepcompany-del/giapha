@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 215 - A-16I5 adds read-only import review pack while official import remains closed
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add a server-only import review pack service for existing manifest staging
+  data.
+- Expose only `GET /api/admin/import-sessions/[sessionId]/review-pack`.
+- Summarize parse, validation and dry-run preview evidence for owner review.
+- Keep `canProceedToOfficialImport=false` and `readyForOfficialImport=false`.
+- Keep the existing disabled official import UI boundary.
+
+Lý do:
+
+- Owner needs one compact review surface after A-16I/A-16J/A-16L before any
+  separate official import approval phase.
+- Existing staging data is enough to produce a read-only review pack without
+  schema changes or real genealogy writes.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no seed, no real Excel
+  import in this decision, no people/person write, no relationship write, no
+  layout/tree/revision write, no service-role bypass, no official import action,
+  no deploy and no push.
+
 ## Decision 214 - A-16SQL adds import staging write RLS candidate without DB apply
 
 Status: `ACTIVE`

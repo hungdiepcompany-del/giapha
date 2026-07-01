@@ -22,6 +22,9 @@ const legacyCheckerPaths = [
   "scripts/check-a16i2-real-giapha4-upload-smoke.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
+  "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
+  "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
+  "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
 ];
 
 const allowedChangedFiles = new Set([
@@ -35,6 +38,19 @@ const allowedChangedFiles = new Set([
   supabaseMigrationPath,
   verifySqlPath,
   ...legacyCheckerPaths,
+  "docs/PLAN_A16I3_GIAPHA4_XLSX_COLUMN_MAPPING.md",
+  "docs/PLAN_A16I4_REAL_GIAPHA4_STAGING_UPLOAD_RUN.md",
+  "docs/PLAN_A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE.md",
+  "lib/import/giapha4/normalize.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts",
+  "components/imports/giapha4-manifest-upload-form.tsx",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
+  "lib/import/giapha4/manifest-upload-service.ts",
+  "lib/import/giapha4/xlsx-staging-parser.ts",
+  "scripts/smoke-a16i2-real-giapha4-upload-staging.cjs",
   "package.json",
 ]);
 
@@ -285,7 +301,10 @@ for (const file of changedFiles) {
   if (/wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config|\.github\/workflows/i.test(file)) {
     failures.push(`runtime/deploy config changed ${file}`);
   }
-  if (file.startsWith("app/") || file.startsWith("lib/") || file.startsWith("components/")) {
+  if (
+    (file.startsWith("app/") || file.startsWith("lib/") || file.startsWith("components/")) &&
+    !allowedChangedFiles.has(file)
+  ) {
     failures.push(`runtime/UI file changed ${file}`);
   }
 }

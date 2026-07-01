@@ -1,5 +1,6 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
+import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -84,6 +85,7 @@ export function ImportSessionManifestPanel({
   const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
   const dryRunGate = getImportDryRunApprovalGate();
   const dryRunPreview = buildDryRunMappingPreview(result);
+  const reviewPack = buildImportReviewPackFromManifest(result);
 
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
@@ -314,6 +316,55 @@ export function ImportSessionManifestPanel({
                   ))}
               </div>
             ) : null}
+          </section>
+
+          <section className="grid gap-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-emerald-800">
+                Gói rà soát trước khi nhập
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Chủ sở hữu kiểm tra lần cuối
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Gói này chỉ tổng hợp dữ liệu staging, cảnh báo và bản mô phỏng
+                dry-run. Chưa ghi thành viên thật, quan hệ thật, layout cây hoặc
+                revision.
+              </p>
+              {reviewPack.readiness === "READY_FOR_OWNER_REVIEW" ? (
+                <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm font-semibold text-emerald-900">
+                  Sẵn sàng để owner rà soát
+                </div>
+              ) : (
+                <div className="rounded-md border border-amber-200 bg-white p-3 text-sm font-semibold text-amber-900">
+                  Chưa đủ điều kiện nhập chính thức
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <MetricCard
+                label="Người staging"
+                value={reviewPack.validationSummary.peopleCount}
+              />
+              <MetricCard
+                label="Quan hệ cha mẹ"
+                value={reviewPack.validationSummary.relationshipCount}
+              />
+              <MetricCard
+                label="Lỗi cần xử lý"
+                value={reviewPack.validationSummary.errorCount}
+              />
+              <MetricCard
+                label="Dry-run bị chặn"
+                value={reviewPack.dryRunSummary.blockedByErrorCount}
+              />
+            </div>
+
+            <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm leading-6 text-stone-700">
+              Trạng thái nhập chính thức: chưa mở. Marker review:{" "}
+              {reviewPack.marker}.
+            </div>
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

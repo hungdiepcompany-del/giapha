@@ -8,6 +8,7 @@ import {
   A16I_PARSER_VERSION,
   GIAPHA4_STAGING_MAX_BYTES,
   parseGiaPha4XlsxForStaging,
+  type GiaPha4ParseSummary,
   type GiaPha4StagedDuplicateCandidate,
   type GiaPha4StagedPersonCandidate,
   type GiaPha4StagedRelationshipCandidate,
@@ -30,6 +31,7 @@ export type GiaPha4ManifestUploadSummary = {
   unmappedColumnCount: number;
   heldRowCount: number;
   fileFormat: "xlsx" | "xls_unsupported" | "unsupported" | "missing";
+  parseSummary: GiaPha4ParseSummary | null;
 };
 
 export type GiaPha4ManifestUploadResult = {
@@ -97,6 +99,7 @@ function emptySummary(
     unmappedColumnCount: 0,
     heldRowCount: 0,
     fileFormat: "missing",
+    parseSummary: null,
   };
 }
 
@@ -206,10 +209,16 @@ function buildDraftWriteManifest(input: {
     status: "draft",
     approved_scope: {
       stage: "A-16I",
+      mapping_stage: "A-16I3",
       staging_only: true,
       real_import_enabled: false,
       official_import_cta: "disabled",
       person_candidates: input.personCandidates,
+      mapping_summary: {
+        sheet_detected: true,
+        people_candidate_count: input.personCandidates.length,
+        parent_relationship_candidate_count: input.relationshipCandidates.length,
+      },
     },
     planned_counts: {
       people: input.personCandidates.length,
@@ -365,6 +374,7 @@ export async function uploadGiaPha4ManifestStaging(
           : file.name.toLowerCase().endsWith(".xlsx")
             ? "xlsx"
             : "unsupported",
+        parseSummary: null,
       },
     });
   }
@@ -404,6 +414,7 @@ export async function uploadGiaPha4ManifestStaging(
         fileFormat: file.name.toLowerCase().endsWith(".xls")
           ? "xls_unsupported"
           : "unsupported",
+        parseSummary: null,
       },
     });
   }
@@ -494,10 +505,12 @@ export async function uploadGiaPha4ManifestStaging(
       held_row_count: parseResult.heldRowCount,
       review_summary: {
         stage: "A-16I",
+        mapping_stage: "A-16I3",
         staging_only: true,
         parse_status: "completed",
         sheet_name: parseResult.sheetName,
         header_row_index: parseResult.headerRowIndex,
+        parse_summary: parseResult.parseSummary,
         person_candidates_in_write_manifest: true,
         official_import_open: false,
       },
@@ -523,6 +536,7 @@ export async function uploadGiaPha4ManifestStaging(
         sourceFileHash: parseResult.sourceFileHash,
         previewManifestHash: parseResult.previewManifestHash,
         fileFormat: "xlsx",
+        parseSummary: parseResult.parseSummary,
       },
     });
   }
@@ -546,6 +560,7 @@ export async function uploadGiaPha4ManifestStaging(
       unmappedColumnCount: parseResult.unmappedColumns.length,
       heldRowCount: parseResult.heldRowCount,
       fileFormat: "xlsx",
+      parseSummary: parseResult.parseSummary,
     },
   });
 }

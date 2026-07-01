@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16I3/A-16I4/A-16I5 - Gia Phả 4 Mapping, Real Staging Smoke, Owner Review Pack
+
+- Markers: `A-16I3`, `A-16I4`, `A-16I5`.
+- Current statuses:
+  `A16I3_STATUS=XLSX_COLUMN_MAPPING_READY_STAGING_ONLY`,
+  `A16I4_STATUS=REAL_STAGING_UPLOAD_SMOKE_READY_OR_SAFE_SKIP`,
+  `A16I5_STATUS=OWNER_REVIEW_PACK_READY_OFFICIAL_IMPORT_CLOSED`.
+- A-16I3 hardens the Gia Phả 4 `.xlsx` parser for sheet `Thành viên`, `Mã GP`,
+  `Họ tên`, `Mã GP Bố`, `Mã GP Mẹ`, nullable placeholders, date parsing and
+  parent-reference warnings.
+- A-16I4 hardens the real staging smoke with reason codes:
+  `AUTH_SESSION_MISSING`, `PERMISSION_IMPORTS_CREATE_MISSING`,
+  `RLS_STAGING_WRITE_BLOCKED`, `PARSER_HEADER_MISSING`,
+  `PARSER_SHEET_MISSING`, `PARSER_UNSUPPORTED_XLS`,
+  `NETWORK_OR_BASE_URL_ERROR`, `UNKNOWN_UPLOAD_ERROR`.
+- Owner reported A-16SQL manual Supabase Dashboard apply verification PASS:
+  five staging tables have RLS enabled, authenticated SELECT/INSERT policies,
+  authenticated UPDATE only on `import_sessions`, no anon/public staging policy,
+  `imports.create` exists, and no A-16SQL policy touches real genealogy tables.
+- A-16I5 adds read-only owner review pack:
+  `GET /api/admin/import-sessions/[sessionId]/review-pack`.
+- `/admin/exports/import` now includes `Gói rà soát trước khi nhập`; official
+  import remains closed with `canProceedToOfficialImport=false` and
+  `readyForOfficialImport=false`.
+- Added docs/checkers:
+  `docs/PLAN_A16I3_GIAPHA4_XLSX_COLUMN_MAPPING.md`,
+  `docs/PLAN_A16I4_REAL_GIAPHA4_STAGING_UPLOAD_RUN.md`,
+  `docs/PLAN_A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE.md`,
+  `scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs`,
+  `scripts/check-a16i4-real-giapha4-staging-upload-run.cjs`,
+  `scripts/check-a16i5-import-review-pack-official-import-gate.cjs`.
+- Boundaries preserved: no migration, no DB push, no SQL apply, no seed, no
+  deploy, no push, no people/person write, no relationship write, no
+  layout/tree/revision write, no service-role bypass and no official import.
+- Next safe step: run a real staging upload smoke only with explicit owner env
+  and a real `.xlsx` file outside the repo; any official import still requires a
+  separate approval/transaction/rollback phase.
+
 ## 2026-06-30 - A-16SQL - Import Staging Write RLS Candidate
 
 - Marker: `A-16SQL-RLS-IMPORT-STAGING-WRITE`.
