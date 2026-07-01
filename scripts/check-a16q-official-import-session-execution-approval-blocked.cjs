@@ -5,20 +5,16 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16P_TX_APPLY_VERIFY.md";
-const readinessDocPath =
-  "docs/PLAN_A16P_TX_OFFICIAL_IMPORT_TRANSACTION_HELPER_READINESS.md";
-const dbMigrationPath =
-  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql";
-const supabaseMigrationPath =
-  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql";
-const verificationSqlPath =
-  "db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql";
+const docPath =
+  "docs/PLAN_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION_APPROVAL_BLOCKED.md";
+const checkerPath =
+  "scripts/check-a16q-official-import-session-execution-approval-blocked.cjs";
+const packagePath = "package.json";
 const servicePath = "lib/import/giapha4/official-import-service.ts";
+const gatePath = "lib/import/giapha4/official-import-preflight-gate.ts";
 const routePath =
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
-const checkerPath = "scripts/check-a16p-tx-apply-verify.cjs";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -62,91 +58,80 @@ function rejectPattern(content, pattern, label = String(pattern)) {
 }
 
 const doc = readFile(docPath);
-const readinessDoc = readFile(readinessDocPath);
-const dbMigration = readFile(dbMigrationPath);
-const supabaseMigration = readFile(supabaseMigrationPath);
-const verificationSql = readFile(verificationSqlPath);
+const checker = readFile(checkerPath);
+const packageJson = readJson(packagePath);
 const service = readFile(servicePath);
+const gate = readFile(gatePath);
 const route = readFile(routePath);
 const panel = readFile(panelPath);
-const checker = readFile(checkerPath);
-const packageJson = readJson("package.json");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
-if (dbMigration !== supabaseMigration) {
-  failures.push("db migration and supabase mirror must remain byte-for-byte identical");
-}
-
 for (const token of [
-  "A-16P-TX-APPLY-VERIFY",
-  "A16P_TX_APPLY_VERIFY_STATUS=PASS_OWNER_CONFIRMED",
-  "Owner manual apply PASS",
-  "Verification PASS",
-  "public.a16p_tx_execute_giapha4_official_import",
-  "Function comment",
-  "NOT_APPLIED",
-  "RPC exists but fail-closed",
-  "Official import still locked",
-  "canRunOfficialImport=false",
+  "A-16Q",
+  "A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID",
+  "Missing owner marker record",
+  "APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION",
+  "Missing session id",
+  "A16Q_IMPORT_SESSION_ID=<uuid>",
+  "102 staged members",
+  "134 parent relationship candidates",
+  "RPC `public.a16p_tx_execute_giapha4_official_import` da duoc owner apply thu",
+  "verification PASS",
+  "Official import van chua chay",
+  "`canRunOfficialImport=false`",
   "UI button disabled",
   "No RPC call",
   "No POST official import call",
   "No real genealogy writes",
-  "No SQL run",
-  "No DB push",
-  "No migration repair",
-  "No seed",
-  "A-16Q Session-specific Official Import Execution Approval",
-  "APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION",
+  "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const token of [
-  "Function `public.a16p_tx_execute_giapha4_official_import` exists",
-  "not `SECURITY DEFINER`",
-  "search_path=public, pg_temp",
-  "No `EXECUTE` for `anon` or `public`",
-  "Function fails closed",
-  "No A-16P policy on real tables",
-  "No auto import trigger",
+  "Exact session id",
+  "Validation errors = 0",
+  "Blockers = 0",
+  "Unresolved parent references = 0",
+  "Duplicate/conflict unresolved = 0",
+  "Rollback reviewed",
+  "Audit reviewed",
+  "Dry-run/review pack current",
+  "Owner accepts 102 staged people and 134 parent relationships",
+  "Owner understands import is irreversible unless rollback works",
+  "Owner understands A-16R will be the phase that may actually mutate data",
+  "A-16R must not deploy/push unless separately approved",
 ]) {
-  requireIncludes(doc, token, `verification evidence ${token}`);
+  requireIncludes(doc, token, `approval checklist token ${token}`);
+}
+
+if (
+  packageJson?.scripts?.[
+    "check:a16q-official-import-session-execution-approval-blocked"
+  ] !==
+  "node scripts/check-a16q-official-import-session-execution-approval-blocked.cjs"
+) {
+  failures.push(
+    "missing package script check:a16q-official-import-session-execution-approval-blocked",
+  );
+}
+
+for (const [content, token, label] of [
+  [index, "PLAN_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION_APPROVAL_BLOCKED.md", "index entry"],
+  [workLog, "A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID", "work log status"],
+  [decisionLog, "Decision 220", "decision log entry"],
+  [handoff, "A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID", "handoff status"],
+]) {
+  requireIncludes(content, token, label);
 }
 
 for (const token of [
-  "A16P_TX_STATUS=PASS_WITH_BLOCKER_TRANSACTION_NOT_APPLIED",
-  "APPROVE_A16P_TX_RPC_MANUAL_SQL_APPLY",
-  "APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION",
-]) {
-  requireIncludes(readinessDoc, token, `readiness doc token ${token}`);
-}
-
-for (const token of [
-  "SELECT_ONLY_VERIFICATION",
-  "DO_NOT_RUN_RPC",
-  "DO_NOT_RUN_OFFICIAL_IMPORT",
-  "DO_NOT_MUTATE_DB",
-  "A16P_TX_FUNCTION_EXISTS",
-  "A16P_TX_FUNCTION_IS_NOT_SECURITY_DEFINER",
-  "A16P_TX_FUNCTION_HAS_FIXED_SEARCH_PATH",
-  "A16P_TX_NO_EXECUTE_FOR_ANON_OR_PUBLIC",
-  "A16P_TX_FUNCTION_FAILS_CLOSED",
-  "A16P_TX_NO_A16P_POLICY_ON_REAL_TABLES",
-  "A16P_TX_NO_AUTO_IMPORT_TRIGGER",
-]) {
-  requireIncludes(verificationSql, token, `verification SQL token ${token}`);
-}
-
-for (const token of [
-  "A16P_TX_TRANSACTION_RPC_NAME",
-  "public.a16p_tx_execute_giapha4_official_import",
-  "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED",
   "canRunOfficialImport: false",
   "transactionStatus: \"BLOCKED_TRANSACTION_HELPER_NOT_APPLIED\"",
+  "A16P_TX_TRANSACTION_RPC_NAME",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
@@ -154,32 +139,28 @@ for (const token of [
 rejectPattern(service, /\.rpc\s*\(/i, "service must not call RPC");
 
 for (const token of [
+  "canOpenOfficialImport: false",
+  "officialImportEnabled: false",
+]) {
+  requireIncludes(gate, token, `gate token ${token}`);
+}
+
+for (const token of [
   "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED",
-  "process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === \"true\"",
   "status: \"LOCKED\"",
   "canRunOfficialImport: false",
 ]) {
   requireIncludes(route, token, `route token ${token}`);
 }
 
-for (const token of ["disabled", "aria-disabled=\"true\""]) {
-  requireIncludes(panel, token, `panel token ${token}`);
-}
-
-if (
-  packageJson?.scripts?.["check:a16p-tx-apply-verify"] !==
-  "node scripts/check-a16p-tx-apply-verify.cjs"
-) {
-  failures.push("missing package script check:a16p-tx-apply-verify");
-}
-
-for (const [content, token, label] of [
-  [index, "PLAN_A16P_TX_APPLY_VERIFY.md", "index apply-verify entry"],
-  [workLog, "A16P_TX_APPLY_VERIFY_STATUS=PASS_OWNER_CONFIRMED", "work log status"],
-  [decisionLog, "Decision 219", "decision log entry"],
-  [handoff, "A16P_TX_APPLY_VERIFY_STATUS=PASS_OWNER_CONFIRMED", "handoff status"],
+for (const token of [
+  "Cổng nhập chính thức",
+  "Nhập chính thức chưa được mở",
+  "disabled",
+  "aria-disabled=\"true\"",
+  "Xác nhận nhập chính thức",
 ]) {
-  requireIncludes(content, token, label);
+  requireIncludes(panel, token, `panel token ${token}`);
 }
 
 const scriptFiles = gitOutput(["ls-files", "scripts"])
@@ -202,14 +183,12 @@ for (const file of scriptFiles) {
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
-  "package.json",
+  packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
-  "scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs",
-  "docs/PLAN_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION_APPROVAL_BLOCKED.md",
-  "scripts/check-a16q-official-import-session-execution-approval-blocked.cjs",
+  "scripts/check-a16p-tx-apply-verify.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -221,14 +200,14 @@ for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
-  if (file !== "package.json" && /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip|json)$/i.test(file)) {
+  if (file !== packagePath && /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip|json)$/i.test(file)) {
     failures.push(`real data/storage/screenshot/state file must not be changed ${file}`);
   }
   if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
-    failures.push(`SQL migration file must not change in apply-verify record phase ${file}`);
+    failures.push(`migration must not change ${file}`);
   }
   if (file.startsWith("db/checks/")) {
-    failures.push(`verification SQL file must not change in apply-verify record phase ${file}`);
+    failures.push(`SQL verification file must not change ${file}`);
   }
   if (file.startsWith("app/") || file.startsWith("lib/") || file.startsWith("components/")) {
     failures.push(`runtime/UI behavior file must not change ${file}`);
@@ -238,7 +217,7 @@ for (const file of changedFiles) {
 for (const file of gitOutput(["diff", "--cached", "--name-only"])
   .split(/\r?\n/)
   .filter(Boolean)) {
-  if (file !== "package.json" && /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip|json)$/i.test(file)) {
+  if (file !== packagePath && /\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip|json)$/i.test(file)) {
     failures.push(`staged real data/storage/screenshot/state file not allowed ${file}`);
   }
 }
@@ -246,9 +225,7 @@ for (const file of gitOutput(["diff", "--cached", "--name-only"])
 for (const [file, content] of [
   [docPath, doc],
   [checkerPath, checker],
-  [readinessDocPath, readinessDoc],
-  [servicePath, service],
-  [routePath, route],
+  [packagePath, JSON.stringify(packageJson ?? {})],
 ]) {
   for (const pattern of [
     /sb_(secret|service)_[A-Za-z0-9_-]{12,}/,
@@ -262,9 +239,9 @@ for (const [file, content] of [
 }
 
 if (failures.length > 0) {
-  console.error("A-16P-TX apply verify check failed:");
+  console.error("A-16Q blocked session execution approval check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16P-TX apply verify check passed.");
+console.log("A-16Q blocked session execution approval check passed.");

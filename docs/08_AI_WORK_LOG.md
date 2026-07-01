@@ -1,5 +1,30 @@
 # AI Work Log
 
+## 2026-07-01 - A-16Q - Session-specific Official Import Execution Approval Blocked
+
+- Marker: `A-16Q`.
+- Final status: `A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID`.
+- A-16Q approval was not opened because the prompt did not provide both an
+  explicit owner approval record and `A16Q_IMPORT_SESSION_ID=<uuid>` for one
+  import session.
+- The marker string `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION` appeared
+  only in the condition/requirement text, not as a session-specific approval
+  record with an exact session id.
+- Required session id is missing: `A16Q_IMPORT_SESSION_ID=<uuid>`.
+- Staging evidence remains recorded from prior phases: sheet `Thanh vien`, 102
+  staged members and 134 parent relationship candidates, staging-only.
+- A-16P-TX manual apply/verification remains PASS and RPC
+  `public.a16p_tx_execute_giapha4_official_import` remains fail-closed.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Required next phase is A-16R Official Import Execution Run, only after owner
+  provides `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>`.
+- A-16Q blocked phase did not run SQL, did not run DB push, did not run
+  migration repair, did not seed, did not call RPC, did not call POST official
+  import, did not write people/person rows, did not write
+  relationships/families, did not update layout/tree/revision/profile data, did
+  not deploy and did not push.
+
 ## 2026-07-01 - A-16P-TX-APPLY-VERIFY - Manual SQL Apply Verification Record
 
 - Marker: `A-16P-TX-APPLY-VERIFY`.

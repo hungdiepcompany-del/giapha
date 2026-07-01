@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16Q - Session-specific Official Import Execution Approval Blocked
+
+- Marker: `A-16Q`.
+- Current status: `A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID`.
+- A-16Q approval was not opened because the prompt did not provide both:
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION` as a session-specific owner
+  approval record and `A16Q_IMPORT_SESSION_ID=<uuid>`.
+- Missing session id: `A16Q_IMPORT_SESSION_ID=<uuid>`.
+- Marker string appeared in the prompt only as the required condition/future
+  marker wording, not as a concrete approval bound to a session id.
+- Prior evidence remains staging-only: sheet `Thanh vien`, 102 staged members
+  and 134 parent relationship candidates.
+- A-16P-TX manual SQL apply/verification remains PASS; RPC
+  `public.a16p_tx_execute_giapha4_official_import` exists but still fails
+  closed.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Do not run A-16R until owner provides exact session-specific marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>`.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no RLS change, no anon/public grant, no RPC call, no POST official import
+  call, no real people/relationships/families/layout/tree/revision/profile
+  write, no deploy and no push.
+
 ## 2026-07-01 - A-16P-TX-APPLY-VERIFY - Manual SQL Apply Verification Record
 
 - Marker: `A-16P-TX-APPLY-VERIFY`.

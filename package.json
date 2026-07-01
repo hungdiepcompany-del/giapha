@@ -235,7 +235,8 @@
     "check:a16o-official-import-runtime-readiness-handoff": "node scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
     "check:a16p-official-import-runtime-candidate": "node scripts/check-a16p-official-import-runtime-candidate.cjs",
     "check:a16p-tx-official-import-transaction-helper-readiness": "node scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs",
-    "check:a16p-tx-apply-verify": "node scripts/check-a16p-tx-apply-verify.cjs"
+    "check:a16p-tx-apply-verify": "node scripts/check-a16p-tx-apply-verify.cjs",
+    "check:a16q-official-import-session-execution-approval-blocked": "node scripts/check-a16q-official-import-session-execution-approval-blocked.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

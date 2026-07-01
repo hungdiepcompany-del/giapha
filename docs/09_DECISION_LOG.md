@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 220 - A-16Q remains blocked without session-specific approval data
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Do not open A-16Q approval because the current prompt does not provide both
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION` as a session-specific owner
+  approval record and `A16Q_IMPORT_SESSION_ID=<uuid>`.
+- Record blocker status:
+  `A16Q_STATUS=BLOCKED_MISSING_MARKER_OR_SESSION_ID`.
+- Keep official import locked: no RPC call, no POST official import call,
+  `canRunOfficialImport=false` and UI button disabled.
+
+Lý do:
+
+- A-16Q is dangerous/strict and must bind approval to one exact import session.
+- The prompt only describes the required marker/session id contract; it does
+  not include an actual `A16Q_IMPORT_SESSION_ID=<uuid>` value.
+- Recording a generic approval without a session id would create ambiguity for
+  A-16R and could lead to accidental mutation of real genealogy tables.
+
+Boundaries:
+
+- No import run, no RPC call, no POST official import call, no migration, no
+  SQL run, no DB push, no migration repair, no seed, no RLS change, no
+  anon/public grant, no real people/person write, no relationship/family write,
+  no layout/tree/revision/profile write, no deploy and no push.
+- A-16R may only be considered after owner provides:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>`.
+
 ## Decision 219 - A-16P-TX manual apply is recorded as verified but official import remains locked
 
 Status: `ACTIVE`
