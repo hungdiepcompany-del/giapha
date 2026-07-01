@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16P-TX - Official Import Transaction Helper / RPC Schema Readiness
+
+- Marker: `A-16P-TX`.
+- Current status: `A16P_TX_STATUS=PASS_WITH_BLOCKER_TRANSACTION_NOT_APPLIED`.
+- SQL candidate ready but not applied:
+  `db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`.
+- Supabase mirror ready and must remain byte-for-byte identical:
+  `supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`.
+- SELECT-only verification SQL:
+  `db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql`.
+- RPC/function contract:
+  `public.a16p_tx_execute_giapha4_official_import`.
+- Candidate is fail-closed and returns blockers; it does not open a real
+  mutation branch in A-16P-TX.
+- Runtime A-16P service knows RPC contract name but does not call RPC. It still
+  returns `canRunOfficialImport=false` and blocker
+  `BLOCKED_TRANSACTION_HELPER_NOT_APPLIED`.
+- UI official import button remains disabled.
+- Rollback/audit contract doc:
+  `docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md`.
+- Readiness doc/checker:
+  `docs/PLAN_A16P_TX_OFFICIAL_IMPORT_TRANSACTION_HELPER_READINESS.md` and
+  `scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs`.
+- Manual apply is NOT authorized in A-16P-TX. Future manual apply requires:
+  `APPROVE_A16P_TX_RPC_MANUAL_SQL_APPLY`.
+- Future session-specific execution after apply/verify requires:
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+- Boundaries preserved: no DB apply, no SQL run, no Supabase db push, no
+  migration repair, no seed, no RPC call, no POST official import call, no
+  people/person write, no relationship/family write, no layout/tree/revision
+  write, no deploy and no push.
+- Next safe step: owner reviews SQL candidate. If accepted, open a separate
+  `A-16P-TX-APPLY-VERIFY` phase with the manual apply marker.
+
 ## 2026-07-01 - A-16P - Official Import Runtime Candidate
 
 - Marker present in prompt:

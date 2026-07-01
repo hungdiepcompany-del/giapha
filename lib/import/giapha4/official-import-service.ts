@@ -16,6 +16,12 @@ export const A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER =
 export const A16P_TRANSACTION_HELPER_MISSING_BLOCKER =
   "A16P_BLOCKED_TRANSACTION_HELPER_MISSING";
 
+export const A16P_TX_TRANSACTION_RPC_NAME =
+  "public.a16p_tx_execute_giapha4_official_import";
+
+export const A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER =
+  "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED";
+
 export type OfficialImportCandidateStatus =
   | "BLOCKED"
   | "CANDIDATE_READY_NOT_EXECUTED"
@@ -56,7 +62,10 @@ export type OfficialImportCandidateResult = {
   };
   canRunOfficialImport: false;
   piiPrinted: false;
-  transactionStatus: "BLOCKED_TRANSACTION_HELPER_MISSING";
+  transactionStatus:
+    | "BLOCKED_TRANSACTION_HELPER_MISSING"
+    | "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED";
+  transactionRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
   message: string;
 };
 
@@ -108,6 +117,7 @@ function buildNoGoReasons(params: {
   const reviewPack = buildImportReviewPackFromManifest(params.manifest);
   const reasons: string[] = [
     A16P_TRANSACTION_HELPER_MISSING_BLOCKER,
+    A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER,
     "Chưa có RPC/transaction helper an toàn để ghi people, relationships, audit và rollback trong một transaction.",
   ];
 
@@ -189,7 +199,8 @@ export function buildOfficialImportRuntimeCandidate(params: {
     },
     canRunOfficialImport: false,
     piiPrinted: false,
-    transactionStatus: "BLOCKED_TRANSACTION_HELPER_MISSING",
+    transactionStatus: "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED",
+    transactionRpcName: A16P_TX_TRANSACTION_RPC_NAME,
     message:
       "Ứng viên nhập chính thức đã được chuẩn bị nhưng chưa thể chạy vì thiếu transaction helper all-or-nothing.",
   };

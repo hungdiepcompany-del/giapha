@@ -11,6 +11,10 @@ const routePath =
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
 const checkerPath = "scripts/check-a16p-official-import-runtime-candidate.cjs";
+const allowedA16pTxSqlFiles = new Set([
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+]);
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -92,11 +96,13 @@ for (const token of [
   "buildImportReviewPackFromManifest",
   "canRunOfficialImport: false",
   "piiPrinted: false",
-  "transactionStatus: \"BLOCKED_TRANSACTION_HELPER_MISSING\"",
+  "transactionStatus: \"BLOCKED_TRANSACTION_HELPER_NOT_APPLIED\"",
+  "A16P_TX_TRANSACTION_RPC_NAME",
+  "public.a16p_tx_execute_giapha4_official_import",
   "rollbackManifestPreview",
   "auditManifestPreview",
   "IMPORT_COMPLETED",
-  "A16P_TRANSACTION_HELPER_MISSING_BLOCKER",
+  "A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
@@ -202,7 +208,10 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
 for (const file of changedFiles) {
   if (file === ".env.local") failures.push(".env.local must not be changed");
   if (file === "PLANNING.MD") failures.push("PLANNING.MD must not be changed");
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    !allowedA16pTxSqlFiles.has(file)
+  ) {
     failures.push(`migration file changed ${file}`);
   }
   if (/\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip)$/i.test(file)) {

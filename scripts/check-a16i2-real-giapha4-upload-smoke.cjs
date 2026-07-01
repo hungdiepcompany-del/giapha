@@ -11,6 +11,8 @@ const checkerPath = "scripts/check-a16i2-real-giapha4-upload-smoke.cjs";
 const a16sqlAllowedSqlFiles = new Set([
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
 ]);
 
 const allowedChangedFiles = new Set([
@@ -63,6 +65,12 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/official-import-service.ts",
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "scripts/check-a16p-official-import-runtime-candidate.cjs",
+  "docs/PLAN_A16P_TX_OFFICIAL_IMPORT_TRANSACTION_HELPER_READINESS.md",
+  "docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md",
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql",
+  "scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",

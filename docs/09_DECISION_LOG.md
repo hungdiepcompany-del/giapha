@@ -1,5 +1,45 @@
 # Decision Log
 
+## Decision 218 - A-16P-TX creates transaction helper SQL candidate only
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Add a not-applied SQL/RPC candidate:
+  `public.a16p_tx_execute_giapha4_official_import`.
+- Keep canonical SQL under `db/migrations` and mirror it byte-for-byte under
+  `supabase/migrations`.
+- Add SELECT-only verification SQL for future owner/manual apply verification.
+- Keep the candidate fail-closed: no real execution branch, no people write, no
+  relationship/family write, no layout/tree/revision write.
+- Align the A-16P runtime service to know the RPC contract name while keeping
+  `canRunOfficialImport=false` and adding blocker
+  `BLOCKED_TRANSACTION_HELPER_NOT_APPLIED`.
+
+Lý do:
+
+- A-16P correctly blocked on `A16P_BLOCKED_TRANSACTION_HELPER_MISSING`; official
+  import needs one all-or-nothing DB boundary.
+- Existing revision/audit schema does not yet provide an official import batch
+  audit action, so the candidate must not fake audit/rollback persistence.
+- Creating a reviewed candidate plus checker lets the owner review SQL before
+  any manual apply phase.
+
+Boundaries:
+
+- Candidate not applied.
+- A-16P official import remains blocked until SQL apply/verify in a separate
+  phase.
+- Future manual apply requires marker
+  `APPROVE_A16P_TX_RPC_MANUAL_SQL_APPLY`.
+- Future session-specific execution requires marker
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+- No DB apply, no SQL run, no `supabase db push`, no migration repair, no seed,
+  no RPC call, no POST official import call, no real people/person write, no
+  relationship/family write, no layout/tree/revision/profile write, no deploy
+  and no push.
+
 ## Decision 217 - A-16P creates a locked official import candidate and blocks on missing transaction helper
 
 Status: `ACTIVE`

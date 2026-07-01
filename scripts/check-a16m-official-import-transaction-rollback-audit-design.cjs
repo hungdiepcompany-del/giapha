@@ -8,6 +8,10 @@ const docPath =
   "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md";
 const checkerPath =
   "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs";
+const allowedA16pTxSqlFiles = new Set([
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+]);
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -96,7 +100,10 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
 for (const file of changedFiles) {
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    !allowedA16pTxSqlFiles.has(file)
+  ) {
     failures.push(`migration file changed ${file}`);
   }
   if (/official-import-service\.ts$/.test(file) && file !== "lib/import/giapha4/official-import-service.ts") {

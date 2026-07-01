@@ -233,7 +233,8 @@
     "check:a16m-official-import-transaction-rollback-audit-design": "node scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
     "check:a16n-locked-official-import-preflight-gate": "node scripts/check-a16n-locked-official-import-preflight-gate.cjs",
     "check:a16o-official-import-runtime-readiness-handoff": "node scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
-    "check:a16p-official-import-runtime-candidate": "node scripts/check-a16p-official-import-runtime-candidate.cjs"
+    "check:a16p-official-import-runtime-candidate": "node scripts/check-a16p-official-import-runtime-candidate.cjs",
+    "check:a16p-tx-official-import-transaction-helper-readiness": "node scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

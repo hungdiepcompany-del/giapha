@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-07-01 - A-16P-TX - Official Import Transaction Helper / RPC Schema Readiness
+
+- Marker: `A-16P-TX`.
+- Final status: `A16P_TX_STATUS=PASS_WITH_BLOCKER_TRANSACTION_NOT_APPLIED`.
+- Created SQL candidate, not applied:
+  `db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`.
+- Created byte-for-byte Supabase mirror:
+  `supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`.
+- Created SELECT-only verification SQL:
+  `db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql`.
+- Candidate RPC/function name:
+  `public.a16p_tx_execute_giapha4_official_import`.
+- Candidate is fail-closed: `p_dry_run_only` defaults true, false still returns
+  blocker `REAL_EXECUTION_BRANCH_NOT_OPEN_IN_A16P_TX`,
+  `can_run_official_import=false`, `created_people_count=0`, and
+  `created_relationship_count=0`.
+- Runtime A-16P service now records the RPC contract name and blocker
+  `BLOCKED_TRANSACTION_HELPER_NOT_APPLIED`, but it does not call RPC and still
+  returns `canRunOfficialImport=false`.
+- Added rollback/audit contract doc:
+  `docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md`.
+- Added readiness doc/checker:
+  `docs/PLAN_A16P_TX_OFFICIAL_IMPORT_TRANSACTION_HELPER_READINESS.md` and
+  `scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs`.
+- Future manual SQL apply requires:
+  `APPROVE_A16P_TX_RPC_MANUAL_SQL_APPLY`.
+- Future session-specific execution requires:
+  `APPROVE_A16Q_OFFICIAL_IMPORT_SESSION_EXECUTION`.
+- A-16P-TX did not apply DB, did not run SQL, did not run `supabase db push`,
+  did not run `supabase db push --dry-run`, did not run migration repair, did
+  not seed, did not call RPC, did not call POST official import, did not write
+  people/person rows, did not write relationships/families, did not update
+  layout/tree/revision/profile data, did not deploy and did not push.
+
 ## 2026-07-01 - A-16P - Official Import Runtime Candidate
 
 - Marker present in prompt:

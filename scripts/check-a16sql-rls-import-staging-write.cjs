@@ -39,6 +39,12 @@ const legacyCheckerPaths = [
   "lib/import/giapha4/official-import-service.ts",
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "scripts/check-a16p-official-import-runtime-candidate.cjs",
+  "docs/PLAN_A16P_TX_OFFICIAL_IMPORT_TRANSACTION_HELPER_READINESS.md",
+  "docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md",
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "db/checks/20260701_check_a16p_tx_official_import_transaction_helper.sql",
+  "scripts/check-a16p-tx-official-import-transaction-helper-readiness.cjs",
 ];
 
 const allowedChangedFiles = new Set([

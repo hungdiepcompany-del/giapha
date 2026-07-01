@@ -10,6 +10,10 @@ const servicePath = "lib/import/giapha4/official-import-preflight-gate.ts";
 const routePath =
   "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const allowedA16pTxSqlFiles = new Set([
+  "db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+  "supabase/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql",
+]);
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -139,7 +143,10 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
 for (const file of changedFiles) {
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    !allowedA16pTxSqlFiles.has(file)
+  ) {
     failures.push(`migration file changed ${file}`);
   }
   if (/\.(xls|xlsx|csv|png|jpg|jpeg|webp|zip)$/i.test(file)) {
