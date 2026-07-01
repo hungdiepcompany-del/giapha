@@ -228,7 +228,11 @@
     "check:a16sql-rls-import-staging-write": "node scripts/check-a16sql-rls-import-staging-write.cjs",
     "check:a16i3-giapha4-xlsx-column-mapping": "node scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
     "check:a16i4-real-giapha4-staging-upload-run": "node scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
-    "check:a16i5-import-review-pack-official-import-gate": "node scripts/check-a16i5-import-review-pack-official-import-gate.cjs"
+    "check:a16i5-import-review-pack-official-import-gate": "node scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+    "check:a16i4u-manual-ui-real-giapha4-staging-upload-verification": "node scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+    "check:a16m-official-import-transaction-rollback-audit-design": "node scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+    "check:a16n-locked-official-import-preflight-gate": "node scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+    "check:a16o-official-import-runtime-readiness-handoff": "node scripts/check-a16o-official-import-runtime-readiness-handoff.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

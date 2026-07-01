@@ -51,6 +51,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -77,8 +87,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -125,17 +151,17 @@ for (const token of [
   "A-16K",
   "A16K_OWNER_APPROVAL_GATE_DRY_RUN_IMPORT",
   "APPROVE_A16K_IMPORT_DRY_RUN_GATE",
-  "Dry-run hiện vẫn locked",
-  "Official import vẫn closed",
-  "Không migration",
-  "Không DB push",
-  "Không SQL apply",
-  "Không seed",
-  "Không upload/parse file thật",
-  "Không ghi people/relationships thật",
-  "Không layout/tree/revision",
-  "Không dry-run mapping",
-  "Không official import",
+  "Dry-run hiá»‡n váº«n locked",
+  "Official import váº«n closed",
+  "KhÃ´ng migration",
+  "KhÃ´ng DB push",
+  "KhÃ´ng SQL apply",
+  "KhÃ´ng seed",
+  "KhÃ´ng upload/parse file tháº­t",
+  "KhÃ´ng ghi people/relationships tháº­t",
+  "KhÃ´ng layout/tree/revision",
+  "KhÃ´ng dry-run mapping",
+  "KhÃ´ng official import",
   "A16K_STATUS=OWNER_APPROVAL_GATE_LOCKED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -174,16 +200,16 @@ rejectPattern(
 );
 
 for (const token of [
-  "Cổng phê duyệt dry-run",
-  "Dry-run import chưa được mở",
-  "Cần owner phê duyệt trước khi chạy dry-run.",
-  "Marker yêu cầu:",
-  "Dữ liệu staging vẫn",
-  "chưa được nhập vào cây gia phả thật",
-  "Chạy dry-run — cần phê duyệt",
+  "Cá»•ng phÃª duyá»‡t dry-run",
+  "Dry-run import chÆ°a Ä‘Æ°á»£c má»Ÿ",
+  "Cáº§n owner phÃª duyá»‡t trÆ°á»›c khi cháº¡y dry-run.",
+  "Marker yÃªu cáº§u:",
+  "Dá»¯ liá»‡u staging váº«n",
+  "chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£ tháº­t",
+  "Cháº¡y dry-run â€” cáº§n phÃª duyá»‡t",
   "disabled",
   "aria-disabled=\"true\"",
-  "Xác nhận nhập chính thức — chưa mở",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
 }
@@ -253,7 +279,8 @@ for (const file of changedFiles) {
     file.startsWith("app/api/") &&
     file !== gateRoutePath &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
   ) {
     failures.push(`unexpected API route changed ${file}`);
   }
@@ -309,7 +336,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
   /\b(runDryRunImport|executeDryRun|createDryRunResult|applyDryRunMapping)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);

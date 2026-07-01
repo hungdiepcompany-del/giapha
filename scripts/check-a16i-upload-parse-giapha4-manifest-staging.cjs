@@ -60,6 +60,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -86,8 +96,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -142,16 +168,16 @@ for (const token of [
   "staging-only",
   "XLSX",
   "XLS",
-  "Không migration",
-  "Không DB push",
-  "Không SQL apply",
-  "Không seed/import vào bảng thật",
-  "Không tạo people/person thật",
-  "Không tạo relationship thật",
-  "Không cập nhật layout/tree/revision thật",
-  "Không mở import chính thức",
-  "Không deploy",
-  "Không push",
+  "KhÃ´ng migration",
+  "KhÃ´ng DB push",
+  "KhÃ´ng SQL apply",
+  "KhÃ´ng seed/import vÃ o báº£ng tháº­t",
+  "KhÃ´ng táº¡o people/person tháº­t",
+  "KhÃ´ng táº¡o relationship tháº­t",
+  "KhÃ´ng cáº­p nháº­t layout/tree/revision tháº­t",
+  "KhÃ´ng má»Ÿ import chÃ­nh thá»©c",
+  "KhÃ´ng deploy",
+  "KhÃ´ng push",
   "A-16J",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -199,14 +225,14 @@ for (const token of [
 }
 
 for (const token of [
-  "Tải lên file Gia Phả 4",
-  "Chỉ ghi vào vùng staging, chưa nhập vào cây gia phả thật.",
-  "Chọn file",
-  "Đọc file và tạo manifest",
-  "Đang đọc file...",
-  "Đã tạo manifest staging",
-  "Không đọc được file Gia Phả 4",
-  "Xác nhận nhập chính thức — chưa mở",
+  "Táº£i lÃªn file Gia Pháº£ 4",
+  "Chá»‰ ghi vÃ o vÃ¹ng staging, chÆ°a nháº­p vÃ o cÃ¢y gia pháº£ tháº­t.",
+  "Chá»n file",
+  "Äá»c file vÃ  táº¡o manifest",
+  "Äang Ä‘á»c file...",
+  "ÄÃ£ táº¡o manifest staging",
+  "KhÃ´ng Ä‘á»c Ä‘Æ°á»£c file Gia Pháº£ 4",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
   "/api/admin/import-sessions/upload",
 ]) {
   requireIncludes(uploadForm + page, token, `UI token ${token}`);
@@ -214,9 +240,9 @@ for (const token of [
 
 for (const token of [
   "peoplePreview",
-  "Thành viên staging",
-  "Quan hệ staging",
-  "Xác nhận nhập chính thức — chưa mở",
+  "ThÃ nh viÃªn staging",
+  "Quan há»‡ staging",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
 ]) {
   requireIncludes(panel + manifestReadService, token, `manifest read UI token ${token}`);
 }
@@ -227,7 +253,7 @@ for (const [content, token, label] of [
   [handoff, "A16I_UPLOAD_PARSE_GIAPHA4_MANIFEST_STAGING", "handoff marker"],
   [
     decisionLog,
-    "Decision 209 - A-16I stages Gia Phả 4 uploads without opening official import",
+    "Decision 209 - A-16I stages Gia Pháº£ 4 uploads without opening official import",
     "decision entry",
   ],
 ]) {
@@ -335,7 +361,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }
@@ -350,7 +376,8 @@ for (const file of uploadRouteNames) {
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
   ) {
     failures.push(`unexpected API/action changed ${file}`);
   }

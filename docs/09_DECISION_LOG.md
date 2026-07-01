@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 216 - A-16I4U/A-16M/A-16N/A-16O keeps official Gia Pha 4 import locked until A-16P
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Record owner-confirmed manual UI staging upload evidence for the real Gia Pha
+  4 workbook: sheet `Thành viên`, `102` staged members and `134` parent
+  relationship candidates.
+- Treat the evidence as staging-only proof, not official import readiness.
+- Design the official import transaction, rollback manifest, audit/revision
+  trail and no-go conditions in documentation only.
+- Add a locked read-only official import preflight gate:
+  `GET /api/admin/import-sessions/[sessionId]/official-import-gate`.
+- Keep UI action disabled and require future owner marker
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE` before any runtime candidate
+  can write real genealogy tables.
+
+Lý do:
+
+- A-16I3/A-16I4/A-16I5 plus owner manual UI upload prove staging can parse the
+  real workbook, but the project still needs transaction, rollback, audit,
+  duplicate handling and approval rules before official import.
+- A locked preflight gate gives owner/operator visibility without creating a
+  POST/PUT/PATCH/DELETE import path.
+
+Boundaries:
+
+- No migration, no `supabase db push`, no SQL apply, no seed, no deploy, no
+  push, no service-role bypass, no import token, no official import action, no
+  write to real people/person rows, no write to real relationships, no family,
+  layout, revision or profile mutation.
+
 ## Decision 215 - A-16I5 adds read-only import review pack while official import remains closed
 
 Status: `ACTIVE`

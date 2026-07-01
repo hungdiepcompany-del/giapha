@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-07-01 - A-16I4U/A-16M/A-16N/A-16O - Official Import Readiness Handoff
+
+- Markers: `A-16I4U`, `A-16M`, `A-16N`, `A-16O`.
+- Current statuses:
+  `A16I4U_STATUS=PASS_OWNER_CONFIRMED_STAGING_ONLY_OFFICIAL_IMPORT_NOT_OPENED`,
+  `A16M_STATUS=OFFICIAL_IMPORT_DESIGN_READY_RUNTIME_NOT_OPENED`,
+  `A16N_STATUS=LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE_READY`,
+  `A16O_STATUS=OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF_BLOCKED_UNTIL_A16P_MARKER`.
+- Owner manually verified real Gia Pha 4 UI upload evidence: sheet
+  `Thành viên` detected, `102` staged members, `134` parent relationship
+  candidates, staging only.
+- A-16SQL owner-applied staging RLS verification remains PASS: five staging
+  tables have RLS enabled, authenticated SELECT/INSERT policies, authenticated
+  UPDATE only on `import_sessions`, no anon/public staging policy,
+  `imports.create` exists and no A-16SQL policy touches real genealogy tables.
+- A-16M documents the future official import transaction/rollback/audit design;
+  no official import write route or service was opened.
+- A-16N adds a locked read-only preflight gate:
+  `GET /api/admin/import-sessions/[sessionId]/official-import-gate`.
+- `/admin/exports/import` now shows a disabled `Cổng nhập chính thức` block
+  with required future marker
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`.
+- Added docs/checkers:
+  `docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md`,
+  `docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md`,
+  `docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md`,
+  `docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md`,
+  `scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs`,
+  `scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs`,
+  `scripts/check-a16n-locked-official-import-preflight-gate.cjs`, and
+  `scripts/check-a16o-official-import-runtime-readiness-handoff.cjs`.
+- Boundaries preserved: no migration, no DB push, no SQL apply, no seed, no
+  deploy, no push, no service-role bypass, no import token, no official import,
+  no real people/person write, no real relationship write, no
+  family/layout/tree/revision/profile mutation.
+- Next safe step: only open A-16P after owner gives
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`; A-16P must remain a
+  separate runtime candidate phase with explicit transaction, rollback, audit
+  and validation gates.
+- Commit hash: use current `HEAD` after this local commit; final report records
+  the exact hash.
+
 ## 2026-07-01 - A-16I3/A-16I4/A-16I5 - Gia Phả 4 Mapping, Real Staging Smoke, Owner Review Pack
 
 - Markers: `A-16I3`, `A-16I4`, `A-16I5`.

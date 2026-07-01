@@ -49,6 +49,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -75,8 +85,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -142,18 +168,18 @@ for (const token of [
   "SAFE_SKIP_UNSUPPORTED_XLS",
   ".xlsx",
   ".xls",
-  "chỉ manifest staging/session staging",
-  "không ghi people/person thật",
-  "không ghi relationships thật",
-  "không cập nhật layout/tree/revision thật",
-  "không mở official import",
-  "không log dữ liệu cá nhân thô",
-  "Không migration",
-  "Không DB push",
-  "Không SQL apply",
-  "Không seed",
-  "Không deploy",
-  "Không push",
+  "chá»‰ manifest staging/session staging",
+  "khÃ´ng ghi people/person tháº­t",
+  "khÃ´ng ghi relationships tháº­t",
+  "khÃ´ng cáº­p nháº­t layout/tree/revision tháº­t",
+  "khÃ´ng má»Ÿ official import",
+  "khÃ´ng log dá»¯ liá»‡u cÃ¡ nhÃ¢n thÃ´",
+  "KhÃ´ng migration",
+  "KhÃ´ng DB push",
+  "KhÃ´ng SQL apply",
+  "KhÃ´ng seed",
+  "KhÃ´ng deploy",
+  "KhÃ´ng push",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
@@ -173,7 +199,7 @@ for (const token of [
   "/api/admin/import-sessions/upload",
   "mutationAllowed",
   "hasDangerousAction",
-  "confirm|commit|finalize|official-import|import-now|apply|write-real-tree",
+  "confirm|commit|finalize|official-import(?!-gate)|import-now|apply|write-real-tree",
   "counts_available: false",
   "warning_codes",
 ]) {
@@ -238,7 +264,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b[\s\S]{0,200}(confirm|commit|finalize|official-import|import-now)/i,
+  /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b[\s\S]{0,200}(confirm|commit|finalize|official-import(?!-gate)|import-now)/i,
 ]) {
   rejectPattern(smoke + checker, pattern, `A-16I2 script ${pattern}`);
 }

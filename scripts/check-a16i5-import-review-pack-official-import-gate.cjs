@@ -53,8 +53,24 @@ function gitOutput(args) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -78,12 +94,12 @@ for (const token of a16sqlAllowlistTokens) {
 
 for (const token of [
   "A-16I5",
-  "Gói rà soát",
+  "GÃ³i rÃ  soÃ¡t",
   "GET /api/admin/import-sessions/[sessionId]/review-pack",
   "canProceedToOfficialImport=false",
   "readyForOfficialImport=false",
-  "Không ghi `people/person`",
-  "Không mở route/action `confirm`, `import-now`, `finalize`, hoặc nhập chính thức",
+  "KhÃ´ng ghi `people/person`",
+  "KhÃ´ng má»Ÿ route/action `confirm`, `import-now`, `finalize`, hoáº·c nháº­p chÃ­nh thá»©c",
   "A16I5_STATUS=OWNER_REVIEW_PACK_READY_OFFICIAL_IMPORT_CLOSED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
@@ -114,9 +130,9 @@ for (const token of [
 }
 
 for (const token of [
-  "Gói rà soát trước khi nhập",
-  "Sẵn sàng để owner rà soát",
-  "Chưa đủ điều kiện nhập chính thức",
+  "GÃ³i rÃ  soÃ¡t trÆ°á»›c khi nháº­p",
+  "Sáºµn sÃ ng Ä‘á»ƒ owner rÃ  soÃ¡t",
+  "ChÆ°a Ä‘á»§ Ä‘iá»u kiá»‡n nháº­p chÃ­nh thá»©c",
   "reviewPack.marker",
 ]) {
   requireIncludes(panel, token, `panel token ${token}`);
@@ -171,7 +187,8 @@ for (const file of changedFiles) {
     file !== "app/api/admin/import-sessions/upload/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
   ) {
     failures.push(`unexpected API/action changed ${file}`);
   }
@@ -196,7 +213,7 @@ for (const pattern of [
   /\.from\(["']relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-07-01 - A-16I4U/A-16M/A-16N/A-16O - Manual Gia Pha 4 Staging Verification and Official Import Readiness Gate
+
+- Markers: `A-16I4U`, `A-16M`, `A-16N`, `A-16O`.
+- A-16I4U final status:
+  `A16I4U_STATUS=PASS_OWNER_CONFIRMED_STAGING_ONLY_OFFICIAL_IMPORT_NOT_OPENED`.
+- A-16M final status:
+  `A16M_STATUS=OFFICIAL_IMPORT_DESIGN_READY_RUNTIME_NOT_OPENED`.
+- A-16N final status:
+  `A16N_STATUS=LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE_READY`.
+- A-16O final status:
+  `A16O_STATUS=OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF_BLOCKED_UNTIL_A16P_MARKER`.
+- Owner manually verified the real Gia Pha 4 UI upload: sheet `Thanh vien`
+  detected, `102` staged members, `134` parent relationship candidates, and
+  data remained staging-only.
+- A-16SQL owner-applied staging RLS evidence remains PASS: five staging tables
+  have RLS enabled, authenticated SELECT/INSERT policies, authenticated UPDATE
+  only on `import_sessions`, no anon/public staging policy, `imports.create`
+  exists, and no A-16SQL policy touches real genealogy tables.
+- Added official import transaction/rollback/audit design documentation without
+  creating any official import write route or service.
+- Added locked read-only official import preflight gate service and GET-only API:
+  `GET /api/admin/import-sessions/[sessionId]/official-import-gate`.
+- `/admin/exports/import` now shows `Cong nhap chinh thuc`,
+  `Nhap chinh thuc chua duoc mo`, the future marker
+  `APPROVE_A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE`, and keeps the official
+  import button disabled.
+- Added docs/checkers:
+  `docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md`,
+  `docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md`,
+  `docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md`,
+  `docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md`,
+  `scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs`,
+  `scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs`,
+  `scripts/check-a16n-locked-official-import-preflight-gate.cjs`, and
+  `scripts/check-a16o-official-import-runtime-readiness-handoff.cjs`.
+- A-16I4U/A-16M/A-16N/A-16O did not create migrations, did not run
+  `supabase db push`, did not run SQL apply, did not seed, did not deploy, did
+  not push, did not write real people/person rows, did not write real
+  relationships, did not update families/layout/tree/revision/profile data, did
+  not create import token, and did not open official import.
+
 ## 2026-07-01 - A-16I3/A-16I4/A-16I5 - Gia Phả 4 Mapping, Real Staging Smoke, Owner Review Pack
 
 - Markers: `A-16I3`, `A-16I4`, `A-16I5`.

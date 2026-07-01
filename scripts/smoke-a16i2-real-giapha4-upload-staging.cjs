@@ -127,7 +127,7 @@ function hasDangerousAction(rawUrl) {
   } catch {
     // Keep raw URL text for conservative matching.
   }
-  return /(confirm|commit|finalize|official-import|import-now|apply|write-real-tree)/i.test(
+  return /(confirm|commit|finalize|official-import(?!-gate)|import-now|apply|write-real-tree)/i.test(
     pathname,
   );
 }

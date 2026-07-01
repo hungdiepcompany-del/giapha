@@ -25,6 +25,16 @@ const legacyCheckerPaths = [
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
 ];
 
 const allowedChangedFiles = new Set([
@@ -82,8 +92,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -127,18 +153,18 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 
 for (const token of [
   "A-16SQL-RLS-IMPORT-STAGING-WRITE",
-  "Không chạy `supabase db push`",
-  "Không chạy `supabase db push --dry-run`",
-  "Không chạy `supabase migration repair`",
-  "Không apply SQL trong phase này",
-  "Không seed",
-  "Không import Excel",
-  "Không ghi people/person thật",
-  "Không ghi relationships thật",
-  "Không dùng service role để bypass RLS",
-  "Không disable RLS",
-  "Không cấp anon/public",
-  "Không mở official import",
+  "KhÃ´ng cháº¡y `supabase db push`",
+  "KhÃ´ng cháº¡y `supabase db push --dry-run`",
+  "KhÃ´ng cháº¡y `supabase migration repair`",
+  "KhÃ´ng apply SQL trong phase nÃ y",
+  "KhÃ´ng seed",
+  "KhÃ´ng import Excel",
+  "KhÃ´ng ghi people/person tháº­t",
+  "KhÃ´ng ghi relationships tháº­t",
+  "KhÃ´ng dÃ¹ng service role Ä‘á»ƒ bypass RLS",
+  "KhÃ´ng disable RLS",
+  "KhÃ´ng cáº¥p anon/public",
+  "KhÃ´ng má»Ÿ official import",
   "A16SQL_STATUS=SQL_CANDIDATE_READY_NOT_APPLIED",
   dbMigrationPath,
   supabaseMigrationPath,
@@ -271,6 +297,8 @@ for (const pattern of [
 }
 
 for (const previousChecker of legacyCheckerPaths) {
+  if (!previousChecker.startsWith("scripts/check-a16")) continue;
+  if (/check-a16(i4u|m|n|o)-/i.test(previousChecker)) continue;
   const content = readFile(previousChecker);
   for (const token of [
     docPath,

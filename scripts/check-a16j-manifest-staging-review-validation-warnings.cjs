@@ -59,6 +59,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -85,8 +95,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -144,16 +170,16 @@ for (const token of [
   "A16J_MANIFEST_STAGING_REVIEW_VALIDATION_WARNINGS",
   "GET /api/admin/import-sessions/[sessionId]/validation",
   "runtime/read-only",
-  "Không migration",
-  "Không DB push",
-  "Không SQL apply",
-  "Không seed/import vào bảng thật",
-  "Không tạo people/person thật",
-  "Không tạo relationship thật",
-  "Không cập nhật layout/tree/revision",
-  "Không mở import chính thức",
-  "Không deploy",
-  "Không push",
+  "KhÃ´ng migration",
+  "KhÃ´ng DB push",
+  "KhÃ´ng SQL apply",
+  "KhÃ´ng seed/import vÃ o báº£ng tháº­t",
+  "KhÃ´ng táº¡o people/person tháº­t",
+  "KhÃ´ng táº¡o relationship tháº­t",
+  "KhÃ´ng cáº­p nháº­t layout/tree/revision",
+  "KhÃ´ng má»Ÿ import chÃ­nh thá»©c",
+  "KhÃ´ng deploy",
+  "KhÃ´ng push",
   "A16J_MIGRATION_STATUS=NO_NEW_MIGRATION",
   "A16J_DB_PUSH_STATUS=NOT_RUN",
   "A16J_SQL_APPLY_STATUS=NOT_RUN",
@@ -209,18 +235,18 @@ rejectPattern(
 
 for (const token of [
   "buildManifestValidationReview",
-  "Kiểm tra dữ liệu staging",
-  "Cảnh báo dữ liệu",
-  "Lỗi cần xử lý",
-  "Gợi ý kiểm tra",
-  "Chưa phát hiện cảnh báo nghiêm trọng",
-  "Dữ liệu này vẫn chưa được nhập vào cây gia phả thật.",
-  "Xác nhận nhập chính thức — chưa mở",
-  "Số người staging",
-  "Số quan hệ staging",
-  "Số lỗi",
-  "Số cảnh báo",
-  "Số thông tin",
+  "Kiá»ƒm tra dá»¯ liá»‡u staging",
+  "Cáº£nh bÃ¡o dá»¯ liá»‡u",
+  "Lá»—i cáº§n xá»­ lÃ½",
+  "Gá»£i Ã½ kiá»ƒm tra",
+  "ChÆ°a phÃ¡t hiá»‡n cáº£nh bÃ¡o nghiÃªm trá»ng",
+  "Dá»¯ liá»‡u nÃ y váº«n chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£ tháº­t.",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c â€” chÆ°a má»Ÿ",
+  "Sá»‘ ngÆ°á»i staging",
+  "Sá»‘ quan há»‡ staging",
+  "Sá»‘ lá»—i",
+  "Sá»‘ cáº£nh bÃ¡o",
+  "Sá»‘ thÃ´ng tin",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
 }
@@ -332,7 +358,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

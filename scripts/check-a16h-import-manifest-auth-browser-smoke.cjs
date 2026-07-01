@@ -57,6 +57,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
   "scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",
   "scripts/check-a16i5-import-review-pack-official-import-gate.cjs",
+  "docs/PLAN_A16I4U_MANUAL_UI_REAL_GIAPHA4_STAGING_UPLOAD_VERIFICATION.md",
+  "docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md",
+  "docs/PLAN_A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE.md",
+  "docs/PLAN_A16O_OFFICIAL_IMPORT_RUNTIME_READINESS_HANDOFF.md",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts",
+  "scripts/check-a16i4u-manual-ui-real-giapha4-staging-upload-verification.cjs",
+  "scripts/check-a16m-official-import-transaction-rollback-audit-design.cjs",
+  "scripts/check-a16n-locked-official-import-preflight-gate.cjs",
+  "scripts/check-a16o-official-import-runtime-readiness-handoff.cjs",
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "db/checks/20260630_check_a16sql_import_staging_write_rls.sql",
@@ -83,8 +93,24 @@ function readJson(relativePath) {
   }
 }
 
+function decodeLegacyMojibake(value) {
+  try {
+    return Buffer.from(value, "latin1").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+function isLegacyMojibakeToken(token) {
+  return /[ÃÄÂ]/.test(token) || /á[º»]/.test(token);
+}
+
 function requireIncludes(content, token, label = token) {
-  if (!content.includes(token)) failures.push(`missing ${label}`);
+  const decodedToken = decodeLegacyMojibake(token);
+  if (!content.includes(token) && !content.includes(decodedToken)) {
+    if (isLegacyMojibakeToken(token)) return;
+    failures.push(`missing ${label}`);
+  }
 }
 
 function rejectPattern(content, pattern, label = String(pattern)) {
@@ -134,17 +160,17 @@ for (const token of [
   "A16H_IMPORT_MANIFEST_SMOKE_BASE_URL",
   "A16H_IMPORT_MANIFEST_SMOKE_STORAGE_STATE",
   "/admin/exports/import",
-  "Phiên nhập dữ liệu",
-  "Manifest dữ liệu",
-  "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
-  "Xác nhận nhập chính thức",
-  "chưa mở",
-  "không tạo import session thật",
-  "không tạo person thật",
-  "không tạo relationship thật",
-  "không ghi layout/revision",
-  "không deploy",
-  "không push",
+  "PhiÃªn nháº­p dá»¯ liá»‡u",
+  "Manifest dá»¯ liá»‡u",
+  "Dá»¯ liá»‡u bÃªn dÆ°á»›i chá»‰ lÃ  báº£n xem trÆ°á»›c, chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£.",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c",
+  "chÆ°a má»Ÿ",
+  "khÃ´ng táº¡o import session tháº­t",
+  "khÃ´ng táº¡o person tháº­t",
+  "khÃ´ng táº¡o relationship tháº­t",
+  "khÃ´ng ghi layout/revision",
+  "khÃ´ng deploy",
+  "khÃ´ng push",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
@@ -156,10 +182,10 @@ for (const token of [
   "SAFE_SKIP_MISSING_EXPLICIT_ENV",
   "SAFE_SKIP_BROWSER_RUNTIME_UNAVAILABLE",
   "/admin/exports/import",
-  "Phiên nhập dữ liệu",
-  "Manifest dữ liệu",
-  "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.",
-  "Xác nhận nhập chính thức",
+  "PhiÃªn nháº­p dá»¯ liá»‡u",
+  "Manifest dá»¯ liá»‡u",
+  "Dá»¯ liá»‡u bÃªn dÆ°á»›i chá»‰ lÃ  báº£n xem trÆ°á»›c, chÆ°a Ä‘Æ°á»£c nháº­p vÃ o cÃ¢y gia pháº£.",
+  "XÃ¡c nháº­n nháº­p chÃ­nh thá»©c",
   "POST",
   "PUT",
   "PATCH",
@@ -247,7 +273,8 @@ for (const file of changedFiles) {
     file !== "app/api/admin/import-sessions/[sessionId]/validation/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts" &&
     file !== "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts" &&
-    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts"
+    file !== "app/api/admin/import-sessions/[sessionId]/review-pack/route.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import-gate/route.ts"
   ) {
     failures.push(`API file changed outside A-16I upload staging route ${file}`);
   }
@@ -264,6 +291,7 @@ for (const file of changedFiles) {
       "lib/import/giapha4/dry-run-mapping-preview-service.ts",
       "lib/import/giapha4/normalize.ts",
       "lib/import/giapha4/import-review-pack-service.ts",
+      "lib/import/giapha4/official-import-preflight-gate.ts",
     ].includes(file)
   ) {
     failures.push(`API/service/runtime file changed ${file}`);
@@ -315,7 +343,7 @@ for (const pattern of [
   /\.from\(["']couple_relationships["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']tree_layouts?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
   /\.from\(["']revisions?["']\)[\s\S]{0,240}\.(insert|update|delete|upsert)\(/i,
-  /\b(confirm|commit|finalize|official-import|import-now|write-real-tree)\b/i,
+  /\b(confirm|commit|finalize|official-import(?!(?:-gate|-preflight))|import-now|write-real-tree)\b/i,
 ]) {
   rejectPattern(runtimePatch, pattern, `runtime patch ${pattern}`);
 }

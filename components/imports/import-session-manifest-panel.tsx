@@ -1,6 +1,7 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
+import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -86,6 +87,7 @@ export function ImportSessionManifestPanel({
   const dryRunGate = getImportDryRunApprovalGate();
   const dryRunPreview = buildDryRunMappingPreview(result);
   const reviewPack = buildImportReviewPackFromManifest(result);
+  const officialImportGate = buildOfficialImportPreflightGateFromManifest(result);
 
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
@@ -367,6 +369,42 @@ export function ImportSessionManifestPanel({
             </div>
           </section>
 
+          <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-rose-800">
+                Cổng nhập chính thức
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Nhập chính thức chưa được mở
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Dữ liệu staging đã đọc được, nhưng chưa ghi vào cây gia phả thật.
+                Cần thiết kế transaction, rollback, audit và owner approval riêng
+                trước khi mở.
+              </p>
+              <p className="text-sm font-semibold text-rose-900">
+                Marker yêu cầu cho phase sau:{" "}
+                {officialImportGate.requiredFutureMarker}
+              </p>
+              {officialImportGate.noGoReasons.length > 0 ? (
+                <div className="rounded-md border border-rose-200 bg-white p-3 text-sm leading-6 text-rose-900">
+                  {officialImportGate.noGoReasons.slice(0, 4).map((reason) => (
+                    <div key={reason}>{reason}</div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
+            >
+              Xác nhận nhập chính thức — chưa mở
+            </button>
+          </section>
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <MetricCard
               label="Cảnh báo manifest"
@@ -461,13 +499,6 @@ export function ImportSessionManifestPanel({
             </div>
           )}
 
-          <button
-            type="button"
-            disabled
-            className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-stone-300 bg-stone-100 px-5 py-3 text-sm font-semibold text-stone-500 sm:w-fit"
-          >
-            Xác nhận nhập chính thức — chưa mở
-          </button>
         </div>
       ) : null}
     </section>
