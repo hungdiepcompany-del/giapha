@@ -59,8 +59,12 @@ function getMatchStrengthLabel(matchStrength: string) {
   return labels[matchStrength] ?? matchStrength;
 }
 
-function isBlockingDuplicateDecision(ownerDecision: string) {
-  return ownerDecision === "unresolved" || ownerDecision === "needs_review" || ownerDecision === "hold";
+function isNeedsReviewDecision(ownerDecision: string) {
+  return ownerDecision === "needs_review" || ownerDecision === "hold";
+}
+
+function isSavedDuplicateDecision(ownerDecision: string) {
+  return normalizeInitialDecision(ownerDecision) !== "unresolved";
 }
 
 function getExistingPersonSummary(candidate: ImportDuplicateCandidatePreview) {
@@ -78,6 +82,46 @@ function normalizeInitialDecision(value: string): OwnerDecision {
   return isOwnerDecision(value) ? value : "unresolved";
 }
 
+function getSavedDraft(candidate: ImportDuplicateCandidatePreview) {
+  return {
+    ownerDecision:
+      normalizeInitialDecision(candidate.ownerDecision) === "link_existing" &&
+      !candidate.existingPersonId
+        ? "unresolved"
+        : normalizeInitialDecision(candidate.ownerDecision),
+    decisionNote: candidate.decisionNote ?? "",
+  };
+}
+
+function normalizeDecisionNoteForCompare(value: string | null | undefined) {
+  return (value ?? "").trim();
+}
+
+function isDirtyDraft(
+  candidate: ImportDuplicateCandidatePreview,
+  draft: {
+    ownerDecision: OwnerDecision;
+    decisionNote: string;
+  },
+) {
+  const saved = getSavedDraft(candidate);
+  return (
+    draft.ownerDecision !== saved.ownerDecision ||
+    normalizeDecisionNoteForCompare(draft.decisionNote) !==
+      normalizeDecisionNoteForCompare(saved.decisionNote)
+  );
+}
+
+function isValidDraft(
+  candidate: ImportDuplicateCandidatePreview,
+  draft: {
+    ownerDecision: OwnerDecision;
+    decisionNote: string;
+  },
+) {
+  return draft.ownerDecision !== "link_existing" || Boolean(candidate.existingPersonId);
+}
+
 type DraftState = Record<
   string,
   {
@@ -88,17 +132,7 @@ type DraftState = Record<
 
 function createInitialDrafts(candidates: ImportDuplicateCandidatePreview[]) {
   return Object.fromEntries(
-    candidates.map((candidate) => [
-      candidate.id,
-      {
-        ownerDecision:
-          normalizeInitialDecision(candidate.ownerDecision) === "link_existing" &&
-          !candidate.existingPersonId
-            ? "unresolved"
-            : normalizeInitialDecision(candidate.ownerDecision),
-        decisionNote: candidate.decisionNote ?? "",
-      },
-    ]),
+    candidates.map((candidate) => [candidate.id, getSavedDraft(candidate)]),
   ) as DraftState;
 }
 
@@ -112,7 +146,12 @@ function buildDuplicateListKey(
   sessionId: string,
   candidates: ImportDuplicateCandidatePreview[],
 ) {
-  return `${sessionId}:${candidates.map((candidate) => candidate.id).join("|")}`;
+  return `${sessionId}:${candidates
+    .map(
+      (candidate) =>
+        `${candidate.id}:${candidate.ownerDecision}:${candidate.decidedAt ?? ""}:${candidate.decisionNote ?? ""}`,
+    )
+    .join("|")}`;
 }
 
 function isUuid(value: string) {
@@ -142,14 +181,20 @@ export function DuplicateDecisionReviewClient({
   const [activeDuplicateListKey] = useState(incomingDuplicateListKey);
   const [saveNotice, setSaveNotice] = useState<SaveNotice | null>(null);
   const [lastSavedId, setLastSavedId] = useState<string | null>(null);
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   const currentUnresolvedCount = useMemo(
     () =>
-      candidates.filter((candidate) =>
-        isBlockingDuplicateDecision(candidate.ownerDecision),
+      candidates.filter(
+        (candidate) => normalizeInitialDecision(candidate.ownerDecision) === "unresolved",
       ).length,
     [candidates],
   );
+  const currentNeedsReviewCount = useMemo(
+    () => candidates.filter((candidate) => isNeedsReviewDecision(candidate.ownerDecision)).length,
+    [candidates],
+  );
+  const currentBlockingDuplicateCount = currentUnresolvedCount + currentNeedsReviewCount;
   const isStaleDuplicateList =
     activeSessionId !== sessionId || activeDuplicateListKey !== incomingDuplicateListKey;
 
@@ -180,49 +225,60 @@ export function DuplicateDecisionReviewClient({
       return;
     }
 
-    const response = await fetch(
-      `/api/admin/import-sessions/${sessionId}/duplicates/${candidate.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ownerDecision: draft.ownerDecision,
-          decisionNote: draft.decisionNote,
-        }),
-      },
-    );
-    const result = (await response.json()) as DuplicateDecisionSaveResult;
-
-    if (!response.ok || !result.ok || !result.ownerDecision) {
-      setSaveNotice({
-        tone: "error",
-        text: result.message || "Chưa lưu được quyết định ứng viên trùng.",
-        diagnosticCode: result.diagnosticCode,
-      });
+    if (!isDirtyDraft(candidate, draft) || !isValidDraft(candidate, draft)) {
       return;
     }
 
-    setCandidates((current) =>
-      current.map((item) =>
-        item.id === result.duplicateId
-          ? {
-              ...item,
-              ownerDecision: result.ownerDecision ?? item.ownerDecision,
-              decisionNote: draft.decisionNote.trim() || null,
-              decidedAt: result.decidedAt,
-            }
-          : item,
-      ),
-    );
-    setSaveNotice({
-      tone: "success",
-      text: result.message,
-      diagnosticCode: result.diagnosticCode,
-    });
-    setLastSavedId(result.duplicateId);
-    startTransition(() => router.refresh());
+    setSavingId(candidate.id);
+
+    try {
+      const response = await fetch(
+        `/api/admin/import-sessions/${sessionId}/duplicates/${candidate.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ownerDecision: draft.ownerDecision,
+            decisionNote: draft.decisionNote,
+          }),
+        },
+      );
+      const result = (await response.json()) as DuplicateDecisionSaveResult;
+
+      if (!response.ok || !result.ok || !result.ownerDecision) {
+        setSaveNotice({
+          tone: "error",
+          text: result.message || "Chưa lưu được quyết định ứng viên trùng.",
+          diagnosticCode: result.diagnosticCode,
+        });
+        return;
+      }
+
+      const savedNote = draft.decisionNote.trim();
+      setCandidates((current) =>
+        current.map((item) =>
+          item.id === result.duplicateId
+            ? {
+                ...item,
+                ownerDecision: result.ownerDecision ?? item.ownerDecision,
+                decisionNote: savedNote || null,
+                decidedAt: result.decidedAt,
+              }
+            : item,
+        ),
+      );
+      setSaveNotice({
+        tone: "success",
+        text: result.message,
+        diagnosticCode: result.diagnosticCode,
+      });
+      setLastSavedId(result.duplicateId);
+      startTransition(() => router.refresh());
+    } finally {
+      setSavingId(null);
+    }
   }
 
   return (
@@ -246,11 +302,14 @@ export function DuplicateDecisionReviewClient({
           value={totalDuplicateCandidates}
         />
         <MetricCard
-          label="Chưa có quyết định"
+          label="Chưa quyết định"
           value={currentUnresolvedCount}
         />
+        <MetricCard
+          label="Cần rà soát thêm"
+          value={currentNeedsReviewCount}
+        />
         <MetricCard label="Đang hiển thị" value={candidates.length} />
-        <MetricCard label="Có thể nhập chính thức" value={0} />
       </div>
 
       {isStaleDuplicateList ? (
@@ -282,6 +341,20 @@ export function DuplicateDecisionReviewClient({
         </div>
       ) : null}
 
+      {currentUnresolvedCount === 0 && currentNeedsReviewCount > 0 ? (
+        <div className="rounded-md border border-amber-200 bg-white p-3 text-sm leading-6 text-amber-950">
+          Các ứng viên trùng đã được lưu quyết định, nhưng vẫn còn dòng cần rà
+          soát thêm nên nhập chính thức vẫn khóa.
+        </div>
+      ) : null}
+
+      {currentBlockingDuplicateCount === 0 ? (
+        <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm font-semibold text-emerald-900">
+          Tất cả ứng viên trùng đang hiển thị đã có quyết định staging. Nhập
+          chính thức vẫn chờ phase phê duyệt riêng.
+        </div>
+      ) : null}
+
       <div className="grid gap-2">
         {candidates.slice(0, 20).map((candidate) => {
           const draft = drafts[candidate.id] ?? {
@@ -289,6 +362,18 @@ export function DuplicateDecisionReviewClient({
             decisionNote: candidate.decisionNote ?? "",
           };
           const visibleDecisionOptions = getVisibleDecisionOptions(candidate);
+          const isDirty = isDirtyDraft(candidate, draft);
+          const isValid = isValidDraft(candidate, draft);
+          const isSaving = savingId === candidate.id;
+          const hasSavedDecision = isSavedDuplicateDecision(candidate.ownerDecision);
+          const isSavedNeedsReview = isNeedsReviewDecision(candidate.ownerDecision);
+          const isSaveDisabled =
+            !isDirty || savingId !== null || isStaleDuplicateList || !isValid;
+          const saveButtonText = isSaving
+            ? "Đang lưu..."
+            : !isDirty && hasSavedDecision
+              ? "Đã lưu"
+              : "Lưu quyết định";
 
           return (
             <div
@@ -315,9 +400,29 @@ export function DuplicateDecisionReviewClient({
                       Ghi chú quyết định: {candidate.decisionNote}
                     </div>
                   ) : null}
-                  {lastSavedId === candidate.id ? (
+                  {hasSavedDecision ? (
                     <div className="mt-1 font-semibold text-teal-800">
                       Đã lưu quyết định
+                    </div>
+                  ) : null}
+                  {isSavedNeedsReview ? (
+                    <div className="mt-1 font-semibold text-amber-800">
+                      Cần rà soát thêm, vẫn chặn nhập chính thức
+                    </div>
+                  ) : null}
+                  {isDirty ? (
+                    <div className="mt-1 font-semibold text-amber-800">
+                      Có thay đổi chưa lưu
+                    </div>
+                  ) : null}
+                  {!isValid ? (
+                    <div className="mt-1 font-semibold text-rose-800">
+                      Chỉ chọn liên kết khi ứng viên có hồ sơ hiện hữu.
+                    </div>
+                  ) : null}
+                  {lastSavedId === candidate.id && !isDirty ? (
+                    <div className="mt-1 text-stone-600">
+                      Lần lưu gần nhất đã cập nhật dòng này.
                     </div>
                   ) : null}
                 </div>
@@ -370,10 +475,10 @@ export function DuplicateDecisionReviewClient({
                   <button
                     type="button"
                     onClick={() => void saveDecision(candidate)}
-                    disabled={isPending || isStaleDuplicateList}
+                    disabled={isSaveDisabled || isPending}
                     className="inline-flex min-h-11 items-center justify-center rounded-md border border-teal-700 bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:border-stone-300 disabled:bg-stone-200 disabled:text-stone-500"
                   >
-                    Lưu quyết định
+                    {saveButtonText}
                   </button>
                 </div>
               </div>

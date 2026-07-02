@@ -91,6 +91,14 @@ export function ImportSessionManifestPanel({
   const officialImportGate = buildOfficialImportPreflightGateFromManifest(result);
   const totalDuplicateCandidates =
     session?.duplicateCandidateCount ?? result.duplicateCandidates.length;
+  const duplicateReviewKey = session
+    ? `duplicate-review-${session.id}-${session.updatedAt}-${result.duplicateCandidates
+        .map(
+          (candidate) =>
+            `${candidate.id}:${candidate.ownerDecision}:${candidate.decidedAt ?? ""}`,
+        )
+        .join("|")}`
+    : "duplicate-review-empty";
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -214,7 +222,7 @@ export function ImportSessionManifestPanel({
           </section>
 
           <DuplicateDecisionReviewClient
-            key={`duplicate-review-${session.id}-${session.updatedAt}`}
+            key={duplicateReviewKey}
             sessionId={session.id}
             duplicateCandidates={result.duplicateCandidates}
             totalDuplicateCandidates={totalDuplicateCandidates}

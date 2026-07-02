@@ -247,7 +247,8 @@
     "check:a16q-dup-rls-verify-ui-write-blocked": "node scripts/check-a16q-dup-rls-verify-ui-write-blocked.cjs",
     "check:a16q-dup-rls-verify-ui-write-pass": "node scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs",
     "check:a16q-dup-save-fix": "node scripts/check-a16q-dup-save-fix.cjs",
-    "check:a16q-dup-live-save-fix": "node scripts/check-a16q-dup-live-save-fix.cjs"
+    "check:a16q-dup-live-save-fix": "node scripts/check-a16q-dup-live-save-fix.cjs",
+    "check:a16q-dup-decision-ux-fix": "node scripts/check-a16q-dup-decision-ux-fix.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

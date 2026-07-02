@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 230 - A-16Q-DUP-DECISION-UX-FIX treats saved staging decisions as UI baseline
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Use each duplicate candidate's saved `ownerDecision` and `decisionNote` as the
+  baseline for the UI draft.
+- Show `Đã lưu quyết định` for saved `create_new`, `ignore_candidate`,
+  `link_existing` and `needs_review` rows.
+- Keep saved `create_new` rows selected as `Tạo người mới` after refresh.
+- Treat `needs_review` as saved but still blocking official import.
+- Treat `unresolved` as not decided and blocking official import.
+- Enable `Lưu quyết định` only when the owner changes the decision or note.
+- Keep `Đã lưu` disabled for clean saved rows and show `Đang lưu...` during
+  save.
+- Keep duplicate decisions owner-driven; no automatic `create_new`,
+  `ignore_candidate` or `link_existing` decision is made by code.
+
+Lý do:
+
+- Owner evidence showed session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` had
+  `create_new,8` persisted in DB, so the UI must not look like those rows are
+  still unsaved.
+- The safest UX is to compare the editable draft against the saved staging row
+  and only allow a new PATCH when the owner has made a real change.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto duplicate decision, no
+  deploy and no push.
+
 ## Decision 229 - A-16Q-DUP-LIVE-SAVE-FIX binds duplicate save UI to the active session
 
 Status: `ACTIVE`

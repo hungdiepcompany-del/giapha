@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16Q-DUP-DECISION-UX-FIX - Persist Saved Duplicate Decision UI State
+
+- Marker: `A-16Q-DUP-DECISION-UX-FIX`.
+- Current status:
+  `A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED`.
+- Owner evidence for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`:
+  SQL showed `owner_decision,count` = `create_new,8`.
+- UX issue fixed: after saved duplicate decisions, the UI should no longer make
+  the owner think rows are unsaved.
+- Duplicate decision review now:
+  - Initializes drafts from saved `ownerDecision` and `decisionNote`.
+  - Shows `Đã lưu quyết định` for saved decisions.
+  - Keeps saved `create_new` rows selected as `Tạo người mới`.
+  - Shows `Cần rà soát thêm` for `needs_review`; this is saved but still blocks
+    official import.
+  - Treats `unresolved` as not decided and still blocking official import.
+  - Tracks dirty state per candidate and enables save only after decision/note
+    changes.
+  - Shows `Đã lưu`, `Lưu quyết định`, or `Đang lưu...` based on row state.
+- The duplicate review panel key includes duplicate saved state so a server
+  refresh from DB values remounts the client with the saved state.
+- No auto duplicate decision was added; owner still chooses and saves explicitly.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed,
+  no real people/relationships/families/layout/tree/revision/profile write, no
+  auto duplicate decision, no deploy and no push.
+
 ## 2026-07-01 - A-16Q-DUP-LIVE-SAVE-FIX - Live Duplicate Decision Session Binding
 
 - Marker: `A-16Q-DUP-LIVE-SAVE-FIX`.

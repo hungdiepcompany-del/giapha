@@ -5,15 +5,16 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16Q_DUP_LIVE_SAVE_FIX.md";
-const checkerPath = "scripts/check-a16q-dup-live-save-fix.cjs";
+const docPath = "docs/PLAN_A16Q_DUP_DECISION_UX_FIX.md";
+const checkerPath = "scripts/check-a16q-dup-decision-ux-fix.cjs";
 const packagePath = "package.json";
 const clientPath = "components/imports/duplicate-decision-review-client.tsx";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
 const servicePath =
   "lib/import/giapha4/duplicate-decision-review-service.ts";
-const getRoutePath =
-  "app/api/admin/import-sessions/[sessionId]/duplicates/route.ts";
+const reviewPackPath = "lib/import/giapha4/import-review-pack-service.ts";
+const preflightGatePath = "lib/import/giapha4/official-import-preflight-gate.ts";
+const officialServicePath = "lib/import/giapha4/official-import-service.ts";
 const patchRoutePath =
   "app/api/admin/import-sessions/[sessionId]/duplicates/[duplicateId]/route.ts";
 
@@ -64,7 +65,9 @@ const packageJson = readJson(packagePath);
 const client = readFile(clientPath);
 const panel = readFile(panelPath);
 const service = readFile(servicePath);
-const getRoute = readFile(getRoutePath);
+const reviewPack = readFile(reviewPackPath);
+const preflightGate = readFile(preflightGatePath);
+const officialService = readFile(officialServicePath);
 const patchRoute = readFile(patchRoutePath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -72,43 +75,51 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "A-16Q-DUP-LIVE-SAVE-FIX",
-  "A16Q_DUP_LIVE_SAVE_FIX_STATUS=LIVE_SESSION_BINDING_REPAIRED",
-  "DUPLICATE_DECISION_NOT_IN_SESSION",
-  "Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.",
-  "PATCH uses the duplicate candidate UUID from `candidate.id`, not",
-  "sourceRowIndex",
-  "success and error are not shown at the same time",
-  "never auto-decides duplicate candidates",
-  "A16Q_DUP_LIVE_SAVE_FIX_SQL_STATUS=NOT_RUN",
-  "A16Q_DUP_LIVE_SAVE_FIX_DB_PUSH_STATUS=NOT_RUN",
-  "A16Q_DUP_LIVE_SAVE_FIX_RPC_STATUS=NOT_CALLED",
-  "A16Q_DUP_LIVE_SAVE_FIX_OFFICIAL_IMPORT_POST_STATUS=NOT_CALLED",
-  "A16Q_DUP_LIVE_SAVE_FIX_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
+  "A-16Q-DUP-DECISION-UX-FIX",
+  "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
+  "2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
+  "owner_decision,count",
+  "create_new,8",
+  "Drafts are initialized from the existing saved `ownerDecision`",
+  "`Đã lưu quyết định`",
+  "`Tạo người mới`",
+  "`Cần rà soát thêm`",
+  "`Đã lưu`",
+  "`Lưu quyết định`",
+  "`Đang lưu...`",
+  "`unresolved` blocks official import",
+  "`needs_review` blocks official import",
+  "`create_new`, `ignore_candidate` and `link_existing` are staging decisions",
   "canRunOfficialImport=false",
-  "officialImportButtonDisabled=true",
+  "official import button remains disabled",
+  "A16Q_DUP_DECISION_UX_FIX_SQL_STATUS=NOT_RUN",
+  "A16Q_DUP_DECISION_UX_FIX_DB_PUSH_STATUS=NOT_RUN",
+  "A16Q_DUP_DECISION_UX_FIX_RPC_STATUS=NOT_CALLED",
+  "A16Q_DUP_DECISION_UX_FIX_OFFICIAL_IMPORT_POST_STATUS=NOT_CALLED",
+  "A16Q_DUP_DECISION_UX_FIX_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
+  "A16Q_DUP_DECISION_UX_FIX_AUTO_DECISION_STATUS=NO_AUTO_DECISION",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 if (
-  packageJson?.scripts?.["check:a16q-dup-live-save-fix"] !==
-  "node scripts/check-a16q-dup-live-save-fix.cjs"
+  packageJson?.scripts?.["check:a16q-dup-decision-ux-fix"] !==
+  "node scripts/check-a16q-dup-decision-ux-fix.cjs"
 ) {
-  failures.push("missing package script check:a16q-dup-live-save-fix");
+  failures.push("missing package script check:a16q-dup-decision-ux-fix");
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16Q_DUP_LIVE_SAVE_FIX.md", "index entry"],
+  [index, "PLAN_A16Q_DUP_DECISION_UX_FIX.md", "index entry"],
   [
     workLog,
-    "A16Q_DUP_LIVE_SAVE_FIX_STATUS=LIVE_SESSION_BINDING_REPAIRED",
+    "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
     "work log status",
   ],
-  [decisionLog, "Decision 229", "decision log entry"],
+  [decisionLog, "Decision 230", "decision log entry"],
   [
     handoff,
-    "A16Q_DUP_LIVE_SAVE_FIX_STATUS=LIVE_SESSION_BINDING_REPAIRED",
+    "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
     "handoff status",
   ],
 ]) {
@@ -116,29 +127,41 @@ for (const [content, token, label] of [
 }
 
 for (const token of [
-  "buildDuplicateListKey",
-  "incomingDuplicateListKey",
-  "const [activeSessionId] = useState(sessionId)",
-  "const [activeDuplicateListKey]",
-  "useState(incomingDuplicateListKey)",
-  "isStaleDuplicateList",
-  "Danh sách ứng viên trùng đã cũ, vui lòng tải lại phiên nhập.",
-  "disabled={isSaveDisabled || isPending}",
-  "isUuid(candidate.id)",
-  "`/api/admin/import-sessions/${sessionId}/duplicates/${candidate.id}`",
-  "type SaveNotice",
+  "function getSavedDraft",
+  "normalizeInitialDecision(candidate.ownerDecision)",
+  "decisionNote: candidate.decisionNote ?? \"\"",
+  "createInitialDrafts(duplicateCandidates)",
+  "function isSavedDuplicateDecision",
+  "function isDirtyDraft",
+  "draft.ownerDecision !== saved.ownerDecision",
+  "normalizeDecisionNoteForCompare(draft.decisionNote)",
+  "function isValidDraft",
+  "draft.ownerDecision !== \"link_existing\" || Boolean(candidate.existingPersonId)",
+  "{ value: \"create_new\", label: \"Tạo người mới\" }",
+  "const isDirty = isDirtyDraft(candidate, draft)",
+  "const isSaveDisabled",
+  "!isDirty || savingId !== null || isStaleDuplicateList || !isValid",
+  "const saveButtonText = isSaving",
+  "? \"Đang lưu...\"",
+  "? \"Đã lưu\"",
+  ": \"Lưu quyết định\"",
+  "Đã lưu quyết định",
+  "Có thay đổi chưa lưu",
+  "Cần rà soát thêm, vẫn chặn nhập chính thức",
+  "setCandidates((current)",
+  "ownerDecision: result.ownerDecision ?? item.ownerDecision",
+  "decisionNote: savedNote || null",
   "setSaveNotice(null)",
   "tone: \"error\"",
   "tone: \"success\"",
-  "setLastSavedId(null)",
 ]) {
   requireIncludes(client, token, `client token ${token}`);
 }
 
 rejectPattern(
   client,
-  /duplicates\/\$\{candidate\.sourceRowIndex\}|duplicates\/\$\{sourceRowIndex\}/,
-  "client must not PATCH with sourceRowIndex",
+  /setDrafts\s*\([\s\S]{0,260}(create_new|link_existing|ignore_candidate)[\s\S]{0,260}\)/i,
+  "client must not auto choose a final duplicate decision",
 );
 rejectPattern(
   client,
@@ -147,56 +170,66 @@ rejectPattern(
 );
 rejectPattern(
   client,
-  /setDrafts\s*\([\s\S]{0,260}(create_new|link_existing|ignore_candidate)[\s\S]{0,260}\)/i,
-  "client must not auto choose a final duplicate decision",
+  /duplicates\/\$\{candidate\.sourceRowIndex\}|duplicates\/\$\{sourceRowIndex\}/,
+  "client must not PATCH with sourceRowIndex",
 );
 
 for (const token of [
   "duplicateReviewKey",
   "candidate.ownerDecision",
+  "candidate.decidedAt",
   "key={duplicateReviewKey}",
-  "sessionId={session.id}",
-  "duplicateCandidates={result.duplicateCandidates}",
+  "DuplicateDecisionReviewClient",
 ]) {
   requireIncludes(panel, token, `panel token ${token}`);
 }
 
 for (const token of [
-  "export async function GET",
-  "getDuplicateDecisionReview(sessionId)",
-  "sessionId",
-]) {
-  requireIncludes(getRoute, token, `GET route token ${token}`);
-}
-
-for (const token of [
-  "export async function PATCH",
-  "sessionId",
-  "duplicateId",
-  "updateDuplicateOwnerDecision",
-  "ownerDecision: payload.ownerDecision",
-  "decisionNote: payload.decisionNote",
-]) {
-  requireIncludes(patchRoute, token, `PATCH route token ${token}`);
-}
-
-for (const token of [
-  "candidate.id === input.duplicateId",
-  ".eq(\"id\", input.duplicateId)",
-  ".eq(\"import_session_id\", input.sessionId)",
-  "DUPLICATE_DECISION_NOT_IN_SESSION",
-  "ownerDecision === \"link_existing\"",
+  "unresolved",
+  "needs_review",
+  "hold",
+  "const finalDuplicateDecisions",
+  "\"create_new\"",
+  "\"link_existing\"",
+  "\"ignore_candidate\"",
   "canRunOfficialImport: false",
   "realGenealogyWrite: false",
+  ".from(\"import_duplicate_candidates\")",
+  ".eq(\"id\", input.duplicateId)",
+  ".eq(\"import_session_id\", input.sessionId)",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
+}
+
+for (const token of [
+  "duplicateDecisionSummary.unresolvedDuplicateCandidates === 0",
+  "duplicateDecisionSummary.needsReviewDuplicateCandidates === 0",
+  "canProceedToOfficialImport: false",
+]) {
+  requireIncludes(reviewPack, token, `review pack token ${token}`);
+}
+
+for (const token of [
+  "duplicateDecisionSummary.unresolvedDuplicateCandidates > 0",
+  "duplicateDecisionSummary.needsReviewDuplicateCandidates > 0",
+  "canOpenOfficialImport: false",
+  "officialImportEnabled: false",
+]) {
+  requireIncludes(preflightGate, token, `preflight gate token ${token}`);
+}
+
+for (const token of [
+  "duplicateDecisionSummary.unresolvedDuplicateCandidates > 0",
+  "duplicateDecisionSummary.needsReviewDuplicateCandidates > 0",
+  "canRunOfficialImport: false",
+]) {
+  requireIncludes(officialService, token, `official service token ${token}`);
 }
 
 for (const [label, content] of [
   [clientPath, client],
   [panelPath, panel],
   [servicePath, service],
-  [getRoutePath, getRoute],
   [patchRoutePath, patchRoute],
 ]) {
   rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
@@ -227,10 +260,9 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "scripts/check-a16q-dup-live-save-fix.cjs",
   "scripts/check-a16q-dup-save-fix.cjs",
   "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs",
-  "docs/PLAN_A16Q_DUP_DECISION_UX_FIX.md",
-  "scripts/check-a16q-dup-decision-ux-fix.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -258,9 +290,9 @@ for (const file of stagedFiles) {
 }
 
 if (failures.length > 0) {
-  console.error("A-16Q-DUP-LIVE-SAVE-FIX check failed:");
+  console.error("A-16Q-DUP-DECISION-UX-FIX check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16Q-DUP-LIVE-SAVE-FIX check passed.");
+console.log("A-16Q-DUP-DECISION-UX-FIX check passed.");
