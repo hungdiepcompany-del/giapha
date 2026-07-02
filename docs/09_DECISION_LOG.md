@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 239 - A-16T remains blocked when latest PASS-to-A16U evidence is placeholder only
+
+Status: `ACTIVE`
+
+Chon:
+
+- Keep
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+- Treat
+  `A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY` as a hard
+  blocker for A-16U.
+- Keep `A16U_STATUS=NOT_STARTED_A16T_VERIFY_BLOCKED`.
+- Do not create A-16U SQL candidate, runtime wiring or verify runbook.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+
+Ly do:
+
+- The latest A-16T-PASS-TO-A16U bundle still did not include actual SQL
+  verification rows after owner manual apply.
+- A-16T PASS requires proof for `official_import_batches`,
+  `official_import_rollback_manifests`, idempotency guard, RLS, no anon/public
+  access and no auto import trigger.
+- Proceeding to A-16U with placeholder evidence would fake apply verification
+  and blur the official import execution gate.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 238 - A-16T grant hardening uses revoke-only candidate and keeps runtime locked
 
 Status: `ACTIVE`

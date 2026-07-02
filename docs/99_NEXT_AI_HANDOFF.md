@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - Still Blocked by Placeholder Evidence
+
+- Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
+- Bundle status:
+  `A16T_PASS_TO_A16U_BUNDLE_STATUS=BLOCKED_AT_A16T_VERIFY`.
+- Current A-16T apply/verify status:
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+- Owner evidence status:
+  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT`
+  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY`
+  - `A16T_OWNER_VERIFICATION_RESULT=INSUFFICIENT_OR_FAILED`
+  - `A16T_OWNER_EVIDENCE_PLACEHOLDER_DETECTED=YES`
+- Reason: the latest prompt did not include actual verification SQL output after
+  owner manual apply; it only contained placeholder text for where the SQL
+  verification result should be pasted.
+- Current verification evidence remains insufficient:
+  - `A16T_APPLY_VERIFY_OFFICIAL_IMPORT_BATCHES_VERIFIED=NO_INSUFFICIENT_EVIDENCE`
+  - `A16T_APPLY_VERIFY_OFFICIAL_IMPORT_ROLLBACK_MANIFESTS_VERIFIED=NO_INSUFFICIENT_EVIDENCE`
+  - `A16T_APPLY_VERIFY_IDEMPOTENCY_GUARD_VERIFIED=NO_INSUFFICIENT_EVIDENCE`
+  - `A16T_APPLY_VERIFY_NO_ANON_PUBLIC_VERIFIED=NO_INSUFFICIENT_EVIDENCE`
+  - `A16T_APPLY_VERIFY_NO_AUTO_IMPORT_TRIGGER_VERIFIED=NO_INSUFFICIENT_EVIDENCE`
+- A-16U status:
+  `A16U_STATUS=NOT_STARTED_A16T_VERIFY_BLOCKED`.
+- A-16U SQL candidate created: `NO`.
+- A-16U SQL candidate path: `N/A_A16T_VERIFY_BLOCKED`.
+- A-16U mirror byte-for-byte: `N/A_A16T_VERIFY_BLOCKED`.
+- Runtime remains fail-closed:
+  - `A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- Next safe work: owner must provide the actual verification SQL result output
+  after applying the required A-16T SQL candidates. Only then can A-16T be
+  marked PASS and A-16U begin.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no RPC call, no POST official import call, no real genealogy write,
+  no deploy and no push.
+
 ## 2026-07-02 - A-16T-GRANT-RLS-HARDENING-FIX - Candidate Ready Not Applied
 
 - Marker: `A-16T-GRANT-RLS-HARDENING-FIX`.

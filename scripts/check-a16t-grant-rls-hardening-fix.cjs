@@ -144,11 +144,16 @@ rejectPattern(
   "verification SQL must be SELECT-only",
 );
 
-requireIncludes(
-  applyVerifyDoc,
-  "A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX",
-  "apply verify doc grant blocker status",
-);
+if (
+  !applyVerifyDoc.includes(
+    "A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX",
+  ) &&
+  !applyVerifyDoc.includes(
+    "A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED",
+  )
+) {
+  failures.push("missing apply verify doc blocked status");
+}
 
 if (
   packageJson?.scripts?.["check:a16t-grant-rls-hardening-fix"] !==
