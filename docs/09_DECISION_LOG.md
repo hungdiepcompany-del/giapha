@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 232 - A-16R keeps official import closed until session-specific owner marker
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Record A-16R preflight evidence for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` without running the official import.
+- Treat current evidence as preflight-ready:
+  people `102`, relationships `134`, validation errors `0`, dry-run blockers
+  `0`, duplicate unresolved `0`, duplicate needs_review `0`, duplicate
+  create_new `8`.
+- Keep rollback and audit plan references mandatory before execution:
+  `docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md` and
+  `docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md`.
+- Require a separate future prompt with exact marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`
+  before any execution phase may consider opening official import.
+- Keep `canRunOfficialImport=false` and the official import button disabled in
+  this bundle.
+
+Lý do:
+
+- The duplicate blocker is resolved by owner evidence, but official import is a
+  real genealogy write boundary. The safe next step is to prepare final
+  preflight, runbook and approval gate artifacts while preserving a
+  session-specific approval marker.
+
+Boundaries:
+
+- No SQL run by Codex, no DB push, no migration repair, no seed, no RPC call, no
+  POST official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto people/relationship
+  creation, no deploy and no push.
+
 ## Decision 231 - A-16Q-DUP-DECISION-VERIFY records duplicate blocker completion by owner evidence
 
 Status: `ACTIVE`

@@ -216,6 +216,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16q-dup-live-save-fix.cjs",
   "scripts/check-a16q-dup-save-fix.cjs",
   "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs",
+  "docs/PLAN_A16R_PREFLIGHT_BUNDLE.md",
+  "docs/PLAN_A16R_OFFICIAL_IMPORT_RUNBOOK.md",
+  "docs/PLAN_A16R_SESSION_APPROVAL_GATE.md",
+  "scripts/check-a16r-preflight-bundle.cjs",
+  "scripts/check-a16r-official-import-runbook.cjs",
+  "scripts/check-a16r-session-approval-gate.cjs",
 ]);
 
 for (const file of changedFiles) {

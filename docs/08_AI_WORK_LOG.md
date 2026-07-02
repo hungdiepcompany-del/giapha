@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-07-02 - A-16R-PREFLIGHT-BUNDLE - Final Preflight, Runbook and Approval Gate
+
+- Marker: `A-16R-PREFLIGHT-BUNDLE`.
+- Bundle status:
+  `A16R_PREFLIGHT_BUNDLE_STATUS=PASS_PREFLIGHT_READY_APPROVAL_REQUIRED`.
+- Session under review:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Phase 1 status:
+  `A16R_PREFLIGHT_STATUS=PASS_OWNER_EVIDENCE_READY_APPROVAL_REQUIRED`.
+- Phase 2 status:
+  `A16R_RUNBOOK_STATUS=PASS_RUNBOOK_READY_NOT_EXECUTED`.
+- Phase 3 status:
+  `A16R_APPROVAL_GATE_STATUS=PASS_GATE_DOCUMENTED_RUNTIME_LOCKED`.
+- Preflight evidence recorded for the session:
+  - Staging people: `102`.
+  - Staging relationships: `134`.
+  - Validation errors: `0`.
+  - Dry-run blockers: `0`.
+  - Duplicate unresolved: `0`.
+  - Duplicate needs_review: `0`.
+  - Duplicate create_new: `8`.
+- Rollback/audit references are documented in
+  `docs/PLAN_A16M_OFFICIAL_IMPORT_TRANSACTION_ROLLBACK_AUDIT_DESIGN.md` and
+  `docs/PLAN_A16P_TX_ROLLBACK_AUDIT_MANIFEST_CONTRACT.md`.
+- Created A-16R docs:
+  - `docs/PLAN_A16R_PREFLIGHT_BUNDLE.md`
+  - `docs/PLAN_A16R_OFFICIAL_IMPORT_RUNBOOK.md`
+  - `docs/PLAN_A16R_SESSION_APPROVAL_GATE.md`
+- Created checker scripts:
+  - `scripts/check-a16r-preflight-bundle.cjs`
+  - `scripts/check-a16r-official-import-runbook.cjs`
+  - `scripts/check-a16r-session-approval-gate.cjs`
+- Required future marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Official import remains locked:
+  `canRunOfficialImport=false`, `officialImportButtonDisabled=true`.
+- A-16R-PREFLIGHT-BUNDLE did not run SQL, did not run DB push, did not repair
+  migrations, did not seed, did not call RPC, did not call POST official import,
+  did not write people/relationships/families/layout/tree/revision/profile data,
+  did not auto create people/relationships, did not deploy and did not push.
+
 ## 2026-07-02 - A-16Q-DUP-DECISION-VERIFY - Duplicate Decisions Completed
 
 - Marker: `A-16Q-DUP-DECISION-VERIFY`.

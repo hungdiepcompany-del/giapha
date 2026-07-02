@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16R-PREFLIGHT-BUNDLE - Final Preflight, Runbook and Approval Gate
+
+- Marker: `A-16R-PREFLIGHT-BUNDLE`.
+- Current status:
+  `A16R_PREFLIGHT_BUNDLE_STATUS=PASS_PREFLIGHT_READY_APPROVAL_REQUIRED`.
+- Session under review:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Phase status summary:
+  - `A16R_PREFLIGHT_STATUS=PASS_OWNER_EVIDENCE_READY_APPROVAL_REQUIRED`
+  - `A16R_RUNBOOK_STATUS=PASS_RUNBOOK_READY_NOT_EXECUTED`
+  - `A16R_APPROVAL_GATE_STATUS=PASS_GATE_DOCUMENTED_RUNTIME_LOCKED`
+- Preflight evidence recorded for the session:
+  - Staging people: `102`.
+  - Staging relationships: `134`.
+  - Validation errors: `0`.
+  - Dry-run blockers: `0`.
+  - Duplicate unresolved: `0`.
+  - Duplicate needs_review: `0`.
+  - Duplicate create_new: `8`.
+- A-16R artifacts:
+  - `docs/PLAN_A16R_PREFLIGHT_BUNDLE.md`
+  - `docs/PLAN_A16R_OFFICIAL_IMPORT_RUNBOOK.md`
+  - `docs/PLAN_A16R_SESSION_APPROVAL_GATE.md`
+- Required future marker for any later execution phase:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Official import remains locked:
+  `canRunOfficialImport=false`, `officialImportButtonDisabled=true`.
+- Do not run official import unless the owner provides the exact marker in a
+  separate future prompt and the same session id is revalidated.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair, no
+  seed, no RPC call, no POST official import call, no real people/relationships/
+  families/layout/tree/revision/profile write, no auto people/relationship
+  creation, no deploy and no push.
+
 ## 2026-07-02 - A-16Q-DUP-DECISION-VERIFY - Duplicate Decisions Completed
 
 - Marker: `A-16Q-DUP-DECISION-VERIFY`.
