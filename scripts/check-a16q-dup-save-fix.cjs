@@ -242,6 +242,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16q-dup-live-save-fix.cjs",
   "docs/PLAN_A16Q_DUP_DECISION_UX_FIX.md",
   "scripts/check-a16q-dup-decision-ux-fix.cjs",
+  "docs/PLAN_A16Q_DUP_DECISION_VERIFY.md",
+  "scripts/check-a16q-dup-decision-verify.cjs",
 ]);
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])

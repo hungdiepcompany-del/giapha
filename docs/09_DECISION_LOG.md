@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 231 - A-16Q-DUP-DECISION-VERIFY records duplicate blocker completion by owner evidence
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Accept owner SQL evidence for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` as the verification record for
+  duplicate decision completion.
+- Record `create_new=8`, `unresolved=0` and `needs_review=0`.
+- Treat the duplicate blocker as complete for unresolved/needs_review rows
+  based on owner evidence.
+- Keep `create_new` as staging-only owner intent; do not create real people or
+  relationships in this phase.
+- Keep official import locked with `canRunOfficialImport=false` and disabled UI
+  button until a later explicit execution phase.
+
+Lý do:
+
+- Owner has already handled all duplicate rows and provided the grouped SQL
+  result. The safe next step is to record the evidence and preserve the
+  execution boundary, not to run import.
+
+Boundaries:
+
+- No SQL run by Codex, no DB push, no migration repair, no seed, no RPC call, no
+  POST official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no auto duplicate decision, no
+  deploy and no push.
+
 ## Decision 230 - A-16Q-DUP-DECISION-UX-FIX treats saved staging decisions as UI baseline
 
 Status: `ACTIVE`

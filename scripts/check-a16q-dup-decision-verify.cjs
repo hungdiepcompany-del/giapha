@@ -5,11 +5,11 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16Q_DUP_DECISION_UX_FIX.md";
-const checkerPath = "scripts/check-a16q-dup-decision-ux-fix.cjs";
+const docPath = "docs/PLAN_A16Q_DUP_DECISION_VERIFY.md";
+const checkerPath = "scripts/check-a16q-dup-decision-verify.cjs";
 const packagePath = "package.json";
-const clientPath = "components/imports/duplicate-decision-review-client.tsx";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const clientPath = "components/imports/duplicate-decision-review-client.tsx";
 const servicePath =
   "lib/import/giapha4/duplicate-decision-review-service.ts";
 const reviewPackPath = "lib/import/giapha4/import-review-pack-service.ts";
@@ -62,8 +62,8 @@ function rejectPattern(content, pattern, label = String(pattern)) {
 const doc = readFile(docPath);
 readFile(checkerPath);
 const packageJson = readJson(packagePath);
-const client = readFile(clientPath);
 const panel = readFile(panelPath);
+const client = readFile(clientPath);
 const service = readFile(servicePath);
 const reviewPack = readFile(reviewPackPath);
 const preflightGate = readFile(preflightGatePath);
@@ -75,130 +75,57 @@ const decisionLog = readFile("docs/09_DECISION_LOG.md");
 const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
-  "A-16Q-DUP-DECISION-UX-FIX",
-  "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
+  "A-16Q-DUP-DECISION-VERIFY",
+  "A16Q_DUP_DECISION_VERIFY_STATUS=OWNER_EVIDENCE_DUPLICATE_DECISIONS_COMPLETED",
+  "919df333e26e8142f792feceba9b155a306f9dbb",
   "2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
   "owner_decision,count",
   "create_new,8",
-  "Drafts are initialized from the existing saved `ownerDecision`",
-  "`Đã lưu quyết định`",
-  "`Tạo người mới`",
-  "`Cần rà soát thêm`",
-  "`Đã lưu`",
-  "`Lưu quyết định`",
-  "`Đang lưu...`",
-  "`unresolved` blocks official import",
-  "`needs_review` blocks official import",
-  "`create_new`, `ignore_candidate` and `link_existing` are staging decisions",
+  "unresolved,0",
+  "needs_review,0",
+  "A16Q_DUP_DECISION_VERIFY_CREATE_NEW_COUNT=8",
+  "A16Q_DUP_DECISION_VERIFY_UNRESOLVED_COUNT=0",
+  "A16Q_DUP_DECISION_VERIFY_NEEDS_REVIEW_COUNT=0",
+  "A16Q_DUP_DECISION_VERIFY_DUPLICATE_BLOCKER_STATUS=PASS_NO_UNRESOLVED_OR_NEEDS_REVIEW",
+  "`create_new` is still only a staging owner decision",
   "canRunOfficialImport=false",
-  "official import button remains disabled",
-  "A16Q_DUP_DECISION_UX_FIX_SQL_STATUS=NOT_RUN",
-  "A16Q_DUP_DECISION_UX_FIX_DB_PUSH_STATUS=NOT_RUN",
-  "A16Q_DUP_DECISION_UX_FIX_RPC_STATUS=NOT_CALLED",
-  "A16Q_DUP_DECISION_UX_FIX_OFFICIAL_IMPORT_POST_STATUS=NOT_CALLED",
-  "A16Q_DUP_DECISION_UX_FIX_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
-  "A16Q_DUP_DECISION_UX_FIX_AUTO_DECISION_STATUS=NO_AUTO_DECISION",
+  "officialImportButtonDisabled=true",
+  "A16Q_DUP_DECISION_VERIFY_OFFICIAL_IMPORT_STATUS=LOCKED",
+  "A16Q_DUP_DECISION_VERIFY_SQL_STATUS=NOT_RUN_BY_CODEX",
+  "A16Q_DUP_DECISION_VERIFY_DB_PUSH_STATUS=NOT_RUN",
+  "A16Q_DUP_DECISION_VERIFY_SEED_STATUS=NOT_RUN",
+  "A16Q_DUP_DECISION_VERIFY_RPC_STATUS=NOT_CALLED",
+  "A16Q_DUP_DECISION_VERIFY_OFFICIAL_IMPORT_POST_STATUS=NOT_CALLED",
+  "A16Q_DUP_DECISION_VERIFY_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
+  "A16Q_DUP_DECISION_VERIFY_AUTO_DECISION_STATUS=NO_AUTO_DECISION",
+  "A16Q_DUP_DECISION_VERIFY_DEPLOY_STATUS=NOT_DEPLOYED",
+  "A16Q_DUP_DECISION_VERIFY_PUSH_STATUS=NOT_PUSHED",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 if (
-  packageJson?.scripts?.["check:a16q-dup-decision-ux-fix"] !==
-  "node scripts/check-a16q-dup-decision-ux-fix.cjs"
+  packageJson?.scripts?.["check:a16q-dup-decision-verify"] !==
+  "node scripts/check-a16q-dup-decision-verify.cjs"
 ) {
-  failures.push("missing package script check:a16q-dup-decision-ux-fix");
+  failures.push("missing package script check:a16q-dup-decision-verify");
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16Q_DUP_DECISION_UX_FIX.md", "index entry"],
+  [index, "PLAN_A16Q_DUP_DECISION_VERIFY.md", "index entry"],
   [
     workLog,
-    "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
+    "A16Q_DUP_DECISION_VERIFY_STATUS=OWNER_EVIDENCE_DUPLICATE_DECISIONS_COMPLETED",
     "work log status",
   ],
-  [decisionLog, "Decision 230", "decision log entry"],
+  [decisionLog, "Decision 231", "decision log entry"],
   [
     handoff,
-    "A16Q_DUP_DECISION_UX_FIX_STATUS=SAVED_DECISION_UI_STATE_PERSISTED",
+    "A16Q_DUP_DECISION_VERIFY_STATUS=OWNER_EVIDENCE_DUPLICATE_DECISIONS_COMPLETED",
     "handoff status",
   ],
 ]) {
   requireIncludes(content, token, label);
-}
-
-for (const token of [
-  "function getSavedDraft",
-  "normalizeInitialDecision(candidate.ownerDecision)",
-  "decisionNote: candidate.decisionNote ?? \"\"",
-  "createInitialDrafts(duplicateCandidates)",
-  "function isSavedDuplicateDecision",
-  "function isDirtyDraft",
-  "draft.ownerDecision !== saved.ownerDecision",
-  "normalizeDecisionNoteForCompare(draft.decisionNote)",
-  "function isValidDraft",
-  "draft.ownerDecision !== \"link_existing\" || Boolean(candidate.existingPersonId)",
-  "{ value: \"create_new\", label: \"Tạo người mới\" }",
-  "const isDirty = isDirtyDraft(candidate, draft)",
-  "const isSaveDisabled",
-  "!isDirty || savingId !== null || isStaleDuplicateList || !isValid",
-  "const saveButtonText = isSaving",
-  "? \"Đang lưu...\"",
-  "? \"Đã lưu\"",
-  ": \"Lưu quyết định\"",
-  "Đã lưu quyết định",
-  "Có thay đổi chưa lưu",
-  "Cần rà soát thêm, vẫn chặn nhập chính thức",
-  "setCandidates((current)",
-  "ownerDecision: result.ownerDecision ?? item.ownerDecision",
-  "decisionNote: savedNote || null",
-  "setSaveNotice(null)",
-  "tone: \"error\"",
-  "tone: \"success\"",
-]) {
-  requireIncludes(client, token, `client token ${token}`);
-}
-
-rejectPattern(
-  client,
-  /setDrafts\s*\([\s\S]{0,260}(create_new|link_existing|ignore_candidate)[\s\S]{0,260}\)/i,
-  "client must not auto choose a final duplicate decision",
-);
-rejectPattern(
-  client,
-  /useEffect\s*\([\s\S]{0,360}saveDecision/i,
-  "client must not auto-save decisions",
-);
-rejectPattern(
-  client,
-  /duplicates\/\$\{candidate\.sourceRowIndex\}|duplicates\/\$\{sourceRowIndex\}/,
-  "client must not PATCH with sourceRowIndex",
-);
-
-for (const token of [
-  "duplicateReviewKey",
-  "candidate.ownerDecision",
-  "candidate.decidedAt",
-  "key={duplicateReviewKey}",
-  "DuplicateDecisionReviewClient",
-]) {
-  requireIncludes(panel, token, `panel token ${token}`);
-}
-
-for (const token of [
-  "unresolved",
-  "needs_review",
-  "hold",
-  "const finalDuplicateDecisions",
-  "\"create_new\"",
-  "\"link_existing\"",
-  "\"ignore_candidate\"",
-  "canRunOfficialImport: false",
-  "realGenealogyWrite: false",
-  ".from(\"import_duplicate_candidates\")",
-  ".eq(\"id\", input.duplicateId)",
-  ".eq(\"import_session_id\", input.sessionId)",
-]) {
-  requireIncludes(service, token, `service token ${token}`);
 }
 
 for (const token of [
@@ -224,6 +151,33 @@ for (const token of [
   "canRunOfficialImport: false",
 ]) {
   requireIncludes(officialService, token, `official service token ${token}`);
+}
+
+for (const token of [
+  "finalDuplicateDecisions",
+  "\"create_new\"",
+  "\"ignore_candidate\"",
+  "\"link_existing\"",
+  "canRunOfficialImport: false",
+  "realGenealogyWrite: false",
+  ".from(\"import_duplicate_candidates\")",
+  ".eq(\"id\", input.duplicateId)",
+  ".eq(\"import_session_id\", input.sessionId)",
+]) {
+  requireIncludes(service, token, `service token ${token}`);
+}
+
+for (const token of [
+  "Xác nhận nhập chính thức",
+  "disabled",
+  "aria-disabled=\"true\"",
+  "canRunOfficialImport=false",
+]) {
+  if (token === "canRunOfficialImport=false") {
+    requireIncludes(doc, token, `doc official lock token ${token}`);
+  } else {
+    requireIncludes(panel, token, `panel official button token ${token}`);
+  }
 }
 
 for (const [label, content] of [
@@ -254,17 +208,14 @@ const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
   packagePath,
-  clientPath,
-  panelPath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "scripts/check-a16q-dup-decision-ux-fix.cjs",
   "scripts/check-a16q-dup-live-save-fix.cjs",
   "scripts/check-a16q-dup-save-fix.cjs",
   "scripts/check-a16q-dup-rls-verify-ui-write-pass.cjs",
-  "docs/PLAN_A16Q_DUP_DECISION_VERIFY.md",
-  "scripts/check-a16q-dup-decision-verify.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -292,9 +243,9 @@ for (const file of stagedFiles) {
 }
 
 if (failures.length > 0) {
-  console.error("A-16Q-DUP-DECISION-UX-FIX check failed:");
+  console.error("A-16Q-DUP-DECISION-VERIFY check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16Q-DUP-DECISION-UX-FIX check passed.");
+console.log("A-16Q-DUP-DECISION-VERIFY check passed.");

@@ -1,5 +1,30 @@
 # AI Work Log
 
+## 2026-07-02 - A-16Q-DUP-DECISION-VERIFY - Duplicate Decisions Completed
+
+- Marker: `A-16Q-DUP-DECISION-VERIFY`.
+- Final status:
+  `A16Q_DUP_DECISION_VERIFY_STATUS=OWNER_EVIDENCE_DUPLICATE_DECISIONS_COMPLETED`.
+- Commit baseline before this phase:
+  `919df333e26e8142f792feceba9b155a306f9dbb`.
+- Owner evidence for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`:
+  `owner_decision,count` = `create_new,8`.
+- Recorded verification values:
+  - `A16Q_DUP_DECISION_VERIFY_CREATE_NEW_COUNT=8`
+  - `A16Q_DUP_DECISION_VERIFY_UNRESOLVED_COUNT=0`
+  - `A16Q_DUP_DECISION_VERIFY_NEEDS_REVIEW_COUNT=0`
+  - `A16Q_DUP_DECISION_VERIFY_DUPLICATE_BLOCKER_STATUS=PASS_NO_UNRESOLVED_OR_NEEDS_REVIEW`
+- Duplicate blocker is complete by owner evidence because no unresolved or
+  needs_review duplicate rows remain for the session.
+- `create_new` remains a staging owner decision only. It does not create real
+  people, relationships, families, layout, tree, revision or profile data.
+- Official import remains locked: `canRunOfficialImport=false`, UI button
+  disabled, no RPC call and no POST official import call.
+- A-16Q-DUP-DECISION-VERIFY did not run SQL, did not run DB push, did not repair
+  migrations, did not seed, did not write people/relationships/families/layout/
+  tree/revision/profile data, did not auto decide duplicates, did not deploy and
+  did not push.
+
 ## 2026-07-02 - A-16Q-DUP-DECISION-UX-FIX - Persist Saved Duplicate Decision UI State
 
 - Marker: `A-16Q-DUP-DECISION-UX-FIX`.
