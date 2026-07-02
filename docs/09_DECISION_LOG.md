@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 233 - A-16R official import remains blocked until a real transaction branch exists
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Accept that the A-16R session-specific marker matched for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Do not run official import because the current implementation does not have a
+  real all-or-nothing execution branch.
+- Treat `A16R_RUN_STATUS=BLOCKED_REAL_TRANSACTION_EXECUTION_BRANCH_NOT_READY`
+  as the correct fail-closed result.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+- Record post-import verification as not run because no import executed:
+  `A16R_POST_IMPORT_VERIFICATION_STATUS=NOT_RUN_IMPORT_NOT_EXECUTED`.
+
+Lý do:
+
+- `lib/import/giapha4/official-import-service.ts` still returns
+  `status: "BLOCKED"` and includes transaction-helper blockers.
+- The A-16P-TX SQL helper still contains
+  `REAL_EXECUTION_BRANCH_NOT_OPEN_IN_A16P_TX` and returns zero created rows.
+- The prompt explicitly forbids best-effort multi-table inserts when the real
+  transaction branch is missing.
+
+Boundaries:
+
+- No DB push, no migration repair, no seed, no deploy, no push, no Excel/secret/
+  env/storage-state commit, no POST official import call, no RPC call, no real
+  people/person write, no relationship/family write, no layout/tree/revision/
+  profile write and no temporary import implementation.
+
 ## Decision 232 - A-16R keeps official import closed until session-specific owner marker
 
 Status: `ACTIVE`

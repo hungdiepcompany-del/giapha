@@ -222,6 +222,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-preflight-bundle.cjs",
   "scripts/check-a16r-official-import-runbook.cjs",
   "scripts/check-a16r-session-approval-gate.cjs",
+  "docs/PLAN_A16R_RUN_OFFICIAL_IMPORT.md",
+  "docs/PLAN_A16R_POST_IMPORT_VERIFICATION.md",
+  "scripts/check-a16r-run-official-import.cjs",
+  "scripts/check-a16r-post-import-verification.cjs",
 ]);
 
 for (const file of changedFiles) {

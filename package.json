@@ -252,7 +252,9 @@
     "check:a16q-dup-decision-verify": "node scripts/check-a16q-dup-decision-verify.cjs",
     "check:a16r-preflight-bundle": "node scripts/check-a16r-preflight-bundle.cjs",
     "check:a16r-official-import-runbook": "node scripts/check-a16r-official-import-runbook.cjs",
-    "check:a16r-session-approval-gate": "node scripts/check-a16r-session-approval-gate.cjs"
+    "check:a16r-session-approval-gate": "node scripts/check-a16r-session-approval-gate.cjs",
+    "check:a16r-run-official-import": "node scripts/check-a16r-run-official-import.cjs",
+    "check:a16r-post-import-verification": "node scripts/check-a16r-post-import-verification.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

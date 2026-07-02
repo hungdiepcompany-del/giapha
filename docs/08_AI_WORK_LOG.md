@@ -1,5 +1,45 @@
 # AI Work Log
 
+## 2026-07-02 - A-16R-RUN-OFFICIAL-IMPORT - Execution Blocked
+
+- Marker: `A-16R-RUN-OFFICIAL-IMPORT`.
+- Final status:
+  `A16R_RUN_STATUS=BLOCKED_REAL_TRANSACTION_EXECUTION_BRANCH_NOT_READY`.
+- Session under review:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Approval marker matched:
+  `A16R_RUN_APPROVAL_MARKER_MATCHED=YES`.
+- Required marker was present:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Preflight evidence carried forward:
+  - Staging people: `102`.
+  - Staging relationships: `134`.
+  - Validation errors: `0`.
+  - Dry-run blockers: `0`.
+  - Duplicate unresolved: `0`.
+  - Duplicate needs_review: `0`.
+  - Duplicate create_new: `8`.
+- Transaction capability check failed closed:
+  - `A16R_RUN_TRANSACTION_BRANCH_READY=NO`.
+  - `lib/import/giapha4/official-import-service.ts` still returns
+    `status: "BLOCKED"` and `canRunOfficialImport: false`.
+  - `db/migrations/20260701_0012_a16p_tx_official_import_transaction_helper_candidate.sql`
+    still contains `REAL_EXECUTION_BRANCH_NOT_OPEN_IN_A16P_TX`.
+- Official import was not called:
+  - `A16R_RUN_OFFICIAL_IMPORT_POST_CALLED=NO`.
+  - `A16R_RUN_RPC_CALLED=NO`.
+  - `A16R_RUN_CALLED_EXACTLY_ONCE=NO_NOT_CALLED`.
+- Created people count: `0`.
+- Created relationships count: `0`.
+- Post-import verification status:
+  `A16R_POST_IMPORT_VERIFICATION_STATUS=NOT_RUN_IMPORT_NOT_EXECUTED`.
+- Official import remains locked:
+  `canRunOfficialImport=false`, `officialImportButtonDisabled=true`.
+- A-16R-RUN did not run DB push, did not run migration repair, did not seed,
+  did not deploy, did not push, did not commit Excel/secret/env/storage state,
+  did not call POST official import, did not call RPC and did not write real
+  genealogy data.
+
 ## 2026-07-02 - A-16R-PREFLIGHT-BUNDLE - Final Preflight, Runbook and Approval Gate
 
 - Marker: `A-16R-PREFLIGHT-BUNDLE`.
