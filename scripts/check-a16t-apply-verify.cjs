@@ -13,6 +13,12 @@ const supabaseMigrationPath =
   "supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
 const verifySqlPath =
   "db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql";
+const grantFixDocPath = "docs/PLAN_A16T_GRANT_RLS_HARDENING_FIX.md";
+const grantFixDbMigrationPath =
+  "db/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql";
+const grantFixSupabaseMigrationPath =
+  "supabase/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql";
+const grantFixVerifySqlPath = "db/checks/20260702_check_a16t_grant_rls_hardening_fix.sql";
 const packagePath = "package.json";
 const servicePath = "lib/import/giapha4/official-import-service.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
@@ -73,38 +79,44 @@ const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
 
 for (const token of [
   "A-16T-APPLY-VERIFY",
-  "A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED",
+  "A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX",
   "A16T_BASELINE_COMMIT=fa8a21d",
   "A16T_BASELINE_STATUS=A16T_STATUS=CANDIDATE_READY_NOT_APPLIED",
   dbMigrationPath,
   supabaseMigrationPath,
   verifySqlPath,
-  "A16T_PASS_TO_A16U_BUNDLE_STATUS=BLOCKED_AT_A16T_VERIFY",
-  "A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT",
-  "A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY",
-  "A16T_OWNER_VERIFICATION_RESULT=INSUFFICIENT_OR_FAILED",
-  "A16T_OWNER_EVIDENCE_PLACEHOLDER_DETECTED=YES",
+  "A16T_OWNER_APPLY_EVIDENCE_STATUS=OWNER_MANUAL_APPLY_REPORTED",
+  "A16T_OWNER_VERIFY_EVIDENCE_STATUS=PARTIAL_PASS_WITH_GRANT_BLOCKER",
+  "A16T_OWNER_VERIFICATION_RESULT=BLOCKED_FORBIDDEN_GRANTS",
+  "A16T_TABLES_EXIST=PASS",
+  "A16T_IDEMPOTENCY_UNIQUE_GUARD_EXISTS=PASS",
+  "A16T_RLS_ENABLED=PASS",
+  "A16T_AUTHENTICATED_POLICIES_EXIST=PASS",
+  "A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT=FAIL",
+  "A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT_DETAILS={\"forbidden_grant_count\":14,\"forbidden_policy_count\":0}",
   "A16T_APPLY_VERIFY_DO_NOT_FAKE_PASS=YES",
   "official_import_batches",
   "official_import_rollback_manifests",
   "idempotency unique guard",
   "idempotency_key",
-  "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_BATCHES_VERIFIED=NO_INSUFFICIENT_EVIDENCE",
-  "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_ROLLBACK_MANIFESTS_VERIFIED=NO_INSUFFICIENT_EVIDENCE",
-  "A16T_APPLY_VERIFY_IDEMPOTENCY_GUARD_VERIFIED=NO_INSUFFICIENT_EVIDENCE",
-  "A16T_APPLY_VERIFY_NO_ANON_PUBLIC_VERIFIED=NO_INSUFFICIENT_EVIDENCE",
-  "A16T_APPLY_VERIFY_NO_AUTO_IMPORT_TRIGGER_VERIFIED=NO_INSUFFICIENT_EVIDENCE",
+  "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_BATCHES_VERIFIED=YES",
+  "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_ROLLBACK_MANIFESTS_VERIFIED=YES",
+  "A16T_APPLY_VERIFY_IDEMPOTENCY_GUARD_VERIFIED=YES",
+  "A16T_APPLY_VERIFY_NO_ANON_PUBLIC_VERIFIED=NO_FORBIDDEN_GRANT_COUNT_14",
+  "A16T_APPLY_VERIFY_FORBIDDEN_POLICY_COUNT=0",
+  "A16T_APPLY_VERIFY_NO_AUTO_IMPORT_TRIGGER_VERIFIED=YES",
   "A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES",
   "A16T_APPLY_VERIFY_CAN_RUN_OFFICIAL_IMPORT=false",
   "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_BUTTON=DISABLED",
   "A16T_APPLY_VERIFY_RPC_CALLED=NO",
   "A16T_APPLY_VERIFY_OFFICIAL_IMPORT_POST_CALLED=NO",
   "A16T_APPLY_VERIFY_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
-  "A16U_STATUS=NOT_STARTED_A16T_VERIFY_BLOCKED",
+  "A16U_STATUS=NOT_STARTED_A16T_GRANT_RLS_BLOCKED",
   "A16U_PHASES_STARTED=NO",
   "A16U_SQL_CANDIDATE_CREATED=NO",
-  "A16U_SQL_CANDIDATE_PATH=N/A_A16T_VERIFY_BLOCKED",
-  "A16U_SQL_MIRROR_BYTE_FOR_BYTE=N/A_A16T_VERIFY_BLOCKED",
+  "A16U_SQL_CANDIDATE_PATH=N/A_A16T_GRANT_RLS_BLOCKED",
+  "A16U_SQL_MIRROR_BYTE_FOR_BYTE=N/A_A16T_GRANT_RLS_BLOCKED",
+  "A16T_GRANT_RLS_HARDENING_FIX_STATUS=CANDIDATE_READY_NOT_APPLIED",
   "A16T_APPLY_VERIFY_SQL_RUN_BY_CODEX=NO",
   "A16T_APPLY_VERIFY_DB_PUSH_STATUS=NOT_RUN",
   "A16T_APPLY_VERIFY_MIGRATION_REPAIR_STATUS=NOT_RUN",
@@ -129,7 +141,7 @@ if (currentStatus === "A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED"
     requireIncludes(doc, token, `PASS evidence token ${token}`);
   }
 } else if (
-  !doc.includes("A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT")
+  !doc.includes("A16T_OWNER_APPLY_EVIDENCE_STATUS=OWNER_MANUAL_APPLY_REPORTED")
 ) {
   failures.push("missing explicit owner evidence status for non-PASS state");
 }
@@ -149,9 +161,9 @@ if (
 
 for (const [content, token, label] of [
   [index, "PLAN_A16T_APPLY_VERIFY.md", "index A-16T apply verify entry"],
-  [workLog, "A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED", "work log A-16T apply verify status"],
+  [workLog, "A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX", "work log A-16T apply verify status"],
   [decisionLog, "Decision 236", "decision log A-16T apply verify entry"],
-  [handoff, "A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED", "handoff A-16T apply verify status"],
+  [handoff, "A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX", "handoff A-16T apply verify status"],
 ]) {
   requireIncludes(content, token, label);
 }
@@ -202,14 +214,26 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
+  grantFixDocPath,
+  grantFixDbMigrationPath,
+  grantFixSupabaseMigrationPath,
+  grantFixVerifySqlPath,
+  "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  "CHECK_CLOUDFLARE_ACCOUNT.bat",
 ]);
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(".env.local must not change");
-  if (file.startsWith("db/migrations/")) failures.push(`migration must not change in A-16T-APPLY-VERIFY ${file}`);
-  if (file.startsWith("supabase/migrations/")) failures.push(`supabase migration must not change in A-16T-APPLY-VERIFY ${file}`);
-  if (file.startsWith("db/checks/")) failures.push(`SQL check must not change in A-16T-APPLY-VERIFY ${file}`);
+  if (file.startsWith("db/migrations/") && file !== grantFixDbMigrationPath) {
+    failures.push(`migration must not change in A-16T-APPLY-VERIFY ${file}`);
+  }
+  if (file.startsWith("supabase/migrations/") && file !== grantFixSupabaseMigrationPath) {
+    failures.push(`supabase migration must not change in A-16T-APPLY-VERIFY ${file}`);
+  }
+  if (file.startsWith("db/checks/") && file !== grantFixVerifySqlPath) {
+    failures.push(`SQL check must not change in A-16T-APPLY-VERIFY ${file}`);
+  }
   if (file.startsWith("supabase/.temp/")) failures.push(`supabase temp must not change ${file}`);
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`spreadsheet/csv must not change ${file}`);
 }

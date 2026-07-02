@@ -15,6 +15,12 @@ const supabaseMigrationPath =
   "supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
 const verifySqlPath =
   "db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql";
+const grantFixDocPath = "docs/PLAN_A16T_GRANT_RLS_HARDENING_FIX.md";
+const grantFixDbMigrationPath =
+  "db/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql";
+const grantFixSupabaseMigrationPath =
+  "supabase/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql";
+const grantFixVerifySqlPath = "db/checks/20260702_check_a16t_grant_rls_hardening_fix.sql";
 const packagePath = "package.json";
 const servicePath = "lib/import/giapha4/official-import-service.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
@@ -221,6 +227,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16t-a16u-transaction-branch-requirements.cjs",
   applyVerifyDocPath,
   "scripts/check-a16t-apply-verify.cjs",
+  grantFixDocPath,
+  grantFixDbMigrationPath,
+  grantFixSupabaseMigrationPath,
+  grantFixVerifySqlPath,
+  "scripts/check-a16t-grant-rls-hardening-fix.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -230,6 +241,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16s-official-import-transaction-execution-branch.cjs",
   "scripts/check-a16s-transaction-audit-rollback-idempotency-contract.cjs",
   "scripts/check-a16s-sql-apply-verify-runbook.cjs",
+  "CHECK_CLOUDFLARE_ACCOUNT.bat",
 ]);
 
 for (const file of changedFiles) {

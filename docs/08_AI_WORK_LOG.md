@@ -1,5 +1,45 @@
 # AI Work Log
 
+## 2026-07-02 - A-16T-GRANT-RLS-HARDENING-FIX - Candidate Ready Not Applied
+
+- Marker: `A-16T-GRANT-RLS-HARDENING-FIX`.
+- Final status:
+  `A16T_GRANT_RLS_HARDENING_FIX_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- Owner verification baseline:
+  - `A16T_TABLES_EXIST=PASS`
+  - `A16T_BATCH_REQUIRED_COLUMNS_EXIST=PASS`
+  - `A16T_ROLLBACK_REQUIRED_COLUMNS_EXIST=PASS`
+  - `A16T_IDEMPOTENCY_UNIQUE_GUARD_EXISTS=PASS`
+  - `A16T_ROLLBACK_MANIFEST_UNIQUE_GUARD_EXISTS=PASS`
+  - `A16T_RLS_ENABLED=PASS`
+  - `A16T_AUTHENTICATED_POLICIES_EXIST=PASS`
+  - `A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT=FAIL`
+  - `A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT_DETAILS={"forbidden_grant_count":14,"forbidden_policy_count":0}`
+  - `A16T_NO_AUTO_IMPORT_TRIGGER=PASS`
+  - `A16T_RPC_EXISTS_BUT_EXECUTION_NOT_VERIFIED_BY_THIS_CHECK=PASS`
+- A-16T apply/verify remains blocked:
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX`.
+- SQL candidate path:
+  `db/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql`.
+- Supabase mirror path:
+  `supabase/migrations/20260702_0015_a16t_grant_rls_hardening_fix_candidate.sql`.
+- Byte-for-byte mirror:
+  `A16T_GRANT_RLS_HARDENING_FIX_SQL_MIRROR_BYTE_FOR_BYTE=PASS`.
+- Verification SQL path:
+  `db/checks/20260702_check_a16t_grant_rls_hardening_fix.sql`.
+- REVOKE anon/PUBLIC coverage:
+  `A16T_GRANT_RLS_HARDENING_FIX_REVOKE_ANON_PUBLIC_COVERED=YES`.
+- Authenticated policies preserved:
+  `A16T_GRANT_RLS_HARDENING_FIX_AUTHENTICATED_POLICIES_PRESERVED=YES`.
+- Runtime remains fail-closed:
+  `A16T_GRANT_RLS_HARDENING_FIX_RUNTIME_FAIL_CLOSED=YES`,
+  `canRunOfficialImport=false`,
+  `officialImportButtonDisabled=true`.
+- A-16T-GRANT-RLS-HARDENING-FIX did not run SQL, did not DB push, did not
+  repair migrations, did not seed, did not call RPC, did not call POST official
+  import, did not write people/relationships/families/layout/tree/revision/
+  profile data, did not deploy and did not push.
+
 ## 2026-07-02 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - Blocked at A-16T Verify
 
 - Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
@@ -34,7 +74,7 @@
 
 - Marker: `A-16T-APPLY-VERIFY`.
 - Final status:
-  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX`.
 - Baseline commit:
   `fa8a21d db: add official import audit rollback idempotency schema candidate`.
 - Candidate path:
@@ -44,14 +84,15 @@
 - Verification SQL path:
   `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
 - Owner evidence status:
-  `A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT`,
-  `A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY`.
+  `A16T_OWNER_APPLY_EVIDENCE_STATUS=OWNER_MANUAL_APPLY_REPORTED`,
+  `A16T_OWNER_VERIFY_EVIDENCE_STATUS=PARTIAL_PASS_WITH_GRANT_BLOCKER`.
 - Current verification evidence:
-  - `official_import_batches`: `NO_INSUFFICIENT_EVIDENCE`.
-  - `official_import_rollback_manifests`: `NO_INSUFFICIENT_EVIDENCE`.
-  - idempotency guard: `NO_INSUFFICIENT_EVIDENCE`.
-  - no anon/public grants or policies: `NO_INSUFFICIENT_EVIDENCE`.
-  - no auto import trigger: `NO_INSUFFICIENT_EVIDENCE`.
+  - `official_import_batches`: `YES`.
+  - `official_import_rollback_manifests`: `YES`.
+  - idempotency guard: `YES`.
+  - no anon/public grants or policies:
+    `NO_FORBIDDEN_GRANT_COUNT_14`.
+  - no auto import trigger: `YES`.
 - Runtime remains fail-closed:
   `A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES`,
   `canRunOfficialImport=false`,

@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 238 - A-16T grant hardening uses revoke-only candidate and keeps runtime locked
+
+Status: `ACTIVE`
+
+Chon:
+
+- Create a NOT_APPLIED SQL candidate to revoke anon/PUBLIC grants from
+  `public.official_import_batches` and
+  `public.official_import_rollback_manifests`.
+- Preserve authenticated policies and do not create replacement grants.
+- Add a SELECT-only verification SQL file for owner rerun after manual apply.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+- Keep A-16U blocked until the hardening candidate is owner-applied and
+  verification reports no anon/PUBLIC grant blocker.
+
+Ly do:
+
+- Owner verification proved the A-16T schema, columns, unique guards, RLS and
+  authenticated policies exist, but
+  `A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT=FAIL` with
+  `forbidden_grant_count=14`.
+- The narrowest safe fix is revoking anon/PUBLIC privileges from the two
+  A-16T audit/rollback tables, without deleting valid authenticated policies or
+  opening official import execution.
+
+Boundaries:
+
+- No SQL run by Codex, no DB push, no migration repair, no seed, no RPC call,
+  no POST official import call, no real people/person write, no
+  relationship/family write, no layout/tree/revision/profile write, no deploy
+  and no push.
+
 ## Decision 237 - A-16T PASS-to-A-16U bundle stops when verification evidence is placeholder only
 
 Status: `ACTIVE`
@@ -34,7 +66,7 @@ Status: `ACTIVE`
 Chọn:
 
 - Record
-  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_NO_ANON_PUBLIC_GRANT_FAILED_PENDING_HARDENING_FIX`.
 - Do not mark the A-16T schema as applied or verified until owner provides
   verification output from the SELECT-only verification SQL.
 - Keep runtime fail-closed with `canRunOfficialImport=false` and the official
