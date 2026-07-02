@@ -12,6 +12,10 @@ const sqlCandidatePath =
   "db/migrations/20260702_0014_a16s_official_import_transaction_execution_branch_candidate.sql";
 const supabaseMirrorPath =
   "supabase/migrations/20260702_0014_a16s_official_import_transaction_execution_branch_candidate.sql";
+const a16tDbMigrationPath =
+  "db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
+const a16tSupabaseMigrationPath =
+  "supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -135,7 +139,11 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
   .filter(Boolean);
 
 for (const file of changedFiles) {
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    file !== a16tDbMigrationPath &&
+    file !== a16tSupabaseMigrationPath
+  ) {
     failures.push(`migration must not change while A-16S is blocked: ${file}`);
   }
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(".env.local must not change");

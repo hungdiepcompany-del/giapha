@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 235 - A-16T uses separate official import audit tables before opening execution
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Create a not-applied additive SQL candidate for official import audit batch,
+  rollback manifest and idempotency persistence.
+- Use `public.official_import_batches` for durable official import batch audit
+  and idempotency.
+- Use `public.official_import_rollback_manifests` for durable rollback manifest
+  persistence.
+- Keep the candidate mirrored byte-for-byte under `supabase/migrations`.
+- Keep `A16T_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- Keep official import runtime fail-closed with `canRunOfficialImport=false`
+  and the UI button disabled.
+- Do not widen `revisions.action` in this phase; record
+  `A16T_REVISION_ACTION_STRATEGY=SEPARATE_OFFICIAL_IMPORT_BATCH_TABLE`.
+
+Lý do:
+
+- `revisions.action` is currently constrained to create/update/delete/restore.
+  A separate batch table is a narrower additive schema for official import audit
+  evidence than changing the existing revision action contract.
+- A future A-16U execution branch needs durable proof for idempotency, audit
+  batch creation, rollback manifest creation and post-import counts before it
+  may write real genealogy tables.
+- The schema candidate must remain owner-reviewed and not applied by Codex in
+  A-16T.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 234 - A-16S blocks official import transaction branch until audit rollback idempotency schema is sufficient
 
 Status: `ACTIVE`

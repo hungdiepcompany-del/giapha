@@ -1,5 +1,54 @@
 # AI Work Log
 
+## 2026-07-02 - A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA - Candidate Ready Not Applied
+
+- Marker: `A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA`.
+- Final status:
+  `A16T_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- Schema apply/verify status:
+  `A16T_SCHEMA_APPLY_VERIFY_STATUS=READY_FOR_OWNER_REVIEW_NOT_APPLIED`.
+- A-16U requirements status:
+  `A16T_A16U_REQUIREMENTS_STATUS=READY_FOR_A16U_AFTER_SCHEMA_APPLY_VERIFY`.
+- SQL candidate created:
+  `A16T_SQL_CANDIDATE_CREATED=YES`.
+- SQL candidate path:
+  `db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Supabase mirror path:
+  `supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Byte-for-byte mirror:
+  `A16T_SQL_MIRROR_BYTE_FOR_BYTE=PASS`.
+- Verification SQL path:
+  `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
+- Audit batch persistence:
+  `A16T_AUDIT_BATCH_PERSISTENCE=YES`,
+  table `official_import_batches`.
+- Rollback manifest persistence:
+  `A16T_ROLLBACK_MANIFEST_PERSISTENCE=YES`,
+  table `official_import_rollback_manifests`.
+- Idempotency guard:
+  `A16T_IDEMPOTENCY_GUARD=YES` using unique `import_session_id` plus
+  `idempotency_key`.
+- Revision/action strategy:
+  `A16T_REVISION_ACTION_STRATEGY=SEPARATE_OFFICIAL_IMPORT_BATCH_TABLE`.
+- Runtime remains fail-closed:
+  `A16T_RUNTIME_FAIL_CLOSED=YES`,
+  `canRunOfficialImport=false`,
+  `officialImportButtonDisabled=true`.
+- Added A-16T blocker constants to
+  `lib/import/giapha4/official-import-service.ts` without opening execution.
+- Created docs:
+  - `docs/PLAN_A16T_OFFICIAL_IMPORT_AUDIT_ROLLBACK_IDEMPOTENCY_SCHEMA.md`
+  - `docs/PLAN_A16T_SCHEMA_APPLY_VERIFY_RUNBOOK.md`
+  - `docs/PLAN_A16T_A16U_TRANSACTION_BRANCH_REQUIREMENTS.md`
+- Created checkers:
+  - `scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs`
+  - `scripts/check-a16t-schema-apply-verify-runbook.cjs`
+  - `scripts/check-a16t-a16u-transaction-branch-requirements.cjs`
+- A-16T did not run SQL, did not DB push, did not run migration repair, did not
+  seed, did not call RPC, did not call POST official import, did not write
+  people/relationships/families/layout/tree/revision/profile data, did not
+  deploy and did not push.
+
 ## 2026-07-02 - A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH - Blocked by Schema Contract
 
 - Marker: `A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH`.

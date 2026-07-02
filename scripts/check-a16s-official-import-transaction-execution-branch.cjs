@@ -16,6 +16,12 @@ const sqlCandidatePath =
   "db/migrations/20260702_0014_a16s_official_import_transaction_execution_branch_candidate.sql";
 const supabaseMirrorPath =
   "supabase/migrations/20260702_0014_a16s_official_import_transaction_execution_branch_candidate.sql";
+const a16tDbMigrationPath =
+  "db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
+const a16tSupabaseMigrationPath =
+  "supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
+const a16tVerifySqlPath =
+  "db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql";
 
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -188,15 +194,30 @@ const allowedChangedFiles = new Set([
   servicePath,
   "scripts/check-a16r-run-official-import.cjs",
   "scripts/check-a16r-post-import-verification.cjs",
+  "docs/PLAN_A16T_OFFICIAL_IMPORT_AUDIT_ROLLBACK_IDEMPOTENCY_SCHEMA.md",
+  "docs/PLAN_A16T_SCHEMA_APPLY_VERIFY_RUNBOOK.md",
+  "docs/PLAN_A16T_A16U_TRANSACTION_BRANCH_REQUIREMENTS.md",
+  "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
+  "scripts/check-a16t-schema-apply-verify-runbook.cjs",
+  "scripts/check-a16t-a16u-transaction-branch-requirements.cjs",
+  a16tDbMigrationPath,
+  a16tSupabaseMigrationPath,
+  a16tVerifySqlPath,
 ]);
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(".env.local must not change");
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    file !== a16tDbMigrationPath &&
+    file !== a16tSupabaseMigrationPath
+  ) {
     failures.push(`migration must not change while A-16S is blocked: ${file}`);
   }
-  if (file.startsWith("db/checks/")) failures.push(`SQL check must not change ${file}`);
+  if (file.startsWith("db/checks/") && file !== a16tVerifySqlPath) {
+    failures.push(`SQL check must not change ${file}`);
+  }
   if (file.startsWith("supabase/.temp/")) failures.push(`supabase temp must not change ${file}`);
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`spreadsheet/csv must not change ${file}`);
 }

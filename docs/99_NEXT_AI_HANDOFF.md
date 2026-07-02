@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA - Candidate Ready Not Applied
+
+- Marker: `A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA`.
+- Current status:
+  `A16T_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- Schema apply/verify status:
+  `A16T_SCHEMA_APPLY_VERIFY_STATUS=READY_FOR_OWNER_REVIEW_NOT_APPLIED`.
+- A-16U requirements status:
+  `A16T_A16U_REQUIREMENTS_STATUS=READY_FOR_A16U_AFTER_SCHEMA_APPLY_VERIFY`.
+- SQL candidate created:
+  `A16T_SQL_CANDIDATE_CREATED=YES`.
+- SQL candidate path:
+  `db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Supabase mirror path:
+  `supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Byte-for-byte mirror:
+  `A16T_SQL_MIRROR_BYTE_FOR_BYTE=PASS`.
+- Verification SQL path:
+  `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
+- Schema candidate adds audit/rollback/idempotency persistence only:
+  - `official_import_batches`
+  - `official_import_rollback_manifests`
+  - unique `import_session_id` and `idempotency_key` guards
+- Revision/action strategy:
+  `A16T_REVISION_ACTION_STRATEGY=SEPARATE_OFFICIAL_IMPORT_BATCH_TABLE`.
+- Runtime remains fail-closed:
+  - `A16T_RUNTIME_FAIL_CLOSED=YES`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- Next safe work is owner review/apply/verify of the A-16T schema candidate in
+  a separate phase. A-16U transaction branch work must wait until schema
+  apply/verify evidence exists.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed, no
+  RPC call, no POST official import call, no real genealogy write, no deploy and
+  no push.
+
 ## 2026-07-02 - A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH - Blocked by Schema Contract
 
 - Marker: `A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH`.
