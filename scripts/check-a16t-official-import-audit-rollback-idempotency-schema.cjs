@@ -8,6 +8,7 @@ const failures = [];
 const docPath = "docs/PLAN_A16T_OFFICIAL_IMPORT_AUDIT_ROLLBACK_IDEMPOTENCY_SCHEMA.md";
 const runbookDocPath = "docs/PLAN_A16T_SCHEMA_APPLY_VERIFY_RUNBOOK.md";
 const requirementsDocPath = "docs/PLAN_A16T_A16U_TRANSACTION_BRANCH_REQUIREMENTS.md";
+const applyVerifyDocPath = "docs/PLAN_A16T_APPLY_VERIFY.md";
 const dbMigrationPath =
   "db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql";
 const supabaseMigrationPath =
@@ -218,6 +219,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
   "scripts/check-a16t-schema-apply-verify-runbook.cjs",
   "scripts/check-a16t-a16u-transaction-branch-requirements.cjs",
+  applyVerifyDocPath,
+  "scripts/check-a16t-apply-verify.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

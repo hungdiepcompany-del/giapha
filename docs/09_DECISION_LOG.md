@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 236 - A-16T apply verification stays blocked without owner evidence
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Record
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_MISSING_OWNER_APPLY_VERIFY_EVIDENCE`.
+- Do not mark the A-16T schema as applied or verified until owner provides
+  verification output from the SELECT-only verification SQL.
+- Keep runtime fail-closed with `canRunOfficialImport=false` and the official
+  import button disabled.
+- Keep A-16U transaction branch blocked until A-16T apply/verify evidence is
+  available.
+
+Lý do:
+
+- A-16T created a not-applied schema candidate, but this prompt does not include
+  owner evidence that the SQL was manually applied and verified.
+- Recording a PASS without owner verification would collapse the candidate/apply
+  boundary and risk opening a real import path on unverified schema state.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 235 - A-16T uses separate official import audit tables before opening execution
 
 Status: `ACTIVE`

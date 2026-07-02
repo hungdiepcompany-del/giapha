@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16T-APPLY-VERIFY - Pending Owner Evidence
+
+- Marker: `A-16T-APPLY-VERIFY`.
+- Current status:
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_MISSING_OWNER_APPLY_VERIFY_EVIDENCE`.
+- Baseline commit:
+  `fa8a21d db: add official import audit rollback idempotency schema candidate`.
+- Candidate path:
+  `db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Supabase mirror path:
+  `supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Verification SQL path:
+  `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
+- Owner evidence status:
+  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=MISSING`
+  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=MISSING`
+- Pending verification items:
+  - `official_import_batches` exists.
+  - `official_import_rollback_manifests` exists.
+  - idempotency unique guard exists.
+  - RLS is enabled.
+  - no anon/public grants or policies exist.
+  - no auto import trigger exists.
+- Runtime remains fail-closed:
+  - `A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- Next safe work: owner must manually apply the A-16T SQL candidate in
+  Supabase SQL Editor, run the verification SQL, and provide the PASS output in
+  a later prompt. Only then may this status become
+  `A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no RPC call, no POST official import call, no real genealogy write,
+  no deploy and no push.
+
 ## 2026-07-02 - A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA - Candidate Ready Not Applied
 
 - Marker: `A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA`.

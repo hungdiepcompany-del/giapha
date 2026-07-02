@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-07-02 - A-16T-APPLY-VERIFY - Pending Owner Evidence
+
+- Marker: `A-16T-APPLY-VERIFY`.
+- Final status:
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_MISSING_OWNER_APPLY_VERIFY_EVIDENCE`.
+- Baseline commit:
+  `fa8a21d db: add official import audit rollback idempotency schema candidate`.
+- Candidate path:
+  `db/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Supabase mirror path:
+  `supabase/migrations/20260702_0014_a16t_official_import_audit_rollback_idempotency_schema_candidate.sql`.
+- Verification SQL path:
+  `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
+- Owner evidence status:
+  `A16T_OWNER_APPLY_EVIDENCE_STATUS=MISSING`,
+  `A16T_OWNER_VERIFY_EVIDENCE_STATUS=MISSING`.
+- Current verification evidence:
+  - `official_import_batches`: `NO_OWNER_EVIDENCE`.
+  - `official_import_rollback_manifests`: `NO_OWNER_EVIDENCE`.
+  - idempotency guard: `NO_OWNER_EVIDENCE`.
+  - no anon/public grants or policies: `NO_OWNER_EVIDENCE`.
+  - no auto import trigger: `NO_OWNER_EVIDENCE`.
+- Runtime remains fail-closed:
+  `A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES`,
+  `canRunOfficialImport=false`,
+  `officialImportButtonDisabled=true`.
+- Created doc:
+  `docs/PLAN_A16T_APPLY_VERIFY.md`.
+- Created checker:
+  `scripts/check-a16t-apply-verify.cjs`.
+- A-16T-APPLY-VERIFY did not run SQL, did not DB push, did not run migration
+  repair, did not seed, did not call RPC, did not call POST official import,
+  did not write people/relationships/families/layout/tree/revision/profile
+  data, did not deploy and did not push.
+
 ## 2026-07-02 - A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA - Candidate Ready Not Applied
 
 - Marker: `A-16T-OFFICIAL-IMPORT-AUDIT-ROLLBACK-IDEMPOTENCY-SCHEMA`.
