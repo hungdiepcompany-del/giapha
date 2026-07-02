@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 237 - A-16T PASS-to-A-16U bundle stops when verification evidence is placeholder only
+
+Status: `ACTIVE`
+
+Chon:
+
+- Treat the A-16T-PASS-TO-A16U bundle as blocked at Phase 1 because the prompt
+  did not include actual owner verification SQL output.
+- Record
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+- Do not start A-16U transaction branch, locked runtime wiring or verify
+  runbook work.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+
+Ly do:
+
+- The prompt contained the placeholder text for pasting verification results,
+  not the verification result itself.
+- A-16U requires confirmed A-16T apply/verify PASS. Proceeding without actual
+  evidence would fake PASS and blur the DB apply verification boundary.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 236 - A-16T apply verification stays blocked without owner evidence
 
 Status: `ACTIVE`
@@ -7,7 +34,7 @@ Status: `ACTIVE`
 Chọn:
 
 - Record
-  `A16T_APPLY_VERIFY_STATUS=BLOCKED_MISSING_OWNER_APPLY_VERIFY_EVIDENCE`.
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
 - Do not mark the A-16T schema as applied or verified until owner provides
   verification output from the SELECT-only verification SQL.
 - Keep runtime fail-closed with `canRunOfficialImport=false` and the official

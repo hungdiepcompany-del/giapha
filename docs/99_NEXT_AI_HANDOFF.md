@@ -1,10 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - Blocked at A-16T Verify
+
+- Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
+- Bundle status:
+  `A16T_PASS_TO_A16U_BUNDLE_STATUS=BLOCKED_AT_A16T_VERIFY`.
+- Current A-16T apply/verify status:
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
+- Owner evidence status:
+  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT`
+  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY`
+  - `A16T_OWNER_EVIDENCE_PLACEHOLDER_DETECTED=YES`
+- Reason: prompt included only a placeholder for verification SQL output, so
+  there is no proof that `official_import_batches`,
+  `official_import_rollback_manifests`, idempotency guard, RLS, no anon/public
+  access and no auto import trigger all passed verification.
+- A-16U status:
+  `A16U_STATUS=NOT_STARTED_A16T_VERIFY_BLOCKED`.
+- A-16U SQL candidate created: `NO`.
+- A-16U SQL candidate path: `N/A_A16T_VERIFY_BLOCKED`.
+- A-16U mirror byte-for-byte: `N/A_A16T_VERIFY_BLOCKED`.
+- Runtime remains fail-closed:
+  - `A16T_APPLY_VERIFY_RUNTIME_FAIL_CLOSED=YES`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- Next safe work: owner must provide the actual verification SQL result output.
+  Only then can A-16T be marked PASS and A-16U begin.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no RPC call, no POST official import call, no real genealogy write,
+  no deploy and no push.
+
 ## 2026-07-02 - A-16T-APPLY-VERIFY - Pending Owner Evidence
 
 - Marker: `A-16T-APPLY-VERIFY`.
 - Current status:
-  `A16T_APPLY_VERIFY_STATUS=BLOCKED_MISSING_OWNER_APPLY_VERIFY_EVIDENCE`.
+  `A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED`.
 - Baseline commit:
   `fa8a21d db: add official import audit rollback idempotency schema candidate`.
 - Candidate path:
@@ -14,8 +44,8 @@
 - Verification SQL path:
   `db/checks/20260702_check_a16t_official_import_audit_rollback_idempotency_schema.sql`.
 - Owner evidence status:
-  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=MISSING`
-  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=MISSING`
+  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=CLAIMED_WITHOUT_VERIFICATION_OUTPUT`
+  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=INSUFFICIENT_PLACEHOLDER_ONLY`
 - Pending verification items:
   - `official_import_batches` exists.
   - `official_import_rollback_manifests` exists.
