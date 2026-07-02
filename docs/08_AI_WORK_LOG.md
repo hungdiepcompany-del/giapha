@@ -1,5 +1,48 @@
 # AI Work Log
 
+## 2026-07-02 - A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH - Blocked by Schema Contract
+
+- Marker: `A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH`.
+- Final status:
+  `A16S_STATUS=BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Contract status:
+  `A16S_CONTRACT_STATUS=BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- SQL apply/verify status:
+  `A16S_SQL_APPLY_VERIFY_STATUS=SAFE_BLOCKED_NO_SQL_CANDIDATE`.
+- A-16R blocker baseline:
+  `1f381b6 docs: record Gia Pha 4 official import execution blocker`.
+- SQL candidate created: `NO`.
+- SQL candidate path:
+  `NOT_CREATED_BECAUSE_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Supabase mirror path:
+  `NOT_CREATED_BECAUSE_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Byte-for-byte mirror:
+  `N/A_SAFE_BLOCKED_NO_SQL_CANDIDATE`.
+- Runtime remains fail-closed:
+  `A16S_RUNTIME_FAIL_CLOSED=YES`,
+  `canRunOfficialImport=false`,
+  `officialImportButtonDisabled=true`.
+- `lib/import/giapha4/official-import-service.ts` now records A-16S blocker
+  constants:
+  `A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH` and
+  `A16S_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Blocker reason: current schema/contract cannot prove durable official import
+  audit, rollback manifest persistence and idempotency. Existing
+  `revisions.action` is limited to create/update/delete/restore and A-16P-TX
+  already records audit/rollback persistence blockers.
+- Created docs:
+  - `docs/PLAN_A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH.md`
+  - `docs/PLAN_A16S_TRANSACTION_AUDIT_ROLLBACK_IDEMPOTENCY_CONTRACT.md`
+  - `docs/PLAN_A16S_SQL_APPLY_VERIFY_RUNBOOK.md`
+- Created checkers:
+  - `scripts/check-a16s-official-import-transaction-execution-branch.cjs`
+  - `scripts/check-a16s-transaction-audit-rollback-idempotency-contract.cjs`
+  - `scripts/check-a16s-sql-apply-verify-runbook.cjs`
+- A-16S did not run SQL, did not DB push, did not run migration repair, did not
+  seed, did not call RPC, did not call POST official import, did not write
+  people/relationships/families/layout/tree/revision/profile data, did not
+  deploy and did not push.
+
 ## 2026-07-02 - A-16R-RUN-OFFICIAL-IMPORT - Execution Blocked
 
 - Marker: `A-16R-RUN-OFFICIAL-IMPORT`.

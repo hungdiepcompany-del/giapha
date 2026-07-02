@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-02 - A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH - Blocked by Schema Contract
+
+- Marker: `A-16S-OFFICIAL-IMPORT-TRANSACTION-EXECUTION-BRANCH`.
+- Current status:
+  `A16S_STATUS=BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Contract status:
+  `A16S_CONTRACT_STATUS=BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- SQL apply/verify status:
+  `A16S_SQL_APPLY_VERIFY_STATUS=SAFE_BLOCKED_NO_SQL_CANDIDATE`.
+- SQL candidate created: `NO`.
+- SQL candidate path:
+  `NOT_CREATED_BECAUSE_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Supabase mirror path:
+  `NOT_CREATED_BECAUSE_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Byte-for-byte mirror:
+  `N/A_SAFE_BLOCKED_NO_SQL_CANDIDATE`.
+- Runtime remains fail-closed:
+  - `A16S_RUNTIME_FAIL_CLOSED=YES`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- `lib/import/giapha4/official-import-service.ts` records A-16S blocker
+  constants but still returns blocked/no imported rows.
+- Blocker: current schema/contract cannot yet prove audit/revision persistence,
+  rollback manifest persistence and idempotency for a real all-or-nothing
+  official import.
+- A-16S docs:
+  - `docs/PLAN_A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH.md`
+  - `docs/PLAN_A16S_TRANSACTION_AUDIT_ROLLBACK_IDEMPOTENCY_CONTRACT.md`
+  - `docs/PLAN_A16S_SQL_APPLY_VERIFY_RUNBOOK.md`
+- Next safe work is a separate schema/contract candidate for official import
+  audit, rollback manifest persistence and idempotency. Do not create or apply
+  an execution branch until that exists and is separately approved.
+- Boundaries preserved: no SQL run, no DB push, no migration repair, no seed, no
+  RPC call, no POST official import call, no real genealogy write, no deploy and
+  no push.
+
 ## 2026-07-02 - A-16R-RUN-OFFICIAL-IMPORT - Execution Blocked
 
 - Marker: `A-16R-RUN-OFFICIAL-IMPORT`.

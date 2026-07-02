@@ -190,6 +190,13 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-preflight-bundle.cjs",
   "scripts/check-a16r-official-import-runbook.cjs",
   "scripts/check-a16r-session-approval-gate.cjs",
+  "docs/PLAN_A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH.md",
+  "docs/PLAN_A16S_TRANSACTION_AUDIT_ROLLBACK_IDEMPOTENCY_CONTRACT.md",
+  "docs/PLAN_A16S_SQL_APPLY_VERIFY_RUNBOOK.md",
+  "scripts/check-a16s-official-import-transaction-execution-branch.cjs",
+  "scripts/check-a16s-transaction-audit-rollback-idempotency-contract.cjs",
+  "scripts/check-a16s-sql-apply-verify-runbook.cjs",
+  "lib/import/giapha4/official-import-service.ts",
 ]);
 
 for (const file of changedFiles) {

@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 234 - A-16S blocks official import transaction branch until audit rollback idempotency schema is sufficient
+
+Status: `ACTIVE`
+
+Chọn:
+
+- Do not create an A-16S SQL execution candidate yet.
+- Record
+  `A16S_STATUS=BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT`.
+- Keep official import runtime fail-closed with `canRunOfficialImport=false` and
+  the UI button disabled.
+- Add A-16S blocker constants to
+  `lib/import/giapha4/official-import-service.ts` without opening execution.
+- Require a future schema/contract phase before any transaction execution branch
+  can be proposed.
+
+Lý do:
+
+- A real official import branch must prove all-or-nothing writes, durable audit,
+  rollback manifest persistence and idempotency.
+- Current schema has import write-manifest JSON columns, but the existing
+  A-16P-TX contract already warns stronger persistence may require a schema
+  phase.
+- `revisions.action` currently only supports create/update/delete/restore, not a
+  batch official import audit action.
+- Writing a best-effort multi-table SQL function would violate the A-16S
+  fail-closed rule.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 233 - A-16R official import remains blocked until a real transaction branch exists
 
 Status: `ACTIVE`

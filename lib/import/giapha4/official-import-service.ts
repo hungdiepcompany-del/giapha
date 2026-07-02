@@ -23,6 +23,12 @@ export const A16P_TX_TRANSACTION_RPC_NAME =
 export const A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER =
   "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED";
 
+export const A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH_MARKER =
+  "A16S_OFFICIAL_IMPORT_TRANSACTION_EXECUTION_BRANCH";
+
+export const A16S_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT_BLOCKER =
+  "A16S_BLOCKED_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT";
+
 export type OfficialImportCandidateStatus =
   | "BLOCKED"
   | "CANDIDATE_READY_NOT_EXECUTED"
@@ -118,6 +124,7 @@ function buildNoGoReasons(params: {
   const reviewPack = buildImportReviewPackFromManifest(params.manifest);
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(params.manifest);
   const reasons: string[] = [
+    A16S_SCHEMA_AUDIT_ROLLBACK_IDEMPOTENCY_INSUFFICIENT_BLOCKER,
     A16P_TRANSACTION_HELPER_MISSING_BLOCKER,
     A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER,
     "Chưa có RPC/transaction helper an toàn để ghi people, relationships, audit và rollback trong một transaction.",
