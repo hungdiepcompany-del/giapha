@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE - Blocked at Execution Gate
+
+- Marker: `A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE`.
+- Status:
+  `A16R_RUN_RETRY_BUNDLE_STATUS=BLOCKED_AT_EXECUTION_GATE`.
+- Session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner marker in prompt matched:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Preflight evidence remained aligned with prior owner/docs evidence:
+  staging people `102`, staging relationships `134`, validation errors `0`,
+  dry-run blockers `0`, duplicate unresolved `0`, duplicate needs_review `0`,
+  duplicate create_new `8`.
+- A-16T apply/verify PASS, A-16U locked branch ready and production UI visible
+  were recorded from prior docs.
+- Execution gate blocked because the runtime still returns
+  `status: "BLOCKED"`, `canRunOfficialImport: false` and
+  `A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- Result:
+  `A16R_RUN_RETRY_STATUS=BLOCKED_TRANSACTION_BRANCH_NOT_READY`.
+- Official import was not called:
+  `A16R_RUN_RETRY_OFFICIAL_IMPORT_POST_CALLED=NO` and
+  `A16R_RUN_RETRY_RPC_DIRECT_CALLED=NO`.
+- Created real genealogy rows: people `0`, relationships `0`.
+- Post-import verification was not run:
+  `A16R_RUN_RETRY_POST_IMPORT_VERIFY_STATUS=NOT_RUN_EXECUTION_GATE_BLOCKED`.
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not call RPC, did not POST official import, did not write real
+  genealogy data, did not deploy and did not push.
+
 ## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-POST-DEPLOY-SMOKE - PASS Owner UI Visible
 
 - Marker: `A16U_PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE`.

@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 243 - A-16R retry stops at execution gate when runtime remains fail-closed
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Treat the owner marker for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` as matched for the A-16R retry
+  prompt.
+- Stop the bundle at Phase 2 with
+  `A16R_RUN_RETRY_BUNDLE_STATUS=BLOCKED_AT_EXECUTION_GATE` and
+  `A16R_RUN_RETRY_STATUS=BLOCKED_TRANSACTION_BRANCH_NOT_READY`.
+- Do not call POST `/official-import` when the local runtime still returns
+  `status: "BLOCKED"`, `canRunOfficialImport: false` and
+  `A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- Keep post-import verification as
+  `A16R_RUN_RETRY_POST_IMPORT_VERIFY_STATUS=NOT_RUN_EXECUTION_GATE_BLOCKED`.
+
+Rationale:
+
+- A session-specific marker is necessary but not sufficient for a dangerous
+  official import execution. The runtime branch must also be a real execution
+  implementation, not only a locked contract.
+- Calling the official import route while the branch remains fail-closed would
+  create misleading evidence and could blur the no-blind-retry rule.
+
+Consequences:
+
+- No POST official import call, no direct RPC, no DB push, no SQL, no seed, no
+  deploy, no push and no real people/relationship/family/layout/tree/revision
+  write occurred in this bundle.
+- Created people and relationship counts remain `0`.
+- A later execution phase must first implement and verify a real transaction
+  execution branch, then obtain an explicit owner approval prompt again.
+
 ## Decision 242 - A-16U post-deploy smoke accepts owner UI visibility while keeping import locked
 
 Status: `ACTIVE`

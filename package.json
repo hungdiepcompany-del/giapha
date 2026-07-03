@@ -255,6 +255,8 @@
     "check:a16r-session-approval-gate": "node scripts/check-a16r-session-approval-gate.cjs",
     "check:a16r-run-official-import": "node scripts/check-a16r-run-official-import.cjs",
     "check:a16r-post-import-verification": "node scripts/check-a16r-post-import-verification.cjs",
+    "check:a16r-run-retry-official-import-bundle": "node scripts/check-a16r-run-retry-official-import-bundle.cjs",
+    "check:a16r-run-retry-post-import-verify": "node scripts/check-a16r-run-retry-post-import-verify.cjs",
     "check:a16s-official-import-transaction-execution-branch": "node scripts/check-a16s-official-import-transaction-execution-branch.cjs",
     "check:a16s-transaction-audit-rollback-idempotency-contract": "node scripts/check-a16s-transaction-audit-rollback-idempotency-contract.cjs",
     "check:a16s-sql-apply-verify-runbook": "node scripts/check-a16s-sql-apply-verify-runbook.cjs",

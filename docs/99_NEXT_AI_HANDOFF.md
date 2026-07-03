@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE - Blocked at Execution Gate
+
+- Marker: `A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE`.
+- Bundle status:
+  `A16R_RUN_RETRY_BUNDLE_STATUS=BLOCKED_AT_EXECUTION_GATE`.
+- Session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Approval marker matched:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Phase 1 preflight evidence from prior docs/owner records:
+  - staging people: `102`;
+  - staging relationships: `134`;
+  - validation errors: `0`;
+  - dry-run blockers: `0`;
+  - duplicate unresolved: `0`;
+  - duplicate needs_review: `0`;
+  - duplicate create_new: `8`;
+  - A-16T apply/verify PASS: `YES`;
+  - A-16U locked branch ready: `YES`;
+  - production UI visible: `YES`.
+- Phase 2 execution gate blocked:
+  `A16R_RUN_RETRY_STATUS=BLOCKED_TRANSACTION_BRANCH_NOT_READY`.
+- Runtime evidence:
+  - service still returns `status: "BLOCKED"`;
+  - `canRunOfficialImport=false`;
+  - transaction status remains
+    `A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`;
+  - official import button remains disabled.
+- Phase 3 official import did not run:
+  - `A16R_RUN_RETRY_OFFICIAL_IMPORT_POST_CALLED=NO`;
+  - `A16R_RUN_RETRY_RPC_DIRECT_CALLED=NO`;
+  - created people count: `0`;
+  - created relationship count: `0`.
+- Phase 4 post-import verification did not run:
+  `A16R_RUN_RETRY_POST_IMPORT_VERIFY_STATUS=NOT_RUN_EXECUTION_GATE_BLOCKED`.
+- A-16T/A-16U schema and contract evidence exists for
+  `official_import_batches`, `official_import_rollback_manifests` and
+  idempotency, but this run created no execution batch, rollback manifest or
+  idempotency runtime evidence because no import ran.
+- Next safe work: implement/verify a real transaction execution branch before
+  asking for another owner-approved official import execution prompt.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  RPC, no POST official import, no real genealogy write, no deploy and no push.
+
 ## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-POST-DEPLOY-SMOKE - PASS Owner UI Visible
 
 - Marker: `A16U_PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE`.
