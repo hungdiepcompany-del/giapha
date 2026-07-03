@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 264 - A-16R account verify deploy smoke remains blocked on the same Cloudflare account
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Keep deploy blocked because `npx wrangler whoami` still reports
+  `hung.pham@longthaisteel.com` on account
+  `dec1eb5cfb3f4b32956b1aff723e5ace`, the same account previously classified
+  as wrong or unverified for GIA PHA.
+- Keep target worker status blocked because
+  `npx wrangler deployments list --name web-gia-pha` returned Cloudflare API
+  `10007: This Worker does not exist on your account.`
+- Do not run `npm run deploy`, do not alter `wrangler.toml`, and do not treat
+  any post-deploy smoke as run while the account/worker gate fails.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+
+Rationale:
+
+- The phase hard gate requires both a correct Cloudflare account and visible
+  target worker `web-gia-pha` before deploy.
+- Deploying while the active account is still the known blocked account risks
+  updating or creating the wrong Cloudflare target.
+
 ## Decision 263 - A-16R Cloudflare account recovery blocks deploy until web-gia-pha is visible
 
 Date: 2026-07-03

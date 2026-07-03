@@ -1,5 +1,44 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE - Deploy Blocked Again
+
+- Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE`.
+- Status:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE_STATUS=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND`.
+- Preflight PASS: branch `main`, remote
+  `git@github-giapha:hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`,
+  local HEAD `fc546764720a094e145fd25aa61d299956c333b9` equals `origin/main`,
+  and working tree was clean before docs/checker updates.
+- Validation before Cloudflare gate PASS with caveat:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED`.
+  Repo-local `npm run build` hit the known `.next` ACL blocker
+  `EPERM unlink D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js`; clean
+  temp mirror build with temp-local `npm ci` passed.
+- Wrangler account evidence from `npx wrangler whoami`:
+  `hung.pham@longthaisteel.com`,
+  `Hung.pham@longthaisteel.com's Account`,
+  `dec1eb5cfb3f4b32956b1aff723e5ace`.
+- Account classification:
+  `CLOUDFLARE_ACCOUNT_MATCH=NO` because this is the same previously blocked
+  account.
+- Target worker evidence from
+  `npx wrangler deployments list --name web-gia-pha`:
+  Cloudflare API `10007: This Worker does not exist on your account.`
+- Target/deploy classification:
+  `TARGET_WORKER_FOUND=NO`, `DEPLOY_ALLOWED=NO`, `DEPLOY_RESULT=BLOCKED`.
+- Post-deploy smoke:
+  `PRODUCTION_POST_DEPLOY_SMOKE_RESULT=NOT_RUN_DEPLOY_BLOCKED`.
+- Production `canRunOfficialImport`:
+  `PRODUCTION_CAN_RUN_OFFICIAL_IMPORT=unknown`.
+- Production official import button:
+  `PRODUCTION_OFFICIAL_IMPORT_BUTTON=unknown`.
+- A-16R import may be retried next:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- This phase did not call POST `/official-import`, did not call direct RPC,
+  did not write real genealogy data, did not run SQL, did not DB push, did not
+  migration repair, did not seed, did not deploy and did not change
+  `wrangler.toml`.
+
 ## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY - Account Target Blocked
 
 - Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY`.

@@ -281,7 +281,8 @@
     "check:a16r-runtime-execution-enablement-gate": "node scripts/check-a16r-runtime-execution-enablement-gate.cjs",
     "check:a16r-runtime-execution-enablement-owner-review": "node scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
     "check:a16r-runtime-execution-enablement-push-deploy-smoke": "node scripts/check-a16r-runtime-execution-enablement-push-deploy-smoke.cjs",
-    "check:a16r-giapha-cloudflare-account-recovery": "node scripts/check-a16r-giapha-cloudflare-account-recovery.cjs"
+    "check:a16r-giapha-cloudflare-account-recovery": "node scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",
+    "check:a16r-giapha-cloudflare-account-verify-deploy-smoke": "node scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

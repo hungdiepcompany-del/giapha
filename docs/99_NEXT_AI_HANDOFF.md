@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE - Still Blocked
+
+- Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE`.
+- Current status:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE_STATUS=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, local HEAD equals `origin/main`, working tree clean at
+  phase start.
+- Validation PASS with caveat:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED`.
+  Repo-local build is still blocked by ignored `.next` ACL, but a clean temp
+  mirror build with temp-local `npm ci` passed.
+- Current Wrangler account remains:
+  `hung.pham@longthaisteel.com`,
+  `Hung.pham@longthaisteel.com's Account`,
+  `dec1eb5cfb3f4b32956b1aff723e5ace`.
+- Cloudflare classification:
+  `CLOUDFLARE_ACCOUNT_MATCH=NO`,
+  `TARGET_WORKER_FOUND=NO`,
+  `DEPLOY_ALLOWED=NO`,
+  `DEPLOY_RESULT=BLOCKED`.
+- `npx wrangler deployments list --name web-gia-pha` returned:
+  `10007: This Worker does not exist on your account.`
+- No deploy was run, so post-deploy smoke is
+  `PRODUCTION_POST_DEPLOY_SMOKE_RESULT=NOT_RUN_DEPLOY_BLOCKED`.
+- Production `canRunOfficialImport` and official import button state remain
+  `unknown` because deploy and post-deploy smoke did not happen.
+- A-16R import may be retried next:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- Next safe step: owner/operator must log Wrangler into the correct Cloudflare
+  account containing `web-gia-pha`, then rerun account/target verification
+  before any deploy. Actual official import remains a separate later phase.
+- Boundaries preserved: no POST official import, no direct RPC, no real
+  genealogy write, no SQL, no DB push, no migration repair, no seed, no deploy
+  and no `wrangler.toml` change.
+
 ## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY - Account Target Blocked
 
 - Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY`.
