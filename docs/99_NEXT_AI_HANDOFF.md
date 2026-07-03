@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-POST-DEPLOY-SMOKE - PASS Owner UI Visible
+
+- Marker: `A16U_PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE`.
+- Current status:
+  `PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE_STATUS=PASS_OWNER_UI_VISIBLE`.
+- Owner production evidence: owner now sees the Excel/Gia Pha 4 import UI on
+  production.
+- Correct route:
+  `/admin/exports/import`.
+- Public homepage `/` does not show the Excel upload form.
+- Evidence type:
+  `OWNER_VISUAL_EVIDENCE`.
+- Automated HTTP smoke from local remains not claimed if local TLS/Schannel is
+  inconclusive.
+- Source evidence:
+  - admin import page imports `GiaPha4ManifestUploadForm`;
+  - upload form posts only to `/api/admin/import-sessions/upload`;
+  - upload route exists and remains staging-only;
+  - official import UI remains disabled;
+  - `canRunOfficialImport=false`.
+- Official import status:
+  `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- Next safe step: keep official import locked until a separate explicit
+  execution approval phase. Do not treat visible upload UI as permission to run
+  official import.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  RPC, no POST official import, no real genealogy write, no deploy and no push.
+
 ## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE - Blocked Until Manual Deploy Evidence
 
 - Marker: `A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE`.

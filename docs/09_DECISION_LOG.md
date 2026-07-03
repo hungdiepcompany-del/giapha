@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 242 - A-16U post-deploy smoke accepts owner UI visibility while keeping import locked
+
+Status: `ACTIVE`
+
+Chon:
+
+- Record
+  `PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE_STATUS=PASS_OWNER_UI_VISIBLE`.
+- Use owner visual evidence that the Gia Pha 4 Excel upload UI is visible on
+  production at `/admin/exports/import`.
+- Do not claim automated HTTP PASS from local when the local network/TLS smoke
+  is inconclusive.
+- Keep official import locked with `canRunOfficialImport=false` and the button
+  disabled.
+
+Ly do:
+
+- The previous phase proved source readiness but blocked on missing manual
+  deploy evidence. Owner now reports the production UI is visible after deploy.
+- The visible upload UI is only the staging upload surface. It is not evidence
+  that official import execution is open or has run.
+- The official import route/RPC/real genealogy writes remain separated behind a
+  future explicit approval phase.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real genealogy write, no deploy and no push.
+
 ## Decision 241 - A-16U production import UI needs manual deploy evidence after push
 
 Status: `ACTIVE`

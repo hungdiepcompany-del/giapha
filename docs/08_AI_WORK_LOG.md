@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-POST-DEPLOY-SMOKE - PASS Owner UI Visible
+
+- Marker: `A16U_PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE`.
+- Status:
+  `PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE_STATUS=PASS_OWNER_UI_VISIBLE`.
+- Owner production evidence:
+  owner reported the Excel/Gia Pha 4 import UI is now visible on production.
+- Correct route:
+  `/admin/exports/import`.
+- Homepage `/` does not show the Excel import form.
+- Evidence classification:
+  `OWNER_VISUAL_EVIDENCE`; automated HTTP PASS is not claimed from local
+  because the prior local HTTP smoke hit a TLS/Schannel issue.
+- Source evidence remains valid:
+  - `app/(admin)/admin/exports/import/page.tsx` imports
+    `GiaPha4ManifestUploadForm`;
+  - `components/imports/giapha4-manifest-upload-form.tsx` posts only to
+    `/api/admin/import-sessions/upload`;
+  - `app/api/admin/import-sessions/upload/route.ts` still handles staging
+    upload through `uploadGiaPha4ManifestStaging`.
+- Official import remains locked:
+  `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`,
+  `canRunOfficialImport=false`, official import button disabled.
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not call RPC, did not POST official import, did not write real
+  genealogy data, did not run official import, did not deploy and did not push.
+
 ## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE - Blocked Until Manual Deploy Evidence
 
 - Marker: `A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE`.
