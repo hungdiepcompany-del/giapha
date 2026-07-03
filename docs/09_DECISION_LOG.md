@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 263 - A-16R Cloudflare account recovery blocks deploy until web-gia-pha is visible
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Classify the current Cloudflare deployment context as not safe for GIA PHA:
+  `CLOUDFLARE_ACCOUNT_MATCH=NO`, `TARGET_WORKER_FOUND=NO` and
+  `DEPLOY_ALLOWED_NEXT=NO`.
+- Keep deploy blocked while account `dec1eb5cfb3f4b32956b1aff723e5ace`
+  lists only `bom`, `hrsync`, `san-xuat-lt`,
+  `san-xuat-lt-google-drive-service` and `sx`.
+- Do not change `wrangler.toml` to fit that account and do not deploy GIA PHA
+  to any Sản Xuất LT worker.
+- Require owner/operator to log into the correct GIA PHA Cloudflare account or
+  provide GitHub Actions/manual deploy evidence for `web-gia-pha` before any
+  deploy retry.
+
+Rationale:
+
+- The repo and operations docs identify the GIA PHA worker as `web-gia-pha` and
+  the production URL as `https://web-gia-pha.hungdiepcompany.workers.dev/`.
+- A Cloudflare account that cannot see `web-gia-pha` cannot be treated as a
+  safe deploy target for GIA PHA.
+
 ## Decision 262 - A-16R push succeeds but deploy blocks on Cloudflare target mismatch
 
 Date: 2026-07-03

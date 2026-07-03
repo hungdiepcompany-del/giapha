@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY - Account Target Blocked
+
+- Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY`.
+- Status:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_RECOVERY_STATUS=BLOCKED_WRONG_OR_UNVERIFIED_CLOUDFLARE_ACCOUNT`.
+- Expected target from repo/docs:
+  worker `web-gia-pha`, production URL
+  `https://web-gia-pha.hungdiepcompany.workers.dev/`, deploy workflow
+  `.github/workflows/cloudflare-deploy.yml`, manual-only `workflow_dispatch`.
+- Documented GIA PHA Cloudflare account id:
+  `GIA_PHA_CLOUDFLARE_ACCOUNT_ID_DOCUMENTED=UNKNOWN_NOT_DOCUMENTED_IN_REPO_DOCS`.
+- Current account evidence:
+  `hung.pham@longthaisteel.com`,
+  `dec1eb5cfb3f4b32956b1aff723e5ace`.
+- Wrangler CLI `whoami` timed out in this phase, but read-only Cloudflare API
+  confirmed the account id and worker list:
+  `bom`, `hrsync`, `san-xuat-lt`, `san-xuat-lt-google-drive-service`, `sx`.
+- `web-gia-pha` was not found in that account:
+  `TARGET_WORKER_FOUND=NO`.
+- Classification:
+  `CLOUDFLARE_ACCOUNT_MATCH=NO`,
+  `DEPLOY_ALLOWED_NEXT=NO`,
+  `DEPLOY_BLOCKER=BLOCKED_TARGET_WORKER_NOT_FOUND_IN_CURRENT_CLOUDFLARE_ACCOUNT`.
+- Required owner action:
+  `REQUIRED_OWNER_ACTION=LOGIN_TO_CORRECT_GIAPHA_CLOUDFLARE_ACCOUNT_OR_PROVIDE_GITHUB_ACTIONS_DEPLOY_EVIDENCE_FOR_WEB_GIA_PHA`.
+- This phase did not call POST `/official-import`, did not call direct RPC,
+  did not write real genealogy data, did not deploy, did not push, did not run
+  SQL, did not DB push, did not migration repair and did not seed.
+
 ## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE - Push PASS, Deploy Target Mismatch
 
 - Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE`.

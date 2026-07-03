@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY - Account Target Blocked
+
+- Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-RECOVERY`.
+- Current status:
+  `A16R_GIAPHA_CLOUDFLARE_ACCOUNT_RECOVERY_STATUS=BLOCKED_WRONG_OR_UNVERIFIED_CLOUDFLARE_ACCOUNT`.
+- Classifications:
+  `CLOUDFLARE_ACCOUNT_MATCH=NO`,
+  `TARGET_WORKER_FOUND=NO`,
+  `DEPLOY_ALLOWED_NEXT=NO`.
+- Deploy blocker:
+  `DEPLOY_BLOCKER=BLOCKED_TARGET_WORKER_NOT_FOUND_IN_CURRENT_CLOUDFLARE_ACCOUNT`.
+- Expected GIA PHA target:
+  worker `web-gia-pha`, production URL
+  `https://web-gia-pha.hungdiepcompany.workers.dev/`, manual-only workflow
+  `.github/workflows/cloudflare-deploy.yml` with `workflow_dispatch`.
+- GIA PHA Cloudflare account id is not documented in repo docs:
+  `GIA_PHA_CLOUDFLARE_ACCOUNT_ID_DOCUMENTED=UNKNOWN_NOT_DOCUMENTED_IN_REPO_DOCS`.
+- Current observed account remains:
+  `hung.pham@longthaisteel.com`,
+  `dec1eb5cfb3f4b32956b1aff723e5ace`.
+- Wrangler CLI calls timed out in this phase, but read-only Cloudflare API
+  confirmed account `dec1eb5cfb3f4b32956b1aff723e5ace` lists only:
+  `bom`, `hrsync`, `san-xuat-lt`, `san-xuat-lt-google-drive-service`, `sx`.
+- `web-gia-pha` is still absent from that account. Do not deploy GIA PHA to
+  `sx` or any Sản Xuất LT worker and do not edit `wrangler.toml` to fit the
+  wrong account.
+- Required owner action:
+  `REQUIRED_OWNER_ACTION=LOGIN_TO_CORRECT_GIAPHA_CLOUDFLARE_ACCOUNT_OR_PROVIDE_GITHUB_ACTIONS_DEPLOY_EVIDENCE_FOR_WEB_GIA_PHA`.
+- Next safe step: owner/operator logs into the correct account or provides a
+  workflow/manual deploy run proving `web-gia-pha`; then run a separate
+  account-target verification phase before deploy retry.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE - Push PASS, Deploy Blocked By Target Mismatch
 
 - Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE`.
