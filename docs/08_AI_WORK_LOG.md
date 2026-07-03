@@ -1,5 +1,28 @@
 # AI Work Log
 
+## 2026-07-03 - A-16V-APPLY-VERIFY - PASS Owner Applied And Verified
+
+- Marker: `A-16V-APPLY-VERIFY`.
+- Status:
+  `A16V_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
+- Readiness:
+  `A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
+- A-16R retry gate:
+  `A16R_RETRY_ALLOWED_AFTER_A16V=YES`.
+- Owner reported manual apply of the A-16V real transaction branch candidate
+  and the 0017 marker verification fix on Supabase.
+- Owner reran
+  `db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql`.
+- Owner-provided raw verification output showed PASS for all required rows:
+  A16V marker, all-or-nothing batch, completed batch branch, people/family
+  insert branches, revision audit branch, rollback manifest, idempotency guard,
+  unique guards, no anon/public execute grants, no auto import trigger, not
+  security definer, fixed search_path and required audit/rollback tables.
+- This phase records verification/readiness only. It did not run SQL, did not
+  DB push, did not migration repair, did not seed, did not call RPC, did not
+  POST official import, did not run official import, did not retry A-16R, did
+  not write real genealogy data, did not deploy and did not push.
+
 ## 2026-07-03 - A-16V-MARKER-VERIFICATION-FIX - Candidate Ready Not Applied
 
 - Marker: `A-16V-MARKER-VERIFICATION-FIX`.

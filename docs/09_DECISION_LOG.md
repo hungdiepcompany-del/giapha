@@ -1,5 +1,28 @@
 # Decision Log
 
+## Decision 256 - A-16V apply verification PASS allows a future A-16R retry gate
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Record owner-provided A-16V manual apply/verify as PASS because the raw
+  verification output includes PASS for every required A-16V row.
+- Mark `A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
+- Mark `A16R_RETRY_ALLOWED_AFTER_A16V=YES`, but only for a future separate
+  prompt with the exact session-specific marker.
+
+Rationale:
+
+- The previous A-16V blocker was the marker verification row; owner evidence now
+  shows `A16V marker,PASS`.
+- Security and transaction evidence also show PASS: not security definer, fixed
+  search_path, no anon/public execute grants, no auto trigger, idempotency,
+  rollback manifest and audit tables.
+- This decision does not execute official import and does not itself open A-16R.
+
 ## Decision 255 - A-16V marker verification fix uses COMMENT ON FUNCTION
 
 Date: 2026-07-03

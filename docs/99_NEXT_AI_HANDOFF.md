@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16V-APPLY-VERIFY - PASS Owner Applied And Verified
+
+- Marker: `A-16V-APPLY-VERIFY`.
+- Current status:
+  `A16V_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
+- Readiness:
+  `A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
+- A-16R retry after A-16V:
+  `A16R_RETRY_ALLOWED_AFTER_A16V=YES`.
+- Owner manually applied:
+  - `db/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql`;
+  - `db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql`.
+- Owner reran:
+  `db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql`.
+- Owner-provided raw output shows every verification row PASS, including
+  A16V marker, all-or-nothing branch, people/family/revision branches,
+  rollback manifest, idempotency guard, unique guards, no anon/public execute
+  grants, no auto import trigger, not security definer, fixed search_path and
+  required tables.
+- This is readiness evidence only. No SQL was run by Codex, no RPC/POST
+  official import was called, no official import ran, no real genealogy rows
+  were written, and A-16R was not retried in this phase.
+- Next safe step: owner may open a separate A-16R retry prompt with the exact
+  session marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+
 ## 2026-07-03 - A-16V-MARKER-VERIFICATION-FIX - Candidate Ready Not Applied
 
 - Marker: `A-16V-MARKER-VERIFICATION-FIX`.

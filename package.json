@@ -273,7 +273,8 @@
     "check:a16v-official-import-real-transaction-execution-branch": "node scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
     "check:a16v-sql-apply-verify-runbook": "node scripts/check-a16v-sql-apply-verify-runbook.cjs",
     "check:a16v-a16r-execution-retry-requirements": "node scripts/check-a16v-a16r-execution-retry-requirements.cjs",
-    "check:a16v-marker-verification-fix": "node scripts/check-a16v-marker-verification-fix.cjs"
+    "check:a16v-marker-verification-fix": "node scripts/check-a16v-marker-verification-fix.cjs",
+    "check:a16v-apply-verify": "node scripts/check-a16v-apply-verify.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
