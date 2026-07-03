@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 259 - A-16V production runtime evidence mismatch is reconciled without opening import
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Classify the A-16R after A-16V blocker as
+  `A16V_PRODUCTION_RUNTIME_ROOT_CAUSE=EVIDENCE_READER_MISMATCH`.
+- Reconcile runtime evidence so the A-16V branch reports
+  `sqlCandidateStatus: "OWNER_APPLIED_VERIFIED"` with evidence source
+  `docs/PLAN_A16V_APPLY_VERIFY.md`.
+- Replace the stale runtime blocker
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED` in the active
+  execution response with
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Keep `canRunOfficialImport=false`, keep the route fail-closed and keep the
+  UI button disabled.
+
+Rationale:
+
+- Owner A-16V apply/verify evidence says the real transaction branch was
+  applied and verified, so the runtime `NOT_APPLIED` label was stale.
+- The runtime still does not contain an approved execution path that calls the
+  RPC under one-call/import-session guards, so A-16R cannot be retried yet.
+- Reconciliation fixes evidence accuracy without weakening fail-closed guards.
+
 ## Decision 258 - A-16R after A-16V retry stops at source runtime gate
 
 Date: 2026-07-03

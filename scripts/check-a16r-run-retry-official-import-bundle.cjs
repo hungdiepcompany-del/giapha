@@ -119,9 +119,12 @@ for (const token of [
 for (const token of [
   "A16U_LOCKED_RUNTIME_GUARD",
   "A16U_REQUIRED_A16R_RETRY_MARKER",
+  "A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER",
   "status: \"BLOCKED\"",
   "canRunOfficialImport: false",
-  "transactionStatus: \"A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED\"",
+  "transactionStatus: \"A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED\"",
+  "sqlCandidateStatus: \"OWNER_APPLIED_VERIFIED\"",
+  "verificationEvidenceSource: \"docs/PLAN_A16V_APPLY_VERIFY.md\"",
   "importedPeopleCount: 0",
   "importedRelationshipCount: 0",
   "auditBatchContract",

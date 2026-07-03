@@ -17,7 +17,8 @@
 - The bundle stopped before official import because the post-deploy/source
   gate found the runtime still fail-closed:
   `A16R_AFTER_A16V_RUNTIME_CAN_RUN_OFFICIAL_IMPORT=false`,
-  `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=NOT_APPLIED`.
+  `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=OWNER_APPLIED_VERIFIED`,
+  `A16R_AFTER_A16V_RUNTIME_BLOCKER=A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
 - No `POST /official-import` request was called.
 - No direct RPC call was made.
 - No official import batch was created by this phase.
@@ -57,5 +58,5 @@
 
 Do not run post-import verification until official import has actually executed
 successfully in a later phase. The next safe action is a separate runtime
-execution enablement phase; do not retry A-16R while the source still reports
-the A-16V transaction branch as `NOT_APPLIED`.
+execution enablement phase; do not retry A-16R while the route/service still
+reports `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.

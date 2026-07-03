@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-03 - A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION - Evidence Reader Mismatch Reconciled
+
+- Marker: `A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION`.
+- Status:
+  `A16V_PRODUCTION_RUNTIME_EVIDENCE_RECONCILIATION_STATUS=PASS_RECONCILED_RUNTIME_EVIDENCE_MISMATCH`.
+- Root cause:
+  `A16V_PRODUCTION_RUNTIME_ROOT_CAUSE=EVIDENCE_READER_MISMATCH`.
+- A-16R retry allowed now:
+  `A16V_PRODUCTION_RUNTIME_A16R_RETRY_ALLOWED=NO`.
+- Current branch was `main...origin/main [ahead 1]` at phase start because the
+  previous blocker commit had not been pushed. This phase did not push.
+- Investigation found that A-16V owner apply/verify PASS was already recorded,
+  but runtime source still advertised the old A-16V state as
+  `sqlCandidateStatus: "NOT_APPLIED"` with blocker
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+- Runtime evidence is now reconciled to:
+  `sqlCandidateStatus: "OWNER_APPLIED_VERIFIED"`,
+  evidence source `docs/PLAN_A16V_APPLY_VERIFY.md`, and blocker
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Official import remains disabled:
+  `canRunOfficialImport=false`, route/service still do not call RPC, and the
+  official import button remains disabled.
+- This phase did not call POST `/official-import`, did not call the RPC
+  directly, did not write real genealogy data, did not run SQL, did not DB
+  push, did not migration repair, did not seed, did not deploy and did not
+  push.
+
 ## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY - Blocked Source Runtime Gate
 
 - Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY`.

@@ -124,8 +124,10 @@ for (const token of [
 for (const token of [
   "A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER",
   "A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER",
+  "A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER",
   "realTransactionExecutionBranchCandidate",
-  "sqlCandidateStatus: \"NOT_APPLIED\"",
+  "sqlCandidateStatus: \"OWNER_APPLIED_VERIFIED\"",
+  "verificationEvidenceSource: \"docs/PLAN_A16V_APPLY_VERIFY.md\"",
   "canonicalRpcName: A16P_TX_TRANSACTION_RPC_NAME",
   "allOrNothing: true",
   "idempotencyGuard: \"import_session_id\"",

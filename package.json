@@ -276,7 +276,8 @@
     "check:a16v-marker-verification-fix": "node scripts/check-a16v-marker-verification-fix.cjs",
     "check:a16v-apply-verify": "node scripts/check-a16v-apply-verify.cjs",
     "check:a16r-after-a16v-official-import-execution-bundle": "node scripts/check-a16r-after-a16v-official-import-execution-bundle.cjs",
-    "check:a16r-after-a16v-post-import-verify": "node scripts/check-a16r-after-a16v-post-import-verify.cjs"
+    "check:a16r-after-a16v-post-import-verify": "node scripts/check-a16r-after-a16v-post-import-verify.cjs",
+    "check:a16v-production-runtime-evidence-reconciliation": "node scripts/check-a16v-production-runtime-evidence-reconciliation.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

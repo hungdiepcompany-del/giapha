@@ -41,7 +41,11 @@ function parseConfirmation(value: unknown): OfficialImportConfirmation {
     confirmDuplicateDecisionsComplete: body.confirmDuplicateDecisionsComplete,
     confirmA16TApplyVerified: body.confirmA16TApplyVerified,
     confirmA16ULockedBranchReady: body.confirmA16ULockedBranchReady,
+    confirmA16VApplyVerified: body.confirmA16VApplyVerified,
+    confirmA16VRealTransactionBranchReady:
+      body.confirmA16VRealTransactionBranchReady,
     confirmProductionUiVisible: body.confirmProductionUiVisible,
+    confirmProductionDeployReady: body.confirmProductionDeployReady,
     confirmRollbackReviewed: body.confirmRollbackReviewed,
     confirmAuditReviewed: body.confirmAuditReviewed,
   };
@@ -74,8 +78,17 @@ function missingConfirmationReasons(
   if (confirmation.confirmA16ULockedBranchReady !== true) {
     reasons.push("ChÆ°a xÃ¡c nháº­n A-16U locked branch ready.");
   }
+  if (confirmation.confirmA16VApplyVerified !== true) {
+    reasons.push("Chưa xác nhận A-16V apply/verify PASS.");
+  }
+  if (confirmation.confirmA16VRealTransactionBranchReady !== true) {
+    reasons.push("Chưa xác nhận A-16V real transaction branch ready.");
+  }
   if (confirmation.confirmProductionUiVisible !== true) {
     reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");
+  }
+  if (confirmation.confirmProductionDeployReady !== true) {
+    reasons.push("Chưa xác nhận production đã deploy bản A-16V.");
   }
   if (confirmation.confirmRollbackReviewed !== true) {
     reasons.push("Chưa xác nhận đã rà soát rollback.");

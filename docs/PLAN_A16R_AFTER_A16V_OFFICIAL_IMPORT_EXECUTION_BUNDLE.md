@@ -56,8 +56,8 @@
 - Runtime source still reports:
   - `A16R_AFTER_A16V_RUNTIME_SOURCE_STATUS=BLOCKED`;
   - `A16R_AFTER_A16V_RUNTIME_CAN_RUN_OFFICIAL_IMPORT=false`;
-  - `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=NOT_APPLIED`;
-  - `A16R_AFTER_A16V_RUNTIME_BLOCKER=A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+  - `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=OWNER_APPLIED_VERIFIED`;
+  - `A16R_AFTER_A16V_RUNTIME_BLOCKER=A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
 - Because the source/runtime gate is insufficient, the bundle stopped before
   the final execution gate.
 
@@ -73,7 +73,8 @@
 - `A16R_AFTER_A16V_A16U_LOCKED_BRANCH_READY=YES`.
 - `A16R_AFTER_A16V_A16V_APPLY_VERIFY_PASS=YES`.
 - `A16R_AFTER_A16V_A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
-- Execution did not proceed because runtime source remains fail-closed.
+- Execution did not proceed because runtime source remains fail-closed even
+  after the A-16V owner apply/verify evidence was reconciled.
 
 ## Preflight Counts Carried From Prior Evidence
 
@@ -128,7 +129,8 @@
 ## Next Safe Step
 
 Next safe step is a separate runtime execution enablement phase that updates
-the official import service/route to use the verified A-16V transaction branch,
-keeps the one-call guard, and proves `canRunOfficialImport` can become true
-only for the exact approved session. Do not run A-16R official import while the
-source still reports the A-16V branch as `NOT_APPLIED`.
+the official import service/route to call the verified A-16V transaction branch
+under strict guard, keeps the one-call guard, and proves `canRunOfficialImport`
+can become true only for the exact approved session. Do not run A-16R official
+import while the source still reports
+`A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.

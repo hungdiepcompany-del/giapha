@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION - Evidence Reader Mismatch Reconciled
+
+- Marker: `A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION`.
+- Current status:
+  `A16V_PRODUCTION_RUNTIME_EVIDENCE_RECONCILIATION_STATUS=PASS_RECONCILED_RUNTIME_EVIDENCE_MISMATCH`.
+- Root cause:
+  `A16V_PRODUCTION_RUNTIME_ROOT_CAUSE=EVIDENCE_READER_MISMATCH`.
+- A-16R retry allowed now:
+  `A16V_PRODUCTION_RUNTIME_A16R_RETRY_ALLOWED=NO`.
+- A-16V owner apply/verify PASS remains recorded:
+  `A16V_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`,
+  `A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
+- Reconciled runtime evidence:
+  - `sqlCandidateStatus: "OWNER_APPLIED_VERIFIED"`;
+  - `verificationEvidenceSource: "docs/PLAN_A16V_APPLY_VERIFY.md"`;
+  - blocker:
+    `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`;
+  - `canRunOfficialImport=false`.
+- This means SQL/apply was not re-run and not classified as missing. The stale
+  evidence reader was corrected, but official import remains locked because the
+  route/service still does not have an enabled RPC execution path.
+- Current local branch may still be ahead of origin because this phase and the
+  previous blocker phase produce local commits only. Do not push unless owner
+  explicitly asks.
+- Next safe step: a separate owner-approved runtime execution enablement phase
+  that proves how the guarded route/service will call the verified RPC exactly
+  once for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY - Blocked Source Runtime Gate
 
 - Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY`.

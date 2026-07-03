@@ -1,4 +1,4 @@
-import "server-only";
+﻿import "server-only";
 
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildDuplicateDecisionSummary } from "@/lib/import/giapha4/duplicate-decision-review-service";
@@ -52,6 +52,9 @@ export const A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER =
 export const A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER =
   "A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED";
 
+export const A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER =
+  "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY";
+
 export const A16U_REQUIRED_SESSION_ID =
   "2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
 
@@ -72,7 +75,10 @@ export type OfficialImportConfirmation = {
   confirmDuplicateDecisionsComplete?: unknown;
   confirmA16TApplyVerified?: unknown;
   confirmA16ULockedBranchReady?: unknown;
+  confirmA16VApplyVerified?: unknown;
+  confirmA16VRealTransactionBranchReady?: unknown;
   confirmProductionUiVisible?: unknown;
+  confirmProductionDeployReady?: unknown;
   confirmRollbackReviewed?: unknown;
   confirmAuditReviewed?: unknown;
 };
@@ -106,7 +112,8 @@ export type OfficialImportCandidateResult = {
   transactionStatus:
     | "BLOCKED_TRANSACTION_HELPER_MISSING"
     | "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED"
-    | "A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED";
+    | "A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED"
+    | "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED";
   transactionRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
   transactionBranchContract: {
     marker: typeof A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER;
@@ -120,14 +127,15 @@ export type OfficialImportCandidateResult = {
   };
   realTransactionExecutionBranchCandidate: {
     marker: typeof A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER;
-    sqlCandidateStatus: "NOT_APPLIED";
+    sqlCandidateStatus: "OWNER_APPLIED_VERIFIED";
+    verificationEvidenceSource: "docs/PLAN_A16V_APPLY_VERIFY.md";
     canonicalRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
     allOrNothing: true;
     idempotencyGuard: "import_session_id";
     auditBatchTable: "official_import_batches";
     rollbackManifestTable: "official_import_rollback_manifests";
     canRunOfficialImport: false;
-    blocker: typeof A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER;
+    blocker: typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER;
   };
   auditBatchContract: {
     table: "official_import_batches";
@@ -156,34 +164,43 @@ function validateConfirmation(
   const reasons: string[] = [];
 
   if (confirmation.confirmMarker !== A16U_REQUIRED_A16R_RETRY_MARKER) {
-    reasons.push("confirmMarker không khớp marker session-specific A-16R.");
+    reasons.push("confirmMarker khÃ´ng khá»›p marker session-specific A-16R.");
   }
   if (confirmation.confirmSessionId !== sessionId) {
-    reasons.push("confirmSessionId không khớp phiên import đang được yêu cầu.");
+    reasons.push("confirmSessionId khÃ´ng khá»›p phiÃªn import Ä‘ang Ä‘Æ°á»£c yÃªu cáº§u.");
   }
   if (!isConfirmed(confirmation.confirmNoValidationErrors)) {
-    reasons.push("Chưa xác nhận không còn lỗi validation.");
+    reasons.push("ChÆ°a xÃ¡c nháº­n khÃ´ng cÃ²n lá»—i validation.");
   }
   if (!isConfirmed(confirmation.confirmNoDryRunBlockers)) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n dry-run blockers báº±ng 0.");
+    reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n dry-run blockers bÃ¡ÂºÂ±ng 0.");
   }
   if (!isConfirmed(confirmation.confirmDuplicateDecisionsComplete)) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n duplicate unresolved/needs_review báº±ng 0.");
+    reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n duplicate unresolved/needs_review bÃ¡ÂºÂ±ng 0.");
   }
   if (!isConfirmed(confirmation.confirmA16TApplyVerified)) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n A-16T schema Ä‘Ã£ apply/verify PASS.");
+    reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n A-16T schema Ã„â€˜ÃƒÂ£ apply/verify PASS.");
   }
   if (!isConfirmed(confirmation.confirmA16ULockedBranchReady)) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n A-16U locked transaction branch Ä‘Ã£ ready.");
+    reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n A-16U locked transaction branch Ã„â€˜ÃƒÂ£ ready.");
+  }
+  if (!isConfirmed(confirmation.confirmA16VApplyVerified)) {
+    reasons.push("Chưa xác nhận A-16V đã owner apply/verify PASS.");
+  }
+  if (!isConfirmed(confirmation.confirmA16VRealTransactionBranchReady)) {
+    reasons.push("Chưa xác nhận A-16V real transaction branch ready.");
   }
   if (!isConfirmed(confirmation.confirmProductionUiVisible)) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");
+    reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n production UI nhÃ¡ÂºÂ­p Excel Ã„â€˜ÃƒÂ£ hiÃ¡Â»Æ’n thÃ¡Â»â€¹.");
+  }
+  if (!isConfirmed(confirmation.confirmProductionDeployReady)) {
+    reasons.push("Chưa xác nhận production đã deploy bản A-16V.");
   }
   if (!isConfirmed(confirmation.confirmRollbackReviewed)) {
-    reasons.push("Chưa xác nhận đã rà soát rollback.");
+    reasons.push("ChÆ°a xÃ¡c nháº­n Ä‘Ã£ rÃ  soÃ¡t rollback.");
   }
   if (!isConfirmed(confirmation.confirmAuditReviewed)) {
-    reasons.push("Chưa xác nhận đã rà soát audit/revision.");
+    reasons.push("ChÆ°a xÃ¡c nháº­n Ä‘Ã£ rÃ  soÃ¡t audit/revision.");
   }
 
   return reasons;
@@ -209,48 +226,48 @@ function buildNoGoReasons(params: {
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(params.manifest);
   const reasons: string[] = [
     A16U_LOCKED_RUNTIME_GUARD,
-    A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER,
-    "Nhánh transaction A-16U đã chuẩn bị contract all-or-nothing nhưng vẫn khóa chạy thật đến phase A-16R-RUN-RETRY riêng.",
+    A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
+    "A-16V đã có owner apply/verify PASS nhưng runtime execution vẫn chưa được bật; route/service chưa được phép gọi RPC nhập chính thức.",
   ];
 
   if (!params.actor.user) {
-    reasons.push("Người dùng chưa đăng nhập.");
+    reasons.push("NgÆ°á»i dÃ¹ng chÆ°a Ä‘Äƒng nháº­p.");
   }
   if (!hasStrictOfficialImportPermission(params.actor)) {
     reasons.push(
-      "Thiếu bộ quyền chặt cho nhập chính thức: imports.create, people.create, relationships.create và permissions.manage.",
+      "Thiáº¿u bá»™ quyá»n cháº·t cho nháº­p chÃ­nh thá»©c: imports.create, people.create, relationships.create vÃ  permissions.manage.",
     );
   }
   if (!params.manifest.ok || !params.manifest.session) {
-    reasons.push("Không đọc được import manifest staging hợp lệ.");
+    reasons.push("KhÃ´ng Ä‘á»c Ä‘Æ°á»£c import manifest staging há»£p lá»‡.");
   }
   if (params.manifest.session?.status && params.manifest.session.status !== "staged") {
-    reasons.push("Import session không ở trạng thái staged để xét nhập chính thức.");
+    reasons.push("Import session khÃ´ng á»Ÿ tráº¡ng thÃ¡i staged Ä‘á»ƒ xÃ©t nháº­p chÃ­nh thá»©c.");
   }
   if (params.manifest.session?.id && params.manifest.session.id !== A16U_REQUIRED_SESSION_ID) {
-    reasons.push("Phiên import không khớp session đã được preflight cho A-16U.");
+    reasons.push("PhiÃªn import khÃ´ng khá»›p session Ä‘Ã£ Ä‘Æ°á»£c preflight cho A-16U.");
   }
   if (validation.summary.errorCount > 0) {
-    reasons.push("Còn lỗi validation trong staging.");
+    reasons.push("CÃ²n lá»—i validation trong staging.");
   }
   if (dryRun.summary.blockedByErrorCount > 0) {
-    reasons.push("Dry-run preview còn lỗi chặn.");
+    reasons.push("Dry-run preview cÃ²n lá»—i cháº·n.");
   }
   if (reviewPack.readiness !== "READY_FOR_OWNER_REVIEW") {
-    reasons.push("Review pack chưa sẵn sàng cho owner review.");
+    reasons.push("Review pack chÆ°a sáºµn sÃ ng cho owner review.");
   }
   if (duplicateDecisionSummary.unresolvedDuplicateCandidates > 0) {
-    reasons.push("Còn ứng viên trùng chưa có quyết định owner.");
+    reasons.push("CÃ²n á»©ng viÃªn trÃ¹ng chÆ°a cÃ³ quyáº¿t Ä‘á»‹nh owner.");
   }
   if (duplicateDecisionSummary.needsReviewDuplicateCandidates > 0) {
-    reasons.push("Còn ứng viên trùng đang ở trạng thái cần chủ nhà rà soát.");
+    reasons.push("CÃ²n á»©ng viÃªn trÃ¹ng Ä‘ang á»Ÿ tráº¡ng thÃ¡i cáº§n chá»§ nhÃ  rÃ  soÃ¡t.");
   }
   if (
     params.manifest.relationshipsPreview.some(
       (item) => item.ambiguityStatus && item.ambiguityStatus !== "clear",
     )
   ) {
-    reasons.push("Còn quan hệ staging chưa rõ hoặc parent reference chưa được xử lý.");
+    reasons.push("CÃ²n quan há»‡ staging chÆ°a rÃµ hoáº·c parent reference chÆ°a Ä‘Æ°á»£c xá»­ lÃ½.");
   }
 
   reasons.push(...validateConfirmation(params.manifest.session?.id ?? "", params.confirmation));
@@ -297,7 +314,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
     },
     canRunOfficialImport: false,
     piiPrinted: false,
-    transactionStatus: "A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED",
+    transactionStatus: "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
     transactionRpcName: A16P_TX_TRANSACTION_RPC_NAME,
     transactionBranchContract: {
       marker: A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER,
@@ -311,14 +328,15 @@ export function buildOfficialImportRuntimeCandidate(params: {
     },
     realTransactionExecutionBranchCandidate: {
       marker: A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER,
-      sqlCandidateStatus: "NOT_APPLIED",
+      sqlCandidateStatus: "OWNER_APPLIED_VERIFIED",
+      verificationEvidenceSource: "docs/PLAN_A16V_APPLY_VERIFY.md",
       canonicalRpcName: A16P_TX_TRANSACTION_RPC_NAME,
       allOrNothing: true,
       idempotencyGuard: "import_session_id",
       auditBatchTable: "official_import_batches",
       rollbackManifestTable: "official_import_rollback_manifests",
       canRunOfficialImport: false,
-      blocker: A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER,
+      blocker: A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
     },
     auditBatchContract: {
       table: "official_import_batches",
@@ -334,7 +352,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
       expectedFields: ["import_batch_id", "import_session_id", "created_people_ids"],
     },
     message:
-      "Nhánh transaction A-16U đã sẵn sàng ở trạng thái khóa, vẫn chưa chạy nhập chính thức và phải chờ marker A-16R-RUN-RETRY riêng.",
+      "A-16V đã owner apply/verify PASS, nhưng runtime nhập chính thức vẫn khóa và chưa gọi RPC. Cần phase enablement riêng trước khi chạy A-16R.",
   };
 }
 
