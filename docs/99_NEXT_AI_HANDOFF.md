@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16V-MARKER-VERIFICATION-FIX - Candidate Ready Not Applied
+
+- Marker: `A-16V-MARKER-VERIFICATION-FIX`.
+- Current status:
+  `A16V_MARKER_VERIFICATION_FIX_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- A-16V apply/verify remains:
+  `A16V_APPLY_VERIFY_STATUS=BLOCKED_A16V_MARKER_FAIL_PENDING_FIX`.
+- Owner verification evidence: only `A16V marker = FAIL`; all other listed
+  transaction/security/schema verification rows were PASS.
+- Root cause: verification looked for
+  `A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_CANDIDATE` in
+  `pg_get_functiondef(...)`, but the exact marker existed only in the 0016 SQL
+  file header and was not persisted into DB metadata.
+- Fix candidate 0017:
+  `db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql`.
+- Supabase mirror:
+  `supabase/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql`.
+- Chosen fix: `COMMENT ON FUNCTION` with the exact marker token; no transaction
+  logic, permission, RLS, grant, trigger or data change.
+- Verification SQL now reads marker from either `pg_get_functiondef(...)` or
+  `obj_description(..., 'pg_proc')`.
+- Next safe step: owner manually applies 0017, then reruns
+  `db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql`.
+- Do not record A-16V apply/verify PASS and do not retry A-16R until marker
+  verification PASS is provided.
+
 ## 2026-07-03 - A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH - Candidate Ready Not Applied
 
 - Marker: `A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH`.

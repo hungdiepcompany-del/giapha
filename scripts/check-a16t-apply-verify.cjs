@@ -239,10 +239,23 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16U_PRODUCTION_IMPORT_UI_POST_DEPLOY_SMOKE.md",
   "docs/PLAN_A16R_RUN_RETRY_OFFICIAL_IMPORT_BUNDLE.md",
   "docs/PLAN_A16R_RUN_RETRY_POST_IMPORT_VERIFY.md",
+  "docs/PLAN_A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH.md",
+  "docs/PLAN_A16V_SQL_APPLY_VERIFY_RUNBOOK.md",
+  "docs/PLAN_A16V_A16R_EXECUTION_RETRY_REQUIREMENTS.md",
+  "docs/PLAN_A16V_MARKER_VERIFICATION_FIX.md",
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
   "scripts/check-a16u-production-import-ui-deploy-smoke.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+  "scripts/check-a16v-sql-apply-verify-runbook.cjs",
+  "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
+  "scripts/check-a16v-marker-verification-fix.cjs",
+  "db/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql",
+  "supabase/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql",
+  "db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql",
+  "db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql",
+  "supabase/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql",
   "scripts/check-a16u-production-import-ui-post-deploy-smoke.cjs",
   "scripts/check-a16r-run-retry-official-import-bundle.cjs",
   "scripts/check-a16r-run-retry-post-import-verify.cjs",
@@ -256,13 +269,27 @@ const allowedChangedFiles = new Set([
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(".env.local must not change");
-  if (file.startsWith("db/migrations/") && file !== grantFixDbMigrationPath) {
+  if (
+    file.startsWith("db/migrations/") &&
+    file !== grantFixDbMigrationPath &&
+    file !== "db/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql" &&
+    file !== "db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql"
+  ) {
     failures.push(`migration must not change in A-16T-APPLY-VERIFY ${file}`);
   }
-  if (file.startsWith("supabase/migrations/") && file !== grantFixSupabaseMigrationPath) {
+  if (
+    file.startsWith("supabase/migrations/") &&
+    file !== grantFixSupabaseMigrationPath &&
+    file !== "supabase/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql" &&
+    file !== "supabase/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql"
+  ) {
     failures.push(`supabase migration must not change in A-16T-APPLY-VERIFY ${file}`);
   }
-  if (file.startsWith("db/checks/") && file !== grantFixVerifySqlPath) {
+  if (
+    file.startsWith("db/checks/") &&
+    file !== grantFixVerifySqlPath &&
+    file !== "db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql"
+  ) {
     failures.push(`SQL check must not change in A-16T-APPLY-VERIFY ${file}`);
   }
   if (file.startsWith("supabase/.temp/")) failures.push(`supabase temp must not change ${file}`);

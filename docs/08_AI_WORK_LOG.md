@@ -1,5 +1,28 @@
 # AI Work Log
 
+## 2026-07-03 - A-16V-MARKER-VERIFICATION-FIX - Candidate Ready Not Applied
+
+- Marker: `A-16V-MARKER-VERIFICATION-FIX`.
+- Status:
+  `A16V_MARKER_VERIFICATION_FIX_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- A-16V apply/verify remains blocked:
+  `A16V_APPLY_VERIFY_STATUS=BLOCKED_A16V_MARKER_FAIL_PENDING_FIX`.
+- Owner verification evidence: only `A16V marker = FAIL`; transaction,
+  schema and security checks otherwise PASS.
+- Cause: 0016 stored the exact A-16V marker only in SQL file header comments;
+  `pg_get_functiondef(...)` did not include that header after manual apply, and
+  the function comment did not contain the exact marker token.
+- Fix chosen: 0017 `COMMENT ON FUNCTION` metadata-only candidate.
+- Candidate:
+  `db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql`.
+- Supabase mirror:
+  `supabase/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql`.
+- Verification SQL updated to check both `pg_get_functiondef(...)` and
+  `obj_description(..., 'pg_proc')`.
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not call RPC, did not POST official import, did not run import,
+  did not write real genealogy data, did not deploy and did not push.
+
 ## 2026-07-03 - A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH - Candidate Ready Not Applied
 
 - Marker: `A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH`.

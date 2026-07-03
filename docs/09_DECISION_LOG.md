@@ -1,5 +1,28 @@
 # Decision Log
 
+## Decision 255 - A-16V marker verification fix uses COMMENT ON FUNCTION
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Fix the remaining `A16V marker = FAIL` verification row with a metadata-only
+  `COMMENT ON FUNCTION` candidate.
+- Keep transaction logic unchanged because owner verification already showed the
+  all-or-nothing, audit, rollback, idempotency and security checks PASS.
+- Keep A-16V apply/verify blocked until owner manually applies 0017 and reruns
+  the SELECT-only verification SQL.
+
+Rationale:
+
+- The marker was present in the 0016 SQL file header but that header is not
+  persisted in database metadata after apply.
+- `obj_description(function_oid, 'pg_proc')` can safely read the persisted
+  function comment without calling the RPC or mutating data.
+- This avoids replacing the function body just to add an evidence marker.
+
 ## Decision 254 - A-16V real execution branch remains a not-applied SQL candidate
 
 Date: 2026-07-03
