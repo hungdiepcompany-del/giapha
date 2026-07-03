@@ -1,5 +1,30 @@
 # Decision Log
 
+## Decision 254 - A-16V real execution branch remains a not-applied SQL candidate
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Create the A-16V official import real transaction execution branch as a
+  reviewable SQL candidate and keep runtime fail-closed until a later owner
+  manual apply/verify phase.
+- Keep `public.a16p_tx_execute_giapha4_official_import` as the canonical RPC
+  name instead of creating a parallel execution path.
+- Keep `canRunOfficialImport=false` with blocker
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+
+Rationale:
+
+- A-16R retry proved the owner marker can match, but execution stayed blocked
+  because the real transaction branch was not ready.
+- The safe next step is a not-applied SQL candidate with SELECT-only
+  verification, not a direct import run.
+- A future A-16R retry is allowed only after A-16V apply/verify PASS and a fresh
+  owner prompt with the exact session-specific marker.
+
 ## Decision 243 - A-16R retry stops at execution gate when runtime remains fail-closed
 
 Date: 2026-07-03

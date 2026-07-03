@@ -46,6 +46,12 @@ export const A16U_VERIFY_RUNBOOK_MARKER = "A16U_VERIFY_RUNBOOK";
 export const A16U_LOCKED_RUNTIME_GUARD =
   "A16U_LOCKED_RUNTIME_GUARD_A16R_RETRY_REQUIRED";
 
+export const A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER =
+  "A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_CANDIDATE";
+
+export const A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER =
+  "A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED";
+
 export const A16U_REQUIRED_SESSION_ID =
   "2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
 
@@ -62,6 +68,11 @@ export type OfficialImportConfirmation = {
   confirmMarker?: unknown;
   confirmSessionId?: unknown;
   confirmNoValidationErrors?: unknown;
+  confirmNoDryRunBlockers?: unknown;
+  confirmDuplicateDecisionsComplete?: unknown;
+  confirmA16TApplyVerified?: unknown;
+  confirmA16ULockedBranchReady?: unknown;
+  confirmProductionUiVisible?: unknown;
   confirmRollbackReviewed?: unknown;
   confirmAuditReviewed?: unknown;
 };
@@ -107,6 +118,17 @@ export type OfficialImportCandidateResult = {
     canRunOfficialImport: false;
     requiredExecutionMarker: typeof A16U_REQUIRED_A16R_RETRY_MARKER;
   };
+  realTransactionExecutionBranchCandidate: {
+    marker: typeof A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER;
+    sqlCandidateStatus: "NOT_APPLIED";
+    canonicalRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
+    allOrNothing: true;
+    idempotencyGuard: "import_session_id";
+    auditBatchTable: "official_import_batches";
+    rollbackManifestTable: "official_import_rollback_manifests";
+    canRunOfficialImport: false;
+    blocker: typeof A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER;
+  };
   auditBatchContract: {
     table: "official_import_batches";
     expectedFields: [
@@ -142,6 +164,21 @@ function validateConfirmation(
   if (!isConfirmed(confirmation.confirmNoValidationErrors)) {
     reasons.push("Chưa xác nhận không còn lỗi validation.");
   }
+  if (!isConfirmed(confirmation.confirmNoDryRunBlockers)) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n dry-run blockers báº±ng 0.");
+  }
+  if (!isConfirmed(confirmation.confirmDuplicateDecisionsComplete)) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n duplicate unresolved/needs_review báº±ng 0.");
+  }
+  if (!isConfirmed(confirmation.confirmA16TApplyVerified)) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n A-16T schema Ä‘Ã£ apply/verify PASS.");
+  }
+  if (!isConfirmed(confirmation.confirmA16ULockedBranchReady)) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n A-16U locked transaction branch Ä‘Ã£ ready.");
+  }
+  if (!isConfirmed(confirmation.confirmProductionUiVisible)) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");
+  }
   if (!isConfirmed(confirmation.confirmRollbackReviewed)) {
     reasons.push("Chưa xác nhận đã rà soát rollback.");
   }
@@ -172,6 +209,7 @@ function buildNoGoReasons(params: {
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(params.manifest);
   const reasons: string[] = [
     A16U_LOCKED_RUNTIME_GUARD,
+    A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER,
     "Nhánh transaction A-16U đã chuẩn bị contract all-or-nothing nhưng vẫn khóa chạy thật đến phase A-16R-RUN-RETRY riêng.",
   ];
 
@@ -270,6 +308,17 @@ export function buildOfficialImportRuntimeCandidate(params: {
       rollbackManifestTable: "official_import_rollback_manifests",
       canRunOfficialImport: false,
       requiredExecutionMarker: A16U_REQUIRED_A16R_RETRY_MARKER,
+    },
+    realTransactionExecutionBranchCandidate: {
+      marker: A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER,
+      sqlCandidateStatus: "NOT_APPLIED",
+      canonicalRpcName: A16P_TX_TRANSACTION_RPC_NAME,
+      allOrNothing: true,
+      idempotencyGuard: "import_session_id",
+      auditBatchTable: "official_import_batches",
+      rollbackManifestTable: "official_import_rollback_manifests",
+      canRunOfficialImport: false,
+      blocker: A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER,
     },
     auditBatchContract: {
       table: "official_import_batches",

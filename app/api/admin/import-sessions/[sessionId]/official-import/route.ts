@@ -37,6 +37,11 @@ function parseConfirmation(value: unknown): OfficialImportConfirmation {
     confirmMarker: body.confirmMarker,
     confirmSessionId: body.confirmSessionId,
     confirmNoValidationErrors: body.confirmNoValidationErrors,
+    confirmNoDryRunBlockers: body.confirmNoDryRunBlockers,
+    confirmDuplicateDecisionsComplete: body.confirmDuplicateDecisionsComplete,
+    confirmA16TApplyVerified: body.confirmA16TApplyVerified,
+    confirmA16ULockedBranchReady: body.confirmA16ULockedBranchReady,
+    confirmProductionUiVisible: body.confirmProductionUiVisible,
     confirmRollbackReviewed: body.confirmRollbackReviewed,
     confirmAuditReviewed: body.confirmAuditReviewed,
   };
@@ -56,6 +61,21 @@ function missingConfirmationReasons(
   }
   if (confirmation.confirmNoValidationErrors !== true) {
     reasons.push("Chưa xác nhận không còn lỗi validation.");
+  }
+  if (confirmation.confirmNoDryRunBlockers !== true) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n dry-run blockers báº±ng 0.");
+  }
+  if (confirmation.confirmDuplicateDecisionsComplete !== true) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n duplicate unresolved/needs_review báº±ng 0.");
+  }
+  if (confirmation.confirmA16TApplyVerified !== true) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n A-16T apply/verify PASS.");
+  }
+  if (confirmation.confirmA16ULockedBranchReady !== true) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n A-16U locked branch ready.");
+  }
+  if (confirmation.confirmProductionUiVisible !== true) {
+    reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");
   }
   if (confirmation.confirmRollbackReviewed !== true) {
     reasons.push("Chưa xác nhận đã rà soát rollback.");

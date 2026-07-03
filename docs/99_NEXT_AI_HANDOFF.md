@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH - Candidate Ready Not Applied
+
+- Marker: `A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH`.
+- Current status:
+  `A16V_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- SQL candidate:
+  `db/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql`.
+- Supabase mirror:
+  `supabase/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql`.
+- SELECT-only verification SQL:
+  `db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql`.
+- Canonical RPC target remains:
+  `public.a16p_tx_execute_giapha4_official_import`.
+- Runtime remains fail-closed:
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`,
+  `canRunOfficialImport=false`, no RPC call, no POST official import call and
+  no real genealogy write.
+- Carried evidence for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`:
+  people `102`, relationships `134`, validation errors `0`, dry-run blockers
+  `0`, duplicate unresolved `0`, duplicate needs_review `0`, duplicate
+  create_new `8`.
+- Next safe step is a separate owner-approved A-16V apply/verify phase. Do not
+  retry A-16R execution until A-16V apply/verify PASS is recorded and owner
+  provides the exact session marker again.
+
 ## 2026-07-03 - A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE - Blocked at Execution Gate
 
 - Marker: `A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE`.

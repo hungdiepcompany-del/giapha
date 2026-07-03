@@ -1,5 +1,27 @@
 # AI Work Log
 
+## 2026-07-03 - A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH - Candidate Ready Not Applied
+
+- Marker: `A-16V-OFFICIAL-IMPORT-REAL-TRANSACTION-EXECUTION-BRANCH`.
+- Status:
+  `A16V_STATUS=CANDIDATE_READY_NOT_APPLIED`.
+- Created SQL candidate:
+  `db/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql`.
+- Created byte-for-byte Supabase mirror:
+  `supabase/migrations/20260703_0016_a16v_official_import_real_transaction_execution_branch_candidate.sql`.
+- Created SELECT-only verification SQL:
+  `db/checks/20260703_check_a16v_official_import_real_transaction_execution_branch.sql`.
+- Runtime remains fail-closed with
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`,
+  `canRunOfficialImport=false` and the official import button disabled.
+- Carried evidence for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`:
+  staging people `102`, staging relationships `134`, validation errors `0`,
+  dry-run blockers `0`, duplicate unresolved `0`, duplicate needs_review `0`,
+  duplicate create_new `8`.
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not call RPC, did not POST official import, did not write real
+  genealogy data, did not deploy and did not push.
+
 ## 2026-07-03 - A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE - Blocked at Execution Gate
 
 - Marker: `A-16R-RUN-RETRY-OFFICIAL-IMPORT-BUNDLE`.

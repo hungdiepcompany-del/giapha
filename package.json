@@ -269,7 +269,10 @@
     "check:a16u-locked-runtime-wiring": "node scripts/check-a16u-locked-runtime-wiring.cjs",
     "check:a16u-verify-runbook": "node scripts/check-a16u-verify-runbook.cjs",
     "check:a16u-production-import-ui-deploy-smoke": "node scripts/check-a16u-production-import-ui-deploy-smoke.cjs",
-    "check:a16u-production-import-ui-post-deploy-smoke": "node scripts/check-a16u-production-import-ui-post-deploy-smoke.cjs"
+    "check:a16u-production-import-ui-post-deploy-smoke": "node scripts/check-a16u-production-import-ui-post-deploy-smoke.cjs",
+    "check:a16v-official-import-real-transaction-execution-branch": "node scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+    "check:a16v-sql-apply-verify-runbook": "node scripts/check-a16v-sql-apply-verify-runbook.cjs",
+    "check:a16v-a16r-execution-retry-requirements": "node scripts/check-a16v-a16r-execution-retry-requirements.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
