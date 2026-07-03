@@ -165,9 +165,11 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   "docs/PLAN_A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE.md",
+  "docs/PLAN_A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE.md",
   packagePath,
   "scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs",
+  "scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs",
   "scripts/check-a16r-runtime-execution-enablement-push-deploy-smoke.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",

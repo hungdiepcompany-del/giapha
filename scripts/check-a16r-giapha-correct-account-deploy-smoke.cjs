@@ -5,7 +5,7 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE.md";
+const docPath = "docs/PLAN_A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE.md";
 const packagePath = "package.json";
 const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const servicePath = "lib/import/giapha4/official-import-service.ts";
@@ -63,58 +63,75 @@ const service = read(servicePath);
 const wrangler = read(wranglerPath);
 
 for (const token of [
-  "A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE_STATUS=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_PREFLIGHT_STATUS=PASS",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED",
+  "A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE_STATUS=DEPLOYED_SMOKE_FAILED_ROLLED_BACK",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_PREFLIGHT_STATUS=PASS",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED",
   "REMOTE_REPO_SLUG_MATCH=YES_SSH_ALIAS_ACCEPTED",
+  "eb7d77d410c955b74ae73d963d8d8a4fe855b9df",
   "HEAD_EQUALS_ORIGIN_MAIN=YES",
   "WORKING_TREE_CLEAN=YES",
   "BUILD_STATUS=PASS_CLEAN_MIRROR_SOURCE_BUILD_CHECKOUT_ARTIFACT_ACL_BLOCKED",
-  "CLOUDFLARE_ACCOUNT_MATCH=NO",
-  "TARGET_WORKER_FOUND=NO",
-  "DEPLOY_ALLOWED=NO",
-  "DEPLOY_RESULT=BLOCKED",
-  "PRODUCTION_POST_DEPLOY_SMOKE_RESULT=NOT_RUN_DEPLOY_BLOCKED",
-  "A16R_IMPORT_RETRY_NEXT=NO",
-  "npx wrangler whoami",
-  "hung.pham@longthaisteel.com",
-  "dec1eb5cfb3f4b32956b1aff723e5ace",
-  "WRANGLER_ACCOUNT_IS_PREVIOUS_BLOCKED_ACCOUNT=YES",
-  "CURRENT_ACCOUNT_IS_NOT_PREVIOUS_WRONG_ACCOUNT=NO",
+  "hungdiepcompany@gmail.com",
+  "Hungdiepcompany@gmail.com's Account",
+  "2974c02a3713cc906eddb18833d69077",
+  "CURRENT_ACCOUNT_IS_NOT_PREVIOUS_WRONG_ACCOUNT=YES",
+  "CLOUDFLARE_ACCOUNT_MATCH=YES",
   "web-gia-pha",
-  "npx wrangler deployments list --name web-gia-pha",
-  "10007: This Worker does not exist on your account.",
-  "TARGET_WORKER_CLASSIFICATION=BLOCKED_NOT_FOUND_IN_ACTIVE_ACCOUNT",
-  "DEPLOY_COMMAND_RUN=NO",
-  "DEPLOY_BLOCKER=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND",
-  "RUNTIME_ENABLEMENT_MARKER_RECOGNIZED=UNKNOWN_DEPLOY_BLOCKED",
-  "A16V_RECONCILIATION_EVIDENCE_RECOGNIZED=UNKNOWN_DEPLOY_BLOCKED",
+  "TARGET_WORKER_FOUND=YES",
+  "TARGET_WORKER_CLASSIFICATION=FOUND_IN_CORRECT_ACCOUNT",
+  "DEPLOY_ALLOWED=YES",
+  "DEPLOY_COMMAND_RUN=YES",
+  "DEPLOY_RESULT=PASS",
+  "DEPLOY_SOURCE=CLEAN_TEMP_MIRROR_CHECKOUT_NEXT_ACL_AVOIDANCE",
+  "https://web-gia-pha.hungdiepcompany.workers.dev",
+  "d158869a-3d32-4697-8ad8-815a64526b36",
+  "PRODUCTION_POST_DEPLOY_SMOKE_RESULT=FAILED_500_ALL_REQUIRED_GET_ROUTES",
+  "RUNTIME_ENABLEMENT_MARKER_RECOGNIZED=UNKNOWN_SMOKE_500",
+  "A16V_RECONCILIATION_EVIDENCE_RECOGNIZED=UNKNOWN_SMOKE_500",
   "PRODUCTION_CAN_RUN_OFFICIAL_IMPORT=unknown",
   "PRODUCTION_OFFICIAL_IMPORT_BUTTON=unknown",
+  "REMAINING_BLOCKER=POST_DEPLOY_SMOKE_500_ALL_REQUIRED_GET_ROUTES",
+  "ROLLBACK_RESULT=PASS_RESTORED_PREVIOUS_VERSION",
+  "77fc3067-b197-4bce-8a36-eb2bde6bacc8",
+  "POST_ROLLBACK_PUBLIC_ROUTES_STATUS=PASS_GET_200",
+  "POST_ROLLBACK_OFFICIAL_IMPORT_GATE_GET_STATUS=PASS_GUARDED_401",
+  "ACTIVE_VERSION_AFTER_ROLLBACK=77fc3067-b197-4bce-8a36-eb2bde6bacc8",
+  "A16R_IMPORT_RETRY_NEXT=NO",
   "A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO",
-  "A16R_IMPORT_RETRY_BLOCKER=DEPLOY_AND_POST_DEPLOY_SMOKE_NOT_PROVEN",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_POST_OFFICIAL_IMPORT_CALLED=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DIRECT_RPC_CALLED=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_REAL_GENEALOGY_WRITE=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_SQL_RUN=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DB_PUSH_RUN=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_MIGRATION_REPAIR_RUN=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_SEED_RUN=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_RUN=NO",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_WRANGLER_TOML_CHANGED=NO",
+  "A16R_IMPORT_RETRY_BLOCKER=POST_DEPLOY_SMOKE_FAILED_AND_ROLLED_BACK",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_POST_OFFICIAL_IMPORT_CALLED=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_DIRECT_RPC_CALLED=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_REAL_GENEALOGY_WRITE=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_SQL_RUN=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_DB_PUSH_RUN=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_MIGRATION_REPAIR_RUN=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_SEED_RUN=NO",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_WRANGLER_TOML_CHANGED=NO",
   "No POST `/official-import`.",
   "No direct RPC call.",
   "No real genealogy data write.",
-  "Main Worker touched: NO",
+  "Main Worker source touched: NO",
   "Runtime dependency added: NO",
   "New service Worker created: NO",
   "OpenNext/Wrangler config changed: NO",
-  "Worker size risk: NO",
-  "Service boundary recommendation: NONE",
-  "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_NEXT_GATE=WAIT_FOR_CORRECT_CLOUDFLARE_ACCOUNT_WITH_WEB_GIA_PHA",
+  "INVESTIGATE_DEPLOYED_RUNTIME_500_BEFORE_A16R_RETRY",
+  "A16R_GIAPHA_CORRECT_ACCOUNT_NEXT_GATE=INVESTIGATE_DEPLOYED_RUNTIME_500_THEN_REDEPLOY_SMOKE",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
+}
+
+for (const routeSmoke of [
+  "/`: `500`, body length `21`",
+  "/tree`: `500`, body length `21`",
+  "/auth/login`: `500`, body length `21`",
+  "/admin/exports/import`: `500`, body length `21`",
+  "/`: `200`, body length `20799`",
+  "/tree`: `200`, body length `18765`",
+  "/auth/login`: `200`, body length `12180`",
+  "/admin/exports/import`: `200`, body length `19173`",
+]) {
+  requireIncludes(doc, routeSmoke, `route smoke ${routeSmoke}`);
 }
 
 requireIncludes(wrangler, 'name = "web-gia-pha"', "wrangler target worker name");
@@ -122,28 +139,28 @@ requireIncludes(route, "canRunOfficialImport: false", "route remains fail closed
 requireIncludes(service, "canRunOfficialImport: false", "service remains fail closed");
 
 if (
-  packageJson?.scripts?.["check:a16r-giapha-cloudflare-account-verify-deploy-smoke"] !==
-  "node scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs"
+  packageJson?.scripts?.["check:a16r-giapha-correct-account-deploy-smoke"] !==
+  "node scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs"
 ) {
-  failures.push("missing package script check:a16r-giapha-cloudflare-account-verify-deploy-smoke");
+  failures.push("missing package script check:a16r-giapha-correct-account-deploy-smoke");
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE.md", "index verify deploy smoke entry"],
+  [index, "PLAN_A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE.md", "index correct account deploy smoke entry"],
   [
     workLog,
-    "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE_STATUS=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND",
-    "work log verify deploy smoke status",
+    "A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE_STATUS=DEPLOYED_SMOKE_FAILED_ROLLED_BACK",
+    "work log correct account deploy smoke status",
   ],
   [
     decisionLog,
-    "A-16R account verify deploy smoke remains blocked on the same Cloudflare account",
-    "decision log verify deploy smoke decision",
+    "A-16R correct account deploy smoke failed and rolled back",
+    "decision log correct account deploy smoke decision",
   ],
   [
     handoff,
-    "A16R_GIAPHA_CLOUDFLARE_ACCOUNT_VERIFY_DEPLOY_SMOKE_STATUS=BLOCKED_WRONG_CLOUDFLARE_ACCOUNT_TARGET_WORKER_NOT_FOUND",
-    "handoff verify deploy smoke status",
+    "A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE_STATUS=DEPLOYED_SMOKE_FAILED_ROLLED_BACK",
+    "handoff correct account deploy smoke status",
   ],
 ]) {
   requireIncludes(content, token, label);
@@ -174,7 +191,6 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
-  "docs/PLAN_A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE.md",
   packagePath,
   "scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs",
@@ -201,6 +217,7 @@ for (const file of changedFiles) {
   if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
+  if (file === wranglerPath) failures.push("wrangler.toml must not change");
   if (["CHECK_CLOUDFLARE_ACCOUNT.bat", "GUARD.bat", "GIA_PHA_GITHUB_MENU.bat"].includes(file)) {
     failures.push(`forbidden outside-scope file ${file}`);
   }
@@ -211,12 +228,13 @@ const stagedFiles = git(["diff", "--cached", "--name-only"])
   .filter(Boolean);
 for (const file of stagedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected staged file ${file}`);
+  if (file === wranglerPath) failures.push("wrangler.toml must not be staged");
 }
 
 if (failures.length > 0) {
-  console.error("A-16R GIA PHA Cloudflare account verify deploy smoke check failed:");
+  console.error("A-16R GIA PHA correct account deploy smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16R GIA PHA Cloudflare account verify deploy smoke check passed.");
+console.log("A-16R GIA PHA correct account deploy smoke check passed.");

@@ -1,5 +1,52 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE - Deploy Failed Smoke and Rolled Back
+
+- Marker: `A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE`.
+- Current status:
+  `A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE_STATUS=DEPLOYED_SMOKE_FAILED_ROLLED_BACK`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, local HEAD
+  `eb7d77d410c955b74ae73d963d8d8a4fe855b9df` equals `origin/main`, working
+  tree clean at phase start.
+- Validation PASS with caveat:
+  `A16R_GIAPHA_CORRECT_ACCOUNT_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED`.
+  Repo-local build is still blocked by ignored `.next` ACL, but a clean temp
+  mirror build with temp-local `npm ci` passed.
+- Wrangler account was correct:
+  `hungdiepcompany@gmail.com`,
+  `Hungdiepcompany@gmail.com's Account`,
+  `2974c02a3713cc906eddb18833d69077`.
+- Cloudflare classification:
+  `CLOUDFLARE_ACCOUNT_MATCH=YES`,
+  `TARGET_WORKER_FOUND=YES`,
+  `DEPLOY_ALLOWED=YES`,
+  `DEPLOY_RESULT=PASS`.
+- Deploy ran from a clean temp mirror of source commit
+  `eb7d77d410c955b74ae73d963d8d8a4fe855b9df` and produced version
+  `d158869a-3d32-4697-8ad8-815a64526b36` for `web-gia-pha`.
+- Required post-deploy GET smoke failed:
+  `PRODUCTION_POST_DEPLOY_SMOKE_RESULT=FAILED_500_ALL_REQUIRED_GET_ROUTES`.
+  The tested routes `/`, `/tree`, `/auth/login`, `/admin/exports/import` and
+  GET-only official-import-gate all returned `500`.
+- Rollback PASS:
+  `ROLLBACK_RESULT=PASS_RESTORED_PREVIOUS_VERSION`.
+  Active version after rollback:
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+- Post-rollback smoke: public GET routes returned `200`; official-import-gate
+  GET returned guarded `401`.
+- Production `canRunOfficialImport` and official import button state for the
+  failed deployed version remain `unknown` because the smoke hit 500.
+- A-16R import may be retried next:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- Next safe step: investigate the deployed runtime 500 from version
+  `d158869a-3d32-4697-8ad8-815a64526b36`, fix/recover, then run a separate
+  correct-account deploy-smoke. Actual official import remains a separate later
+  phase.
+- Boundaries preserved: no POST official import, no direct RPC, no real
+  genealogy write, no SQL, no DB push, no migration repair, no seed and no
+  `wrangler.toml` change.
+
 ## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE - Still Blocked
 
 - Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE`.

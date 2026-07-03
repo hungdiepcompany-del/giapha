@@ -1,5 +1,46 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE - Deploy Failed Smoke and Rolled Back
+
+- Marker: `A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE`.
+- Status:
+  `A16R_GIAPHA_CORRECT_ACCOUNT_DEPLOY_SMOKE_STATUS=DEPLOYED_SMOKE_FAILED_ROLLED_BACK`.
+- Preflight PASS: branch `main`, remote slug
+  `hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`, local HEAD
+  `eb7d77d410c955b74ae73d963d8d8a4fe855b9df` equals `origin/main`, and
+  working tree was clean before docs/checker updates.
+- Validation before deploy PASS with caveat:
+  `A16R_GIAPHA_CORRECT_ACCOUNT_VALIDATION_STATUS=PASS_WITH_CLEAN_MIRROR_BUILD_CHECKOUT_NEXT_ACL_BLOCKED`.
+  Repo-local `npm run build` hit the known `.next` ACL blocker; clean temp
+  mirror build with temp-local `npm ci` passed.
+- Wrangler account evidence from `npx wrangler whoami`:
+  `hungdiepcompany@gmail.com`,
+  `Hungdiepcompany@gmail.com's Account`,
+  `2974c02a3713cc906eddb18833d69077`.
+- Account/target classification:
+  `CLOUDFLARE_ACCOUNT_MATCH=YES`,
+  `TARGET_WORKER_FOUND=YES`,
+  `DEPLOY_ALLOWED=YES`.
+- Deploy PASS from clean temp mirror source commit
+  `eb7d77d410c955b74ae73d963d8d8a4fe855b9df` to worker `web-gia-pha`;
+  deployed version:
+  `d158869a-3d32-4697-8ad8-815a64526b36`.
+- Post-deploy safe GET smoke failed:
+  `PRODUCTION_POST_DEPLOY_SMOKE_RESULT=FAILED_500_ALL_REQUIRED_GET_ROUTES`.
+  `/`, `/tree`, `/auth/login`, `/admin/exports/import` and the GET-only
+  official-import-gate endpoint all returned `500`.
+- Rolled back to previous version:
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+  `ROLLBACK_RESULT=PASS_RESTORED_PREVIOUS_VERSION`.
+- Post-rollback GET smoke returned `200` for `/`, `/tree`, `/auth/login` and
+  `/admin/exports/import`; the official-import-gate GET returned guarded
+  `401`.
+- A-16R import may be retried next:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- This phase did not call POST `/official-import`, did not call direct RPC,
+  did not write real genealogy data, did not run SQL, did not DB push, did not
+  migration repair, did not seed and did not change `wrangler.toml`.
+
 ## 2026-07-03 - A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE - Deploy Blocked Again
 
 - Marker: `A-16R-GIAPHA-CLOUDFLARE-ACCOUNT-VERIFY-DEPLOY-SMOKE`.

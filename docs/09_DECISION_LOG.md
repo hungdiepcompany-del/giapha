@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 265 - A-16R correct account deploy smoke failed and rolled back
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Accept the Cloudflare account as correct for deploy only after Wrangler
+  reported `hungdiepcompany@gmail.com` on account
+  `2974c02a3713cc906eddb18833d69077` and `web-gia-pha` was visible.
+- Accept that deploy ran to worker `web-gia-pha` and produced version
+  `d158869a-3d32-4697-8ad8-815a64526b36`.
+- Treat the deployed version as failed because required GET smoke returned
+  `500` for `/`, `/tree`, `/auth/login`, `/admin/exports/import` and the
+  GET-only official-import-gate endpoint.
+- Roll back to prior version
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`; post-rollback public GET routes
+  returned `200` and the official-import-gate GET returned guarded `401`.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+
+Rationale:
+
+- Correct account and successful upload are not sufficient runtime evidence
+  when every required post-deploy GET route returns 500.
+- Rolling back preserves production availability while keeping the failed
+  version and smoke evidence available for follow-up diagnosis.
+
 ## Decision 264 - A-16R account verify deploy smoke remains blocked on the same Cloudflare account
 
 Date: 2026-07-03
