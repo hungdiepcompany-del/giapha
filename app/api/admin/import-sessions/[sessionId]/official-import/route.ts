@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import {
+  A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
   A16U_REQUIRED_A16R_RETRY_MARKER,
   getOfficialImportRuntimeCandidate,
   type OfficialImportConfirmation,
@@ -44,6 +45,8 @@ function parseConfirmation(value: unknown): OfficialImportConfirmation {
     confirmA16VApplyVerified: body.confirmA16VApplyVerified,
     confirmA16VRealTransactionBranchReady:
       body.confirmA16VRealTransactionBranchReady,
+    confirmRuntimeExecutionEnablementMarker:
+      body.confirmRuntimeExecutionEnablementMarker,
     confirmProductionUiVisible: body.confirmProductionUiVisible,
     confirmProductionDeployReady: body.confirmProductionDeployReady,
     confirmRollbackReviewed: body.confirmRollbackReviewed,
@@ -83,6 +86,14 @@ function missingConfirmationReasons(
   }
   if (confirmation.confirmA16VRealTransactionBranchReady !== true) {
     reasons.push("Chưa xác nhận A-16V real transaction branch ready.");
+  }
+  if (
+    confirmation.confirmRuntimeExecutionEnablementMarker !==
+    A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER
+  ) {
+    reasons.push(
+      "Thiếu marker APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY để xét bật runtime execution sau A-16V.",
+    );
   }
   if (confirmation.confirmProductionUiVisible !== true) {
     reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");

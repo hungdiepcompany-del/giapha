@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE - Runtime Enablement Marker Added, Still Locked
+
+- Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE`.
+- Current status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_GATE_STATUS=READY_FAIL_CLOSED`.
+- Required future runtime enablement marker:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Keep this separate from the session-specific run marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- A-16V evidence remains reconciled:
+  `A16R_RUNTIME_EXECUTION_A16V_SQL_CANDIDATE_STATUS=OWNER_APPLIED_VERIFIED`,
+  `A16R_RUNTIME_EXECUTION_A16V_RECONCILIATION_STATUS=PASS_RECONCILED_RUNTIME_EVIDENCE_MISMATCH`.
+- Runtime remains locked without the new marker:
+  `A16R_RUNTIME_EXECUTION_CAN_RUN_OFFICIAL_IMPORT=false`,
+  `A16R_RUNTIME_EXECUTION_OFFICIAL_IMPORT_BUTTON=DISABLED`,
+  `A16R_BLOCKED_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING`.
+- The official import route parses `confirmRuntimeExecutionEnablementMarker`.
+  The service returns a `runtimeExecutionEnablementGate` contract, but no RPC
+  execution path is opened in this phase.
+- Do not retry A-16R yet. A later phase must receive the runtime enablement
+  marker, prove post-deploy/source evidence, preserve one-call/idempotency
+  guards and still receive the exact session marker before any import run.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION - Evidence Reader Mismatch Reconciled
 
 - Marker: `A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION`.

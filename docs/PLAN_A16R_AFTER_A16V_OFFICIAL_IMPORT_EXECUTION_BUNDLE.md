@@ -134,3 +134,7 @@ under strict guard, keeps the one-call guard, and proves `canRunOfficialImport`
 can become true only for the exact approved session. Do not run A-16R official
 import while the source still reports
 `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+
+That future runtime enablement phase requires the separate owner marker:
+
+`APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`

@@ -92,4 +92,8 @@ That phase must prove how the guarded route/service will call the verified RPC
 exactly once for session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`, while keeping
 preflight, one-call, no-blind-retry, audit, rollback and idempotency checks.
 
+The runtime execution enablement marker for that next gate is:
+
+`APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`
+
 Do not run A-16R official import from this reconciliation phase.

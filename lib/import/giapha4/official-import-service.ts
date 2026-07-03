@@ -55,6 +55,12 @@ export const A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER =
 export const A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER =
   "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY";
 
+export const A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER =
+  "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY";
+
+export const A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER =
+  "A16R_BLOCKED_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING";
+
 export const A16U_REQUIRED_SESSION_ID =
   "2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
 
@@ -77,6 +83,7 @@ export type OfficialImportConfirmation = {
   confirmA16ULockedBranchReady?: unknown;
   confirmA16VApplyVerified?: unknown;
   confirmA16VRealTransactionBranchReady?: unknown;
+  confirmRuntimeExecutionEnablementMarker?: unknown;
   confirmProductionUiVisible?: unknown;
   confirmProductionDeployReady?: unknown;
   confirmRollbackReviewed?: unknown;
@@ -137,6 +144,16 @@ export type OfficialImportCandidateResult = {
     canRunOfficialImport: false;
     blocker: typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER;
   };
+  runtimeExecutionEnablementGate: {
+    requiredMarker: typeof A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER;
+    approvalMarkerMatched: boolean;
+    evidenceStatus: "A16V_OWNER_APPLIED_VERIFIED_RECONCILED";
+    productionDeployEvidenceRequired: true;
+    canRunOfficialImport: false;
+    blocker:
+      | typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER
+      | typeof A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER;
+  };
   auditBatchContract: {
     table: "official_import_batches";
     expectedFields: [
@@ -155,6 +172,15 @@ export type OfficialImportCandidateResult = {
 
 function isConfirmed(value: unknown) {
   return value === true;
+}
+
+function hasRuntimeExecutionEnablementApproval(
+  confirmation: OfficialImportConfirmation,
+) {
+  return (
+    confirmation.confirmRuntimeExecutionEnablementMarker ===
+    A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER
+  );
 }
 
 function validateConfirmation(
@@ -190,6 +216,11 @@ function validateConfirmation(
   if (!isConfirmed(confirmation.confirmA16VRealTransactionBranchReady)) {
     reasons.push("Chưa xác nhận A-16V real transaction branch ready.");
   }
+  if (!hasRuntimeExecutionEnablementApproval(confirmation)) {
+    reasons.push(
+      "Thiếu marker APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY để xét bật runtime execution sau A-16V.",
+    );
+  }
   if (!isConfirmed(confirmation.confirmProductionUiVisible)) {
     reasons.push("ChÃ†Â°a xÃƒÂ¡c nhÃ¡ÂºÂ­n production UI nhÃ¡ÂºÂ­p Excel Ã„â€˜ÃƒÂ£ hiÃ¡Â»Æ’n thÃ¡Â»â€¹.");
   }
@@ -224,11 +255,25 @@ function buildNoGoReasons(params: {
   const dryRun = buildDryRunMappingPreview(params.manifest);
   const reviewPack = buildImportReviewPackFromManifest(params.manifest);
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(params.manifest);
+  const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
+    params.confirmation,
+  );
   const reasons: string[] = [
     A16U_LOCKED_RUNTIME_GUARD,
     A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
     "A-16V đã có owner apply/verify PASS nhưng runtime execution vẫn chưa được bật; route/service chưa được phép gọi RPC nhập chính thức.",
   ];
+
+  if (!runtimeEnablementApproved) {
+    reasons.push(A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER);
+    reasons.push(
+      "Thiếu marker APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY nên runtime execution vẫn khóa.",
+    );
+  } else {
+    reasons.push(
+      "Marker enablement sau A-16V đã khớp nhưng phase này vẫn chưa mở đường gọi RPC; cần phase thực thi riêng.",
+    );
+  }
 
   if (!params.actor.user) {
     reasons.push("NgÆ°á»i dÃ¹ng chÆ°a Ä‘Äƒng nháº­p.");
@@ -287,6 +332,9 @@ export function buildOfficialImportRuntimeCandidate(params: {
 }): OfficialImportCandidateResult {
   const sessionId = params.manifest.session?.id ?? String(params.confirmation.confirmSessionId ?? "");
   const { dryRun, reasons } = buildNoGoReasons(params);
+  const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
+    params.confirmation,
+  );
 
   return {
     ok: false,
@@ -337,6 +385,16 @@ export function buildOfficialImportRuntimeCandidate(params: {
       rollbackManifestTable: "official_import_rollback_manifests",
       canRunOfficialImport: false,
       blocker: A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
+    },
+    runtimeExecutionEnablementGate: {
+      requiredMarker: A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
+      approvalMarkerMatched: runtimeEnablementApproved,
+      evidenceStatus: "A16V_OWNER_APPLIED_VERIFIED_RECONCILED",
+      productionDeployEvidenceRequired: true,
+      canRunOfficialImport: false,
+      blocker: runtimeEnablementApproved
+        ? A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER
+        : A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER,
     },
     auditBatchContract: {
       table: "official_import_batches",

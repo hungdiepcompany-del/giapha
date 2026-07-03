@@ -1,5 +1,28 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE - Ready Fail Closed
+
+- Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE`.
+- Status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_GATE_STATUS=READY_FAIL_CLOSED`.
+- Required future runtime enablement marker:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- A-16V evidence remains reconciled:
+  `A16R_RUNTIME_EXECUTION_A16V_SQL_CANDIDATE_STATUS=OWNER_APPLIED_VERIFIED`
+  and
+  `A16R_RUNTIME_EXECUTION_A16V_RECONCILIATION_STATUS=PASS_RECONCILED_RUNTIME_EVIDENCE_MISMATCH`.
+- Runtime remains fail-closed without the marker:
+  `A16R_RUNTIME_EXECUTION_CAN_RUN_OFFICIAL_IMPORT=false`,
+  `A16R_RUNTIME_EXECUTION_OFFICIAL_IMPORT_BUTTON=DISABLED`, blocker
+  `A16R_BLOCKED_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING`.
+- The route now parses `confirmRuntimeExecutionEnablementMarker`; the service
+  records `runtimeExecutionEnablementGate`, but this phase does not open an RPC
+  execution path.
+- This phase did not call POST `/official-import`, did not call the RPC
+  directly, did not write real genealogy data, did not run SQL, did not DB
+  push, did not migration repair, did not seed, did not deploy and did not
+  push.
+
 ## 2026-07-03 - A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION - Evidence Reader Mismatch Reconciled
 
 - Marker: `A-16V-PRODUCTION-RUNTIME-EVIDENCE-RECONCILIATION`.

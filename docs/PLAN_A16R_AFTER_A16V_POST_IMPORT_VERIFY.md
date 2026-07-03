@@ -60,3 +60,7 @@ Do not run post-import verification until official import has actually executed
 successfully in a later phase. The next safe action is a separate runtime
 execution enablement phase; do not retry A-16R while the route/service still
 reports `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+
+That runtime enablement phase requires:
+
+`APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`

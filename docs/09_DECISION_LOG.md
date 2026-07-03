@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 260 - A-16R runtime execution enablement requires a separate owner marker
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Add a distinct runtime execution enablement marker:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Keep the session-specific run marker separate:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Record A-16V owner apply/verify as `OWNER_APPLIED_VERIFIED`, but keep
+  `canRunOfficialImport=false` and keep the official import button disabled
+  until a later phase explicitly opens runtime execution.
+- Use blocker
+  `A16R_BLOCKED_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING` when the new
+  marker is absent, while preserving
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY` for the still
+  disabled execution path.
+
+Rationale:
+
+- A-16V verification proves the database transaction branch is ready, but it
+  does not prove owner has approved opening the runtime path that calls the
+  verified RPC.
+- Keeping marker separation avoids silently turning readiness evidence into a
+  production data write.
+- The phase prepares the next gate without calling POST `/official-import`,
+  calling RPC, writing real genealogy data, deploying or pushing.
+
 ## Decision 259 - A-16V production runtime evidence mismatch is reconciled without opening import
 
 Date: 2026-07-03

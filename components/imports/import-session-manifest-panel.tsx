@@ -3,6 +3,7 @@ import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-de
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
+import { A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER } from "@/lib/import/giapha4/official-import-service";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -436,6 +437,10 @@ export function ImportSessionManifestPanel({
               <p className="text-sm font-semibold text-rose-900">
                 Marker session-specific cho phase chạy thật: {" "}
                 {officialImportGate.requiredFutureMarker}
+              </p>
+              <p className="text-sm font-semibold text-rose-900">
+                Marker bật runtime execution sau A-16V:{" "}
+                {A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER}
               </p>
               {officialImportGate.noGoReasons.length > 0 ? (
                 <div className="rounded-md border border-rose-200 bg-white p-3 text-sm leading-6 text-rose-900">
