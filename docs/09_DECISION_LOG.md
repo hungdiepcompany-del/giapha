@@ -1,5 +1,31 @@
 # Decision Log
 
+## Decision 261 - A-16R runtime execution owner review accepts marker but keeps import closed
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Treat `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY` in the owner prompt
+  as present and exact for runtime execution enablement review.
+- Keep the marker separate from the session-specific run marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Keep `canRunOfficialImport=false` and the official import button disabled
+  because post-deploy/source smoke and a final execution gate are still
+  required before A-16R import retry.
+- Do not call POST `/official-import`, do not call direct RPC and do not write
+  real genealogy data in this review phase.
+
+Rationale:
+
+- The runtime enablement marker records owner intent to review opening the
+  execution path after A-16V verification; it is not itself an execution
+  command.
+- Keeping post-deploy/source smoke and final execution gating separate prevents
+  readiness evidence from silently becoming a production write.
+
 ## Decision 260 - A-16R runtime execution enablement requires a separate owner marker
 
 Date: 2026-07-03

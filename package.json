@@ -278,7 +278,8 @@
     "check:a16r-after-a16v-official-import-execution-bundle": "node scripts/check-a16r-after-a16v-official-import-execution-bundle.cjs",
     "check:a16r-after-a16v-post-import-verify": "node scripts/check-a16r-after-a16v-post-import-verify.cjs",
     "check:a16v-production-runtime-evidence-reconciliation": "node scripts/check-a16v-production-runtime-evidence-reconciliation.cjs",
-    "check:a16r-runtime-execution-enablement-gate": "node scripts/check-a16r-runtime-execution-enablement-gate.cjs"
+    "check:a16r-runtime-execution-enablement-gate": "node scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+    "check:a16r-runtime-execution-enablement-owner-review": "node scripts/check-a16r-runtime-execution-enablement-owner-review.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW - Marker Valid, Import Still Closed
+
+- Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW`.
+- Current status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_REVIEW_STATUS=PASS_MARKER_PRESENT_VALID_BUT_STILL_FAIL_CLOSED`.
+- Runtime enablement marker reviewed:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Marker result:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_MARKER_PRESENT=YES`,
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_MARKER_VALID=YES`.
+- Keep separate from the session-specific official import run marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Current import state:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_CAN_RUN_OFFICIAL_IMPORT=false`,
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_OFFICIAL_IMPORT_BUTTON=DISABLED`.
+- A-16R retry now:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_A16R_RETRY_NOW=NO_POST_DEPLOY_SMOKE_AND_FINAL_EXECUTION_GATE_REQUIRED`.
+- Next safe step: a separate post-deploy/source smoke and final execution gate
+  phase. Do not run official import until that phase explicitly allows the
+  guarded route/service path and still receives the exact session-specific run
+  marker.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE - Runtime Enablement Marker Added, Still Locked
 
 - Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-GATE`.
