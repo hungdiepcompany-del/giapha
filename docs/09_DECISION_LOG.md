@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 257 - A-16R after A-16V stops at production deploy evidence gate
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Treat the A-16R official import marker for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` as matched.
+- Keep the bundle blocked with
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_PRODUCTION_DEPLOY_EVIDENCE_MISSING`
+  because the Cloudflare deploy workflow is manual-only and this prompt did
+  not include owner evidence that A-16V was deployed to production.
+- Do not call POST `/official-import`, do not call the RPC directly and do not
+  write real genealogy data while production deploy evidence is missing.
+
+Rationale:
+
+- A-16V apply/verify PASS proves the DB-side transaction branch is ready, but
+  it does not prove production runtime is running the matching code.
+- Prior A-16U evidence showed the import UI visible, but the dangerous import
+  execution bundle requires fresh A-16V production deploy evidence before the
+  execution gate can be reached.
+- Stopping before import preserves the no-blind-retry rule and keeps created
+  people/relationship counts at `0/0`.
+
 ## Decision 256 - A-16V apply verification PASS allows a future A-16R retry gate
 
 Date: 2026-07-03

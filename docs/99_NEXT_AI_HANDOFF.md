@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE - Blocked Production Deploy Evidence Missing
+
+- Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE`.
+- Current status:
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_PRODUCTION_DEPLOY_EVIDENCE_MISSING`.
+- Import status:
+  `A16R_AFTER_A16V_IMPORT_STATUS=NOT_CALLED_BLOCKED`.
+- Post-import verification:
+  `A16R_AFTER_A16V_POST_IMPORT_VERIFY_STATUS=NOT_RUN_IMPORT_NOT_CALLED`.
+- Session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Approval marker matched:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Phase 0 repo hygiene passed at HEAD `0534534`; working tree started clean,
+  no staged files and no dirty outside-scope files were detected.
+- Phase 1 push gate passed:
+  `A16R_AFTER_A16V_PUSH_STATUS=PASS_ALREADY_UP_TO_DATE`.
+- Phase 2 blocked: Cloudflare deploy is manual-only (`workflow_dispatch`) and
+  no A-16V production deploy evidence marker was present in the prompt.
+- Phase 3 was not run:
+  `A16R_AFTER_A16V_POST_DEPLOY_SMOKE_STATUS=NOT_RUN_DEPLOY_EVIDENCE_MISSING`.
+- Phase 4-6 were not reached. Official import was not called:
+  - `A16R_AFTER_A16V_OFFICIAL_IMPORT_POST_CALLED=NO`;
+  - `A16R_AFTER_A16V_RPC_DIRECT_CALLED=NO`;
+  - created people count: `0`;
+  - created relationship count: `0`;
+  - batch/rollback/idempotency execution evidence: none from this phase.
+- Preflight evidence still expected from prior owner/docs records: staging
+  people `102`, staging relationships `134`, validation errors `0`, dry-run
+  blockers `0`, duplicate unresolved `0`, duplicate needs_review `0`,
+  duplicate create_new `8`.
+- A-16T apply/verify PASS, A-16U locked branch ready, A-16V apply/verify PASS
+  and A-16V real transaction branch ready remain recorded.
+- Next safe step: owner manually deploys A-16V to production or provides
+  `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION` in a separate prompt, then the
+  execution bundle can be rerun from the gates.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16V-APPLY-VERIFY - PASS Owner Applied And Verified
 
 - Marker: `A-16V-APPLY-VERIFY`.
