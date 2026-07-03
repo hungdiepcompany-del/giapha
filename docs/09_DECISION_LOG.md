@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 266 - A-16R post-deploy HTTP 500 likely caused by Windows OpenNext deploy incompatibility
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Classify the failed A-16R post-deploy all-route HTTP 500 as
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CLASSIFICATION=OPENNEXT_CLOUDFLARE_INCOMPATIBILITY`.
+- Treat the likely subtype as
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_SUBTYPE=WINDOWS_LOCAL_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_INCOMPATIBILITY`.
+- Keep confidence limited to
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CONFIDENCE=LIKELY_NOT_PROVEN_BY_FAILED_VERSION_STACKTRACE`
+  because no failed-version stacktrace was captured after rollback.
+- Keep failed deploy version
+  `d158869a-3d32-4697-8ad8-815a64526b36` as the incident version and active
+  rollback version `77fc3067-b197-4bce-8a36-eb2bde6bacc8` as the production
+  baseline.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action is a separate Linux/WSL/GitHub Actions deploy retry plan:
+  `A16R_POST_DEPLOY_HTTP500_NEXT_ALLOWED_ACTION=PREPARE_LINUX_OR_GITHUB_ACTIONS_DEPLOY_RETRY_WITH_PREVIEW_AND_ROLLBACK_PLAN`.
+
+Rationale:
+
+- Failed and rollback versions had matching Cloudflare version metadata for
+  handler, compatibility date, `nodejs_compat`, secret name and assets binding.
+- Source diff from the last known production-smoke PASS commit to the failed
+  source commit did not change global route initialization, public routes,
+  auth login, Supabase server helpers, OpenNext/Wrangler config, Next config or
+  runtime dependencies.
+- The failed deploy returned `500` on every required GET route, including
+  public and auth routes unrelated to official import, which makes a narrow
+  official-import guard side effect unlikely.
+- The phase did not deploy, call POST `/official-import`, call direct RPC, run
+  SQL, push DB, repair migrations, seed, write real genealogy data or change
+  `wrangler.toml`.
+
 ## Decision 265 - A-16R correct account deploy smoke failed and rolled back
 
 Date: 2026-07-03

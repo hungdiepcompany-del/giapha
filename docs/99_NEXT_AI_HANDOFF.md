@@ -1,5 +1,32 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE - Likely Root Cause Identified Docs Only
+
+- Marker: `A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE`.
+- Current status:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_STATUS=LIKELY_ROOT_CAUSE_IDENTIFIED_DOCS_ONLY`.
+- Root-cause classification:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CLASSIFICATION=OPENNEXT_CLOUDFLARE_INCOMPATIBILITY`.
+- Confidence:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CONFIDENCE=LIKELY_NOT_PROVEN_BY_FAILED_VERSION_STACKTRACE`.
+- Subtype:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_SUBTYPE=WINDOWS_LOCAL_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_INCOMPATIBILITY`.
+- Failed deploy version:
+  `d158869a-3d32-4697-8ad8-815a64526b36`.
+- Active rollback version:
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+- Evidence summary: read-only Wrangler version metadata matched between the
+  failed and rollback versions; source range `5fb248c..eb7d77d` did not change
+  global route initialization, public/auth routes, Supabase server helpers,
+  OpenNext/Wrangler config, Next config or runtime dependencies.
+- Caveat: failed-version stacktrace evidence was not captured after rollback,
+  so the root cause is likely, not proven by logs.
+- Next allowed action:
+  `A16R_POST_DEPLOY_HTTP500_NEXT_ALLOWED_ACTION=PREPARE_LINUX_OR_GITHUB_ACTIONS_DEPLOY_RETRY_WITH_PREVIEW_AND_ROLLBACK_PLAN`.
+- A-16R import retry remains `NO`; do not call POST `/official-import`, direct
+  RPC, SQL, DB push, migration repair, seed or deploy from this handoff.
+- `wrangler.toml` was not changed.
+
 ## 2026-07-03 - A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE - Deploy Failed Smoke and Rolled Back
 
 - Marker: `A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE`.

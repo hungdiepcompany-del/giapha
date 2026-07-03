@@ -1,5 +1,44 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE - Likely Root Cause Identified Docs Only
+
+- Marker: `A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE`.
+- Status:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_STATUS=LIKELY_ROOT_CAUSE_IDENTIFIED_DOCS_ONLY`.
+- Root-cause classification:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CLASSIFICATION=OPENNEXT_CLOUDFLARE_INCOMPATIBILITY`.
+- Confidence:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_CONFIDENCE=LIKELY_NOT_PROVEN_BY_FAILED_VERSION_STACKTRACE`.
+- Subtype:
+  `A16R_POST_DEPLOY_HTTP500_ROOT_CAUSE_SUBTYPE=WINDOWS_LOCAL_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_INCOMPATIBILITY`.
+- Failed deploy version:
+  `d158869a-3d32-4697-8ad8-815a64526b36`.
+- Active rollback version:
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+- Read-only Cloudflare evidence found matching version metadata between failed
+  and rollback versions: same handler, compatibility date, `nodejs_compat`,
+  `SUPABASE_SERVICE_ROLE_KEY` secret name and `env.ASSETS` binding.
+- Source range review `5fb248c..eb7d77d` found no changes to `app/layout.tsx`,
+  `/`, `/tree`, `/auth/login`, Supabase server helpers, `wrangler.toml`,
+  `open-next.config.ts`, `next.config.ts` or runtime dependencies.
+- The likely root cause is therefore a Windows-local OpenNext Cloudflare deploy
+  bundle incompatibility rather than a proven missing env, binding mismatch, or
+  official-import guard side effect. Failed-version stacktrace evidence was not
+  available after rollback because no tail traffic was generated.
+- Next allowed action:
+  `A16R_POST_DEPLOY_HTTP500_NEXT_ALLOWED_ACTION=PREPARE_LINUX_OR_GITHUB_ACTIONS_DEPLOY_RETRY_WITH_PREVIEW_AND_ROLLBACK_PLAN`.
+- Import retry remains blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety boundary: `A16R_POST_DEPLOY_HTTP500_DEPLOY_RUN=NO`,
+  `A16R_POST_DEPLOY_HTTP500_POST_OFFICIAL_IMPORT_CALLED=NO`,
+  `A16R_POST_DEPLOY_HTTP500_DIRECT_RPC_CALLED=NO`,
+  `A16R_POST_DEPLOY_HTTP500_REAL_GENEALOGY_WRITE=NO`,
+  `A16R_POST_DEPLOY_HTTP500_SQL_RUN=NO`,
+  `A16R_POST_DEPLOY_HTTP500_DB_PUSH_RUN=NO`,
+  `A16R_POST_DEPLOY_HTTP500_MIGRATION_REPAIR_RUN=NO`,
+  `A16R_POST_DEPLOY_HTTP500_SEED_RUN=NO`,
+  `A16R_POST_DEPLOY_HTTP500_WRANGLER_TOML_CHANGED=NO`.
+
 ## 2026-07-03 - A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE - Deploy Failed Smoke and Rolled Back
 
 - Marker: `A-16R-GIAPHA-CORRECT-ACCOUNT-DEPLOY-SMOKE`.
