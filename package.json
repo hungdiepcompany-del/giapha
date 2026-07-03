@@ -262,7 +262,10 @@
     "check:a16t-schema-apply-verify-runbook": "node scripts/check-a16t-schema-apply-verify-runbook.cjs",
     "check:a16t-a16u-transaction-branch-requirements": "node scripts/check-a16t-a16u-transaction-branch-requirements.cjs",
     "check:a16t-apply-verify": "node scripts/check-a16t-apply-verify.cjs",
-    "check:a16t-grant-rls-hardening-fix": "node scripts/check-a16t-grant-rls-hardening-fix.cjs"
+    "check:a16t-grant-rls-hardening-fix": "node scripts/check-a16t-grant-rls-hardening-fix.cjs",
+    "check:a16u-official-import-transaction-branch": "node scripts/check-a16u-official-import-transaction-branch.cjs",
+    "check:a16u-locked-runtime-wiring": "node scripts/check-a16u-locked-runtime-wiring.cjs",
+    "check:a16u-verify-runbook": "node scripts/check-a16u-verify-runbook.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

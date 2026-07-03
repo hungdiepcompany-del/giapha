@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 240 - A-16T PASS opens only a locked A-16U transaction branch candidate
+
+Status: `ACTIVE`
+
+Chon:
+
+- Record
+  `A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED` from owner-provided
+  verification rows.
+- Treat `forbidden_grant_count=0` and `forbidden_policy_count=0` as closing the
+  A-16T grant/RLS hardening blocker.
+- Set
+  `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- Do not create SQL candidate `20260702_0016` because A-16T already provides
+  the verified audit batch, rollback manifest and idempotency persistence
+  required for this locked runtime contract.
+- Keep `canRunOfficialImport=false` and the official import button disabled.
+- Require the future marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`
+  before any later execution phase may call the official import route.
+
+Ly do:
+
+- Owner supplied real verification output for both A-16T schema and grant/RLS
+  hardening. The output includes table/column checks, idempotency unique guards,
+  RLS, authenticated policies, no anon/public grant/policy, no auto import
+  trigger and RPC not public.
+- A-16U can now prepare the all-or-nothing transaction branch contract, but the
+  bundle explicitly forbids running official import, calling RPC, calling POST
+  `/official-import`, or writing real genealogy data.
+- Keeping the runtime locked preserves the separate A-16R-RUN-RETRY approval
+  boundary.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real people/person write, no relationship/family
+  write, no layout/tree/revision/profile write, no deploy and no push.
+
 ## Decision 239 - A-16T remains blocked when latest PASS-to-A16U evidence is placeholder only
 
 Status: `ACTIVE`

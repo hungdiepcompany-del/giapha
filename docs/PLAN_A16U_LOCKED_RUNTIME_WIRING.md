@@ -1,0 +1,70 @@
+# A-16U - Locked Runtime Wiring
+
+Status: `A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED`
+
+Marker: `A-16U-LOCKED-RUNTIME-WIRING`
+
+## Goal
+
+Wire the runtime to expose an A-16U transaction branch contract while keeping
+official import execution locked. This phase does not call RPC, does not call
+POST `/official-import`, and does not write real genealogy data.
+
+## Runtime Guard
+
+```text
+A16U_LOCKED_RUNTIME_GUARD=A16U_LOCKED_RUNTIME_GUARD_A16R_RETRY_REQUIRED
+A16U_REQUIRED_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68
+A16U_REQUIRED_A16R_RETRY_MARKER=APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68
+A16U_CAN_RUN_OFFICIAL_IMPORT=false
+A16U_OFFICIAL_IMPORT_BUTTON=DISABLED
+```
+
+`lib/import/giapha4/official-import-service.ts` now returns a locked contract:
+
+```text
+A16U_RUNTIME_RESULT_OK=false
+A16U_RUNTIME_RESULT_STATUS=BLOCKED
+A16U_RUNTIME_TRANSACTION_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED
+A16U_RUNTIME_IMPORTED_PEOPLE_COUNT=0
+A16U_RUNTIME_IMPORTED_RELATIONSHIP_COUNT=0
+A16U_RUNTIME_PII_PRINTED=false
+A16U_RUNTIME_AUDIT_BATCH_CONTRACT=official_import_batches
+A16U_RUNTIME_ROLLBACK_MANIFEST_CONTRACT=official_import_rollback_manifests
+A16U_RUNTIME_IDEMPOTENCY_GUARD=import_session_id
+```
+
+## POST Route Boundary
+
+The existing POST route remains locked by
+`A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`. In this bundle it is not
+called and still returns `canRunOfficialImport=false` when locked.
+
+```text
+A16U_POST_OFFICIAL_IMPORT_CALLED=NO
+A16U_RPC_CALLED=NO
+A16U_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE
+A16U_SERVICE_ROLE_CLIENT_SIDE=NO
+A16U_RUNTIME_DEPENDENCY_ADDED=NO
+A16U_NEW_SERVICE_WORKER_CREATED=NO
+A16U_OPENNEXT_WRANGLER_CONFIG_CHANGED=NO
+```
+
+## UI Boundary
+
+The UI still presents official import as disabled:
+
+```text
+A16U_OFFICIAL_IMPORT_UI_BUTTON_DISABLED=YES
+A16U_OFFICIAL_IMPORT_UI_CAN_RUN=false
+A16U_OFFICIAL_IMPORT_UI_OWNER_CLICK_ENABLED=NO
+```
+
+## Next Phase
+
+Only a separate A-16R-RUN-RETRY prompt with the exact marker below may attempt
+execution:
+
+```text
+APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68
+```

@@ -1,5 +1,66 @@
 # AI Work Log
 
+## 2026-07-03 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - PASS A-16T Verified, A-16U Locked Branch Ready
+
+- Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
+- Bundle status:
+  `A16T_PASS_TO_A16U_BUNDLE_STATUS=PASS_A16T_VERIFIED_A16U_LOCKED_BRANCH_READY`.
+- A-16T apply/verify status:
+  `A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
+- Owner evidence status:
+  `A16T_OWNER_APPLY_EVIDENCE_STATUS=PASS_OWNER_MANUAL_APPLY_REPORTED`,
+  `A16T_OWNER_VERIFY_EVIDENCE_STATUS=PASS_OWNER_VERIFICATION_OUTPUT_PROVIDED`,
+  `A16T_OWNER_VERIFICATION_RESULT=PASS`,
+  `A16T_OWNER_EVIDENCE_PLACEHOLDER_DETECTED=NO`.
+- Owner verification PASS rows recorded:
+  - `A16T_GRANT_FIX_NO_ANON_PUBLIC_TABLE_GRANTS=PASS` with
+    `forbidden_table_grant_count=0`.
+  - `A16T_GRANT_FIX_NO_ANON_PUBLIC_POLICIES=PASS` with
+    `forbidden_policy_count=0`.
+  - `A16T_GRANT_FIX_RPC_EXECUTION_STILL_NOT_PUBLIC=PASS` with
+    `forbidden_rpc_execute_grant_count=0`.
+  - `A16T_TABLES_EXIST=PASS`.
+  - `A16T_BATCH_REQUIRED_COLUMNS_EXIST=PASS`.
+  - `A16T_ROLLBACK_REQUIRED_COLUMNS_EXIST=PASS`.
+  - `A16T_IDEMPOTENCY_UNIQUE_GUARD_EXISTS=PASS`.
+  - `A16T_ROLLBACK_MANIFEST_UNIQUE_GUARD_EXISTS=PASS`.
+  - `A16T_RLS_ENABLED=PASS`.
+  - `A16T_AUTHENTICATED_POLICIES_EXIST=PASS`.
+  - `A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT=PASS` with
+    `forbidden_grant_count=0` and `forbidden_policy_count=0`.
+  - `A16T_NO_AUTO_IMPORT_TRIGGER=PASS`.
+  - `A16T_RPC_EXISTS_BUT_EXECUTION_NOT_VERIFIED_BY_THIS_CHECK=PASS`.
+- A-16U status:
+  `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- SQL candidate decision:
+  `A16U_SQL_CANDIDATE_REQUIRED=NO`,
+  `A16U_SQL_CANDIDATE_CREATED=NO`,
+  `A16U_SQL_CANDIDATE_PATH=N/A_SQL_NOT_REQUIRED_A16T_SCHEMA_VERIFIED`,
+  `A16U_SQL_MIRROR_BYTE_FOR_BYTE=N/A_SQL_NOT_REQUIRED_A16T_SCHEMA_VERIFIED`.
+- Runtime wiring:
+  `A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED`,
+  `A16U_CAN_RUN_OFFICIAL_IMPORT=false`,
+  `A16U_OFFICIAL_IMPORT_BUTTON=DISABLED`.
+- Verify runbook:
+  `A16U_VERIFY_RUNBOOK_STATUS=READY`.
+- A-16U contract:
+  audit batch table `official_import_batches`, rollback manifest table
+  `official_import_rollback_manifests`, idempotency guard `import_session_id`.
+- Required future marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Created docs:
+  - `docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md`
+  - `docs/PLAN_A16U_LOCKED_RUNTIME_WIRING.md`
+  - `docs/PLAN_A16U_VERIFY_RUNBOOK.md`
+- Created checkers:
+  - `scripts/check-a16u-official-import-transaction-branch.cjs`
+  - `scripts/check-a16u-locked-runtime-wiring.cjs`
+  - `scripts/check-a16u-verify-runbook.cjs`
+- This bundle did not run SQL, did not DB push, did not run migration repair,
+  did not seed, did not call RPC, did not call POST official import, did not
+  write people/relationships/families/layout/tree/revision/profile data, did
+  not deploy and did not push.
+
 ## 2026-07-02 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - Still Blocked by Placeholder Evidence
 
 - Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.

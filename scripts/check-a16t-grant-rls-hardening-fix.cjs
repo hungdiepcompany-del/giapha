@@ -150,6 +150,9 @@ if (
   ) &&
   !applyVerifyDoc.includes(
     "A16T_APPLY_VERIFY_STATUS=BLOCKED_VERIFY_EVIDENCE_INSUFFICIENT_OR_FAILED",
+  ) &&
+  !applyVerifyDoc.includes(
+    "A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED",
   )
 ) {
   failures.push("missing apply verify doc blocked status");
@@ -219,7 +222,16 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
   "scripts/check-a16t-apply-verify.cjs",
+  "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
+  "docs/PLAN_A16U_LOCKED_RUNTIME_WIRING.md",
+  "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  servicePath,
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "CHECK_CLOUDFLARE_ACCOUNT.bat",
+  "GUARD.bat",
 ]);
 
 for (const file of changedFiles) {

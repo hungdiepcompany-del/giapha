@@ -1,0 +1,191 @@
+const fs = require("node:fs");
+const path = require("node:path");
+const childProcess = require("node:child_process");
+
+const root = process.cwd();
+const failures = [];
+
+const docPath = "docs/PLAN_A16U_LOCKED_RUNTIME_WIRING.md";
+const servicePath = "lib/import/giapha4/official-import-service.ts";
+const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
+const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const packagePath = "package.json";
+
+function readFile(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return "";
+  }
+  return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readJson(relativePath) {
+  const content = readFile(relativePath);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    failures.push(`${relativePath} is not valid JSON`);
+    return null;
+  }
+}
+
+function gitOutput(args) {
+  try {
+    return childProcess.execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    failures.push(`git ${args.join(" ")} failed`);
+    return "";
+  }
+}
+
+function requireIncludes(content, token, label = token) {
+  if (!content.includes(token)) failures.push(`missing ${label}`);
+}
+
+function rejectPattern(content, pattern, label = String(pattern)) {
+  if (pattern.test(content)) failures.push(`forbidden ${label}`);
+}
+
+const doc = readFile(docPath);
+const service = readFile(servicePath);
+const route = readFile(routePath);
+const panel = readFile(panelPath);
+const packageJson = readJson(packagePath);
+const index = readFile("docs/00_INDEX.md");
+const workLog = readFile("docs/08_AI_WORK_LOG.md");
+const decisionLog = readFile("docs/09_DECISION_LOG.md");
+const handoff = readFile("docs/99_NEXT_AI_HANDOFF.md");
+
+for (const token of [
+  "A-16U-LOCKED-RUNTIME-WIRING",
+  "A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED",
+  "A16U_LOCKED_RUNTIME_GUARD=A16U_LOCKED_RUNTIME_GUARD_A16R_RETRY_REQUIRED",
+  "A16U_REQUIRED_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
+  "A16U_REQUIRED_A16R_RETRY_MARKER=APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
+  "A16U_CAN_RUN_OFFICIAL_IMPORT=false",
+  "A16U_OFFICIAL_IMPORT_BUTTON=DISABLED",
+  "A16U_RUNTIME_RESULT_OK=false",
+  "A16U_RUNTIME_RESULT_STATUS=BLOCKED",
+  "A16U_RUNTIME_TRANSACTION_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED",
+  "A16U_RUNTIME_IMPORTED_PEOPLE_COUNT=0",
+  "A16U_RUNTIME_IMPORTED_RELATIONSHIP_COUNT=0",
+  "A16U_RUNTIME_PII_PRINTED=false",
+  "A16U_RUNTIME_AUDIT_BATCH_CONTRACT=official_import_batches",
+  "A16U_RUNTIME_ROLLBACK_MANIFEST_CONTRACT=official_import_rollback_manifests",
+  "A16U_RUNTIME_IDEMPOTENCY_GUARD=import_session_id",
+  "A16U_POST_OFFICIAL_IMPORT_CALLED=NO",
+  "A16U_RPC_CALLED=NO",
+  "A16U_REAL_GENEALOGY_WRITE_STATUS=NO_WRITE",
+  "A16U_SERVICE_ROLE_CLIENT_SIDE=NO",
+  "A16U_RUNTIME_DEPENDENCY_ADDED=NO",
+  "A16U_NEW_SERVICE_WORKER_CREATED=NO",
+  "A16U_OPENNEXT_WRANGLER_CONFIG_CHANGED=NO",
+  "A16U_OFFICIAL_IMPORT_UI_BUTTON_DISABLED=YES",
+  "A16U_OFFICIAL_IMPORT_UI_CAN_RUN=false",
+]) {
+  requireIncludes(doc, token, `doc token ${token}`);
+}
+
+for (const token of [
+  "A16U_LOCKED_RUNTIME_WIRING_MARKER",
+  "A16U_LOCKED_RUNTIME_GUARD",
+  "A16U_REQUIRED_A16R_RETRY_MARKER",
+  "canRunOfficialImport: false",
+  "status: \"BLOCKED\"",
+  "A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED",
+  "importedPeopleCount: 0",
+  "importedRelationshipCount: 0",
+]) {
+  requireIncludes(service, token, `service token ${token}`);
+}
+
+for (const token of [
+  "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED",
+  "lockedResponse",
+  "canRunOfficialImport: false",
+  "A16U_REQUIRED_A16R_RETRY_MARKER",
+]) {
+  requireIncludes(route, token, `route token ${token}`);
+}
+
+for (const token of ["disabled", "aria-disabled=\"true\""]) {
+  requireIncludes(panel, token, `official button disabled token ${token}`);
+}
+
+if (
+  packageJson?.scripts?.["check:a16u-locked-runtime-wiring"] !==
+  "node scripts/check-a16u-locked-runtime-wiring.cjs"
+) {
+  failures.push("missing package script check:a16u-locked-runtime-wiring");
+}
+
+for (const [content, token, label] of [
+  [index, "PLAN_A16U_LOCKED_RUNTIME_WIRING.md", "index A-16U wiring entry"],
+  [workLog, "A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED", "work log A-16U wiring status"],
+  [decisionLog, "Decision 240", "decision log A-16U entry"],
+  [handoff, "A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED", "handoff A-16U wiring status"],
+]) {
+  requireIncludes(content, token, label);
+}
+
+for (const [label, content] of [
+  [servicePath, service],
+  [routePath, route],
+]) {
+  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  rejectPattern(
+    content,
+    /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
+    `${label} must not write real genealogy tables`,
+  );
+}
+rejectPattern(route, /service_role|SUPABASE_SERVICE_ROLE/i, "route must not expose service role");
+rejectPattern(doc + service + route, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, "secret-like token");
+
+const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
+  .split(/\r?\n/)
+  .map((line) => line.slice(3).trim())
+  .filter(Boolean);
+
+const allowedChangedFiles = new Set([
+  "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
+  docPath,
+  "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
+  "docs/PLAN_A16T_APPLY_VERIFY.md",
+  servicePath,
+  routePath,
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  packagePath,
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
+  "CHECK_CLOUDFLARE_ACCOUNT.bat",
+  "GUARD.bat",
+]);
+
+for (const file of changedFiles) {
+  if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
+  if (file === ".env.local" || file.endsWith(".env.local")) failures.push(".env.local must not change");
+  if (file.startsWith("supabase/.temp/")) failures.push(`supabase temp must not change ${file}`);
+  if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`spreadsheet/csv must not change ${file}`);
+}
+
+if (failures.length > 0) {
+  console.error("A-16U locked runtime wiring check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("A-16U locked runtime wiring check passed.");

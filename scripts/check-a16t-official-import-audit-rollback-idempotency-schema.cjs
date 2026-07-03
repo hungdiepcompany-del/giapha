@@ -241,7 +241,15 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16s-official-import-transaction-execution-branch.cjs",
   "scripts/check-a16s-transaction-audit-rollback-idempotency-contract.cjs",
   "scripts/check-a16s-sql-apply-verify-runbook.cjs",
+  "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
+  "docs/PLAN_A16U_LOCKED_RUNTIME_WIRING.md",
+  "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "CHECK_CLOUDFLARE_ACCOUNT.bat",
+  "GUARD.bat",
 ]);
 
 for (const file of changedFiles) {

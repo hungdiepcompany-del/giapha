@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 
 import {
-  A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER,
-} from "@/lib/import/giapha4/official-import-preflight-gate";
-import {
+  A16U_REQUIRED_A16R_RETRY_MARKER,
   getOfficialImportRuntimeCandidate,
   type OfficialImportConfirmation,
 } from "@/lib/import/giapha4/official-import-service";
@@ -50,7 +48,7 @@ function missingConfirmationReasons(
 ) {
   const reasons: string[] = [];
 
-  if (confirmation.confirmMarker !== A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER) {
+  if (confirmation.confirmMarker !== A16U_REQUIRED_A16R_RETRY_MARKER) {
     reasons.push("Thiếu hoặc sai confirmMarker.");
   }
   if (confirmation.confirmSessionId !== sessionId) {

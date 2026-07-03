@@ -1,5 +1,59 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - PASS A-16T Verified, A-16U Locked Branch Ready
+
+- Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
+- Bundle status:
+  `A16T_PASS_TO_A16U_BUNDLE_STATUS=PASS_A16T_VERIFIED_A16U_LOCKED_BRANCH_READY`.
+- Current A-16T apply/verify status:
+  `A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
+- Owner evidence status:
+  - `A16T_OWNER_APPLY_EVIDENCE_STATUS=PASS_OWNER_MANUAL_APPLY_REPORTED`
+  - `A16T_OWNER_VERIFY_EVIDENCE_STATUS=PASS_OWNER_VERIFICATION_OUTPUT_PROVIDED`
+  - `A16T_OWNER_VERIFICATION_RESULT=PASS`
+  - `A16T_OWNER_EVIDENCE_PLACEHOLDER_DETECTED=NO`
+- Verified A-16T evidence:
+  - `A16T_GRANT_FIX_NO_ANON_PUBLIC_TABLE_GRANTS=PASS`
+  - `A16T_GRANT_FIX_NO_ANON_PUBLIC_POLICIES=PASS`
+  - `A16T_GRANT_FIX_RPC_EXECUTION_STILL_NOT_PUBLIC=PASS`
+  - `A16T_TABLES_EXIST=PASS`
+  - `A16T_BATCH_REQUIRED_COLUMNS_EXIST=PASS`
+  - `A16T_ROLLBACK_REQUIRED_COLUMNS_EXIST=PASS`
+  - `A16T_IDEMPOTENCY_UNIQUE_GUARD_EXISTS=PASS`
+  - `A16T_ROLLBACK_MANIFEST_UNIQUE_GUARD_EXISTS=PASS`
+  - `A16T_RLS_ENABLED=PASS`
+  - `A16T_AUTHENTICATED_POLICIES_EXIST=PASS`
+  - `A16T_NO_ANON_OR_PUBLIC_POLICY_OR_GRANT=PASS`
+  - `A16T_APPLY_VERIFY_FORBIDDEN_GRANT_COUNT=0`
+  - `A16T_APPLY_VERIFY_FORBIDDEN_POLICY_COUNT=0`
+  - `A16T_NO_AUTO_IMPORT_TRIGGER=PASS`
+  - `A16T_RPC_EXISTS_BUT_EXECUTION_NOT_VERIFIED_BY_THIS_CHECK=PASS`
+- A-16U status:
+  `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
+- A-16U SQL candidate created: `NO`.
+- A-16U SQL candidate path: `N/A_SQL_NOT_REQUIRED_A16T_SCHEMA_VERIFIED`.
+- A-16U mirror byte-for-byte: `N/A_SQL_NOT_REQUIRED_A16T_SCHEMA_VERIFIED`.
+- Runtime remains fail-closed:
+  - `A16U_LOCKED_RUNTIME_WIRING_STATUS=LOCKED_FAIL_CLOSED`
+  - `A16U_CAN_RUN_OFFICIAL_IMPORT=false`
+  - `canRunOfficialImport=false`
+  - `officialImportButtonDisabled=true`
+- Verify runbook:
+  `A16U_VERIFY_RUNBOOK_STATUS=READY`.
+- A-16U contract:
+  - all-or-nothing transaction branch contract: `YES`
+  - idempotency guard: `import_session_id`
+  - audit batch table: `official_import_batches`
+  - rollback manifest table: `official_import_rollback_manifests`
+- Required future execution marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Next safe work: a separate A-16R-RUN-RETRY phase may execute official import
+  only if the owner provides the exact marker above and current session
+  preflight is revalidated. Do not run import from this handoff alone.
+- Boundaries preserved: no SQL run by Codex, no DB push, no migration repair,
+  no seed, no RPC call, no POST official import call, no real genealogy write,
+  no deploy and no push.
+
 ## 2026-07-02 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - Still Blocked by Placeholder Evidence
 
 - Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.
