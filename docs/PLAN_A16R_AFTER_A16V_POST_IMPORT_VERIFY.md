@@ -6,7 +6,7 @@
 - Verify status:
   `A16R_AFTER_A16V_POST_IMPORT_VERIFY_STATUS=NOT_RUN_IMPORT_NOT_CALLED`.
 - Bundle status:
-  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_PRODUCTION_DEPLOY_EVIDENCE_MISSING`.
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_POST_DEPLOY_SMOKE_INSUFFICIENT`.
 - Import status:
   `A16R_AFTER_A16V_IMPORT_STATUS=NOT_CALLED_BLOCKED`.
 - Session id:
@@ -14,8 +14,10 @@
 
 ## Reason Verify Did Not Run
 
-- The bundle stopped before official import because production deploy evidence
-  for the A-16V code was missing.
+- The bundle stopped before official import because the post-deploy/source
+  gate found the runtime still fail-closed:
+  `A16R_AFTER_A16V_RUNTIME_CAN_RUN_OFFICIAL_IMPORT=false`,
+  `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=NOT_APPLIED`.
 - No `POST /official-import` request was called.
 - No direct RPC call was made.
 - No official import batch was created by this phase.
@@ -54,6 +56,6 @@
 ## Next Safe Step
 
 Do not run post-import verification until official import has actually executed
-successfully in a later phase. The next safe action is to obtain production
-deploy evidence for A-16V, then rerun the A-16R-after-A-16V execution bundle
-from the beginning.
+successfully in a later phase. The next safe action is a separate runtime
+execution enablement phase; do not retry A-16R while the source still reports
+the A-16V transaction branch as `NOT_APPLIED`.

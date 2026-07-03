@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY - Blocked Source Runtime Gate
+
+- Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY`.
+- Current status:
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_POST_DEPLOY_SMOKE_INSUFFICIENT`.
+- Import status:
+  `A16R_AFTER_A16V_IMPORT_STATUS=NOT_CALLED_BLOCKED`.
+- Post-import verification:
+  `A16R_AFTER_A16V_POST_IMPORT_VERIFY_STATUS=NOT_RUN_IMPORT_NOT_CALLED`.
+- Session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Approval marker matched:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner production deploy evidence was present:
+  `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION`.
+- Repo hygiene passed at HEAD `d6fbb7c`; `git status -sb` did not show ahead
+  or dirty files.
+- Push gate passed:
+  `A16R_AFTER_A16V_PUSH_STATUS=PASS_ALREADY_UP_TO_DATE`.
+- Deploy gate passed by owner evidence:
+  `A16R_AFTER_A16V_DEPLOY_STATUS=PASS_OWNER_CONFIRMED_PRODUCTION_DEPLOYED`.
+- Post-deploy/source gate blocked because source remains fail-closed:
+  - service returns `status: "BLOCKED"`;
+  - `canRunOfficialImport: false`;
+  - A-16V branch source status still `sqlCandidateStatus: "NOT_APPLIED"`;
+  - blocker:
+    `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`;
+  - official import button remains disabled.
+- Official import was not called:
+  - `A16R_AFTER_A16V_OFFICIAL_IMPORT_POST_CALLED=NO`;
+  - `A16R_AFTER_A16V_RPC_DIRECT_CALLED=NO`;
+  - created people count: `0`;
+  - created relationship count: `0`;
+  - batch/rollback/idempotency execution evidence: none from this phase.
+- Next safe step: create a separate runtime execution enablement phase that
+  wires the verified A-16V transaction branch into the guarded route/service.
+  Do not retry A-16R while source still reports A-16V as `NOT_APPLIED`.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no push, no direct RPC, no POST official import and no real genealogy
+  write.
+
 ## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE - Blocked Production Deploy Evidence Missing
 
 - Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE`.

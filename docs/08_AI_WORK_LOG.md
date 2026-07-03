@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY - Blocked Source Runtime Gate
+
+- Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-RETRY`.
+- Status:
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_POST_DEPLOY_SMOKE_INSUFFICIENT`.
+- Import status:
+  `A16R_AFTER_A16V_IMPORT_STATUS=NOT_CALLED_BLOCKED`.
+- Post-import verification:
+  `A16R_AFTER_A16V_POST_IMPORT_VERIFY_STATUS=NOT_RUN_IMPORT_NOT_CALLED`.
+- Session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner official import marker matched:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner deploy evidence was present:
+  `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION`.
+- Repo hygiene passed at HEAD `d6fbb7c`; `git status -sb` did not show ahead
+  or dirty files.
+- Push gate passed:
+  `A16R_AFTER_A16V_PUSH_STATUS=PASS_ALREADY_UP_TO_DATE`.
+- Deploy gate passed by owner evidence:
+  `A16R_AFTER_A16V_DEPLOY_STATUS=PASS_OWNER_CONFIRMED_PRODUCTION_DEPLOYED`.
+- Post-deploy/source gate blocked because source still reports official import
+  fail-closed: `status: "BLOCKED"`, `canRunOfficialImport: false`,
+  `sqlCandidateStatus: "NOT_APPLIED"` and
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+- Official import was not called: no POST `/official-import`, no direct RPC,
+  no people/relationships/families/layout/tree/revision/profile writes, no
+  batch, no rollback manifest and no idempotency execution evidence from this
+  phase.
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not deploy and did not push.
+
 ## 2026-07-03 - A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE - Blocked Production Deploy Evidence Missing
 
 - Marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE`.

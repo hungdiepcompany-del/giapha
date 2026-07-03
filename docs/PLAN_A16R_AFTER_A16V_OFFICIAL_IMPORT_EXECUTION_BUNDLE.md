@@ -4,7 +4,7 @@
 
 - Phase marker: `A-16R-AFTER-A16V-OFFICIAL-IMPORT-EXECUTION-BUNDLE`.
 - Bundle status:
-  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_PRODUCTION_DEPLOY_EVIDENCE_MISSING`.
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_POST_DEPLOY_SMOKE_INSUFFICIENT`.
 - Import status:
   `A16R_AFTER_A16V_IMPORT_STATUS=NOT_CALLED_BLOCKED`.
 - Session id:
@@ -16,8 +16,8 @@
 
 ## Phase 0 - Repository Hygiene Gate
 
-- `A16R_AFTER_A16V_REPO_HYGIENE_STATUS=PASS_CLEAN`.
-- `A16R_AFTER_A16V_HEAD=0534534`.
+- `A16R_AFTER_A16V_REPO_HYGIENE_STATUS=PASS_CLEAN_NOT_AHEAD`.
+- `A16R_AFTER_A16V_HEAD=d6fbb7c`.
 - `A16R_AFTER_A16V_STAGED_FILES=NONE`.
 - `A16R_AFTER_A16V_DIRTY_OUTSIDE_SCOPE_FILES=NONE`.
 - Forbidden outside-scope files were not staged:
@@ -32,32 +32,38 @@
 
 ## Phase 2 - Production Deploy Gate
 
-- `A16R_AFTER_A16V_DEPLOY_STATUS=BLOCKED_PRODUCTION_DEPLOY_EVIDENCE_MISSING`.
+- `A16R_AFTER_A16V_DEPLOY_STATUS=PASS_OWNER_CONFIRMED_PRODUCTION_DEPLOYED`.
 - Cloudflare deploy workflow is manual-only: `.github/workflows/cloudflare-deploy.yml`
   uses `workflow_dispatch`.
 - `.github/workflows/opennext-build-gate.yml` runs on push/PR but only builds;
   it does not deploy.
-- The prompt did not include
-  `APPROVE_A16R_AFTER_A16V_PRODUCTION_DEPLOY`.
-- The prompt did not include
+- The prompt included deploy evidence:
   `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION`.
-- Because production deploy evidence for the A-16V code is missing, the bundle
-  stopped here.
+- No deploy command was run by Codex in this phase.
 
 ## Phase 3 - Production Post-Deploy Smoke
 
-- `A16R_AFTER_A16V_POST_DEPLOY_SMOKE_STATUS=NOT_RUN_DEPLOY_EVIDENCE_MISSING`.
-- Prior A-16U owner evidence said the import UI was visible on production, but
-  this bundle did not receive evidence that A-16V was deployed to production.
+- `A16R_AFTER_A16V_POST_DEPLOY_SMOKE_STATUS=BLOCKED_SOURCE_RUNTIME_GATE_FAIL_CLOSED`.
+- Owner deploy evidence is present, but the source/runtime gate is still
+  fail-closed for official import execution.
 - Source still contains the admin import UI route and staging upload flow:
   - `/admin/exports/import`;
   - `GiaPha4ManifestUploadForm`;
   - `POST /api/admin/import-sessions/upload`.
 - Homepage `/` is not the import Excel screen.
+- Official import route exists:
+  `POST /api/admin/import-sessions/[sessionId]/official-import`.
+- Runtime source still reports:
+  - `A16R_AFTER_A16V_RUNTIME_SOURCE_STATUS=BLOCKED`;
+  - `A16R_AFTER_A16V_RUNTIME_CAN_RUN_OFFICIAL_IMPORT=false`;
+  - `A16R_AFTER_A16V_RUNTIME_A16V_SQL_CANDIDATE_STATUS=NOT_APPLIED`;
+  - `A16R_AFTER_A16V_RUNTIME_BLOCKER=A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+- Because the source/runtime gate is insufficient, the bundle stopped before
+  the final execution gate.
 
 ## Phase 4 - Execution Gate
 
-- `A16R_AFTER_A16V_EXECUTION_GATE_STATUS=NOT_REACHED_DEPLOY_EVIDENCE_MISSING`.
+- `A16R_AFTER_A16V_EXECUTION_GATE_STATUS=NOT_REACHED_SOURCE_RUNTIME_GATE_BLOCKED`.
 - `A16T_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
 - `A16U_STATUS=A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED`.
 - `A16V_APPLY_VERIFY_STATUS=PASS_OWNER_APPLIED_AND_VERIFIED`.
@@ -67,7 +73,7 @@
 - `A16R_AFTER_A16V_A16U_LOCKED_BRANCH_READY=YES`.
 - `A16R_AFTER_A16V_A16V_APPLY_VERIFY_PASS=YES`.
 - `A16R_AFTER_A16V_A16V_REAL_TRANSACTION_BRANCH_READY=YES`.
-- Execution did not proceed because production deploy evidence was missing.
+- Execution did not proceed because runtime source remains fail-closed.
 
 ## Preflight Counts Carried From Prior Evidence
 
@@ -105,7 +111,7 @@
 - `A16R_AFTER_A16V_CAN_RUN_OFFICIAL_IMPORT=false`.
 - `A16R_AFTER_A16V_OFFICIAL_IMPORT_BUTTON=DISABLED`.
 - `A16R_AFTER_A16V_OFFICIAL_IMPORT_BUTTON_AFTER_RUN=NOT_RUN_SOURCE_DISABLED_FAIL_CLOSED`.
-- Source remains fail-closed while production deploy evidence is missing.
+- Source remains fail-closed even though owner deploy evidence is present.
 
 ## Boundaries Preserved
 
@@ -121,7 +127,8 @@
 
 ## Next Safe Step
 
-Owner must manually deploy the A-16V code to production or provide the exact
-deploy evidence marker `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION` in a
-separate prompt. Do not run A-16R official import until that deploy evidence is
-present and the execution bundle is rerun from the gates.
+Next safe step is a separate runtime execution enablement phase that updates
+the official import service/route to use the verified A-16V transaction branch,
+keeps the one-call guard, and proves `canRunOfficialImport` can become true
+only for the exact approved session. Do not run A-16R official import while the
+source still reports the A-16V branch as `NOT_APPLIED`.

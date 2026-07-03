@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 258 - A-16R after A-16V retry stops at source runtime gate
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Accept the owner deploy evidence marker
+  `OWNER_CONFIRMED_A16V_DEPLOYED_TO_PRODUCTION`.
+- Treat the A-16R official import marker for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` as matched.
+- Keep the retry blocked with
+  `A16R_AFTER_A16V_BUNDLE_STATUS=BLOCKED_POST_DEPLOY_SMOKE_INSUFFICIENT`
+  because source/runtime still reports official import as fail-closed.
+- Do not call POST `/official-import`, do not call the RPC directly and do not
+  write real genealogy data while the source still has
+  `canRunOfficialImport: false` and A-16V `sqlCandidateStatus: "NOT_APPLIED"`.
+
+Rationale:
+
+- Production deploy evidence is necessary but not sufficient for a dangerous
+  import execution.
+- The route and upload UI exist, but the official import service still returns
+  a blocked candidate and still carries
+  `A16V_BLOCKED_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED`.
+- Running POST while this source gate is fail-closed would violate the
+  no-blind-retry rule and would not produce valid execution evidence.
+
 ## Decision 257 - A-16R after A-16V stops at production deploy evidence gate
 
 Date: 2026-07-03
