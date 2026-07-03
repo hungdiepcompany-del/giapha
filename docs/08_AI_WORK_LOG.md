@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE - Blocked Until Manual Deploy Evidence
+
+- Marker: `A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE`.
+- Status:
+  `PRODUCTION_IMPORT_UI_STATUS=BLOCKED_NOT_DEPLOYED_AFTER_PUSH`.
+- Local/git evidence:
+  - current HEAD is newer than the A-16U commit:
+    `1215bb6 yyyyy`;
+  - commit `8c39f685731fa558155fa710ed495a9491c815e2` is present in history;
+  - local branch was not ahead/behind `origin/main` at preflight;
+  - working tree had an unrelated deleted `GIA_PHA_GITHUB_MENU.bat`, left
+    untouched and unstaged.
+- Deploy evidence:
+  - `.github/workflows/cloudflare-deploy.yml` is `workflow_dispatch` only;
+  - it runs `npm run deploy` only when owner manually starts the workflow;
+  - therefore GitHub push alone does not update production.
+- Production HTTP smoke was attempted read-only against
+  `https://web-gia-pha.hungdiepcompany.workers.dev/admin/exports/import`, but
+  local PowerShell/curl failed at the TLS/Schannel layer, so this phase does not
+  claim production route PASS.
+- Source evidence PASS:
+  - route page exists at `app/(admin)/admin/exports/import/page.tsx`;
+  - page imports `GiaPha4ManifestUploadForm`;
+  - upload component exists at
+    `components/imports/giapha4-manifest-upload-form.tsx`;
+  - upload endpoint exists at `POST /api/admin/import-sessions/upload`;
+  - source keeps official import disabled and `canRunOfficialImport=false`.
+- Correct route for owner to open after deploy/auth is `/admin/exports/import`.
+  Public homepage `/` does not show the Excel import form.
+- Auth/permission copy remains explicit:
+  `Bạn cần đăng nhập để kiểm tra nhập dữ liệu.` or
+  `Bạn chưa có quyền imports.create.`
+- This phase did not run SQL, did not DB push, did not migration repair, did
+  not seed, did not call RPC, did not POST official import, did not write real
+  genealogy data, did not deploy and did not push.
+
 ## 2026-07-03 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - PASS A-16T Verified, A-16U Locked Branch Ready
 
 - Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.

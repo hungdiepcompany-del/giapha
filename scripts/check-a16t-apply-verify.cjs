@@ -235,13 +235,16 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
   "docs/PLAN_A16U_LOCKED_RUNTIME_WIRING.md",
   "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
+  "docs/PLAN_A16U_PRODUCTION_IMPORT_UI_DEPLOY_SMOKE.md",
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
+  "scripts/check-a16u-production-import-ui-deploy-smoke.cjs",
   servicePath,
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "CHECK_CLOUDFLARE_ACCOUNT.bat",
   "GUARD.bat",
+  "GIA_PHA_GITHUB_MENU.bat",
 ]);
 
 for (const file of changedFiles) {

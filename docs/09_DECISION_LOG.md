@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 241 - A-16U production import UI needs manual deploy evidence after push
+
+Status: `ACTIVE`
+
+Chon:
+
+- Record
+  `PRODUCTION_IMPORT_UI_STATUS=BLOCKED_NOT_DEPLOYED_AFTER_PUSH`.
+- Treat GitHub push as source publication only, not production deployment.
+- Keep the correct admin import route as `/admin/exports/import`.
+- Keep public homepage `/` out of scope for Excel upload visibility.
+- Keep official import locked with `canRunOfficialImport=false` and the button
+  disabled.
+
+Ly do:
+
+- `.github/workflows/cloudflare-deploy.yml` uses `workflow_dispatch` only and
+  deploys only when owner manually runs the Cloudflare Deploy workflow.
+- Owner reported only a GitHub push after commit
+  `8c39f685731fa558155fa710ed495a9491c815e2`; no manual deploy run evidence was
+  provided in this phase.
+- Source still contains the Gia Pha 4 upload UI and upload route, so the most
+  likely reason production does not show the form is either wrong route/auth
+  state or production still running an older deployed Worker version.
+
+Boundaries:
+
+- No SQL run, no DB push, no migration repair, no seed, no RPC call, no POST
+  official import call, no real genealogy write, no deploy and no push.
+
 ## Decision 240 - A-16T PASS opens only a locked A-16U transaction branch candidate
 
 Status: `ACTIVE`

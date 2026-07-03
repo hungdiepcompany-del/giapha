@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE - Blocked Until Manual Deploy Evidence
+
+- Marker: `A-16U-PRODUCTION-IMPORT-UI-DEPLOY-SMOKE`.
+- Current status:
+  `PRODUCTION_IMPORT_UI_STATUS=BLOCKED_NOT_DEPLOYED_AFTER_PUSH`.
+- Reason: owner reported GitHub push after commit
+  `8c39f685731fa558155fa710ed495a9491c815e2`, but the Cloudflare deploy
+  workflow is manual-only (`workflow_dispatch`) and no post-push manual deploy
+  run evidence was provided.
+- Local source evidence:
+  - admin import route exists at `/admin/exports/import`;
+  - page file `app/(admin)/admin/exports/import/page.tsx` imports
+    `GiaPha4ManifestUploadForm`;
+  - upload component `components/imports/giapha4-manifest-upload-form.tsx`
+    posts only to `/api/admin/import-sessions/upload`;
+  - upload route `app/api/admin/import-sessions/upload/route.ts` exists;
+  - official import UI remains disabled;
+  - `canRunOfficialImport=false`.
+- Production URL from deploy docs:
+  `https://web-gia-pha.hungdiepcompany.workers.dev/`.
+- Read-only HTTP smoke from local was inconclusive because PowerShell/curl hit a
+  local TLS/Schannel error (`SEC_E_NO_CREDENTIALS`), so do not treat this phase
+  as production route PASS.
+- Correct route for owner after deploy/login:
+  `/admin/exports/import`.
+- Public homepage `/` does not show the Excel upload form.
+- Auth/permission blockers are expected if the user is not logged in or lacks
+  `imports.create`:
+  `Bạn cần đăng nhập để kiểm tra nhập dữ liệu.` or
+  `Bạn chưa có quyền imports.create.`
+- Next safe step: owner may manually run GitHub Actions -> Cloudflare Deploy on
+  branch `main`, then a separate read-only production smoke can verify the route.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  RPC, no POST official import, no real genealogy write, no deploy and no push.
+
 ## 2026-07-03 - A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE - PASS A-16T Verified, A-16U Locked Branch Ready
 
 - Marker: `A-16T-PASS-TO-A16U-LOCKED-TRANSACTION-BRANCH-BUNDLE`.

@@ -157,6 +157,7 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
   docPath,
   "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
+  "docs/PLAN_A16U_PRODUCTION_IMPORT_UI_DEPLOY_SMOKE.md",
   "docs/PLAN_A16T_APPLY_VERIFY.md",
   servicePath,
   routePath,
@@ -166,6 +167,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
+  "scripts/check-a16u-production-import-ui-deploy-smoke.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -173,6 +175,7 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "CHECK_CLOUDFLARE_ACCOUNT.bat",
   "GUARD.bat",
+  "GIA_PHA_GITHUB_MENU.bat",
 ]);
 
 for (const file of changedFiles) {
