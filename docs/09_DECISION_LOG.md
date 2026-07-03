@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 262 - A-16R push succeeds but deploy blocks on Cloudflare target mismatch
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Accept the push to `origin/main` after clean preflight, ahead/behind `4 0`
+  and source validation.
+- Do not deploy from the current Wrangler/Cloudflare context because
+  `web-gia-pha` is not visible in account
+  `dec1eb5cfb3f4b32956b1aff723e5ace`; Wrangler deployments checks returned
+  API code `10007`.
+- Treat the public GET 200 responses from
+  `https://web-gia-pha.hungdiepcompany.workers.dev/` as existing-production
+  smoke only, not proof that commit `55d137c893104c30f7fa738b6be5b0294821dac1`
+  is deployed.
+- Keep A-16R import retry blocked until owner/operator resolves the Cloudflare
+  target mismatch and a later post-deploy/source smoke proves sufficient
+  production runtime evidence.
+
+Rationale:
+
+- Deploying when the configured Worker is not visible in the active account
+  risks creating or updating the wrong Cloudflare target.
+- Production availability alone is not enough to prove the pushed runtime
+  enablement evidence is live.
+
 ## Decision 261 - A-16R runtime execution owner review accepts marker but keeps import closed
 
 Date: 2026-07-03

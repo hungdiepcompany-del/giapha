@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE - Push PASS, Deploy Target Mismatch
+
+- Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE`.
+- Status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_DEPLOY_SMOKE_STATUS=BLOCKED_DEPLOY_TARGET_MISMATCH`.
+- Preflight:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_PREFLIGHT_STATUS=PASS_WITH_REMOTE_URL_ALIAS_NOTE`.
+- Local remote is `git@github-giapha:hungdiepcompany-del/giapha.git`, which
+  matches the required repository slug but is not the literal HTTPS URL from
+  the prompt.
+- Push PASS:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_STATUS=PASS_PUSHED_TO_ORIGIN_MAIN`.
+  After push, `main...origin/main` was `0 0`.
+- Deploy was not run because the active Cloudflare account
+  `dec1eb5cfb3f4b32956b1aff723e5ace` did not expose the configured worker
+  `web-gia-pha`; Wrangler returned API code `10007` and read-only worker list
+  showed `bom`, `hrsync`, `san-xuat-lt`, `san-xuat-lt-google-drive-service`,
+  `sx`.
+- Deploy status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_DEPLOY_STATUS=BLOCKED_TARGET_WORKER_NOT_FOUND_IN_CURRENT_CLOUDFLARE_ACCOUNT`.
+- Existing production public GET smoke returned 200 for `/`, `/tree`,
+  `/auth/login` and `/admin/exports/import`, but this is not post-deploy
+  evidence for commit `55d137c893104c30f7fa738b6be5b0294821dac1`.
+- Production `canRunOfficialImport` and official import button state from the
+  pushed commit remain `UNKNOWN_DEPLOY_BLOCKED`.
+- A-16R import may not be retried:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- This phase did not call POST `/official-import`, did not call direct RPC,
+  did not write real genealogy data, did not run SQL, did not DB push, did not
+  migration repair, did not seed and did not deploy. The only remote mutation
+  was the explicitly allowed Git push to `origin/main`.
+
 ## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW - Marker Present, Still Fail Closed
 
 - Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW`.

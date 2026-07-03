@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE - Push PASS, Deploy Blocked By Target Mismatch
+
+- Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-PUSH-DEPLOY-SMOKE`.
+- Current status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_DEPLOY_SMOKE_STATUS=BLOCKED_DEPLOY_TARGET_MISMATCH`.
+- Push status:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_STATUS=PASS_PUSHED_TO_ORIGIN_MAIN`.
+- Pushed commits include:
+  `70f7df2`,
+  `c3ab5f78c64455e30c0bd649b020a5b0b79ba3a7`,
+  `132160f3f4610b5a2c0593dafbca933f5a2bb1ab`,
+  `55d137c893104c30f7fa738b6be5b0294821dac1`.
+- After push, `main...origin/main` was `0 0`.
+- Deploy was not run. Wrangler identity was
+  `hung.pham@longthaisteel.com` on account
+  `dec1eb5cfb3f4b32956b1aff723e5ace`, but the configured worker
+  `web-gia-pha` was not visible. `npx wrangler deployments list --name
+  web-gia-pha` and `deployments status` returned Cloudflare API code `10007`.
+- Read-only Cloudflare worker list in that account showed:
+  `bom`, `hrsync`, `san-xuat-lt`, `san-xuat-lt-google-drive-service`, `sx`.
+- Existing production public GET smoke returned `200` for `/`, `/tree`,
+  `/auth/login` and `/admin/exports/import`, but this is not post-deploy
+  evidence for commit `55d137c893104c30f7fa738b6be5b0294821dac1`.
+- Remaining blocker:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_BLOCKER=BLOCKED_TARGET_WORKER_NOT_FOUND_IN_CURRENT_CLOUDFLARE_ACCOUNT`.
+- Production `canRunOfficialImport` and official import button state from the
+  pushed commit remain `UNKNOWN_DEPLOY_BLOCKED`.
+- A-16R import may be retried next:
+  `A16R_RUNTIME_EXECUTION_ENABLEMENT_A16R_IMPORT_MAY_BE_RETRIED_NEXT=NO`.
+- Next safe step: owner/operator confirms the correct Cloudflare account/worker
+  for `web-gia-pha` or provides a separate GitHub Actions/manual deploy
+  evidence phase, then rerun post-deploy/source smoke. Do not run official
+  import before that.
+- Boundaries preserved: no SQL, no DB push, no migration repair, no seed, no
+  deploy, no direct RPC, no POST official import and no real genealogy write.
+  The only remote mutation was the explicitly allowed Git push.
+
 ## 2026-07-03 - A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW - Marker Valid, Import Still Closed
 
 - Marker: `A-16R-RUNTIME-EXECUTION-ENABLEMENT-OWNER-REVIEW`.
