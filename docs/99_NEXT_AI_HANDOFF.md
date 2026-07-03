@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE - Safe Candidate Ready Docs Only
+
+- Marker: `A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE`.
+- Current status:
+  `A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_FIX_CANDIDATE_STATUS=FIX_CANDIDATE_READY_DOCS_ONLY`.
+- Fix candidate classification:
+  `A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_FIX_CANDIDATE_CLASSIFICATION=USE_MANUAL_GITHUB_ACTIONS_LINUX_DEPLOY_PATH`.
+- Safe deploy candidate path:
+  `A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_SAFE_PATH=MANUAL_GITHUB_ACTIONS_LINUX_DEPLOY_FROM_CLEAN_CHECKOUT`.
+- Failed deploy version:
+  `d158869a-3d32-4697-8ad8-815a64526b36`.
+- Active rollback version:
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+- Candidate summary: do not deploy from repo-local Windows while
+  `.next/build/56416d4ae4ce586f.js` remains ACL-locked and the prior failed
+  deploy still has OpenNext Windows-warning evidence. Use the manual
+  GitHub Actions Linux deploy workflow in a separate explicit deploy-smoke
+  phase instead.
+- `wrangler.toml` changed: NO.
+- Deploy scripts changed: NO.
+- Package script changed: YES_CHECKER_ONLY.
+- A-16R import retry remains `NO`; do not call POST `/official-import`, direct
+  RPC, SQL, DB push, migration repair, seed or deploy from this handoff.
+
 ## 2026-07-03 - A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE - Likely Root Cause Identified Docs Only
 
 - Marker: `A-16R-POST-DEPLOY-HTTP500-ROOT-CAUSE`.

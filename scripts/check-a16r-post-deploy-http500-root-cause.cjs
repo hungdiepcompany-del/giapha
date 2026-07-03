@@ -162,8 +162,10 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_FIX_CANDIDATE.md",
   packagePath,
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
+  "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",

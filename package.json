@@ -284,7 +284,8 @@
     "check:a16r-giapha-cloudflare-account-recovery": "node scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",
     "check:a16r-giapha-cloudflare-account-verify-deploy-smoke": "node scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs",
     "check:a16r-giapha-correct-account-deploy-smoke": "node scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs",
-    "check:a16r-post-deploy-http500-root-cause": "node scripts/check-a16r-post-deploy-http500-root-cause.cjs"
+    "check:a16r-post-deploy-http500-root-cause": "node scripts/check-a16r-post-deploy-http500-root-cause.cjs",
+    "check:a16r-opennext-cloudflare-deploy-bundle-fix-candidate": "node scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 267 - A-16R OpenNext deploy bundle fix candidate uses manual GitHub Actions Linux deploy
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Accept the A-16R deploy bundle fix candidate as docs/checker-only:
+  `A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_FIX_CANDIDATE_STATUS=FIX_CANDIDATE_READY_DOCS_ONLY`.
+- Prefer the manual GitHub Actions Linux deploy path for the next explicit
+  deploy-smoke phase:
+  `A16R_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_SAFE_PATH=MANUAL_GITHUB_ACTIONS_LINUX_DEPLOY_FROM_CLEAN_CHECKOUT`.
+- Do not prefer Windows-local deploy, including clean temp mirror deploy, while
+  the repo-local `.next` ACL lock and OpenNext Windows warning remain part of
+  the root-cause evidence.
+- Keep `wrangler.toml`, `open-next.config.ts`, `next.config.ts`, deploy scripts
+  and workflows unchanged for this candidate.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Rationale:
+
+- The prior failed version `d158869a-3d32-4697-8ad8-815a64526b36` returned
+  HTTP 500 on all required GET routes and was rolled back to
+  `77fc3067-b197-4bce-8a36-eb2bde6bacc8`.
+- The current root-cause classification is
+  `OPENNEXT_CLOUDFLARE_INCOMPATIBILITY` with subtype
+  `WINDOWS_LOCAL_OPENNEXT_CLOUDFLARE_DEPLOY_BUNDLE_INCOMPATIBILITY`.
+- A clean temp mirror helps local build validation when repo-local `.next` is
+  ACL-locked, but the previous failed deploy still used Windows-local
+  OpenNext/Cloudflare tooling and emitted the OpenNext Windows warning.
+- The existing `.github/workflows/cloudflare-deploy.yml` is manual-only,
+  `ubuntu-latest`, clean checkout based, and already runs validation before
+  `npm run deploy`.
+- The phase did not deploy, call POST `/official-import`, call direct RPC, run
+  SQL, push DB, repair migrations, seed, write real genealogy data or change
+  `wrangler.toml`.
+
 ## Decision 266 - A-16R post-deploy HTTP 500 likely caused by Windows OpenNext deploy incompatibility
 
 Date: 2026-07-03
