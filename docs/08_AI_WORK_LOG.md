@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-04 - A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS - Auth Required, Source Fail-Closed
+
+- Marker: `A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS`.
+- Status:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_DIAGNOSIS_STATUS=DIAGNOSED_AUTH_REQUIRED_AND_SOURCE_FAIL_CLOSED`.
+- Classification:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_CLASSIFICATION=UNKNOWN_NEEDS_AUTHENTICATED_SMOKE`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, HEAD and `origin/main`
+  `4f1635b94c7a884e5b3624768b1cb13939ba1bdb`, working tree clean.
+- Read-only production GET to official-import-gate returned `401` with
+  marker `A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE`, `readOnly=true`,
+  `canOpenOfficialImport=false`, `officialImportEnabled=false`.
+- Diagnosis: the `401` is expected unauthenticated manifest-read behavior
+  because `getImportManifest()` requires an authenticated user with
+  `imports.create`; no auth token/cookie was supplied in the smoke.
+- Static source still reports `canRunOfficialImport=false`; UI button remains
+  disabled and source blocker remains
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Next allowed action:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_NEXT_ALLOWED_ACTION=RUN_AUTHENTICATED_ADMIN_READ_ONLY_GATE_AND_UI_SMOKE_NO_POST`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no direct RPC,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed
+  and no `wrangler.toml` change.
+
 ## 2026-07-03 - A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE - Deploy PASS, GET Smoke PASS, Import Locked
 
 - Marker: `A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE`.

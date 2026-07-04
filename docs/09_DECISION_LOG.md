@@ -1,5 +1,31 @@
 # Decision Log
 
+## Decision 269 - A-16R official import gate readiness needs authenticated read-only smoke
+
+Date: 2026-07-04
+
+Status: Accepted
+
+Decision:
+
+- Classify the post-deploy official-import-gate readiness state as:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_CLASSIFICATION=UNKNOWN_NEEDS_AUTHENTICATED_SMOKE`.
+- Treat the live guarded `401` as expected unauthenticated GET behavior, not a
+  deploy failure and not official import execution.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- The next allowed action is authenticated admin read-only gate/UI smoke only:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_NEXT_ALLOWED_ACTION=RUN_AUTHENTICATED_ADMIN_READ_ONLY_GATE_AND_UI_SMOKE_NO_POST`.
+
+Rationale:
+
+- The GET gate depends on manifest read access, which requires an authenticated
+  user with `imports.create`; unauthenticated GET cannot prove readiness.
+- Source remains fail-closed with `canRunOfficialImport=false` and the official
+  import UI button disabled.
+- This decision does not change DB, auth, permission, API, dependency,
+  OpenNext/Wrangler config or service boundary.
+
 ## Decision 268 - A-16R GitHub Actions Linux deploy smoke passes while official import remains locked
 
 Date: 2026-07-03

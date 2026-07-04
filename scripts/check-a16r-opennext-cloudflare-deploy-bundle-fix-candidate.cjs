@@ -197,6 +197,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
   "docs/PLAN_A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE.md",
   "scripts/check-a16r-github-actions-linux-deploy-smoke.cjs",
+  "docs/PLAN_A16R_OFFICIAL_IMPORT_GATE_READINESS_DIAGNOSIS.md",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",

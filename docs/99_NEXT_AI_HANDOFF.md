@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-07-04 - A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS - Auth Required, Source Fail-Closed
+
+- Marker: `A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS`.
+- Current status:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_DIAGNOSIS_STATUS=DIAGNOSED_AUTH_REQUIRED_AND_SOURCE_FAIL_CLOSED`.
+- Classification:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_CLASSIFICATION=UNKNOWN_NEEDS_AUTHENTICATED_SMOKE`.
+- GitHub Actions Linux deploy/smoke remains PASS, active version
+  `4e7841b6-62ca-4b71-a46c-ccc21ad6cefc`.
+- Safe unauthenticated GET to official-import-gate returned guarded `401`;
+  this is expected auth-required behavior for manifest read access, not a
+  deploy failure.
+- Authenticated readiness is not proven. Static source still keeps
+  `canRunOfficialImport=false`, the source blocker
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`, and the
+  official import UI button disabled.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_OFFICIAL_IMPORT_GATE_READINESS_NEXT_ALLOWED_ACTION=RUN_AUTHENTICATED_ADMIN_READ_ONLY_GATE_AND_UI_SMOKE_NO_POST`.
+- Do not call POST `/official-import`, direct RPC, SQL, DB push, migration
+  repair, seed or deploy from this handoff.
+
 ## 2026-07-03 - A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE - Deploy PASS, GET Smoke PASS, Import Locked
 
 - Marker: `A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE`.
