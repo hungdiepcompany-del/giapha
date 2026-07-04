@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-03 - A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE - Deploy PASS, GET Smoke PASS, Import Locked
+
+- Marker: `A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE`.
+- Current status:
+  `A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE_STATUS=PASS_DEPLOYED_SMOKE_GET_ONLY_IMPORT_LOCKED`.
+- GitHub Actions workflow:
+  `Cloudflare Deploy`, run `28656644567`,
+  `https://github.com/hungdiepcompany-del/giapha/actions/runs/28656644567`.
+- Workflow SHA:
+  `cee98384e7df6b6fc3c6703c1ff523b844d89254`.
+- Active deployed version:
+  `4e7841b6-62ca-4b71-a46c-ccc21ad6cefc`.
+- Production smoke:
+  `A16R_GITHUB_ACTIONS_LINUX_PRODUCTION_SMOKE_RESULT=PASS_REQUIRED_GET_ROUTES_NO_500`.
+- Required GET routes `/`, `/tree`, `/auth/login` and
+  `/admin/exports/import` returned 200. Guarded official-import GET returned
+  401 with `readOnly=true` and `officialImportEnabled=false`.
+- Rollback:
+  `A16R_GITHUB_ACTIONS_LINUX_ROLLBACK_RESULT=NOT_RUN_NO_PRODUCTION_BREAKING_500`.
+- A-16R import retry remains `NO`; deploy smoke success does not authorize
+  POST `/official-import` or direct RPC. A later explicit execution phase must
+  re-check the gate and include the session-specific marker.
+- Boundaries preserved: no POST `/official-import`, no direct RPC, no real
+  genealogy write, no SQL, no DB push, no migration repair, no seed, no
+  Windows-local deploy and no `wrangler.toml` change.
+
 ## 2026-07-03 - A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE - Safe Candidate Ready Docs Only
 
 - Marker: `A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE`.

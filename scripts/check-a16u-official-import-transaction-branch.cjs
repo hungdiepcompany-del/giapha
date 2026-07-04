@@ -251,6 +251,8 @@ const allowedChangedFiles = new Set([
   "db/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql",
   "supabase/migrations/20260703_0017_a16v_marker_verification_fix_candidate.sql",
   packagePath,
+  "docs/PLAN_A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE.md",
+  "scripts/check-a16r-github-actions-linux-deploy-smoke.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",

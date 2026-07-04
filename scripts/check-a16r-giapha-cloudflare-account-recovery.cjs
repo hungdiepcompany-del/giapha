@@ -182,6 +182,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
+  "docs/PLAN_A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE.md",
+  "scripts/check-a16r-github-actions-linux-deploy-smoke.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",

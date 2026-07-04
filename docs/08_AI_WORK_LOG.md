@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-07-03 - A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE - Deploy PASS, GET Smoke PASS, Import Locked
+
+- Marker: `A-16R-GITHUB-ACTIONS-LINUX-DEPLOY-SMOKE`.
+- Status:
+  `A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE_STATUS=PASS_DEPLOYED_SMOKE_GET_ONLY_IMPORT_LOCKED`.
+- Preflight PASS: branch `main`, remote slug
+  `hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`, local HEAD
+  `cee98384e7df6b6fc3c6703c1ff523b844d89254` equals `origin/main`, and
+  working tree was clean before deploy.
+- Validation PASS:
+  `A16R_GITHUB_ACTIONS_LINUX_DEPLOY_VALIDATION_STATUS=PASS_REPO_LOCAL_BUILD`.
+- GitHub Actions workflow: `Cloudflare Deploy`, run `28656644567`,
+  `https://github.com/hungdiepcompany-del/giapha/actions/runs/28656644567`,
+  SHA `cee98384e7df6b6fc3c6703c1ff523b844d89254`, result success.
+- Deploy path:
+  `A16R_GITHUB_ACTIONS_LINUX_DEPLOY_PATH=MANUAL_GITHUB_ACTIONS_LINUX_FROM_CLEAN_ORIGIN_MAIN`.
+- Active deployed version after workflow:
+  `4e7841b6-62ca-4b71-a46c-ccc21ad6cefc`.
+- Production GET-only smoke returned 200 for `/`, `/tree`, `/auth/login`,
+  `/admin/exports/import`; guarded GET
+  `/api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/official-import-gate`
+  returned 401 with `readOnly=true`, `officialImportEnabled=false`.
+- Smoke status:
+  `A16R_GITHUB_ACTIONS_LINUX_PRODUCTION_SMOKE_RESULT=PASS_REQUIRED_GET_ROUTES_NO_500`.
+- Rollback status:
+  `A16R_GITHUB_ACTIONS_LINUX_ROLLBACK_RESULT=NOT_RUN_NO_PRODUCTION_BREAKING_500`.
+- A-16R import retry remains blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety boundary: `A16R_GITHUB_ACTIONS_LINUX_POST_OFFICIAL_IMPORT_CALLED=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_DIRECT_RPC_CALLED=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_REAL_GENEALOGY_WRITE=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_SQL_RUN=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_DB_PUSH_RUN=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_MIGRATION_REPAIR_RUN=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_SEED_RUN=NO`,
+  `A16R_GITHUB_ACTIONS_LINUX_WRANGLER_TOML_CHANGED=NO`.
+
 ## 2026-07-03 - A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE - Safe Candidate Ready Docs Only
 
 - Marker: `A-16R-OPENNEXT-CLOUDFLARE-DEPLOY-BUNDLE-FIX-CANDIDATE`.

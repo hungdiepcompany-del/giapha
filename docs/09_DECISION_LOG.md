@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 268 - A-16R GitHub Actions Linux deploy smoke passes while official import remains locked
+
+Date: 2026-07-03
+
+Status: Accepted
+
+Decision:
+
+- Accept the manual GitHub Actions Linux deploy evidence for A-16R:
+  `A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE_STATUS=PASS_DEPLOYED_SMOKE_GET_ONLY_IMPORT_LOCKED`.
+- Treat workflow run `28656644567` on commit
+  `cee98384e7df6b6fc3c6703c1ff523b844d89254` as the deploy evidence for this
+  phase.
+- Treat Worker version `4e7841b6-62ca-4b71-a46c-ccc21ad6cefc` as the active
+  version after the GitHub Actions Linux deploy.
+- Do not rollback because required GET routes did not return 500:
+  `A16R_GITHUB_ACTIONS_LINUX_ROLLBACK_RESULT=NOT_RUN_NO_PRODUCTION_BREAKING_500`.
+- Keep official import locked and require a separate execution gate:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Rationale:
+
+- The earlier Windows-local deploy path produced all-route HTTP 500, but this
+  Linux workflow deployed from clean `origin/main` and GET smoke passed.
+- The guarded official-import GET still returns fail-closed evidence with
+  `officialImportEnabled=false`, so deploy success is not import authorization.
+- This decision does not change DB, auth, permission, API, dependency,
+  OpenNext/Wrangler config or service boundary.
+
 ## Decision 267 - A-16R OpenNext deploy bundle fix candidate uses manual GitHub Actions Linux deploy
 
 Date: 2026-07-03

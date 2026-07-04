@@ -197,6 +197,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16V_PRODUCTION_RUNTIME_EVIDENCE_RECONCILIATION.md",
   "docs/PLAN_A16R_AFTER_A16V_OFFICIAL_IMPORT_EXECUTION_BUNDLE.md",
   "docs/PLAN_A16R_AFTER_A16V_POST_IMPORT_VERIFY.md",
+  "docs/PLAN_A16R_GITHUB_ACTIONS_LINUX_DEPLOY_SMOKE.md",
+  "scripts/check-a16r-github-actions-linux-deploy-smoke.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
