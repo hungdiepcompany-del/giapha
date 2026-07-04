@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 270 - A-16R authenticated official import gate smoke is blocked by auth or permission context
+
+Date: 2026-07-04
+
+Status: Accepted
+
+Decision:
+
+- Classify the attempted authenticated official-import gate smoke as:
+  `A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Treat the available browser/session context as insufficient for gate
+  readiness because it did not prove an authenticated admin import context.
+- The next allowed action is to provide a logged-in admin owner browser session
+  or explicitly approved read-only auth context, then rerun read-only gate/UI
+  smoke with no POST:
+  `A16R_AUTH_GATE_SMOKE_NEXT_ALLOWED_ACTION=PROVIDE_LOGGED_IN_ADMIN_OWNER_BROWSER_SESSION_OR_APPROVED_READ_ONLY_AUTH_CONTEXT_THEN_RERUN_AUTHENTICATED_GATE_UI_SMOKE_NO_POST`.
+
+Rationale:
+
+- The production import page was reachable, but visible state showed permission
+  count `0` and login-required copy for import checking.
+- Authenticated admin API readiness could not be proven from that context.
+- Source remains fail-closed with `canRunOfficialImport=false` and the official
+  import UI source button disabled.
+- This decision does not change DB, auth, permission, API, dependency,
+  OpenNext/Wrangler config or service boundary.
+
 ## Decision 269 - A-16R official import gate readiness needs authenticated read-only smoke
 
 Date: 2026-07-04

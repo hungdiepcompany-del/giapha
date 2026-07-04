@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-04 - A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE - Auth/Permission Blocker
+
+- Marker: `A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE`.
+- Status:
+  `A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_SMOKE_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Classification:
+  `A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, HEAD and `origin/main`
+  `1383f7c92319a264fd86f6d84c43af9ab159fbca`, working tree clean.
+- Browser/page read-only smoke reached
+  `https://web-gia-pha.hungdiepcompany.workers.dev/admin/exports/import`,
+  but the visible context was not an admin import context: permission count
+  `0`, login-required copy was shown, and admin import readiness was not
+  proven.
+- Browser direct API navigation to official-import-gate was blocked by the
+  browser client, and in-page API GET was unavailable in the read-only
+  evaluation context. A separate safe unauthenticated GET still returned
+  guarded `401` with `readOnly=true`, `canOpenOfficialImport=false` and
+  `officialImportEnabled=false`.
+- Readiness answers: A-16V reconciliation evidence, runtime enablement marker,
+  session run marker and production `canRunOfficialImport` remain
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source still has
+  `canRunOfficialImport=false` and disabled official import button.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_AUTH_GATE_SMOKE_NEXT_ALLOWED_ACTION=PROVIDE_LOGGED_IN_ADMIN_OWNER_BROWSER_SESSION_OR_APPROVED_READ_ONLY_AUTH_CONTEXT_THEN_RERUN_AUTHENTICATED_GATE_UI_SMOKE_NO_POST`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no direct RPC,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed,
+  no Windows-local deploy and no `wrangler.toml` change.
+
 ## 2026-07-04 - A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS - Auth Required, Source Fail-Closed
 
 - Marker: `A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS`.

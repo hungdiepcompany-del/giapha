@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-07-04 - A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE - Auth/Permission Blocker
+
+- Marker: `A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE`.
+- Current status:
+  `A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_SMOKE_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Classification:
+  `A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Browser/page read-only smoke reached `/admin/exports/import` in production,
+  but the available context was not an admin import context: visible permission
+  count was `0`, login-required copy was present, and authenticated admin gate
+  readiness was not proven.
+- Safe unauthenticated official-import-gate GET still returned guarded `401`
+  with `readOnly=true`, `canOpenOfficialImport=false` and
+  `officialImportEnabled=false`.
+- A-16V reconciliation evidence recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Runtime enablement marker recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Session-specific run marker recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Production `canRunOfficialImport`:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source remains
+  `canRunOfficialImport=false`.
+- Production official import button:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source remains disabled.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_AUTH_GATE_SMOKE_NEXT_ALLOWED_ACTION=PROVIDE_LOGGED_IN_ADMIN_OWNER_BROWSER_SESSION_OR_APPROVED_READ_ONLY_AUTH_CONTEXT_THEN_RERUN_AUTHENTICATED_GATE_UI_SMOKE_NO_POST`.
+- Do not call POST `/official-import`, direct RPC, SQL, DB push, migration
+  repair, seed, Windows-local deploy or deploy from this handoff.
+- `wrangler.toml` was not changed.
+
 ## 2026-07-04 - A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS - Auth Required, Source Fail-Closed
 
 - Marker: `A-16R-OFFICIAL-IMPORT-GATE-READINESS-DIAGNOSIS`.
