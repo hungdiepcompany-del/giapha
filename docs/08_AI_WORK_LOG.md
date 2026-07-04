@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-04 - A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY - Owner/Admin Context Still Blocked
+
+- Marker: `A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY`.
+- Status:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Classification:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, HEAD and `origin/main`
+  `d78f83acef7cf89fdd8513ecda62e15f890ac38d`, working tree clean.
+- Browser/page read-only retry reached
+  `https://web-gia-pha.hungdiepcompany.workers.dev/admin/exports/import`,
+  but the visible context still did not prove owner/admin import permission:
+  permission count `0`, login-required copy present, and admin import readiness
+  not proven.
+- Readiness answers: A-16V reconciliation evidence, runtime enablement marker,
+  session run marker, production `canRunOfficialImport` and production official
+  import button remain `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source still has
+  `canRunOfficialImport=false` and disabled official import button.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_NEXT_ALLOWED_ACTION=OWNER_LOGIN_WITH_ADMIN_IMPORT_PERMISSION_THEN_RERUN_READ_ONLY_GATE_UI_SMOKE_NO_POST`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no direct RPC,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed,
+  no Windows-local deploy and no `wrangler.toml` change.
+
 ## 2026-07-04 - A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE - Auth/Permission Blocker
 
 - Marker: `A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE`.

@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-07-04 - A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY - Owner/Admin Context Still Blocked
+
+- Marker: `A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY`.
+- Current status:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Classification:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Browser/page read-only retry reached `/admin/exports/import` in production,
+  but the available context still did not prove owner/admin import permission:
+  visible permission count was `0`, login-required copy was present, and
+  authenticated owner/admin gate readiness was not proven.
+- A-16V reconciliation evidence recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Runtime enablement marker recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Session-specific run marker recognized:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`.
+- Production `canRunOfficialImport`:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source remains
+  `canRunOfficialImport=false`.
+- Production official import button:
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source remains disabled.
+- Remaining blocker:
+  `AUTHENTICATED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_AVAILABLE_OR_PERMISSION_INSUFFICIENT`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_AUTH_OWNER_GATE_SMOKE_RETRY_NEXT_ALLOWED_ACTION=OWNER_LOGIN_WITH_ADMIN_IMPORT_PERMISSION_THEN_RERUN_READ_ONLY_GATE_UI_SMOKE_NO_POST`.
+- Do not call POST `/official-import`, direct RPC, SQL, DB push, migration
+  repair, seed, Windows-local deploy or deploy from this handoff.
+- `wrangler.toml` was not changed.
+
 ## 2026-07-04 - A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE - Auth/Permission Blocker
 
 - Marker: `A-16R-AUTHENTICATED-OFFICIAL-IMPORT-GATE-SMOKE`.

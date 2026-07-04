@@ -219,6 +219,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "docs/PLAN_A16R_AUTHENTICATED_OFFICIAL_IMPORT_GATE_SMOKE.md",
   "scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
+  "docs/PLAN_A16R_AUTHENTICATED_OWNER_IMPORT_GATE_SMOKE_RETRY.md",
+  "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
