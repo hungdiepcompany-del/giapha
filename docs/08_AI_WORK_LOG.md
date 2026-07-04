@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-04 - A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS - Auth Session Missing Evidence
+
+- Marker: `A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS`.
+- Status:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS_STATUS=DIAGNOSED_READ_ONLY_NO_MUTATION`.
+- Classification:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Preflight PASS: `main`, remote slug `hungdiepcompany-del/giapha.git`,
+  ahead/behind `0 / 0`, HEAD and `origin/main`
+  `6e830c70b82a23fbd4bf55f2a471d6b76bd71a34`, working tree clean.
+- Diagnosis: prior production page evidence showed permission count `0` and
+  login-required copy. Source shows that copy is used when `context.user` is
+  absent, so the closest proven blocker is missing app-server Supabase auth
+  session/cookie evidence.
+- Required read contract: authenticated user, linked profile, profile role,
+  role permission mapping and `imports.create`. Official import POST is stricter:
+  `imports.create`, `people.create`, `relationships.create` and
+  `permissions.manage`, plus markers/runtime gates.
+- DB/SQL role repair needed:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DB_SQL_ROLE_REPAIR_NEEDED=UNKNOWN_NOT_PROVEN`.
+- Owner manual action needed:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_OWNER_MANUAL_ACTION_NEEDED=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no direct RPC,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed,
+  no permission/role/auth/user/member mutation, no Windows-local deploy and no
+  `wrangler.toml` change.
+
 ## 2026-07-04 - A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY - Owner/Admin Context Still Blocked
 
 - Marker: `A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY`.

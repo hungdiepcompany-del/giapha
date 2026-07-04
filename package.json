@@ -289,7 +289,8 @@
     "check:a16r-github-actions-linux-deploy-smoke": "node scripts/check-a16r-github-actions-linux-deploy-smoke.cjs",
     "check:a16r-official-import-gate-readiness-diagnosis": "node scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
     "check:a16r-authenticated-official-import-gate-smoke": "node scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
-    "check:a16r-authenticated-owner-import-gate-smoke-retry": "node scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs"
+    "check:a16r-authenticated-owner-import-gate-smoke-retry": "node scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
+    "check:a16r-owner-admin-import-permission-diagnosis": "node scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

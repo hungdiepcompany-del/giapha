@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-04 - A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS - Auth Session Missing Evidence
+
+- Marker: `A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS`.
+- Current status:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS_STATUS=DIAGNOSED_READ_ONLY_NO_MUTATION`.
+- Classification:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Current blocker:
+  `AUTHENTICATED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_AVAILABLE_OR_PERMISSION_INSUFFICIENT`.
+- Required read contract: authenticated Supabase user, linked profile by
+  `auth_user_id`, profile role, role permission mapping and `imports.create`.
+- Required official import POST permission bundle for a later execution phase:
+  `imports.create`, `people.create`, `relationships.create` and
+  `permissions.manage`, plus session/runtime markers and fail-closed runtime
+  gates.
+- DB/SQL role repair needed:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DB_SQL_ROLE_REPAIR_NEEDED=UNKNOWN_NOT_PROVEN`.
+- Owner manual action needed:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_OWNER_MANUAL_ACTION_NEEDED=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_NEXT_ALLOWED_ACTION=OWNER_LOGIN_TO_PRODUCTION_WITH_EXPECTED_OWNER_ADMIN_ACCOUNT_VERIFY_ADMIN_SHELL_EMAIL_ROLE_PERMISSION_COUNT_THEN_RERUN_READ_ONLY_GATE_UI_SMOKE_NO_POST`.
+- Do not call POST `/official-import`, direct RPC, SQL, DB push, migration
+  repair, seed, permission/role mutation, auth/user/membership mutation,
+  Windows-local deploy or deploy from this handoff.
+- `wrangler.toml` was not changed.
+
 ## 2026-07-04 - A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY - Owner/Admin Context Still Blocked
 
 - Marker: `A-16R-AUTHENTICATED-OWNER-IMPORT-GATE-SMOKE-RETRY`.

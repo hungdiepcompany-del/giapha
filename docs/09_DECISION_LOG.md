@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 272 - A-16R owner/admin import permission blocker is auth session missing until owner login is proven
+
+Date: 2026-07-04
+
+Status: Accepted
+
+Decision:
+
+- Classify the owner/admin import permission diagnosis as:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Treat DB/SQL role repair as unknown, not authorized and not proven:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_DB_SQL_ROLE_REPAIR_NEEDED=UNKNOWN_NOT_PROVEN`.
+- Require owner manual production login/account action before another
+  read-only gate smoke:
+  `A16R_OWNER_ADMIN_IMPORT_PERMISSION_OWNER_MANUAL_ACTION_NEEDED=YES`.
+
+Rationale:
+
+- The prior page smoke showed permission count `0` and login-required copy.
+- Source uses the login-required import copy when `context.user` is absent.
+- Without a proven app-server Supabase auth user context, this phase cannot
+  distinguish wrong account, missing profile, missing role, missing
+  `imports.create`, or role/permission mapping mismatch.
+- This decision does not mutate roles, permissions, auth users, memberships,
+  DB, API, dependency, OpenNext/Wrangler config or service boundary.
+
 ## Decision 271 - A-16R authenticated owner import gate smoke retry remains blocked by auth or permission context
 
 Date: 2026-07-04
