@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 273 - A-16R owner auth gate smoke bundle remains blocked by missing app-server owner auth context
+
+Date: 2026-07-06
+
+Status: Accepted
+
+Context:
+
+- The owner repaired local `.git/FETCH_HEAD` permissions and preflight returned
+  `main...origin/main`, ahead/behind `0 / 0`, with HEAD equal to
+  `origin/main` at `88ec34237543b67c255e61dde8f84d8a9728895f`.
+- The active toolset did not expose in-app browser control for direct owner
+  session inspection in this resumed turn.
+- Safe Node GET-only production smoke without cookies/auth headers reached the
+  import page but still showed unknown user, no visible role, visible
+  permission count `0` and login-required copy.
+- Safe Node GET-only official-import-gate returned guarded `401` with
+  `A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE`, `readOnly=true`,
+  `canOpenOfficialImport=false` and `officialImportEnabled=false`.
+
+Decision:
+
+- Keep `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Keep owner auth classification
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_OWNER_AUTH_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Keep `A16R_IMPORT_RETRY_NEXT=NO`.
+- A future phase must first prove an owner/admin app-server session and
+  `imports.create` permission through read-only UI/gate evidence. Even if ready,
+  it must record READY and stop before any import execution.
+
+Consequences:
+
+- No deploy, POST `/official-import`, direct RPC, real genealogy write, SQL,
+  DB push, migration repair, seed, permission/role/auth/user/membership
+  mutation, Windows-local deploy or `wrangler.toml` change is allowed from this
+  evidence.
+
 ## Decision 272 - A-16R owner/admin import permission blocker is auth session missing until owner login is proven
 
 Date: 2026-07-04

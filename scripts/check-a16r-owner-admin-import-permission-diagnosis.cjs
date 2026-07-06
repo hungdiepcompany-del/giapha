@@ -214,7 +214,9 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16R_OWNER_AUTH_GATE_SMOKE_AND_EVIDENCE_BUNDLE.md",
   packagePath,
+  "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

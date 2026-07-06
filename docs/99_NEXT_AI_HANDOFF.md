@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-06 - A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE - Read-Only Bundle Still Blocked
+
+- Marker: `A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE`.
+- Current status:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Owner auth classification:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_OWNER_AUTH_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Gate classification:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_GATE_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Preflight PASS after owner fixed `.git/FETCH_HEAD` permission: branch `main`,
+  remote slug `hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`, HEAD and
+  `origin/main` `88ec34237543b67c255e61dde8f84d8a9728895f`, working tree clean.
+- In-app browser control was unavailable in this resumed turn:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_BROWSER_TOOL_AVAILABLE=NO`.
+- Production GET-only evidence without cookies/auth headers:
+  `/admin/exports/import` returned `200` with unknown user, no visible role,
+  visible permission count `0` and login-required copy.
+- Official-import-gate GET returned guarded `401`, marker
+  `A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE`, `readOnly=true`,
+  `canOpenOfficialImport=false`, `officialImportEnabled=false`.
+- Owner/admin import permission proven:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_OWNER_ADMIN_IMPORT_PERMISSION_PROVEN=NO`.
+- Runtime/UI/source remain fail-closed:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_SOURCE_CAN_RUN_OFFICIAL_IMPORT=false` and
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_SOURCE_OFFICIAL_IMPORT_BUTTON=DISABLED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_NEXT_ALLOWED_ACTION=OWNER_LOGIN_TO_PRODUCTION_WITH_EXPECTED_OWNER_ADMIN_ACCOUNT_VERIFY_ADMIN_SHELL_EMAIL_ROLE_PERMISSION_COUNT_THEN_RERUN_READ_ONLY_GATE_UI_SMOKE_NO_POST`.
+- Do not call POST `/official-import`, direct RPC, SQL, DB push, migration
+  repair, seed, permission/role/auth/user/membership mutation, Windows-local
+  deploy or deploy from this handoff.
+- If a later read-only gate smoke proves READY, record READY and stop. Import
+  execution must be a separate explicit phase.
+- `wrangler.toml` was not changed.
+
 ## 2026-07-04 - A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS - Auth Session Missing Evidence
 
 - Marker: `A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS`.

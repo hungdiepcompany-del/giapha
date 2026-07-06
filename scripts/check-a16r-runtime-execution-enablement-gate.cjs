@@ -165,6 +165,7 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16R_OWNER_AUTH_GATE_SMOKE_AND_EVIDENCE_BUNDLE.md",
   "docs/PLAN_A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_REVIEW.md",
   "docs/PLAN_A16R_RUNTIME_EXECUTION_ENABLEMENT_PUSH_DEPLOY_SMOKE.md",
   "docs/PLAN_A16R_GIAPHA_CLOUDFLARE_ACCOUNT_RECOVERY.md",
@@ -176,6 +177,7 @@ const allowedChangedFiles = new Set([
   routePath,
   panelPath,
   packagePath,
+  "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
   "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",

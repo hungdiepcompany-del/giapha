@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-07-06 - A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE - Read-Only Bundle Still Blocked
+
+- Marker: `A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE`.
+- Status:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_STATUS=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Owner auth classification:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_OWNER_AUTH_CLASSIFICATION=AUTH_SESSION_COOKIE_MISSING`.
+- Gate classification:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_GATE_CLASSIFICATION=BLOCKED_AUTH_OR_PERMISSION_INSUFFICIENT`.
+- Preflight PASS after owner fixed `.git/FETCH_HEAD` permission: branch `main`,
+  remote slug `hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`, HEAD and
+  `origin/main` `88ec34237543b67c255e61dde8f84d8a9728895f`, working tree clean.
+- In-app browser control tool was not available in this turn, so owner browser
+  session inspection remains:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_BROWSER_OWNER_SESSION_INSPECTION=UNKNOWN_BROWSER_TOOL_UNAVAILABLE`.
+- Node GET-only production smoke without cookies/auth headers reached
+  `/admin/exports/import` with `200`, body length `19173`, visible user
+  unknown, visible role missing, visible permission count `0` and
+  login-required copy present.
+- Node GET-only official-import-gate returned guarded `401`, body length
+  `1282`, marker `A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE`, `readOnly=true`,
+  `canOpenOfficialImport=false` and `officialImportEnabled=false`.
+- Source remains fail-closed: official import UI disabled, gate closed, runtime
+  candidate `canRunOfficialImport: false`, blocker
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Owner/admin import permission proven:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_OWNER_ADMIN_IMPORT_PERMISSION_PROVEN=NO`.
+- DB/SQL role repair needed:
+  `A16R_OWNER_AUTH_GATE_SMOKE_BUNDLE_DB_SQL_ROLE_REPAIR_NEEDED=UNKNOWN_NOT_PROVEN`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no direct RPC,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed,
+  no permission/role/auth/user/membership mutation, no Windows-local deploy and
+  no `wrangler.toml` change.
+
 ## 2026-07-04 - A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS - Auth Session Missing Evidence
 
 - Marker: `A-16R-OWNER-ADMIN-IMPORT-PERMISSION-DIAGNOSIS`.
