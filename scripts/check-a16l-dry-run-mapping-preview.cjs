@@ -27,6 +27,8 @@ const allowedChangedFiles = new Set([
   checkerPath,
   "docs/PLAN_A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_RELATIONSHIP_AUDIT.md",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
+  "docs/PLAN_A16M_RELATIONSHIP_ROLE_MAPPING_ROOT_CAUSE_PLAN.md",
+  "scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
   servicePath,
   routePath,
   panelPath,

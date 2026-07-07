@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN - Full Relationship Audit Next
+
+- Marker: `A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN`.
+- Current status:
+  `A16M_RELATIONSHIP_ROLE_MAPPING_ROOT_CAUSE_STATUS=PLAN_ONLY_IMPORT_BLOCKED`.
+- Root-cause classification:
+  `A16M_ROOT_CAUSE_CLASSIFICATION=A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- Import safety classification:
+  `A16M_IMPORT_SAFETY_CLASSIFICATION=LIKELY_YES`.
+- Confirmed runtime-write risk:
+  `A16M_CONFIRMED_RUNTIME_WRITE_RISK=UNKNOWN`.
+- Audited session:
+  `A16M_AUDITED_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session:
+  `A16M_BAD_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Relationship mapping trace: `sourcePersonFingerprint` means parent and
+  `relatedPersonFingerprint` means child.
+- `relationshipLabelVi` is parse/staging derived, persisted as
+  `relationship_label_vi`, then passed through dry-run preview and UI.
+- Gender is parsed directly from Gia Phả 4 gender column; it is not inferred
+  from name or parent role.
+- A-16V SQL derives `family_parents.parent_role` from
+  `relationship_label_vi`, so suspicious `Bố/Mẹ` labels remain likely official
+  import write risk until proven otherwise.
+- Recommended next phase:
+  `A16M_RECOMMENDED_NEXT_PHASE=A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.
+- Official import remains locked: `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `officialImportEnabled=false`,
+  `canRunOfficialImport=false`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, write
+  real genealogy data, mutate people/relationships/tree layout/revisions, run
+  SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships,
+  deploy, run Windows-local deploy, change `wrangler.toml`, change
+  `app/layout.tsx`, use session `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or
+  mark A-16R retry YES.
+
 ## 2026-07-07 - A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT - Relationship Role Audit Required
 
 - Marker: `A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT`.

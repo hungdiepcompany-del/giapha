@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-07-07 - A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN - Plan-only Root Cause
+
+- Marker: `A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN`.
+- Status:
+  `A16M_RELATIONSHIP_ROLE_MAPPING_ROOT_CAUSE_STATUS=PLAN_ONLY_IMPORT_BLOCKED`.
+- Root-cause classification:
+  `A16M_ROOT_CAUSE_CLASSIFICATION=A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- Import safety classification:
+  `A16M_IMPORT_SAFETY_CLASSIFICATION=LIKELY_YES`.
+- Confirmed runtime-write risk:
+  `A16M_CONFIRMED_RUNTIME_WRITE_RISK=UNKNOWN`.
+- Relationship candidate trace: parser creates candidates in
+  `buildParentRelationshipCandidates`; `sourcePersonFingerprint` means parent
+  and `relatedPersonFingerprint` means child.
+- Label trace: `relationshipLabelVi` is created at parse time from the mapped
+  Gia Phả 4 parent column role, persisted as `relationship_label_vi`, then
+  passed through manifest read, dry-run preview and UI render.
+- Gender trace: gender is parsed directly from the Gia Phả 4 gender column by
+  `normalizeGiaPha4Gender`; it is not inferred from name or parent role.
+- Runtime risk trace: A-16V SQL currently derives
+  `family_parents.parent_role` from `relationship_label_vi`, so suspicious
+  `Bố/Mẹ` labels are likely write-risk evidence, not label-only UI copy.
+- Recommended next phase:
+  `A16M_RECOMMENDED_NEXT_PHASE=A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.
+- Official import remains locked: `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `canRunOfficialImport=false`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no parser/import/runtime behavior change, no deploy,
+  no Windows-local deploy, no POST `/official-import`, no direct RPC, no real
+  genealogy write, no SQL, no DB push, no migration repair, no seed, no
+  permission/role/auth/user/membership mutation, no `wrangler.toml` change and
+  no `app/layout.tsx` change.
+
 ## 2026-07-07 - A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT - Relationship Role Audit Blocker
 
 - Marker: `A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT`.

@@ -196,6 +196,7 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_RELATIONSHIP_AUDIT.md",
+  "docs/PLAN_A16M_RELATIONSHIP_ROLE_MAPPING_ROOT_CAUSE_PLAN.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
@@ -206,6 +207,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
+  "scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
   "scripts/check-a16t-apply-verify.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
 ]);

@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 280 - A-16M keeps official import blocked until relationship role root cause is proven
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- A-16L found suspicious `Bố/Mẹ` relationship labels in dry-run preview for
+  audited session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Source inspection shows parser/staging creates and persists
+  `relationship_label_vi`; dry-run preview and UI only pass it through.
+- The A-16V SQL candidate derives `family_parents.parent_role` from
+  `relationship_label_vi`.
+
+Decision:
+
+- Classify root cause as:
+  `A16M_ROOT_CAUSE_CLASSIFICATION=A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- Treat official import safety as:
+  `A16M_IMPORT_SAFETY_CLASSIFICATION=LIKELY_YES`.
+- Keep confirmed runtime-write risk as `UNKNOWN` until a full row-level export
+  proves affected rows and exact cause.
+- Keep official import locked with `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `officialImportEnabled=false` and
+  `canRunOfficialImport=false`.
+- Recommend next phase:
+  `A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.
+
+Consequences:
+
+- Do not fix parser, SQL or runtime behavior in this plan-only phase.
+- Do not run POST `/official-import`, direct RPC, deploy, SQL, DB push,
+  migration repair, seed, auth/role/user mutation or real genealogy writes.
+- A-16R import retry remains `NO`.
+
 ## Decision 279 - A-16L dry-run relationship preview requires owner role audit before official import
 
 Date: 2026-07-07
