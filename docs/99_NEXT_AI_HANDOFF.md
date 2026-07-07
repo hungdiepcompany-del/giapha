@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION - UI Copy Reconciled With Runtime Gate
+
+- Marker: `A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION`.
+- Current status:
+  `A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION_STATUS=PASS_DOCS_CHECKER_ONLY`.
+- Classification:
+  `A16R_PRODUCTION_UI_GATE_STATE_CLASSIFICATION=UI_COPY_STALE_BUT_RUNTIME_GATE_CORRECT`.
+- A-16K marker:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- A-16R session marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- A-16R runtime enablement marker:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Reconciliation result: A-16K remains required by current dry-run gate/preview
+  source, but there is no source evidence it is the official import runtime
+  blocker.
+- Official import source remains fail-closed: source
+  `canRunOfficialImport=false`, source official import button disabled and
+  blocker `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Production `canRunOfficialImport` remains
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED` until an authenticated owner/admin
+  read-only context is proven.
+- Remaining blocker:
+  `A16R_PRODUCTION_UI_GATE_STATE_REMAINING_BLOCKER=OFFICIAL_IMPORT_RUNTIME_SOURCE_FAIL_CLOSED_AND_AUTHENTICATED_OWNER_ADMIN_CONTEXT_NOT_PROVEN`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_PRODUCTION_UI_GATE_STATE_NEXT_ALLOWED_ACTION=CREATE_SEPARATE_UI_COPY_REFRESH_PHASE_OR_RERUN_AUTHENTICATED_READ_ONLY_GATE_SMOKE_NO_POST_DO_NOT_IMPORT`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, deploy,
+  run SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships
+  or change `wrangler.toml` from this handoff.
+
 ## 2026-07-06 - A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE - Read-Only Bundle Still Blocked
 
 - Marker: `A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE`.

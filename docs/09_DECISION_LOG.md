@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 274 - A-16R production UI gate state treats A-16K as dry-run UI copy, not the official import runtime blocker
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- Production/operator UI evidence can still surface the A-16K dry-run gate copy
+  requiring `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Later A-16R/A-16T/A-16U/A-16V evidence says dry-run/runtime readiness
+  progressed, but official import execution still remains closed.
+- Source inspection shows the A-16K marker belongs to dry-run gate/preview
+  source, while official import execution uses A-16R session/runtime markers
+  and remains fail-closed.
+
+Decision:
+
+- Classify the reconciliation as:
+  `A16R_PRODUCTION_UI_GATE_STATE_CLASSIFICATION=UI_COPY_STALE_BUT_RUNTIME_GATE_CORRECT`.
+- Treat `APPROVE_A16K_IMPORT_DRY_RUN_GATE` as still required by current dry-run
+  source, but not proven as required before official import runtime execution.
+- Keep source `canRunOfficialImport=false`, source official import button
+  disabled and `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- A later phase may refresh UI copy to separate dry-run history from official
+  import runtime blockers, or rerun authenticated read-only gate smoke.
+- This decision does not authorize POST `/official-import`, direct RPC, deploy,
+  SQL, DB push, migration repair, seed, real genealogy writes, auth/role/user
+  mutation or `wrangler.toml` changes.
+
 ## Decision 273 - A-16R owner auth gate smoke bundle remains blocked by missing app-server owner auth context
 
 Date: 2026-07-06

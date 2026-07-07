@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-07-07 - A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION - UI Copy Reconciled With Runtime Gate
+
+- Marker: `A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION`.
+- Status:
+  `A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION_STATUS=PASS_DOCS_CHECKER_ONLY`.
+- Classification:
+  `A16R_PRODUCTION_UI_GATE_STATE_CLASSIFICATION=UI_COPY_STALE_BUT_RUNTIME_GATE_CORRECT`.
+- Preflight PASS: branch `main`, remote slug
+  `hungdiepcompany-del/giapha.git`, ahead/behind `0 / 0`, HEAD
+  `e88ef9cc288ee4718ba1b0ce4e765f7a1535fd7f`, working tree clean.
+- Source reconciliation: `APPROVE_A16K_IMPORT_DRY_RUN_GATE` is still required
+  by current dry-run gate/preview source, but there is no source evidence it is
+  the official import runtime blocker.
+- Official import source remains separate and fail-closed with session marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`,
+  runtime marker `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`,
+  `canRunOfficialImport=false`, source official import button disabled and
+  blocker `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Production `canRunOfficialImport` remains
+  `UNKNOWN_AUTH_OR_PERMISSION_BLOCKED`; source `canRunOfficialImport` is
+  `false`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_PRODUCTION_UI_GATE_STATE_NEXT_ALLOWED_ACTION=CREATE_SEPARATE_UI_COPY_REFRESH_PHASE_OR_RERUN_AUTHENTICATED_READ_ONLY_GATE_SMOKE_NO_POST_DO_NOT_IMPORT`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no confirm
+  click, no direct RPC, no real genealogy write, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation
+  and no `wrangler.toml` change.
+
 ## 2026-07-06 - A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE - Read-Only Bundle Still Blocked
 
 - Marker: `A-16R-OWNER-AUTH-GATE-SMOKE-AND-EVIDENCE-BUNDLE`.
