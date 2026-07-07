@@ -173,6 +173,10 @@ const allowedChangedFiles = new Set([
   checkerPath,
   "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "docs/PLAN_A16K_OWNER_DRY_RUN_GATE_APPROVAL_AFTER_A16R_FIX.md",
+  "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
+  "lib/import/giapha4/import-dry-run-approval-gate.ts",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
   panelPath,
   officialServicePath,
   packagePath,
@@ -206,9 +210,12 @@ for (const file of changedFiles) {
     file === "open-next.config.ts" ||
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
-    file.startsWith("app/") ||
+    (file.startsWith("app/") &&
+      file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts") ||
     (file.startsWith("components/") && file !== panelPath) ||
-    (file.startsWith("lib/") && file !== officialServicePath)
+    (file.startsWith("lib/") &&
+      file !== officialServicePath &&
+      file !== "lib/import/giapha4/import-dry-run-approval-gate.ts")
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
   }

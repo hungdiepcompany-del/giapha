@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 278 - A-16K owner approval opens dry-run gate only for the audited A-16R session
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- Owner provided the A-16K dry-run approval marker:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- The A-16R session-selection fix binds official import markers to audited
+  session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- The previously observed UI session
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565` remains unverified and must not be
+  used for dry-run or official import approval.
+
+Decision:
+
+- Open the A-16K dry-run gate only when the requested session id equals
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Keep all other sessions locked, including
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Treat validation warnings as owner-review warnings rather than hard blockers
+  unless existing validation logic already marks them as errors.
+- Keep official import fail-closed: `officialImportOpen=false`,
+  `canOpenOfficialImport=false`, `officialImportEnabled=false` and
+  `canRunOfficialImport=false`.
+
+Consequences:
+
+- A-16K approval opens only read-only dry-run mapping for the audited session.
+- A-16K approval does not authorize POST `/official-import`, direct RPC,
+  real genealogy writes, SQL, DB push, migration repair, seed, auth/role/user
+  mutation, deploy or `wrangler.toml` changes.
+- Local hydration warning with `crxlauncher=""` remains classified as likely
+  browser extension injection; do not modify `app/layout.tsx` unless it
+  reproduces in a clean browser profile without extensions.
+
 ## Decision 277 - A-16R official import marker is bound to the audited session, not the current UI session
 
 Date: 2026-07-07

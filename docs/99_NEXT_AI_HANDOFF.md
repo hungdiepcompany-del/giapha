@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX - Audited Dry-run Gate Open
+
+- Marker: `A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX`.
+- Current status:
+  `A16K_OWNER_DRY_RUN_GATE_APPROVAL_AFTER_A16R_FIX_STATUS=PASS_AUDITED_SESSION_DRY_RUN_GATE_OPEN_READ_ONLY`.
+- Classification:
+  `A16K_OWNER_DRY_RUN_GATE_APPROVAL_AFTER_A16R_FIX_CLASSIFICATION=OWNER_APPROVED_DRY_RUN_GATE_AUDITED_SESSION_ONLY`.
+- Owner approval marker recorded:
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`.
+- Audited dry-run session:
+  `A16K_AUDITED_DRY_RUN_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session remains blocked:
+  `A16K_BLOCKED_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- A-16K dry-run gate can open for the audited session:
+  `A16K_DRY_RUN_GATE_CAN_OPEN_FOR_AUDITED_SESSION=YES`.
+- A-16K dry-run gate blocks all other sessions:
+  `A16K_DRY_RUN_GATE_BLOCKS_OTHER_SESSIONS=YES`.
+- Official import remains locked: `officialImportOpen=false`,
+  `canOpenOfficialImport=false`, `officialImportEnabled=false`,
+  `canRunOfficialImport=false`, and the official import button remains
+  disabled.
+- Dry-run remains non-writing: `dbWrite=false`, `peopleWrite=false`,
+  `relationshipWrite=false`, `treeLayoutWrite=false` and
+  `revisionWrite=false`.
+- Hydration advisory:
+  `LOCAL_HYDRATION_ADVISORY_LIKELY_BROWSER_EXTENSION_INJECTION`.
+- `app/layout.tsx` was not changed and no `crxlauncher` attribute was added.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16K_AFTER_A16R_FIX_NEXT_ALLOWED_ACTION=OWNER_AUTHENTICATED_READ_ONLY_DRY_RUN_PREVIEW_SMOKE_FOR_AUDITED_SESSION_NO_POST_NO_IMPORT`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, deploy,
+  run SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships,
+  run Windows-local deploy, change `wrangler.toml`, use session
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or mark A-16R retry YES.
+
 ## 2026-07-07 - A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH - Audited Session Marker Binding
 
 - Marker: `A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH`.

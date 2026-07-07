@@ -32,6 +32,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "docs/PLAN_A16K_OWNER_DRY_RUN_GATE_APPROVAL_AFTER_A16R_FIX.md",
+  "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
   gateServicePath,
   gateRoutePath,
   panelPath,

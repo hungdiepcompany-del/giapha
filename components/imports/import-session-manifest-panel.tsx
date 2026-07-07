@@ -90,7 +90,8 @@ export function ImportSessionManifestPanel({
     (issue) => issue.severity === "warning",
   );
   const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
-  const dryRunGate = getImportDryRunApprovalGate();
+  const currentSessionId = session?.id ?? null;
+  const dryRunGate = getImportDryRunApprovalGate(currentSessionId);
   const dryRunPreview = buildDryRunMappingPreview(result);
   const reviewPack = buildImportReviewPackFromManifest(result);
   const officialImportGate = buildOfficialImportPreflightGateFromManifest(result);
@@ -104,7 +105,6 @@ export function ImportSessionManifestPanel({
         )
         .join("|")}`
     : "duplicate-review-empty";
-  const currentSessionId = session?.id ?? null;
   const officialImportSessionMismatch =
     currentSessionId !== null &&
     currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
@@ -258,14 +258,35 @@ export function ImportSessionManifestPanel({
               <p className="text-sm font-semibold text-rose-900">
                 Marker dry-run A-16K: {dryRunGate.dryRunGate.requiredMarker}
               </p>
+              <p className="text-sm font-semibold text-rose-900">
+                Trạng thái dry-run A-16K: {dryRunGate.dryRunGate.status}. Phiên
+                đã kiểm toán: {dryRunGate.dryRunGate.auditedSessionId}.
+              </p>
+              {dryRunGate.dryRunGate.canRunDryRun ? (
+                <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm font-semibold text-emerald-900">
+                  Dry-run read-only đã mở cho phiên đã kiểm toán. Không mở nhập
+                  chính thức và không ghi dữ liệu gia phả thật.
+                </div>
+              ) : (
+                <div className="rounded-md border border-amber-200 bg-white p-3 text-sm font-semibold text-amber-900">
+                  Dry-run vẫn khóa cho phiên đang xem. Chỉ phiên đã kiểm toán
+                  mới được mở dry-run read-only.
+                </div>
+              )}
             </div>
             <button
               type="button"
-              disabled
-              aria-disabled="true"
-              className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
+              disabled={!dryRunGate.dryRunGate.canRunDryRun}
+              aria-disabled={!dryRunGate.dryRunGate.canRunDryRun}
+              className={
+                dryRunGate.dryRunGate.canRunDryRun
+                  ? "inline-flex min-h-11 items-center justify-center rounded-md border border-emerald-200 bg-white px-5 py-3 text-sm font-semibold text-emerald-900 sm:w-fit"
+                  : "inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
+              }
             >
-              Chạy dry-run - cần phê duyệt A-16K
+              {dryRunGate.dryRunGate.canRunDryRun
+                ? "Dry-run read-only đã được phê duyệt"
+                : "Chạy dry-run - cần phê duyệt A-16K"}
             </button>
           </section>
 
