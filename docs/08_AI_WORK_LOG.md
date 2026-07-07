@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-07 - A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH - Marker Bound To Audited Session
+
+- Marker: `A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH`.
+- Status:
+  `A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH_STATUS=PASS_MARKER_BOUND_TO_AUDITED_SESSION_FAIL_CLOSED`.
+- Classification:
+  `A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH_CLASSIFICATION=SESSION_ID_UI_SELECTION_MISMATCH`.
+- Audited official import session:
+  `A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Unverified UI session that must not be used for official import:
+  `A16R_UNVERIFIED_UI_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Source fix: `ImportSessionManifestPanel` now renders the A-16R official
+  import marker from `A16R_AUDITED_OFFICIAL_IMPORT_MARKER`, not from current
+  `session.id`.
+- Runtime constants now keep `A16U_REQUIRED_SESSION_ID` and
+  `A16U_REQUIRED_A16R_RETRY_MARKER` aliased to the audited A-16R session and
+  marker.
+- UI mismatch warning is present when the visible session differs from the
+  audited session, and it shows both the current session id and audited session
+  id.
+- Official import button remains disabled, `canRunOfficialImport=false`, and
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no confirm
+  click, no direct RPC, no real genealogy write, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation,
+  no Windows-local deploy and no `wrangler.toml` change.
+
 ## 2026-07-07 - A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION - Session Mismatch Remains Unknown
 
 - Marker: `A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION`.

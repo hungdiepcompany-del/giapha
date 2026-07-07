@@ -1,5 +1,30 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH - Audited Session Marker Binding
+
+- Marker: `A-16R-FIX-OFFICIAL-IMPORT-SESSION-SELECTION-MISMATCH`.
+- Current status:
+  `A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH_STATUS=PASS_MARKER_BOUND_TO_AUDITED_SESSION_FAIL_CLOSED`.
+- Classification:
+  `A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH_CLASSIFICATION=SESSION_ID_UI_SELECTION_MISMATCH`.
+- Audited official import session:
+  `A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Do not use this unverified UI session for official import:
+  `A16R_UNVERIFIED_UI_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- UI marker generation now uses `A16R_AUDITED_OFFICIAL_IMPORT_MARKER`, not
+  current/latest `session.id`.
+- `A16U_REQUIRED_SESSION_ID` aliases the audited session id, and
+  `A16U_REQUIRED_A16R_RETRY_MARKER` aliases the audited marker.
+- If the visible session does not match the audited session, the UI shows a
+  mismatch warning and lists both ids.
+- Official import remains locked: button disabled,
+  `canRunOfficialImport=false`, and `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_FIX_SESSION_SELECTION_NEXT_ALLOWED_ACTION=DEPLOY_VIA_MANUAL_GITHUB_ACTIONS_LINUX_THEN_OWNER_AUTHENTICATED_READ_ONLY_UI_SMOKE_NO_POST_NO_IMPORT`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, deploy,
+  run SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships,
+  run Windows-local deploy, change `wrangler.toml`, or mark A-16R retry YES.
+
 ## 2026-07-07 - A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION - Session Mismatch Remains Unknown
 
 - Marker: `A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION`.

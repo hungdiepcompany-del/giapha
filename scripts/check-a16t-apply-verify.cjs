@@ -240,6 +240,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

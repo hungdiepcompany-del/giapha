@@ -118,7 +118,9 @@ for (const token of [
   "A-16K dry-run",
   "không thay thế cho cổng thực thi A-16R.",
   "officialImportSessionMarker",
-  "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
+  "A16R_AUDITED_OFFICIAL_IMPORT_MARKER",
+  "A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID",
+  "officialImportSessionMismatch",
   "Marker chạy thật cho đúng phiên A-16R:",
   "Marker bật runtime execution sau A-16V, tách riêng với marker",
   "A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER",
@@ -137,6 +139,8 @@ for (const [content, token, label] of [
   [officialGate, "canOpenOfficialImport: false", "A-16R gate canOpen false"],
   [officialGate, "officialImportEnabled: false", "A-16R gate enabled false"],
   [officialService, "canRunOfficialImport: false", "official service canRun false"],
+  [officialService, "A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "official service audited marker"],
+  [officialService, "A16U_REQUIRED_A16R_RETRY_MARKER =\n  A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "official service audited marker alias"],
   [officialService, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "runtime blocker"],
   [officialRoute, "export async function POST", "POST route exists but not called"],
   [officialRoute, "canRunOfficialImport: false", "route canRun false"],
@@ -197,7 +201,10 @@ const allowedChangedFiles = new Set([
   checkerPath,
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   panelPath,
+  officialServicePath,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -229,7 +236,7 @@ for (const file of changedFiles) {
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
     file.startsWith("app/") ||
-    file.startsWith("lib/")
+    (file.startsWith("lib/") && file !== officialServicePath)
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
   }

@@ -208,7 +208,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   panelPath,
+  officialImportServicePath,
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",
   "docs/PLAN_A16R_OWNER_AUTH_GATE_SMOKE_AND_EVIDENCE_BUNDLE.md",
   packagePath,
@@ -267,7 +270,7 @@ for (const file of changedFiles) {
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
     file.startsWith("app/") ||
-    file.startsWith("lib/") ||
+    (file.startsWith("lib/") && file !== officialImportServicePath) ||
     (file.startsWith("components/") && file !== panelPath)
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);

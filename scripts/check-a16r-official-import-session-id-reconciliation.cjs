@@ -112,9 +112,10 @@ for (const token of [
 }
 
 for (const [content, token, label] of [
-  [panel, "const officialImportSessionMarker = session", "panel dynamic session marker"],
-  [panel, "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${session.id}", "panel marker from session id"],
-  [panel, "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68", "panel fallback marker"],
+  [panel, "A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID", "panel audited session const"],
+  [panel, "A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "panel audited marker const"],
+  [panel, "const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "panel audited marker binding"],
+  [panel, "officialImportSessionMismatch", "panel mismatch warning flag"],
   [page, "listImportSessions()", "page lists sessions"],
   [page, "getImportManifest(importSessionsResult.sessions[0].id)", "page selects first session"],
   [manifestRead, ".from(\"import_sessions\")", "manifest reads import_sessions"],
@@ -122,6 +123,9 @@ for (const [content, token, label] of [
   [manifestRead, ".limit(20)", "manifest list limit"],
   [manifestRead, ".eq(\"id\", sessionId)", "manifest session lookup by id"],
   [officialService, "A16U_REQUIRED_SESSION_ID", "official service required session const"],
+  [officialService, "A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID", "official service audited session const"],
+  [officialService, "A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "official service audited marker const"],
+  [officialService, "A16U_REQUIRED_A16R_RETRY_MARKER =\n  A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "official service audited marker alias"],
   [officialService, "2af4bfb6-a20e-453e-9804-1b8c0afbdd68", "official service hardcoded prior session"],
   [officialService, "canRunOfficialImport: false", "official service fail closed"],
   [officialRoute, "export async function POST", "official POST route exists but not called"],
@@ -167,6 +171,10 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  panelPath,
+  officialServicePath,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -199,8 +207,8 @@ for (const file of changedFiles) {
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
     file.startsWith("app/") ||
-    file.startsWith("components/") ||
-    file.startsWith("lib/")
+    (file.startsWith("components/") && file !== panelPath) ||
+    (file.startsWith("lib/") && file !== officialServicePath)
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
   }

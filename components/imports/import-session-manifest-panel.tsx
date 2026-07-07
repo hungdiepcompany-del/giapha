@@ -3,7 +3,11 @@ import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-de
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
-import { A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER } from "@/lib/import/giapha4/official-import-service";
+import {
+  A16R_AUDITED_OFFICIAL_IMPORT_MARKER,
+  A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+  A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
+} from "@/lib/import/giapha4/official-import-service";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -100,9 +104,11 @@ export function ImportSessionManifestPanel({
         )
         .join("|")}`
     : "duplicate-review-empty";
-  const officialImportSessionMarker = session
-    ? `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${session.id}`
-    : "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
+  const currentSessionId = session?.id ?? null;
+  const officialImportSessionMismatch =
+    currentSessionId !== null &&
+    currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -448,6 +454,22 @@ export function ImportSessionManifestPanel({
                 Marker chạy thật cho đúng phiên A-16R:{" "}
                 {officialImportSessionMarker}
               </p>
+              {officialImportSessionMismatch ? (
+                <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
+                  <div className="font-semibold">
+                    Phiên đang xem không khớp phiên nhập chính thức đã được kiểm toán.
+                  </div>
+                  <div>Phiên đang xem: {currentSessionId}</div>
+                  <div>
+                    Phiên nhập chính thức đã kiểm toán:{" "}
+                    {A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}
+                  </div>
+                  <div>
+                    Không dùng phiên đang xem làm marker nhập chính thức. Nhập
+                    chính thức vẫn khóa cho đến phase thực thi riêng.
+                  </div>
+                </div>
+              ) : null}
               <p className="text-sm font-semibold text-rose-900">
                 Marker bật runtime execution sau A-16V, tách riêng với marker
                 phiên:{" "}

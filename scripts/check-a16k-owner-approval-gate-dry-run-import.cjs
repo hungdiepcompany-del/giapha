@@ -11,6 +11,7 @@ const gateServicePath = "lib/import/giapha4/import-dry-run-approval-gate.ts";
 const gateRoutePath =
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const officialServicePath = "lib/import/giapha4/official-import-service.ts";
 const a16sqlAllowedSqlFiles = new Set([
   "db/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
   "supabase/migrations/20260630_0011_a16sql_import_staging_write_rls.sql",
@@ -29,9 +30,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   gateServicePath,
   gateRoutePath,
   panelPath,
+  officialServicePath,
   "docs/PLAN_A16L_DRY_RUN_MAPPING_PREVIEW.md",
   "lib/import/giapha4/dry-run-mapping-preview-service.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",

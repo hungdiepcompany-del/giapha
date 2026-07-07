@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 277 - A-16R official import marker is bound to the audited session, not the current UI session
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- The previous reconciliation found the production UI could display marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_ae7a5fe3-6a29-4f60-85f7-76108ed02565`
+  because the admin import page selects a visible/current session.
+- The only audited runtime-bound official import session for this A-16R chain is
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Official import execution remains fail-closed and is not authorized in this
+  phase.
+
+Decision:
+
+- Classify the issue as:
+  `A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH_CLASSIFICATION=SESSION_ID_UI_SELECTION_MISMATCH`.
+- Bind the UI official import marker to
+  `A16R_AUDITED_OFFICIAL_IMPORT_MARKER`, derived from
+  `A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Do not use `ae7a5fe3-6a29-4f60-85f7-76108ed02565` as an official import
+  session.
+- Keep `canRunOfficialImport=false`, keep the button disabled and keep
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- The current/latest visible UI session can still be displayed as session
+  context, but it cannot generate the official import marker.
+- When the visible session differs from the audited session, the UI shows a
+  mismatch warning with both ids.
+- This decision does not authorize deploy, POST `/official-import`, direct RPC,
+  real genealogy writes, SQL, DB push, migration repair, seed, auth/role/user
+  mutation, Windows-local deploy or `wrangler.toml` changes.
+
 ## Decision 276 - A-16R official import session id remains unknown until both sessions are read-only verified
 
 Date: 2026-07-07

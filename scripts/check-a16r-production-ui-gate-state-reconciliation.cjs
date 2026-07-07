@@ -133,7 +133,9 @@ for (const [content, token, label] of [
   [officialGate, "officialImportEnabled: false", "official gate enabled false"],
   [officialService, "A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER", "runtime marker const"],
   [officialService, "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY", "runtime marker value"],
-  [officialService, "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68", "session marker value"],
+  [officialService, "A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID", "audited session const"],
+  [officialService, "A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "audited session marker const"],
+  [officialService, "A16U_REQUIRED_A16R_RETRY_MARKER =\n  A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "audited session marker alias"],
   [officialService, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "runtime blocker"],
   [officialService, "canRunOfficialImport: false", "runtime canRun false"],
   [officialService, "confirmRuntimeExecutionEnablementMarker", "runtime confirmation field"],
@@ -194,7 +196,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
+  "docs/PLAN_A16R_FIX_OFFICIAL_IMPORT_SESSION_SELECTION_MISMATCH.md",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   panelPath,
+  officialServicePath,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -227,7 +232,7 @@ for (const file of changedFiles) {
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
     file.startsWith("app/") ||
-    file.startsWith("lib/") ||
+    (file.startsWith("lib/") && file !== officialServicePath) ||
     (file.startsWith("components/") && file !== panelPath)
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
