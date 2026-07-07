@@ -228,6 +228,8 @@
     "check:a16l-dry-run-mapping-preview": "node scripts/check-a16l-dry-run-mapping-preview.cjs",
     "check:a16l-dry-run-preview-owner-review-relationship-audit": "node scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
     "check:a16m-relationship-role-mapping-root-cause-plan": "node scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
+    "audit:a16n-full-dry-run-relationships": "node scripts/audit-a16n-full-dry-run-relationships.cjs",
+    "check:a16n-full-dry-run-relationship-audit-evidence": "node scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
     "check:a16sql-rls-import-staging-write": "node scripts/check-a16sql-rls-import-staging-write.cjs",
     "check:a16i3-giapha4-xlsx-column-mapping": "node scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
     "check:a16i4-real-giapha4-staging-upload-run": "node scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",

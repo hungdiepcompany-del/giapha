@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 281 - A-16N prepares offline full relationship audit evidence before any import fix
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- A-16M left root cause as
+  `A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- A-16L/A-16M evidence shows official import should remain blocked until all
+  `134` proposed dry-run relationships can be audited with owner-visible JSON.
+- No owner-exported full dry-run preview JSON is present in the repo.
+
+Decision:
+
+- Classify the phase as:
+  `A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_STATUS=A16N_EVIDENCE_TOOLING_READY_OWNER_JSON_NEEDED`.
+- Add only offline/read-only tooling and evidence docs for the audited session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Require the full relationship audit before choosing an A-16O path:
+  `A-16O-FIX-RELATIONSHIP-ROLE-MAPPING`,
+  `A-16O-OWNER-ACCEPTS-SOURCE-RELATIONSHIP-ROLES_AFTER_FULL_AUDIT`, or
+  `A-16O-LABEL-ONLY-PREVIEW-CORRECTION`.
+- Keep official import locked and keep A-16R import retry as `NO`.
+
+Consequences:
+
+- Do not change parser/import/runtime behavior in A-16N.
+- Do not run POST `/official-import`, direct RPC, deploy, SQL, DB push,
+  migration repair, seed, auth/role/user mutation or real genealogy writes.
+
 ## Decision 280 - A-16M keeps official import blocked until relationship role root cause is proven
 
 Date: 2026-07-07

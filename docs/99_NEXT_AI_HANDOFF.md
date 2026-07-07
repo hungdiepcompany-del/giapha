@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE - Owner JSON Needed
+
+- Marker: `A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.
+- Current status:
+  `A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_STATUS=A16N_EVIDENCE_TOOLING_READY_OWNER_JSON_NEEDED`.
+- Root-cause baseline:
+  `A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- Import safety classification remains `LIKELY_YES`; confirmed runtime write
+  risk remains `UNKNOWN`.
+- Audited session:
+  `A16N_AUDITED_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session:
+  `A16N_BAD_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Expected counts: `proposedPeopleCount=102`,
+  `proposedRelationshipCount=134`, `blockedByErrorCount=0`,
+  `warningCount=92`.
+- Full owner JSON availability:
+  `A16N_FULL_OWNER_JSON_AVAILABLE=NO`.
+- Evidence files prepared:
+  `docs/PLAN_A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE.md`,
+  `docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md`,
+  `scripts/audit-a16n-full-dry-run-relationships.cjs`, and
+  `scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs`.
+- Owner next safe step is to export the authenticated GET dry-run preview JSON
+  for audited session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`, then run
+  `npm run audit:a16n-full-dry-run-relationships -- .tmp\a16n-dry-run-preview.json --markdown .tmp\a16n-full-relationship-audit-report.md`.
+- Official import remains locked:
+  `A16N_NO_GO_RULE=OFFICIAL_IMPORT_REMAINS_BLOCKED_UNTIL_FULL_AUDIT_PROVES_NO_PARENT_ROLE_WRITE_RISK_OR_FIX_PHASE_RERUNS_DRY_RUN`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, write
+  real genealogy data, mutate people/relationships/tree layout/revisions, run
+  SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships,
+  deploy, run Windows-local deploy, change `wrangler.toml`, change
+  `app/layout.tsx`, use session `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or
+  mark A-16R retry YES.
+
 ## 2026-07-07 - A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN - Full Relationship Audit Next
 
 - Marker: `A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN`.

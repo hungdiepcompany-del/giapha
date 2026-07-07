@@ -1,5 +1,44 @@
 # AI Work Log
 
+## 2026-07-07 - A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE - Offline Audit Tooling Ready
+
+- Marker: `A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.
+- Status:
+  `A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_STATUS=A16N_EVIDENCE_TOOLING_READY_OWNER_JSON_NEEDED`.
+- A-16M root cause remains:
+  `A16M_ROOT_CAUSE_UNKNOWN_NEEDS_FULL_EXPORT_EVIDENCE`.
+- Current import safety classification remains `LIKELY_YES`; confirmed
+  runtime write risk remains `UNKNOWN` until owner JSON is audited.
+- Audited session:
+  `A16N_AUDITED_IMPORT_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session remains blocked:
+  `A16N_BAD_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Expected dry-run counts: `proposedPeopleCount=102`,
+  `proposedRelationshipCount=134`, `blockedByErrorCount=0`,
+  `warningCount=92`.
+- Full owner JSON availability:
+  `A16N_FULL_OWNER_JSON_AVAILABLE=NO`.
+- Added offline/read-only script
+  `scripts/audit-a16n-full-dry-run-relationships.cjs`, evidence template
+  `docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md`,
+  checker `scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs`
+  and package commands `audit:a16n-full-dry-run-relationships` plus
+  `check:a16n-full-dry-run-relationship-audit-evidence`.
+- The audit remains local-file only and classifies rows as
+  `REVIEW_ROLE_GENDER_MISMATCH`, `REVIEW_MISSING_PERSON_LOOKUP`,
+  `REVIEW_AMBIGUOUS_RELATIONSHIP`, `REVIEW_WEAK_CONFIDENCE` or
+  `REVIEW_DIRECTION_SUSPECTED` for owner review.
+- Official import remains locked until the full audit proves no parent-role
+  write risk or a later A-16O fix reruns dry-run:
+  `A16N_NO_GO_RULE=OFFICIAL_IMPORT_REMAINS_BLOCKED_UNTIL_FULL_AUDIT_PROVES_NO_PARENT_ROLE_WRITE_RISK_OR_FIX_PHASE_RERUNS_DRY_RUN`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no parser/import/runtime behavior change, no deploy,
+  no Windows-local deploy, no POST `/official-import`, no direct RPC, no real
+  genealogy write, no SQL, no DB push, no migration repair, no seed, no
+  permission/role/auth/user/membership mutation, no `wrangler.toml` change and
+  no `app/layout.tsx` change.
+
 ## 2026-07-07 - A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN - Plan-only Root Cause
 
 - Marker: `A-16M-RELATIONSHIP-ROLE-MAPPING-ROOT-CAUSE-PLAN`.
