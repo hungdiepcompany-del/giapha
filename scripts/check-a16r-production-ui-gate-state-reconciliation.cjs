@@ -192,6 +192,8 @@ const allowedChangedFiles = new Set([
   checkerPath,
   "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
+  "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
+  "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   panelPath,
   packagePath,
   "docs/00_INDEX.md",

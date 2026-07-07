@@ -201,6 +201,8 @@ const allowedChangedFiles = new Set([
   docPath,
   "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
+  "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
+  "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   panelPath,
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",
   packagePath,

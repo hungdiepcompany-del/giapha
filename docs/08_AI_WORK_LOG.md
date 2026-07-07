@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-07 - A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION - Session Mismatch Remains Unknown
+
+- Marker: `A-16R-OFFICIAL-IMPORT-SESSION-ID-RECONCILIATION`.
+- Status:
+  `A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION_STATUS=RECONCILED_READ_ONLY_NO_IMPORT`.
+- Classification:
+  `A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION_CLASSIFICATION=UNKNOWN_NEEDS_READ_ONLY_SESSION_EVIDENCE`.
+- Authoritative session:
+  `A16R_OFFICIAL_IMPORT_SESSION_ID_AUTHORITATIVE=UNKNOWN`.
+- Observed production UI marker from owner evidence:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Previously tracked A-16R session marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Source finding: the UI marker is rendered from `session.id`; the import page
+  selects `listImportSessions().sessions[0]`, and `listImportSessions()` orders
+  sessions by `created_at desc`.
+- Session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` remains the only session with
+  prior complete counts/readiness evidence: people `102`, relationships `134`,
+  validation errors `0`, dry-run blockers `0`, duplicate unresolved `0`,
+  needs_review `0`, create_new `8`.
+- Session `ae7a5fe3-6a29-4f60-85f7-76108ed02565` has observed UI marker
+  evidence only; counts, source identity, readiness, rollback/audit evidence,
+  already-imported state and eligibility remain `UNKNOWN`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_SESSION_ID_RECONCILIATION_NEXT_ALLOWED_ACTION=OWNER_AUTHENTICATED_READ_ONLY_SESSION_DETAIL_SMOKE_FOR_BOTH_SESSION_IDS_NO_POST_NO_IMPORT`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no confirm
+  click, no direct RPC, no real genealogy write, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation,
+  no direct production DB query and no `wrangler.toml` change.
+
 ## 2026-07-07 - A-16R-UI-COPY-REFRESH-OFFICIAL-IMPORT-GATE - Official Import Gate Copy Clarified
 
 - Marker: `A-16R-UI-COPY-REFRESH-OFFICIAL-IMPORT-GATE`.

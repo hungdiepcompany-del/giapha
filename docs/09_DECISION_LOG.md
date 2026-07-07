@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 276 - A-16R official import session id remains unknown until both sessions are read-only verified
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- Owner observed production UI marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Prior A-16R/A-16T/A-16U/A-16V evidence consistently tracked session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Source inspection shows `/admin/exports/import` selects the newest visible
+  import session by `created_at desc`, and the UI marker renders from
+  `session.id`.
+- Runtime official import source still hardcodes the prior session and remains
+  fail-closed with `canRunOfficialImport=false`.
+
+Decision:
+
+- Classify the mismatch as:
+  `A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION_CLASSIFICATION=UNKNOWN_NEEDS_READ_ONLY_SESSION_EVIDENCE`.
+- Keep authoritative session:
+  `A16R_OFFICIAL_IMPORT_SESSION_ID_AUTHORITATIVE=UNKNOWN`.
+- Do not approve or use either session marker until both session ids have
+  authenticated owner/admin read-only detail evidence.
+- Keep A-16R import retry blocked:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- The `ae7a5fe3-6a29-4f60-85f7-76108ed02565` marker is not accepted as correct
+  merely because it appears in production UI.
+- The `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` marker is not accepted as current
+  merely because prior docs and runtime guards reference it.
+- Next work must be an authenticated owner/admin read-only session detail smoke
+  for both ids, with no POST, direct RPC, SQL, DB push, seed, deploy or import.
+
 ## Decision 275 - A-16R import UI copy separates dry-run preview from official import execution while staying locked
 
 Date: 2026-07-07

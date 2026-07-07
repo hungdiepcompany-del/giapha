@@ -195,6 +195,8 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",
+  "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   panelPath,
   packagePath,
   "docs/00_INDEX.md",
