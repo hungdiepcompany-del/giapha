@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-07-07 - A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT - Relationship Role Audit Blocker
+
+- Marker: `A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT`.
+- Status:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_RELATIONSHIP_AUDIT_STATUS=BLOCKED_RELATIONSHIP_ROLE_AUDIT_REQUIRED_READ_ONLY`.
+- Classification:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_CLASSIFICATION=A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_BLOCKED_RELATIONSHIP_ROLE_AUDIT_REQUIRED`.
+- Audited session:
+  `A16L_AUDITED_DRY_RUN_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session remains blocked:
+  `A16L_BAD_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Dry-run preview evidence remains read-only: `dryRunPreviewOnly=true`,
+  `readOnly=true`, `dbWrite=false`, `peopleWrite=false`,
+  `relationshipWrite=false`, `treeLayoutWrite=false`, `revisionWrite=false`.
+- Counts recorded: `proposedPeopleCount=102`,
+  `proposedRelationshipCount=134`, `blockedByErrorCount=0`,
+  `warningCount=92`.
+- Source finding:
+  `A16L_RELATIONSHIP_LABEL_SOURCE=PARSER_PARENT_COLUMN_TO_IMPORT_RELATIONSHIP_CANDIDATE_FIELD_PASSTHROUGH`;
+  dry-run preview and UI render `relationshipLabelVi` directly rather than
+  synthesizing `Bố/Mẹ`.
+- Suspicious role/gender mismatch examples recorded:
+  `A16L_SUSPICIOUS_ROLE_GENDER_MISMATCH_EXAMPLE_COUNT=8`; total suspicious
+  count remains `UNKNOWN_NOT_DETERMINABLE_FROM_OWNER_EXCERPT`.
+- Duplicate example `Nguyễn Văn Tiến / Nguyễn Văn Tiện` remains owner-review
+  required with no auto-merge, no auto-delete and no auto-correct.
+- Official import remains locked: `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `canRunOfficialImport=false`,
+  `officialImportEnabled=false`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no deploy, no Windows-local deploy, no POST
+  `/official-import`, no confirm click, no direct RPC, no real genealogy write,
+  no people/relationship/tree-layout/revision mutation, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation,
+  no `wrangler.toml` change and no `app/layout.tsx` change.
+
 ## 2026-07-07 - A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX - Audited Dry-run Gate Open
 
 - Marker: `A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX`.

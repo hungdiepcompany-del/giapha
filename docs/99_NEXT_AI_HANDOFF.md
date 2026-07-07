@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-07 - A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT - Relationship Role Audit Required
+
+- Marker: `A-16L-DRY-RUN-PREVIEW-OWNER-REVIEW-RELATIONSHIP-AUDIT`.
+- Current status:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_RELATIONSHIP_AUDIT_STATUS=BLOCKED_RELATIONSHIP_ROLE_AUDIT_REQUIRED_READ_ONLY`.
+- Classification:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_CLASSIFICATION=A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_BLOCKED_RELATIONSHIP_ROLE_AUDIT_REQUIRED`.
+- Audited dry-run session:
+  `A16L_AUDITED_DRY_RUN_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session:
+  `A16L_BAD_UNVERIFIED_SESSION_ID=ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Dry-run preview counts: `proposedPeopleCount=102`,
+  `proposedRelationshipCount=134`, `blockedByErrorCount=0`,
+  `warningCount=92`.
+- Relationship label source:
+  `A16L_RELATIONSHIP_LABEL_SOURCE=PARSER_PARENT_COLUMN_TO_IMPORT_RELATIONSHIP_CANDIDATE_FIELD_PASSTHROUGH`.
+- Suspicious `Bố/Mẹ` examples recorded:
+  `A16L_SUSPICIOUS_ROLE_GENDER_MISMATCH_EXAMPLE_COUNT=8`.
+- Total suspicious and clear relationship counts remain unknown until a raw
+  read-only relationship list is audited.
+- Duplicate example `Nguyễn Văn Tiến / Nguyễn Văn Tiện` remains owner-review
+  required; no auto-merge, no auto-delete, no auto-correct and no auto-date
+  correction are allowed.
+- Official import remains locked: `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `officialImportEnabled=false`,
+  `canRunOfficialImport=false`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_NEXT_ALLOWED_ACTION=OWNER_EXPORT_OR_AUTHENTICATED_READ_ONLY_RELATIONSHIP_WARNING_DETAIL_AUDIT_NO_POST_NO_IMPORT`.
+- Do not call POST `/official-import`, click confirm, call direct RPC, write
+  real genealogy data, mutate people/relationships/tree layout/revisions, run
+  SQL, DB push, migration repair, seed, mutate auth/roles/users/memberships,
+  deploy, run Windows-local deploy, change `wrangler.toml`, change
+  `app/layout.tsx`, use session `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or
+  mark A-16R retry YES.
+
 ## 2026-07-07 - A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX - Audited Dry-run Gate Open
 
 - Marker: `A-16K-OWNER-DRY-RUN-GATE-APPROVAL-AFTER-A16R-FIX`.

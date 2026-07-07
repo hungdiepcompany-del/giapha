@@ -1,5 +1,45 @@
 # Decision Log
 
+## Decision 279 - A-16L dry-run relationship preview requires owner role audit before official import
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- A-16K opened the audited dry-run gate for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` only.
+- A-16L dry-run preview returned `proposedPeopleCount=102`,
+  `proposedRelationshipCount=134`, `blockedByErrorCount=0` and
+  `warningCount=92`.
+- Owner preview evidence showed suspicious `Bố/Mẹ` relationship labels such as
+  `Bố: Phạm Thị Bích` and `Mẹ: Nguyễn Hoàng Hiệp`.
+- Source inspection found the preview UI does not synthesize these labels; the
+  labels are parser/staging values passed through from
+  `import_relationship_candidates.relationship_label_vi`.
+
+Decision:
+
+- Classify the phase as:
+  `A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_CLASSIFICATION=A16L_DRY_RUN_PREVIEW_OWNER_REVIEW_BLOCKED_RELATIONSHIP_ROLE_AUDIT_REQUIRED`.
+- Keep the issue as `UNKNOWN_NOT_PROVEN` between confirmed mapping bug and
+  source data semantics until raw relationship/warning details are audited.
+- Require owner review for suspicious relationship roles, warning categories
+  and duplicate decisions before any official import phase.
+- Keep official import locked with `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `officialImportEnabled=false` and
+  `canRunOfficialImport=false`.
+
+Consequences:
+
+- This decision does not authorize POST `/official-import`, direct RPC, real
+  genealogy writes, SQL, DB push, migration repair, seed, deploy, permissions
+  mutation, `wrangler.toml` changes or `app/layout.tsx` changes.
+- A-16R import retry remains `NO`.
+- The next safe action is an owner/authenticated read-only raw relationship and
+  warning detail audit for the audited session only.
+
 ## Decision 278 - A-16K owner approval opens dry-run gate only for the audited A-16R session
 
 Date: 2026-07-07
