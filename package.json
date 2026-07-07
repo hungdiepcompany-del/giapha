@@ -292,7 +292,8 @@
     "check:a16r-authenticated-owner-import-gate-smoke-retry": "node scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
     "check:a16r-owner-admin-import-permission-diagnosis": "node scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
     "check:a16r-owner-auth-gate-smoke-and-evidence-bundle": "node scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
-    "check:a16r-production-ui-gate-state-reconciliation": "node scripts/check-a16r-production-ui-gate-state-reconciliation.cjs"
+    "check:a16r-production-ui-gate-state-reconciliation": "node scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
+    "check:a16r-ui-copy-refresh-official-import-gate": "node scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

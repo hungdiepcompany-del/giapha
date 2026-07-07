@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 275 - A-16R import UI copy separates dry-run preview from official import execution while staying locked
+
+Date: 2026-07-07
+
+Status: Accepted
+
+Context:
+
+- The previous reconciliation classified the UI as potentially misleading
+  because A-16K dry-run copy could be read as an official import blocker.
+- A-16K is a dry-run/preview gate, while A-16R is the official import execution
+  gate.
+- Official import execution still requires exact session/runtime approval and a
+  proven owner/admin production context.
+
+Decision:
+
+- Refresh Vietnamese UI copy on the import session panel so A-16K dry-run and
+  A-16R official import execution are visually and textually separate.
+- Display the exact A-16R session marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Display the runtime enablement marker as separate:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Keep the official import button disabled, keep `canRunOfficialImport=false`
+  and keep `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- Owner/operator copy is clearer without opening import execution.
+- Next allowed action remains an authenticated owner/admin read-only gate smoke
+  with no POST and no import.
+- This decision does not authorize deploy, POST `/official-import`, direct RPC,
+  real genealogy writes, SQL, DB push, migration repair, seed, auth/role/user
+  mutation, Windows-local deploy or `wrangler.toml` changes.
+
 ## Decision 274 - A-16R production UI gate state treats A-16K as dry-run UI copy, not the official import runtime blocker
 
 Date: 2026-07-07

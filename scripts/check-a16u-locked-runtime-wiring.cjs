@@ -227,6 +227,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",
   "scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
+  "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
+  "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

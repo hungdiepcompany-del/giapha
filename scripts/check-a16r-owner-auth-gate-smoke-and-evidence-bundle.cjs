@@ -199,6 +199,9 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
+  "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
+  panelPath,
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",
   packagePath,
   "scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
@@ -254,7 +257,7 @@ for (const file of changedFiles) {
     file.startsWith(".github/workflows/") ||
     file.startsWith("app/") ||
     file.startsWith("lib/") ||
-    file.startsWith("components/")
+    (file.startsWith("components/") && file !== panelPath)
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
   }

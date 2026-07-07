@@ -25,6 +25,8 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   docPath,
   checkerPath,
+  "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
+  "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   gateServicePath,
   gateRoutePath,
   panelPath,
@@ -52,6 +54,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16t-apply-verify.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "lib/import/giapha4/normalize.ts",
@@ -219,16 +222,16 @@ rejectPattern(
 );
 
 for (const token of [
-  "CÃ¡Â»â€¢ng phÃƒÂª duyÃ¡Â»â€¡t dry-run",
-  "Dry-run import chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c mÃ¡Â»Å¸",
-  "CÃ¡ÂºÂ§n owner phÃƒÂª duyÃ¡Â»â€¡t trÃ†Â°Ã¡Â»â€ºc khi chÃ¡ÂºÂ¡y dry-run.",
-  "Marker yÃƒÂªu cÃ¡ÂºÂ§u:",
-  "DÃ¡Â»Â¯ liÃ¡Â»â€¡u staging vÃ¡ÂºÂ«n",
-  "chÃ†Â°a Ã„â€˜Ã†Â°Ã¡Â»Â£c nhÃ¡ÂºÂ­p vÃƒÂ o cÃƒÂ¢y gia phÃ¡ÂºÂ£ thÃ¡ÂºÂ­t",
-  "ChÃ¡ÂºÂ¡y dry-run Ã¢â‚¬â€ cÃ¡ÂºÂ§n phÃƒÂª duyÃ¡Â»â€¡t",
+  "Cổng kiểm tra thử / dry-run A-16K",
+  "Cổng dry-run chỉ dành cho bước xem trước",
+  "Marker A-16K bên dưới chỉ mở bước kiểm tra thử và xem trước mapping.",
+  "Nó không có nghĩa là được chạy nhập chính thức",
+  "Nhập chính thức thuộc cổng A-16R riêng ở phía dưới.",
+  "Marker dry-run A-16K:",
+  "Chạy dry-run - cần phê duyệt A-16K",
   "disabled",
   "aria-disabled=\"true\"",
-  "XÃƒÂ¡c nhÃ¡ÂºÂ­n nhÃ¡ÂºÂ­p chÃƒÂ­nh thÃ¡Â»Â©c Ã¢â‚¬â€ chÃ†Â°a mÃ¡Â»Å¸",
+  "Xác nhận nhập chính thức - đang khóa",
 ]) {
   requireIncludes(panel, token, `UI token ${token}`);
 }

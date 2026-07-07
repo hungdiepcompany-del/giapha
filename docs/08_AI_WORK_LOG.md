@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-07-07 - A-16R-UI-COPY-REFRESH-OFFICIAL-IMPORT-GATE - Official Import Gate Copy Clarified
+
+- Marker: `A-16R-UI-COPY-REFRESH-OFFICIAL-IMPORT-GATE`.
+- Status:
+  `A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE_STATUS=PASS_UI_COPY_CLARIFIED_FAIL_CLOSED`.
+- Classification:
+  `A16R_UI_COPY_REFRESH_CLASSIFICATION=UI_COPY_CLARIFIED_A16K_DRY_RUN_SEPARATE_FROM_A16R_OFFICIAL_IMPORT`.
+- UI copy now separates `Cổng kiểm tra thử / dry-run A-16K` from
+  `Cổng nhập chính thức A-16R`.
+- The A-16K block now says dry-run only opens preview/mapping review and does
+  not authorize official import execution or write real genealogy data.
+- The A-16R block now says `Trạng thái hiện tại: nhập chính thức vẫn khóa`,
+  displays session marker
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`
+  and keeps runtime marker
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY` separate.
+- Official import button remains disabled:
+  `A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_BUTTON=DISABLED`.
+- Source remains fail-closed:
+  `A16R_UI_COPY_REFRESH_CAN_RUN_OFFICIAL_IMPORT=false` and
+  `A16R_UI_COPY_REFRESH_CAN_RUN_OFFICIAL_IMPORT_FORCED_TRUE=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next allowed action:
+  `A16R_UI_COPY_REFRESH_NEXT_ALLOWED_ACTION=OWNER_LOGIN_TO_PRODUCTION_WITH_EXPECTED_OWNER_ADMIN_ACCOUNT_THEN_RERUN_AUTHENTICATED_READ_ONLY_GATE_SMOKE_NO_POST_DO_NOT_IMPORT`.
+- Boundaries preserved: no deploy, no POST `/official-import`, no confirm
+  click, no direct RPC, no real genealogy write, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation,
+  no Windows-local deploy and no `wrangler.toml` change.
+
 ## 2026-07-07 - A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION - UI Copy Reconciled With Runtime Gate
 
 - Marker: `A-16R-PRODUCTION-UI-GATE-STATE-RECONCILIATION`.

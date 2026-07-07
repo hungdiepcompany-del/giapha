@@ -100,6 +100,9 @@ export function ImportSessionManifestPanel({
         )
         .join("|")}`
     : "duplicate-review-empty";
+  const officialImportSessionMarker = session
+    ? `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${session.id}`
+    : "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -232,23 +235,22 @@ export function ImportSessionManifestPanel({
           <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
             <div className="grid gap-2">
               <div className="text-sm font-semibold uppercase tracking-normal text-rose-800">
-                Cổng phê duyệt dry-run
+                Cổng kiểm tra thử / dry-run A-16K
               </div>
               <h3 className="text-base font-bold text-stone-950">
-                Dry-run import chưa được mở
+                Cổng dry-run chỉ dành cho bước xem trước
               </h3>
               <p className="text-sm leading-6 text-stone-700">
-                Cần owner phê duyệt trước khi chạy dry-run. Dữ liệu staging vẫn
-                chưa được nhập vào cây gia phả thật.
+                Marker A-16K bên dưới chỉ mở bước kiểm tra thử và xem trước mapping.
+                Nó không có nghĩa là được chạy nhập chính thức, và không ghi dữ liệu
+                gia phả thật.
               </p>
               <p className="text-sm leading-6 text-stone-700">
-                Ứng viên nhập chính thức đã được chuẩn bị nhưng chưa được bật.
-                Chưa chạy nhập chính thức. Cần xác nhận phiên nhập, lỗi/cảnh
-                báo, rollback và audit trước khi chạy. Nút nhập chính thức vẫn
-                khóa trong phase này.
+                Nhập chính thức thuộc cổng A-16R riêng ở phía dưới. Không bấm hoặc
+                gửi yêu cầu nhập chính thức cho đến khi có phase thực thi riêng.
               </p>
               <p className="text-sm font-semibold text-rose-900">
-                Marker yêu cầu: {dryRunGate.dryRunGate.requiredMarker}
+                Marker dry-run A-16K: {dryRunGate.dryRunGate.requiredMarker}
               </p>
             </div>
             <button
@@ -257,7 +259,7 @@ export function ImportSessionManifestPanel({
               aria-disabled="true"
               className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
             >
-              Chạy dry-run — cần phê duyệt
+              Chạy dry-run - cần phê duyệt A-16K
             </button>
           </section>
 
@@ -426,24 +428,34 @@ export function ImportSessionManifestPanel({
           <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
             <div className="grid gap-2">
               <div className="text-sm font-semibold uppercase tracking-normal text-rose-800">
-                Cổng nhập chính thức
+                Cổng nhập chính thức A-16R
               </div>
               <h3 className="text-base font-bold text-stone-950">
-                Nhập chính thức chưa được mở
+                Trạng thái hiện tại: nhập chính thức vẫn khóa
               </h3>
               <p className="text-sm leading-6 text-stone-700">
-                {officialImportGate.message}
+                Cổng A-16R là cổng chạy thật. Nút nhập chính thức vẫn bị khóa cho
+                đến khi chứng minh được phiên owner/admin trên production, đúng
+                phiên nhập và đủ phê duyệt runtime. Chưa có dữ liệu gia phả thật
+                nào được ghi từ màn hình này.
+              </p>
+              <p className="text-sm leading-6 text-stone-700">
+                Lý do: chưa có phê duyệt chạy thật cho đúng phiên nhập và chưa
+                chứng minh xong phiên admin/owner trên production. A-16K dry-run
+                không thay thế cho cổng thực thi A-16R.
               </p>
               <p className="text-sm font-semibold text-rose-900">
-                Marker session-specific cho phase chạy thật: {" "}
-                {officialImportGate.requiredFutureMarker}
+                Marker chạy thật cho đúng phiên A-16R:{" "}
+                {officialImportSessionMarker}
               </p>
               <p className="text-sm font-semibold text-rose-900">
-                Marker bật runtime execution sau A-16V:{" "}
+                Marker bật runtime execution sau A-16V, tách riêng với marker
+                phiên:{" "}
                 {A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER}
               </p>
               {officialImportGate.noGoReasons.length > 0 ? (
                 <div className="rounded-md border border-rose-200 bg-white p-3 text-sm leading-6 text-rose-900">
+                  <div>Không chạy nhập chính thức trong phase này.</div>
                   {officialImportGate.noGoReasons.slice(0, 4).map((reason) => (
                     <div key={reason}>{reason}</div>
                   ))}
@@ -457,7 +469,7 @@ export function ImportSessionManifestPanel({
               aria-disabled="true"
               className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
             >
-              Xác nhận nhập chính thức — chưa mở
+              Xác nhận nhập chính thức - đang khóa
             </button>
           </section>
 
