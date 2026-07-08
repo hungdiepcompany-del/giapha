@@ -20,6 +20,7 @@ const a16sqlAllowedSqlFiles = new Set([
 ]);
 
 const allowedChangedFiles = new Set([
+  ".gitignore",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -45,6 +46,8 @@ const allowedChangedFiles = new Set([
   "docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md",
   "scripts/audit-a16n-full-dry-run-relationships.cjs",
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
+  "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
+  "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
   "lib/import/giapha4/dry-run-mapping-preview-service.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",

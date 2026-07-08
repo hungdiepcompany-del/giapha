@@ -13,7 +13,7 @@ function usage() {
   console.error(
     [
       "Usage:",
-      "  node scripts/audit-a16n-full-dry-run-relationships.cjs <dry-run-preview.json> [--markdown <report.md>]",
+      "  node scripts/audit-a16n-full-dry-run-relationships.cjs <dry-run-preview.json> [--markdown <report.md>] [--partial]",
       "",
       "This is an offline/read-only parser for an owner-exported dry-run preview JSON file.",
       "It does not call production APIs, Supabase, RPC, SQL, or official import.",
@@ -25,11 +25,16 @@ function parseArgs(argv) {
   const args = [...argv];
   const inputPath = args.shift();
   let markdownPath = null;
+  let partialMode = false;
 
   while (args.length > 0) {
     const arg = args.shift();
     if (arg === "--markdown") {
       markdownPath = args.shift() ?? null;
+      continue;
+    }
+    if (arg === "--partial") {
+      partialMode = true;
       continue;
     }
     throw new Error(`Unknown argument: ${arg}`);
@@ -38,7 +43,7 @@ function parseArgs(argv) {
   if (!inputPath) throw new Error("Missing dry-run preview JSON path.");
   if (markdownPath === "") throw new Error("Missing markdown output path.");
 
-  return { inputPath, markdownPath };
+  return { inputPath, markdownPath, partialMode };
 }
 
 function readJsonFile(filePath) {
@@ -86,9 +91,15 @@ function assertEqual(actual, expected, label, failures) {
   if (actual !== expected) failures.push(`${label}: expected ${expected}, got ${actual}`);
 }
 
-function validateTopLevel(payload) {
+function validateTopLevel(payload, partialMode = false) {
   const failures = [];
   const summary = payload.summary ?? {};
+  const proposedPeople = asArray(payload.proposedPeople);
+  const proposedRelationships = asArray(payload.proposedRelationships);
+  const peopleExportCount =
+    summary.proposedPeopleExportCount ?? proposedPeople.length;
+  const relationshipExportCount =
+    summary.proposedRelationshipExportCount ?? proposedRelationships.length;
 
   assertEqual(payload.sessionId, AUDITED_SESSION_ID, "sessionId", failures);
   assertEqual(payload.dryRunPreviewOnly, true, "dryRunPreviewOnly", failures);
@@ -114,6 +125,32 @@ function validateTopLevel(payload) {
     failures,
   );
   assertEqual(summary.warningCount, EXPECTED_WARNING_COUNT, "summary.warningCount", failures);
+
+  if (!partialMode) {
+    assertEqual(payload.auditExportOnly, true, "auditExportOnly", failures);
+    assertEqual(
+      payload.fullRelationshipAuditExport,
+      true,
+      "fullRelationshipAuditExport",
+      failures,
+    );
+    assertEqual(summary.exportCapped, false, "summary.exportCapped", failures);
+    assertEqual(peopleExportCount, EXPECTED_PEOPLE_COUNT, "proposedPeopleExportCount", failures);
+    assertEqual(
+      relationshipExportCount,
+      EXPECTED_RELATIONSHIP_COUNT,
+      "proposedRelationshipExportCount",
+      failures,
+    );
+  }
+
+  if (
+    !partialMode &&
+    summary.proposedRelationshipCount === EXPECTED_RELATIONSHIP_COUNT &&
+    proposedRelationships.length < EXPECTED_RELATIONSHIP_COUNT
+  ) {
+    failures.push("A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT");
+  }
 
   return failures;
 }
@@ -236,7 +273,7 @@ function classifyRelationship(relationship, index, peopleByFingerprint) {
   };
 }
 
-function summarize(payload, auditRows, validationFailures) {
+function summarize(payload, auditRows, validationFailures, partialMode = false) {
   const countWhere = (predicate) => auditRows.filter(predicate).length;
 
   const summary = {
@@ -263,6 +300,13 @@ function summarize(payload, auditRows, validationFailures) {
     unknownCount: countWhere((row) => row.classification.includes("REVIEW_UNKNOWN")),
     officialImportOpen: payload.officialImportOpen,
     canProceedToOfficialImport: payload.canProceedToOfficialImport,
+    auditAcceptanceMarker:
+      !partialMode &&
+      validationFailures.length === 0 &&
+      asArray(payload.proposedPeople).length === EXPECTED_PEOPLE_COUNT &&
+      auditRows.length === EXPECTED_RELATIONSHIP_COUNT
+        ? "A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED"
+        : null,
     writeFlags: {
       dryRunPreviewOnly: payload.dryRunPreviewOnly,
       readOnly: payload.readOnly,
@@ -332,14 +376,14 @@ function main() {
   }
 
   const payload = readJsonFile(args.inputPath);
-  const validationFailures = validateTopLevel(payload);
+  const validationFailures = validateTopLevel(payload, args.partialMode);
   const proposedPeople = asArray(payload.proposedPeople);
   const proposedRelationships = asArray(payload.proposedRelationships);
   const peopleByFingerprint = buildPersonLookup(proposedPeople);
   const auditRows = proposedRelationships.map((relationship, index) =>
     classifyRelationship(relationship, index, peopleByFingerprint),
   );
-  const summary = summarize(payload, auditRows, validationFailures);
+  const summary = summarize(payload, auditRows, validationFailures, args.partialMode);
   const output = { summary, auditRows };
 
   if (args.markdownPath) {
@@ -348,6 +392,15 @@ function main() {
   }
 
   console.log(JSON.stringify(output, null, 2));
+
+  if (summary.auditAcceptanceMarker) {
+    console.error(summary.auditAcceptanceMarker);
+  }
+  if (
+    validationFailures.includes("A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT")
+  ) {
+    console.error("A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT");
+  }
 
   if (validationFailures.length > 0) process.exitCode = 1;
 }

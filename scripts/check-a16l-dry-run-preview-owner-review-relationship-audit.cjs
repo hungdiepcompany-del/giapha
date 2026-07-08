@@ -226,7 +226,14 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
 
+const a16oRuntimeChangedFiles = new Set([
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
+]);
+
 const allowedChangedFiles = new Set([
+  ".gitignore",
   docPath,
   checkerPath,
   "docs/PLAN_A16M_RELATIONSHIP_ROLE_MAPPING_ROOT_CAUSE_PLAN.md",
@@ -235,6 +242,9 @@ const allowedChangedFiles = new Set([
   "docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md",
   "scripts/audit-a16n-full-dry-run-relationships.cjs",
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
+  "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
+  "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
+  ...a16oRuntimeChangedFiles,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -263,12 +273,15 @@ for (const file of changedFiles) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
   if (
+    !a16oRuntimeChangedFiles.has(file) &&
+    (
     file.startsWith("app/") ||
     file.startsWith("components/") ||
     file.startsWith("lib/") ||
     file === "next.config.ts" ||
     file === "open-next.config.ts" ||
     file.startsWith(".github/workflows/")
+    )
   ) {
     failures.push(`runtime/source/config file changed ${file}`);
   }

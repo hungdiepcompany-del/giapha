@@ -4,6 +4,7 @@ Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file l
 
 | File | Mục đích | Khi nào cần đọc |
 | --- | --- | --- |
+| PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md | A-16O adds explicit authenticated/admin GET-only full dry-run relationship audit export via `auditExport=relationships-full`, preserving the default capped UI preview and keeping official import locked. | Khi can confirm `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`, full 102/134 export contract, A-16N capped-preview rejection, or next deploy/smoke phase before owner fetches full audit JSON. |
 | PLAN_A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE.md | A-16N prepares offline/read-only full dry-run relationship audit tooling and owner JSON export instructions for all 134 proposed relationships without changing runtime/import behavior. | Khi can run `audit:a16n-full-dry-run-relationships`, confirm `A16N_EVIDENCE_TOOLING_READY_OWNER_JSON_NEEDED`, or collect owner JSON evidence before any A-16O fix/acceptance path. |
 | README.md | Tổng quan dự án, stack, nguyên tắc dữ liệu lâu dài và cách chạy/deploy placeholder. | Luôn đọc khi bắt đầu một task mới hoặc cần định hướng dự án. |
 | AGENTS.md | Quy tắc làm việc cho AI coding. | Luôn đọc trước khi AI sửa code hoặc tài liệu. |

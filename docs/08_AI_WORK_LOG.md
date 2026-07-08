@@ -1,5 +1,51 @@
 # AI Work Log
 
+## 2026-07-08 - A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY - Full Export Contract Added
+
+- Marker: `A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY`.
+- Full export response marker:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`.
+- Route/query parameter chosen:
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-preview?auditExport=relationships-full`.
+- A-16N finding preserved: authenticated read-only preview was valid but capped
+  at `proposedPeoplePreviewCount=100` and
+  `proposedRelationshipPreviewCount=100` while total counts were
+  `proposedPeopleCount=102` and `proposedRelationshipCount=134`.
+- Partial A-16N audit preserved:
+  `REVIEW_ROLE_GENDER_MISMATCH=34`,
+  `father_label_source_gender_female=17`,
+  `mother_label_source_gender_male=17`.
+- Default UI preview remains capped at 100 and keeps source marker
+  `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.
+- Full audit export is explicit, authenticated/admin-only through the existing
+  manifest permission gate, requires `APPROVE_A16K_IMPORT_DRY_RUN_GATE`, and is
+  locked to audited session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Full export contract: `auditExportOnly=true`,
+  `fullRelationshipAuditExport=true`, `readOnly=true`, `dbWrite=false`,
+  `peopleWrite=false`, `relationshipWrite=false`, `treeLayoutWrite=false`,
+  `revisionWrite=false`, `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `exportCapped=false`,
+  `proposedPeopleExportCount=102`, and
+  `proposedRelationshipExportCount=134`.
+- `scripts/audit-a16n-full-dry-run-relationships.cjs` now accepts full 102/134
+  export JSON with `A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED` and rejects
+  capped 100/134 preview JSON with
+  `A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT` unless run with
+  diagnostic `--partial`.
+- Added `.tmp/` to `.gitignore` so raw owner JSON evidence is not committed.
+- No deploy was run. Next required phase:
+  `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no official import, no direct RPC official import, no
+  real genealogy write, no SQL, no DB push, no migration repair, no seed, no
+  permission/role/auth/user/membership mutation, no `wrangler.toml` change and
+  no `app/layout.tsx` change.
+- Runtime guardrail review: Main Worker touched `YES`; runtime dependency
+  added `NO`; new service Worker created `NO`; OpenNext/Wrangler config changed
+  `NO`; Worker size risk `LOW_READ_ONLY_SMALL_JSON_EXPORT_FOR_134_RELATIONSHIPS`;
+  service boundary recommendation `NONE_FOR_THIS_SMALL_AUDIT_EXPORT`.
+
 ## 2026-07-07 - A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE - Offline Audit Tooling Ready
 
 - Marker: `A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.

@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 282 - A-16O adds read-only full relationship audit export without opening official import
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16N owner JSON evidence showed valid authenticated dry-run preview data, but
+  the default preview was capped to 100 people and 100 relationships.
+- Total dry-run counts remain `proposedPeopleCount=102` and
+  `proposedRelationshipCount=134`.
+- Partial audit of first 100 relationships found
+  `REVIEW_ROLE_GENDER_MISMATCH=34`, so full 134/134 evidence is required before
+  any parser/staging/SQL fix or owner acceptance decision.
+
+Decision:
+
+- Add an explicit GET-only full audit export mode on the existing dry-run
+  preview route:
+  `?auditExport=relationships-full`.
+- Preserve the default capped UI preview behavior when that query parameter is
+  absent.
+- Require existing authenticated/admin manifest read access plus the A-16K
+  audited dry-run session gate.
+- Keep official import locked with `canProceedToOfficialImport=false` and
+  `officialImportOpen=false`.
+- Do not deploy in this phase; require
+  `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE` before production use.
+
+Consequences:
+
+- Main Worker has a narrow read-only route/service change, but no dependency,
+  Worker config, SQL, deploy, DB write, official import execution or permission
+  mutation is introduced.
+- Raw full JSON evidence remains local under `.tmp/` or outside the repo and is
+  not committed.
+- A-16R import retry remains `NO`.
+
 ## Decision 281 - A-16N prepares offline full relationship audit evidence before any import fix
 
 Date: 2026-07-07

@@ -10,9 +10,15 @@ type RouteContext = {
   }>;
 };
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   const { sessionId } = await context.params;
-  const result = await getDryRunMappingPreview(sessionId);
+  const auditExport = new URL(request.url).searchParams.get("auditExport");
+  const result = await getDryRunMappingPreview(
+    sessionId,
+    auditExport === "relationships-full"
+      ? { auditExport: "relationships-full" }
+      : undefined,
+  );
 
   return NextResponse.json(result, {
     status: result.httpStatus,

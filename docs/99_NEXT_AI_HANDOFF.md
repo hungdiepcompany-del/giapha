@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY - Deploy Smoke Next
+
+- Marker: `A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY`.
+- Full export response marker:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`.
+- Route/query parameter:
+  `GET /api/admin/import-sessions/[sessionId]/dry-run-preview?auditExport=relationships-full`.
+- Audited session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Bad/unverified session:
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565`.
+- Default UI preview remains capped at 100 and keeps source marker
+  `A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING`.
+- Full export is explicit, GET-only, authenticated/admin-only, requires
+  `APPROVE_A16K_IMPORT_DRY_RUN_GATE`, and is locked to the audited session.
+- Full export contract includes `auditExportOnly=true`,
+  `fullRelationshipAuditExport=true`, `readOnly=true`, `dbWrite=false`,
+  `peopleWrite=false`, `relationshipWrite=false`, `treeLayoutWrite=false`,
+  `revisionWrite=false`, `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `exportCapped=false`,
+  `proposedPeopleExportCount=102`, and
+  `proposedRelationshipExportCount=134`.
+- A-16N script behavior: full 102/134 export is accepted with
+  `A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED`; capped 100/134 preview is
+  rejected for full audit with
+  `A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT`.
+- `.tmp/` is ignored so owner JSON evidence is not committed.
+- No deploy was run in this phase. Next required phase:
+  `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.
+- After deploy/smoke, owner should fetch full export JSON from production and
+  rerun A-16N offline audit before any parser/SQL fix or owner acceptance path.
+- Official import remains locked and A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, click confirm, call direct RPC official
+  import, write real genealogy data, mutate people/relationships/tree
+  layout/revisions, run SQL, DB push, migration repair, seed, mutate
+  auth/roles/users/memberships, deploy without explicit next phase approval,
+  run Windows-local deploy, change `wrangler.toml`, change `app/layout.tsx`,
+  commit raw JSON, use session `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or mark
+  A-16R retry YES.
+
 ## 2026-07-07 - A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE - Owner JSON Needed
 
 - Marker: `A-16N-FULL-DRY-RUN-RELATIONSHIP-AUDIT-EVIDENCE`.

@@ -189,7 +189,14 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
 
+const a16oRuntimeChangedFiles = new Set([
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
+]);
+
 const allowedChangedFiles = new Set([
+  ".gitignore",
   docPath,
   checkerPath,
   "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
@@ -215,6 +222,9 @@ const allowedChangedFiles = new Set([
   "docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md",
   "scripts/audit-a16n-full-dry-run-relationships.cjs",
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
+  "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
+  "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
+  ...a16oRuntimeChangedFiles,
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
   "scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
@@ -245,8 +255,10 @@ for (const file of changedFiles) {
     file === "next.config.ts" ||
     file.startsWith(".github/workflows/") ||
     (file.startsWith("app/") &&
+      !a16oRuntimeChangedFiles.has(file) &&
       file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts") ||
     (file.startsWith("lib/") &&
+      !a16oRuntimeChangedFiles.has(file) &&
       file !== officialServicePath &&
       file !== dryRunGatePath) ||
     (file.startsWith("components/") && file !== panelPath)

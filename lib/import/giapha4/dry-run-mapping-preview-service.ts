@@ -1,7 +1,9 @@
 import "server-only";
 
 import {
+  A16K_AUDITED_DRY_RUN_SESSION_ID,
   A16K_IMPORT_DRY_RUN_REQUIRED_MARKER,
+  getImportDryRunApprovalGate,
 } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import {
   getImportManifest,
@@ -16,6 +18,9 @@ import {
 
 export const A16L_DRY_RUN_MAPPING_PREVIEW_MARKER =
   "A16L_DRY_RUN_MAPPING_PREVIEW_FROM_MANIFEST_STAGING";
+
+export const A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_MARKER =
+  "A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY";
 
 export const A16L_DRY_RUN_APPROVAL_MARKER =
   "APPROVE_A16K_IMPORT_DRY_RUN_GATE";
@@ -71,22 +76,30 @@ export type DryRunMappingPreviewSummary = {
   stagedPeoplePreviewCount: number;
   proposedPeopleCount: number;
   proposedPeoplePreviewCount: number;
+  proposedPeopleExportCount?: number;
   stagedRelationshipCount: number;
   stagedRelationshipPreviewCount: number;
   proposedRelationshipCount: number;
   proposedRelationshipPreviewCount: number;
+  proposedRelationshipExportCount?: number;
   blockedByErrorCount: number;
   warningCount: number;
   canProceedToOfficialImport: false;
+  exportCapped?: false;
 };
 
 export type DryRunMappingPreviewResult = {
   ok: boolean;
   status: ImportManifestReadResult["status"];
   httpStatus: ImportManifestReadResult["httpStatus"];
-  marker: typeof A16L_DRY_RUN_MAPPING_PREVIEW_MARKER;
+  marker:
+    | typeof A16L_DRY_RUN_MAPPING_PREVIEW_MARKER
+    | typeof A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_MARKER;
+  sourceMarker?: typeof A16L_DRY_RUN_MAPPING_PREVIEW_MARKER;
   approvalMarker: typeof A16K_IMPORT_DRY_RUN_REQUIRED_MARKER;
   dryRunPreviewOnly: true;
+  auditExportOnly?: true;
+  fullRelationshipAuditExport?: true;
   readOnly: true;
   dbWrite: false;
   peopleWrite: false;
@@ -101,6 +114,10 @@ export type DryRunMappingPreviewResult = {
   proposedPeople: ProposedPersonPayload[];
   proposedRelationships: ProposedRelationshipPayload[];
   issues: ManifestValidationIssue[];
+};
+
+export type DryRunMappingPreviewOptions = {
+  auditExport?: "relationships-full";
 };
 
 function issueMatchesPerson(
@@ -182,7 +199,10 @@ function mapRelationship(
 
 export function buildDryRunMappingPreview(
   manifest: ImportManifestReadResult,
+  options: DryRunMappingPreviewOptions = {},
 ): DryRunMappingPreviewResult {
+  const fullRelationshipAuditExport =
+    options.auditExport === "relationships-full";
   const validation = buildManifestValidationReview(manifest);
   const blockedByErrorCount = validation.summary.errorCount;
   const warningCount = validation.summary.warningCount;
@@ -202,11 +222,13 @@ export function buildDryRunMappingPreview(
     manifest.session?.relationshipCandidateCount ??
     manifest.relationshipsPreview.length;
 
-  return {
+  const result: DryRunMappingPreviewResult = {
     ok: manifest.ok,
     status: manifest.status,
     httpStatus: manifest.httpStatus,
-    marker: A16L_DRY_RUN_MAPPING_PREVIEW_MARKER,
+    marker: fullRelationshipAuditExport
+      ? A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_MARKER
+      : A16L_DRY_RUN_MAPPING_PREVIEW_MARKER,
     approvalMarker,
     dryRunPreviewOnly: true,
     readOnly: true,
@@ -239,11 +261,45 @@ export function buildDryRunMappingPreview(
     proposedRelationships,
     issues: validation.issues,
   };
+
+  if (fullRelationshipAuditExport) {
+    result.sourceMarker = A16L_DRY_RUN_MAPPING_PREVIEW_MARKER;
+    result.auditExportOnly = true;
+    result.fullRelationshipAuditExport = true;
+    result.summary.proposedPeopleExportCount = proposedPeople.length;
+    result.summary.proposedRelationshipExportCount =
+      proposedRelationships.length;
+    result.summary.exportCapped = false;
+  }
+
+  return result;
 }
 
 export async function getDryRunMappingPreview(
   sessionId: string,
+  options: DryRunMappingPreviewOptions = {},
 ): Promise<DryRunMappingPreviewResult> {
-  const manifest = await getImportManifest(sessionId);
-  return buildDryRunMappingPreview(manifest);
+  const fullRelationshipAuditExport =
+    options.auditExport === "relationships-full";
+  if (fullRelationshipAuditExport) {
+    const dryRunGate = getImportDryRunApprovalGate(sessionId);
+    const sessionMatchesAudited = sessionId === A16K_AUDITED_DRY_RUN_SESSION_ID;
+
+    if (!sessionMatchesAudited || !dryRunGate.dryRunGate.canRunDryRun) {
+      const manifest = await getImportManifest(sessionId);
+      return {
+        ...buildDryRunMappingPreview(manifest, options),
+        ok: false,
+        status: manifest.status === "ready" ? "forbidden" : manifest.status,
+        httpStatus: 403,
+        message:
+          "Full relationship audit export is locked to the A-16K audited dry-run session.",
+      };
+    }
+  }
+
+  const manifest = await getImportManifest(sessionId, {
+    fullAuditExport: fullRelationshipAuditExport,
+  });
+  return buildDryRunMappingPreview(manifest, options);
 }

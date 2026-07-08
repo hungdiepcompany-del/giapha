@@ -148,6 +148,10 @@ export type ImportManifestReadResult = {
   writeManifests: ImportWriteManifestPreview[];
 };
 
+export type ImportManifestReadOptions = {
+  fullAuditExport?: boolean;
+};
+
 type ImportSessionRow = {
   id: string;
   source_type: string;
@@ -323,7 +327,10 @@ function normalizePersonCandidatePreview(
   };
 }
 
-function extractPeoplePreview(writeManifests: ImportWriteManifestPreview[]) {
+function extractPeoplePreview(
+  writeManifests: ImportWriteManifestPreview[],
+  previewLimit = 100,
+) {
   const people: ImportPersonCandidatePreview[] = [];
 
   for (const manifest of writeManifests) {
@@ -334,7 +341,7 @@ function extractPeoplePreview(writeManifests: ImportWriteManifestPreview[]) {
       if (isPersonCandidatePreview(candidate)) {
         people.push(normalizePersonCandidatePreview(candidate));
       }
-      if (people.length >= 100) return people;
+      if (people.length >= previewLimit) return people;
     }
   }
 
@@ -513,12 +520,14 @@ export async function getImportSession(
 
 export async function getImportManifest(
   sessionId: string,
+  options: ImportManifestReadOptions = {},
 ): Promise<ImportManifestReadResult> {
   const sessionResult = await getImportSession(sessionId);
   if (!sessionResult.ok || !sessionResult.session) return sessionResult;
 
   const access = await ensureReadAccess();
   if (!access.ok) return access.result;
+  const previewLimit = options.fullAuditExport ? 1000 : 100;
 
   const [warningsResult, duplicatesResult, relationshipsResult, writeManifestsResult] =
     await Promise.all([
@@ -529,7 +538,7 @@ export async function getImportManifest(
         )
         .eq("import_session_id", sessionId)
         .order("created_at", { ascending: true })
-        .limit(100)
+        .limit(previewLimit)
         .returns<ImportSessionWarningRow[]>(),
       access.supabase
         .from("import_duplicate_candidates")
@@ -538,7 +547,7 @@ export async function getImportManifest(
         )
         .eq("import_session_id", sessionId)
         .order("source_row_index", { ascending: true })
-        .limit(100)
+        .limit(previewLimit)
         .returns<ImportDuplicateCandidateRow[]>(),
       access.supabase
         .from("import_relationship_candidates")
@@ -547,7 +556,7 @@ export async function getImportManifest(
         )
         .eq("import_session_id", sessionId)
         .order("source_row_index", { ascending: true })
-        .limit(100)
+        .limit(previewLimit)
         .returns<ImportRelationshipCandidateRow[]>(),
       access.supabase
         .from("import_write_manifests")
@@ -626,7 +635,7 @@ export async function getImportManifest(
     createdRecordIds: row.created_record_ids ?? {},
     createdAt: row.created_at,
   }));
-  const peoplePreview = extractPeoplePreview(writeManifests);
+  const peoplePreview = extractPeoplePreview(writeManifests, previewLimit);
 
   const hasManifestRows =
     warnings.length > 0 ||

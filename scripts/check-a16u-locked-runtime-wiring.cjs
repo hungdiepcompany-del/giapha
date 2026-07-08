@@ -154,6 +154,7 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
   .filter(Boolean);
 
 const allowedChangedFiles = new Set([
+  ".gitignore",
   "docs/PLAN_A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH.md",
   docPath,
   "docs/PLAN_A16U_VERIFY_RUNBOOK.md",
@@ -241,6 +242,11 @@ const allowedChangedFiles = new Set([
   "docs/evidence/A16N_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EVIDENCE_TEMPLATE.md",
   "scripts/audit-a16n-full-dry-run-relationships.cjs",
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
+  "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
+  "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
+  "app/api/admin/import-sessions/[sessionId]/dry-run-preview/route.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/manifest-read-service.ts",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
   "scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
