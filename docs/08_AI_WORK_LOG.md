@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-07-08 - A-16X2-CORRECT-A16O-FULL-RELATIONSHIP-AUDIT-EXPORT-SHAPE-VERIFICATION - Shape Evidence Accepted
+
+- Marker:
+  `A-16X2-CORRECT-A16O-FULL-RELATIONSHIP-AUDIT-EXPORT-SHAPE-VERIFICATION`.
+- Verification status:
+  `A16X2_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=PASS_CORRECT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_SHAPE`.
+- Evidence gate:
+  `A16X2_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_EVIDENCE_GATE=SATISFIED_SHAPE_ONLY`.
+- Local evidence path checked:
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- Sanitized metadata only was recorded; raw JSON was not printed or committed.
+- File size:
+  `A16X2_OWNER_JSON_FILE_SIZE_BYTES=211516`.
+- SHA256:
+  `A16X2_OWNER_JSON_SHA256=B30CF84A78B78CF750EACE9BDBC9D697040D623B194AB095875E66F8EBFF1289`.
+- Shape match:
+  `A16X2_A16O_FULL_AUDIT_EXPORT_SHAPE_MATCH=YES`.
+- Marker/session/counts:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`,
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`,
+  `proposedPeople=102`, `proposedRelationships=134`.
+- Summary counts:
+  `proposedPeopleCount=102`, `proposedPeopleExportCount=102`,
+  `proposedRelationshipCount=134`, `proposedRelationshipExportCount=134`,
+  `exportCapped=false`, `blockedByErrorCount=0`, `warningCount=94`.
+- Follow-up recorded:
+  `A16X2_FOLLOW_UP_UI_MOJIBAKE_REVIEW_NEEDED=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no direct RPC official
+  import, no A-16R retry, no SQL/DB mutation, no migration repair, no seed, no
+  DB push, no deploy, no Wrangler deploy, no local Windows deploy, no
+  permission/auth/genealogy mutation, no `wrangler.toml` change, no
+  `app/layout.tsx` change, no raw JSON commit, and no private JSON print.
+
 ## 2026-07-08 - A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE - Owner Download Path Added
 
 - Marker: `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`.

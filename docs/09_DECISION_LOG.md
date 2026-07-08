@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 288 - A-16X2 accepts the correct A-16O audit export shape without opening import
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16X previously rejected an owner-provided family backup JSON as not being
+  the A-16O full relationship audit export.
+- A-16Z exposed the owner-facing read-only A-16O audit export download path on
+  `/admin/exports/import`.
+- Owner provided a newly downloaded local evidence file at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+
+Decision:
+
+- Accept the newly downloaded JSON for the shape/evidence gate only because it
+  has marker `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`, audited
+  session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`, summary present, 102
+  proposed people, and 134 proposed relationships.
+- Record only sanitized metadata, including SHA256
+  `B30CF84A78B78CF750EACE9BDBC9D697040D623B194AB095875E66F8EBFF1289`.
+- Keep A-16R import retry closed as `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- The next allowed gate is the offline full relationship audit phase, not import
+  execution.
+- The raw JSON remains local and uncommitted.
+- Vietnamese UI mojibake remains a recorded follow-up rather than an A-16X2
+  implementation change.
+
 ## Decision 287 - A-16Z exposes the A-16O audit export path without opening import
 
 Date: 2026-07-08

@@ -71,8 +71,18 @@ const workLog = read("docs/08_AI_WORK_LOG.md");
 const decisionLog = read("docs/09_DECISION_LOG.md");
 const handoff = read("docs/99_NEXT_AI_HANDOFF.md");
 const a16wDoc = read("docs/PLAN_A16W_FULL_AUTHENTICATED_RELATIONSHIP_AUDIT_EXPORT_EVIDENCE_READINESS.md");
+const a16x2Doc = read(
+  "docs/PLAN_A16X2_CORRECT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_SHAPE_VERIFICATION.md",
+);
 const layout = read(layoutPath);
 const wrangler = read(wranglerPath);
+const a16x2SupersededEvidence =
+  a16x2Doc.includes(
+    "A16X2_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_EVIDENCE_GATE=SATISFIED_SHAPE_ONLY",
+  ) &&
+  a16x2Doc.includes(
+    "A16X2_OWNER_JSON_SHA256=B30CF84A78B78CF750EACE9BDBC9D697040D623B194AB095875E66F8EBFF1289",
+  );
 
 for (const token of [
   "A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION",
@@ -157,8 +167,14 @@ if (!fs.existsSync(evidenceAbsolutePath)) {
 } else {
   const buffer = fs.readFileSync(evidenceAbsolutePath);
   const sha = crypto.createHash("sha256").update(buffer).digest("hex").toUpperCase();
-  if (buffer.length !== 33121) failures.push(`unexpected evidence size ${buffer.length}`);
-  if (sha !== expectedSha) failures.push(`unexpected evidence sha ${sha}`);
+  const currentEvidenceWasSupersededByA16x2 =
+    a16x2SupersededEvidence &&
+    buffer.length === 211516 &&
+    sha === "B30CF84A78B78CF750EACE9BDBC9D697040D623B194AB095875E66F8EBFF1289";
+  if (!currentEvidenceWasSupersededByA16x2) {
+    if (buffer.length !== 33121) failures.push(`unexpected evidence size ${buffer.length}`);
+    if (sha !== expectedSha) failures.push(`unexpected evidence sha ${sha}`);
+  }
 
   let payload = null;
   try {
@@ -167,7 +183,13 @@ if (!fs.existsSync(evidenceAbsolutePath)) {
     failures.push("evidence file is not valid JSON");
   }
 
-  if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+  if (currentEvidenceWasSupersededByA16x2) {
+    requireIncludes(
+      a16x2Doc,
+      "A16X2_A16O_FULL_AUDIT_EXPORT_SHAPE_MATCH=YES",
+      "A-16X2 superseding shape evidence",
+    );
+  } else if (payload && typeof payload === "object" && !Array.isArray(payload)) {
     const requiredMissing = [
       "marker",
       "sessionId",
@@ -222,6 +244,8 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16w-full-authenticated-relationship-audit-export-evidence-readiness.cjs",
+  "scripts/check-a16x2-correct-a16o-full-relationship-audit-export-shape-verification.cjs",
+  "docs/PLAN_A16X2_CORRECT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_SHAPE_VERIFICATION.md",
 ]);
 
 for (const file of changedFiles) {

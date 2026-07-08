@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16X2-CORRECT-A16O-FULL-RELATIONSHIP-AUDIT-EXPORT-SHAPE-VERIFICATION - Shape Gate Satisfied
+
+- Marker:
+  `A-16X2-CORRECT-A16O-FULL-RELATIONSHIP-AUDIT-EXPORT-SHAPE-VERIFICATION`.
+- Verification status:
+  `A16X2_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=PASS_CORRECT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_SHAPE`.
+- Evidence gate:
+  `A16X2_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_EVIDENCE_GATE=SATISFIED_SHAPE_ONLY`.
+- Local evidence path checked:
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- SHA256:
+  `B30CF84A78B78CF750EACE9BDBC9D697040D623B194AB095875E66F8EBFF1289`.
+- File size:
+  `211516` bytes.
+- Shape match:
+  `A16X2_A16O_FULL_AUDIT_EXPORT_SHAPE_MATCH=YES`.
+- Marker/session/counts:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`,
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`,
+  `proposedPeople=102`, `proposedRelationships=134`.
+- Summary counts:
+  `proposedPeopleCount=102`, `proposedPeopleExportCount=102`,
+  `proposedRelationshipCount=134`, `proposedRelationshipExportCount=134`,
+  `exportCapped=false`, `blockedByErrorCount=0`, `warningCount=94`.
+- The prior A-16X blocker is resolved for shape only:
+  `A16X2_OWNER_JSON_CLASSIFICATION=A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON`.
+- Next allowed phase:
+  `A-16AB-FULL-RELATIONSHIP-AUDIT-RUN-OFFLINE`.
+- Follow-up:
+  `A16X2_FOLLOW_UP_UI_MOJIBAKE_REVIEW_NEEDED=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or start
+  import execution.
+
 ## 2026-07-08 - A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE - Source Ready, Deploy Needed Later
 
 - Marker: `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`.
