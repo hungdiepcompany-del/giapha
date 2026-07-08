@@ -235,6 +235,7 @@
     "check:a16w-full-authenticated-relationship-audit-export-evidence-readiness": "node scripts/check-a16w-full-authenticated-relationship-audit-export-evidence-readiness.cjs",
     "check:a16x-full-authenticated-relationship-audit-export-evidence-verification": "node scripts/check-a16x-full-authenticated-relationship-audit-export-evidence-verification.cjs",
     "check:a16y-import-execution-planning-reconciliation": "node scripts/check-a16y-import-execution-planning-reconciliation.cjs",
+    "check:a16z-audit-export-download-path-exposure": "node scripts/check-a16z-audit-export-download-path-exposure.cjs",
     "check:a16sql-rls-import-staging-write": "node scripts/check-a16sql-rls-import-staging-write.cjs",
     "check:a16i3-giapha4-xlsx-column-mapping": "node scripts/check-a16i3-giapha4-xlsx-column-mapping.cjs",
     "check:a16i4-real-giapha4-staging-upload-run": "node scripts/check-a16i4-real-giapha4-staging-upload-run.cjs",

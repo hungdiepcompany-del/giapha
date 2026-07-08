@@ -1,5 +1,6 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-decision-review-client";
+import { ActionLink } from "@/components/ui/action-link";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
@@ -109,6 +110,7 @@ export function ImportSessionManifestPanel({
     currentSessionId !== null &&
     currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
   const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
+  const a16oAuditExportHref = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/dry-run-preview?auditExport=relationships-full`;
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -237,6 +239,38 @@ export function ImportSessionManifestPanel({
             duplicateCandidates={result.duplicateCandidates}
             totalDuplicateCandidates={totalDuplicateCandidates}
           />
+
+          <section className="grid gap-4 rounded-lg border border-sky-200 bg-sky-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-sky-800">
+                A-16O - Export audit quan há»‡ chá»‰ Ä‘á»c
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Táº£i JSON audit A-16O cho phiÃªn Ä‘Ã£ kiá»ƒm toÃ¡n
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                `family.json` á»Ÿ trang Sao lÆ°u / Xuáº¥t dá»¯ liá»‡u lÃ  báº£n backup chung.
+                NÃ³ khÃ´ng pháº£i báº±ng chá»©ng cho A-16R retry. File cáº§n cho audit
+                quan há»‡ lÃ  JSON A-16O bÃªn dÆ°á»›i, vá»›i marker
+                `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`.
+              </p>
+              <p className="text-sm leading-6 text-stone-700">
+                ÄÆ°á»ng táº£i nÃ y chá»‰ gá»i GET read-only vÃ o dry-run preview. KhÃ´ng
+                báº¥m xÃ¡c nháº­n nháº­p, khÃ´ng gá»i official import, khÃ´ng ghi dá»¯ liá»‡u.
+              </p>
+              <p className="break-all font-mono text-xs text-sky-950">
+                {a16oAuditExportHref}
+              </p>
+            </div>
+            <ActionLink
+              href={a16oAuditExportHref}
+              download="a16o-dry-run-relationship-audit-export-full.json"
+              variant="primary"
+              className="sm:w-fit"
+            >
+              Táº£i A-16O audit export JSON
+            </ActionLink>
+          </section>
 
           <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
             <div className="grid gap-2">

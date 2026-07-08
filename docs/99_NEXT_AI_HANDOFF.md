@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE - Source Ready, Deploy Needed Later
+
+- Marker: `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`.
+- Status:
+  `A16Z_AUDIT_EXPORT_DOWNLOAD_PATH_STATUS=PASS_OWNER_FACING_READ_ONLY_DOWNLOAD_EXPOSED`.
+- Exact API route:
+  `GET /api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`.
+- Owner-facing UI path:
+  `/admin/exports/import`.
+- Owner-facing button label:
+  `Tải A-16O audit export JSON`.
+- Download filename:
+  `a16o-dry-run-relationship-audit-export-full.json`.
+- UI copy explicitly distinguishes `family.json` as general backup and the
+  A-16O audit export JSON as import retry evidence.
+- Source readiness:
+  `A16Z_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_SOURCE_READY=YES`.
+- Production still needs a separate deploy/smoke phase before owner relies on
+  this button in production.
+- Next evidence phase after deploy/owner download:
+  `A-16AA-FULL-AUDIT-EXPORT-SHAPE-VERIFY`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or start
+  unrelated backup/domain/visual-polish/service-worker work.
+
 ## 2026-07-08 - A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION - A-16R Retry Still Blocked
 
 - Marker: `A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION`.

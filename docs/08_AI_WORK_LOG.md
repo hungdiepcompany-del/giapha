@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-08 - A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE - Owner Download Path Added
+
+- Marker: `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`.
+- Status:
+  `A16Z_AUDIT_EXPORT_DOWNLOAD_PATH_STATUS=PASS_OWNER_FACING_READ_ONLY_DOWNLOAD_EXPOSED`.
+- Purpose:
+  `A16Z_PURPOSE=PREVENT_FAMILY_JSON_BACKUP_CONFUSION_WITH_A16O_AUDIT_EXPORT_JSON`.
+- Exact API route:
+  `GET /api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`.
+- Owner-facing UI path:
+  `/admin/exports/import`.
+- Owner-facing button label:
+  `Tải A-16O audit export JSON`.
+- Download filename:
+  `a16o-dry-run-relationship-audit-export-full.json`.
+- UI copy distinguishes `family.json` as a general backup and not A-16R retry
+  evidence.
+- Source readiness:
+  `A16Z_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_SOURCE_READY=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no direct RPC official
+  import, no A-16R retry, no SQL/DB mutation, no migration repair, no seed, no
+  DB push, no deploy, no Wrangler deploy, no local Windows deploy, no
+  permission/auth/genealogy mutation, no `wrangler.toml` change, no
+  `app/layout.tsx` change, no raw JSON commit, and no private JSON print.
+
 ## 2026-07-08 - A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION - Planning Re-anchored
 
 - Marker: `A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION`.

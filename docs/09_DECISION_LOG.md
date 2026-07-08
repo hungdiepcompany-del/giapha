@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 287 - A-16Z exposes the A-16O audit export path without opening import
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16Y concluded the production UI exposed general `family.json` backup, while
+  the correct owner-facing A-16O audit export download was missing or unclear.
+- A-16X proved a family backup JSON is not valid A-16O relationship audit
+  evidence.
+- The existing A-16O API route already supports the full read-only audit export
+  with `?auditExport=relationships-full`.
+
+Decision:
+
+- Add a minimal owner-facing link on `/admin/exports/import` with label:
+  `Tải A-16O audit export JSON`.
+- Point it to:
+  `GET /api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`.
+- Keep the path read-only and separate from `family.json`.
+- Keep official import locked and A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- Owner can fetch the correct JSON after a later deploy/smoke phase instead of
+  using general backup JSON by mistake.
+- A later A-16AA shape verification phase must still verify the downloaded JSON
+  before any offline relationship audit or A-16R retry consideration.
+
 ## Decision 286 - A-16Y re-anchors Gia Pha 4 import execution to audit evidence gates
 
 Date: 2026-07-08
