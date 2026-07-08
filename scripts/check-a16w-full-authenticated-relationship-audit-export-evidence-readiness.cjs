@@ -14,7 +14,6 @@ const checkerPath =
 const packagePath = "package.json";
 const layoutPath = "app/layout.tsx";
 const wranglerPath = "wrangler.toml";
-const fullJsonPath = ".tmp/a16o-dry-run-relationship-audit-export-full.json";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -160,11 +159,9 @@ if (
   );
 }
 
-if (fs.existsSync(path.join(root, fullJsonPath))) {
-  failures.push(
-    "full authenticated export JSON exists locally; run the separate offline audit phase instead of this blocked-readiness checker",
-  );
-}
+// A-16W is a historical readiness gate. Later phases may place a local .tmp
+// file and classify it separately; do not make this checker depend on mutable
+// local evidence state.
 
 rejectPattern(layout, /crxlauncher|suppressHydrationWarning\s*=\s*{?\s*true/i, "layout hydration workaround");
 rejectPattern(wrangler, /A16W|A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY/i, "wrangler evidence/config change");

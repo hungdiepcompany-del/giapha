@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-07-08 - A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION - Shape Mismatch Blocked
+
+- Marker:
+  `A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION`.
+- Verification status:
+  `A16X_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=BLOCKED_JSON_SHAPE_MISMATCH`.
+- Exact blocker:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- Owner-provided file existed at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- SHA256 matched owner evidence:
+  `380E45CFDDAE78D0FEA9904B45B7901901708915E335B8D000428A962B5DE513`.
+- Sanitized shape classified the file as:
+  `A16X_OWNER_JSON_CLASSIFICATION=FAMILY_BACKUP_JSON_NOT_A16O_AUDIT_EXPORT`.
+- Sanitized counts included `people=8`, `families=7`, `family_parents=6`,
+  `family_children=6`, `couple_relationships=3`,
+  `tree_layout_nodes=13`, and `tree_layouts=1`.
+- Required A-16O full audit fields were missing, including `marker`,
+  `sessionId`, `summary`, `proposedPeople`, and `proposedRelationships`.
+- Offline A-16N full audit was not run:
+  `A16X_OFFLINE_A16N_FULL_AUDIT_RUN=NO_SHAPE_MISMATCH`.
+- A-16N full audit acceptance remains:
+  `A16X_A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED=NO`.
+- A-16O PASS evidence remains preserved, but A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no raw JSON content printed, no raw JSON committed, no
+  POST `/official-import`, no A-16R import retry, no direct RPC official import,
+  no real genealogy write, no SQL, no DB push, no migration repair, no seed, no
+  permission/role/auth/user/membership mutation, no deploy, no `wrangler.toml`
+  change, and no `app/layout.tsx` change.
+
 ## 2026-07-08 - A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS - Blocked Owner JSON Missing
 
 - Marker:

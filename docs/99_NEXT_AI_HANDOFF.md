@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION - Shape Mismatch Blocked
+
+- Marker:
+  `A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION`.
+- Verification status:
+  `A16X_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=BLOCKED_JSON_SHAPE_MISMATCH`.
+- Exact blocker:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- Owner file path checked:
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- Owner SHA256 matched:
+  `380E45CFDDAE78D0FEA9904B45B7901901708915E335B8D000428A962B5DE513`.
+- File size:
+  `33121` bytes.
+- Sanitized classification:
+  `A16X_OWNER_JSON_CLASSIFICATION=FAMILY_BACKUP_JSON_NOT_A16O_AUDIT_EXPORT`.
+- Sanitized counts: `people=8`, `families=7`, `family_parents=6`,
+  `family_children=6`, `couple_relationships=3`,
+  `tree_layout_nodes=13`, `tree_layouts=1`.
+- Missing expected A-16O fields included `marker`, `sessionId`, `summary`,
+  `proposedPeople`, and `proposedRelationships`.
+- Shape match:
+  `A16X_A16O_FULL_AUDIT_EXPORT_SHAPE_MATCH=NO`.
+- Offline A-16N audit:
+  `A16X_OFFLINE_A16N_FULL_AUDIT_RUN=NO_SHAPE_MISMATCH`.
+- A-16N acceptance:
+  `A16X_A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED=NO`.
+- Required next evidence: owner must fetch the authenticated admin GET response
+  from
+  `https://web-gia-pha.hungdiepcompany.workers.dev/api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`,
+  not a family backup export.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, write real genealogy data, mutate people/relationships/tree
+  layout/revisions, run SQL, DB push, migration repair, seed, mutate
+  auth/roles/users/memberships, deploy, change `wrangler.toml`, change
+  `app/layout.tsx`, print raw JSON content, commit raw JSON, use session
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or mark A-16R retry YES.
+
 ## 2026-07-08 - A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS - Blocked Owner Full JSON Missing
 
 - Marker:

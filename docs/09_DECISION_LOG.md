@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 285 - A-16X rejects family backup JSON as full relationship audit evidence
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- Owner provided a local JSON file at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json` with SHA256
+  `380E45CFDDAE78D0FEA9904B45B7901901708915E335B8D000428A962B5DE513`.
+- Sanitized shape verification showed backup-style keys such as `people`,
+  `family_parents`, `family_children`, `families`, `tree_layouts` and
+  `tree_layout_nodes`.
+- The expected A-16O full relationship audit fields were missing, including
+  `marker`, `sessionId`, `summary`, `proposedPeople`, and
+  `proposedRelationships`.
+
+Decision:
+
+- Classify the owner file as:
+  `A16X_OWNER_JSON_CLASSIFICATION=FAMILY_BACKUP_JSON_NOT_A16O_AUDIT_EXPORT`.
+- Block A-16X with:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- Do not run the A-16N offline audit against the wrong shape.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- Owner must provide the authenticated JSON returned by
+  `?auditExport=relationships-full` for audited session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`, not a family backup export.
+- The backup JSON must not be used as A-16O relationship audit evidence or as a
+  trigger for official import execution.
+- No official import, direct RPC, SQL, DB mutation, deploy, permission mutation,
+  raw JSON print, raw JSON commit, `wrangler.toml` change or `app/layout.tsx`
+  change is allowed by this verification phase.
+
 ## Decision 284 - A-16W keeps A-16R import retry blocked until authenticated full export evidence exists
 
 Date: 2026-07-08
