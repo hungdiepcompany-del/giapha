@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 289 - A-16AA classifies relationship audit warnings as owner-review required but not import-blocking
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16X2 verified the owner-downloaded A-16O full audit export shape with 102
+  proposed people, 134 proposed relationships, blocked errors `0`, and warnings
+  `94`.
+- A-16AA reviewed warning metadata offline/read-only without printing or
+  committing the raw JSON.
+
+Decision:
+
+- Classify the 94 warnings as non-import-blocking by runtime severity because no
+  `error` severity issue is present and `blockedByErrorCount=0`.
+- Require owner review before retry preflight because warnings include date
+  parse/precision/calendar categories and one duplicate candidate warning.
+- Use the next explicit owner marker:
+  `OWNER_APPROVED_A16AA_WARNING_REVIEW_FOR_A16R_IMPORT_RETRY_PREFLIGHT`.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- A later phase may request owner acceptance of the warning categories/counts.
+- A-16AA itself does not run import, SQL, deploy, mutation, or raw evidence
+  publication.
+
 ## Decision 288 - A-16X2 accepts the correct A-16O audit export shape without opening import
 
 Date: 2026-07-08

@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16AA-RELATIONSHIP-AUDIT-WARNING-REVIEW-IMPORT-RETRY-READINESS - Owner Review Needed
+
+- Marker:
+  `A-16AA-RELATIONSHIP-AUDIT-WARNING-REVIEW-IMPORT-RETRY-READINESS`.
+- Review status:
+  `A16AA_WARNING_REVIEW_STATUS=PASS_WARNINGS_CLASSIFIED_OWNER_REVIEW_REQUIRED`.
+- Warning count:
+  `A16AA_WARNING_COUNT=94`.
+- Blocked errors:
+  `A16AA_BLOCKED_BY_ERROR_COUNT=0`.
+- Import-blocking category found:
+  `A16AA_IMPORT_BLOCKING_WARNING_CATEGORY_FOUND=NO`.
+- Owner review required:
+  `A16AA_OWNER_REVIEW_REQUIRED=YES`.
+- Sanitized warning category counts:
+  `parse_warning_a16i3_birth_date_needs_review=37`,
+  `birth_date_precision_needs_review=36`,
+  `parse_warning_a16i3_death_date_needs_review=8`,
+  `death_date_calendar_conflict_needs_review=8`,
+  `death_date_precision_needs_review=3`,
+  `death_same_year_incomplete_precision=1`,
+  `duplicate_person_candidate=1`.
+- Next owner approval marker:
+  `OWNER_APPROVED_A16AA_WARNING_REVIEW_FOR_A16R_IMPORT_RETRY_PREFLIGHT`.
+- Owner approval marker present:
+  `A16AA_OWNER_APPROVAL_MARKER_PRESENT=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or start
+  import execution.
+
 ## 2026-07-08 - A-16X2-CORRECT-A16O-FULL-RELATIONSHIP-AUDIT-EXPORT-SHAPE-VERIFICATION - Shape Gate Satisfied
 
 - Marker:
