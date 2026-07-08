@@ -897,3 +897,60 @@ Báo cáo cuối:
   - No package added
   - No push
 ```
+## A-16Y - Import Execution Planning Reconciliation
+
+Current Gia Pha 4 import objective:
+
+`A16Y_TRUE_OBJECTIVE=SAFELY_IMPORT_GIA_PHA_4_DATA_INTO_PRODUCTION_WITH_DRY_RUN_AUDIT_OWNER_APPROVAL_AND_ROLLBACK_GATES`
+
+Current blocker:
+
+`A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`
+
+Current A-16R retry status:
+
+`A16Y_A16R_IMPORT_RETRY_STATUS=NO_BLOCKED_BY_A16X_SHAPE_MISMATCH_AND_MISSING_A16O_AUDIT_EXPORT`
+
+Completed import evidence checkpoints:
+
+- A-16O deploy/read-only audit export smoke is complete and pushed.
+- A-16W readiness is complete.
+- A-16X shape verification is complete and pushed.
+
+Important distinction:
+
+- `family.json` from `/admin/exports/download/json` is the general backup JSON.
+- `family.json` is not sufficient evidence for A-16R import retry:
+  `A16Y_FAMILY_JSON_BACKUP_SUFFICIENT_FOR_A16R_RETRY=NO`.
+- The missing artifact is:
+  `A16Y_MISSING_ARTIFACT=A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON`.
+- Required audit export URL:
+  `GET /api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`.
+
+UI/API exposure status:
+
+- General backup download is exposed:
+  `A16Y_GENERAL_FAMILY_BACKUP_DOWNLOAD_EXPOSED=YES`.
+- A-16O audit export API exists:
+  `A16Y_A16O_AUDIT_EXPORT_API_EXISTS=YES`.
+- Correct owner-facing A-16O audit export download in production UI is missing or unclear:
+  `A16Y_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_EXPOSED=NO_OR_UNCLEAR`.
+
+Next allowed phases:
+
+- `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`
+- `A-16AA-FULL-AUDIT-EXPORT-SHAPE-VERIFY`
+- `A-16AB-FULL-RELATIONSHIP-AUDIT-RUN-OFFLINE`
+- `A-16AC-RELATIONSHIP-ROLE-MAPPING-FIX-OR-OWNER-ACCEPTANCE-PLAN`
+- `A-16AD-FINAL-A16R-RETRY-PREFLIGHT-RECONCILIATION`
+
+Forbidden drift:
+
+- Do not run official import, direct RPC, SQL/DB mutation, migration repair,
+  seed, db push, deploy, Wrangler deploy, or local Windows deploy.
+- Do not mutate users, roles, permissions, memberships, auth settings, or
+  genealogy data.
+- Do not change `wrangler.toml` or `app/layout.tsx`.
+- Do not commit raw JSON evidence or print private JSON contents.
+- Do not start unrelated UI, backup, domain, backup-service, media, monitoring,
+  public-site, or custom-domain work.

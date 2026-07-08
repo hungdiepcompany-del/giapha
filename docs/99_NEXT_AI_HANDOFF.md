@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION - A-16R Retry Still Blocked
+
+- Marker: `A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION`.
+- Planning status:
+  `A16Y_IMPORT_EXECUTION_PLANNING_STATUS=PASS_PLANNING_RECONCILED_A16R_RETRY_BLOCKED`.
+- True objective:
+  `A16Y_TRUE_OBJECTIVE=SAFELY_IMPORT_GIA_PHA_4_DATA_INTO_PRODUCTION_WITH_DRY_RUN_AUDIT_OWNER_APPROVAL_AND_ROLLBACK_GATES`.
+- Completed phases recorded: A-16O, A-16W, and A-16X.
+- Current blocker:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- Missing artifact:
+  `A16Y_MISSING_ARTIFACT=A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON`.
+- Family backup JSON is not sufficient:
+  `A16Y_FAMILY_JSON_BACKUP_SUFFICIENT_FOR_A16R_RETRY=NO`.
+- UI/API exposure status:
+  `A16Y_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_EXPOSED=NO_OR_UNCLEAR`,
+  `A16Y_GENERAL_FAMILY_BACKUP_DOWNLOAD_EXPOSED=YES`, and
+  `A16Y_A16O_AUDIT_EXPORT_API_EXISTS=YES`.
+- Next allowed phases:
+  `A-16Z-AUDIT-EXPORT-DOWNLOAD-PATH-EXPOSURE`,
+  `A-16AA-FULL-AUDIT-EXPORT-SHAPE-VERIFY`,
+  `A-16AB-FULL-RELATIONSHIP-AUDIT-RUN-OFFLINE`,
+  `A-16AC-RELATIONSHIP-ROLE-MAPPING-FIX-OR-OWNER-ACCEPTANCE-PLAN`,
+  `A-16AD-FINAL-A16R-RETRY-PREFLIGHT-RECONCILIATION`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or start
+  unrelated UI/backup/domain/backup-service/media/public-site work.
+
 ## 2026-07-08 - A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION - Shape Mismatch Blocked
 
 - Marker:

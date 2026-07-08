@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 286 - A-16Y re-anchors Gia Pha 4 import execution to audit evidence gates
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16O, A-16W, and A-16X are complete.
+- A-16X proved the owner-provided JSON was a family backup JSON, not the
+  expected A-16O full relationship audit export.
+- The current blocker remains:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- `/admin/exports` exposes general backup downloads, while the A-16O audit
+  export exists as the `?auditExport=relationships-full` API path.
+
+Decision:
+
+- Re-anchor the Gia Pha 4 import execution roadmap to a strict phase sequence:
+  A-16Z, A-16AA, A-16AB, A-16AC, then A-16AD before any future A-16R retry.
+- Record:
+  `A16Y_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_EXPOSED=NO_OR_UNCLEAR`.
+- Record:
+  `A16Y_FAMILY_JSON_BACKUP_SUFFICIENT_FOR_A16R_RETRY=NO`.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- The next implementation phase should expose or document the correct
+  read-only A-16O full audit export path, not execute import.
+- General backup work, unrelated UI work, domain work, backup-service work,
+  deployment, SQL, mutation, and official import execution remain out of scope.
+
 ## Decision 285 - A-16X rejects family backup JSON as full relationship audit evidence
 
 Date: 2026-07-08

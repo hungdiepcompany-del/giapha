@@ -1,5 +1,31 @@
 # AI Work Log
 
+## 2026-07-08 - A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION - Planning Re-anchored
+
+- Marker: `A-16Y-IMPORT-EXECUTION-PLANNING-RECONCILIATION`.
+- Planning status:
+  `A16Y_IMPORT_EXECUTION_PLANNING_STATUS=PASS_PLANNING_RECONCILED_A16R_RETRY_BLOCKED`.
+- True objective:
+  `A16Y_TRUE_OBJECTIVE=SAFELY_IMPORT_GIA_PHA_4_DATA_INTO_PRODUCTION_WITH_DRY_RUN_AUDIT_OWNER_APPROVAL_AND_ROLLBACK_GATES`.
+- Completed phases recorded: A-16O, A-16W, and A-16X.
+- Current blocker preserved exactly:
+  `A16X_BLOCKER=OWNER_PROVIDED_JSON_SHAPE_MISMATCH_FAMILY_BACKUP_NOT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT`.
+- Family backup JSON is not sufficient evidence for A-16R retry:
+  `A16Y_FAMILY_JSON_BACKUP_SUFFICIENT_FOR_A16R_RETRY=NO`.
+- Missing artifact:
+  `A16Y_MISSING_ARTIFACT=A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON`.
+- UI/API exposure classification:
+  `A16Y_PRODUCTION_UI_CORRECT_A16O_AUDIT_EXPORT_DOWNLOAD_EXPOSED=NO_OR_UNCLEAR`,
+  `A16Y_GENERAL_FAMILY_BACKUP_DOWNLOAD_EXPOSED=YES`, and
+  `A16Y_A16O_AUDIT_EXPORT_API_EXISTS=YES`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no A-16R retry, no direct
+  RPC official import, no SQL/DB mutation, no migration repair, no seed, no DB
+  push, no deploy, no Wrangler deploy, no local Windows deploy, no permission
+  or genealogy mutation, no `wrangler.toml` change, no `app/layout.tsx` change,
+  no raw JSON commit, and no private JSON print.
+
 ## 2026-07-08 - A-16X-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-VERIFICATION - Shape Mismatch Blocked
 
 - Marker:
