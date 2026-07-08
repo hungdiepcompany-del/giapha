@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 284 - A-16W keeps A-16R import retry blocked until authenticated full export evidence exists
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16O production deploy/smoke evidence is accepted and the unauthenticated
+  full export API boundary is `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- The required owner-authenticated full JSON was still not available locally at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- The A-16N offline full audit cannot prove full 102/134 relationship evidence
+  without that authenticated JSON.
+
+Decision:
+
+- Record readiness as:
+  `A16W_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=BLOCKED_OWNER_AUTHENTICATED_FULL_JSON_NOT_AVAILABLE`.
+- Record exact blocker:
+  `A16W_BLOCKER=OWNER_AUTHENTICATED_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_MISSING`.
+- Preserve A-16O PASS status and keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- A later phase may run the offline A-16N audit only after owner-authenticated
+  full export JSON exists locally under `.tmp\` or another non-committed path.
+- Actual official import execution remains a separate owner-approved phase.
+- No official import, direct RPC, SQL, DB mutation, deploy, permission mutation,
+  `wrangler.toml` change, `app/layout.tsx` change or raw JSON commit is allowed
+  by this readiness phase.
+
 ## Decision 283 - A-16O deploy smoke records auth boundary before owner full JSON audit
 
 Date: 2026-07-08

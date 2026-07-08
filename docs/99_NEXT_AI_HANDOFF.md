@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS - Blocked Owner Full JSON Missing
+
+- Marker:
+  `A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS`.
+- Readiness status:
+  `A16W_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=BLOCKED_OWNER_AUTHENTICATED_FULL_JSON_NOT_AVAILABLE`.
+- Exact blocker:
+  `A16W_BLOCKER=OWNER_AUTHENTICATED_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_MISSING`.
+- A-16O PASS status preserved:
+  `A16O_DEPLOY_SMOKE_READY_OWNER_FULL_JSON_NEEDED`.
+- A-16O auth boundary preserved:
+  `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- Full authenticated export JSON is still missing at:
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- Local `.tmp` contains only prior capped/placeholder evidence:
+  `.tmp\a16n-dry-run-preview.json`.
+- Do not run A-16N offline full audit until owner-authenticated full export JSON
+  exists and is not committed.
+- Required full export URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev/api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/dry-run-preview?auditExport=relationships-full`.
+- Expected full export contract still requires
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`,
+  `auditExportOnly=true`, `fullRelationshipAuditExport=true`,
+  `readOnly=true`, `dbWrite=false`, `peopleWrite=false`,
+  `relationshipWrite=false`, `treeLayoutWrite=false`,
+  `revisionWrite=false`, `canProceedToOfficialImport=false`,
+  `officialImportOpen=false`, `exportCapped=false`,
+  `proposedPeopleExportCount=102`, and
+  `proposedRelationshipExportCount=134`.
+- Next safe owner step: open the full export URL in an authenticated admin
+  browser session, save JSON as
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`, then run
+  `npm run audit:a16n-full-dry-run-relationships -- .tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- Expected later offline marker:
+  `A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, write real genealogy data, mutate people/relationships/tree
+  layout/revisions, run SQL, DB push, migration repair, seed, mutate
+  auth/roles/users/memberships, run local Windows deploy, run Wrangler deploy,
+  change `wrangler.toml`, change `app/layout.tsx`, commit raw JSON, use session
+  `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or mark A-16R retry YES.
+
 ## 2026-07-08 - A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE - Owner Full JSON Needed
 
 - Marker: `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.

@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-08 - A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS - Blocked Owner JSON Missing
+
+- Marker:
+  `A-16W-FULL-AUTHENTICATED-RELATIONSHIP-AUDIT-EXPORT-EVIDENCE-READINESS`.
+- Readiness status:
+  `A16W_FULL_AUTHENTICATED_EXPORT_EVIDENCE_STATUS=BLOCKED_OWNER_AUTHENTICATED_FULL_JSON_NOT_AVAILABLE`.
+- Exact blocker:
+  `A16W_BLOCKER=OWNER_AUTHENTICATED_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_MISSING`.
+- A-16O PASS evidence preserved:
+  `A16O_DEPLOY_SMOKE_READY_OWNER_FULL_JSON_NEEDED` and
+  `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- Full authenticated export JSON was not available at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`; only
+  `.tmp\a16n-dry-run-preview.json` was present locally.
+- Offline A-16N full audit was not run because the authenticated full 102/134
+  export JSON is missing.
+- Required owner next step remains: open the full production export URL in an
+  authenticated admin browser session, save the JSON under `.tmp\`, then run
+  `npm run audit:a16n-full-dry-run-relationships -- .tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no A-16R import retry, no
+  direct RPC official import, no real genealogy write, no SQL, no DB push, no
+  migration repair, no seed, no permission/role/auth/user/membership mutation,
+  no deploy, no Windows-local deploy, no Wrangler deploy, no `wrangler.toml`
+  change, no `app/layout.tsx` change, and no raw full JSON evidence committed.
+
 ## 2026-07-08 - A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE - Auth Boundary PASS, Owner JSON Needed
 
 - Marker: `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.
