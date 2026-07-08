@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 291 - A-16AC blocks A-16R import retry execution because runtime remains fail-closed
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16AB classified the evidence chain as
+  `READY_FOR_SEPARATE_OWNER_IMPORT_EXECUTION_APPROVAL`.
+- The owner provided:
+  `OWNER_APPROVED_A16R_IMPORT_RETRY_EXECUTION`.
+- Current source still keeps the official import route and service fail-closed
+  with `canRunOfficialImport: false`.
+
+Decision:
+
+- Set final execution gate classification to:
+  `BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED`.
+- Record exact blocker:
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Do not print a final owner-run command because same-run source verification
+  does not allow execution.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- A separate runtime enablement implementation gate is required before any final
+  execution command or UI action can be offered.
+- A-16AC itself does not call POST `/official-import`, direct RPC, SQL, deploy,
+  or any data mutation.
+
 ## Decision 290 - A-16AB marks retry preflight ready for separate owner import execution approval
 
 Date: 2026-07-08

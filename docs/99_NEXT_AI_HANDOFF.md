@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16AC-A16R-IMPORT-RETRY-EXECUTION-FINAL-GATE - Blocked By Runtime Gate
+
+- Marker:
+  `A-16AC-A16R-IMPORT-RETRY-EXECUTION-FINAL-GATE`.
+- Owner execution approval marker is present:
+  `OWNER_APPROVED_A16R_IMPORT_RETRY_EXECUTION`.
+- Owner execution approval marker status:
+  `A16AC_OWNER_IMPORT_EXECUTION_APPROVAL_MARKER_PRESENT=YES`.
+- Final execution gate classification:
+  `A16AC_FINAL_EXECUTION_GATE_CLASSIFICATION=BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED`.
+- Exact blocker:
+  `A16AC_BLOCKER=A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- Evidence chain:
+  `A16AC_A16O_FULL_AUDIT_EXPORT_GATE=PASS`,
+  `A16AC_A16X2_SHAPE_GATE=PASS`,
+  `A16AC_A16AA_WARNING_REVIEW_GATE=PASS`,
+  `A16AC_OWNER_WARNING_REVIEW_APPROVAL_GATE=PASS`,
+  `A16AC_BLOCKED_ERROR_GATE=PASS_ZERO_BLOCKED_ERRORS`,
+  `A16AC_IMPORT_BLOCKING_WARNING_GATE=PASS_NONE_FOUND`.
+- Runtime source still says:
+  `canRunOfficialImport: false` and
+  `A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED`.
+- Execution allowed:
+  `A16AC_EXECUTION_ALLOWED=NO`.
+- Final owner-run command printed:
+  `A16AC_FINAL_OWNER_RUN_COMMAND_PRINTED=NO`.
+- A-16R import retry executed:
+  `A16AC_A16R_IMPORT_RETRY_EXECUTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next required phase:
+  `A-16AD-RUNTIME-EXECUTION-ENABLEMENT-IMPLEMENTATION-GATE`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or print a
+  final owner-run command until source/runtime enablement is explicitly opened
+  and checked in a later phase.
+
 ## 2026-07-08 - A-16AB-A16R-IMPORT-RETRY-PREFLIGHT-APPROVAL-GATE - Ready For Separate Owner Execution Approval
 
 - Marker:

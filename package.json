@@ -237,6 +237,7 @@
     "check:a16x2-correct-a16o-full-relationship-audit-export-shape-verification": "node scripts/check-a16x2-correct-a16o-full-relationship-audit-export-shape-verification.cjs",
     "check:a16aa-relationship-audit-warning-review-import-retry-readiness": "node scripts/check-a16aa-relationship-audit-warning-review-import-retry-readiness.cjs",
     "check:a16ab-import-retry-preflight-approval-gate": "node scripts/check-a16ab-import-retry-preflight-approval-gate.cjs",
+    "check:a16ac-import-retry-execution-final-gate": "node scripts/check-a16ac-import-retry-execution-final-gate.cjs",
     "check:a16y-import-execution-planning-reconciliation": "node scripts/check-a16y-import-execution-planning-reconciliation.cjs",
     "check:a16z-audit-export-download-path-exposure": "node scripts/check-a16z-audit-export-download-path-exposure.cjs",
     "check:a16sql-rls-import-staging-write": "node scripts/check-a16sql-rls-import-staging-write.cjs",
