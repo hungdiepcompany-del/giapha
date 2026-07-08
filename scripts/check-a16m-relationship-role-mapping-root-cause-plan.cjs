@@ -242,6 +242,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
   "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
   "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
+  "docs/PLAN_A16O_DEPLOY_READ_ONLY_AUDIT_EXPORT_SMOKE.md",
+  "scripts/check-a16o-deploy-read-only-audit-export-smoke.cjs",
   ...a16oRuntimeChangedFiles,
   "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",

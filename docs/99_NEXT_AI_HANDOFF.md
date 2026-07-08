@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE - Owner Full JSON Needed
+
+- Marker: `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.
+- Owner deploy evidence:
+  `OWNER_CONFIRMED_A16O_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_e74ec38`.
+- Deploy method:
+  `GITHUB_ACTIONS_CLOUDFLARE_DEPLOY_WORKFLOW_BRANCH_MAIN`.
+- Production worker URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- GET-only smoke results:
+  `/` = `HTTP 200`;
+  `/auth/login` = `HTTP 200`;
+  `/admin/exports/import` = `HTTP 200`;
+  default dry-run preview API = unauthenticated `HTTP 401`;
+  full audit export API = unauthenticated `HTTP 401`.
+- Auth boundary:
+  `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- Current classification:
+  `A16O_DEPLOY_SMOKE_READY_OWNER_FULL_JSON_NEEDED`.
+- Full export marker still needs authenticated owner browser JSON evidence:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`.
+- Expected full export counts remain:
+  `proposedPeopleExportCount=102`, `proposedRelationshipExportCount=134`,
+  `exportCapped=false`.
+- Offline A-16N audit was not run because
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json` was not available.
+- Next safe owner step: open the full export URL in an authenticated admin
+  browser session, save JSON under `.tmp\`, then run
+  `npm run audit:a16n-full-dry-run-relationships -- .tmp\a16o-dry-run-relationship-audit-export-full.json`.
+- Official import remains locked and A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, click confirm, call direct RPC official
+  import, write real genealogy data, mutate people/relationships/tree
+  layout/revisions, run SQL, DB push, migration repair, seed, mutate
+  auth/roles/users/memberships, run Windows-local deploy, run local Wrangler
+  deploy, change `wrangler.toml`, change `app/layout.tsx`, commit raw JSON, use
+  session `ae7a5fe3-6a29-4f60-85f7-76108ed02565`, or mark A-16R retry YES.
+
 ## 2026-07-08 - A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY - Deploy Smoke Next
 
 - Marker: `A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY`.

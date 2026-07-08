@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 283 - A-16O deploy smoke records auth boundary before owner full JSON audit
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- Owner confirmed GitHub Actions Cloudflare Deploy succeeded on branch `main`
+  for implementation commit `e74ec38`.
+- Production public/login/admin import routes were reachable by GET.
+- The default dry-run preview and full audit export API routes returned
+  unauthenticated `401`, which proves the API is not publicly exposed from CLI
+  but does not prove the authenticated full 102/134 export payload.
+- The owner full export JSON was not available locally.
+
+Decision:
+
+- Record the deploy smoke as:
+  `A16O_DEPLOY_SMOKE_READY_OWNER_FULL_JSON_NEEDED`.
+- Treat unauthenticated `401` as:
+  `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- Require owner-authenticated browser JSON before running offline A-16N full
+  relationship audit.
+- Keep official import locked and keep A-16R import retry as `NO`.
+
+Consequences:
+
+- Do not infer full export counts from unauthenticated CLI responses.
+- Do not run official import, direct RPC, SQL, DB push, migration repair, seed,
+  permission mutation or any real genealogy write.
+
 ## Decision 282 - A-16O adds read-only full relationship audit export without opening official import
 
 Date: 2026-07-08

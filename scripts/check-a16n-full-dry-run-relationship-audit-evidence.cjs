@@ -214,6 +214,8 @@ const allowedChangedFiles = new Set([
   packagePath,
   "docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md",
   "scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs",
+  "docs/PLAN_A16O_DEPLOY_READ_ONLY_AUDIT_EXPORT_SMOKE.md",
+  "scripts/check-a16o-deploy-read-only-audit-export-smoke.cjs",
   ...a16oRuntimeChangedFiles,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

@@ -1,5 +1,40 @@
 # AI Work Log
 
+## 2026-07-08 - A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE - Auth Boundary PASS, Owner JSON Needed
+
+- Marker: `A-16O-DEPLOY-READ-ONLY-AUDIT-EXPORT-SMOKE`.
+- Owner deploy evidence:
+  `OWNER_CONFIRMED_A16O_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_e74ec38`.
+- Deploy method:
+  `GITHUB_ACTIONS_CLOUDFLARE_DEPLOY_WORKFLOW_BRANCH_MAIN`.
+- Production worker URL:
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Production GET smoke results:
+  `/` returned `HTTP 200`;
+  `/auth/login` returned `HTTP 200`;
+  `/admin/exports/import` returned `HTTP 200`;
+  default dry-run preview GET returned unauthenticated `HTTP 401`;
+  full audit export GET returned unauthenticated `HTTP 401`.
+- Auth boundary result:
+  `A16O_EXPORT_AUTH_BOUNDARY_PASS`.
+- Full export marker expected after authenticated owner browser smoke:
+  `A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY`.
+- Expected full export counts remain:
+  `proposedPeopleExportCount=102`, `proposedRelationshipExportCount=134`,
+  `exportCapped=false`.
+- Authenticated full export JSON was not available locally at
+  `.tmp\a16o-dry-run-relationship-audit-export-full.json`, so offline A-16N
+  audit was not run.
+- Classification:
+  `A16O_DEPLOY_SMOKE_READY_OWNER_FULL_JSON_NEEDED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no direct RPC official
+  import, no real genealogy write, no SQL, no DB push, no migration repair, no
+  seed, no permission/role/auth/user/membership mutation, no Windows-local
+  deploy, no local Wrangler deploy, no `wrangler.toml` change, no
+  `app/layout.tsx` change, and no raw JSON evidence committed.
+
 ## 2026-07-08 - A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY - Full Export Contract Added
 
 - Marker: `A-16O-UNCAP-DRY-RUN-RELATIONSHIP-AUDIT-EXPORT-READ-ONLY`.

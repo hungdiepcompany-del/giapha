@@ -181,6 +181,8 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A16O_DEPLOY_READ_ONLY_AUDIT_EXPORT_SMOKE.md",
+  "scripts/check-a16o-deploy-read-only-audit-export-smoke.cjs",
   "scripts/check-a16n-full-dry-run-relationship-audit-evidence.cjs",
   "scripts/check-a16m-relationship-role-mapping-root-cause-plan.cjs",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",
