@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 290 - A-16AB marks retry preflight ready for separate owner import execution approval
+
+Date: 2026-07-08
+
+Status: Accepted
+
+Context:
+
+- A-16O exposes the audited full relationship export route in read-only mode.
+- A-16X2 accepted the correct A-16O full audit export shape.
+- A-16AA classified all 94 warnings as owner-review required but not
+  import-blocking and the owner provided:
+  `OWNER_APPROVED_A16AA_WARNING_REVIEW_FOR_A16R_IMPORT_RETRY_PREFLIGHT`.
+
+Decision:
+
+- Set final preflight classification to:
+  `READY_FOR_SEPARATE_OWNER_IMPORT_EXECUTION_APPROVAL`.
+- Keep actual import execution out of A-16AB.
+- Require a future explicit execution marker:
+  `OWNER_APPROVED_A16R_IMPORT_RETRY_EXECUTION`.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- A later separate phase may request owner execution approval and run the final
+  execution-specific preflight.
+- A-16AB itself does not call POST `/official-import`, direct RPC, SQL, deploy,
+  or any data mutation.
+
 ## Decision 289 - A-16AA classifies relationship audit warnings as owner-review required but not import-blocking
 
 Date: 2026-07-08

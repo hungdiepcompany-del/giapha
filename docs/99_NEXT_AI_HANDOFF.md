@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-08 - A-16AB-A16R-IMPORT-RETRY-PREFLIGHT-APPROVAL-GATE - Ready For Separate Owner Execution Approval
+
+- Marker:
+  `A-16AB-A16R-IMPORT-RETRY-PREFLIGHT-APPROVAL-GATE`.
+- Preflight status:
+  `A16AB_PREFLIGHT_STATUS=PASS_READY_FOR_SEPARATE_OWNER_IMPORT_EXECUTION_APPROVAL`.
+- Final classification:
+  `A16AB_FINAL_PREFLIGHT_CLASSIFICATION=READY_FOR_SEPARATE_OWNER_IMPORT_EXECUTION_APPROVAL`.
+- Evidence chain:
+  `A16AB_A16O_FULL_AUDIT_EXPORT_GATE=PASS`,
+  `A16AB_A16X2_SHAPE_GATE=PASS`,
+  `A16AB_A16AA_WARNING_REVIEW_GATE=PASS`,
+  `A16AB_OWNER_WARNING_REVIEW_APPROVAL_GATE=PASS`.
+- Owner warning-review approval marker present:
+  `OWNER_APPROVED_A16AA_WARNING_REVIEW_FOR_A16R_IMPORT_RETRY_PREFLIGHT`.
+- Import execution approval marker is still missing:
+  `A16AB_OWNER_IMPORT_EXECUTION_APPROVAL_MARKER_PRESENT=NO`.
+- Required future marker:
+  `OWNER_APPROVED_A16R_IMPORT_RETRY_EXECUTION`.
+- A-16R import retry executed:
+  `A16AB_A16R_IMPORT_RETRY_EXECUTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or start
+  import execution without the explicit future execution marker.
+
 ## 2026-07-08 - A-16AA-RELATIONSHIP-AUDIT-WARNING-REVIEW-IMPORT-RETRY-READINESS - Owner Review Needed
 
 - Marker:
