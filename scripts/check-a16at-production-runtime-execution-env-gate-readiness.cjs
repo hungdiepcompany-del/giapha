@@ -194,6 +194,8 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs",
   "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "docs/PLAN_A16AV_RUNTIME_ENV_FLAGS_PRODUCTION_READ_ONLY_SMOKE.md",
+  "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
 ]);
 
 for (const file of changedFiles) {

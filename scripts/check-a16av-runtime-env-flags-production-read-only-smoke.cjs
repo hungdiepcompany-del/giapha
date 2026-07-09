@@ -7,8 +7,8 @@ const childProcess = require("node:child_process");
 const root = process.cwd();
 const failures = [];
 
-const docPath = "docs/PLAN_A16AS_A16AR_PRODUCTION_OWNER_READ_ONLY_UI_SMOKE.md";
-const checkerPath = "scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs";
+const docPath = "docs/PLAN_A16AV_RUNTIME_ENV_FLAGS_PRODUCTION_READ_ONLY_SMOKE.md";
+const checkerPath = "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs";
 const packagePath = "package.json";
 
 function read(relativePath) {
@@ -62,66 +62,70 @@ const wrangler = read("wrangler.toml");
 const layout = read("app/layout.tsx");
 
 for (const token of [
-  "A-16AS - A-16AR Production Owner Read-only UI Smoke",
-  "A16AS_STATUS=BLOCKED_AUTHENTICATED_CONTEXT_IMPORTS_CREATE_PERMISSION_MISSING",
-  "A16AS_DEPLOY_MARKER=OWNER_CONFIRMED_A16AR_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_9a11248",
-  "A16AS_PRODUCTION_URL=https://web-gia-pha.hungdiepcompany.workers.dev",
-  "A16AS_UI_PATH=/admin/exports/import",
-  "A16AS_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
-  "A16AS_PRODUCTION_ROUTE_LOADED=YES",
-  "A16AS_ADMIN_SHELL_VISIBLE=YES",
-  "A16AS_AUTHENTICATED_CONTEXT_VISIBLE=YES",
-  "A16AS_VISIBLE_PERMISSION_COUNT=0",
-  "A16AS_IMPORTS_CREATE_PRESENT=NO",
-  "A16AS_IMPORT_PANEL_VISIBLE=NO",
-  "A16AS_A16R_BLOCK_VISIBLE=NO",
-  "A16AS_AUDITED_SESSION_VISIBLE=NO",
-  "A16AS_RUNTIME_MARKER_VISIBLE=NO",
-  "A16AS_SESSION_MARKER_VISIBLE=NO",
-  "A16AS_FINAL_CONFIRMATION_CHECKBOX_VISIBLE=NO",
-  "A16AS_OFFICIAL_IMPORT_BUTTON_STATE=NOT_RENDERED",
-  "A16AS_SANITIZED_UI_REASON=Bạn chưa có quyền imports.create.",
-  "A16AS_BLOCKER=AUTHENTICATED_PRODUCTION_CONTEXT_PERMISSION_COUNT_0_IMPORTS_CREATE_MISSING",
-  "A16AS_POST_OFFICIAL_IMPORT_CALLED=NO",
-  "A16AS_A16R_IMPORT_RETRY_EXECUTED=NO",
-  "A16AS_DIRECT_MANUAL_RPC_CALLED=NO",
-  "A16AS_SQL_RUN=NO",
-  "A16AS_DB_MUTATION_RUN=NO",
-  "A16AS_MIGRATION_REPAIR_RUN=NO",
-  "A16AS_SEED_RUN=NO",
-  "A16AS_DEPLOY_RUN=NO",
-  "A16AS_AUTH_ROLE_PERMISSION_MEMBERSHIP_MUTATION=NO",
-  "A16AS_GENEALOGY_MUTATION=NO",
-  "A16AS_RAW_JSON_COMMITTED=NO",
-  "A16AS_PRIVATE_DATA_PRINTED=NO",
+  "A-16AV - Runtime Env Flags Production Read-only Smoke",
+  "A16AV_STATUS=BLOCKED_AUTHENTICATED_CONTEXT_IMPORTS_CREATE_PERMISSION_MISSING",
+  "A16AV_DEPLOY_MARKER=OWNER_CONFIRMED_A16AU_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_ea9fe40",
+  "A16AV_PRODUCTION_URL=https://web-gia-pha.hungdiepcompany.workers.dev",
+  "A16AV_UI_PATH=/admin/exports/import",
+  "A16AV_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68",
+  "A16AV_PRODUCTION_ROUTE_LOADED=YES",
+  "A16AV_ADMIN_SHELL_VISIBLE=YES",
+  "A16AV_AUTHENTICATED_CONTEXT_VISIBLE=YES",
+  "A16AV_VISIBLE_PERMISSION_COUNT=0",
+  "A16AV_IMPORTS_CREATE_PRESENT=NO",
+  "A16AV_IMPORT_PANEL_VISIBLE=NO",
+  "A16AV_A16R_BLOCK_VISIBLE=NO",
+  "A16AV_AUDITED_SESSION_VISIBLE=NO",
+  "A16AV_RUNTIME_MARKER_VISIBLE=NO",
+  "A16AV_SESSION_MARKER_VISIBLE=NO",
+  "A16AV_RUNTIME_CANDIDATE_ENV_ACTIVE=UNKNOWN_NOT_RENDERED",
+  "A16AV_EXECUTION_BRANCH_ENV_ACTIVE=UNKNOWN_NOT_RENDERED",
+  "A16AV_ENV_LOCK_REASONS_VISIBLE=UNKNOWN_NOT_RENDERED",
+  "A16AV_SAME_RUN_PREFLIGHT_LOCK_VISIBLE=UNKNOWN_NOT_RENDERED",
+  "A16AV_FINAL_CONFIRMATION_CHECKBOX_VISIBLE=NO",
+  "A16AV_OFFICIAL_IMPORT_BUTTON_STATE=NOT_RENDERED",
+  "A16AV_SANITIZED_UI_REASON=Báº¡n chÆ°a cÃ³ quyá»n imports.create.",
+  "A16AV_BLOCKER=AUTHENTICATED_PRODUCTION_CONTEXT_PERMISSION_COUNT_0_IMPORTS_CREATE_MISSING",
+  "A16AV_POST_OFFICIAL_IMPORT_CALLED=NO",
+  "A16AV_A16R_IMPORT_RETRY_EXECUTED=NO",
+  "A16AV_DIRECT_MANUAL_RPC_CALLED=NO",
+  "A16AV_SQL_RUN=NO",
+  "A16AV_DB_MUTATION_RUN=NO",
+  "A16AV_MIGRATION_REPAIR_RUN=NO",
+  "A16AV_SEED_RUN=NO",
+  "A16AV_DEPLOY_RUN=NO",
+  "A16AV_AUTH_ROLE_PERMISSION_MEMBERSHIP_MUTATION=NO",
+  "A16AV_GENEALOGY_MUTATION=NO",
+  "A16AV_RAW_JSON_COMMITTED=NO",
+  "A16AV_PRIVATE_DATA_PRINTED=NO",
   "A16R_IMPORT_RETRY_NEXT=NO",
-  "A16AS_NEXT_ACTION=OWNER_REOPEN_PRODUCTION_ADMIN_IMPORT_ROUTE_WITH_TRUE_OWNER_ADMIN_IMPORT_CONTEXT_THEN_RERUN_READ_ONLY_UI_SMOKE_NO_POST",
+  "A16AV_NEXT_ACTION=OWNER_REOPEN_PRODUCTION_ADMIN_IMPORT_ROUTE_WITH_TRUE_OWNER_ADMIN_IMPORT_CONTEXT_THEN_RERUN_A16AV_READ_ONLY_UI_SMOKE_NO_POST",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
 
 for (const [content, token, label] of [
-  [index, "PLAN_A16AS_A16AR_PRODUCTION_OWNER_READ_ONLY_UI_SMOKE.md", "index entry"],
-  [workLog, "A16AS_STATUS=BLOCKED_AUTHENTICATED_CONTEXT_IMPORTS_CREATE_PERMISSION_MISSING", "work log status"],
-  [handoff, "A16AS_BLOCKER=AUTHENTICATED_PRODUCTION_CONTEXT_PERMISSION_COUNT_0_IMPORTS_CREATE_MISSING", "handoff blocker"],
+  [index, "PLAN_A16AV_RUNTIME_ENV_FLAGS_PRODUCTION_READ_ONLY_SMOKE.md", "index entry"],
+  [workLog, "A16AV_STATUS=BLOCKED_AUTHENTICATED_CONTEXT_IMPORTS_CREATE_PERMISSION_MISSING", "work log status"],
+  [handoff, "A16AV_BLOCKER=AUTHENTICATED_PRODUCTION_CONTEXT_PERMISSION_COUNT_0_IMPORTS_CREATE_MISSING", "handoff blocker"],
 ]) {
   requireIncludes(content, token, label);
 }
 
 if (
-  packageJson?.scripts?.["check:a16as-a16ar-production-owner-read-only-ui-smoke"] !==
-  "node scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs"
+  packageJson?.scripts?.["check:a16av-runtime-env-flags-production-read-only-smoke"] !==
+  "node scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs"
 ) {
-  failures.push("missing package script check:a16as-a16ar-production-owner-read-only-ui-smoke");
+  failures.push("missing package script check:a16av-runtime-env-flags-production-read-only-smoke");
 }
 
-rejectPattern(doc, /A16AS_POST_OFFICIAL_IMPORT_CALLED=YES/i, "POST must remain NO");
-rejectPattern(doc, /A16AS_A16R_IMPORT_RETRY_EXECUTED=YES|A16R_IMPORT_RETRY_NEXT=YES/i, "A-16R retry must remain NO");
-rejectPattern(doc, /A16AS_SQL_RUN=YES|A16AS_DB_MUTATION_RUN=YES|A16AS_DEPLOY_RUN=YES/i, "forbidden mutation/deploy status");
+rejectPattern(doc, /A16AV_POST_OFFICIAL_IMPORT_CALLED=YES/i, "POST must remain NO");
+rejectPattern(doc, /A16AV_A16R_IMPORT_RETRY_EXECUTED=YES|A16R_IMPORT_RETRY_NEXT=YES/i, "A-16R retry must remain NO");
+rejectPattern(doc, /A16AV_SQL_RUN=YES|A16AV_DB_MUTATION_RUN=YES|A16AV_DEPLOY_RUN=YES/i, "mutation/deploy must remain NO");
 rejectPattern(doc + checker, /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i, "private email literal");
 rejectPattern(doc + checker, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, "secret-like token");
-rejectPattern(wrangler, /A16AS|A16R_IMPORT_RETRY/i, "wrangler config must not change");
-rejectPattern(layout, /A16AS|official-import/i, "app layout must not change");
+rejectPattern(wrangler, /A16AV|A16R_IMPORT_RETRY/i, "wrangler config must not change");
+rejectPattern(layout, /A16AV|official-import/i, "app layout must not change");
 
 const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
@@ -136,11 +140,9 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
-  "docs/PLAN_A16AT_PRODUCTION_RUNTIME_EXECUTION_ENV_GATE_READINESS.md",
+  "scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs",
   "scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
   "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
-  "docs/PLAN_A16AV_RUNTIME_ENV_FLAGS_PRODUCTION_READ_ONLY_SMOKE.md",
-  "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -167,9 +169,9 @@ for (const file of stagedFiles) {
 }
 
 if (failures.length > 0) {
-  console.error("A-16AS A-16AR production owner read-only UI smoke check failed:");
+  console.error("A-16AV runtime env flags production read-only smoke check failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("A-16AS A-16AR production owner read-only UI smoke check passed.");
+console.log("A-16AV runtime env flags production read-only smoke check passed.");

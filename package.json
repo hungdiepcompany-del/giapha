@@ -326,7 +326,8 @@
     "check:a16ar-owner-same-run-official-import-confirmation-ui-plumbing": "node scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
     "check:a16as-a16ar-production-owner-read-only-ui-smoke": "node scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs",
     "check:a16at-production-runtime-execution-env-gate-readiness": "node scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
-    "check:a16au-github-actions-runtime-env-flag-wiring": "node scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs"
+    "check:a16au-github-actions-runtime-env-flag-wiring": "node scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
+    "check:a16av-runtime-env-flags-production-read-only-smoke": "node scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
