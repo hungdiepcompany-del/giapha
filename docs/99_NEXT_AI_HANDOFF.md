@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AF-RUNTIME-IMPORT-ENABLEMENT-CANDIDATE-PRODUCTION-SMOKE - Read-Only Blocked Safe
+
+- Marker:
+  `A-16AF-RUNTIME-IMPORT-ENABLEMENT-CANDIDATE-PRODUCTION-SMOKE`.
+- Owner deploy marker:
+  `OWNER_CONFIRMED_A16AE_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_5ddd7c0`.
+- Production smoke status:
+  `A16AF_PRODUCTION_SMOKE_STATUS=PASS_READ_ONLY_BLOCKED_SAFE`.
+- Current runtime import status:
+  `A16AF_CAN_RUN_OFFICIAL_IMPORT_STATUS=NOT_ENABLED_BY_READ_ONLY_PRODUCTION_SMOKE`.
+- Blocker:
+  `A16AF_BLOCKER=RUNTIME_CANDIDATE_NOT_OBSERVABLE_OR_RUNNABLE_BY_SAFE_GET_OFFICIAL_IMPORT_ROUTE_GET_405_GATE_GET_401`.
+- Sanitized GET evidence:
+  `/` 200, `/auth/login` 200, `/admin/exports/import` 200,
+  official-import-gate 401 with `readOnly=true`, `canOpenOfficialImport=false`,
+  `officialImportEnabled=false`, `reviewPackReadiness=NOT_READY`, and
+  official-import route GET 405.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next action:
+  define a separate owner-approved final execution phase only if explicitly
+  requested. That phase must re-check all gates in the same run before any POST
+  is considered.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or print a
+  final import command from A-16AF.
+
 ## 2026-07-09 - A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE - Candidate Ready, Not Executed
 
 - Marker:

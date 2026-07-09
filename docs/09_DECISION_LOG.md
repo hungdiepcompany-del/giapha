@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 294 - A-16AF production smoke keeps runtime import execution blocked after A-16AE deploy
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- Owner confirmed GitHub Actions deploy succeeded for A-16AE commit `5ddd7c0`.
+- A-16AF was limited to read-only production smoke and could not call POST
+  `/official-import`.
+
+Decision:
+
+- Record A-16AF as:
+  `A16AF_PRODUCTION_SMOKE_STATUS=PASS_READ_ONLY_BLOCKED_SAFE`.
+- Classify current runtime import status as:
+  `A16AF_CAN_RUN_OFFICIAL_IMPORT_STATUS=NOT_ENABLED_BY_READ_ONLY_PRODUCTION_SMOKE`.
+- Preserve the blocker:
+  `A16AF_BLOCKER=RUNTIME_CANDIDATE_NOT_OBSERVABLE_OR_RUNNABLE_BY_SAFE_GET_OFFICIAL_IMPORT_ROUTE_GET_405_GATE_GET_401`.
+
+Consequences:
+
+- The deployed candidate did not produce an import execution approval in this
+  phase.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 293 - A-16AE adds guarded runtime official import enablement candidate without execution
 
 Date: 2026-07-09

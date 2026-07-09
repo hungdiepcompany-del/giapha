@@ -207,6 +207,8 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
   "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "docs/PLAN_A16AF_RUNTIME_IMPORT_ENABLEMENT_CANDIDATE_PRODUCTION_SMOKE.md",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",

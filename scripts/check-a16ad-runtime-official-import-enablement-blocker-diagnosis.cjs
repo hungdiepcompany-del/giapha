@@ -169,6 +169,8 @@ const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
   "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "docs/PLAN_A16AF_RUNTIME_IMPORT_ENABLEMENT_CANDIDATE_PRODUCTION_SMOKE.md",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
   "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
@@ -200,7 +202,7 @@ const stagedFiles = git(["diff", "--cached", "--name-only"])
   .filter(Boolean);
 for (const file of stagedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected staged file ${file}`);
-  if (file.startsWith(".tmp/") || /\.(json|xlsx|xls|csv|zip)$/i.test(file)) {
+  if (file.startsWith(".tmp/") || (file !== packagePath && /\.(json|xlsx|xls|csv|zip)$/i.test(file))) {
     failures.push(`raw evidence/data file staged ${file}`);
   }
 }
