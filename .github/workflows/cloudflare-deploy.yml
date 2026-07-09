@@ -23,6 +23,8 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED: ${{ vars.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED || 'false' }}
+      A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED: ${{ vars.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED || 'false' }}
 
     steps:
       - name: Checkout
@@ -46,6 +48,8 @@ jobs:
           test -n "${NEXT_PUBLIC_SUPABASE_ANON_KEY}" || (echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is missing" && exit 1)
           test -n "${NEXT_PUBLIC_APP_URL}" || (echo "NEXT_PUBLIC_APP_URL is missing" && exit 1)
           test -n "${SUPABASE_SERVICE_ROLE_KEY}" || (echo "SUPABASE_SERVICE_ROLE_KEY is missing" && exit 1)
+          test -n "${A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED}" || (echo "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED default is missing" && exit 1)
+          test -n "${A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED}" || (echo "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED default is missing" && exit 1)
           echo "Required deploy environment is configured."
 
       - name: Check environment safety

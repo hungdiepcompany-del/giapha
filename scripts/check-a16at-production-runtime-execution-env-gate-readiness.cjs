@@ -150,11 +150,11 @@ for (const [content, token, label] of [
   requireIncludes(content, token, label);
 }
 
-if (/A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED/.test(workflow)) {
-  failures.push("workflow already contains A16P env flag; update A-16AT classification");
+if (/A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED:\s*true/i.test(workflow)) {
+  failures.push("workflow must not hardcode A16P env flag true");
 }
-if (/A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED/.test(workflow)) {
-  failures.push("workflow already contains A16AH env flag; update A-16AT classification");
+if (/A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED:\s*true/i.test(workflow)) {
+  failures.push("workflow must not hardcode A16AH env flag true");
 }
 
 if (
@@ -185,6 +185,9 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  ".github/workflows/cloudflare-deploy.yml",
+  "docs/PLAN_A16AU_GITHUB_ACTIONS_RUNTIME_ENV_FLAG_WIRING.md",
+  "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -198,7 +201,6 @@ for (const file of changedFiles) {
   if (file === "wrangler.toml" || file === "app/layout.tsx") {
     failures.push(`forbidden changed file ${file}`);
   }
-  if (file === workflowPath) failures.push("workflow must not change in A-16AT");
   if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
     failures.push(`forbidden SQL/check file ${file}`);
   }

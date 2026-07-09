@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AU-GITHUB-ACTIONS-RUNTIME-ENV-FLAG-WIRING - Workflow Wiring
+
+- Marker:
+  `A-16AU-GITHUB-ACTIONS-RUNTIME-ENV-FLAG-WIRING`.
+- Status:
+  `A16AU_STATUS=PASS_WORKFLOW_ENV_WIRING_READY_NOT_DEPLOYED`.
+- Workflow changed:
+  `.github/workflows/cloudflare-deploy.yml`.
+- Runtime flags wired:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Fail-closed behavior:
+  both workflow env values come from GitHub Actions `vars.*` and default to
+  string `false` when missing; source still requires exact string `true`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  `A16AU_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+- Next action:
+  `A16AU_NEXT_ACTION=OWNER_SET_GITHUB_ACTIONS_VARS_THEN_MANUAL_CLOUDFLARE_DEPLOY_AND_A16AV_READ_ONLY_UI_SMOKE_NO_POST`.
+
 ## 2026-07-09 - A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS - Runbook Only
 
 - Marker:

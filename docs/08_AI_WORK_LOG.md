@@ -1,5 +1,28 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AU-GITHUB-ACTIONS-RUNTIME-ENV-FLAG-WIRING - Workflow Wiring
+
+- Marker:
+  `A-16AU-GITHUB-ACTIONS-RUNTIME-ENV-FLAG-WIRING`.
+- Status:
+  `A16AU_STATUS=PASS_WORKFLOW_ENV_WIRING_READY_NOT_DEPLOYED`.
+- Workflow:
+  `.github/workflows/cloudflare-deploy.yml` now passes
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED` from GitHub Actions
+  variables with fail-closed default `false`.
+- Source gates preserved:
+  route and UI still require exact string `true` before A-16AR can open.
+- Owner manual next step:
+  configure both GitHub Actions variables to `true`, then run a separate
+  owner-approved manual Cloudflare Deploy and read-only A-16AV UI smoke.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AU_POST_OFFICIAL_IMPORT_CALLED=NO`; no import retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+
 ## 2026-07-09 - A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS - Runbook Only
 
 - Marker:
