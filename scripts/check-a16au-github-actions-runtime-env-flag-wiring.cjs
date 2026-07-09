@@ -183,6 +183,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
   "docs/PLAN_A16AV_RUNTIME_ENV_FLAGS_PRODUCTION_READ_ONLY_SMOKE.md",
   "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
+  "docs/PLAN_A16AW_RUNTIME_ENV_FLAG_PROPAGATION_DIAGNOSIS.md",
+  "scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

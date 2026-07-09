@@ -143,6 +143,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs",
   "scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
   "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
+  "docs/PLAN_A16AW_RUNTIME_ENV_FLAG_PROPAGATION_DIAGNOSIS.md",
+  "scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

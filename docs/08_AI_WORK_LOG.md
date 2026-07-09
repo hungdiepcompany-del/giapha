@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS - Runtime Env Blocker
+
+- Marker:
+  `A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS`.
+- Status:
+  `A16AW_STATUS=DIAGNOSED_RUNTIME_ENV_PROPAGATION_BLOCKED_NO_IMPORT`.
+- Owner-provided production UI evidence:
+  OWNER/admin context is proven for the audited session, visible permission
+  count `25`, `imports.create` present, and `permissions.manage` present.
+- Remaining production blockers:
+  `A16AR_LOCKED_RUNTIME_CANDIDATE_ENV_DISABLED`,
+  `A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED`, and
+  `A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE`.
+- Diagnosis:
+  `A16AW_BLOCKER=GITHUB_ACTIONS_REPOSITORY_VARS_ARE_NOT_CLOUDFLARE_WORKER_RUNTIME_VARS_AND_DEPLOY_DOES_NOT_KEEP_DASHBOARD_RUNTIME_VARS`.
+- Evidence:
+  `.github/workflows/cloudflare-deploy.yml` passes both A-16 flags as GitHub
+  Actions job env, but `wrangler.toml` has no `[vars]`, the package deploy
+  command does not pass `--keep-vars`, and Cloudflare/OpenNext production docs
+  separate build/job variables from Worker runtime variables.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AW_POST_OFFICIAL_IMPORT_CALLED=NO`; no import retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+- Next action:
+  run a separate A-16AX source phase to wire a safe deploy/runtime-var
+  propagation path, or have owner configure Worker runtime vars and redeploy
+  with a deploy path that preserves them; then rerun read-only smoke only.
+
 ## 2026-07-09 - A-16AV-RUNTIME-ENV-FLAGS-PRODUCTION-READ-ONLY-SMOKE - Blocked By Permission Context
 
 - Marker:

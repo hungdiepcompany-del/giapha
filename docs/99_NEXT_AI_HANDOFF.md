@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS - Runtime Env Blocker
+
+- Marker:
+  `A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS`.
+- Status:
+  `A16AW_STATUS=DIAGNOSED_RUNTIME_ENV_PROPAGATION_BLOCKED_NO_IMPORT`.
+- Owner-provided production UI evidence:
+  OWNER role, visible permission count `25`, `imports.create` present,
+  `permissions.manage` present, OWNER/ADMIN context `YES`, audited session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Remaining blockers:
+  `A16AR_LOCKED_RUNTIME_CANDIDATE_ENV_DISABLED`,
+  `A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED`, and
+  `A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE`.
+- Blocker:
+  `A16AW_BLOCKER=GITHUB_ACTIONS_REPOSITORY_VARS_ARE_NOT_CLOUDFLARE_WORKER_RUNTIME_VARS_AND_DEPLOY_DOES_NOT_KEEP_DASHBOARD_RUNTIME_VARS`.
+- Diagnosis:
+  A-16AU wired GitHub Actions repository variables into the workflow job env,
+  but production runtime still needs Cloudflare Worker runtime variables. Current
+  deploy command is `opennextjs-cloudflare build && opennextjs-cloudflare deploy`
+  and does not pass `--keep-vars`, so dashboard runtime vars would not be
+  preserved by that deploy path.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  `A16AW_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+- Next action:
+  `A16AW_NEXT_ACTION=A16AX_WIRE_DEPLOY_KEEP_VARS_OR_OWNER_SET_CLOUDFLARE_WORKER_RUNTIME_VARS_THEN_REDEPLOY_AND_RERUN_READ_ONLY_SMOKE_NO_POST`.
+
 ## 2026-07-09 - A-16AV-RUNTIME-ENV-FLAGS-PRODUCTION-READ-ONLY-SMOKE - Blocked By Permission Context
 
 - Marker:
