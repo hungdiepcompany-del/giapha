@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 295 - A-16AG blocks official import retry because deployed runtime is still candidate-only
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- The final owner execution approval marker is present.
+- A-16O, A-16X2, A-16AA, A-16AB, A-16AE and A-16AF evidence gates are present.
+- A-16AG required the route/runtime allow gate to pass in the same run before
+  any official import POST.
+
+Decision:
+
+- Block A-16AG before POST with:
+  `A16AG_EXECUTION_STATUS=BLOCKED_ROUTE_RUNTIME_NOT_EXECUTION_CAPABLE`.
+- Record blocker:
+  `A16AG_BLOCKER=ROUTE_RUNTIME_ONLY_EXPOSES_CANDIDATE_READY_NOT_EXECUTED_NO_RPC_EXECUTION_BRANCH`.
+- Do not call POST `/official-import` because current source only returns
+  `CANDIDATE_READY_NOT_EXECUTED` and does not call the transaction RPC.
+
+Consequences:
+
+- No genealogy data was written by A-16AG.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 294 - A-16AF production smoke keeps runtime import execution blocked after A-16AE deploy
 
 Date: 2026-07-09

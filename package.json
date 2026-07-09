@@ -241,6 +241,7 @@
     "check:a16ad-runtime-official-import-enablement-blocker-diagnosis": "node scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
     "check:a16ae-runtime-official-import-enablement-candidate": "node scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
     "check:a16af-runtime-import-enablement-candidate-production-smoke": "node scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
+    "check:a16ag-a16r-official-import-retry-execution": "node scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
     "check:a16y-import-execution-planning-reconciliation": "node scripts/check-a16y-import-execution-planning-reconciliation.cjs",
     "check:a16z-audit-export-download-path-exposure": "node scripts/check-a16z-audit-export-download-path-exposure.cjs",
     "check:a16sql-rls-import-staging-write": "node scripts/check-a16sql-rls-import-staging-write.cjs",

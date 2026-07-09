@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AG-A16R-OFFICIAL-IMPORT-RETRY-EXECUTION - Blocked Before POST
+
+- Marker:
+  `A-16AG-A16R-OFFICIAL-IMPORT-RETRY-EXECUTION`.
+- Owner execution marker:
+  `OWNER_APPROVED_A16R_IMPORT_RETRY_EXECUTION`.
+- Target session:
+  `A16AG_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Execution status:
+  `A16AG_EXECUTION_STATUS=BLOCKED_ROUTE_RUNTIME_NOT_EXECUTION_CAPABLE`.
+- Blocker:
+  `A16AG_BLOCKER=ROUTE_RUNTIME_ONLY_EXPOSES_CANDIDATE_READY_NOT_EXECUTED_NO_RPC_EXECUTION_BRANCH`.
+- Same-run production GET evidence stayed guarded:
+  official-import-gate 401 with `officialImportEnabled=false`, and
+  official-import route GET 405.
+- Source/runtime evidence:
+  `CANDIDATE_READY_NOT_EXECUTED`, transaction status
+  `A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED`, no runtime RPC call,
+  candidate imported people/relationships counts remain 0/0.
+- Official import POST called:
+  `A16AG_OFFICIAL_IMPORT_POST_CALLED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next action:
+  `A-16AH` must implement or prove a real execution branch that calls the
+  approved transaction helper exactly once, then rerun same-run gates before any
+  POST is considered.
+
 ## 2026-07-09 - A-16AF-RUNTIME-IMPORT-ENABLEMENT-CANDIDATE-PRODUCTION-SMOKE - Read-Only Blocked Safe
 
 - Marker:
