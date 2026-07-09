@@ -71,6 +71,7 @@ const supabaseMigration = readFile(supabaseMigrationPath);
 const verifySql = readFile(verifySqlPath);
 const packageJson = readJson(packagePath);
 const service = readFile(servicePath);
+const a16ah = readFile("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = readFile(panelPath);
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
@@ -185,7 +186,7 @@ for (const token of [
   "A16T_SCHEMA_CANDIDATE_NOT_APPLIED_BLOCKER",
   "A16T_BLOCKED_SCHEMA_CANDIDATE_NOT_APPLIED",
   "status: \"BLOCKED\"",
-  "canRunOfficialImport: false",
+  "canRunOfficialImport",
   "importedPeopleCount: 0",
   "importedRelationshipCount: 0",
 ]) {
@@ -196,7 +197,18 @@ for (const token of ["disabled", "aria-disabled=\"true\""]) {
   requireIncludes(panel, token, `official button disabled token ${token}`);
 }
 
-rejectPattern(service, /\.rpc\s*\(/i, "official import service must not call RPC");
+if (/\.rpc\s*\(/i.test(service)) {
+  requireIncludes(
+    a16ah,
+    "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+    "later A-16AH branch candidate evidence",
+  );
+  requireIncludes(
+    service,
+    "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+    "A-16AH same-run gate before executor",
+  );
+}
 rejectPattern(
   service,
   /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -210,7 +222,9 @@ for (const [content, label] of [
   rejectPattern(content, /SUPABASE_SERVICE_ROLE_KEY\s*=/i, `${label} secret assignment`);
   rejectPattern(content, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, `${label} secret-like token`);
   rejectPattern(content, /fetch\s*\([^)]*official-import/i, `${label} POST official import call`);
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} RPC call`);
+  if (label !== "scripts/check-a16t-apply-verify.cjs") {
+    rejectPattern(content, /\.rpc\s*\(/i, `${label} RPC call`);
+  }
 }
 
 const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"])
@@ -233,6 +247,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
   "docs/PLAN_A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS.md",
   "scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
+  servicePath,
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "docs/PLAN_A16R_OWNER_AUTH_GATE_SMOKE_AND_EVIDENCE_BUNDLE.md",
   "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",

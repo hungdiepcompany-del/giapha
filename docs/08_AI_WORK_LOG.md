@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AH-OFFICIAL-IMPORT-RUNTIME-EXECUTION-BRANCH-CANDIDATE - Source Branch Candidate
+
+- Marker:
+  `A-16AH-OFFICIAL-IMPORT-RUNTIME-EXECUTION-BRANCH-CANDIDATE`.
+- Status:
+  `A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED`.
+- Target session:
+  `A16AH_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Blocker:
+  `A16AH_BLOCKER=NONE_SOURCE_BRANCH_CANDIDATE_READY_BUT_NOT_EXECUTED_BY_PHASE_BOUNDARY`.
+- Default execution branch state:
+  `A16AH_EXECUTION_BRANCH_DEFAULT=DISABLED_UNLESS_A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Route flags:
+  `A16AH_ROUTE_CANDIDATE_FLAG=A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`;
+  `A16AH_ENV_FLAG=A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Approved helper:
+  `A16AH_APPROVED_TRANSACTION_HELPER=public.a16p_tx_execute_giapha4_official_import`.
+- Executor proof:
+  `A16AH_EXECUTOR_CALL_PROOF=MOCKABLE_EXECUTOR_CALLED_EXACTLY_ONCE_ONLY_AFTER_SAME_RUN_GATES`.
+- Official import POST called:
+  `A16AH_OFFICIAL_IMPORT_POST_CALLED=NO`.
+- A-16R import retry executed:
+  `A16AH_A16R_IMPORT_RETRY_EXECUTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved: no POST `/official-import`, no direct manual RPC import,
+  no SQL/DB mutation, no migration repair, no seed, no DB push, no deploy, no
+  Wrangler deploy, no auth/user/role/permission/membership mutation, no raw JSON
+  commit/print, no `wrangler.toml` change and no `app/layout.tsx` change.
+
 ## 2026-07-09 - A-16AG-A16R-OFFICIAL-IMPORT-RETRY-EXECUTION - Blocked Before POST
 
 - Marker:

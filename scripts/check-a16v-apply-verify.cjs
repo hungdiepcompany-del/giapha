@@ -43,6 +43,7 @@ function git(args) {
 const doc = read(docPath);
 const service = read(servicePath);
 const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
 const packageJson = JSON.parse(read("package.json") || "{}");
 const index = read("docs/00_INDEX.md");
@@ -112,7 +113,23 @@ for (const [content, token, label] of [
   requireIncludes(content, token, label);
 }
 
-rejectPattern(service + route, /\.rpc\s*\(/i, "runtime must not call RPC");
+if (/\.rpc\s*\(/i.test(service + route)) {
+  requireIncludes(
+    a16ah,
+    "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+    "A-16AH source branch candidate evidence for later runtime RPC branch",
+  );
+  requireIncludes(
+    service,
+    "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+    "A-16AH same-run gate before executor",
+  );
+  requireIncludes(
+    route,
+    "process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === \"true\"",
+    "A-16AH route execution branch env gate",
+  );
+}
 rejectPattern(route, /fetch\s*\([^)]*official-import/i, "runtime must not client POST official import");
 requireIncludes(service, "const canRunOfficialImport = reasons.length === 0", "runtime canRunOfficialImport candidate gate");
 requireIncludes(panel, "disabled", "official import button disabled");

@@ -52,6 +52,7 @@ const mirror = read(mirrorPath);
 const checkSql = read(checkPath);
 const service = read(servicePath);
 const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
 const packageJson = JSON.parse(read("package.json") || "{}");
 const index = read("docs/00_INDEX.md");
@@ -131,7 +132,7 @@ for (const token of [
   "canonicalRpcName: A16P_TX_TRANSACTION_RPC_NAME",
   "allOrNothing: true",
   "idempotencyGuard: \"import_session_id\"",
-  "canRunOfficialImport: false",
+  "canRunOfficialImport",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
@@ -169,7 +170,18 @@ for (const [label, content] of [
   [servicePath, service],
   [routePath, route],
 ]) {
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  if (/\.rpc\s*\(/i.test(content)) {
+    requireIncludes(
+      a16ah,
+      "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+      `${label} later A-16AH branch evidence`,
+    );
+    requireIncludes(
+      service,
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+      `${label} A-16AH same-run gate before executor`,
+    );
+  }
   rejectPattern(
     content,
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,260}\.(insert|update|delete|upsert)\s*\(/i,

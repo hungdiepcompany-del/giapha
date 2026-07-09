@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AH-OFFICIAL-IMPORT-RUNTIME-EXECUTION-BRANCH-CANDIDATE - Source Branch Candidate
+
+- Marker:
+  `A-16AH-OFFICIAL-IMPORT-RUNTIME-EXECUTION-BRANCH-CANDIDATE`.
+- Status:
+  `A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED`.
+- Target session:
+  `A16AH_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- A-16AG source blocker addressed at source-candidate level:
+  `A16AH_BLOCKER=NONE_SOURCE_BRANCH_CANDIDATE_READY_BUT_NOT_EXECUTED_BY_PHASE_BOUNDARY`.
+- Default state:
+  `A16AH_EXECUTION_BRANCH_DEFAULT=DISABLED_UNLESS_A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Route flags:
+  `A16AH_ROUTE_CANDIDATE_FLAG=A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`;
+  `A16AH_ENV_FLAG=A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Approved helper:
+  `A16AH_APPROVED_TRANSACTION_HELPER=public.a16p_tx_execute_giapha4_official_import`.
+- RPC function:
+  `A16AH_RPC_FUNCTION=a16p_tx_execute_giapha4_official_import`.
+- Executor proof:
+  `A16AH_EXECUTOR_CALL_PROOF=MOCKABLE_EXECUTOR_CALLED_EXACTLY_ONCE_ONLY_AFTER_SAME_RUN_GATES`.
+- Official import POST called:
+  `A16AH_OFFICIAL_IMPORT_POST_CALLED=NO`.
+- A-16R import retry executed:
+  `A16AH_A16R_IMPORT_RETRY_EXECUTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next action:
+  deploy/smoke this branch candidate only after explicit owner deploy marker, or
+  start a separate owner-approved execution phase that explicitly authorizes one
+  POST `/official-import` attempt and re-checks every gate in the same run.
+- Do not run A-16R import from this handoff alone. Do not call POST
+  `/official-import`, direct manual RPC import, SQL/DB mutation, migration
+  repair, seed, db push, deploy, Wrangler deploy, auth/user/role/permission/
+  membership mutation, raw JSON print/commit, `wrangler.toml` edit or
+  `app/layout.tsx` edit unless a later phase explicitly scopes it.
+
 ## 2026-07-09 - A-16AG-A16R-OFFICIAL-IMPORT-RETRY-EXECUTION - Blocked Before POST
 
 - Marker:

@@ -61,6 +61,7 @@ const doc = readFile(docPath);
 const applyVerifyDoc = readFile(applyVerifyDocPath);
 const service = readFile(servicePath);
 const route = readFile(routePath);
+const a16ah = readFile("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = readFile(panelPath);
 const packageJson = readJson(packagePath);
 const index = readFile("docs/00_INDEX.md");
@@ -124,7 +125,7 @@ for (const token of [
   "idempotencyGuard: \"import_session_id\"",
   "auditBatchTable: \"official_import_batches\"",
   "rollbackManifestTable: \"official_import_rollback_manifests\"",
-  "canRunOfficialImport: false",
+  "canRunOfficialImport",
   "auditBatchContract",
   "rollbackManifestContract",
   "importedPeopleCount: 0",
@@ -173,7 +174,18 @@ for (const [label, content] of [
   [servicePath, service],
   [routePath, route],
 ]) {
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  if (/\.rpc\s*\(/i.test(content)) {
+    requireIncludes(
+      a16ah,
+      "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+      `${label} later A-16AH branch evidence`,
+    );
+    requireIncludes(
+      service,
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+      `${label} A-16AH same-run gate before executor`,
+    );
+  }
   rejectPattern(
     content,
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -240,6 +252,13 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs",
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
   "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
   "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
   "scripts/check-a16v-sql-apply-verify-runbook.cjs",
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",

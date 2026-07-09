@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 296 - A-16AH adds real runtime execution branch candidate while keeping default execution disabled
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AG proved the same-run gates could reach a candidate-ready state, but the
+  runtime still had no real branch that calls the approved transaction helper.
+- The owner execution approval marker exists, but A-16AH is not an execution
+  phase and must not call POST `/official-import`.
+
+Decision:
+
+- Add a minimal official import runtime execution branch candidate behind a new
+  env gate:
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`.
+- Keep the existing route candidate gate:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`.
+- Require all same-run permission, session, validation, dry-run, duplicate,
+  relationship, A-16T/A-16U/A-16V, runtime marker, rollback and audit gates
+  before the executor can be called.
+- Call the approved transaction helper through exactly one injected executor
+  call only after those gates pass.
+- Keep the default branch disabled and not executed in A-16AH.
+
+Consequences:
+
+- A-16AH resolves the source-only "no execution branch" blocker as a branch
+  candidate, but it does not execute official import.
+- A future deploy/smoke or execution phase must explicitly authorize any POST
+  `/official-import` attempt and re-check all gates in the same run.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 295 - A-16AG blocks official import retry because deployed runtime is still candidate-only
 
 Date: 2026-07-09

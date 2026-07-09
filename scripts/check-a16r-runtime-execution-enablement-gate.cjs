@@ -55,6 +55,7 @@ function rejectPattern(content, pattern, label = String(pattern)) {
 const doc = read(docPath);
 const service = read(servicePath);
 const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
 const packageJson = readJson(packagePath);
 const index = read("docs/00_INDEX.md");
@@ -146,7 +147,18 @@ for (const [label, content] of [
   [servicePath, service],
   [routePath, route],
 ]) {
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  if (/\.rpc\s*\(/i.test(content)) {
+    requireIncludes(
+      a16ah,
+      "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+      `${label} later A-16AH branch evidence`,
+    );
+    requireIncludes(
+      service,
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+      `${label} A-16AH same-run gate before executor`,
+    );
+  }
   rejectPattern(
     content,
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -188,6 +200,13 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
   "lib/import/giapha4/import-dry-run-approval-gate.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16r-owner-auth-gate-smoke-and-evidence-bundle.cjs",
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
@@ -201,6 +220,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-apply-verify.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16r-runtime-execution-enablement-push-deploy-smoke.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs",
   "scripts/check-a16r-giapha-correct-account-deploy-smoke.cjs",

@@ -10,6 +10,8 @@ const failures = [];
 const docPath = "docs/PLAN_A16AD_RUNTIME_OFFICIAL_IMPORT_ENABLEMENT_BLOCKER_DIAGNOSIS.md";
 const checkerPath = "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs";
 const packagePath = "package.json";
+const servicePath = "lib/import/giapha4/official-import-service.ts";
+const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const expectedSessionId = "2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
 
 function read(relativePath) {
@@ -54,8 +56,9 @@ function rejectPattern(content, pattern, label = String(pattern)) {
 }
 
 const doc = read(docPath);
-const service = read("lib/import/giapha4/official-import-service.ts");
-const route = read("app/api/admin/import-sessions/[sessionId]/official-import/route.ts");
+const service = read(servicePath);
+const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const a16ac = read("docs/PLAN_A16AC_IMPORT_RETRY_EXECUTION_FINAL_GATE.md");
 const a16v = read("docs/PLAN_A16V_APPLY_VERIFY.md");
 const ownerReview = read("docs/PLAN_A16R_RUNTIME_EXECUTION_ENABLEMENT_OWNER_REVIEW.md");
@@ -176,6 +179,15 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16v-apply-verify.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+  servicePath,
+  routePath,
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -192,8 +204,11 @@ for (const file of changedFiles) {
   if (file === "wrangler.toml" || file === "app/layout.tsx") {
     failures.push(`forbidden file changed ${file}`);
   }
-  if (/^(db\/migrations|supabase\/migrations|db\/checks|app\/|lib\/)/.test(file)) {
+  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
     failures.push(`forbidden runtime/db file changed ${file}`);
+  }
+  if (/^(app\/|lib\/)/.test(file) && file !== servicePath && file !== routePath) {
+    failures.push(`forbidden unrelated runtime file changed ${file}`);
   }
 }
 
@@ -213,12 +228,24 @@ const changedPatch = git([
   ...changedFiles.filter((file) => allowedChangedFiles.has(file)),
 ]);
 for (const pattern of [
-  /\.rpc\s*\(/i,
   /canProceedToOfficialImport:\s*true/i,
   /officialImportOpen:\s*true/i,
   /\bsupabase\s+db\s+push\b/i,
 ]) {
   rejectPattern(changedPatch, pattern, `changed patch ${pattern}`);
+}
+
+if (/\.rpc\s*\(/i.test(service + route)) {
+  requireIncludes(
+    a16ah,
+    "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+    "later A-16AH branch candidate evidence",
+  );
+  requireIncludes(
+    service,
+    "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+    "A-16AH same-run gate before executor",
+  );
 }
 
 if (failures.length > 0) {

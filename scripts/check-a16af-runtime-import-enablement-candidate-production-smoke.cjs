@@ -10,6 +10,8 @@ const failures = [];
 const docPath = "docs/PLAN_A16AF_RUNTIME_IMPORT_ENABLEMENT_CANDIDATE_PRODUCTION_SMOKE.md";
 const checkerPath = "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs";
 const packagePath = "package.json";
+const servicePath = "lib/import/giapha4/official-import-service.ts";
+const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -143,6 +145,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  servicePath,
+  routePath,
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -172,7 +184,6 @@ const changedPatch = git([
   ...changedFiles.filter((file) => allowedChangedFiles.has(file)),
 ]);
 for (const pattern of [
-  /\.rpc\s*\(/i,
   /\bsupabase\s+db\s+push\b/i,
   /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
 ]) {

@@ -12,6 +12,10 @@ const doc = fs.existsSync(path.join(root, docPath))
 const service = fs.existsSync(path.join(root, servicePath))
   ? fs.readFileSync(path.join(root, servicePath), "utf8")
   : "";
+const a16ahPath = "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md";
+const a16ah = fs.existsSync(path.join(root, a16ahPath))
+  ? fs.readFileSync(path.join(root, a16ahPath), "utf8")
+  : "";
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
 if (!doc) failures.push(`missing ${docPath}`);
@@ -40,7 +44,18 @@ for (const token of [
 if (!service.includes("A16V_REAL_TRANSACTION_BRANCH_NOT_APPLIED_OR_VERIFIED_BLOCKER")) {
   failures.push("service missing A-16V blocker");
 }
-if (/\.rpc\s*\(/i.test(service)) failures.push("service must not call RPC in A-16V");
+if (/\.rpc\s*\(/i.test(service)) {
+  if (!a16ah.includes("A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED")) {
+    failures.push("service RPC branch requires later A-16AH evidence");
+  }
+  if (
+    !service.includes(
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+    )
+  ) {
+    failures.push("service RPC branch must stay behind A-16AH same-run gate");
+  }
+}
 
 if (
   packageJson.scripts?.["check:a16v-a16r-execution-retry-requirements"] !==

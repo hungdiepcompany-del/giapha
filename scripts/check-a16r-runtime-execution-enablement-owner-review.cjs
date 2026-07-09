@@ -59,6 +59,7 @@ const gateDoc = read(gateDocPath);
 const reconciliationDoc = read(reconciliationDocPath);
 const service = read(servicePath);
 const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
 const packageJson = readJson(packagePath);
 const index = read("docs/00_INDEX.md");
@@ -159,7 +160,18 @@ for (const [label, content] of [
   [servicePath, service],
   [routePath, route],
 ]) {
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  if (/\.rpc\s*\(/i.test(content)) {
+    requireIncludes(
+      a16ah,
+      "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+      `${label} later A-16AH branch evidence`,
+    );
+    requireIncludes(
+      service,
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+      `${label} A-16AH same-run gate before executor`,
+    );
+  }
   rejectPattern(
     content,
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -203,6 +215,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-run-retry-official-import-bundle.cjs",
   "scripts/check-a16t-apply-verify.cjs",
   "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  routePath,
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",

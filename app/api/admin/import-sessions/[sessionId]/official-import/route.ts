@@ -13,6 +13,9 @@ export const dynamic = "force-dynamic";
 const A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED =
   process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === "true";
 
+const A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED =
+  process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === "true";
+
 const lockedResponse = {
   ok: false,
   status: "LOCKED",
@@ -169,6 +172,7 @@ export async function POST(request: Request, context: RouteContext) {
     sessionId,
     confirmation,
     actor: permissionContext,
+    executionBranchEnabled: A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED,
   });
 
   return jsonError(result.status === "BLOCKED" ? 409 : 200, result);

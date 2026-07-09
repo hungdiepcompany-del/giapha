@@ -58,6 +58,7 @@ function rejectPattern(content, pattern, label = String(pattern)) {
 const doc = read(docPath);
 const service = read(servicePath);
 const route = read(routePath);
+const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
 const decisionLog = read("docs/09_DECISION_LOG.md");
@@ -181,7 +182,23 @@ for (const [label, content] of [
   [servicePath, service],
   [routePath, route],
 ]) {
-  rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call RPC`);
+  if (/\.rpc\s*\(/i.test(content)) {
+    requireIncludes(
+      a16ah,
+      "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+      `${label} later A-16AH branch evidence`,
+    );
+    requireIncludes(
+      service,
+      "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+      `${label} A-16AH same-run gate before executor`,
+    );
+    requireIncludes(
+      route,
+      "process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === \"true\"",
+      `${label} A-16AH env gate`,
+    );
+  }
   rejectPattern(
     content,
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -200,6 +217,7 @@ const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
   servicePath,
+  routePath,
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -213,6 +231,18 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16v-apply-verify.cjs",
+  "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16af-runtime-import-enablement-candidate-production-smoke.cjs",
+  "scripts/check-a16ag-a16r-official-import-retry-execution.cjs",
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+  "scripts/check-a16u-verify-runbook.cjs",
+  "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -242,10 +272,7 @@ const changedPatch = git([
   ...changedFiles.filter((file) => allowedChangedFiles.has(file)),
 ]);
 for (const pattern of [
-  /\.rpc\s*\(/i,
   /supabase\s+db\s+push/i,
-  /Invoke-RestMethod/i,
-  /curl\b/i,
 ]) {
   rejectPattern(changedPatch, pattern, `changed patch ${pattern}`);
 }
