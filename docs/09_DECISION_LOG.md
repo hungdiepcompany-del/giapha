@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 299 - A-16AM blocks before POST when authenticated context lacks strict import permissions
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AM was explicitly allowed to submit exactly one official import
+  confirmation POST only if all gates pass in the same authenticated owner/admin
+  run.
+- The production UI opened at `/admin/exports/import` with an authenticated
+  browser session, but the visible context was a redacted non-owner context,
+  role `NO_ROLE`, permission count `0`, and missing `imports.create`.
+
+Decision:
+
+- Treat this as a failed same-run auth/permission gate.
+- Do not submit POST `/official-import` from a non-owner/admin context.
+- Keep A-16R retry blocked until a real owner/admin import context with the
+  strict permission set is available and the same-run gates are rechecked.
+
+Safety:
+
+- No POST `/official-import`.
+- No direct/manual RPC.
+- No SQL, migration repair, seed, db push, deploy or Wrangler deploy.
+- No auth/user/role/permission/membership or genealogy mutation by this phase.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 298 - A-16AL marker approval is evidence, not runtime state without same-run confirmation
 
 Date: 2026-07-09

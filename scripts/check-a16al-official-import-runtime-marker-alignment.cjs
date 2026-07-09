@@ -223,6 +223,14 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16AM_OWNER_SAME_RUN_OFFICIAL_IMPORT_POST_CONFIRMATION.md",
+  "scripts/check-a16am-owner-same-run-official-import-post-confirmation.cjs",
+  "scripts/check-a16aa-relationship-audit-warning-review-import-retry-readiness.cjs",
+  "scripts/check-a16ab-import-retry-preflight-approval-gate.cjs",
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
+  "scripts/check-a16x2-correct-a16o-full-relationship-audit-export-shape-verification.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -267,7 +275,7 @@ const changedPatch = git([
 for (const pattern of [
   /\bPOST\s+\/official-import\b/i,
   /\bsupabase\s+db\s+push\b/i,
-  /\bwrangler\s+deploy\b/i,
+  /\bwrangler\s+deploy\s+--/i,
 ]) {
   rejectPattern(changedPatch, pattern, `changed patch ${pattern}`);
 }

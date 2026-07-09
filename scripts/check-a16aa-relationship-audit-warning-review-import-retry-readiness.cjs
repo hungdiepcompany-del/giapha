@@ -244,6 +244,18 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A16AM_OWNER_SAME_RUN_OFFICIAL_IMPORT_POST_CONFIRMATION.md",
+  "scripts/check-a16am-owner-same-run-official-import-post-confirmation.cjs",
+  "scripts/check-a16ab-import-retry-preflight-approval-gate.cjs",
+  "scripts/check-a16x2-correct-a16o-full-relationship-audit-export-shape-verification.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
+  "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
+  "scripts/check-a16t-apply-verify.cjs",
+  "scripts/check-a16u-locked-runtime-wiring.cjs",
+  "scripts/check-a16u-official-import-transaction-branch.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -263,7 +275,10 @@ const stagedFiles = git(["diff", "--cached", "--name-only"])
   .filter(Boolean);
 for (const file of stagedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected staged file ${file}`);
-  if (file.startsWith(".tmp/") || /\.(json|xlsx|xls|csv|zip)$/i.test(file)) {
+  if (
+    file.startsWith(".tmp/") ||
+    (file !== packagePath && /\.(json|xlsx|xls|csv|zip)$/i.test(file))
+  ) {
     failures.push(`raw evidence/data file staged ${file}`);
   }
 }

@@ -206,6 +206,8 @@ const allowedChangedFiles = new Set([
   docPath,
   "docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md",
   "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "docs/PLAN_A16AM_OWNER_SAME_RUN_OFFICIAL_IMPORT_POST_CONFIRMATION.md",
+  "scripts/check-a16am-owner-same-run-official-import-post-confirmation.cjs",
   "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
   "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",

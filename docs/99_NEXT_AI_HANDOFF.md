@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AM-OWNER-SAME-RUN-OFFICIAL-IMPORT-POST-CONFIRMATION - Blocked Before POST
+
+- Marker:
+  `A-16AM-OWNER-SAME-RUN-OFFICIAL-IMPORT-POST-CONFIRMATION`.
+- Status:
+  `A16AM_STATUS=BLOCKED_BEFORE_POST_AUTH_PERMISSION_INSUFFICIENT`.
+- Classification:
+  `A16AM_CLASSIFICATION=AUTHENTICATED_CONTEXT_PRESENT_BUT_NOT_OWNER_ADMIN_IMPORT_CONTEXT`.
+- Target session:
+  `A16AM_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner markers:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`;
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Production UI path checked:
+  `/admin/exports/import`.
+- Same-run browser context:
+  redacted authenticated non-owner context, role `NO_ROLE`, visible permission
+  count `0`, and missing `imports.create`.
+- Blocker:
+  `A16AM_BLOCKER=AUTHENTICATED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_AVAILABLE_OR_PERMISSION_INSUFFICIENT`.
+- Official import POST called:
+  `A16AM_POST_OFFICIAL_IMPORT_CALLED=NO`.
+- Import result:
+  `A16AM_IMPORT_RESULT=NOT_EXECUTED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no direct/manual RPC, no SQL/DB mutation outside
+  approved import path, no migration repair, seed, db push, deploy, Wrangler
+  deploy, auth/user/role/permission/membership mutation, raw JSON/private data
+  print, raw JSON commit, `wrangler.toml` edit or `app/layout.tsx` edit.
+- Next action:
+  Log in with a real owner/admin import context that has the strict permission
+  set, then start a separate execution phase that rechecks same-run gates before
+  any single approved POST. Do not retry from this blocked evidence.
+
 ## 2026-07-09 - A-16AL-OFFICIAL-IMPORT-RUNTIME-MARKER-ALIGNMENT - Marker Aligned, Not Executed
 
 - Marker:
