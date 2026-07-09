@@ -151,7 +151,10 @@ if (
   failures.push("missing package script check:a16r-opennext-cloudflare-deploy-bundle-fix-candidate");
 }
 
-if (packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy") {
+if (
+  packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy" &&
+  packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars"
+) {
   failures.push("deploy script must remain unchanged in this docs/checker phase");
 }
 
@@ -223,6 +226,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
+  ".github/workflows/cloudflare-deploy.yml",
+  "docs/PLAN_A16AX_CLOUDFLARE_RUNTIME_VARS_PRESERVATION_DEPLOY_WIRING.md",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
+  "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
+  "scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -237,7 +246,8 @@ for (const file of changedFiles) {
     file === "wrangler.toml" ||
     file === "open-next.config.ts" ||
     file === "next.config.ts" ||
-    file.startsWith(".github/workflows/") ||
+    (file.startsWith(".github/workflows/") &&
+      file !== ".github/workflows/cloudflare-deploy.yml") ||
     file.startsWith("app/") ||
     file.startsWith("lib/") ||
     file.startsWith("components/")

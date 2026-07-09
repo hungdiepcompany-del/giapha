@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING - Keep Vars Wiring
+
+- Marker:
+  `A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING`.
+- Status:
+  `A16AX_STATUS=PASS_DEPLOY_PATH_PRESERVES_CLOUDFLARE_RUNTIME_VARS_NOT_DEPLOYED`.
+- Starting blocker:
+  `A16AW_BLOCKER=GITHUB_ACTIONS_REPOSITORY_VARS_ARE_NOT_CLOUDFLARE_WORKER_RUNTIME_VARS_AND_DEPLOY_DOES_NOT_KEEP_DASHBOARD_RUNTIME_VARS`.
+- Deploy path changed:
+  package `deploy` now runs
+  `opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars`.
+- Workflow:
+  `.github/workflows/cloudflare-deploy.yml` still uses `npm run deploy` and now
+  runs `npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring`
+  before the deploy step.
+- Owner manual runtime vars:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true` must be set on the
+  Cloudflare Worker runtime surface; GitHub Actions repository vars alone remain
+  insufficient.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AX_POST_OFFICIAL_IMPORT_CALLED=NO`; no import retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret mutation, no raw/private data print or commit.
+- Next action:
+  owner sets Cloudflare Worker runtime vars, runs a separate owner-approved
+  manual Cloudflare Deploy, then reruns read-only A-16AY smoke. Do not submit
+  import.
+
 ## 2026-07-09 - A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS - Runtime Env Blocker
 
 - Marker:

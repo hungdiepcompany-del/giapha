@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "lint": "eslint",
@@ -328,7 +328,8 @@
     "check:a16at-production-runtime-execution-env-gate-readiness": "node scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
     "check:a16au-github-actions-runtime-env-flag-wiring": "node scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
     "check:a16av-runtime-env-flags-production-read-only-smoke": "node scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
-    "check:a16aw-runtime-env-flag-propagation-diagnosis": "node scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs"
+    "check:a16aw-runtime-env-flag-propagation-diagnosis": "node scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
+    "check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring": "node scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

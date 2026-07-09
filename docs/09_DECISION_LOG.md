@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 302 - A-16AX preserves Cloudflare dashboard runtime vars during manual deploy
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AW diagnosed the active production blocker as GitHub Actions repository
+  variables not being sufficient Cloudflare Worker runtime variables.
+- OpenNext Cloudflare production guidance recommends setting runtime variables
+  on the deployed Worker and using `opennextjs-cloudflare deploy -- --keep-vars`
+  when preserving dashboard-managed runtime variables.
+- Cloudflare Wrangler deploy behavior can overwrite dashboard environment
+  variables unless keep-vars is enabled.
+
+Decision:
+
+- Update the standard package `deploy` script to
+  `opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars`.
+- Keep the manual Cloudflare Deploy workflow on `npm run deploy` so the single
+  standard deploy path carries the preservation flag.
+- Add the A-16AX checker to the workflow before deployment.
+- Do not add A-16 runtime vars to `wrangler.toml`; owner-managed Worker runtime
+  vars remain the required manual step.
+
+Safety:
+
+- A-16AX does not deploy.
+- A-16AX does not call POST `/official-import`, execute import, call direct/manual
+  RPC, run SQL, mutate Cloudflare env vars, or mutate genealogy/auth/permission
+  data.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 301 - A-16AR opens UI confirmation only behind same-run gates
 
 Date: 2026-07-09

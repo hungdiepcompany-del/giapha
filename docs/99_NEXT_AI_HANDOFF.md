@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING - Keep Vars Wiring
+
+- Marker:
+  `A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING`.
+- Status:
+  `A16AX_STATUS=PASS_DEPLOY_PATH_PRESERVES_CLOUDFLARE_RUNTIME_VARS_NOT_DEPLOYED`.
+- Deploy script:
+  `opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars`.
+- Workflow:
+  `.github/workflows/cloudflare-deploy.yml` still deploys with `npm run deploy`
+  and now checks
+  `npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring`
+  before deploy.
+- Owner manual runtime vars:
+  set these on the Cloudflare Worker `web-gia-pha` runtime surface before the
+  next deploy:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true`.
+- GitHub Actions repo vars:
+  still useful for CI/build visibility, but not sufficient alone for Worker
+  runtime flags.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  `A16AX_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret mutation, no raw/private data print or commit.
+- Next action:
+  `A16AX_NEXT_ACTION=OWNER_SET_CLOUDFLARE_WORKER_RUNTIME_VARS_THEN_RUN_MANUAL_GITHUB_ACTIONS_DEPLOY_AND_RERUN_A16AY_READ_ONLY_SMOKE_NO_POST`.
+
 ## 2026-07-09 - A-16AW-RUNTIME-ENV-FLAG-PROPAGATION-DIAGNOSIS - Runtime Env Blocker
 
 - Marker:

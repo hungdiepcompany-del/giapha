@@ -20,6 +20,12 @@ const allowedChangedFiles = new Set([
   "package.json",
   "scripts/check-a15e-heritage-ui-production-deploy-readiness-smoke.cjs",
   "scripts/check-a15e3-safe-github-actions-linux-production-deploy-verification.cjs",
+  ".github/workflows/cloudflare-deploy.yml",
+  "docs/PLAN_A16AX_CLOUDFLARE_RUNTIME_VARS_PRESERVATION_DEPLOY_WIRING.md",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
+  "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
+  "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
   checkerPath,
 ]);
 
@@ -153,7 +159,10 @@ if (
   failures.push("missing package script check:a15e2:production-500-rollback-deploy-failure-diagnostics");
 }
 
-if (packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy") {
+if (
+  packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy" &&
+  packageJson?.scripts?.deploy !== "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars"
+) {
   failures.push("standard deploy script drifted");
 }
 
@@ -175,7 +184,8 @@ for (const file of changedFiles) {
   if (
     /wrangler\.toml|wrangler\.json|wrangler\.jsonc|open-next\.config|opennext|cloudflare-env|middleware|next\.config/i.test(
       file,
-    )
+    ) &&
+    file !== "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs"
   ) {
     failures.push(`Worker/OpenNext/Wrangler/runtime config file changed ${file}`);
   }

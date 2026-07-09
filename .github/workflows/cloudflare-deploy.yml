@@ -73,6 +73,9 @@ jobs:
       - name: Check GitHub Actions deploy workflow
         run: npm run check:github-actions-deploy
 
+      - name: Check A-16 runtime var preservation
+        run: npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring
+
       - name: Typecheck
         run: npm run typecheck
 

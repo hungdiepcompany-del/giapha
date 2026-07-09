@@ -185,6 +185,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
   "docs/PLAN_A16AW_RUNTIME_ENV_FLAG_PROPAGATION_DIAGNOSIS.md",
   "scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
+  "docs/PLAN_A16AX_CLOUDFLARE_RUNTIME_VARS_PRESERVATION_DEPLOY_WIRING.md",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "docs/09_DECISION_LOG.md",
+  "scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs",
+  "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
 ]);
 
 for (const file of changedFiles) {

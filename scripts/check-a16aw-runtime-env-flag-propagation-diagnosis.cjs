@@ -130,10 +130,6 @@ if (
 if (/\[vars\]|A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED|A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED/i.test(wrangler)) {
   failures.push("wrangler.toml must not contain A-16 runtime vars in A-16AW");
 }
-if (/--keep-vars/.test(workflow) || /--keep-vars/.test(packageJson?.scripts?.deploy ?? "")) {
-  failures.push("A-16AW must remain diagnosis-only; keep-vars wiring belongs to a later phase");
-}
-
 rejectPattern(doc, /A16AW_POST_OFFICIAL_IMPORT_CALLED=YES/i, "POST must remain NO");
 rejectPattern(doc, /A16AW_A16R_IMPORT_RETRY_EXECUTED=YES|A16R_IMPORT_RETRY_NEXT=YES/i, "A-16R retry must remain NO");
 rejectPattern(doc, /A16AW_SQL_RUN=YES|A16AW_DB_MUTATION_RUN=YES|A16AW_DEPLOY_RUN=YES/i, "mutation/deploy must remain NO");
@@ -158,11 +154,17 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
   "scripts/check-a16au-github-actions-runtime-env-flag-wiring.cjs",
   "scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
+  "docs/PLAN_A16AX_CLOUDFLARE_RUNTIME_VARS_PRESERVATION_DEPLOY_WIRING.md",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  ".github/workflows/cloudflare-deploy.yml",
+  "docs/09_DECISION_LOG.md",
+  "scripts/check-a15e2-production-500-rollback-deploy-failure-diagnostics.cjs",
+  "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
 ]);
 
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
-  if (file === "wrangler.toml" || file === "app/layout.tsx" || file === workflowPath) {
+  if (file === "wrangler.toml" || file === "app/layout.tsx") {
     failures.push(`forbidden changed file ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
