@@ -175,6 +175,9 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md",
+  "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "docs/PLAN_A16AK_OFFICIAL_IMPORT_SESSION_DUPLICATE_READINESS.md",
   "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",

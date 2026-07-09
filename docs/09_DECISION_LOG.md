@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 298 - A-16AL marker approval is evidence, not runtime state without same-run confirmation
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- Production now shows the correct audited A-16R session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Owner confirms both marker strings:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY` and
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- A-16AL is still a non-execution phase and must not call POST
+  `/official-import`.
+
+Decision:
+
+- Treat owner marker text in this phase as valid planning/evidence, but not as
+  runtime state.
+- Runtime execution readiness can only be proven by a later explicit phase that
+  is allowed to send the confirmation payload in the same POST run.
+- The read-only UI/GET gate may display the markers and audited session but must
+  keep official import locked.
+
+Safety:
+
+- No POST `/official-import`.
+- No direct/manual RPC.
+- No SQL, migration repair, seed, db push or deploy.
+- No auth/user/role/permission/membership or genealogy mutation by this phase.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 297 - A-16AK binds owner import readiness UI to the audited A-16R session
 
 Date: 2026-07-09

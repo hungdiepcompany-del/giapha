@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AL-OFFICIAL-IMPORT-RUNTIME-MARKER-ALIGNMENT - Marker Aligned, Not Executed
+
+- Marker:
+  `A-16AL-OFFICIAL-IMPORT-RUNTIME-MARKER-ALIGNMENT`.
+- Status:
+  `A16AL_STATUS=PASS_MARKERS_ALIGNED_EXECUTION_READY_NOT_PROVEN_READ_ONLY`.
+- Classification:
+  `A16AL_CLASSIFICATION=SOURCE_MARKERS_ALIGNED_BUT_RUNTIME_REQUIRES_SAME_RUN_POST_CONFIRMATION`.
+- Runtime marker:
+  `APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY`.
+- Session marker:
+  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Audited session:
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Marker mismatch:
+  `A16AL_MARKER_MISMATCH=NO`.
+- Remaining blocker:
+  `A16AL_BLOCKER=READ_ONLY_UI_DOES_NOT_SUBMIT_SAME_RUN_OFFICIAL_IMPORT_CONFIRMATION`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no SQL/DB
+  mutation, migration repair, seed, db push, deploy, auth/user/role/permission/
+  membership mutation, raw JSON commit, `wrangler.toml` edit or
+  `app/layout.tsx` edit.
+- Next action:
+  If owner wants to proceed, start a separate final execution/readiness phase
+  that explicitly authorizes same-run POST confirmation. Do not run official
+  import from this handoff alone.
+
 ## 2026-07-09 - A-16AK-OFFICIAL-IMPORT-SESSION-DUPLICATE-READINESS - Source UI Fix
 
 - Marker:

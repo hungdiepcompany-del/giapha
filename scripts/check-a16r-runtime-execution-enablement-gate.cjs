@@ -176,6 +176,12 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md",
+  "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "docs/PLAN_A16R_PRODUCTION_UI_GATE_STATE_RECONCILIATION.md",
   "docs/PLAN_A16R_OWNER_AUTH_GATE_SMOKE_AND_EVIDENCE_BUNDLE.md",
   "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",

@@ -186,6 +186,12 @@ for (const [content, token, label] of [
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md",
+  "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
   "scripts/check-a16q-dup-decision-verify.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",

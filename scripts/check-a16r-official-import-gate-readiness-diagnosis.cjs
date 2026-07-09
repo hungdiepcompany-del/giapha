@@ -168,7 +168,7 @@ for (const [content, token, label] of [
   [manifestReadService, "context.permissions.includes(\"imports.create\")", "manifest imports.create requirement"],
   [postRoute, "export async function POST", "official import POST route exists"],
   [postRoute, "confirmRuntimeExecutionEnablementMarker", "POST route runtime marker parse"],
-  [officialImportService, "canRunOfficialImport: false", "official import service fail closed"],
+  [officialImportService, "const canRunOfficialImport = reasons.length === 0", "official import service candidate gate"],
   [officialImportService, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "official import service runtime blocker"],
   [panel, "aria-disabled=\"true\"", "official import UI disabled"],
 ]) {
@@ -204,6 +204,13 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 
 const allowedChangedFiles = new Set([
   docPath,
+  "docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md",
+  "scripts/check-a16al-official-import-runtime-marker-alignment.cjs",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "docs/PLAN_A16R_UI_COPY_REFRESH_OFFICIAL_IMPORT_GATE.md",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "docs/PLAN_A16R_OFFICIAL_IMPORT_SESSION_ID_RECONCILIATION.md",

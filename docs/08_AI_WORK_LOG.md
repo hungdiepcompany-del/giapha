@@ -10488,6 +10488,51 @@ Phase 1 - Project foundation
 
 ## 2026-06-14 - Git baseline
 
+## 2026-07-09 - A-16AL official import runtime marker alignment
+
+### Phase
+
+A-16AL - A-16R Official Import Runtime Marker Alignment
+
+### Viec da lam
+
+- Verified source marker alignment for the runtime execution marker and audited-session official import marker.
+- Confirmed route parsing for `confirmRuntimeExecutionEnablementMarker`, `confirmMarker` and `confirmSessionId`.
+- Confirmed read-only UI/GET gate can display markers but cannot become execution-ready without same-run POST confirmation in a later explicit phase.
+- Added scoped checker `check:a16al-official-import-runtime-marker-alignment`.
+
+### Ket qua
+
+- `A16AL_STATUS=PASS_MARKERS_ALIGNED_EXECUTION_READY_NOT_PROVEN_READ_ONLY`
+- `A16AL_CLASSIFICATION=SOURCE_MARKERS_ALIGNED_BUT_RUNTIME_REQUIRES_SAME_RUN_POST_CONFIRMATION`
+- `A16AL_MARKER_MISMATCH=NO`
+- `A16AL_BLOCKER=READ_ONLY_UI_DOES_NOT_SUBMIT_SAME_RUN_OFFICIAL_IMPORT_CONFIRMATION`
+- `A16R_IMPORT_RETRY_NEXT=NO`
+
+### Safety
+
+- `A16AL_POST_OFFICIAL_IMPORT_CALLED=NO`
+- `A16AL_A16R_IMPORT_RETRY_EXECUTED=NO`
+- `A16AL_DIRECT_MANUAL_RPC_CALLED=NO`
+- `A16AL_SQL_RUN=NO`
+- `A16AL_DB_PUSH_RUN=NO`
+- `A16AL_MIGRATION_REPAIR_RUN=NO`
+- `A16AL_SEED_RUN=NO`
+- `A16AL_DEPLOY_RUN=NO`
+- `A16AL_AUTH_USER_ROLE_PERMISSION_MEMBERSHIP_MUTATION=NO`
+- `A16AL_REAL_GENEALOGY_WRITE=NO`
+- `A16AL_WRANGLER_TOML_CHANGED=NO`
+
+### Files
+
+- docs/PLAN_A16AL_OFFICIAL_IMPORT_RUNTIME_MARKER_ALIGNMENT.md
+- scripts/check-a16al-official-import-runtime-marker-alignment.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
 ## 2026-07-09 - A-16AK official import session duplicate readiness
 
 ### Phase
