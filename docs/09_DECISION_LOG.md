@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 300 - A-16AN diagnoses owner/admin import permission context as role assignment or account-context blocker
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Decision:
+
+Record A-16AN as a read-only diagnosis, not a permission repair phase.
+
+Rationale:
+
+- A-16AM already proved the same-run authenticated context had `NO_ROLE`,
+  visible permission count `0`, and missing `imports.create`.
+- Source shows owner/admin import permission comes from Supabase Auth user to
+  `profiles`, `profile_roles`, `roles`, `role_permissions`, and `permissions`.
+- `OWNER` and `ADMIN` receive the strict import permission set through seeded
+  role-permission mapping, but the current production context did not prove
+  either role.
+- The expected owner account source remains the local OWNER bootstrap snippet,
+  but private account values are intentionally not copied into evidence.
+- No role/user/permission repair belongs in this phase; any repair must be
+  separately approved.
+
+Outcome:
+
+- `A16AN_STATUS=DIAGNOSED_READ_ONLY_OWNER_ADMIN_PERMISSION_CONTEXT_BLOCKED`
+- `A16AN_BLOCKER=AUTHENTICATED_PROFILE_ROLE_ASSIGNMENT_MISSING_OR_WRONG_ACCOUNT_CONTEXT`
+- `A16R_IMPORT_RETRY_NEXT=NO`
+
 ## Decision 299 - A-16AM blocks before POST when authenticated context lacks strict import permissions
 
 Date: 2026-07-09

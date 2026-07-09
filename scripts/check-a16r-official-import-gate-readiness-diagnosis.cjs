@@ -238,6 +238,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
   "docs/PLAN_A16R_OWNER_ADMIN_IMPORT_PERMISSION_DIAGNOSIS.md",
   "scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
+  "docs/PLAN_A16AN_OWNER_ADMIN_IMPORT_PERMISSION_CONTEXT_DIAGNOSIS.md",
+  "scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",

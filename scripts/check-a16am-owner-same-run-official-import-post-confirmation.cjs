@@ -176,6 +176,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16u-locked-runtime-wiring.cjs",
   "scripts/check-a16u-official-import-transaction-branch.cjs",
   "scripts/check-a16x2-correct-a16o-full-relationship-audit-export-shape-verification.cjs",
+  "docs/PLAN_A16AN_OWNER_ADMIN_IMPORT_PERMISSION_CONTEXT_DIAGNOSIS.md",
+  "scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs",
+  "scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
+  "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
+  "scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

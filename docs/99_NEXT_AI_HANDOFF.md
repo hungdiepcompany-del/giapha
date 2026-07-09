@@ -1,5 +1,40 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS - Blocked Read-Only
+
+- Marker:
+  `A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS`.
+- Status:
+  `A16AN_STATUS=DIAGNOSED_READ_ONLY_OWNER_ADMIN_PERMISSION_CONTEXT_BLOCKED`.
+- Classification:
+  `A16AN_CLASSIFICATION=AUTHENTICATED_PROFILE_HAS_NO_ROLE_ASSIGNMENT_OR_WRONG_ACCOUNT_CONTEXT`.
+- Starting blocker:
+  `A16AM_BLOCKER=AUTHENTICATED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_AVAILABLE_OR_PERMISSION_INSUFFICIENT`.
+- A-16AN blocker:
+  `A16AN_BLOCKER=AUTHENTICATED_PROFILE_ROLE_ASSIGNMENT_MISSING_OR_WRONG_ACCOUNT_CONTEXT`.
+- Source diagnosis:
+  permission context flows from Supabase Auth user to `profiles.auth_user_id`,
+  `profile_roles`, `roles`, `role_permissions`, and `permissions`; empty
+  `profile_roles` returns source reason `no_roles`.
+- Expected owner/admin gate:
+  role `OWNER` or `ADMIN`, visible permission count greater than `0`, no missing
+  `imports.create` warning, and strict POST permission set
+  `imports.create,people.create,relationships.create,permissions.manage`.
+- Private account values:
+  not printed or committed; owner should verify the local account literal in
+  `db/snippets/assign-owner-role.sql`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no SQL/DB
+  mutation, no migration repair, seed, db push, deploy, Wrangler deploy,
+  auth/user/role/permission/membership mutation, raw JSON commit, private data
+  print, `wrangler.toml` edit or `app/layout.tsx` edit.
+- Next action:
+  owner verifies the expected account and OWNER/ADMIN role assignment manually,
+  then reruns authenticated import gate read-only smoke. Do not execute import
+  from this handoff.
+
 ## 2026-07-09 - A-16AM-OWNER-SAME-RUN-OFFICIAL-IMPORT-POST-CONFIRMATION - Blocked Before POST
 
 - Marker:

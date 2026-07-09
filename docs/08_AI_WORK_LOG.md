@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS - Blocked Read-Only
+
+- Marker:
+  `A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS`.
+- Status:
+  `A16AN_STATUS=DIAGNOSED_READ_ONLY_OWNER_ADMIN_PERMISSION_CONTEXT_BLOCKED`.
+- Classification:
+  `A16AN_CLASSIFICATION=AUTHENTICATED_PROFILE_HAS_NO_ROLE_ASSIGNMENT_OR_WRONG_ACCOUNT_CONTEXT`.
+- Blocker:
+  `A16AN_BLOCKER=AUTHENTICATED_PROFILE_ROLE_ASSIGNMENT_MISSING_OR_WRONG_ACCOUNT_CONTEXT`.
+- Source diagnosis:
+  permission context flows from Supabase Auth user to `profiles.auth_user_id`,
+  `profile_roles`, `roles`, `role_permissions` and `permissions`; empty role
+  assignment returns source reason `no_roles`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no SQL/DB
+  mutation, no migration repair, seed, db push, deploy, Wrangler deploy,
+  auth/user/role/permission/membership mutation, raw JSON commit or private data
+  print.
+- Files:
+  `docs/PLAN_A16AN_OWNER_ADMIN_IMPORT_PERMISSION_CONTEXT_DIAGNOSIS.md`;
+  `scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs`;
+  `package.json`; `docs/00_INDEX.md`; `docs/08_AI_WORK_LOG.md`;
+  `docs/09_DECISION_LOG.md`; `docs/99_NEXT_AI_HANDOFF.md`.
+
 ## 2026-07-09 - A-16AM-OWNER-SAME-RUN-OFFICIAL-IMPORT-POST-CONFIRMATION - Blocked Before POST
 
 - Marker:

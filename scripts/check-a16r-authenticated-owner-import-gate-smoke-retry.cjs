@@ -139,7 +139,7 @@ for (const [content, token, label] of [
   [gateService, "canOpenOfficialImport: false", "gate source canOpen false"],
   [gateService, "officialImportEnabled: false", "gate source enabled false"],
   [postRoute, "export async function POST", "POST route exists but not used"],
-  [officialImportService, "canRunOfficialImport: false", "service fail closed"],
+  [officialImportService, "GATE_BLOCKED_NOT_EXECUTED", "service fail-closed blocked branch"],
   [officialImportService, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "service runtime blocker"],
   [panel, "aria-disabled=\"true\"", "panel disabled official import"],
 ]) {
@@ -216,6 +216,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
   "scripts/check-a16v-marker-verification-fix.cjs",
   "scripts/check-a16v-apply-verify.cjs",
+  "docs/PLAN_A16AN_OWNER_ADMIN_IMPORT_PERMISSION_CONTEXT_DIAGNOSIS.md",
+  "scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs",
+  "scripts/check-a16am-owner-same-run-official-import-post-confirmation.cjs",
+  "scripts/check-a16r-owner-admin-import-permission-diagnosis.cjs",
+  "scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {
