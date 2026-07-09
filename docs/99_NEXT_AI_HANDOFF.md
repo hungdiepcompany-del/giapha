@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AK-OFFICIAL-IMPORT-SESSION-DUPLICATE-READINESS - Source UI Fix
+
+- Marker:
+  `A-16AK-OFFICIAL-IMPORT-SESSION-DUPLICATE-READINESS`.
+- Status:
+  `A16AK_STATUS=PASS_SOURCE_UI_BINDS_IMPORT_READINESS_TO_AUDITED_SESSION_FAIL_CLOSED`.
+- Classification:
+  `A16AK_CLASSIFICATION=SOURCE_UI_SESSION_SELECTION_MISMATCH_FOR_IMPORT_READINESS`.
+- Production observation:
+  current viewed session `cc7c7e6a-58fe-4824-be57-86d00b008306`, audited
+  official import session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`, 8 duplicate
+  candidates reported without owner decisions, review pack not ready.
+- Source fix:
+  `/admin/exports/import` now loads
+  `getImportManifest(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID)` instead of the
+  latest/current `sessions[0]`.
+- Remaining blocker:
+  `A16AK_BLOCKER=DEPLOY_AND_AUTHENTICATED_OWNER_REVIEW_REQUIRED_TO_PROVE_AUDITED_SESSION_DUPLICATE_DECISION_RUNTIME_STATE`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no direct/manual RPC, no SQL/DB mutation, no
+  migration repair, seed, db push, deploy, auth/user/role/permission/membership
+  mutation, raw JSON commit, `wrangler.toml` edit or `app/layout.tsx` edit.
+- Next action:
+  push only when explicitly instructed, deploy through approved GitHub Actions
+  only after owner marker, then run authenticated owner read-only UI smoke on
+  `/admin/exports/import` to prove audited-session duplicate readiness without
+  running official import.
+
 ## 2026-07-09 - A-16AH-OFFICIAL-IMPORT-RUNTIME-EXECUTION-BRANCH-CANDIDATE - Source Branch Candidate
 
 - Marker:

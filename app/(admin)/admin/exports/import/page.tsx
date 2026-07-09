@@ -6,10 +6,8 @@ import { AdminShell } from "@/components/layout/admin-shell";
 import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
-import {
-  getImportManifest,
-  listImportSessions,
-} from "@/lib/import/giapha4/manifest-read-service";
+import { getImportManifest } from "@/lib/import/giapha4/manifest-read-service";
+import { A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID } from "@/lib/import/giapha4/official-import-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -25,12 +23,9 @@ export default async function AdminImportPage() {
     : !context.user
       ? "Bạn cần đăng nhập để kiểm tra nhập dữ liệu."
       : "Bạn chưa có quyền imports.create.";
-  const importSessionsResult = canPreview
-    ? await listImportSessions()
+  const importManifestResult = canPreview
+    ? await getImportManifest(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID)
     : null;
-  const importManifestResult = importSessionsResult?.sessions[0]
-    ? await getImportManifest(importSessionsResult.sessions[0].id)
-    : importSessionsResult;
 
   return (
     <AdminShell
@@ -56,6 +51,11 @@ export default async function AdminImportPage() {
               {configMissing
                 ? message
                 : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
+            </StatusCallout>
+            <StatusCallout tone="info" className="mb-6">
+              Phiên đang rà soát cho A-16R là phiên đã kiểm toán:{" "}
+              {A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}. Không dùng phiên mới nhất
+              hoặc family.json backup làm cổng nhập chính thức.
             </StatusCallout>
             <div className="grid gap-8">
               <GiaPha4ManifestUploadForm />

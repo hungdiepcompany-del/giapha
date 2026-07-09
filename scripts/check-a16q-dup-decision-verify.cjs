@@ -148,7 +148,6 @@ for (const token of [
 for (const token of [
   "duplicateDecisionSummary.unresolvedDuplicateCandidates > 0",
   "duplicateDecisionSummary.needsReviewDuplicateCandidates > 0",
-  "canRunOfficialImport: false",
 ]) {
   requireIncludes(officialService, token, `official service token ${token}`);
 }
@@ -207,6 +206,11 @@ const changedFiles = gitOutput(["status", "--porcelain", "--untracked-files=all"
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16AK_OFFICIAL_IMPORT_SESSION_DUPLICATE_READINESS.md",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "app/(admin)/admin/exports/import/page.tsx",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

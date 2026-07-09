@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 297 - A-16AK binds owner import readiness UI to the audited A-16R session
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- Production showed current viewed session
+  `cc7c7e6a-58fe-4824-be57-86d00b008306` while the audited official import
+  session remains `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- The official import button was correctly locked, but the UI also reported 8
+  duplicate candidates lacking owner decisions and review-pack not ready on the
+  currently viewed session.
+- Official import readiness must be evaluated on the audited A-16R session, not
+  on the latest/current import session.
+
+Decision:
+
+- `/admin/exports/import` loads
+  `getImportManifest(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID)` for the owner
+  import review surface.
+- The page must not select `sessions[0]` for official import readiness.
+- Duplicate decision readiness, review-pack readiness and official import gate
+  display stay tied to the audited session.
+- The official import button remains disabled until all duplicate decision,
+  review-pack, runtime, owner approval and execution gates pass in a later
+  explicit phase.
+
+Safety:
+
+- No `POST /official-import`.
+- No direct/manual RPC.
+- No SQL, migration repair, seed, db push or deploy.
+- No auth/user/role/permission/membership or genealogy mutation by this phase.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 296 - A-16AH adds real runtime execution branch candidate while keeping default execution disabled
 
 Date: 2026-07-09

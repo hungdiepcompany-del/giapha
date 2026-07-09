@@ -10488,6 +10488,50 @@ Phase 1 - Project foundation
 
 ## 2026-06-14 - Git baseline
 
+## 2026-07-09 - A-16AK official import session duplicate readiness
+
+### Phase
+
+A-16AK - Official Import Session And Duplicate Decision Readiness
+
+### Viec da lam
+
+- Diagnosed production UI mismatch where `/admin/exports/import` was evaluating the latest/current session instead of the audited A-16R official import session.
+- Updated the admin import page to load `A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID` directly for manifest, review-pack, duplicate-decision readiness and official-import gate display.
+- Added an owner-facing callout that distinguishes the audited A-16R session from latest sessions and from `family.json` backup.
+- Added scoped checker `check:a16ak-official-import-session-duplicate-readiness`.
+
+### Ket qua
+
+- `A16AK_STATUS=PASS_SOURCE_UI_BINDS_IMPORT_READINESS_TO_AUDITED_SESSION_FAIL_CLOSED`
+- `A16AK_CLASSIFICATION=SOURCE_UI_SESSION_SELECTION_MISMATCH_FOR_IMPORT_READINESS`
+- `A16AK_BLOCKER=DEPLOY_AND_AUTHENTICATED_OWNER_REVIEW_REQUIRED_TO_PROVE_AUDITED_SESSION_DUPLICATE_DECISION_RUNTIME_STATE`
+- `A16R_IMPORT_RETRY_NEXT=NO`
+
+### Safety
+
+- `A16AK_POST_OFFICIAL_IMPORT_CALLED=NO`
+- `A16AK_DIRECT_RPC_CALLED=NO`
+- `A16AK_REAL_GENEALOGY_WRITE=NO`
+- `A16AK_SQL_RUN=NO`
+- `A16AK_DB_PUSH_RUN=NO`
+- `A16AK_MIGRATION_REPAIR_RUN=NO`
+- `A16AK_SEED_RUN=NO`
+- `A16AK_DEPLOY_RUN=NO`
+- `A16AK_AUTH_USER_ROLE_PERMISSION_MEMBERSHIP_MUTATION=NO`
+- `A16AK_WRANGLER_TOML_CHANGED=NO`
+
+### Files
+
+- app/(admin)/admin/exports/import/page.tsx
+- docs/PLAN_A16AK_OFFICIAL_IMPORT_SESSION_DUPLICATE_READINESS.md
+- scripts/check-a16ak-official-import-session-duplicate-readiness.cjs
+- package.json
+- docs/00_INDEX.md
+- docs/08_AI_WORK_LOG.md
+- docs/09_DECISION_LOG.md
+- docs/99_NEXT_AI_HANDOFF.md
+
 ### Phase
 
 Step 0 - Git baseline

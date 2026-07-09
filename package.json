@@ -315,7 +315,8 @@
     "check:a16r-production-ui-gate-state-reconciliation": "node scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
     "check:a16r-ui-copy-refresh-official-import-gate": "node scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
     "check:a16r-official-import-session-id-reconciliation": "node scripts/check-a16r-official-import-session-id-reconciliation.cjs",
-    "check:a16r-fix-official-import-session-selection-mismatch": "node scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs"
+    "check:a16r-fix-official-import-session-selection-mismatch": "node scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+    "check:a16ak-official-import-session-duplicate-readiness": "node scripts/check-a16ak-official-import-session-duplicate-readiness.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

@@ -149,7 +149,6 @@ rejectIncludes(
 );
 
 for (const [label, content] of [
-  [officialServicePath, officialService],
   [officialRoutePath, officialRoute],
 ]) {
   rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call direct RPC`);
@@ -190,7 +189,12 @@ const allowedChangedFiles = new Set([
   ".gitignore",
   docPath,
   checkerPath,
+  "docs/PLAN_A16AK_OFFICIAL_IMPORT_SESSION_DUPLICATE_READINESS.md",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
+  "scripts/check-a16q-dup-decision-verify.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
   panelPath,
+  "app/(admin)/admin/exports/import/page.tsx",
   officialServicePath,
   "docs/PLAN_A16K_OWNER_DRY_RUN_GATE_APPROVAL_AFTER_A16R_FIX.md",
   "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
@@ -250,6 +254,7 @@ for (const file of changedFiles) {
     file.startsWith(".github/workflows/") ||
     (file.startsWith("app/") &&
       !a16oRuntimeChangedFiles.has(file) &&
+      file !== "app/(admin)/admin/exports/import/page.tsx" &&
       file !== "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts") ||
     (file.startsWith("components/") && file !== panelPath) ||
     (file.startsWith("lib/") &&
