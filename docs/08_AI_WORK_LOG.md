@@ -1,5 +1,38 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AP-OWNER-AUTHENTICATED-OFFICIAL-IMPORT-EXECUTION - Blocked Before POST
+
+- Marker:
+  `A-16AP-OWNER-AUTHENTICATED-OFFICIAL-IMPORT-EXECUTION-FOR-AUDITED-SESSION`.
+- Status:
+  `A16AP_STATUS=BLOCKED_BEFORE_POST_UI_RUNTIME_NOT_EXECUTION_CAPABLE`.
+- Target session:
+  `A16AP_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Same-run owner/admin context:
+  `A16AP_OWNER_PERMISSION_CONTEXT=PASS_SANITIZED_OWNER_ADMIN_CONTEXT`; role
+  `OWNER`, permission count `25`, `imports.create` present,
+  `permissions.manage` present, strict permission missing none.
+- Production UI result:
+  audited session, 102 proposed people, 134 proposed relationships and 94
+  warnings were visible, but the A-16R official import button remained
+  disabled.
+- Blocker:
+  `A16AP_BLOCKER=OFFICIAL_IMPORT_UI_RUNTIME_GATE_REMAINS_LOCKED_BUTTON_DISABLED_SAME_RUN_ROUTE_NOT_EXECUTION_CAPABLE`.
+- Official import POST:
+  `A16AP_POST_OFFICIAL_IMPORT_CALLED=NO`.
+- Import result:
+  `A16AP_IMPORT_RESULT=NOT_EXECUTED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  no direct/manual RPC, no manual SQL, no DB mutation outside the approved
+  official import route, no migration repair, seed, db push, deploy, Wrangler
+  deploy, auth/user/role/permission/membership mutation, unrelated genealogy
+  mutation, raw JSON/private data print or raw/private data commit.
+- Next action:
+  diagnose why the owner markers and owner/admin permission context still do
+  not enable the same-run official import route/button.
+
 ## 2026-07-09 - A-16AO-INLINE-A16R-OWNER-IMPORT-PERMISSION-DIAGNOSTIC - Inline UI Diagnostic
 
 - Marker:
