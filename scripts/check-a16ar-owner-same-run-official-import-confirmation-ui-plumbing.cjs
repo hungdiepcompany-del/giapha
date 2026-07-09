@@ -185,6 +185,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16ap-owner-authenticated-official-import-execution-for-audited-session.cjs",
   "scripts/check-a16ao-inline-a16r-owner-import-permission-diagnostic.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "docs/PLAN_A16AS_A16AR_PRODUCTION_OWNER_READ_ONLY_UI_SMOKE.md",
+  "scripts/check-a16as-a16ar-production-owner-read-only-ui-smoke.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

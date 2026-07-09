@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AS-A16AR-PRODUCTION-OWNER-READ-ONLY-UI-SMOKE - Blocked By Permission Context
+
+- Marker:
+  `A-16AS-A16AR-PRODUCTION-OWNER-READ-ONLY-UI-SMOKE`.
+- Status:
+  `A16AS_STATUS=BLOCKED_AUTHENTICATED_CONTEXT_IMPORTS_CREATE_PERMISSION_MISSING`.
+- Deploy marker:
+  `A16AS_DEPLOY_MARKER=OWNER_CONFIRMED_A16AR_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_9a11248`.
+- Production read-only UI smoke:
+  opened `https://web-gia-pha.hungdiepcompany.workers.dev/admin/exports/import`
+  in Chrome using the available authenticated browser context.
+- Result:
+  admin shell loaded, but the active context showed visible permission count
+  `0` and sanitized UI reason `Bạn chưa có quyền imports.create.`.
+- A-16AR gate visibility:
+  import panel was not rendered, so audited session, runtime/session markers,
+  final confirmation checkbox and official import button were not visible.
+- Blocker:
+  `A16AS_BLOCKER=AUTHENTICATED_PRODUCTION_CONTEXT_PERMISSION_COUNT_0_IMPORTS_CREATE_MISSING`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AS_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  raw/private data print or commit.
+- Next action:
+  owner must reopen the production admin import route with a true owner/admin
+  import context and rerun read-only UI smoke. Do not submit import.
+
 ## 2026-07-09 - A-16AR-OWNER-SAME-RUN-OFFICIAL-IMPORT-CONFIRMATION-UI-PLUMBING - Source Plumbing
 
 - Marker:
