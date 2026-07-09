@@ -26,6 +26,33 @@ export default async function AdminImportPage() {
   const importManifestResult = canPreview
     ? await getImportManifest(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID)
     : null;
+  const strictOfficialImportPermissions = [
+    "imports.create",
+    "people.create",
+    "relationships.create",
+    "permissions.manage",
+  ] as const;
+  const roleCodes = context.roles.map((role) => role.code);
+  const missingStrictPermissions = strictOfficialImportPermissions.filter(
+    (permission) => !context.permissions.includes(permission),
+  );
+  const hasOwnerAdminRole = roleCodes.some(
+    (role) => role === "OWNER" || role === "ADMIN",
+  );
+  const a16rPermissionDiagnostic = {
+    accountEmail: context.user?.email ?? null,
+    userId: context.user?.id ?? null,
+    profileId: context.profile?.id ?? null,
+    roles: roleCodes,
+    visiblePermissionCount: context.permissions.length,
+    hasImportsCreate: context.permissions.includes("imports.create"),
+    hasPermissionsManage: context.permissions.includes("permissions.manage"),
+    hasOwnerAdminRole,
+    qualifiesOwnerAdminImportContext:
+      hasOwnerAdminRole && missingStrictPermissions.length === 0,
+    missingStrictPermissions,
+    contextReason: context.reason,
+  };
 
   return (
     <AdminShell
@@ -60,7 +87,10 @@ export default async function AdminImportPage() {
             <div className="grid gap-8">
               <GiaPha4ManifestUploadForm />
               {importManifestResult ? (
-                <ImportSessionManifestPanel result={importManifestResult} />
+                <ImportSessionManifestPanel
+                  result={importManifestResult}
+                  a16rPermissionDiagnostic={a16rPermissionDiagnostic}
+                />
               ) : null}
               <GiaPha4ImportPreviewForm />
               <JsonImportPreviewForm />

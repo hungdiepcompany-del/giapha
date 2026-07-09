@@ -1,5 +1,30 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AO-INLINE-A16R-OWNER-IMPORT-PERMISSION-DIAGNOSTIC - Inline UI Diagnostic
+
+- Marker:
+  `A-16AO-INLINE-A16R-OWNER-IMPORT-PERMISSION-DIAGNOSTIC`.
+- Status:
+  `A16AO_STATUS=PASS_INLINE_READ_ONLY_DIAGNOSTIC_ADDED_FAIL_CLOSED`.
+- UI path:
+  `/admin/exports/import`.
+- Inline block:
+  `A16AO_INLINE_BLOCK=Cổng nhập chính thức A-16R`.
+- Result:
+  added temporary read-only account/profile/role/permission diagnostics inside
+  the existing A-16R official import block, without adding a separate panel
+  outside that block.
+- Cleanup TODO:
+  `A16AO_TEMP_DIAGNOSTIC_CLEANUP_TODO=YES`; remove or simplify this temporary
+  diagnostic after the A-16R owner/admin import gate issue is resolved.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no SQL/DB
+  mutation, no migration repair, seed, db push, deploy, Wrangler deploy,
+  auth/user/role/permission/membership mutation, raw JSON commit or private data
+  commit.
+
 ## 2026-07-09 - A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS - Blocked Read-Only
 
 - Marker:

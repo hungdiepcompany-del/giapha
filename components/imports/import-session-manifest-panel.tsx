@@ -77,10 +77,30 @@ function EmptyManifestState() {
   );
 }
 
+export type A16RInlinePermissionDiagnostic = {
+  accountEmail: string | null;
+  userId: string | null;
+  profileId: string | null;
+  roles: string[];
+  visiblePermissionCount: number;
+  hasImportsCreate: boolean;
+  hasPermissionsManage: boolean;
+  hasOwnerAdminRole: boolean;
+  qualifiesOwnerAdminImportContext: boolean;
+  missingStrictPermissions: readonly string[];
+  contextReason: string | null;
+};
+
+function formatPresent(value: boolean) {
+  return value ? "present" : "missing";
+}
+
 export function ImportSessionManifestPanel({
   result,
+  a16rPermissionDiagnostic,
 }: {
   result: ImportManifestReadResult;
+  a16rPermissionDiagnostic?: A16RInlinePermissionDiagnostic;
 }) {
   const session = result.session ?? result.sessions[0] ?? null;
   const validation = buildManifestValidationReview(result);
@@ -109,6 +129,33 @@ export function ImportSessionManifestPanel({
   const officialImportSessionMismatch =
     currentSessionId !== null &&
     currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  const a16rButtonLockedReason = (() => {
+    if (!a16rPermissionDiagnostic) {
+      return "A16R_LOCKED_PERMISSION_DIAGNOSTIC_NOT_AVAILABLE";
+    }
+    if (!a16rPermissionDiagnostic.userId) {
+      return "A16R_LOCKED_UNAUTHENTICATED_CONTEXT";
+    }
+    if (!a16rPermissionDiagnostic.hasOwnerAdminRole) {
+      return "A16R_LOCKED_OWNER_ADMIN_ROLE_MISSING";
+    }
+    if (!a16rPermissionDiagnostic.hasImportsCreate) {
+      return "A16R_LOCKED_IMPORTS_CREATE_MISSING";
+    }
+    if (!a16rPermissionDiagnostic.hasPermissionsManage) {
+      return "A16R_LOCKED_PERMISSIONS_MANAGE_MISSING";
+    }
+    if (!a16rPermissionDiagnostic.qualifiesOwnerAdminImportContext) {
+      return `A16R_LOCKED_STRICT_PERMISSION_SET_INCOMPLETE:${a16rPermissionDiagnostic.missingStrictPermissions.join(",")}`;
+    }
+    if (officialImportSessionMismatch) {
+      return "A16R_LOCKED_AUDITED_SESSION_MISMATCH";
+    }
+    if (officialImportGate.noGoReasons.length > 0) {
+      return `A16R_LOCKED_PREFLIGHT_NO_GO:${officialImportGate.noGoReasons[0]}`;
+    }
+    return "A16R_LOCKED_BY_PHASE_BOUNDARY_NO_POST_IN_A16AO";
+  })();
   const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
   const a16oAuditExportHref = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/dry-run-preview?auditExport=relationships-full`;
   return (
@@ -530,6 +577,107 @@ export function ImportSessionManifestPanel({
                 phiên:{" "}
                 {A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER}
               </p>
+              <div className="grid gap-3 border-t border-rose-200 pt-3">
+                <div className="text-sm font-semibold text-rose-950">
+                  Chẩn đoán tạm thời A-16AO về quyền owner/admin
+                </div>
+                <dl className="grid gap-2 text-sm leading-6 text-stone-800 sm:grid-cols-2">
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      Tài khoản hiện tại
+                    </dt>
+                    <dd className="break-all">
+                      {a16rPermissionDiagnostic?.accountEmail ?? "Không có"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">User ID</dt>
+                    <dd className="break-all">
+                      {a16rPermissionDiagnostic?.userId ?? "Không có"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">Profile ID</dt>
+                    <dd className="break-all">
+                      {a16rPermissionDiagnostic?.profileId ?? "Không có"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      Vai trò hiện tại
+                    </dt>
+                    <dd>
+                      {a16rPermissionDiagnostic?.roles.length
+                        ? a16rPermissionDiagnostic.roles.join(", ")
+                        : "NO_ROLE"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      Số quyền thấy được
+                    </dt>
+                    <dd>
+                      {a16rPermissionDiagnostic?.visiblePermissionCount ?? 0}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      imports.create
+                    </dt>
+                    <dd>
+                      {formatPresent(
+                        a16rPermissionDiagnostic?.hasImportsCreate ?? false,
+                      )}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      permissions.manage (official import)
+                    </dt>
+                    <dd>
+                      {formatPresent(
+                        a16rPermissionDiagnostic?.hasPermissionsManage ?? false,
+                      )}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1">
+                    <dt className="font-semibold text-stone-950">
+                      OWNER/ADMIN import context
+                    </dt>
+                    <dd>
+                      {a16rPermissionDiagnostic?.qualifiesOwnerAdminImportContext
+                        ? "YES"
+                        : "NO"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1 sm:col-span-2">
+                    <dt className="font-semibold text-stone-950">
+                      Quyền strict còn thiếu
+                    </dt>
+                    <dd className="break-all">
+                      {a16rPermissionDiagnostic?.missingStrictPermissions.length
+                        ? a16rPermissionDiagnostic.missingStrictPermissions.join(
+                            ", ",
+                          )
+                        : "Không thiếu quyền strict đã biết"}
+                    </dd>
+                  </div>
+                  <div className="grid gap-1 sm:col-span-2">
+                    <dt className="font-semibold text-stone-950">
+                      Lý do nút A-16R vẫn khóa
+                    </dt>
+                    <dd className="break-all">{a16rButtonLockedReason}</dd>
+                  </div>
+                  <div className="grid gap-1 sm:col-span-2">
+                    <dt className="font-semibold text-stone-950">
+                      Permission context reason
+                    </dt>
+                    <dd className="break-all">
+                      {a16rPermissionDiagnostic?.contextReason ?? "none"}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
               {officialImportGate.noGoReasons.length > 0 ? (
                 <div className="rounded-md border border-rose-200 bg-white p-3 text-sm leading-6 text-rose-900">
                   <div>Không chạy nhập chính thức trong phase này.</div>

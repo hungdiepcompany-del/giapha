@@ -259,6 +259,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
   "scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
+  "docs/PLAN_A16AO_INLINE_A16R_OWNER_IMPORT_PERMISSION_DIAGNOSTIC.md",
+  "scripts/check-a16ao-inline-a16r-owner-import-permission-diagnostic.cjs",
+  "app/(admin)/admin/exports/import/page.tsx",
+  "components/imports/import-session-manifest-panel.tsx",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -269,14 +274,18 @@ for (const file of changedFiles) {
   if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
+  const isA16aoInlineUiSource =
+    file === "app/(admin)/admin/exports/import/page.tsx" ||
+    file === "components/imports/import-session-manifest-panel.tsx";
   if (
-    file === wranglerPath ||
-    file === "open-next.config.ts" ||
-    file === "next.config.ts" ||
-    file.startsWith(".github/workflows/") ||
-    file.startsWith("app/") ||
-    file.startsWith("lib/") ||
-    file.startsWith("components/")
+    !isA16aoInlineUiSource &&
+    (file === wranglerPath ||
+      file === "open-next.config.ts" ||
+      file === "next.config.ts" ||
+      file.startsWith(".github/workflows/") ||
+      file.startsWith("app/") ||
+      file.startsWith("lib/") ||
+      file.startsWith("components/"))
   ) {
     failures.push(`runtime/config/source file must not change in this phase ${file}`);
   }

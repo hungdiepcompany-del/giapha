@@ -1,0 +1,86 @@
+# A-16AO - Inline A-16R Owner Import Permission Diagnostic
+
+## Status
+
+- `A16AO_STATUS=PASS_INLINE_READ_ONLY_DIAGNOSTIC_ADDED_FAIL_CLOSED`.
+- `A16AN_BLOCKER=AUTHENTICATED_PROFILE_ROLE_ASSIGNMENT_MISSING_OR_WRONG_ACCOUNT_CONTEXT`.
+- `A16AO_UI_PATH=/admin/exports/import`.
+- `A16AO_INLINE_BLOCK=Cổng nhập chính thức A-16R`.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
+## UI Scope
+
+- The diagnostic is rendered inside the existing `Cổng nhập chính thức A-16R` block.
+- No separate owner/admin permission panel or card was added outside that block.
+- The official import button remains disabled with `disabled` and `aria-disabled="true"`.
+- The diagnostic is temporary/test-only.
+- `A16AO_TEMP_DIAGNOSTIC_CLEANUP_TODO=YES`.
+- TODO: remove or simplify this inline diagnostic after the A-16R owner/admin import gate issue is resolved.
+
+## Inline Diagnostic Fields
+
+The existing A-16R block now shows read-only context fields when safely available:
+
+- `A16AO_FIELD_CURRENT_ACCOUNT_EMAIL=YES_SAFE_RUNTIME_VALUE_ONLY`.
+- `A16AO_FIELD_CURRENT_USER_ID=YES_SAFE_RUNTIME_VALUE_ONLY`.
+- `A16AO_FIELD_CURRENT_PROFILE_ID=YES_SAFE_RUNTIME_VALUE_ONLY`.
+- `A16AO_FIELD_CURRENT_ROLE=YES`.
+- `A16AO_FIELD_VISIBLE_PERMISSION_COUNT=YES`.
+- `A16AO_FIELD_IMPORTS_CREATE_PRESENT_MISSING=YES`.
+- `A16AO_FIELD_OFFICIAL_IMPORT_PERMISSION_PRESENT_MISSING=permissions.manage`.
+- `A16AO_FIELD_OWNER_ADMIN_IMPORT_CONTEXT=YES`.
+- `A16AO_FIELD_A16R_BUTTON_LOCK_REASON=YES`.
+
+No concrete account email, user id, profile id, token, raw JSON, or private data
+is copied into this evidence document.
+
+## Locking Logic
+
+- `A16AO_LOCK_REASON_UNAUTHENTICATED=A16R_LOCKED_UNAUTHENTICATED_CONTEXT`.
+- `A16AO_LOCK_REASON_ROLE_MISSING=A16R_LOCKED_OWNER_ADMIN_ROLE_MISSING`.
+- `A16AO_LOCK_REASON_IMPORTS_CREATE_MISSING=A16R_LOCKED_IMPORTS_CREATE_MISSING`.
+- `A16AO_LOCK_REASON_PERMISSIONS_MANAGE_MISSING=A16R_LOCKED_PERMISSIONS_MANAGE_MISSING`.
+- `A16AO_LOCK_REASON_STRICT_SET_INCOMPLETE=A16R_LOCKED_STRICT_PERMISSION_SET_INCOMPLETE`.
+- `A16AO_LOCK_REASON_SESSION_MISMATCH=A16R_LOCKED_AUDITED_SESSION_MISMATCH`.
+- `A16AO_LOCK_REASON_PREFLIGHT=A16R_LOCKED_PREFLIGHT_NO_GO`.
+- `A16AO_LOCK_REASON_PHASE_BOUNDARY=A16R_LOCKED_BY_PHASE_BOUNDARY_NO_POST_IN_A16AO`.
+
+The qualified owner/admin import context requires:
+
+- role `OWNER` or `ADMIN`;
+- `imports.create`;
+- `people.create`;
+- `relationships.create`;
+- `permissions.manage`.
+
+## Safety
+
+- `A16AO_POST_OFFICIAL_IMPORT_CALLED=NO`.
+- `A16AO_A16R_IMPORT_RETRY_EXECUTED=NO`.
+- `A16AO_DIRECT_MANUAL_RPC_CALLED=NO`.
+- `A16AO_SQL_RUN=NO`.
+- `A16AO_DB_MUTATION_RUN=NO`.
+- `A16AO_DB_PUSH_RUN=NO`.
+- `A16AO_MIGRATION_REPAIR_RUN=NO`.
+- `A16AO_SEED_RUN=NO`.
+- `A16AO_DEPLOY_RUN=NO`.
+- `A16AO_WRANGLER_DEPLOY_RUN=NO`.
+- `A16AO_AUTH_USER_ROLE_PERMISSION_MEMBERSHIP_MUTATION=NO`.
+- `A16AO_REAL_GENEALOGY_WRITE=NO`.
+- `A16AO_RAW_JSON_COMMITTED=NO`.
+- `A16AO_PRIVATE_DATA_COMMITTED=NO`.
+- `A16AO_WRANGLER_TOML_CHANGED=NO`.
+- `A16AO_APP_LAYOUT_TSX_CHANGED=NO`.
+
+## Boundary Review
+
+- Main Worker source touched: YES_UI_ONLY_ADMIN_IMPORT_PAGE_COMPONENT.
+- Runtime dependency added: NO.
+- New service Worker created: NO.
+- OpenNext/Wrangler config changed: NO.
+- Worker size risk: NO.
+- Service boundary recommendation: `NONE_FOR_THIS_PHASE_INLINE_PERMISSION_DIAGNOSTIC_ONLY`.
+
+## Next Action
+
+`A16AO_NEXT_ACTION=OWNER_RECHECK_PRODUCTION_A16R_BLOCK_INLINE_DIAGNOSTIC_WITH_AUTHENTICATED_OWNER_ADMIN_CONTEXT_NO_POST`.

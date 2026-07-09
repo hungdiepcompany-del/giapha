@@ -197,6 +197,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-authenticated-owner-import-gate-smoke-retry.cjs",
   "scripts/check-a16r-authenticated-official-import-gate-smoke.cjs",
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
+  "docs/PLAN_A16AO_INLINE_A16R_OWNER_IMPORT_PERMISSION_DIAGNOSTIC.md",
+  "scripts/check-a16ao-inline-a16r-owner-import-permission-diagnostic.cjs",
+  "app/(admin)/admin/exports/import/page.tsx",
+  "components/imports/import-session-manifest-panel.tsx",
+  "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
 ]);
 
 for (const file of changedFiles) {

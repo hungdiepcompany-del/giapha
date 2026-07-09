@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AO-INLINE-A16R-OWNER-IMPORT-PERMISSION-DIAGNOSTIC - Inline UI Diagnostic
+
+- Marker:
+  `A-16AO-INLINE-A16R-OWNER-IMPORT-PERMISSION-DIAGNOSTIC`.
+- Status:
+  `A16AO_STATUS=PASS_INLINE_READ_ONLY_DIAGNOSTIC_ADDED_FAIL_CLOSED`.
+- UI path:
+  `/admin/exports/import`.
+- Inline block:
+  `A16AO_INLINE_BLOCK=Cổng nhập chính thức A-16R`.
+- Diagnostic fields:
+  current account/email if available at runtime, current user id, current
+  profile id, current role, visible permission count, `imports.create`,
+  `permissions.manage`, OWNER/ADMIN import context, missing strict permissions,
+  and exact A-16R button lock reason.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Cleanup TODO:
+  `A16AO_TEMP_DIAGNOSTIC_CLEANUP_TODO=YES`; remove or simplify this temporary
+  inline diagnostic after the A-16R import gate issue is resolved.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no SQL/DB
+  mutation, no migration repair, seed, db push, deploy, Wrangler deploy,
+  auth/user/role/permission/membership mutation, raw JSON commit, private data
+  commit, `wrangler.toml` edit or `app/layout.tsx` edit.
+- Next action:
+  deploy only after a separate owner deploy marker, then owner can recheck the
+  inline diagnostic in production with an authenticated owner/admin context. Do
+  not execute import from this handoff.
+
 ## 2026-07-09 - A-16AN-OWNER-ADMIN-IMPORT-PERMISSION-CONTEXT-DIAGNOSIS - Blocked Read-Only
 
 - Marker:
