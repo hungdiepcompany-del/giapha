@@ -136,6 +136,8 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "docs/PLAN_A16AT_PRODUCTION_RUNTIME_EXECUTION_ENV_GATE_READINESS.md",
+  "scripts/check-a16at-production-runtime-execution-env-gate-readiness.cjs",
 ]);
 
 for (const file of changedFiles) {

@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS - Runbook Only
+
+- Marker:
+  `A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS`.
+- Status:
+  `A16AT_STATUS=READY_RUNBOOK_ENV_GATE_BLOCKED_NO_IMPORT`.
+- Owner-provided production UI evidence:
+  OWNER role, visible permission count `25`, `imports.create` present,
+  `permissions.manage` present, OWNER/ADMIN import context `YES`, permission
+  context reason `none`, audited session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Permission blocker:
+  `A16AT_PERMISSION_BLOCKER_RESOLVED=YES`.
+- Current blocker classification:
+  `A16AT_BLOCKER_CLASSIFICATION=PRODUCTION_RUNTIME_EXECUTION_ENV_FLAGS_DISABLED`.
+- Required env flags:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true`.
+- Current deploy workflow note:
+  `A16AT_WORKFLOW_ENV_CURRENTLY_PASSES_A16_FLAGS=NO`; `.github/workflows/cloudflare-deploy.yml`
+  currently does not pass these two A-16 flags.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  `A16AT_POST_OFFICIAL_IMPORT_CALLED=NO`; no import retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+- Next action:
+  `A16AT_NEXT_ACTION=OWNER_CONFIGURE_RUNTIME_ENV_FLAGS_OR_REQUEST_A16AU_GITHUB_ACTIONS_ENV_WIRING_THEN_REDEPLOY_AND_RERUN_READ_ONLY_SMOKE_NO_POST`.
+
 ## 2026-07-09 - A-16AS-A16AR-PRODUCTION-OWNER-READ-ONLY-UI-SMOKE - Blocked By Permission Context
 
 - Marker:

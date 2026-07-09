@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS - Runbook Only
+
+- Marker:
+  `A-16AT-PRODUCTION-RUNTIME-EXECUTION-ENV-GATE-READINESS`.
+- Status:
+  `A16AT_STATUS=READY_RUNBOOK_ENV_GATE_BLOCKED_NO_IMPORT`.
+- Owner-provided production UI evidence:
+  permission blocker is resolved for the audited session: OWNER role, visible
+  permission count `25`, `imports.create` present, `permissions.manage`
+  present, OWNER/ADMIN import context `YES`.
+- Current blockers:
+  `A16AR_LOCKED_RUNTIME_CANDIDATE_ENV_DISABLED`,
+  `A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED`, and
+  `A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE`.
+- Classification:
+  `A16AT_BLOCKER_CLASSIFICATION=PRODUCTION_RUNTIME_EXECUTION_ENV_FLAGS_DISABLED`.
+- Required env flags:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true` and
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true`.
+- Workflow finding:
+  current Cloudflare deploy workflow does not pass these two A-16 flags into the
+  job env.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AT_POST_OFFICIAL_IMPORT_CALLED=NO`; no import retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Cloudflare env/secret change, no raw/private data print or commit.
+
 ## 2026-07-09 - A-16AS-A16AR-PRODUCTION-OWNER-READ-ONLY-UI-SMOKE - Blocked By Permission Context
 
 - Marker:
