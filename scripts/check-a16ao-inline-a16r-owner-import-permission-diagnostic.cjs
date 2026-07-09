@@ -14,6 +14,8 @@ const checkerPath =
 const packagePath = "package.json";
 const pagePath = "app/(admin)/admin/exports/import/page.tsx";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const a16arClientPath =
+  "components/imports/a16r-official-import-confirmation-client.tsx";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -60,6 +62,7 @@ const doc = read(docPath);
 const checker = read(checkerPath);
 const page = read(pagePath);
 const panel = read(panelPath);
+const a16arClient = read(a16arClientPath);
 const packageJson = readJson(packagePath);
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
@@ -121,9 +124,9 @@ for (const [content, token, label] of [
   [panel, "A16R_LOCKED_OWNER_ADMIN_ROLE_MISSING", "role lock reason"],
   [panel, "A16R_LOCKED_IMPORTS_CREATE_MISSING", "imports.create lock reason"],
   [panel, "A16R_LOCKED_PERMISSIONS_MANAGE_MISSING", "permissions.manage lock reason"],
-  [panel, "A16R_LOCKED_BY_PHASE_BOUNDARY_NO_POST_IN_A16AO", "phase boundary lock reason"],
+  [panel, "A16AR_LOCKED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_PROVEN", "A-16AR owner/admin lock reason"],
   [panel, "disabled", "official import button disabled"],
-  [panel, "aria-disabled=\"true\"", "official import aria-disabled"],
+  [a16arClient, "aria-disabled={!submitAllowed}", "official import aria-disabled"],
   [index, "PLAN_A16AO_INLINE_A16R_OWNER_IMPORT_PERMISSION_DIAGNOSTIC.md", "index entry"],
   [workLog, "A16AO_STATUS=PASS_INLINE_READ_ONLY_DIAGNOSTIC_ADDED_FAIL_CLOSED", "work log status"],
   [handoff, "A16AO_TEMP_DIAGNOSTIC_CLEANUP_TODO=YES", "handoff cleanup TODO"],
@@ -172,6 +175,14 @@ const allowedChangedFiles = new Set([
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/PLAN_A16AR_OWNER_SAME_RUN_OFFICIAL_IMPORT_CONFIRMATION_UI_PLUMBING.md",
+  "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "scripts/check-a16aq-official-import-ui-runtime-locked-gate-diagnosis.cjs",
+  "scripts/check-a16ap-owner-authenticated-official-import-execution-for-audited-session.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/a16r-official-import-confirmation-client.tsx",
   "scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs",
   "scripts/check-a16ak-official-import-session-duplicate-readiness.cjs",
   "scripts/check-a16am-owner-same-run-official-import-post-confirmation.cjs",

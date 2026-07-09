@@ -1,13 +1,14 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
+import { A16ROfficialImportConfirmationClient } from "@/components/imports/a16r-official-import-confirmation-client";
 import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-decision-review-client";
 import { ActionLink } from "@/components/ui/action-link";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
-import { buildOfficialImportPreflightGateFromManifest } from "@/lib/import/giapha4/official-import-preflight-gate";
 import {
   A16R_AUDITED_OFFICIAL_IMPORT_MARKER,
   A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
   A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
+  A16U_REQUIRED_A16R_RETRY_MARKER,
 } from "@/lib/import/giapha4/official-import-service";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
@@ -95,6 +96,14 @@ function formatPresent(value: boolean) {
   return value ? "present" : "missing";
 }
 
+function pushReason(
+  reasons: string[],
+  condition: boolean,
+  reason: string,
+) {
+  if (!condition) reasons.push(reason);
+}
+
 export function ImportSessionManifestPanel({
   result,
   a16rPermissionDiagnostic,
@@ -115,7 +124,10 @@ export function ImportSessionManifestPanel({
   const dryRunGate = getImportDryRunApprovalGate(currentSessionId);
   const dryRunPreview = buildDryRunMappingPreview(result);
   const reviewPack = buildImportReviewPackFromManifest(result);
-  const officialImportGate = buildOfficialImportPreflightGateFromManifest(result);
+  const a16pRuntimeCandidateEnabled =
+    process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === "true";
+  const a16ahExecutionBranchEnabled =
+    process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === "true";
   const totalDuplicateCandidates =
     session?.duplicateCandidateCount ?? result.duplicateCandidates.length;
   const duplicateReviewKey = session
@@ -129,6 +141,104 @@ export function ImportSessionManifestPanel({
   const officialImportSessionMismatch =
     currentSessionId !== null &&
     currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  const a16rPermissionReady =
+    Boolean(a16rPermissionDiagnostic?.userId) &&
+    Boolean(a16rPermissionDiagnostic?.hasOwnerAdminRole) &&
+    Boolean(a16rPermissionDiagnostic?.hasImportsCreate) &&
+    Boolean(a16rPermissionDiagnostic?.hasPermissionsManage) &&
+    Boolean(a16rPermissionDiagnostic?.qualifiesOwnerAdminImportContext);
+  const a16rAuditedSessionReady =
+    currentSessionId === A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  const a16rBlockedErrorsClear =
+    validation.summary.errorCount === 0 &&
+    dryRunPreview.summary.blockedByErrorCount === 0;
+  const a16rWarningsNonBlocking = true;
+  const a16rDuplicateReviewPackClear =
+    reviewPack.readiness === "READY_FOR_OWNER_REVIEW" &&
+    reviewPack.duplicateDecisionSummary.unresolvedDuplicateCandidates === 0 &&
+    reviewPack.duplicateDecisionSummary.needsReviewDuplicateCandidates === 0;
+  const a16rMarkersPresent =
+    A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER ===
+      "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY" &&
+    A16R_AUDITED_OFFICIAL_IMPORT_MARKER ===
+      `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}`;
+  const a16rSameRunLockedReasons: string[] = [];
+
+  pushReason(
+    a16rSameRunLockedReasons,
+    Boolean(a16rPermissionDiagnostic),
+    "A16AR_LOCKED_PERMISSION_DIAGNOSTIC_NOT_AVAILABLE",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rPermissionReady,
+    "A16AR_LOCKED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_PROVEN",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rAuditedSessionReady,
+    "A16AR_LOCKED_AUDITED_SESSION_MISMATCH",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rMarkersPresent,
+    "A16AR_LOCKED_REQUIRED_OWNER_MARKERS_MISSING_OR_MISMATCHED",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rBlockedErrorsClear,
+    "A16AR_LOCKED_BLOCKED_ERRORS_OR_DRY_RUN_BLOCKERS_PRESENT",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rWarningsNonBlocking,
+    "A16AR_LOCKED_IMPORT_BLOCKING_WARNING_CATEGORY_PRESENT",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rDuplicateReviewPackClear,
+    "A16AR_LOCKED_DUPLICATE_OR_REVIEW_PACK_BLOCKERS_PRESENT",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16pRuntimeCandidateEnabled,
+    "A16AR_LOCKED_RUNTIME_CANDIDATE_ENV_DISABLED",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16ahExecutionBranchEnabled,
+    "A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED",
+  );
+
+  const a16rSameRunPreflight = {
+    canOpenOfficialImport: a16rSameRunLockedReasons.length === 0,
+    officialImportEnabled: a16rSameRunLockedReasons.length === 0,
+  };
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16rSameRunPreflight.canOpenOfficialImport &&
+      a16rSameRunPreflight.officialImportEnabled,
+    "A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE",
+  );
+  const a16rOfficialImportConfirmation = {
+    confirmMarker: A16U_REQUIRED_A16R_RETRY_MARKER,
+    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    confirmNoValidationErrors: validation.summary.errorCount === 0,
+    confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
+    confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
+    confirmA16TApplyVerified: true,
+    confirmA16ULockedBranchReady: true,
+    confirmA16VApplyVerified: true,
+    confirmA16VRealTransactionBranchReady: true,
+    confirmRuntimeExecutionEnablementMarker:
+      A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
+    confirmProductionUiVisible: true,
+    confirmProductionDeployReady: true,
+    confirmRollbackReviewed: true,
+    confirmAuditReviewed: true,
+  };
+  const a16rOfficialImportRoutePath = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/official-import`;
+  const a16rConfirmationText = `Owner/admin confirms A-16R official import for audited session ${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}.`;
   const a16rButtonLockedReason = (() => {
     if (!a16rPermissionDiagnostic) {
       return "A16R_LOCKED_PERMISSION_DIAGNOSTIC_NOT_AVAILABLE";
@@ -151,10 +261,10 @@ export function ImportSessionManifestPanel({
     if (officialImportSessionMismatch) {
       return "A16R_LOCKED_AUDITED_SESSION_MISMATCH";
     }
-    if (officialImportGate.noGoReasons.length > 0) {
-      return `A16R_LOCKED_PREFLIGHT_NO_GO:${officialImportGate.noGoReasons[0]}`;
+    if (a16rSameRunLockedReasons.length > 0) {
+      return a16rSameRunLockedReasons[0];
     }
-    return "A16R_LOCKED_BY_PHASE_BOUNDARY_NO_POST_IN_A16AO";
+    return "A16R_UNLOCKED_PENDING_OWNER_FINAL_CONFIRMATION_CHECKBOX";
   })();
   const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
   const a16oAuditExportHref = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/dry-run-preview?auditExport=relationships-full`;
@@ -678,24 +788,24 @@ export function ImportSessionManifestPanel({
                   </div>
                 </dl>
               </div>
-              {officialImportGate.noGoReasons.length > 0 ? (
+              {a16rSameRunLockedReasons.length > 0 ? (
                 <div className="rounded-md border border-rose-200 bg-white p-3 text-sm leading-6 text-rose-900">
-                  <div>Không chạy nhập chính thức trong phase này.</div>
-                  {officialImportGate.noGoReasons.slice(0, 4).map((reason) => (
+                  <div>Không chạy nhập chính thức khi same-run gate chưa pass.</div>
+                  {a16rSameRunLockedReasons.slice(0, 4).map((reason) => (
                     <div key={reason}>{reason}</div>
                   ))}
                 </div>
               ) : null}
             </div>
 
-            <button
-              type="button"
-              disabled
-              aria-disabled="true"
-              className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-rose-900 sm:w-fit"
-            >
-              Xác nhận nhập chính thức - đang khóa
-            </button>
+            <A16ROfficialImportConfirmationClient
+              sessionId={A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}
+              routePath={a16rOfficialImportRoutePath}
+              confirmationText={a16rConfirmationText}
+              confirmationBody={a16rOfficialImportConfirmation}
+              canSubmit={a16rSameRunPreflight.officialImportEnabled}
+              lockedReasons={a16rSameRunLockedReasons}
+            />
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

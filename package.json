@@ -322,7 +322,8 @@
     "check:a16an-owner-admin-import-permission-context-diagnosis": "node scripts/check-a16an-owner-admin-import-permission-context-diagnosis.cjs",
     "check:a16ao-inline-a16r-owner-import-permission-diagnostic": "node scripts/check-a16ao-inline-a16r-owner-import-permission-diagnostic.cjs",
     "check:a16ap-owner-authenticated-official-import-execution-for-audited-session": "node scripts/check-a16ap-owner-authenticated-official-import-execution-for-audited-session.cjs",
-    "check:a16aq-official-import-ui-runtime-locked-gate-diagnosis": "node scripts/check-a16aq-official-import-ui-runtime-locked-gate-diagnosis.cjs"
+    "check:a16aq-official-import-ui-runtime-locked-gate-diagnosis": "node scripts/check-a16aq-official-import-ui-runtime-locked-gate-diagnosis.cjs",
+    "check:a16ar-owner-same-run-official-import-confirmation-ui-plumbing": "node scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

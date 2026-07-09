@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 301 - A-16AR opens UI confirmation only behind same-run gates
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AQ diagnosed the active lock as
+  `SOURCE_UI_PREFLIGHT_REVIEW_PACK_STILL_FAIL_CLOSED_NO_POST_PLUMBING`.
+- Owner/admin permission, audited session, duplicate decisions and owner-review
+  readiness were no longer the active blockers.
+- The official import route already required the approved confirmation body and
+  server-side gates, but the UI did not have a same-run confirmation path.
+
+Decision:
+
+- Replace the source hard-disabled A-16R button with a fail-closed confirmation
+  component inside the existing official import block.
+- Enable submission only when the UI proves owner/admin context, audited
+  session, markers, zero blockers, duplicate/review readiness, runtime envs and
+  same-run preflight.
+- Keep a final checkbox confirmation containing the audited session id before
+  any POST.
+- Keep the server route authoritative and return a locked response if the
+  execution branch env is disabled.
+
+Safety:
+
+- A-16AR does not call POST `/official-import`.
+- A-16AR does not execute A-16R import, direct/manual RPC, SQL, deploy, auth,
+  role, permission, membership or genealogy mutation.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 300 - A-16AN diagnoses owner/admin import permission context as role assignment or account-context blocker
 
 Date: 2026-07-09

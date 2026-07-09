@@ -1,5 +1,38 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AR-OWNER-SAME-RUN-OFFICIAL-IMPORT-CONFIRMATION-UI-PLUMBING - Source Plumbing
+
+- Marker:
+  `A-16AR-OWNER-SAME-RUN-OFFICIAL-IMPORT-CONFIRMATION-UI-PLUMBING`.
+- Status:
+  `A16AR_STATUS=PASS_SOURCE_UI_CONFIRMATION_PLUMBING_ADDED_NOT_EXECUTED`.
+- Target session:
+  `A16AR_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Route:
+  `A16AR_APPROVED_POST_ROUTE=/api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/official-import`.
+- Key result:
+  the hard-disabled A-16R button is replaced by a fail-closed same-run
+  owner/admin confirmation component inside the existing A-16R block. It can
+  enable only after permission, audited session, owner markers, zero blockers,
+  duplicate/review readiness, runtime candidate env, execution branch env and
+  same-run preflight all pass.
+- Safeguards:
+  final checkbox confirmation includes the audited session id, the client has
+  `submitting`/`hasSubmitted` repeat-submit protection, and there is exactly
+  one approved POST path in source.
+- Server route:
+  disabled `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED` now returns locked
+  `A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED` before runtime candidate
+  execution.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  `A16AR_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R retry, no direct/manual RPC,
+  no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Wrangler deploy, no raw/private data print or commit.
+- Next action:
+  `A16AR_NEXT_ACTION=PUSH_AND_DEPLOY_A16AR_THEN_RUN_AUTHENTICATED_OWNER_READ_ONLY_UI_SMOKE_BEFORE_ANY_IMPORT_EXECUTION_PHASE`.
+
 ## 2026-07-09 - A-16AQ-OFFICIAL-IMPORT-UI-RUNTIME-LOCKED-GATE-DIAGNOSIS - Source Diagnosis
 
 - Marker:

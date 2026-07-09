@@ -1,5 +1,33 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AR-OWNER-SAME-RUN-OFFICIAL-IMPORT-CONFIRMATION-UI-PLUMBING - Source Plumbing
+
+- Marker:
+  `A-16AR-OWNER-SAME-RUN-OFFICIAL-IMPORT-CONFIRMATION-UI-PLUMBING`.
+- Status:
+  `A16AR_STATUS=PASS_SOURCE_UI_CONFIRMATION_PLUMBING_ADDED_NOT_EXECUTED`.
+- Starting blocker:
+  `A16AQ_DISABLED_CLASSIFICATION=SOURCE_UI_PREFLIGHT_REVIEW_PACK_STILL_FAIL_CLOSED_NO_POST_PLUMBING`.
+- Target session:
+  `A16AR_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Implementation:
+  added a same-run owner/admin confirmation client inside the existing A-16R
+  official import block, with fail-closed gate reasons, final checkbox
+  confirmation, session-id text and repeated-submit protection.
+- Route hardening:
+  POST `/official-import` now returns locked
+  `A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED` if the execution branch env is
+  not enabled, before any runtime candidate execution.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  `A16AR_POST_OFFICIAL_IMPORT_CALLED=NO`; no A-16R import retry, no direct/manual
+  RPC, no SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy,
+  no Wrangler deploy, no raw/private data print or commit.
+- Next action:
+  deploy A-16AR through the approved GitHub Actions path later, then run an
+  authenticated owner read-only UI smoke before any separate execution phase.
+
 ## 2026-07-09 - A-16AQ-OFFICIAL-IMPORT-UI-RUNTIME-LOCKED-GATE-DIAGNOSIS - Source Diagnosis
 
 - Marker:

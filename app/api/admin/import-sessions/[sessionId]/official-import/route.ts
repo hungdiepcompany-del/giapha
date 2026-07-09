@@ -168,6 +168,17 @@ export async function POST(request: Request, context: RouteContext) {
     });
   }
 
+  if (!A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED) {
+    return jsonError(423, {
+      ok: false,
+      status: "LOCKED",
+      message:
+        "Nháº­p chÃ­nh thá»©c chÆ°a má»Ÿ execution branch trong runtime.",
+      blockedReasons: ["A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED"],
+      canRunOfficialImport: false,
+    });
+  }
+
   const result = await getOfficialImportRuntimeCandidate({
     sessionId,
     confirmation,

@@ -20,6 +20,8 @@ const preflightPath = "lib/import/giapha4/official-import-preflight-gate.ts";
 const reviewPackPath = "lib/import/giapha4/import-review-pack-service.ts";
 const routePath =
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
+const a16arClientPath =
+  "components/imports/a16r-official-import-confirmation-client.tsx";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -72,6 +74,7 @@ const panel = read(panelPath);
 const preflight = read(preflightPath);
 const reviewPack = read(reviewPackPath);
 const route = read(routePath);
+const a16arClient = read(a16arClientPath);
 const wrangler = read("wrangler.toml");
 const layout = read("app/layout.tsx");
 
@@ -115,9 +118,10 @@ for (const token of [
 }
 
 for (const [content, token, label] of [
-  [panel, "A16R_LOCKED_BY_PHASE_BOUNDARY_NO_POST_IN_A16AO", "panel phase-boundary lock reason"],
-  [panel, "disabled", "panel disabled official import button"],
-  [panel, "aria-disabled=\"true\"", "panel aria-disabled official import button"],
+  [panel, "A16ROfficialImportConfirmationClient", "panel A-16AR confirmation plumbing"],
+  [panel, "A16AR_LOCKED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_PROVEN", "panel owner/admin lock reason"],
+  [a16arClient, "aria-disabled={!submitAllowed}", "A-16AR client disabled official import button"],
+  [a16arClient, "Final owner/admin confirmation before official import POST", "A-16AR final confirmation state"],
   [preflight, "canOpenOfficialImport: false", "preflight canOpen false"],
   [preflight, "officialImportEnabled: false", "preflight enabled false"],
   [reviewPack, "canProceedToOfficialImport: false", "review pack canProceed false"],
@@ -165,6 +169,15 @@ const allowedChangedFiles = new Set([
   workLogPath,
   handoffPath,
   "scripts/check-a16ap-owner-authenticated-official-import-execution-for-audited-session.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "components/imports/a16r-official-import-confirmation-client.tsx",
+  "docs/PLAN_A16AR_OWNER_SAME_RUN_OFFICIAL_IMPORT_CONFIRMATION_UI_PLUMBING.md",
+  "docs/09_DECISION_LOG.md",
+  "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "scripts/check-a16ap-owner-authenticated-official-import-execution-for-audited-session.cjs",
+  "scripts/check-a16ao-inline-a16r-owner-import-permission-diagnostic.cjs",
+  "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
 ]);
 
 for (const file of changedFiles) {
