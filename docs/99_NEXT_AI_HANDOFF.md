@@ -1,5 +1,41 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AQ-OFFICIAL-IMPORT-UI-RUNTIME-LOCKED-GATE-DIAGNOSIS - Source Diagnosis
+
+- Marker:
+  `A-16AQ-OFFICIAL-IMPORT-UI-RUNTIME-LOCKED-GATE-DIAGNOSIS`.
+- Status:
+  `A16AQ_STATUS=DIAGNOSED_SOURCE_UI_RUNTIME_GATE_FAIL_CLOSED`.
+- Target session:
+  `A16AQ_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Active blocker:
+  `A16AQ_DISABLED_CLASSIFICATION=SOURCE_UI_PREFLIGHT_REVIEW_PACK_STILL_FAIL_CLOSED_NO_POST_PLUMBING`.
+- Exact disabled conditions:
+  permission context no longer blocks, audited session matches, duplicate and
+  review-pack blockers were not visible in A-16AP, but the A-16R UI button is
+  hard-disabled in source, GET preflight is always read-only with
+  `canOpenOfficialImport=false` and `officialImportEnabled=false`, review-pack
+  official-import flags remain false, and no UI code submits the same-run POST
+  confirmation body.
+- Route/env note:
+  POST route requires `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`,
+  `A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`, and the full confirmation
+  body; production values were not read in this phase.
+- Browser GET blocker:
+  `A16AQ_DIRECT_GET_GATE_BLOCKER=CHROME_ERR_BLOCKED_BY_CLIENT_TOOLING_ONLY_NOT_APP_LOCK_SOURCE`;
+  this is not the app source blocker.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R import retry, no direct/manual RPC, no
+  SQL/DB/auth/role/permission/membership/genealogy mutation, no deploy, no
+  Wrangler deploy, no raw/private data print or commit.
+- Next action:
+  implement a minimal owner same-run confirmation UI or operator runtime gate
+  that submits the required confirmation body only after all gates pass. Do not
+  execute import until a later phase rechecks all gates and explicitly allows
+  exactly one POST.
+
 ## 2026-07-09 - A-16AP-OWNER-AUTHENTICATED-OFFICIAL-IMPORT-EXECUTION - Blocked Before POST
 
 - Marker:

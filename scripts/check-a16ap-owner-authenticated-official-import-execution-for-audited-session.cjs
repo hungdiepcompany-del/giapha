@@ -145,6 +145,8 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "docs/PLAN_A16AQ_OFFICIAL_IMPORT_UI_RUNTIME_LOCKED_GATE_DIAGNOSIS.md",
+  "scripts/check-a16aq-official-import-ui-runtime-locked-gate-diagnosis.cjs",
   packagePath,
   indexPath,
   workLogPath,
