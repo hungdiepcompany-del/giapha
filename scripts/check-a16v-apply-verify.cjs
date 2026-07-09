@@ -114,7 +114,7 @@ for (const [content, token, label] of [
 
 rejectPattern(service + route, /\.rpc\s*\(/i, "runtime must not call RPC");
 rejectPattern(route, /fetch\s*\([^)]*official-import/i, "runtime must not client POST official import");
-requireIncludes(service, "canRunOfficialImport: false", "runtime canRunOfficialImport false");
+requireIncludes(service, "const canRunOfficialImport = reasons.length === 0", "runtime canRunOfficialImport candidate gate");
 requireIncludes(panel, "disabled", "official import button disabled");
 requireIncludes(panel, "aria-disabled=\"true\"", "official import aria disabled");
 

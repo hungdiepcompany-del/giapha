@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-09 - A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE - Candidate Ready, Not Executed
+
+- Marker:
+  `A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE`.
+- Candidate status:
+  `A16AE_RUNTIME_ENABLEMENT_CANDIDATE_STATUS=PASS_SOURCE_CANDIDATE_READY_NOT_EXECUTED`.
+- Default state:
+  `A16AE_DEFAULT_STATE=FAIL_CLOSED`.
+- Source change:
+  `A16AE_CAN_RUN_SOURCE=const canRunOfficialImport = reasons.length === 0`.
+- Route default remains locked by:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`.
+- `canRunOfficialImport` can become true only when all gates are satisfied in
+  the same service evaluation.
+- Candidate-ready state:
+  `status="CANDIDATE_READY_NOT_EXECUTED"`,
+  `canRunOfficialImport=true`, and
+  `transactionStatus="A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"`.
+- Candidate-ready state does not execute import:
+  `importedPeopleCount=0`,
+  `importedRelationshipCount=0`,
+  `piiPrinted=false`.
+- Execution allowed now:
+  `A16AE_EXECUTION_ALLOWED_NOW=NO`.
+- Final import command printed:
+  `A16AE_FINAL_IMPORT_COMMAND_PRINTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Minimum next safe phase:
+  `A-16AF-RUNTIME-ENABLEMENT-DEPLOY-SMOKE-GATE`.
+- Do not call POST `/official-import`, retry A-16R import, call direct RPC
+  official import, run SQL/DB mutation, run migration repair, seed, db push,
+  mutate users/roles/permissions/memberships/auth/genealogy data, deploy, run
+  Wrangler deploy, run local Windows deploy, edit `wrangler.toml`, edit
+  `app/layout.tsx`, commit raw JSON, print private JSON contents, or print a
+  final import command from A-16AE.
+
 ## 2026-07-09 - A-16AD-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-BLOCKER-DIAGNOSIS - Source Fail-Closed
 
 - Marker:

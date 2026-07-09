@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-07-09 - A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE - Source Candidate Added
+
+- Marker:
+  `A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE`.
+- Candidate status:
+  `A16AE_RUNTIME_ENABLEMENT_CANDIDATE_STATUS=PASS_SOURCE_CANDIDATE_READY_NOT_EXECUTED`.
+- Default state:
+  `A16AE_DEFAULT_STATE=FAIL_CLOSED`.
+- Source change:
+  `A16AE_CAN_RUN_SOURCE=const canRunOfficialImport = reasons.length === 0`.
+- Route default remains locked by:
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`.
+- Candidate-ready state:
+  `status="CANDIDATE_READY_NOT_EXECUTED"`,
+  `canRunOfficialImport=true`, and
+  `transactionStatus="A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"`.
+- Candidate-ready state is not execution:
+  `importedPeopleCount=0`,
+  `importedRelationshipCount=0`,
+  `piiPrinted=false`.
+- Execution allowed now:
+  `A16AE_EXECUTION_ALLOWED_NOW=NO`.
+- Final import command printed:
+  `A16AE_FINAL_IMPORT_COMMAND_PRINTED=NO`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Minimum next phase:
+  `A-16AF-RUNTIME-ENABLEMENT-DEPLOY-SMOKE-GATE`.
+- Boundaries preserved: no POST `/official-import`, no direct RPC official
+  import, no A-16R retry, no SQL/DB mutation, no migration repair, no seed, no
+  DB push, no deploy, no Wrangler deploy, no local Windows deploy, no
+  permission/auth/genealogy mutation, no `wrangler.toml` change, no
+  `app/layout.tsx` change, no raw JSON commit, and no private JSON print.
+
 ## 2026-07-09 - A-16AD-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-BLOCKER-DIAGNOSIS - Source Fail-Closed
 
 - Marker:

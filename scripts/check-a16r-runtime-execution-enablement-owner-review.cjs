@@ -121,7 +121,7 @@ for (const token of [
   "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY",
   "confirmRuntimeExecutionEnablementMarker",
   "runtimeExecutionEnablementGate",
-  "canRunOfficialImport: false",
+  "const canRunOfficialImport = reasons.length === 0",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
@@ -165,7 +165,6 @@ for (const [label, content] of [
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
     `${label} must not write real genealogy tables`,
   );
-  rejectPattern(content, /canRunOfficialImport:\s*true/, `${label} must not open canRunOfficialImport`);
 }
 
 rejectPattern(doc + gateDoc + reconciliationDoc + service + route + panel, /SUPABASE_SERVICE_ROLE_KEY\s*=/i, "secret assignment");
@@ -190,6 +189,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
   "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
   "scripts/check-a16r-runtime-execution-enablement-push-deploy-smoke.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-verify-deploy-smoke.cjs",
@@ -226,6 +228,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "scripts/check-a16r-official-import-session-id-reconciliation.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
   "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
   "lib/import/giapha4/import-dry-run-approval-gate.ts",
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",

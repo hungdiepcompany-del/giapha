@@ -121,7 +121,7 @@ for (const [content, token, label] of [
   [officialService, "2af4bfb6-a20e-453e-9804-1b8c0afbdd68", "audited session value"],
   [officialService, "confirmation.confirmMarker !== A16U_REQUIRED_A16R_RETRY_MARKER", "marker check"],
   [officialService, "params.manifest.session.id !== A16U_REQUIRED_SESSION_ID", "required session check"],
-  [officialService, "canRunOfficialImport: false", "service fail closed"],
+  [officialService, "const canRunOfficialImport = reasons.length === 0", "service A-16AE candidate gate"],
   [officialRoute, "canRunOfficialImport: false", "route fail closed"],
   [panel, "A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID", "panel audited session import"],
   [panel, "A16R_AUDITED_OFFICIAL_IMPORT_MARKER", "panel audited marker import"],
@@ -153,7 +153,6 @@ for (const [label, content] of [
   [officialRoutePath, officialRoute],
 ]) {
   rejectPattern(content, /\.rpc\s*\(/i, `${label} must not call direct RPC`);
-  rejectPattern(content, /canRunOfficialImport:\s*true/, `${label} must remain fail-closed`);
 }
 
 rejectPattern(doc, /A16R_IMPORT_RETRY_NEXT=YES/, "A-16R retry must not be YES");
@@ -220,6 +219,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16l-dry-run-mapping-preview.cjs",
   "scripts/check-a16l-dry-run-preview-owner-review-relationship-audit.cjs",

@@ -96,7 +96,7 @@ export type OfficialImportConfirmation = {
 };
 
 export type OfficialImportCandidateResult = {
-  ok: false;
+  ok: boolean;
   marker: typeof A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER;
   requiredMarker: typeof A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER;
   status: OfficialImportCandidateStatus;
@@ -107,25 +107,26 @@ export type OfficialImportCandidateResult = {
   blockedReasons: string[];
   rollbackManifestPreview: {
     available: boolean;
-    status: "BLOCKED";
+    status: "BLOCKED" | "READY_NOT_EXECUTED";
     reason: string;
     wouldTrackCreatedPeople: number;
     wouldTrackCreatedRelationships: number;
   };
   auditManifestPreview: {
     available: boolean;
-    status: "BLOCKED";
+    status: "BLOCKED" | "READY_NOT_EXECUTED";
     reason: string;
     actorProfileId: string | null;
     sourceFileHash: string | null;
   };
-  canRunOfficialImport: false;
+  canRunOfficialImport: boolean;
   piiPrinted: false;
   transactionStatus:
     | "BLOCKED_TRANSACTION_HELPER_MISSING"
     | "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED"
     | "A16U_LOCKED_TRANSACTION_BRANCH_READY_NOT_EXECUTED"
-    | "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED";
+    | "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED"
+    | "A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED";
   transactionRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
   transactionBranchContract: {
     marker: typeof A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER;
@@ -134,7 +135,7 @@ export type OfficialImportCandidateResult = {
     idempotencyGuard: "import_session_id";
     auditBatchTable: "official_import_batches";
     rollbackManifestTable: "official_import_rollback_manifests";
-    canRunOfficialImport: false;
+    canRunOfficialImport: boolean;
     requiredExecutionMarker: typeof A16U_REQUIRED_A16R_RETRY_MARKER;
   };
   realTransactionExecutionBranchCandidate: {
@@ -146,18 +147,20 @@ export type OfficialImportCandidateResult = {
     idempotencyGuard: "import_session_id";
     auditBatchTable: "official_import_batches";
     rollbackManifestTable: "official_import_rollback_manifests";
-    canRunOfficialImport: false;
-    blocker: typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER;
+    canRunOfficialImport: boolean;
+    blocker: typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER | null;
   };
   runtimeExecutionEnablementGate: {
     requiredMarker: typeof A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER;
     approvalMarkerMatched: boolean;
     evidenceStatus: "A16V_OWNER_APPLIED_VERIFIED_RECONCILED";
     productionDeployEvidenceRequired: true;
-    canRunOfficialImport: false;
+    routeFlagRequired: true;
+    canRunOfficialImport: boolean;
     blocker:
       | typeof A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER
-      | typeof A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER;
+      | typeof A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER
+      | null;
   };
   auditBatchContract: {
     table: "official_import_batches";
@@ -263,11 +266,7 @@ function buildNoGoReasons(params: {
   const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
     params.confirmation,
   );
-  const reasons: string[] = [
-    A16U_LOCKED_RUNTIME_GUARD,
-    A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
-    "A-16V đã có owner apply/verify PASS nhưng runtime execution vẫn chưa được bật; route/service chưa được phép gọi RPC nhập chính thức.",
-  ];
+  const reasons: string[] = [];
 
   if (!runtimeEnablementApproved) {
     reasons.push(A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER);
@@ -330,6 +329,12 @@ function buildNoGoReasons(params: {
   };
 }
 
+function buildBlockedRuntimeReason(runtimeEnablementApproved: boolean) {
+  return runtimeEnablementApproved
+    ? A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER
+    : A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER;
+}
+
 export function buildOfficialImportRuntimeCandidate(params: {
   manifest: ImportManifestReadResult;
   confirmation: OfficialImportConfirmation;
@@ -340,12 +345,17 @@ export function buildOfficialImportRuntimeCandidate(params: {
   const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
     params.confirmation,
   );
+  const canRunOfficialImport = reasons.length === 0;
+  const status: OfficialImportCandidateStatus = canRunOfficialImport
+    ? "CANDIDATE_READY_NOT_EXECUTED"
+    : "BLOCKED";
+  const blockedReason = buildBlockedRuntimeReason(runtimeEnablementApproved);
 
   return {
-    ok: false,
+    ok: canRunOfficialImport,
     marker: A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_MARKER,
     requiredMarker: A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER,
-    status: "BLOCKED",
+    status,
     sessionId,
     importedPeopleCount: 0,
     importedRelationshipCount: 0,
@@ -353,21 +363,27 @@ export function buildOfficialImportRuntimeCandidate(params: {
     blockedReasons: reasons,
     rollbackManifestPreview: {
       available: true,
-      status: "BLOCKED",
-      reason: A16U_LOCKED_RUNTIME_GUARD,
+      status: canRunOfficialImport ? "READY_NOT_EXECUTED" : "BLOCKED",
+      reason: canRunOfficialImport
+        ? "A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"
+        : A16U_LOCKED_RUNTIME_GUARD,
       wouldTrackCreatedPeople: dryRun.summary.proposedPeopleCount,
       wouldTrackCreatedRelationships: dryRun.summary.proposedRelationshipCount,
     },
     auditManifestPreview: {
       available: true,
-      status: "BLOCKED",
-      reason: A16U_LOCKED_RUNTIME_GUARD,
+      status: canRunOfficialImport ? "READY_NOT_EXECUTED" : "BLOCKED",
+      reason: canRunOfficialImport
+        ? "A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"
+        : A16U_LOCKED_RUNTIME_GUARD,
       actorProfileId: params.actor.profile?.id ?? null,
       sourceFileHash: params.manifest.session?.sourceFileHash ?? null,
     },
-    canRunOfficialImport: false,
+    canRunOfficialImport,
     piiPrinted: false,
-    transactionStatus: "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
+    transactionStatus: canRunOfficialImport
+      ? "A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"
+      : "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
     transactionRpcName: A16P_TX_TRANSACTION_RPC_NAME,
     transactionBranchContract: {
       marker: A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER,
@@ -376,7 +392,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
       idempotencyGuard: "import_session_id",
       auditBatchTable: "official_import_batches",
       rollbackManifestTable: "official_import_rollback_manifests",
-      canRunOfficialImport: false,
+      canRunOfficialImport,
       requiredExecutionMarker: A16U_REQUIRED_A16R_RETRY_MARKER,
     },
     realTransactionExecutionBranchCandidate: {
@@ -388,18 +404,19 @@ export function buildOfficialImportRuntimeCandidate(params: {
       idempotencyGuard: "import_session_id",
       auditBatchTable: "official_import_batches",
       rollbackManifestTable: "official_import_rollback_manifests",
-      canRunOfficialImport: false,
-      blocker: A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
+      canRunOfficialImport,
+      blocker: canRunOfficialImport
+        ? null
+        : A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER,
     },
     runtimeExecutionEnablementGate: {
       requiredMarker: A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
       approvalMarkerMatched: runtimeEnablementApproved,
       evidenceStatus: "A16V_OWNER_APPLIED_VERIFIED_RECONCILED",
       productionDeployEvidenceRequired: true,
-      canRunOfficialImport: false,
-      blocker: runtimeEnablementApproved
-        ? A16R_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY_BLOCKER
-        : A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER,
+      routeFlagRequired: true,
+      canRunOfficialImport,
+      blocker: canRunOfficialImport ? null : blockedReason,
     },
     auditBatchContract: {
       table: "official_import_batches",
@@ -415,7 +432,9 @@ export function buildOfficialImportRuntimeCandidate(params: {
       expectedFields: ["import_batch_id", "import_session_id", "created_people_ids"],
     },
     message:
-      "A-16V đã owner apply/verify PASS, nhưng runtime nhập chính thức vẫn khóa và chưa gọi RPC. Cần phase enablement riêng trước khi chạy A-16R.",
+      canRunOfficialImport
+        ? "A-16AE runtime candidate đã đủ điều kiện để mở canRunOfficialImport nhưng chưa gọi RPC và chưa chạy nhập chính thức."
+        : "A-16V đã owner apply/verify PASS, nhưng runtime nhập chính thức vẫn khóa và chưa gọi RPC. Cần đủ toàn bộ gate A-16AE trước khi chạy A-16R.",
   };
 }
 

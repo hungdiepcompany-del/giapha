@@ -1,5 +1,36 @@
 # Decision Log
 
+## Decision 293 - A-16AE adds guarded runtime official import enablement candidate without execution
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AD classified the blocker as
+  `SOURCE_RUNTIME_IMPLEMENTATION_REMAINS_FAIL_CLOSED`.
+- The route flag alone was not sufficient because the service always returned
+  `status: "BLOCKED"` and `canRunOfficialImport: false`.
+
+Decision:
+
+- Let the service compute:
+  `const canRunOfficialImport = reasons.length === 0`.
+- Keep the route fail-closed by default with
+  `A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED`.
+- Return `CANDIDATE_READY_NOT_EXECUTED` only when all confirmation, session,
+  permission, validation, dry-run, duplicate, rollback, audit, A-16T/U/V, and
+  runtime marker gates pass.
+- Do not call RPC or execute import in A-16AE.
+
+Consequences:
+
+- A later deploy/smoke gate must prove the candidate safely in production
+  before any final import execution phase.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 292 - A-16AD classifies runtime official import enablement blocker as source fail-closed
 
 Date: 2026-07-09

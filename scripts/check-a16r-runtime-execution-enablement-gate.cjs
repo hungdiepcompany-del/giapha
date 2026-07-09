@@ -97,7 +97,7 @@ for (const token of [
   "requiredMarker: A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER",
   "evidenceStatus: \"A16V_OWNER_APPLIED_VERIFIED_RECONCILED\"",
   "productionDeployEvidenceRequired: true",
-  "canRunOfficialImport: false",
+  "const canRunOfficialImport = reasons.length === 0",
   "approvalMarkerMatched: runtimeEnablementApproved",
   "status: \"BLOCKED\"",
   "sqlCandidateStatus: \"OWNER_APPLIED_VERIFIED\"",
@@ -152,7 +152,6 @@ for (const [label, content] of [
     /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
     `${label} must not write real genealogy tables`,
   );
-  rejectPattern(content, /canRunOfficialImport:\s*true/, `${label} must not open canRunOfficialImport`);
 }
 
 rejectPattern(doc + service + route + panel, /SUPABASE_SERVICE_ROLE_KEY\s*=/i, "secret assignment");
@@ -194,6 +193,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-post-deploy-http500-root-cause.cjs",
   "scripts/check-a16r-opennext-cloudflare-deploy-bundle-fix-candidate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ac-import-retry-execution-final-gate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16r-runtime-execution-enablement-push-deploy-smoke.cjs",
   "scripts/check-a16r-giapha-cloudflare-account-recovery.cjs",

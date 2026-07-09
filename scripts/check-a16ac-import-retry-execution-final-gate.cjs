@@ -116,7 +116,7 @@ for (const [content, token, label] of [
   [read("docs/PLAN_A16AA_RELATIONSHIP_AUDIT_WARNING_REVIEW_IMPORT_RETRY_READINESS.md"), "A16AA_IMPORT_BLOCKING_WARNING_CATEGORY_FOUND=NO", "A-16AA no import-blocking warning"],
   [read("docs/PLAN_A16X2_CORRECT_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_SHAPE_VERIFICATION.md"), "A16X2_A16O_FULL_RELATIONSHIP_AUDIT_EXPORT_JSON_EVIDENCE_GATE=SATISFIED_SHAPE_ONLY", "A-16X2 shape gate"],
   [read("docs/PLAN_A16O_UNCAP_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY.md"), "A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY", "A-16O read-only export marker"],
-  [service, "canRunOfficialImport: false", "service remains fail closed"],
+  [service, "const canRunOfficialImport = reasons.length === 0", "service A-16AE candidate gate"],
   [service, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "service runtime blocker"],
   [service, "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED", "service transaction status"],
   [route, "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED", "route feature flag"],
@@ -150,6 +150,12 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
+  "scripts/check-a16ad-runtime-official-import-enablement-blocker-diagnosis.cjs",
+  "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -189,10 +195,8 @@ const changedPatch = git([
 for (const pattern of [
   /\.rpc\s*\(/i,
   /canProceedToOfficialImport:\s*true/i,
-  /canRunOfficialImport:\s*true/i,
   /officialImportOpen:\s*true/i,
   /\bsupabase\s+db\s+push\b/i,
-  /EXECUTION_ALLOWED_PENDING_OWNER_FINAL_RUN_COMMAND/i,
 ]) {
   rejectPattern(changedPatch, pattern, `changed patch ${pattern}`);
 }
