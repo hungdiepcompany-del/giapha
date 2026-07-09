@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 292 - A-16AD classifies runtime official import enablement blocker as source fail-closed
+
+Date: 2026-07-09
+
+Status: Accepted
+
+Context:
+
+- A-16AC proved the final execution gate is still blocked by
+  `A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY`.
+- The owner execution approval marker is present.
+- A-16V apply/verify and prior runtime enablement owner review evidence exist.
+
+Decision:
+
+- Classify the blocker as:
+  `SOURCE_RUNTIME_IMPLEMENTATION_REMAINS_FAIL_CLOSED`.
+- Treat the route flag as present but not sufficient because the service result
+  still returns `status: "BLOCKED"` and `canRunOfficialImport: false`.
+- Treat session mismatch and missing route as not the blocker.
+- Keep A-16R import retry as:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+Consequences:
+
+- The minimum next safe phase is:
+  `A-16AE-RUNTIME-OFFICIAL-IMPORT-ENABLEMENT-CANDIDATE`.
+- A-16AD itself does not enable runtime, print a final import command, call
+  POST `/official-import`, call direct RPC, deploy, run SQL, or mutate data.
+
 ## Decision 291 - A-16AC blocks A-16R import retry execution because runtime remains fail-closed
 
 Date: 2026-07-08
