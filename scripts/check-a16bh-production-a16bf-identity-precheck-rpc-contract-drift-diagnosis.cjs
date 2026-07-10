@@ -190,6 +190,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
   "scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "docs/PLAN_A16BJ_FINAL_READ_ONLY_OFFICIAL_IMPORT_RETRY_RECONCILIATION_GATE.md",
+  "scripts/check-a16bj-final-read-only-official-import-retry-reconciliation-gate.cjs",
+  "scripts/verify-a16bj-final-read-only-reconciliation.cjs",
 ]);
 
 for (const file of changedFiles) {

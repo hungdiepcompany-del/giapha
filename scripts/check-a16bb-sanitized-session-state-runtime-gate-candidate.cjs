@@ -235,6 +235,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
   "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
+  "docs/PLAN_A16BJ_FINAL_READ_ONLY_OFFICIAL_IMPORT_RETRY_RECONCILIATION_GATE.md",
+  "scripts/check-a16bj-final-read-only-official-import-retry-reconciliation-gate.cjs",
+  "scripts/verify-a16bj-final-read-only-reconciliation.cjs",
 ]);
 
 for (const file of changedFiles) {

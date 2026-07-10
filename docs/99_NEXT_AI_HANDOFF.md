@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-07-10 - A-16BJ - Final read-only official import retry reconciliation gate
+
+- Status:
+  `A16BJ_STATUS=PASS_FINAL_READ_ONLY_RECONCILIATION_READY_FOR_SEPARATE_OWNER_RETRY`.
+- Target session:
+  `A16BJ_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Session state:
+  `A16BJ_SESSION_STATE=owner_approved_for_db_write`.
+- Identity:
+  `A16BJ_IDENTITY_MATCH=YES`.
+- Audit/idempotency:
+  `A16BJ_OFFICIAL_IMPORT_BATCH_EXISTS=NO`,
+  `A16BJ_ROLLBACK_MANIFEST_EXISTS=NO`,
+  `A16BJ_PARTIAL_WRITE_DETECTED=NO`.
+- Counts:
+  `A16BJ_STAGED_PEOPLE_COUNT=102`,
+  `A16BJ_STAGED_RELATIONSHIP_COUNT=134`,
+  `A16BJ_VALIDATION_BLOCKER_STATUS=PASS_ERRORS_0_DUPLICATE_BLOCKERS_0_RELATIONSHIP_BLOCKERS_0`.
+- Deployed source evidence:
+  `A16BJ_DEPLOYED_SOURCE_EVIDENCE=OWNER_PROVIDED_A16BH_AUTHENTICATED_GET_PASS_AND_RPC_METADATA_PASS_9_OF_9_PLUS_LOCAL_HEAD_INCLUDES_FFF4019`.
+- Root cause:
+  `A16BJ_ROOT_CAUSE_CLASSIFICATION=LIKELY_PRE_FFF4019_STALE_DEPLOYMENT_OR_PRE_DIAGNOSTIC_EXECUTION_PATH_NO_REMAINING_READ_ONLY_BLOCKER`.
+- Final retry readiness:
+  `A16BJ_FINAL_RETRY_READINESS=READY_FOR_SEPARATE_OWNER_APPROVED_SINGLE_RETRY_NOT_EXECUTED_IN_A16BJ`.
+- A-16R retry:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no import RPC, no direct/manual RPC, no SQL/DB
+  mutation, no session-state change, no migration apply/db push/repair/seed, no
+  deploy, no auth/permission/genealogy mutation, no raw/private data printed or
+  committed.
+- Next owner action:
+  `A16BJ_NEXT_OWNER_ACTION=SEPARATE_A16BK_OWNER_APPROVED_SINGLE_POST_RETRY_PHASE_IF_ACCEPTED`.
+
 ## 2026-07-10 - A-16BI - Same-client RPC binding and production contract read-only verification
 
 - Status:

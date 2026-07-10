@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 311 - A-16BJ requires a final read-only reconciliation before another import retry
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: Production A-16BH identity diagnostics and owner-provided RPC metadata
+now pass, while earlier official-import attempts returned HTTP 409 and imported
+zero people. Before any separate retry, the project needs one final sanitized
+read-only check that current DB/session/audit state still matches the reviewed
+evidence gates and that no partial write markers exist.
+
+Decision: Add an A-16BJ read-only verifier and checker that confirm the audited
+session is still `owner_approved_for_db_write`, the session owner matches the
+current RPC-visible owner profile, no official import batch or rollback
+manifest exists, no A-16V import revision markers or write-completed manifest
+exist, candidate counts remain 102/134, and blocker counts remain zero. This
+phase may classify retry readiness, but it does not run the retry.
+
+Consequences: The previous HTTP 409 is reconciled as likely pre-`fff4019` stale
+deployment or pre-diagnostic execution path rather than a remaining read-only
+blocker, provided the verifier keeps passing. A-16R retry remains `NO` until a
+separate owner-approved single POST phase.
+
+Safety: A-16BJ does not call POST `/official-import`, does not call the import
+RPC, does not run SQL or DB mutation, does not change session state, does not
+deploy, and does not print or commit raw/private data.
+
 ## Decision 310 - A-16BI treats same-client false as GET diagnostic observability boundary
 
 Date: 2026-07-10
