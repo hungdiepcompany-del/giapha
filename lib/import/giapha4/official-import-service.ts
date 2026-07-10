@@ -123,6 +123,28 @@ export type OfficialImportConfirmation = {
 
 type JsonRecord = Record<string, unknown>;
 
+type OfficialImportSameRunSupabaseClient = {
+  rpc: (
+    functionName:
+      | typeof A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME
+      | typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
+    args?: Record<string, unknown>,
+  ) => Promise<{ data: unknown; error: { message?: string } | null }>;
+  from: (table: "import_sessions") => {
+    select: (columns: "created_by") => {
+      eq: (
+        column: "id",
+        value: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+      ) => {
+        maybeSingle: <T>() => Promise<{
+          data: T | null;
+          error: { message?: string } | null;
+        }>;
+      };
+    };
+  };
+};
+
 export type OfficialImportTransactionExecutorInput = {
   rpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
   rpcFunctionName: typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME;
@@ -131,6 +153,7 @@ export type OfficialImportTransactionExecutorInput = {
   manifestHash: string | null;
   reviewPackHash: string | null;
   actorProfileId: string | null;
+  sameRunRpcClient?: OfficialImportSameRunSupabaseClient | null;
 };
 
 export type OfficialImportTransactionExecutorResult = {
@@ -159,6 +182,7 @@ export type OfficialImportRpcInvocationIdentityPrecheckResult = {
     | "NOT_EVALUATED";
   rpcClientAuthContext:
     | "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER"
+    | "SAME_RUN_END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER"
     | "UNAVAILABLE"
     | "NOT_EVALUATED";
   rpcVisibleProfileResult:
@@ -180,6 +204,7 @@ export type OfficialImportRpcInvocationIdentityPrecheckResult = {
   runtimeProfileMatchesRpcVisibleProfile: boolean;
   runtimeProfileMatchesAuditedSessionOwner: boolean;
   rpcVisibleProfileMatchesAuditedSessionOwner: boolean;
+  precheckAndImportRpcUseSameClientInstance: boolean;
   blocker: typeof A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER | null;
   piiPrinted: false;
 };
@@ -312,6 +337,7 @@ function buildPendingRpcInvocationIdentityPrecheck(): OfficialImportRpcInvocatio
     runtimeProfileMatchesRpcVisibleProfile: false,
     runtimeProfileMatchesAuditedSessionOwner: false,
     rpcVisibleProfileMatchesAuditedSessionOwner: false,
+    precheckAndImportRpcUseSameClientInstance: false,
     blocker: null,
     piiPrinted: false,
   };
@@ -496,6 +522,8 @@ function buildBlockedRuntimeReason(runtimeEnablementApproved: boolean) {
 async function runRpcInvocationIdentityPrecheck(params: {
   sessionId: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
   actor: PermissionContext;
+  sameRunRpcClient?: OfficialImportSameRunSupabaseClient | null;
+  precheckAndImportRpcUseSameClientInstance?: boolean;
 }): Promise<OfficialImportRpcInvocationIdentityPrecheckResult> {
   const runtimeProfileId = params.actor.profile?.id ?? null;
 
@@ -515,7 +543,8 @@ async function runRpcInvocationIdentityPrecheck(params: {
     });
   }
 
-  const supabase = await maybeCreateServerSupabaseClient();
+  const supabase =
+    params.sameRunRpcClient ?? (await maybeCreateServerSupabaseClient());
   if (!supabase) {
     return buildBlockedRpcInvocationIdentityPrecheck({
       rpcClientAuthContext: "UNAVAILABLE",
@@ -525,25 +554,7 @@ async function runRpcInvocationIdentityPrecheck(params: {
     });
   }
 
-  const rpcClient = supabase as unknown as {
-    rpc: (
-      functionName: typeof A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME,
-      args?: Record<string, never>,
-    ) => Promise<{ data: unknown; error: { message?: string } | null }>;
-    from: (table: "import_sessions") => {
-      select: (columns: "created_by") => {
-        eq: (
-          column: "id",
-          value: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
-        ) => {
-          maybeSingle: <T>() => Promise<{
-            data: T | null;
-            error: { message?: string } | null;
-          }>;
-        };
-      };
-    };
-  };
+  const rpcClient = supabase as unknown as OfficialImportSameRunSupabaseClient;
 
   const rpcProfileResult = await rpcClient.rpc(
     A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME,
@@ -581,6 +592,8 @@ async function runRpcInvocationIdentityPrecheck(params: {
       rpcVisibleProfilePresent: true,
       runtimeProfileMatchesRpcVisibleProfile:
         runtimeProfileId === rpcVisibleProfileId,
+      precheckAndImportRpcUseSameClientInstance:
+        params.precheckAndImportRpcUseSameClientInstance === true,
     });
   }
 
@@ -596,6 +609,8 @@ async function runRpcInvocationIdentityPrecheck(params: {
       auditedSessionOwnerProfilePresent: false,
       runtimeProfileMatchesRpcVisibleProfile:
         runtimeProfileId === rpcVisibleProfileId,
+      precheckAndImportRpcUseSameClientInstance:
+        params.precheckAndImportRpcUseSameClientInstance === true,
     });
   }
 
@@ -622,6 +637,8 @@ async function runRpcInvocationIdentityPrecheck(params: {
       runtimeProfileMatchesRpcVisibleProfile,
       runtimeProfileMatchesAuditedSessionOwner,
       rpcVisibleProfileMatchesAuditedSessionOwner,
+      precheckAndImportRpcUseSameClientInstance:
+        params.precheckAndImportRpcUseSameClientInstance === true,
     });
   }
 
@@ -630,7 +647,10 @@ async function runRpcInvocationIdentityPrecheck(params: {
     marker: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_MARKER,
     permissionClientAuthContext:
       "END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS",
-    rpcClientAuthContext: "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER",
+    rpcClientAuthContext:
+      params.precheckAndImportRpcUseSameClientInstance === true
+        ? "SAME_RUN_END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER"
+        : "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER",
     rpcVisibleProfileResult: "MATCHED_RUNTIME_PROFILE_AND_SESSION_OWNER",
     productionRpcContractStatus:
       "SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL",
@@ -641,9 +661,30 @@ async function runRpcInvocationIdentityPrecheck(params: {
     runtimeProfileMatchesRpcVisibleProfile: true,
     runtimeProfileMatchesAuditedSessionOwner: true,
     rpcVisibleProfileMatchesAuditedSessionOwner: true,
+    precheckAndImportRpcUseSameClientInstance:
+      params.precheckAndImportRpcUseSameClientInstance === true,
     blocker: null,
     piiPrinted: false,
   };
+}
+
+export async function getOfficialImportRpcIdentityPrecheckDiagnostic(params: {
+  sessionId: string;
+  actor: PermissionContext;
+}) {
+  if (params.sessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "MISMATCHED_SESSION_OWNER",
+      authenticatedAuthUserPresent: Boolean(params.actor.user),
+      runtimePermissionProfilePresent: Boolean(params.actor.profile?.id),
+    });
+  }
+
+  return runRpcInvocationIdentityPrecheck({
+    sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    actor: params.actor,
+    precheckAndImportRpcUseSameClientInstance: false,
+  });
 }
 
 export function buildOfficialImportRuntimeCandidate(params: {
@@ -770,7 +811,8 @@ export function buildOfficialImportRuntimeCandidate(params: {
 export async function executeOfficialImportTransactionWithSupabase(
   input: OfficialImportTransactionExecutorInput,
 ): Promise<OfficialImportTransactionExecutorResult> {
-  const supabase = await maybeCreateServerSupabaseClient();
+  const supabase =
+    input.sameRunRpcClient ?? (await maybeCreateServerSupabaseClient());
   if (!supabase) {
     return {
       ok: false,
@@ -787,12 +829,7 @@ export async function executeOfficialImportTransactionWithSupabase(
     };
   }
 
-  const rpcClient = supabase as unknown as {
-    rpc: (
-      functionName: typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
-      args: Record<string, unknown>,
-    ) => Promise<{ data: unknown; error: { message?: string } | null }>;
-  };
+  const rpcClient = supabase as unknown as OfficialImportSameRunSupabaseClient;
 
   const { data, error } = await rpcClient.rpc(
     A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
@@ -863,10 +900,17 @@ export async function executeOfficialImportRuntimeCandidate(params: {
     return candidate;
   }
 
+  const sameRunRpcClient =
+    (await maybeCreateServerSupabaseClient()) as unknown as
+      | OfficialImportSameRunSupabaseClient
+      | null;
+
   const rpcInvocationIdentityPrecheck =
     await runRpcInvocationIdentityPrecheck({
       sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
       actor: params.actor,
+      sameRunRpcClient,
+      precheckAndImportRpcUseSameClientInstance: true,
     });
 
   if (!rpcInvocationIdentityPrecheck.ok) {
@@ -912,6 +956,7 @@ export async function executeOfficialImportRuntimeCandidate(params: {
     manifestHash: params.manifest.session?.previewManifestHash ?? null,
     reviewPackHash: null,
     actorProfileId: params.actor.profile?.id ?? null,
+    sameRunRpcClient,
   });
 
   return {

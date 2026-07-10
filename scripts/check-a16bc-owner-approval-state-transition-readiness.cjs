@@ -186,6 +186,7 @@ const allowedChangedFiles = new Set([
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A16BE_OFFICIAL_IMPORT_RPC_SESSION_OWNERSHIP_CONTRACT_DIAGNOSIS.md",
   "docs/PLAN_A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_CONTRACT_ALIGNMENT.md",
+  "docs/PLAN_A16BH_PRODUCTION_A16BF_IDENTITY_PRECHECK_RPC_CONTRACT_DRIFT_DIAGNOSIS.md",
   "lib/import/giapha4/official-import-service.ts",
   "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
@@ -196,6 +197,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
   "scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
   "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import-identity-precheck/route.ts",
+  "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
 ]);

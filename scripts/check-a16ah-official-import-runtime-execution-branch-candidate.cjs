@@ -250,6 +250,9 @@ const allowedChangedFiles = new Set([
   "scripts/verify-a16be-session-ownership-contract.cjs",
   "docs/PLAN_A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_CONTRACT_ALIGNMENT.md",
   "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
+  "docs/PLAN_A16BH_PRODUCTION_A16BF_IDENTITY_PRECHECK_RPC_CONTRACT_DRIFT_DIAGNOSIS.md",
+  "app/api/admin/import-sessions/[sessionId]/official-import-identity-precheck/route.ts",
+  "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

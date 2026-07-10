@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 309 - A-16BH exposes read-only identity precheck before any further import retry
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: After A-16BF source was available, owner reported another production
+official-import POST returning 409 with `SESSION_NOT_FOUND_OR_NOT_OWNED`, and
+the runtime branch reached the transaction helper once. That evidence does not
+prove whether production included A-16BF or whether A-16BF passed and the
+production RPC definition/auth context then failed.
+
+Decision: Do not retry official import. Add an authenticated GET-only
+`official-import-identity-precheck` diagnostic that returns only sanitized
+booleans and context classifications. Also align the POST source path so the
+A-16BF precheck and transaction helper use the same same-run server Supabase
+client instance before any import transaction RPC can be called.
+
+Consequences: Future production diagnosis can distinguish stale deployment from
+precheck pass plus RPC contract drift without printing private identifiers or
+running import. Production RPC definition still requires owner read-only SQL
+boolean evidence; Codex does not assume it matches the repository migration.
+
+Safety: A-16BH does not call POST `/official-import`, does not call the import
+transaction RPC, does not run SQL or DB mutation, does not deploy, and does not
+print or commit raw/private data.
+
 ## Decision 308 - A-16BF proves RPC-visible identity before official import transaction RPC
 
 Date: 2026-07-10

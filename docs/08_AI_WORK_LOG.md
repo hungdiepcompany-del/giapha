@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-07-10 - A-16BH - Production A-16BF identity precheck and RPC contract drift diagnosis
+
+- Status:
+  `A16BH_STATUS=PASS_SOURCE_DIAGNOSTIC_CANDIDATE_NOT_DEPLOYED_NOT_EXECUTED`.
+- Target session:
+  `A16BH_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Production commit evidence:
+  `A16BH_PRODUCTION_COMMIT_EVIDENCE=LOCAL_ORIGIN_MAIN_CONTAIN_92C4271_PRODUCTION_DEPLOY_OF_92C4271_NOT_PROVEN_IN_THIS_PHASE`.
+- A-16BF precheck active status:
+  `A16BH_A16BF_PRECHECK_ACTIVE=UNKNOWN_NEEDS_AUTHENTICATED_GET_DIAGNOSTIC_AFTER_DEPLOY`.
+- Read-only diagnostic:
+  added authenticated GET-only route
+  `/api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/official-import-identity-precheck`.
+- Same-run client alignment:
+  `A16BH_PRECHECK_AND_IMPORT_RPC_USE_SAME_CLIENT_INSTANCE=YES_IN_SOURCE_POST_PATH`;
+  the GET diagnostic does not run import RPC and returns sanitized booleans only.
+- Production RPC contract status:
+  `A16BH_PRODUCTION_RPC_CONTRACT_STATUS=UNKNOWN_OWNER_READ_ONLY_SQL_REQUIRED`.
+- Root cause:
+  `A16BH_ROOT_CAUSE=PRODUCTION_PRECHECK_ACTIVE_OR_RPC_CONTRACT_DRIFT_NOT_PROVEN_YET`.
+- Safety:
+  no A-16R retry, no POST `/official-import`, no import transaction RPC, no
+  SQL/DB/session/auth/permission/genealogy mutation, no deploy, no raw/private
+  data printed or committed.
+- Next action:
+  `A16BH_NEXT_ACTION=DEPLOY_A16BH_THEN_RUN_AUTHENTICATED_GET_IDENTITY_PRECHECK_AND_OWNER_READ_ONLY_RPC_CONTRACT_SQL_NO_IMPORT`.
+
 ## 2026-07-10 - A-16BF - Same-run RPC invocation identity precheck
 
 - Status:
