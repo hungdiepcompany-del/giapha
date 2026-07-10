@@ -15,6 +15,8 @@ const checkPath =
 const servicePath = "lib/import/giapha4/official-import-service.ts";
 const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const confirmationClientPath =
+  "components/imports/a16r-official-import-confirmation-client.tsx";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -54,6 +56,7 @@ const service = read(servicePath);
 const route = read(routePath);
 const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
+const confirmationClient = read(confirmationClientPath);
 const packageJson = JSON.parse(read("package.json") || "{}");
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
@@ -147,8 +150,12 @@ for (const token of [
   requireIncludes(route, token, `route confirmation ${token}`);
 }
 
-requireIncludes(panel, "disabled", "official import button disabled");
-requireIncludes(panel, "aria-disabled=\"true\"", "official import aria disabled");
+requireIncludes(panel + confirmationClient, "disabled", "official import button disabled");
+requireIncludes(
+  panel + confirmationClient,
+  "aria-disabled",
+  "official import aria-disabled guard",
+);
 
 if (
   packageJson.scripts?.["check:a16v-official-import-real-transaction-execution-branch"] !==

@@ -175,6 +175,13 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+  "scripts/check-a16aa-relationship-audit-warning-review-import-retry-readiness.cjs",
+  "scripts/check-a16ab-import-retry-preflight-approval-gate.cjs",
+  "docs/PLAN_A16AZ_OFFICIAL_IMPORT_POST_409_SESSION_STATE_DIAGNOSIS.md",
+  "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

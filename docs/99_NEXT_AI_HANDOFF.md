@@ -1,5 +1,36 @@
 # Next AI Handoff
 
+## 2026-07-10 - A-16AZ-OFFICIAL-IMPORT-POST-409-SESSION-STATE-DIAGNOSIS - POST 409 Diagnosis
+
+- Marker:
+  `A-16AZ-OFFICIAL-IMPORT-POST-409-SESSION-STATE-DIAGNOSIS`.
+- Status:
+  `A16AZ_STATUS=DIAGNOSED_POST_409_SESSION_STATE_MISMATCH_NO_IMPORT`.
+- Owner production result:
+  one owner final-confirmation POST attempt for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` returned HTTP 409 with route status
+  `BLOCKED`, `canRunOfficialImport=false`, imported people count `0`, warnings
+  count `46`, and no RPC execution.
+- Blocker:
+  `A16AZ_BLOCKER=OFFICIAL_IMPORT_POST_409_SESSION_STATE_GATE_REJECTED_BEFORE_RPC_NO_IMPORT_EXECUTED`.
+- Diagnosis:
+  runtime source still expects `params.manifest.session.status !== "staged"` to
+  be false, but `staged` is not a valid schema state. The schema/RPC contract
+  points to `ready_for_owner_approval` and/or `owner_approved_for_db_write`.
+- Exact stored state:
+  `A16AZ_ACTUAL_SESSION_STATE=UNKNOWN_NOT_READ_FROM_DB_IN_A16AZ`.
+- Warning count reconciliation:
+  `94` was the A-16AA full relationship audit warning count, while `46` is the
+  runtime import manifest warning count for the audited session.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST in A-16AZ, no import retry, no direct/manual RPC, no SQL/DB mutation,
+  no deploy, no auth/permission/genealogy mutation, no raw/private data print or
+  commit.
+- Next action:
+  `A16AZ_NEXT_ACTION=A16BA_READ_ONLY_SESSION_STATE_AND_RUNTIME_STATE_CONTRACT_FIX_PLAN_NO_POST_NO_RPC`.
+
 ## 2026-07-09 - A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING - Keep Vars Wiring
 
 - Marker:

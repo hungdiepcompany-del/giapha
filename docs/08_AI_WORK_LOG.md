@@ -1,5 +1,39 @@
 # AI Work Log
 
+## 2026-07-10 - A-16AZ-OFFICIAL-IMPORT-POST-409-SESSION-STATE-DIAGNOSIS - POST 409 Diagnosis
+
+- Marker:
+  `A-16AZ-OFFICIAL-IMPORT-POST-409-SESSION-STATE-DIAGNOSIS`.
+- Status:
+  `A16AZ_STATUS=DIAGNOSED_POST_409_SESSION_STATE_MISMATCH_NO_IMPORT`.
+- Owner production result:
+  one final-confirmation POST attempt for session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` returned
+  `OFFICIAL_IMPORT_POST_REJECTED_HTTP_409`, route status `BLOCKED`,
+  `canRunOfficialImport=false`, imported people count `0`, warnings count `46`.
+- No import occurred:
+  `A16AZ_RPC_IMPORT_CALLED=NO` and
+  `A16AZ_REAL_GENEALOGY_DATA_IMPORTED=NO`.
+- Source diagnosis:
+  `A16AZ_SOURCE_BLOCKING_CONDITION=params.manifest.session.status !== "staged"`.
+- Contract mismatch:
+  schema states do not include `staged`; A-16V RPC accepts
+  `ready_for_owner_approval` and `owner_approved_for_db_write`.
+- Actual stored session state:
+  `A16AZ_ACTUAL_SESSION_STATE=UNKNOWN_NOT_READ_FROM_DB_IN_A16AZ`.
+- Warning count reconciliation:
+  `A16AZ_WARNING_COUNT_DELTA_EXPLANATION=94_A16AA_FULL_RELATIONSHIP_AUDIT_WARNINGS_VS_46_RUNTIME_IMPORT_MANIFEST_WARNINGS_DIFFERENT_WARNING_SURFACES`.
+- Blocker:
+  `A16AZ_BLOCKER=OFFICIAL_IMPORT_POST_409_SESSION_STATE_GATE_REJECTED_BEFORE_RPC_NO_IMPORT_EXECUTED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Boundaries preserved:
+  no POST in this phase, no retry, no direct/manual RPC, no SQL/DB mutation,
+  no migration repair/seed, no deploy, no auth/permission/genealogy mutation,
+  no raw/private data print or commit.
+- Next action:
+  `A16AZ_NEXT_ACTION=A16BA_READ_ONLY_SESSION_STATE_AND_RUNTIME_STATE_CONTRACT_FIX_PLAN_NO_POST_NO_RPC`.
+
 ## 2026-07-09 - A-16AX-CLOUDFLARE-RUNTIME-VARS-PRESERVATION-DEPLOY-WIRING - Keep Vars Wiring
 
 - Marker:

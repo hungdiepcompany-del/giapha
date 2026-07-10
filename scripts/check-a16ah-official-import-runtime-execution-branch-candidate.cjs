@@ -216,6 +216,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
+  "docs/PLAN_A16AZ_OFFICIAL_IMPORT_POST_409_SESSION_STATE_DIAGNOSIS.md",
+  "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

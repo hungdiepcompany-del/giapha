@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 303 - A-16AZ treats POST 409 as a source/runtime lifecycle contract mismatch
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context:
+
+- The owner submitted the A-16R final confirmation once for audited session
+  `2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Production returned HTTP 409 before RPC execution with
+  `canRunOfficialImport=false`, imported people count `0`, and message
+  `Import session is not in staged state for official import consideration.`
+- Runtime source still rejects any session whose status is not `staged`.
+- The import session schema does not include `staged`; A-16V transaction helper
+  accepts `ready_for_owner_approval` and `owner_approved_for_db_write`.
+
+Decision:
+
+- Classify A-16AZ as a diagnosis-only phase and record the blocker as
+  `A16AZ_BLOCKER=OFFICIAL_IMPORT_POST_409_SESSION_STATE_GATE_REJECTED_BEFORE_RPC_NO_IMPORT_EXECUTED`.
+- Treat the active issue as a UI/API/runtime lifecycle contract mismatch until a
+  read-only session-state diagnostic proves the exact stored session status.
+- Do not retry import in A-16AZ. A later phase must first reconcile the runtime
+  source state gate with the schema/RPC contract and re-smoke read-only.
+
+Safety:
+
+- A-16AZ does not call POST `/official-import`, execute A-16R import, call
+  direct/manual RPC, run SQL, deploy, or mutate DB/auth/permission/genealogy
+  data.
+- `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## Decision 302 - A-16AX preserves Cloudflare dashboard runtime vars during manual deploy
 
 Date: 2026-07-09
