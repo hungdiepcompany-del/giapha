@@ -125,7 +125,7 @@ if (
 }
 
 for (const [content, token, label] of [
-  [service, 'params.manifest.session.status !== "staged"', "current stale staged runtime source condition"],
+  [service, "buildOfficialImportSessionStateGate", "A-16BB state gate replaces stale staged runtime source condition"],
   [route, 'return jsonError(result.status === "BLOCKED" ? 409 : 200, result)', "route maps blocked runtime candidate to 409"],
   [schema, "'ready_for_owner_approval'", "schema ready_for_owner_approval state"],
   [schema, "'owner_approved_for_db_write'", "schema owner_approved_for_db_write state"],
@@ -165,11 +165,20 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A16BB_SANITIZED_SESSION_STATE_RUNTIME_GATE_CANDIDATE.md",
+  "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
+  "scripts/verify-a16bb-sanitized-session-state.cjs",
+  "lib/import/giapha4/official-import-session-state-gate.ts",
+  "lib/import/giapha4/official-import-service.ts",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "components/imports/import-session-manifest-panel.tsx",
   "scripts/check-a16ae-runtime-official-import-enablement-candidate.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
   "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
   "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
   "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16v-apply-verify.cjs",
 ]);
 
 for (const file of changedFiles) {

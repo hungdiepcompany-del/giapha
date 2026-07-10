@@ -8,6 +8,10 @@ import {
   type ImportManifestReadResult,
 } from "@/lib/import/giapha4/manifest-read-service";
 import { buildManifestValidationReview } from "@/lib/import/giapha4/manifest-validation-service";
+import {
+  A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE,
+  buildOfficialImportSessionStateGate,
+} from "@/lib/import/giapha4/official-import-session-state-gate";
 import { A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER } from "@/lib/import/giapha4/official-import-preflight-gate";
 import type { PermissionContext } from "@/lib/permissions/permission-service";
 import { maybeCreateServerSupabaseClient } from "@/lib/supabase/server";
@@ -358,8 +362,14 @@ function buildNoGoReasons(params: {
   if (!params.manifest.ok || !params.manifest.session) {
     reasons.push("KhÃ´ng Ä‘á»c Ä‘Æ°á»£c import manifest staging há»£p lá»‡.");
   }
-  if (params.manifest.session?.status && params.manifest.session.status !== "staged") {
-    reasons.push("Import session khÃ´ng á»Ÿ tráº¡ng thÃ¡i staged Ä‘á»ƒ xÃ©t nháº­p chÃ­nh thá»©c.");
+  const sessionStateGate = buildOfficialImportSessionStateGate(
+    params.manifest.session?.status,
+  );
+  if (!sessionStateGate.executionEligible) {
+    reasons.push(sessionStateGate.blocker);
+    reasons.push(
+      `Import session must be ${A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE} before official import can run.`,
+    );
   }
   if (params.manifest.session?.id && params.manifest.session.id !== A16U_REQUIRED_SESSION_ID) {
     reasons.push("PhiÃªn import khÃ´ng khá»›p session Ä‘Ã£ Ä‘Æ°á»£c preflight cho A-16U.");

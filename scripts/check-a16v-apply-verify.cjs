@@ -133,7 +133,13 @@ if (/\.rpc\s*\(/i.test(service + route)) {
 rejectPattern(route, /fetch\s*\([^)]*official-import/i, "runtime must not client POST official import");
 requireIncludes(service, "const canRunOfficialImport = reasons.length === 0", "runtime canRunOfficialImport candidate gate");
 requireIncludes(panel, "disabled", "official import button disabled");
-requireIncludes(panel, "aria-disabled=\"true\"", "official import aria disabled");
+requireIncludes(panel, "a16rSameRunLockedReasons", "official import same-run locked reasons");
+requireIncludes(panel, "a16bbSessionStateGate.executionEligible", "A-16BB session-state gate");
+requireIncludes(
+  panel,
+  "canSubmit={a16rSameRunPreflight.officialImportEnabled}",
+  "official import same-run submit gate",
+);
 
 rejectPattern(doc + service + route, /SUPABASE_SERVICE_ROLE_KEY\s*=/i, "secret assignment");
 rejectPattern(doc + service + route, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, "secret-like token");

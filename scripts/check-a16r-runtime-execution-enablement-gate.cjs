@@ -122,7 +122,9 @@ for (const token of [
   "A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER",
   "Marker bật runtime execution sau A-16V",
   "disabled",
-  "aria-disabled=\"true\"",
+  "a16rSameRunLockedReasons",
+  "a16bbSessionStateGate.executionEligible",
+  "canSubmit={a16rSameRunPreflight.officialImportEnabled}",
 ]) {
   requireIncludes(panel, token, `panel token ${token}`);
 }
@@ -198,6 +200,8 @@ const allowedChangedFiles = new Set([
   servicePath,
   routePath,
   panelPath,
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "lib/import/giapha4/official-import-session-state-gate.ts",
   packagePath,
   "scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
@@ -208,6 +212,13 @@ const allowedChangedFiles = new Set([
   "app/api/admin/import-sessions/[sessionId]/dry-run-gate/route.ts",
   "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
+  "scripts/check-a16ar-owner-same-run-official-import-confirmation-ui-plumbing.cjs",
+  "scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
+  "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
+  "scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs",
+  "docs/PLAN_A16BB_SANITIZED_SESSION_STATE_RUNTIME_GATE_CANDIDATE.md",
+  "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
+  "scripts/verify-a16bb-sanitized-session-state.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",

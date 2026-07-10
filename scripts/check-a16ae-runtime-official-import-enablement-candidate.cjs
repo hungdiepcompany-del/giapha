@@ -141,7 +141,8 @@ for (const token of [
   "people.create",
   "relationships.create",
   "permissions.manage",
-  "params.manifest.session.status !== \"staged\"",
+  "buildOfficialImportSessionStateGate",
+  "A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE",
   "params.manifest.session.id !== A16U_REQUIRED_SESSION_ID",
   "validation.summary.errorCount > 0",
   "dryRun.summary.blockedByErrorCount > 0",
@@ -229,6 +230,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
   servicePath,
   routePath,
+  "lib/import/giapha4/official-import-session-state-gate.ts",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "components/imports/import-session-manifest-panel.tsx",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -260,6 +264,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
   "docs/PLAN_A16BA_READ_ONLY_SESSION_STATE_RUNTIME_CONTRACT_FIX_PLAN.md",
   "scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs",
+  "docs/PLAN_A16BB_SANITIZED_SESSION_STATE_RUNTIME_GATE_CANDIDATE.md",
+  "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
+  "scripts/verify-a16bb-sanitized-session-state.cjs",
 ]);
 
 for (const file of changedFiles) {

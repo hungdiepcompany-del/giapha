@@ -9,6 +9,10 @@ import {
   getImportManifest,
   type ImportManifestReadResult,
 } from "@/lib/import/giapha4/manifest-read-service";
+import {
+  A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE,
+  buildOfficialImportSessionStateGate,
+} from "@/lib/import/giapha4/official-import-session-state-gate";
 
 export const A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE_MARKER =
   "A16N_LOCKED_OFFICIAL_IMPORT_PREFLIGHT_GATE";
@@ -43,6 +47,9 @@ export function buildOfficialImportPreflightGateFromManifest(
 ): OfficialImportPreflightGate {
   const reviewPack = buildImportReviewPackFromManifest(manifest);
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(manifest);
+  const sessionStateGate = buildOfficialImportSessionStateGate(
+    manifest.session?.status,
+  );
   const noGoReasons: string[] = [
     "Runtime candidate và transaction helper đã được chuẩn bị/verify, nhưng chưa có phê duyệt thực thi cho phiên nhập cụ thể.",
     `Marker tiếp theo phải là ${A16R_REQUIRED_OFFICIAL_IMPORT_SESSION_MARKER}.`,
@@ -50,6 +57,12 @@ export function buildOfficialImportPreflightGateFromManifest(
 
   if (!manifest.ok || !manifest.session) {
     noGoReasons.push("Chưa có import session staging hợp lệ để owner rà soát.");
+  }
+  noGoReasons.push(
+    `Import session status must be ${A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE}.`,
+  );
+  if (!sessionStateGate.executionEligible) {
+    noGoReasons.push(sessionStateGate.blocker);
   }
   if (reviewPack.validationSummary.errorCount > 0) {
     noGoReasons.push("Validation errors chưa bằng 0.");

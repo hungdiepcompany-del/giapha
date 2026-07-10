@@ -1,5 +1,30 @@
 # Decision Log
 
+## Decision 305 - A-16BB requires owner_approved_for_db_write for the runtime/UI POST gate
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: A-16BB read sanitized metadata for the audited session and found
+`A16BB_STORED_SESSION_STATE=preview_generated`, with only a draft write
+manifest and no owner-approved write manifest. The A-16V RPC accepts
+`ready_for_owner_approval` or `owner_approved_for_db_write`, but also requires
+an owner-approved write manifest.
+
+Decision: Use `owner_approved_for_db_write` as the runtime/UI/API
+execution-eligible session state. Treat `ready_for_owner_approval` as review
+ready but not POST execution eligible. Remove the stale runtime `staged` check
+and keep all non-eligible states fail-closed.
+
+Consequences: The A-16R UI/runtime remains locked for the current audited
+session because it is still `preview_generated`. A separate A-16BC phase is
+required to design any owner-approved session-state transition before a future
+execution phase.
+
+Safety: No POST `/official-import`, no import RPC, no manual SQL, no session
+state update, no deploy, and no raw/private evidence.
+
 ## Decision 304 - A-16BA plans the session-state runtime contract fix without import execution
 
 Date: 2026-07-10

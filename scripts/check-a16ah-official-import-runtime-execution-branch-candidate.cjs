@@ -223,6 +223,12 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
   "docs/PLAN_A16BA_READ_ONLY_SESSION_STATE_RUNTIME_CONTRACT_FIX_PLAN.md",
   "scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs",
+  "docs/PLAN_A16BB_SANITIZED_SESSION_STATE_RUNTIME_GATE_CANDIDATE.md",
+  "scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
+  "scripts/verify-a16bb-sanitized-session-state.cjs",
+  "lib/import/giapha4/official-import-session-state-gate.ts",
+  "lib/import/giapha4/official-import-preflight-gate.ts",
+  "components/imports/import-session-manifest-panel.tsx",
 ]);
 
 for (const file of changedFiles) {

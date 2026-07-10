@@ -10,6 +10,10 @@ import {
   A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
   A16U_REQUIRED_A16R_RETRY_MARKER,
 } from "@/lib/import/giapha4/official-import-service";
+import {
+  A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE,
+  buildOfficialImportSessionStateGate,
+} from "@/lib/import/giapha4/official-import-session-state-gate";
 import type { ImportManifestReadResult } from "@/lib/import/giapha4/manifest-read-service";
 import {
   buildManifestValidationReview,
@@ -162,6 +166,9 @@ export function ImportSessionManifestPanel({
       "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY" &&
     A16R_AUDITED_OFFICIAL_IMPORT_MARKER ===
       `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}`;
+  const a16bbSessionStateGate = buildOfficialImportSessionStateGate(
+    session?.status,
+  );
   const a16rSameRunLockedReasons: string[] = [];
 
   pushReason(
@@ -178,6 +185,12 @@ export function ImportSessionManifestPanel({
     a16rSameRunLockedReasons,
     a16rAuditedSessionReady,
     "A16AR_LOCKED_AUDITED_SESSION_MISMATCH",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
+    a16bbSessionStateGate.executionEligible,
+    a16bbSessionStateGate.blocker ??
+      "A16BB_LOCKED_SESSION_STATE_GATE_UNKNOWN",
   );
   pushReason(
     a16rSameRunLockedReasons,
@@ -763,6 +776,18 @@ export function ImportSessionManifestPanel({
                   <div className="grid gap-1 sm:col-span-2">
                     <dt className="font-semibold text-stone-950">
                       Quyền strict còn thiếu
+                    </dt>
+                    <dd className="break-all">
+                      A-16BB session state gate: current=
+                      {a16bbSessionStateGate.status ?? "missing"}; required=
+                      {A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE};
+                      eligible={a16bbSessionStateGate.executionEligible ? "YES" : "NO"};
+                      blocker={a16bbSessionStateGate.blocker ?? "none"}.
+                    </dd>
+                  </div>
+                  <div className="grid gap-1 sm:col-span-2">
+                    <dt className="font-semibold text-stone-950">
+                      A-16BB session state gate
                     </dt>
                     <dd className="break-all">
                       {a16rPermissionDiagnostic?.missingStrictPermissions.length
