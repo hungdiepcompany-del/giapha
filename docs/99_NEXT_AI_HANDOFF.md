@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-07-10 - A-16BF - Same-run RPC invocation identity precheck
+
+- Status:
+  `A16BF_STATUS=PASS_SOURCE_CANDIDATE_NOT_EXECUTED_NOT_DEPLOYED`.
+- Target session:
+  `A16BF_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Previous blocker:
+  `A16BE_BLOCKER=A16BE_BLOCKED_RPC_INVOKER_AUTH_CONTEXT_OR_PRODUCTION_RPC_CONTRACT_DRIFT_SESSION_NOT_FOUND_OR_NOT_OWNED`.
+- Permission client auth context:
+  `A16BF_PERMISSION_CLIENT_AUTH_CONTEXT=END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS`.
+- RPC client auth context:
+  `A16BF_RPC_CLIENT_AUTH_CONTEXT=END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER`.
+- RPC expected identifier:
+  `A16BF_RPC_EXPECTED_IDENTIFIER_TYPE=PROFILE_ID_FROM_PUBLIC_CURRENT_PROFILE_ID_SECURITY_INVOKER`.
+- Runtime identifier:
+  `A16BF_RUNTIME_IDENTIFIER_TYPE=PROFILE_ID_FROM_PERMISSION_CONTEXT_ADMIN_LOOKUP`.
+- Session owner identifier:
+  `A16BF_SESSION_OWNER_IDENTIFIER_TYPE=CURRENT_OWNER_PROFILE_ID`.
+- Source update:
+  added `A16BF_RPC_INVOCATION_IDENTITY_PRECHECK` before the official import
+  transaction executor; mismatched or unreadable runtime/RPC/session identity
+  blocks with `A16BF_BLOCKED_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED` and keeps
+  executor call count at `0`.
+- RPC-visible profile result:
+  `A16BF_RPC_VISIBLE_PROFILE_RESULT=SOURCE_PRECHECK_ADDED_NOT_EXECUTED_IN_THIS_PHASE`.
+- Production RPC contract status:
+  `A16BF_PRODUCTION_RPC_CONTRACT_STATUS=SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL`.
+- Exact fix candidate:
+  `A16BF_EXACT_FIX_CANDIDATE=SAME_RUN_RPC_IDENTITY_PRECHECK_BEFORE_IMPORT_TRANSACTION_RPC`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no import RPC execution, no
+  direct/manual RPC, no SQL/DB mutation, no session-state mutation, no deploy,
+  no auth/role/permission/membership/genealogy mutation, no raw/private data
+  print or commit.
+- Next action:
+  `A16BF_NEXT_ACTION=A16BG_DEPLOY_AND_AUTHENTICATED_IDENTITY_PRECHECK_SMOKE_NO_IMPORT`.
+
 ## 2026-07-10 - A-16BE - Official import RPC session ownership contract diagnosis
 
 - Status:

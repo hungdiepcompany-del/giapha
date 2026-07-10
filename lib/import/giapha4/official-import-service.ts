@@ -84,6 +84,15 @@ export const A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENV =
 export const A16AH_EXECUTION_BRANCH_DISABLED_BLOCKER =
   "A16AH_EXECUTION_BRANCH_DISABLED_NOT_EXECUTED";
 
+export const A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_MARKER =
+  "A16BF_RPC_INVOCATION_IDENTITY_PRECHECK";
+
+export const A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME =
+  "current_profile_id";
+
+export const A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER =
+  "A16BF_BLOCKED_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED";
+
 export const A16U_REQUIRED_SESSION_ID = A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
 
 export const A16U_REQUIRED_A16R_RETRY_MARKER =
@@ -141,6 +150,39 @@ export type OfficialImportTransactionExecutorResult = {
 export type OfficialImportTransactionExecutor = (
   input: OfficialImportTransactionExecutorInput,
 ) => Promise<OfficialImportTransactionExecutorResult>;
+
+export type OfficialImportRpcInvocationIdentityPrecheckResult = {
+  ok: boolean;
+  marker: typeof A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_MARKER;
+  permissionClientAuthContext:
+    | "END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS"
+    | "NOT_EVALUATED";
+  rpcClientAuthContext:
+    | "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER"
+    | "UNAVAILABLE"
+    | "NOT_EVALUATED";
+  rpcVisibleProfileResult:
+    | "MATCHED_RUNTIME_PROFILE_AND_SESSION_OWNER"
+    | "MISMATCHED_RUNTIME_PROFILE"
+    | "MISMATCHED_SESSION_OWNER"
+    | "MISSING_RUNTIME_PROFILE"
+    | "MISSING_RPC_VISIBLE_PROFILE"
+    | "MISSING_SESSION_OWNER"
+    | "READ_ERROR"
+    | "NOT_EVALUATED";
+  productionRpcContractStatus:
+    | "SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL"
+    | "NOT_EVALUATED";
+  authenticatedAuthUserPresent: boolean;
+  runtimePermissionProfilePresent: boolean;
+  rpcVisibleProfilePresent: boolean;
+  auditedSessionOwnerProfilePresent: boolean;
+  runtimeProfileMatchesRpcVisibleProfile: boolean;
+  runtimeProfileMatchesAuditedSessionOwner: boolean;
+  rpcVisibleProfileMatchesAuditedSessionOwner: boolean;
+  blocker: typeof A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER | null;
+  piiPrinted: false;
+};
 
 export type OfficialImportCandidateResult = {
   ok: boolean;
@@ -225,6 +267,7 @@ export type OfficialImportCandidateResult = {
       | "EXECUTED_ONCE";
     blocker: typeof A16AH_EXECUTION_BRANCH_DISABLED_BLOCKER | string | null;
   };
+  rpcInvocationIdentityPrecheck: OfficialImportRpcInvocationIdentityPrecheckResult;
   auditBatchContract: {
     table: "official_import_batches";
     expectedFields: [
@@ -252,6 +295,43 @@ function toNumber(value: unknown) {
 
 function toStringOrNull(value: unknown) {
   return typeof value === "string" && value ? value : null;
+}
+
+function buildPendingRpcInvocationIdentityPrecheck(): OfficialImportRpcInvocationIdentityPrecheckResult {
+  return {
+    ok: false,
+    marker: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_MARKER,
+    permissionClientAuthContext: "NOT_EVALUATED",
+    rpcClientAuthContext: "NOT_EVALUATED",
+    rpcVisibleProfileResult: "NOT_EVALUATED",
+    productionRpcContractStatus: "NOT_EVALUATED",
+    authenticatedAuthUserPresent: false,
+    runtimePermissionProfilePresent: false,
+    rpcVisibleProfilePresent: false,
+    auditedSessionOwnerProfilePresent: false,
+    runtimeProfileMatchesRpcVisibleProfile: false,
+    runtimeProfileMatchesAuditedSessionOwner: false,
+    rpcVisibleProfileMatchesAuditedSessionOwner: false,
+    blocker: null,
+    piiPrinted: false,
+  };
+}
+
+function buildBlockedRpcInvocationIdentityPrecheck(
+  overrides: Partial<OfficialImportRpcInvocationIdentityPrecheckResult>,
+): OfficialImportRpcInvocationIdentityPrecheckResult {
+  return {
+    ...buildPendingRpcInvocationIdentityPrecheck(),
+    permissionClientAuthContext:
+      "END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS",
+    rpcClientAuthContext: "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER",
+    productionRpcContractStatus:
+      "SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL",
+    ...overrides,
+    ok: false,
+    blocker: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER,
+    piiPrinted: false,
+  };
 }
 
 function isConfirmed(value: unknown) {
@@ -413,6 +493,159 @@ function buildBlockedRuntimeReason(runtimeEnablementApproved: boolean) {
     : A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER;
 }
 
+async function runRpcInvocationIdentityPrecheck(params: {
+  sessionId: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  actor: PermissionContext;
+}): Promise<OfficialImportRpcInvocationIdentityPrecheckResult> {
+  const runtimeProfileId = params.actor.profile?.id ?? null;
+
+  if (!params.actor.user) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "MISSING_RUNTIME_PROFILE",
+      authenticatedAuthUserPresent: false,
+      runtimePermissionProfilePresent: Boolean(runtimeProfileId),
+    });
+  }
+
+  if (!runtimeProfileId) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "MISSING_RUNTIME_PROFILE",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: false,
+    });
+  }
+
+  const supabase = await maybeCreateServerSupabaseClient();
+  if (!supabase) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcClientAuthContext: "UNAVAILABLE",
+      rpcVisibleProfileResult: "READ_ERROR",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+    });
+  }
+
+  const rpcClient = supabase as unknown as {
+    rpc: (
+      functionName: typeof A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME,
+      args?: Record<string, never>,
+    ) => Promise<{ data: unknown; error: { message?: string } | null }>;
+    from: (table: "import_sessions") => {
+      select: (columns: "created_by") => {
+        eq: (
+          column: "id",
+          value: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+        ) => {
+          maybeSingle: <T>() => Promise<{
+            data: T | null;
+            error: { message?: string } | null;
+          }>;
+        };
+      };
+    };
+  };
+
+  const rpcProfileResult = await rpcClient.rpc(
+    A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME,
+    {},
+  );
+  if (rpcProfileResult.error) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "READ_ERROR",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+    });
+  }
+
+  const rpcVisibleProfileId = toStringOrNull(rpcProfileResult.data);
+  if (!rpcVisibleProfileId) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "MISSING_RPC_VISIBLE_PROFILE",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+      rpcVisibleProfilePresent: false,
+    });
+  }
+
+  const sessionOwnerResult = await rpcClient
+    .from("import_sessions")
+    .select("created_by")
+    .eq("id", params.sessionId)
+    .maybeSingle<{ created_by: string | null }>();
+
+  if (sessionOwnerResult.error) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "READ_ERROR",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+      rpcVisibleProfilePresent: true,
+      runtimeProfileMatchesRpcVisibleProfile:
+        runtimeProfileId === rpcVisibleProfileId,
+    });
+  }
+
+  const sessionOwnerProfileId = toStringOrNull(
+    sessionOwnerResult.data?.created_by,
+  );
+  if (!sessionOwnerProfileId) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: "MISSING_SESSION_OWNER",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+      rpcVisibleProfilePresent: true,
+      auditedSessionOwnerProfilePresent: false,
+      runtimeProfileMatchesRpcVisibleProfile:
+        runtimeProfileId === rpcVisibleProfileId,
+    });
+  }
+
+  const runtimeProfileMatchesRpcVisibleProfile =
+    runtimeProfileId === rpcVisibleProfileId;
+  const runtimeProfileMatchesAuditedSessionOwner =
+    runtimeProfileId === sessionOwnerProfileId;
+  const rpcVisibleProfileMatchesAuditedSessionOwner =
+    rpcVisibleProfileId === sessionOwnerProfileId;
+
+  if (
+    !runtimeProfileMatchesRpcVisibleProfile ||
+    !runtimeProfileMatchesAuditedSessionOwner ||
+    !rpcVisibleProfileMatchesAuditedSessionOwner
+  ) {
+    return buildBlockedRpcInvocationIdentityPrecheck({
+      rpcVisibleProfileResult: !runtimeProfileMatchesRpcVisibleProfile
+        ? "MISMATCHED_RUNTIME_PROFILE"
+        : "MISMATCHED_SESSION_OWNER",
+      authenticatedAuthUserPresent: true,
+      runtimePermissionProfilePresent: true,
+      rpcVisibleProfilePresent: true,
+      auditedSessionOwnerProfilePresent: true,
+      runtimeProfileMatchesRpcVisibleProfile,
+      runtimeProfileMatchesAuditedSessionOwner,
+      rpcVisibleProfileMatchesAuditedSessionOwner,
+    });
+  }
+
+  return {
+    ok: true,
+    marker: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_MARKER,
+    permissionClientAuthContext:
+      "END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS",
+    rpcClientAuthContext: "END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER",
+    rpcVisibleProfileResult: "MATCHED_RUNTIME_PROFILE_AND_SESSION_OWNER",
+    productionRpcContractStatus:
+      "SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL",
+    authenticatedAuthUserPresent: true,
+    runtimePermissionProfilePresent: true,
+    rpcVisibleProfilePresent: true,
+    auditedSessionOwnerProfilePresent: true,
+    runtimeProfileMatchesRpcVisibleProfile: true,
+    runtimeProfileMatchesAuditedSessionOwner: true,
+    rpcVisibleProfileMatchesAuditedSessionOwner: true,
+    blocker: null,
+    piiPrinted: false,
+  };
+}
+
 export function buildOfficialImportRuntimeCandidate(params: {
   manifest: ImportManifestReadResult;
   confirmation: OfficialImportConfirmation;
@@ -513,6 +746,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
         ? A16AH_EXECUTION_BRANCH_DISABLED_BLOCKER
         : blockedReason,
     },
+    rpcInvocationIdentityPrecheck: buildPendingRpcInvocationIdentityPrecheck(),
     auditBatchContract: {
       table: "official_import_batches",
       expectedFields: [
@@ -629,6 +863,46 @@ export async function executeOfficialImportRuntimeCandidate(params: {
     return candidate;
   }
 
+  const rpcInvocationIdentityPrecheck =
+    await runRpcInvocationIdentityPrecheck({
+      sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+      actor: params.actor,
+    });
+
+  if (!rpcInvocationIdentityPrecheck.ok) {
+    return {
+      ...candidate,
+      ok: false,
+      status: "BLOCKED",
+      blockedReasons: [
+        ...candidate.blockedReasons,
+        A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER,
+      ],
+      rollbackManifestPreview: {
+        ...candidate.rollbackManifestPreview,
+        status: "BLOCKED",
+        reason: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER,
+      },
+      auditManifestPreview: {
+        ...candidate.auditManifestPreview,
+        status: "BLOCKED",
+        reason: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER,
+      },
+      transactionStatus: "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
+      runtimeExecutionBranch: {
+        ...candidate.runtimeExecutionBranch,
+        enabled: true,
+        sameRunGatePassed: false,
+        executorCallCount: 0,
+        status: "GATE_BLOCKED_NOT_EXECUTED",
+        blocker: A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER,
+      },
+      rpcInvocationIdentityPrecheck,
+      message:
+        "A-16BF RPC invocation identity precheck failed closed before the official import transaction RPC.",
+    };
+  }
+
   const executor = params.executor ?? executeOfficialImportTransactionWithSupabase;
   const executionResult = await executor({
     rpcName: A16P_TX_TRANSACTION_RPC_NAME,
@@ -676,6 +950,7 @@ export async function executeOfficialImportRuntimeCandidate(params: {
         ? null
         : "A16AH_REAL_TRANSACTION_EXECUTION_BRANCH_RPC_BLOCKED",
     },
+    rpcInvocationIdentityPrecheck,
     message: executionResult.ok
       ? "A-16AH runtime execution branch called the approved transaction helper exactly once after all same-run gates passed."
       : "A-16AH runtime execution branch reached the approved transaction helper once, but the helper returned a blocked result.",

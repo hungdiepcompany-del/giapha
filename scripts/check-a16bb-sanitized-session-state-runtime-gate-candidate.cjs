@@ -222,11 +222,13 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-apply-verify.cjs",
   "docs/PLAN_A16BC_OWNER_APPROVAL_STATE_TRANSITION_READINESS.md",
   "docs/PLAN_A16BE_OFFICIAL_IMPORT_RPC_SESSION_OWNERSHIP_CONTRACT_DIAGNOSIS.md",
+  "docs/PLAN_A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_CONTRACT_ALIGNMENT.md",
   "lib/import/giapha4/import-session-owner-approval-state-service.ts",
   "app/api/admin/import-sessions/[sessionId]/owner-approval-state/route.ts",
   "components/imports/a16bc-owner-approval-state-client.tsx",
   "scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
   "scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
+  "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
 ]);
 

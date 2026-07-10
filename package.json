@@ -336,7 +336,8 @@
     "verify:a16bb-sanitized-session-state": "node scripts/verify-a16bb-sanitized-session-state.cjs",
     "check:a16bc-owner-approval-state-transition-readiness": "node scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
     "check:a16be-official-import-rpc-session-ownership-contract-diagnosis": "node scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
-    "verify:a16be-session-ownership-contract": "node scripts/verify-a16be-session-ownership-contract.cjs"
+    "verify:a16be-session-ownership-contract": "node scripts/verify-a16be-session-ownership-contract.cjs",
+    "check:a16bf-rpc-invocation-identity-precheck-contract-alignment": "node scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

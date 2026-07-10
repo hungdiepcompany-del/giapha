@@ -136,9 +136,20 @@ if (executorCallMatches.length !== 1) {
   );
 }
 
-const rpcCallMatches = service.match(/\.rpc\s*\(/g) ?? [];
-if (rpcCallMatches.length !== 1) {
-  failures.push(`expected exactly one runtime RPC helper call branch, found ${rpcCallMatches.length}`);
+const importRpcCallMatches =
+  service.match(/\.rpc\(\s*A16P_TX_TRANSACTION_RPC_FUNCTION_NAME/g) ?? [];
+if (importRpcCallMatches.length !== 1) {
+  failures.push(
+    `expected exactly one runtime official import RPC helper call branch, found ${importRpcCallMatches.length}`,
+  );
+}
+
+const identityPrecheckRpcCallMatches =
+  service.match(/\.rpc\(\s*A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME/g) ?? [];
+if (identityPrecheckRpcCallMatches.length > 1) {
+  failures.push(
+    `expected at most one A-16BF read-only identity precheck RPC, found ${identityPrecheckRpcCallMatches.length}`,
+  );
 }
 
 const gateIndex = service.indexOf(
@@ -237,6 +248,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16BE_OFFICIAL_IMPORT_RPC_SESSION_OWNERSHIP_CONTRACT_DIAGNOSIS.md",
   "scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
+  "docs/PLAN_A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_CONTRACT_ALIGNMENT.md",
+  "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
 ]);
 
 for (const file of changedFiles) {

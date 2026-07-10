@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 308 - A-16BF proves RPC-visible identity before official import transaction RPC
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: A-16BE proved the audited session owner metadata matches the current
+owner profile, but the production transaction helper still returned
+`SESSION_NOT_FOUND_OR_NOT_OWNED`. The application permission context and the
+database RPC `SECURITY INVOKER` context are separate identity contracts.
+
+Decision: Add a same-run, server-only A-16BF precheck before the official import
+transaction executor. The precheck uses the same authenticated server Supabase
+client as the transaction RPC, reads `public.current_profile_id()` through the
+RPC-visible context, reads only the audited session `created_by`, and compares
+sanitized equality booleans against the permission-context profile. It does not
+pass a caller-controlled actor profile id into the import RPC and does not switch
+official import execution to unrestricted service-role mode.
+
+Consequences: The official import transaction RPC remains unreachable unless the
+permission-context profile, RPC-visible profile and audited session owner all
+match in the same run. Unknown, missing or mismatched identity fails closed with
+`A16BF_BLOCKED_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED`. A-16R import retry
+remains `NO` until a later deployed owner/admin smoke proves the precheck and a
+separate phase authorizes any final POST.
+
+Safety: A-16BF does not call POST `/official-import`, does not execute the
+import RPC, does not run SQL or DB mutation, does not change session state, does
+not deploy, and does not print or commit raw/private data.
+
 ## Decision 307 - A-16BE keeps RPC ownership fail-closed
 
 Date: 2026-07-10

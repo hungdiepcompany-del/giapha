@@ -1,5 +1,36 @@
 # AI Work Log
 
+## 2026-07-10 - A-16BF - Same-run RPC invocation identity precheck
+
+- Status:
+  `A16BF_STATUS=PASS_SOURCE_CANDIDATE_NOT_EXECUTED_NOT_DEPLOYED`.
+- Target session:
+  `A16BF_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Permission client auth context:
+  `A16BF_PERMISSION_CLIENT_AUTH_CONTEXT=END_USER_SERVER_COOKIES_PLUS_ADMIN_PROFILE_PERMISSION_READS`.
+- RPC client auth context:
+  `A16BF_RPC_CLIENT_AUTH_CONTEXT=END_USER_SERVER_COOKIES_ANON_KEY_SECURITY_INVOKER`.
+- RPC-visible profile:
+  `A16BF_RPC_VISIBLE_PROFILE_RESULT=SOURCE_PRECHECK_ADDED_NOT_EXECUTED_IN_THIS_PHASE`.
+- Source update:
+  added `A16BF_RPC_INVOCATION_IDENTITY_PRECHECK` before the official import
+  transaction executor; any mismatch between runtime permission profile,
+  RPC-visible `current_profile_id()` and audited session owner fails closed with
+  `A16BF_BLOCKED_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED`.
+- Production RPC contract status:
+  `A16BF_PRODUCTION_RPC_CONTRACT_STATUS=SOURCE_CONTRACT_IDENTIFIED_PRODUCTION_CONTRACT_NOT_READ_NO_SQL`.
+- Exact fix candidate:
+  `A16BF_EXACT_FIX_CANDIDATE=SAME_RUN_RPC_IDENTITY_PRECHECK_BEFORE_IMPORT_TRANSACTION_RPC`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no import RPC execution, no
+  direct/manual RPC, no SQL/DB mutation, no session-state change, no deploy, no
+  auth/role/permission/membership/genealogy mutation, no raw/private data print
+  or commit.
+- Next action:
+  `A16BF_NEXT_ACTION=A16BG_DEPLOY_AND_AUTHENTICATED_IDENTITY_PRECHECK_SMOKE_NO_IMPORT`.
+
 ## 2026-07-10 - A-16BE - Official import RPC session ownership contract diagnosis
 
 - Status:
