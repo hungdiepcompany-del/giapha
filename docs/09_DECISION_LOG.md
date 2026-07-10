@@ -1,5 +1,27 @@
 # Decision Log
 
+## Decision 304 - A-16BA plans the session-state runtime contract fix without import execution
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: A-16AZ recorded an owner-reported HTTP 409 before RPC/import. Runtime
+source still expects session status `staged`, while the schema lifecycle and
+A-16V RPC use `ready_for_owner_approval` and `owner_approved_for_db_write`.
+
+Decision: Treat A-16BA as a read-only planning/checker phase. Do not implement
+the runtime state change or execute import in this phase. The next safe phase
+must first add a sanitized read-only session-state diagnostic, then align
+runtime, UI, and API gates with the canonical schema/RPC lifecycle.
+
+Consequences: `A16R_IMPORT_RETRY_NEXT=NO` remains true. If the stored session is
+not already in a canonical pre-import state, a separate explicit owner approval
+transition phase is required before any future execution attempt.
+
+Safety: No POST `/official-import`, no direct/manual RPC, no SQL/DB mutation,
+no deploy, no auth/permission/genealogy mutation, and no raw/private evidence.
+
 ## Decision 303 - A-16AZ treats POST 409 as a source/runtime lifecycle contract mismatch
 
 Date: 2026-07-10

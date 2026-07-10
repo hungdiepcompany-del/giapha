@@ -330,7 +330,8 @@
     "check:a16av-runtime-env-flags-production-read-only-smoke": "node scripts/check-a16av-runtime-env-flags-production-read-only-smoke.cjs",
     "check:a16aw-runtime-env-flag-propagation-diagnosis": "node scripts/check-a16aw-runtime-env-flag-propagation-diagnosis.cjs",
     "check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring": "node scripts/check-a16ax-cloudflare-runtime-vars-preservation-deploy-wiring.cjs",
-    "check:a16az-official-import-post-409-session-state-diagnosis": "node scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs"
+    "check:a16az-official-import-post-409-session-state-diagnosis": "node scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
+    "check:a16ba-read-only-session-state-runtime-contract-fix-plan": "node scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

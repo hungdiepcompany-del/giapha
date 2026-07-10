@@ -221,6 +221,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-official-import-real-transaction-execution-branch.cjs",
   "docs/PLAN_A16AZ_OFFICIAL_IMPORT_POST_409_SESSION_STATE_DIAGNOSIS.md",
   "scripts/check-a16az-official-import-post-409-session-state-diagnosis.cjs",
+  "docs/PLAN_A16BA_READ_ONLY_SESSION_STATE_RUNTIME_CONTRACT_FIX_PLAN.md",
+  "scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs",
 ]);
 
 for (const file of changedFiles) {

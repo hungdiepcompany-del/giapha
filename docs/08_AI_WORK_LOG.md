@@ -1,5 +1,37 @@
 # AI Work Log
 
+## 2026-07-10 - A-16BA-READ-ONLY-SESSION-STATE-RUNTIME-CONTRACT-FIX-PLAN - Contract Plan
+
+- Marker:
+  `A-16BA-READ-ONLY-SESSION-STATE-RUNTIME-CONTRACT-FIX-PLAN`.
+- Status:
+  `A16BA_STATUS=PLAN_READY_READ_ONLY_NO_RUNTIME_CHANGE`.
+- Source blocker:
+  `A16BA_SOURCE_BLOCKER=A16AZ_BLOCKER=OFFICIAL_IMPORT_POST_409_SESSION_STATE_GATE_REJECTED_BEFORE_RPC_NO_IMPORT_EXECUTED`.
+- Target session:
+  `A16BA_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Diagnosis:
+  runtime source still checks
+  `A16BA_RUNTIME_STALE_STATE_CONDITION=params.manifest.session.status !== "staged"`,
+  but schema does not define `staged`.
+- Canonical states:
+  `A16BA_CANONICAL_PRE_IMPORT_STATES=ready_for_owner_approval,owner_approved_for_db_write`.
+- Stored state:
+  `A16BA_CURRENT_STORED_SESSION_STATE=UNKNOWN_NOT_READ_FROM_DB_IN_A16BA`.
+- Fix recommendation:
+  `A16BA_FIX_RECOMMENDATION=ADD_SANITIZED_READ_ONLY_SESSION_STATE_DIAGNOSTIC_THEN_ALIGN_RUNTIME_UI_API_STATE_GATE`.
+- Runtime fix candidate:
+  `A16BA_RUNTIME_ACCEPTED_STATES_FIX_CANDIDATE=ready_for_owner_approval,owner_approved_for_db_write`.
+- Transition gate:
+  `A16BA_TRANSITION_GATE_FIX=REQUIRE_EXPLICIT_OWNER_APPROVAL_TRANSITION_TO_OWNER_APPROVED_FOR_DB_WRITE_IF_SESSION_NOT_ALREADY_CANONICAL`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST, no A-16R retry, no direct/manual RPC, no SQL/DB mutation, no deploy,
+  no auth/permission/genealogy mutation, no raw/private data print or commit.
+- Next action:
+  `A16BA_NEXT_PHASE=A16BB_SANITIZED_SESSION_STATE_DIAGNOSTIC_AND_RUNTIME_STATE_GATE_CANDIDATE_NO_POST`.
+
 ## 2026-07-10 - A-16AZ-OFFICIAL-IMPORT-POST-409-SESSION-STATE-DIAGNOSIS - POST 409 Diagnosis
 
 - Marker:
