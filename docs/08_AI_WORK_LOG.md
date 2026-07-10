@@ -1,5 +1,26 @@
 # AI Work Log
 
+## 2026-07-10 - A-16BI - Same-client RPC binding and production contract read-only verification
+
+- Status:
+  `A16BI_STATUS=PASS_DIAGNOSED_SAME_CLIENT_FALSE_AND_READY_FOR_OWNER_RPC_CONTRACT_SQL`.
+- Identity precheck result:
+  `A16BI_IDENTITY_PRECHECK_RESULT=PASS_READ_ONLY_IDENTITIES_MATCHED_POST_INSTANCE_NOT_OBSERVED`.
+- Same-client false root cause:
+  `A16BI_SAME_CLIENT_FALSE_ROOT_CAUSE=GET_DIAGNOSTIC_CANNOT_OBSERVE_FUTURE_POST_PATH_CLIENT_INSTANCE_BOOLEAN_IMPLEMENTED_CORRECTLY`.
+- POST path same-client guarantee:
+  `A16BI_POST_PATH_SAME_CLIENT_GUARANTEE=PASS_SOURCE_GUARANTEE`.
+- Production contract status:
+  `A16BI_PRODUCTION_CONTRACT_STATUS=PENDING_OWNER_READ_ONLY_SQL_BOOLEAN_RESULTS`.
+- Blocker:
+  `A16BI_BLOCKER=PRODUCTION_RPC_CONTRACT_NOT_VERIFIED_AFTER_IDENTITY_PRECHECK_PASS`.
+- Safety:
+  no POST `/official-import`, no import RPC, no session-state change, no SQL/DB
+  mutation, no migration apply/db push/seed, no deploy, no auth/permission/
+  genealogy mutation, no raw IDs/tokens/cookies/private genealogy data committed.
+- Next action:
+  `A16BI_NEXT_ACTION=OWNER_RUN_READ_ONLY_RPC_CONTRACT_SQL_AND_PROVIDE_BOOLEAN_RESULTS_NO_IMPORT`.
+
 ## 2026-07-10 - A-16BH - Production A-16BF identity precheck and RPC contract drift diagnosis
 
 - Status:

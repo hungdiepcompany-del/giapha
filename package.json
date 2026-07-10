@@ -338,7 +338,8 @@
     "check:a16be-official-import-rpc-session-ownership-contract-diagnosis": "node scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
     "verify:a16be-session-ownership-contract": "node scripts/verify-a16be-session-ownership-contract.cjs",
     "check:a16bf-rpc-invocation-identity-precheck-contract-alignment": "node scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
-    "check:a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis": "node scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs"
+    "check:a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis": "node scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+    "check:a16bi-same-client-rpc-binding-production-contract-read-only-verification": "node scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

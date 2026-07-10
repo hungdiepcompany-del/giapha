@@ -231,6 +231,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
   "app/api/admin/import-sessions/[sessionId]/official-import-identity-precheck/route.ts",
   "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+  "docs/PLAN_A16BI_SAME_CLIENT_RPC_BINDING_PRODUCTION_CONTRACT_READ_ONLY_VERIFICATION.md",
+  "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
   "scripts/check-a16u-verify-runbook.cjs",
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",

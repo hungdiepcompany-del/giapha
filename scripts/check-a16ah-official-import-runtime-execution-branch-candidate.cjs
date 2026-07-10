@@ -253,6 +253,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16BH_PRODUCTION_A16BF_IDENTITY_PRECHECK_RPC_CONTRACT_DRIFT_DIAGNOSIS.md",
   "app/api/admin/import-sessions/[sessionId]/official-import-identity-precheck/route.ts",
   "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+  "docs/PLAN_A16BI_SAME_CLIENT_RPC_BINDING_PRODUCTION_CONTRACT_READ_ONLY_VERIFICATION.md",
+  "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
 ]);
 
 for (const file of changedFiles) {

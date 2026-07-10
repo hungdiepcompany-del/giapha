@@ -1,5 +1,31 @@
 # Decision Log
 
+## Decision 310 - A-16BI treats same-client false as GET diagnostic observability boundary
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: Production A-16BH authenticated GET returned all identity-match
+booleans true but `precheckAndImportRpcUseSameClientInstance=false`. The GET
+route is intentionally read-only and cannot observe or share a future POST
+handler's in-memory Supabase client instance.
+
+Decision: Treat the GET `false` as expected diagnostic semantics, not proof of a
+POST path bug. The POST source path remains the authoritative same-client
+guarantee: it creates one cookie-bound end-user server client, uses it for
+`current_profile_id()` and audited session owner reads, and passes the same
+client into the transaction executor. If identity binding fails, executor call
+count stays `0`.
+
+Consequences: Since production identity booleans pass, the remaining blocker is
+production RPC contract verification. Owner must provide read-only SQL metadata
+booleans for `public.a16p_tx_execute_giapha4_official_import` before any later
+import retry can be considered.
+
+Safety: No POST `/official-import`, no import RPC, no SQL/DB mutation, no
+session-state change, no deploy, and no raw/private data exposure in A-16BI.
+
 ## Decision 309 - A-16BH exposes read-only identity precheck before any further import retry
 
 Date: 2026-07-10
