@@ -1,5 +1,29 @@
 # AI Work Log
 
+## 2026-07-10 - A-16BC-OWNER-APPROVAL-STATE-TRANSITION-READINESS - Source Candidate
+
+- Marker:
+  `A-16BC-OWNER-APPROVAL-STATE-TRANSITION-READINESS`.
+- Status:
+  `A16BC_STATUS=PASS_SOURCE_CANDIDATE_NOT_EXECUTED_NOT_DEPLOYED`.
+- Target session:
+  `A16BC_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Existing transition path:
+  `A16BC_EXISTING_TRANSITION_PATH=NO_APPROVED_UI_API_ACTION_FOUND`.
+- Source update:
+  added a server-validated `/owner-approval-state` route, service and UI block
+  for `preview_generated -> ready_for_owner_approval ->
+  owner_approved_for_db_write`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no manual
+  SQL, no DB push, no migration repair, no seed, no deploy, no auth/role/
+  permission/membership mutation, no real genealogy write, no raw/private data
+  print or commit.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Next action:
+  `A16BC_NEXT_ACTION=A16BD_DEPLOY_AND_OWNER_STATE_TRANSITION_SMOKE_NO_OFFICIAL_IMPORT`.
+
 ## 2026-07-10 - A-16BB-SANITIZED-SESSION-STATE-RUNTIME-GATE-CANDIDATE - State Gate
 
 - Marker:

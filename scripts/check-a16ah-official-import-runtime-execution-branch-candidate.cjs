@@ -229,6 +229,11 @@ const allowedChangedFiles = new Set([
   "lib/import/giapha4/official-import-session-state-gate.ts",
   "lib/import/giapha4/official-import-preflight-gate.ts",
   "components/imports/import-session-manifest-panel.tsx",
+  "docs/PLAN_A16BC_OWNER_APPROVAL_STATE_TRANSITION_READINESS.md",
+  "lib/import/giapha4/import-session-owner-approval-state-service.ts",
+  "app/api/admin/import-sessions/[sessionId]/owner-approval-state/route.ts",
+  "components/imports/a16bc-owner-approval-state-client.tsx",
+  "scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
 ]);
 
 for (const file of changedFiles) {

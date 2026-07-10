@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 306 - A-16BC separates owner-approval state transition from A-16R official import execution
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: A-16BB proved the audited session is still `preview_generated`, while
+the A-16R runtime/UI gate requires `owner_approved_for_db_write`. Existing UI
+and API paths expose duplicate decisions, review-pack reads and final
+`/official-import`, but no approved owner-facing path was found for the
+canonical state transition.
+
+Decision: Add a separate fail-closed A-16BC owner-approval state route and UI
+block for `preview_generated -> ready_for_owner_approval ->
+owner_approved_for_db_write`. Keep it distinct from `/official-import`, use
+separate A-16BC markers, and require owner/admin context plus review-pack,
+duplicate, validation, audit and rollback confirmations before any state
+transition.
+
+Consequences: Production can later expose a clear owner action for state
+approval without making `preview_generated` import-eligible and without
+submitting A-16R official import. A-16R import retry remains `NO` until a later
+phase verifies state transition and separately approves final import execution.
+
+Safety: This phase does not call POST `/official-import`, does not call RPC,
+does not run SQL, does not deploy, and does not mutate real genealogy data.
+
 ## Decision 305 - A-16BB requires owner_approved_for_db_write for the runtime/UI POST gate
 
 Date: 2026-07-10

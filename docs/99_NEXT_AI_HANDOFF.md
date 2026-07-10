@@ -1,5 +1,33 @@
 # Next AI Handoff
 
+## 2026-07-10 - A-16BC-OWNER-APPROVAL-STATE-TRANSITION-READINESS - Source Candidate
+
+- Marker:
+  `A-16BC-OWNER-APPROVAL-STATE-TRANSITION-READINESS`.
+- Status:
+  `A16BC_STATUS=PASS_SOURCE_CANDIDATE_NOT_EXECUTED_NOT_DEPLOYED`.
+- Target session:
+  `A16BC_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Existing transition path:
+  `A16BC_EXISTING_TRANSITION_PATH=NO_APPROVED_UI_API_ACTION_FOUND`.
+- Added owner-facing route:
+  `POST /api/admin/import-sessions/2af4bfb6-a20e-453e-9804-1b8c0afbdd68/owner-approval-state`.
+- Added UI path:
+  `/admin/exports/import`, block `A-16BC - Owner approval state`.
+- Added markers:
+  `APPROVE_A16BC_READY_FOR_OWNER_APPROVAL_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`
+  and
+  `APPROVE_A16BC_OWNER_APPROVED_FOR_DB_WRITE_FOR_SESSION_2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import`, no A-16R retry, no direct/manual RPC, no manual
+  SQL, no DB push, no migration repair, no seed, no deploy, no auth/role/
+  permission/membership mutation, no real genealogy write, no raw/private data
+  print or commit.
+- Next action:
+  `A16BC_NEXT_ACTION=A16BD_DEPLOY_AND_OWNER_STATE_TRANSITION_SMOKE_NO_OFFICIAL_IMPORT`.
+
 ## 2026-07-10 - A-16BB-SANITIZED-SESSION-STATE-RUNTIME-GATE-CANDIDATE - State Gate
 
 - Marker:

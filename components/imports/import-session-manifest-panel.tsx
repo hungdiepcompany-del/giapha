@@ -1,9 +1,15 @@
 import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run-approval-gate";
+import { A16BCOwnerApprovalStateClient } from "@/components/imports/a16bc-owner-approval-state-client";
 import { A16ROfficialImportConfirmationClient } from "@/components/imports/a16r-official-import-confirmation-client";
 import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-decision-review-client";
 import { ActionLink } from "@/components/ui/action-link";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
+import {
+  A16BC_OWNER_APPROVAL_STATE_ROUTE,
+  A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER,
+  A16BC_READY_FOR_OWNER_APPROVAL_MARKER,
+} from "@/lib/import/giapha4/import-session-owner-approval-state-service";
 import {
   A16R_AUDITED_OFFICIAL_IMPORT_MARKER,
   A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
@@ -281,6 +287,88 @@ export function ImportSessionManifestPanel({
   })();
   const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
   const a16oAuditExportHref = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/dry-run-preview?auditExport=relationships-full`;
+  const a16bcRelationshipAmbiguityClear = result.relationshipsPreview.every(
+    (item) => !item.ambiguityStatus || item.ambiguityStatus === "clear",
+  );
+  const a16bcReviewPackReady =
+    reviewPack.readiness === "READY_FOR_OWNER_REVIEW";
+  const a16bcBaseStateGateReady =
+    a16rPermissionReady &&
+    a16rAuditedSessionReady &&
+    a16rBlockedErrorsClear &&
+    a16rDuplicateReviewPackClear &&
+    a16bcRelationshipAmbiguityClear &&
+    a16bcReviewPackReady;
+  const a16bcCanMarkReady =
+    a16bcBaseStateGateReady && session?.status === "preview_generated";
+  const a16bcCanApproveDbWrite =
+    a16bcBaseStateGateReady &&
+    session?.status === "ready_for_owner_approval" &&
+    result.writeManifests.some((item) =>
+      ["draft", "ready_for_apply", "owner_approved"].includes(item.status),
+    );
+  const a16bcLockedReasons: string[] = [];
+  pushReason(
+    a16bcLockedReasons,
+    a16rPermissionReady,
+    "A16BC_LOCKED_OWNER_ADMIN_IMPORT_CONTEXT_NOT_PROVEN",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16rAuditedSessionReady,
+    "A16BC_LOCKED_AUDITED_SESSION_MISMATCH",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16rBlockedErrorsClear,
+    "A16BC_LOCKED_VALIDATION_OR_DRY_RUN_BLOCKERS_PRESENT",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16rDuplicateReviewPackClear,
+    "A16BC_LOCKED_DUPLICATE_OR_REVIEW_PACK_BLOCKERS_PRESENT",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16bcRelationshipAmbiguityClear,
+    "A16BC_LOCKED_RELATIONSHIP_AMBIGUITY_PRESENT",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16bcReviewPackReady,
+    "A16BC_LOCKED_REVIEW_PACK_NOT_READY",
+  );
+  if (!a16bcCanMarkReady && !a16bcCanApproveDbWrite) {
+    a16bcLockedReasons.push(
+      `A16BC_LOCKED_SESSION_STATE_${session?.status ?? "MISSING"}_NOT_TRANSITIONABLE`,
+    );
+  }
+  const a16bcReadyConfirmation = {
+    action: "mark_ready_for_owner_approval" as const,
+    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    confirmMarker: A16BC_READY_FOR_OWNER_APPROVAL_MARKER,
+    confirmNoValidationErrors: validation.summary.errorCount === 0,
+    confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
+    confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
+    confirmRelationshipAmbiguityClear: a16bcRelationshipAmbiguityClear,
+    confirmReviewPackReady: a16bcReviewPackReady,
+    confirmNoOfficialImportExecution: true,
+    confirmRollbackReviewed: true,
+    confirmAuditReviewed: true,
+  };
+  const a16bcDbWriteConfirmation = {
+    action: "approve_for_db_write" as const,
+    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    confirmMarker: A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER,
+    confirmNoValidationErrors: validation.summary.errorCount === 0,
+    confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
+    confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
+    confirmRelationshipAmbiguityClear: a16bcRelationshipAmbiguityClear,
+    confirmReviewPackReady: a16bcReviewPackReady,
+    confirmNoOfficialImportExecution: true,
+    confirmRollbackReviewed: true,
+    confirmAuditReviewed: true,
+  };
   return (
     <section className="grid gap-5 rounded-lg border border-stone-200 bg-[#fffaf0] p-5 shadow-sm">
       <div className="grid gap-2">
@@ -654,6 +742,41 @@ export function ImportSessionManifestPanel({
               Trạng thái nhập chính thức: chưa mở. Marker review:{" "}
               {reviewPack.marker}.
             </div>
+          </section>
+
+          <section className="grid gap-4 rounded-lg border border-violet-200 bg-violet-50 p-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-semibold uppercase tracking-normal text-violet-800">
+                A-16BC - Owner approval state
+              </div>
+              <h3 className="text-base font-bold text-stone-950">
+                Chuyển trạng thái phê duyệt trước khi nhập chính thức
+              </h3>
+              <p className="text-sm leading-6 text-stone-700">
+                Cổng này chỉ chuyển trạng thái phiên đã kiểm toán qua
+                preview_generated, ready_for_owner_approval và
+                owner_approved_for_db_write. Nó không gọi POST /official-import,
+                không gọi RPC và không ghi dữ liệu gia phả thật.
+              </p>
+              <p className="break-all text-sm font-semibold text-violet-950">
+                Route A-16BC: {A16BC_OWNER_APPROVAL_STATE_ROUTE}
+              </p>
+              <p className="break-all text-sm text-violet-950">
+                Ready marker: {A16BC_READY_FOR_OWNER_APPROVAL_MARKER}
+              </p>
+              <p className="break-all text-sm text-violet-950">
+                DB-write approval marker:{" "}
+                {A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER}
+              </p>
+            </div>
+            <A16BCOwnerApprovalStateClient
+              routePath={A16BC_OWNER_APPROVAL_STATE_ROUTE}
+              readyConfirmation={a16bcReadyConfirmation}
+              dbWriteConfirmation={a16bcDbWriteConfirmation}
+              canMarkReady={a16bcCanMarkReady}
+              canApproveDbWrite={a16bcCanApproveDbWrite}
+              lockedReasons={a16bcLockedReasons}
+            />
           </section>
 
           <section className="grid gap-4 rounded-lg border border-rose-200 bg-rose-50 p-4">
