@@ -334,7 +334,9 @@
     "check:a16ba-read-only-session-state-runtime-contract-fix-plan": "node scripts/check-a16ba-read-only-session-state-runtime-contract-fix-plan.cjs",
     "check:a16bb-sanitized-session-state-runtime-gate-candidate": "node scripts/check-a16bb-sanitized-session-state-runtime-gate-candidate.cjs",
     "verify:a16bb-sanitized-session-state": "node scripts/verify-a16bb-sanitized-session-state.cjs",
-    "check:a16bc-owner-approval-state-transition-readiness": "node scripts/check-a16bc-owner-approval-state-transition-readiness.cjs"
+    "check:a16bc-owner-approval-state-transition-readiness": "node scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
+    "check:a16be-official-import-rpc-session-ownership-contract-diagnosis": "node scripts/check-a16be-official-import-rpc-session-ownership-contract-diagnosis.cjs",
+    "verify:a16be-session-ownership-contract": "node scripts/verify-a16be-session-ownership-contract.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

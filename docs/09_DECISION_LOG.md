@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 307 - A-16BE keeps RPC ownership fail-closed
+
+Date: 2026-07-10
+
+Status: Accepted
+
+Context: Production owner/admin UI gates passed and one owner-approved POST
+reached `public.a16p_tx_execute_giapha4_official_import`, but the helper
+returned `SESSION_NOT_FOUND_OR_NOT_OWNED` before official import completion.
+A-16BE read sanitized metadata only and found the audited session's
+`created_by`, `updated_by`, and `approved_by` all classify as the current owner
+profile id.
+
+Decision: Do not weaken the RPC ownership predicate. Treat the failure as an
+RPC invoker auth-context or production RPC contract drift blocker: the
+application-level owner/admin `PermissionContext` proof and the PostgreSQL
+`SECURITY INVOKER` `public.current_profile_id()` proof are separate contracts
+and must be proven identical in the same run before any retry.
+
+Consequences: A-16R import retry remains `NO`. The next phase should add a
+fail-closed RPC invocation identity precheck or align the RPC contract so the
+actor profile id must equal both `public.current_profile_id()` and
+`import_sessions.created_by`.
+
+Safety: A-16BE does not call POST `/official-import`, does not run import RPC,
+does not run SQL or DB mutation, does not change session state, does not deploy,
+and does not print or commit raw/private data.
+
 ## Decision 306 - A-16BC separates owner-approval state transition from A-16R official import execution
 
 Date: 2026-07-10

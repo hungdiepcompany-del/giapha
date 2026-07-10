@@ -1,5 +1,44 @@
 # Next AI Handoff
 
+## 2026-07-10 - A-16BE - Official import RPC session ownership contract diagnosis
+
+- Status:
+  `A16BE_STATUS=DIAGNOSED_READ_ONLY_OWNERSHIP_METADATA_PASS_RPC_CONTEXT_BLOCKED`.
+- Target session:
+  `A16BE_TARGET_SESSION_ID=2af4bfb6-a20e-453e-9804-1b8c0afbdd68`.
+- Production evidence:
+  owner submitted POST once before this phase; runtime reached the approved
+  helper once; helper returned
+  `A16AH_BLOCKED_TRANSACTION_RPC_FAILED` /
+  `SESSION_NOT_FOUND_OR_NOT_OWNED`; imported people count remained `0`.
+- Sanitized ownership verifier:
+  `verify:a16be-session-ownership-contract` returned
+  `A16BE_READ_ONLY_VERIFIER_STATUS=PASS_READ_ONLY_SANITIZED_OWNERSHIP_METADATA`.
+- Stored state:
+  `A16BE_STORED_SESSION_STATE_BEFORE_POST=owner_approved_for_db_write`.
+- Ownership result:
+  `A16BE_SESSION_CREATED_BY_IDENTIFIER_TYPE=CURRENT_OWNER_PROFILE_ID`,
+  `A16BE_SESSION_UPDATED_BY_IDENTIFIER_TYPE=CURRENT_OWNER_PROFILE_ID`,
+  `A16BE_SESSION_APPROVED_BY_IDENTIFIER_TYPE=CURRENT_OWNER_PROFILE_ID`, and
+  `A16BE_SESSION_OWNED_BY_CURRENT_PROFILE=YES`.
+- RPC expected identifier:
+  `A16BE_RPC_EXPECTED_IDENTIFIER_TYPE=PROFILE_ID_FROM_PUBLIC_CURRENT_PROFILE_ID_SECURITY_INVOKER`.
+- Runtime identifier:
+  `A16BE_RUNTIME_IDENTIFIER_TYPE=PROFILE_ID_FROM_PERMISSION_CONTEXT_ADMIN_LOOKUP`.
+- Contract mismatch:
+  `A16BE_EXACT_CONTRACT_MISMATCH=NO_STORED_SESSION_OWNER_MISMATCH_BUT_RUNTIME_ADMIN_PERMISSION_CONTEXT_AND_RPC_INVOKER_AUTH_CONTEXT_NOT_PROVEN_IDENTICAL_IN_SAME_RUN`.
+- Blocker:
+  `A16BE_BLOCKER=A16BE_BLOCKED_RPC_INVOKER_AUTH_CONTEXT_OR_PRODUCTION_RPC_CONTRACT_DRIFT_SESSION_NOT_FOUND_OR_NOT_OWNED`.
+- A-16R import retry remains:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no POST `/official-import` in A-16BE, no import retry, no import RPC, no
+  direct/manual RPC, no SQL/DB mutation, no session-state change, no deploy, no
+  auth/role/permission/membership/genealogy mutation, no raw/private data print
+  or commit.
+- Next action:
+  `A16BE_NEXT_ACTION=A16BF_RPC_INVOCATION_IDENTITY_CONTRACT_PRECHECK_NO_IMPORT_NO_DEPLOY`.
+
 ## 2026-07-10 - A-16BC-OWNER-APPROVAL-STATE-TRANSITION-READINESS - Source Candidate
 
 - Marker:
