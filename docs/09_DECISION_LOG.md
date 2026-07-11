@@ -1,5 +1,29 @@
 # Decision Log
 
+## Decision 324 - A-16BT deploy evidence accepted from owner marker
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner provided
+`OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_919d3df`. Local HEAD
+is `919d3df docs: reconcile a16bt accepted migration history gap`.
+
+Decision: Record
+`A16BT_DEPLOY_EVIDENCE_STATUS=PASS_OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED`
+for commit `919d3df`, with confirmation source `OWNER_MARKER`.
+
+Rationale:
+
+- This is an owner-confirmed GitHub Actions deployment evidence record, not a
+  Codex-run deploy.
+- Codex did not push, deploy, run production smoke, execute SQL, call import
+  RPC, retry A16R, or modify runtime application code in this phase.
+- The accepted A-16BT migration-history gap status remains unchanged:
+  `A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.
+- The next action remains returning to the A16BF/A16R critical path.
+
 ## Decision 323 - A-16BT accepts verified DB effects with migration-history gap
 
 Date: 2026-07-11

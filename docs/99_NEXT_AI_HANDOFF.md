@@ -1,5 +1,28 @@
 # Next AI Handoff
 
+## 2026-07-11 - A-16BT - Owner-confirmed GitHub Actions deploy succeeded
+
+- Deploy evidence status:
+  `A16BT_DEPLOY_EVIDENCE_STATUS=PASS_OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED`.
+- Owner marker:
+  `OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_919d3df`.
+- Commit:
+  `OWNER_CONFIRMED_DEPLOY_COMMIT=919d3df`;
+  `A16BT_DEPLOYED_COMMIT=919d3df`;
+  `A16BT_DEPLOY_CONFIRMATION_SOURCE=OWNER_MARKER`.
+- Safety:
+  `CODEX_DEPLOY=NO`;
+  `CODEX_PUSH=NO`;
+  `SQL_EXECUTED=NO`;
+  `IMPORT_RPC_CALLED=NO`;
+  `A16R_RETRY=NO`;
+  no production smoke, no migration apply/repair/rerun and no runtime app code
+  changes in this evidence-record phase.
+- A-16BT status remains:
+  `A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.
+- Next action:
+  `NEXT_ACTION=RETURN_TO_A16BF_A16R_CRITICAL_PATH`.
+
 ## 2026-07-11 - A-16BT - Accepted manual apply migration-history gap
 
 - Status:

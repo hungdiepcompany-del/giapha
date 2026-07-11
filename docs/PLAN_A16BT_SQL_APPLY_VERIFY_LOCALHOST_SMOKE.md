@@ -3,6 +3,30 @@
 Runbook status:
 `A16BT_RUNBOOK_STATUS=OWNER_REVIEW_REQUIRED_NOT_APPLIED`.
 
+## 2026-07-11 - Owner-confirmed GitHub Actions deploy evidence
+
+`A16BT_DEPLOY_EVIDENCE_STATUS=PASS_OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED`.
+
+Owner marker:
+`OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_919d3df`.
+
+Deploy evidence:
+
+- `OWNER_CONFIRMED_DEPLOY_COMMIT=919d3df`
+- `GITHUB_ACTIONS_DEPLOY_STATUS=OWNER_CONFIRMED_SUCCEEDED`
+- `A16BT_DEPLOYED_COMMIT=919d3df`
+- `A16BT_DEPLOY_CONFIRMATION_SOURCE=OWNER_MARKER`
+- `CODEX_DEPLOY=NO`
+- `CODEX_PUSH=NO`
+- `SQL_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+
+This record only captures owner-confirmed deployment evidence for commit
+`919d3df docs: reconcile a16bt accepted migration history gap`. Codex did not
+run a deploy, did not push, did not run production smoke, did not execute SQL,
+did not call import RPC and did not retry A16R in this evidence-record phase.
+
 ## 2026-07-11 - Owner acceptance and migration history gap reconciliation record
 
 `A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.

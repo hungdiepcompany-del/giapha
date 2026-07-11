@@ -1,5 +1,42 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BT owner-confirmed GitHub Actions deploy evidence
+
+### Phase
+
+A-16BT - Owner-confirmed deploy evidence record for commit 919d3df
+
+### Viec da lam
+
+- Recorded owner marker:
+  `OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED_FOR_COMMIT_919d3df`.
+- Confirmed local HEAD is `919d3df docs: reconcile a16bt accepted migration
+  history gap`.
+- Recorded deploy evidence as owner-confirmed only.
+- Did not run deploy, push, production smoke, SQL, import RPC, A16R retry, or
+  runtime application changes.
+
+### Ket qua
+
+- `A16BT_DEPLOY_EVIDENCE_STATUS=PASS_OWNER_CONFIRMED_GITHUB_ACTIONS_DEPLOY_SUCCEEDED`
+- `OWNER_CONFIRMED_DEPLOY_COMMIT=919d3df`
+- `GITHUB_ACTIONS_DEPLOY_STATUS=OWNER_CONFIRMED_SUCCEEDED`
+- `A16BT_DEPLOYED_COMMIT=919d3df`
+- `A16BT_DEPLOY_CONFIRMATION_SOURCE=OWNER_MARKER`
+- `CODEX_DEPLOY=NO`
+- `CODEX_PUSH=NO`
+- `SQL_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `NEXT_ACTION=RETURN_TO_A16BF_A16R_CRITICAL_PATH`
+
+### Kiem tra
+
+- `npm run check:a16bt-secure-public-genealogy-read-boundary`: PASS
+- `npm run check:a16br-revisions-insert-rls-and-anon-grant-cleanup`: PASS
+- `npm run check:a16bq-downstream-rpc-write-contract-read-only-verification`: PASS
+- `git diff --check`: PASS
+
 ## 2026-07-11 - A-16BT owner acceptance and migration history gap reconciliation record
 
 ### Phase
