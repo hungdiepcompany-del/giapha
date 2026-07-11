@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BP - Owner apply evidence record
+
+- Status:
+  `A16BP_STATUS=PASS_OWNER_MANUAL_APPLY_AND_VERIFIED`.
+- Verification:
+  `A16BO_VERIFICATION_STATUS=PASS_ALL_BOOLEAN_CHECKS_TRUE`.
+- Applied migration:
+  `A16BP_APPLIED_MIGRATION=db/migrations/20260711_0019_a16bo_revoke_anon_import_staging_grants.sql`;
+  `A16BP_APPLIED_MIGRATION_SHA256=879A7472026683268A2343324D0CBA8EB6EE2E3E1D0A246CDE158478C0C38038`.
+- Immutable migrations:
+  `A16BP_MIGRATION_0018_IMMUTABLE_SHA256=7D62C16E201D452FD73B4E06C8F140361873C0C054A876EDDBFF28DD55FACC42`;
+  `A16BP_MIGRATION_0019_IMMUTABLE_SHA256=879A7472026683268A2343324D0CBA8EB6EE2E3E1D0A246CDE158478C0C38038`.
+- A-16R retry:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+
+## 2026-07-11 - A-16BQ - Downstream RPC write-contract read-only verification runbook
+
+- Status:
+  `A16BQ_STATUS=READY_FOR_OWNER_SELECT_ONLY_METADATA_VERIFICATION`.
+- Runbook:
+  `A16BQ_RUNBOOK_STATUS=SELECT_ONLY_OWNER_METADATA_VERIFICATION_NOT_EXECUTED_BY_CODEX`.
+- RPC coverage:
+  `A16BQ_RPC_SELECT_FOR_UPDATE_TARGETS=import_sessions,official_import_batches,import_write_manifests`;
+  `A16BQ_RPC_INSERT_TARGETS=official_import_batches,people,revisions,families,family_children,family_parents,official_import_rollback_manifests`;
+  `A16BQ_RPC_UPDATE_TARGETS=official_import_batches,import_write_manifests,import_sessions`.
+- Safety:
+  no SQL run, no runbook execution, no POST `/official-import`, no import RPC,
+  no session/genealogy mutation, no deploy, and no A-16R retry.
+
 ## 2026-07-11 - A-16BO - Post-apply anon grant hardening and policy deparser verification
 
 - Status:

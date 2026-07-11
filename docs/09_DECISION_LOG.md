@@ -1,5 +1,55 @@
 # Decision Log
 
+## Decision 317 - A-16BQ requires downstream metadata verification before another retry
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: A-16BP records that the owner-applied A-16BO revoke-grants candidate
+now verifies successfully. The next risk is no longer the staging table row-lock
+contract; it is the remaining downstream write contract for every table touched
+by the SECURITY INVOKER official-import RPC.
+
+Decision: Add an owner SELECT-only metadata runbook that covers every RPC
+SELECT, SELECT FOR UPDATE, INSERT, UPDATE, and readback target. The runbook
+checks authenticated privileges, RLS/force-RLS state, applicable policies,
+permission predicates, no anon/PUBLIC grants or policies, SECURITY INVOKER, and
+absence of automatic import triggers. It reads only metadata and is not executed
+by Codex.
+
+Consequences: A-16R retry remains `NO` until the owner separately runs the
+A-16BQ metadata verification and every boolean passes. Any false boolean becomes
+a blocker to record before implementation or retry planning.
+
+Safety: A-16BQ does not run SQL, does not call POST `/official-import`, does not
+call the import RPC, does not mutate session/genealogy/auth data, does not
+deploy, and does not push.
+
+## Decision 316 - A-16BP records owner-applied A-16BO verification pass
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner manually applied A-16BO migration 0019 through Supabase SQL
+Editor and provided SELECT-only verification showing forbidden anon/PUBLIC
+grants and policies are zero, authenticated SELECT/UPDATE on the two import
+staging tables remain present, A-16BM policy semantics pass, the RPC remains
+SECURITY INVOKER, and no automatic import trigger exists.
+
+Decision: Record A-16BP as
+`PASS_OWNER_MANUAL_APPLY_AND_VERIFIED`, mark migrations 0018 and 0019 immutable
+by SHA256, and do not edit either applied migration. The next phase is A-16BQ
+downstream metadata verification, not an import retry.
+
+Consequences: A-16R retry remains `NO`. The applied migration files are now
+history artifacts and must not be amended or regenerated.
+
+Safety: A-16BP records owner evidence only. Codex does not run SQL, does not
+call POST `/official-import`, does not call the import RPC, does not mutate
+session/genealogy/auth data, does not deploy, and does not push.
+
 ## Decision 315 - A-16BO revokes anonymous import staging grants without changing policies
 
 Date: 2026-07-11
