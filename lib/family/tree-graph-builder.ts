@@ -1,19 +1,17 @@
-import type { Person } from "@/lib/family/people-types";
-import type {
-  CoupleRelationship,
-  Family,
-  FamilyChild,
-  FamilyParent,
-} from "@/lib/family/relationship-types";
 import type {
   FamilyTreeGraph,
   TreeBuilderInput,
   TreeBuildOptions,
+  TreeCoupleRelationshipInput,
+  TreeFamilyChildInput,
+  TreeFamilyInput,
+  TreeFamilyParentInput,
   TreeGraphNode,
+  TreePersonInput,
   TreeRelationshipEdge,
 } from "@/lib/family/tree-types";
 
-function yearOf(value: string | null) {
+function yearOf(value: string | null | undefined) {
   return value ? value.slice(0, 4) : null;
 }
 
@@ -32,7 +30,7 @@ function canShowVisibility(
   return visibility === "public";
 }
 
-function visiblePerson(person: Person, mode: TreeBuildOptions["mode"]) {
+function visiblePerson(person: TreePersonInput, mode: TreeBuildOptions["mode"]) {
   if (person.deleted_at) {
     return false;
   }
@@ -48,27 +46,27 @@ function visiblePerson(person: Person, mode: TreeBuildOptions["mode"]) {
   return true;
 }
 
-function visibleFamily(family: Family, mode: TreeBuildOptions["mode"]) {
+function visibleFamily(family: TreeFamilyInput, mode: TreeBuildOptions["mode"]) {
   return !family.deleted_at && canShowVisibility(family.visibility, mode);
 }
 
-function visibleParent(row: FamilyParent) {
+function visibleParent(row: TreeFamilyParentInput) {
   return !row.deleted_at;
 }
 
-function visibleChild(row: FamilyChild) {
+function visibleChild(row: TreeFamilyChildInput) {
   return !row.deleted_at;
 }
 
 function visibleCouple(
-  row: CoupleRelationship,
+  row: TreeCoupleRelationshipInput,
   mode: TreeBuildOptions["mode"],
 ) {
   return !row.deleted_at && canShowVisibility(row.visibility, mode);
 }
 
 function toPersonNode(
-  person: Person,
+  person: TreePersonInput,
   lineage?: {
     clanName: string | null;
     branchName: string | null;
@@ -100,7 +98,7 @@ function toPersonNode(
   };
 }
 
-function toFamilyNode(family: Family): TreeGraphNode {
+function toFamilyNode(family: TreeFamilyInput): TreeGraphNode {
   return {
     id: `family:${family.id}`,
     kind: "family",

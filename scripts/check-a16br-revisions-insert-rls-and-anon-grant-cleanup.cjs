@@ -396,6 +396,16 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "db/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql",
+  "supabase/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql",
+  "db/checks/20260711_check_a16bt_secure_public_genealogy_read_boundary.sql",
+  "docs/PLAN_A16BT_SECURE_PUBLIC_GENEALOGY_READ_BOUNDARY.md",
+  "docs/PLAN_A16BT_SQL_APPLY_VERIFY_LOCALHOST_SMOKE.md",
+  "scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs",
+  "lib/family/public-family-service.ts",
+  "lib/family/tree-graph-builder.ts",
+  "lib/family/tree-types.ts",
+  "lib/privacy/privacy-service.ts",
 ]);
 
 for (const file of changedFiles) {

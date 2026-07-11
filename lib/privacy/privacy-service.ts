@@ -11,15 +11,34 @@ import type {
   PublicPerson,
 } from "@/lib/privacy/privacy-types";
 
-function yearOf(value: string | null) {
+export type PublicPersonSource = Pick<
+  Person,
+  | "id"
+  | "slug"
+  | "full_name"
+  | "display_name"
+  | "is_living"
+  | "generation_number"
+  | "branch_name"
+  | "visibility"
+  | "deleted_at"
+> & {
+  birth_date?: string | null;
+  death_date?: string | null;
+};
+
+function yearOf(value: string | null | undefined) {
   return value ? value.slice(0, 4) : null;
 }
 
-function safeLabel(person: Person) {
+function safeLabel(person: PublicPersonSource) {
   return person.display_name || person.full_name;
 }
 
-export function canShowPersonInMode(person: Person, mode: PrivacyMode) {
+export function canShowPersonInMode(
+  person: PublicPersonSource,
+  mode: PrivacyMode,
+) {
   if (person.deleted_at) {
     return false;
   }
@@ -35,7 +54,7 @@ export function canShowPersonInMode(person: Person, mode: PrivacyMode) {
   return person.visibility === "public";
 }
 
-export function toPublicPerson(person: Person): PublicPerson | null {
+export function toPublicPerson(person: PublicPersonSource): PublicPerson | null {
   if (!canShowPersonInMode(person, "public")) {
     return null;
   }
@@ -63,19 +82,19 @@ export function toFamilyPerson(person: Person): FamilyPerson | null {
     return null;
   }
 
-  const publicPerson = toPublicPerson({
-    ...person,
-    visibility: "public",
-  });
-
-  if (!publicPerson) {
-    return null;
-  }
-
   return {
-    ...publicPerson,
+    id: person.id,
+    slug: person.slug,
+    label: safeLabel(person),
+    full_name: person.full_name,
+    display_name: person.display_name,
+    is_living: person.is_living,
+    life_status: person.is_living ? "living" : "deceased",
+    generation_number: person.generation_number,
+    branch_name: person.branch_name,
     birth_year: yearOf(person.birth_date),
     death_year: yearOf(person.death_date),
+    visibility: "public",
     birth_place: person.birth_place,
     home_town: person.home_town,
   };

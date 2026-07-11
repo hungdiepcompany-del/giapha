@@ -1,5 +1,35 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BT - Secure public genealogy read boundary
+
+- Status:
+  `A16BT_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- Public access model:
+  `A16BT_PUBLIC_ACCESS_MODEL=COLUMN_LEVEL_GRANTS_PLUS_ANON_RLS`.
+- Private column exposure:
+  `A16BT_PRIVATE_COLUMN_EXPOSURE=BLOCKED`.
+- A-16BS evidence:
+  `A16BS_MIGRATION_0020_APPLIED=YES_OWNER_MANUAL_APPLY`;
+  `A16BT_MIGRATION_0020_IMMUTABLE_SHA256=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`.
+- Candidate:
+  `A16BT_MIGRATION_0021=db/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql`;
+  `A16BT_SUPABASE_MIRROR=supabase/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql`;
+  `A16BT_MIGRATION_0021_SHA256=A7277E8A682610447BEC8142564C1A94B5FDE1AB4726C76D7DDF8205486B5D2C`.
+- Verification SQL:
+  `A16BT_VERIFICATION_SQL=db/checks/20260711_check_a16bt_secure_public_genealogy_read_boundary.sql`.
+- Localhost smoke:
+  `A16BT_LOCALHOST_SMOKE=SAFE_SKIP_NO_ISOLATED_LOCAL_DB_NO_PRODUCTION_ROW_QUERY`.
+- Public column allowlist:
+  `A16BT_PUBLIC_QUERY_PEOPLE_COLUMNS=id,slug,full_name,display_name,is_living,branch_name,generation_number,visibility,deleted_at`;
+  `A16BT_PUBLIC_QUERY_FAMILIES_COLUMNS=id,family_code,family_label,visibility,deleted_at`;
+  `A16BT_PUBLIC_QUERY_FAMILY_PARENTS_COLUMNS=id,family_id,person_id,parent_role,deleted_at`;
+  `A16BT_PUBLIC_QUERY_FAMILY_CHILDREN_COLUMNS=id,family_id,person_id,child_relationship_type,deleted_at`.
+- Safety:
+  `A16BT_SQL_EXECUTED_BY_CODEX=NO`;
+  `A16BT_MIGRATION_0021_APPLIED=NO`;
+  no production row query, no Supabase db push/repair/seed, no POST
+  `/official-import`, no import RPC, no deploy, and `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## 2026-07-11 - A-16BR-FIX - Public read-path compatibility audit before migration 0020 apply
 
 - Status:

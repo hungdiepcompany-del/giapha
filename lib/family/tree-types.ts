@@ -75,12 +75,52 @@ export type FamilyTreeGraph = {
   };
 };
 
+export type TreePersonInput = Pick<
+  Person,
+  | "id"
+  | "full_name"
+  | "display_name"
+  | "is_living"
+  | "branch_name"
+  | "generation_number"
+  | "visibility"
+  | "deleted_at"
+> & {
+  birth_date?: string | null;
+  death_date?: string | null;
+};
+
+export type TreeFamilyInput = Pick<
+  Family,
+  "id" | "family_code" | "family_label" | "visibility" | "deleted_at"
+>;
+
+export type TreeFamilyParentInput = Pick<
+  FamilyParent,
+  "id" | "family_id" | "person_id" | "parent_role" | "deleted_at"
+>;
+
+export type TreeFamilyChildInput = Pick<
+  FamilyChild,
+  "id" | "family_id" | "person_id" | "child_relationship_type" | "deleted_at"
+>;
+
+export type TreeCoupleRelationshipInput = Pick<
+  CoupleRelationship,
+  | "id"
+  | "person1_id"
+  | "person2_id"
+  | "relationship_status"
+  | "visibility"
+  | "deleted_at"
+>;
+
 export type TreeBuilderInput = {
-  people: Person[];
-  families: Family[];
-  familyParents: FamilyParent[];
-  familyChildren: FamilyChild[];
-  coupleRelationships: CoupleRelationship[];
+  people: TreePersonInput[];
+  families: TreeFamilyInput[];
+  familyParents: TreeFamilyParentInput[];
+  familyChildren: TreeFamilyChildInput[];
+  coupleRelationships: TreeCoupleRelationshipInput[];
   lineageMemberships?: PersonBranchMembership[];
   lineageClans?: Clan[];
   lineageBranches?: ClanBranch[];

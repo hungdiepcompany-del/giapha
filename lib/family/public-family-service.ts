@@ -1,18 +1,19 @@
 import "server-only";
 
 import { buildFamilyTreeGraph } from "@/lib/family/tree-graph-builder";
-import type { Person } from "@/lib/family/people-types";
+import type { RelationshipServiceResult } from "@/lib/family/relationship-types";
 import type {
-  CoupleRelationship,
-  Family,
-  FamilyChild,
-  FamilyParent,
-  RelationshipServiceResult,
-} from "@/lib/family/relationship-types";
-import type { FamilyTreeGraph } from "@/lib/family/tree-types";
+  FamilyTreeGraph,
+  TreeCoupleRelationshipInput,
+  TreeFamilyChildInput,
+  TreeFamilyInput,
+  TreeFamilyParentInput,
+  TreePersonInput,
+} from "@/lib/family/tree-types";
 import {
-  sanitizePersonForMode,
   sanitizeTreeGraphForMode,
+  toPublicPerson,
+  type PublicPersonSource,
 } from "@/lib/privacy/privacy-service";
 import type { PublicPerson } from "@/lib/privacy/privacy-types";
 import { maybeCreateServerSupabaseClient } from "@/lib/supabase/server";
@@ -22,26 +23,11 @@ const PEOPLE_PUBLIC_SELECT = `
   slug,
   full_name,
   display_name,
-  gender,
-  birth_date,
-  birth_date_precision,
-  death_date,
-  death_date_precision,
   is_living,
-  birth_place,
-  home_town,
   branch_name,
   generation_number,
-  short_bio,
-  notes_private,
   visibility,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  deleted_at,
-  deleted_by,
-  delete_reason
+  deleted_at
 `;
 
 const FAMILY_PUBLIC_SELECT = `
@@ -49,14 +35,7 @@ const FAMILY_PUBLIC_SELECT = `
   family_code,
   family_label,
   visibility,
-  notes,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  deleted_at,
-  deleted_by,
-  delete_reason
+  deleted_at
 `;
 
 const FAMILY_PARENT_PUBLIC_SELECT = `
@@ -64,16 +43,7 @@ const FAMILY_PARENT_PUBLIC_SELECT = `
   family_id,
   person_id,
   parent_role,
-  relationship_type,
-  sort_order,
-  notes,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  deleted_at,
-  deleted_by,
-  delete_reason
+  deleted_at
 `;
 
 const FAMILY_CHILD_PUBLIC_SELECT = `
@@ -81,15 +51,7 @@ const FAMILY_CHILD_PUBLIC_SELECT = `
   family_id,
   person_id,
   child_relationship_type,
-  sort_order,
-  notes,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  deleted_at,
-  deleted_by,
-  delete_reason
+  deleted_at
 `;
 
 const COUPLE_PUBLIC_SELECT = `
@@ -97,21 +59,11 @@ const COUPLE_PUBLIC_SELECT = `
   person1_id,
   person2_id,
   relationship_status,
-  start_date,
-  start_date_precision,
-  end_date,
-  end_date_precision,
-  family_id,
   visibility,
-  notes,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  deleted_at,
-  deleted_by,
-  delete_reason
+  deleted_at
 `;
+
+type PublicGenealogyPersonRow = TreePersonInput & PublicPersonSource;
 
 function errorResult<T>(
   error: string,
@@ -144,29 +96,29 @@ async function queryPublicInputs() {
         .select(PEOPLE_PUBLIC_SELECT)
         .eq("visibility", "public")
         .is("deleted_at", null)
-        .returns<Person[]>(),
+        .returns<PublicGenealogyPersonRow[]>(),
       supabase
         .from("families")
         .select(FAMILY_PUBLIC_SELECT)
         .eq("visibility", "public")
         .is("deleted_at", null)
-        .returns<Family[]>(),
+        .returns<TreeFamilyInput[]>(),
       supabase
         .from("family_parents")
         .select(FAMILY_PARENT_PUBLIC_SELECT)
         .is("deleted_at", null)
-        .returns<FamilyParent[]>(),
+        .returns<TreeFamilyParentInput[]>(),
       supabase
         .from("family_children")
         .select(FAMILY_CHILD_PUBLIC_SELECT)
         .is("deleted_at", null)
-        .returns<FamilyChild[]>(),
+        .returns<TreeFamilyChildInput[]>(),
       supabase
         .from("couple_relationships")
         .select(COUPLE_PUBLIC_SELECT)
         .eq("visibility", "public")
         .is("deleted_at", null)
-        .returns<CoupleRelationship[]>(),
+        .returns<TreeCoupleRelationshipInput[]>(),
     ]);
 
   const firstError =
@@ -232,7 +184,7 @@ export async function getPublicPersonProfile(
     ? query.eq("id", slugOrId)
     : query.eq("slug", slugOrId);
 
-  const { data, error } = await query.maybeSingle<Person>();
+  const { data, error } = await query.maybeSingle<PublicGenealogyPersonRow>();
 
   if (error) {
     return errorResult(error.message, "public_person_query_failed");
@@ -242,9 +194,9 @@ export async function getPublicPersonProfile(
     return errorResult("Không tìm thấy hồ sơ công khai.", "public_person_not_found");
   }
 
-  const person = sanitizePersonForMode(data, "public");
+  const person = toPublicPerson(data);
 
-  if (!person || "notes_private" in person) {
+  if (!person) {
     return errorResult("Không tìm thấy hồ sơ công khai.", "public_person_hidden");
   }
 

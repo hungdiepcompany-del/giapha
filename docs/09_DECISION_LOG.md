@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 320 - A-16BT secures public genealogy reads with column grants
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: A-16BS manually applied migration 0020 at SHA
+`530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`. Owner
+verification passed the import/RPC security checks but remained blocked on the
+four public SELECT policy checks. A-16BR-FIX had proven that public routes need
+the Supabase anon role for direct table SELECT, but broad anon table SELECT
+would expose columns that RLS cannot hide, including private/internal fields.
+
+Decision: Add not-applied migration 0021 for
+`A16BT_PUBLIC_ACCESS_MODEL=COLUMN_LEVEL_GRANTS_PLUS_ANON_RLS`. Revoke broad
+anon/PUBLIC table SELECT on `people`, `families`, `family_parents`, and
+`family_children`; grant anon SELECT only on explicit public-safe columns; add
+anon-only SELECT policies that require active public people/families and prevent
+relationship rows from inferring private or family-only rows. Update public
+queries to use explicit allowlists and stop selecting private, date, place,
+notes, and audit columns.
+
+Consequences: Public birth/death years are no longer derived from full date
+columns in the direct-table anon path. They remain null until a later phase adds
+dedicated year-only public columns or a safe view/RPC. Existing authenticated
+policies, service_role grants, migration 0020, and the A-16BR revisions INSERT
+policy remain unchanged.
+
+Safety: A-16BT does not run SQL, does not apply migration 0021, does not query
+production genealogy rows, does not call POST `/official-import`, does not call
+the import RPC, does not deploy, and does not push.
+
 ## Decision 319 - A-16BR-FIX preserves verified public anon SELECT
 
 Date: 2026-07-11
