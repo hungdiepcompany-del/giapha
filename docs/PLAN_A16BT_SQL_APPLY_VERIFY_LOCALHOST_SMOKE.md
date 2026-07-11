@@ -3,6 +3,45 @@
 Runbook status:
 `A16BT_RUNBOOK_STATUS=OWNER_REVIEW_REQUIRED_NOT_APPLIED`.
 
+## 2026-07-11 - Owner acceptance of manual apply history gap
+
+`A16BT_STATUS=PASS_OWNER_ACCEPTED_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+
+Owner marker received:
+`OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+
+Codex reran the A-16BT SELECT-only verification after receiving the owner
+acceptance marker. The database effects remain verified:
+
+- `a16bt_secure_public_genealogy_read_boundary_verified=true`
+- `broad_anon_table_select_grant_count=0`
+- `broad_public_table_select_grant_count=0`
+- `missing_required_anon_column_grant_count=0`
+- `forbidden_private_column_anon_grant_count=0`
+- `notes_private_anon_select_privilege=false`
+- `forbidden_anon_mutation_grant_count=0`
+- `forbidden_public_mutation_grant_count=0`
+- `forbidden_anon_public_write_policy_count=0`
+- `rls_enabled_table_count=4`
+- `rls_disabled_table_count=0`
+- `a16br_revisions_insert_policy_remains_unchanged=true`
+- `rpc_remains_security_invoker=true`
+- `no_automatic_import_trigger=true`
+
+Metadata-only policy count:
+
+- `a16bt_policy_count=4`
+
+Accepted migration-state contract:
+
+- `A16BT_MIGRATION_STATE_VERIFIED=OWNER_ACCEPTED_MANUAL_SQL_HISTORY_GAP_DB_EFFECTS_VERIFIED`
+- `A16BT_MIGRATION_HISTORY_EXACT_ONCE=NOT_VERIFIABLE_HISTORY_TABLE_NOT_PRESENT_OWNER_ACCEPTED`
+- `A16BT_MIGRATION_0021_APPLY_STATUS=OWNER_ACCEPTED_MANUAL_APPLY_DB_EFFECTS_PRESENT_CODEX_APPLY_NOT_EXECUTED`
+
+No mutation SQL was run in this acceptance update. No production genealogy rows
+were queried. No import RPC, no `POST /official-import`, no deploy and no push
+were performed.
+
 ## 2026-07-11 - Owner-approved verification run result
 
 `A16BT_STATUS=BLOCKED_MIGRATION_HISTORY_NOT_VERIFIABLE_DB_EFFECTS_VERIFIED`.

@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 322 - Owner accepts A-16BT manual SQL migration-history gap
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner supplied
+`OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED` after the
+A-16BT verification run confirmed all security effects but could not prove
+Supabase migration-history exact-once recording because
+`supabase_migrations.schema_migrations` was not available.
+
+Decision: Treat A-16BT as
+`A16BT_STATUS=PASS_OWNER_ACCEPTED_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+The accepted migration-state contract is
+`A16BT_MIGRATION_STATE_VERIFIED=OWNER_ACCEPTED_MANUAL_SQL_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+
+Rationale:
+
+- The A-16BT SELECT-only verification was rerun after owner acceptance and
+  returned `a16bt_secure_public_genealogy_read_boundary_verified=true`.
+- Metadata-only verification found all four A-16BT anon public-read policies.
+- The migration-history exact-once requirement remains technically
+  unverifiable from this environment, but the owner explicitly accepted that
+  manual SQL history gap based on verified database effects.
+- This acceptance does not authorize import retry, deploy, production row
+  queries, mutation SQL, migration repair, or `supabase db push`.
+
 ## Decision 321 - A-16BT cannot claim migration-history exact-once while security state is verified
 
 Date: 2026-07-11

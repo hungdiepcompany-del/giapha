@@ -11359,6 +11359,53 @@ A-16AL - A-16R Official Import Runtime Marker Alignment
 - docs/09_DECISION_LOG.md
 - docs/99_NEXT_AI_HANDOFF.md
 
+## 2026-07-11 - A-16BT owner accepts manual apply history gap
+
+### Phase
+
+A-16BT - Owner acceptance of manual SQL migration-history gap
+
+### Viec da lam
+
+- Recorded owner marker
+  `OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+- Reran A-16BT SELECT-only Supabase verification.
+- Reran metadata-only A-16BT public policy count.
+- Did not run mutation SQL, did not apply migration 0021 by Codex, did not run
+  `supabase db push`, did not repair migration history and did not query
+  production genealogy rows.
+
+### Ket qua
+
+- `A16BT_STATUS=PASS_OWNER_ACCEPTED_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`
+- `A16BT_MIGRATION_STATE_VERIFIED=OWNER_ACCEPTED_MANUAL_SQL_HISTORY_GAP_DB_EFFECTS_VERIFIED`
+- `A16BT_MIGRATION_HISTORY_EXACT_ONCE=NOT_VERIFIABLE_HISTORY_TABLE_NOT_PRESENT_OWNER_ACCEPTED`
+- `A16BT_MIGRATION_0021_APPLY_STATUS=OWNER_ACCEPTED_MANUAL_APPLY_DB_EFFECTS_PRESENT_CODEX_APPLY_NOT_EXECUTED`
+- `A16BT_BROAD_ANON_SELECT_REVOKED=YES`
+- `A16BT_SAFE_COLUMN_GRANTS_VERIFIED=YES`
+- `A16BT_PRIVATE_COLUMN_EXPOSURE=NO`
+- `A16BT_ANON_RLS_VERIFIED=YES`
+- `A16BT_AUTHENTICATED_POLICIES_PRESERVED=YES`
+- `A16BT_POLICY_COUNT=4`
+- `A16BT_IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `A16BT_DEPLOY=NO`
+- `A16BT_PUSH=NO`
+
+### Kiem tra
+
+- `npx supabase db query --linked --file db/checks/20260711_check_a16bt_secure_public_genealogy_read_boundary.sql`
+- `npx supabase db query --linked "select count(*)::int as a16bt_policy_count ..."`
+
+### Safety
+
+- No production genealogy rows queried.
+- No mutation SQL run in this acceptance update.
+- No official-import RPC called.
+- No `POST /official-import` called.
+- No deploy and no push.
+- Migration files 0020 and 0021 were not edited.
+
 ## 2026-07-11 - A-16BT owner-approved production verify and localhost smoke continuation
 
 ### Phase
