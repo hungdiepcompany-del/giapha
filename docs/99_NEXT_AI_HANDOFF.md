@@ -1,5 +1,31 @@
 # Next AI Handoff
 
+## 2026-07-11 - A-16BT - Accepted manual apply migration-history gap
+
+- Status:
+  `A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.
+- Owner acceptance:
+  `OWNER_ACCEPTANCE_RECORDED=YES`;
+  `OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+- Verification outcome:
+  `DB_EFFECTS_VERIFIED=YES`;
+  `MIGRATION_HISTORY_VERIFIED=NO`;
+  `MIGRATION_RERUN_ALLOWED=NO`;
+  `FUTURE_CLI_RECONCILIATION_REQUIRED=YES`.
+- Migration hashes preserved:
+  `A16BT_MIGRATION_0020_HASH=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`;
+  `A16BT_MIGRATION_0021_HASH=A7277E8A682610447BEC8142564C1A94B5FDE1AB4726C76D7DDF8205486B5D2C`.
+- Safety:
+  `SQL_EXECUTED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`;
+  `IMPORT_RPC_CALLED=NO`;
+  `A16R_RETRY=NO`;
+  no production rows queried, no migration apply/repair/revert/rerun, and no
+  runtime app code changes in this reconciliation record.
+- Next action:
+  `NEXT_ACTION=RETURN_TO_A16BF_A16R_CRITICAL_PATH`.
+
 ## 2026-07-11 - A-16BT - Owner accepted manual SQL history gap
 
 - Status:

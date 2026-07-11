@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 323 - A-16BT accepts verified DB effects with migration-history gap
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner provided
+`OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED` and requested
+a reconciliation record without SQL execution, migration apply/repair/rerun,
+production row queries, deploy, push, import RPC, A16R retry, or runtime app
+changes.
+
+Decision: The canonical A-16BT outcome is
+`A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.
+The database security effects are accepted as verified, while Supabase CLI
+migration history is not verified because the expected migration history table
+is not present.
+
+Required status contract:
+
+- `DB_EFFECTS_VERIFIED=YES`
+- `MIGRATION_HISTORY_VERIFIED=NO`
+- `MIGRATION_RERUN_ALLOWED=NO`
+- `FUTURE_CLI_RECONCILIATION_REQUIRED=YES`
+
+Rationale:
+
+- A previous A-16BT SELECT-only verification recorded all security booleans
+  passing and no private anon column exposure.
+- The owner explicitly accepts the manual-apply migration-history gap.
+- Rerunning, repairing, reverting, or reapplying migration 0021 to force
+  migration history is not allowed in this phase.
+- Future CLI reconciliation remains required if the project later needs
+  Supabase CLI migration history to match manual SQL state.
+
 ## Decision 322 - Owner accepts A-16BT manual SQL migration-history gap
 
 Date: 2026-07-11

@@ -3,6 +3,37 @@
 Runbook status:
 `A16BT_RUNBOOK_STATUS=OWNER_REVIEW_REQUIRED_NOT_APPLIED`.
 
+## 2026-07-11 - Owner acceptance and migration history gap reconciliation record
+
+`A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`.
+
+Owner marker:
+`OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+
+Reconciliation status:
+
+- `DB_EFFECTS_VERIFIED=YES`
+- `MIGRATION_HISTORY_VERIFIED=NO`
+- `MIGRATION_RERUN_ALLOWED=NO`
+- `FUTURE_CLI_RECONCILIATION_REQUIRED=YES`
+- `SQL_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+
+Accepted record: migration 0021 database security effects are verified from
+the previous SELECT-only verification evidence, but Supabase CLI migration
+history cannot be verified because the expected migration history table is not
+present. The owner accepts this manual-apply history gap. Migration 0021 must
+not be rerun, repaired, reverted, or reapplied to force migration history from
+this phase.
+
+Hash preservation:
+
+- `A16BT_MIGRATION_0020_HASH=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`
+- `A16BT_MIGRATION_0021_HASH=A7277E8A682610447BEC8142564C1A94B5FDE1AB4726C76D7DDF8205486B5D2C`
+
 ## 2026-07-11 - Owner acceptance of manual apply history gap
 
 `A16BT_STATUS=PASS_OWNER_ACCEPTED_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.

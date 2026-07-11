@@ -1,5 +1,45 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BT owner acceptance and migration history gap reconciliation record
+
+### Phase
+
+A-16BT - Documentation and checker/status reconciliation only
+
+### Viec da lam
+
+- Recorded owner marker:
+  `OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED`.
+- Reconciled the A-16BT owner-accepted status to the required canonical
+  outcome string.
+- Preserved migration 0020 and 0021 hashes.
+- Did not execute SQL, apply, repair, revert, rerun migrations, query
+  production rows, deploy, push, call import RPC, retry A16R, or modify runtime
+  application code.
+
+### Ket qua
+
+- `A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP`
+- `OWNER_ACCEPTANCE_RECORDED=YES`
+- `DB_EFFECTS_VERIFIED=YES`
+- `MIGRATION_HISTORY_VERIFIED=NO`
+- `MIGRATION_RERUN_ALLOWED=NO`
+- `FUTURE_CLI_RECONCILIATION_REQUIRED=YES`
+- `SQL_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `A16BT_MIGRATION_0020_HASH=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`
+- `A16BT_MIGRATION_0021_HASH=A7277E8A682610447BEC8142564C1A94B5FDE1AB4726C76D7DDF8205486B5D2C`
+
+### Kiem tra
+
+- `npm run check:a16bt-secure-public-genealogy-read-boundary`: PASS
+- `npm run check:a16br-revisions-insert-rls-and-anon-grant-cleanup`: PASS
+- `npm run check:a16bq-downstream-rpc-write-contract-read-only-verification`: PASS
+- `git diff --check`: PASS
+
 ## 2026-07-11 - A-16BT - Secure public genealogy read boundary
 
 - Status:

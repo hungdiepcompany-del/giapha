@@ -288,6 +288,17 @@ for (const token of [
 
 for (const token of [
   "A16BT_RUNBOOK_STATUS=OWNER_REVIEW_REQUIRED_NOT_APPLIED",
+  "A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP",
+  "OWNER_ACCEPT_A16BT_MANUAL_APPLY_HISTORY_GAP_DB_EFFECTS_VERIFIED",
+  "DB_EFFECTS_VERIFIED=YES",
+  "MIGRATION_HISTORY_VERIFIED=NO",
+  "MIGRATION_RERUN_ALLOWED=NO",
+  "FUTURE_CLI_RECONCILIATION_REQUIRED=YES",
+  "SQL_EXECUTED=NO",
+  "DEPLOY=NO",
+  "PUSH=NO",
+  "IMPORT_RPC_CALLED=NO",
+  "A16R_RETRY=NO",
   "APPROVE_A16BT_APPLY_SECURE_PUBLIC_GENEALOGY_READ_BOUNDARY",
   "A16BT_RUNBOOK_SQL_EXECUTION_ALLOWED=NO",
   "A16BT_RUNBOOK_DEPLOY_ALLOWED=NO",
@@ -302,8 +313,14 @@ for (const [content, token, label] of [
   [index, "PLAN_A16BT_SECURE_PUBLIC_GENEALOGY_READ_BOUNDARY.md", "index A-16BT plan"],
   [index, "PLAN_A16BT_SQL_APPLY_VERIFY_LOCALHOST_SMOKE.md", "index A-16BT runbook"],
   [workLog, "A-16BT - Secure public genealogy read boundary", "work log A-16BT"],
+  [workLog, "A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP", "work log A-16BT accepted history gap"],
+  [workLog, "FUTURE_CLI_RECONCILIATION_REQUIRED=YES", "work log A-16BT future CLI reconciliation"],
   [decisionLog, "Decision 320 - A-16BT secures public genealogy reads with column grants", "decision A-16BT"],
+  [decisionLog, "Decision 323 - A-16BT accepts verified DB effects with migration-history gap", "decision A-16BT accepted history gap"],
+  [decisionLog, "MIGRATION_RERUN_ALLOWED=NO", "decision A-16BT migration rerun blocked"],
   [handoff, "A16BT_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED", "handoff A-16BT"],
+  [handoff, "A16BT_STATUS=PASS_WITH_ACCEPTED_MANUAL_APPLY_MIGRATION_HISTORY_GAP", "handoff A-16BT accepted history gap"],
+  [handoff, "NEXT_ACTION=RETURN_TO_A16BF_A16R_CRITICAL_PATH", "handoff A-16BT next action"],
 ]) {
   requireIncludes(content, token, label);
 }
