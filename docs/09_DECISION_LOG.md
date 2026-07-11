@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 313 - A-16BM adds a not-applied row-lock RLS schema fix candidate
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: Owner SELECT-only metadata confirmed the A-16BL diagnosis:
+`import_sessions` has an UPDATE policy, but it does not allow
+`owner_approved_for_db_write`; `import_write_manifests` has no UPDATE policy.
+The SECURITY INVOKER official import RPC uses `SELECT ... FOR UPDATE` on both
+tables before the real import writes.
+
+Decision: Add an additive not-applied candidate migration, mirrored
+byte-for-byte under `db/migrations` and `supabase/migrations`, plus SELECT-only
+verification SQL. The candidate grants only SELECT/UPDATE on `import_sessions`
+and `import_write_manifests` to `authenticated`, adds narrow
+owner/profile-scoped official-import UPDATE policies for the exact RPC
+row-lock/write-completion path, and preserves the existing preview policies.
+
+Consequences: A-16R retry remains `NO`. The next phase is owner review and a
+separate SQL apply/verify gate. Real genealogy-table INSERT grant/RLS risk is
+not changed by A-16BM and must be reconciled before another retry.
+
+Safety: A-16BM does not call POST `/official-import`, does not call the import
+RPC, does not run SQL or DB mutation, does not change session state, does not
+deploy, and does not print or commit raw/private data.
+
 ## Decision 312 - A-16BL treats SELECT FOR UPDATE as an UPDATE RLS visibility contract
 
 Date: 2026-07-11

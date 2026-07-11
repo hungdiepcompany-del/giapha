@@ -1,5 +1,34 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BM - Official import row-lock RLS schema fix candidate
+
+- Status:
+  `A16BM_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- Root cause:
+  `A16BM_ROOT_CAUSE=CONFIRMED_BY_OWNER_SELECT_ONLY_METADATA`.
+- Candidate:
+  `A16BM_MIGRATION_CANDIDATE=db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql`;
+  `A16BM_SUPABASE_MIRROR=supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql`;
+  `A16BM_MIRROR_MATCH=BYTE_FOR_BYTE_REQUIRED_BY_CHECKER`.
+- Verification SQL:
+  `A16BM_VERIFICATION_SQL=db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql`.
+- Policy scopes:
+  `A16BM_IMPORT_SESSIONS_POLICY_SCOPE=AUTHENTICATED_IMPORTS_CREATE_OWNER_PROFILE_APPROVED_ROW_OWNER_APPROVED_FOR_DB_WRITE_TO_WRITE_COMPLETED_ONLY`;
+  `A16BM_IMPORT_WRITE_MANIFESTS_POLICY_SCOPE=AUTHENTICATED_IMPORTS_CREATE_PARENT_SESSION_OWNER_SCOPED_OWNER_APPROVED_OR_READY_FOR_APPLY_TO_WRITE_COMPLETED_ONLY`.
+- Grant scope:
+  `A16BM_GRANT_SCOPE=GRANT_SELECT_UPDATE_TO_AUTHENTICATED_ON_IMPORT_SESSIONS_AND_IMPORT_WRITE_MANIFESTS_ONLY`.
+- Downstream review:
+  `A16BM_REAL_GENEALOGY_INSERT_RLS_REVIEW=INDEPENDENT_DOWNSTREAM_GRANT_RLS_RISK_NOT_CHANGED_IN_A16BM`.
+- Blocker:
+  `A16BM_BLOCKER=OWNER_REVIEW_AND_MANUAL_APPLY_VERIFY_REQUIRED_BEFORE_ANY_SEPARATE_RETRY`.
+- Safety:
+  no POST `/official-import`, no import RPC, no direct/manual RPC, no SQL run
+  by Codex, no DB/session/auth/permission/genealogy mutation, no migration
+  apply/db push/repair/seed, no deploy, no raw/private data printed or
+  committed.
+- Next action:
+  `A16BM_NEXT_OWNER_ACTION=REVIEW_CANDIDATE_THEN_SEPARATE_SQL_APPLY_VERIFY_PHASE_IF_APPROVED_NO_IMPORT_RETRY`.
+
 ## 2026-07-11 - A-16BL - Import session FOR UPDATE RLS and lock-visibility diagnosis
 
 - Status:

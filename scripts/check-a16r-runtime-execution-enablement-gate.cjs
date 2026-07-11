@@ -285,6 +285,14 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16BL_IMPORT_SESSION_FOR_UPDATE_RLS_LOCK_VISIBILITY_DIAGNOSIS.md",
   "scripts/a16bl-import-session-for-update-rls-fix-candidate.sql.draft",
   "scripts/check-a16bl-import-session-for-update-rls-lock-visibility-diagnosis.cjs",
+  "db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql",
+  "docs/PLAN_A16BM_OFFICIAL_IMPORT_ROW_LOCK_RLS_FIX_CANDIDATE.md",
+  "docs/PLAN_A16BM_SQL_APPLY_VERIFY_RUNBOOK.md",
+  "scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs",
+  "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
+  "scripts/check-a16t-grant-rls-hardening-fix.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -296,7 +304,16 @@ for (const file of changedFiles) {
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(`forbidden env file ${file}`);
   if (file.startsWith("supabase/.temp/")) failures.push(`forbidden supabase temp ${file}`);
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`forbidden spreadsheet/csv ${file}`);
-  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
+  const isApprovedA16bmSqlCandidate =
+    file ===
+      "db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql" ||
+    file ===
+      "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql" ||
+    file === "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql";
+  if (
+    /^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file) &&
+    !isApprovedA16bmSqlCandidate
+  ) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
 }

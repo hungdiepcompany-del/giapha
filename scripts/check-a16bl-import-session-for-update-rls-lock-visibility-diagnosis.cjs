@@ -180,6 +180,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bc-owner-approval-state-transition-readiness.cjs",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql",
+  "docs/PLAN_A16BM_OFFICIAL_IMPORT_ROW_LOCK_RLS_FIX_CANDIDATE.md",
+  "docs/PLAN_A16BM_SQL_APPLY_VERIFY_RUNBOOK.md",
+  "scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs",
+  "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
+  "scripts/check-a16t-grant-rls-hardening-fix.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -187,7 +195,16 @@ for (const file of changedFiles) {
   if (file === "wrangler.toml" || file === "app/layout.tsx") {
     failures.push(`forbidden changed file ${file}`);
   }
-  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
+  const isApprovedA16bmSqlCandidate =
+    file ===
+      "db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql" ||
+    file ===
+      "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql" ||
+    file === "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql";
+  if (
+    /^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file) &&
+    !isApprovedA16bmSqlCandidate
+  ) {
     failures.push(`forbidden applied SQL/check file ${file}`);
   }
   if (file.startsWith(".tmp/") || file.startsWith(".tmp\\")) {

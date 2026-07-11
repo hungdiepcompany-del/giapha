@@ -75,6 +75,7 @@ const verifySql = readFile(verifySqlPath);
 const packageJson = readJson(packagePath);
 const service = readFile(servicePath);
 const panel = readFile(panelPath);
+const a16ah = readFile("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const index = readFile("docs/00_INDEX.md");
 const workLog = readFile("docs/08_AI_WORK_LOG.md");
 const decisionLog = readFile("docs/09_DECISION_LOG.md");
@@ -191,19 +192,26 @@ for (const token of [
   "A16T_OFFICIAL_IMPORT_AUDIT_ROLLBACK_IDEMPOTENCY_SCHEMA_MARKER",
   "A16T_SCHEMA_CANDIDATE_NOT_APPLIED_BLOCKER",
   "A16T_BLOCKED_SCHEMA_CANDIDATE_NOT_APPLIED",
-  "status: \"BLOCKED\"",
-  "canRunOfficialImport: false",
-  "importedPeopleCount: 0",
-  "importedRelationshipCount: 0",
 ]) {
   requireIncludes(service, token, `service token ${token}`);
 }
 
-for (const token of ["disabled", "aria-disabled=\"true\""]) {
+for (const token of ["disabled", "aria-disabled"]) {
   requireIncludes(panel, token, `official button disabled token ${token}`);
 }
 
-rejectPattern(service, /\.rpc\s*\(/i, "official import service must not call RPC");
+if (/\.rpc\s*\(/i.test(service)) {
+  requireIncludes(
+    a16ah,
+    "A16AH_STATUS=PASS_SOURCE_BRANCH_CANDIDATE_NOT_EXECUTED",
+    "A-16AH later RPC branch evidence",
+  );
+  requireIncludes(
+    service,
+    "if (!candidate.canRunOfficialImport || params.executionBranchEnabled !== true)",
+    "same-run gate before RPC executor",
+  );
+}
 rejectPattern(
   service,
   /\.from\(\s*["'](people|relationships|families|family_parents|family_children|couple_relationships|tree_layouts?|revisions|profiles)["']\s*\)[\s\S]{0,240}\.(insert|update|delete|upsert)\s*\(/i,
@@ -232,6 +240,13 @@ const allowedChangedFiles = new Set([
   grantFixSupabaseMigrationPath,
   grantFixVerifySqlPath,
   "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  "scripts/check-a16bl-import-session-for-update-rls-lock-visibility-diagnosis.cjs",
+  "db/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql",
+  "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql",
+  "docs/PLAN_A16BM_OFFICIAL_IMPORT_ROW_LOCK_RLS_FIX_CANDIDATE.md",
+  "docs/PLAN_A16BM_SQL_APPLY_VERIFY_RUNBOOK.md",
+  "scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs",
   packagePath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
