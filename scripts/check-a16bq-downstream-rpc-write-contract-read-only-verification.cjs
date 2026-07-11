@@ -70,6 +70,7 @@ for (const token of [
   "official_import_batches_supports_rpc_insert",
   "official_import_batches_supports_rpc_lock_select",
   "official_import_batches_supports_rpc_update_lifecycle",
+  "official_import_batches_update_policy_runtime_compatible",
   "official_import_rollback_manifests_supports_rpc_insert",
   "people_supports_rpc_insert",
   "families_supports_rpc_insert",
@@ -85,6 +86,8 @@ for (const token of [
   "A16BQ_RUNBOOK_EXECUTED_BY_CODEX=NO",
   "A16BQ_POST_OFFICIAL_IMPORT_CALLED=NO",
   "A16BQ_IMPORT_RPC_CALLED=NO",
+  "A16BQ_OFFICIAL_IMPORT_BATCH_UPDATE_STATUS=PASS_RUNTIME_COMPATIBLE",
+  "A16BQ_BATCH_LIFECYCLE_BOOLEAN=FALSE_NEGATIVE_CHECKER_TOO_STRICT",
 ]) {
   requireIncludes(doc, token, `A-16BQ doc/runbook token ${token}`);
 }
@@ -133,6 +136,11 @@ for (const sql of sqlBlocks) {
   rejectPattern(sql, /^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate)\b/im, "A-16BQ SQL runbook must remain SELECT-only");
   rejectPattern(sql, /\bfor\s+update\b/i, "A-16BQ SQL runbook must not lock production rows");
   rejectPattern(sql, /\ba16p_tx_execute_giapha4_official_import\s*\(/i, "A-16BQ SQL runbook must not invoke official import RPC");
+  rejectPattern(
+    sql,
+    /official_import_batches_supports_rpc_update_lifecycle[\s\S]{0,900}%completed%/i,
+    "official_import_batches UPDATE check must not require literal completed",
+  );
 }
 
 rejectPattern(doc + workLog + handoff, /A16R_IMPORT_RETRY_NEXT=YES/i, "A-16R retry must remain NO");
@@ -147,8 +155,14 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   "docs/PLAN_A16BP_REVOKE_ANON_IMPORT_STAGING_GRANTS_APPLY_VERIFY.md",
+  "docs/PLAN_A16BR_REVISIONS_INSERT_RLS_AND_ANON_GRANT_CLEANUP.md",
+  "docs/PLAN_A16BR_SQL_APPLY_VERIFY_RUNBOOK.md",
   checkerPath,
   "scripts/check-a16bp-revoke-anon-import-staging-grants-apply-verify.cjs",
+  "scripts/check-a16br-revisions-insert-rls-and-anon-grant-cleanup.cjs",
+  "db/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
+  "supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
+  "db/checks/20260711_check_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
@@ -157,7 +171,13 @@ const allowedChangedFiles = new Set([
 ]);
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
-  if (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) {
+  if (
+    (file.startsWith("db/migrations/") || file.startsWith("supabase/migrations/")) &&
+    ![
+      "db/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
+      "supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
+    ].includes(file)
+  ) {
     failures.push(`migration must not change in A-16BQ: ${file}`);
   }
 }

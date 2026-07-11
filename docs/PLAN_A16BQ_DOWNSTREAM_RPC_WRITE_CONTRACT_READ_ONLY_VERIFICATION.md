@@ -9,6 +9,12 @@ A-16R retry:
 Runbook:
 `A16BQ_RUNBOOK_STATUS=SELECT_ONLY_OWNER_METADATA_VERIFICATION_NOT_EXECUTED_BY_CODEX`.
 
+Follow-up correction:
+`A16BQ_OFFICIAL_IMPORT_BATCH_UPDATE_STATUS=PASS_RUNTIME_COMPATIBLE`.
+
+Strict-checker diagnosis:
+`A16BQ_BATCH_LIFECYCLE_BOOLEAN=FALSE_NEGATIVE_CHECKER_TOO_STRICT`.
+
 Purpose:
 Verify the remaining table privilege/RLS/policy contract for every downstream
 table touched by the production official-import RPC before any separate A-16R
@@ -192,9 +198,28 @@ policy_checks as (
       select 1 from policy_catalog
       where tablename = 'official_import_batches'
         and cmd = 'UPDATE'
-        and normalized_qual like '%created_by = current_profile_id()%'
-        and normalized_with_check like '%completed%'
+        and exists (
+          select 1
+          from unnest(roles) as policy_role(role_name)
+          where lower(policy_role.role_name::text) = 'authenticated'
+        )
+        and normalized_qual like '%has_permission(''imports.create'')%'
+        and normalized_qual like '%from import_sessions owned_session%'
+        and normalized_qual like '%owned_session.created_by = current_profile_id()%'
+        and normalized_with_check like '%has_permission(''imports.create'')%'
+        and normalized_with_check like '%updated_by = current_profile_id()%'
+        and normalized_with_check like '%from import_sessions owned_session%'
+        and normalized_with_check like '%owned_session.created_by = current_profile_id()%'
     ) as official_import_batches_supports_rpc_update_lifecycle,
+    exists (
+      select 1 from policy_catalog
+      where tablename = 'official_import_batches'
+        and cmd = 'UPDATE'
+        and normalized_qual like '%has_permission(''imports.create'')%'
+        and normalized_with_check like '%updated_by = current_profile_id()%'
+        and normalized_qual like '%owned_session.created_by = current_profile_id()%'
+        and normalized_with_check like '%owned_session.created_by = current_profile_id()%'
+    ) as official_import_batches_update_policy_runtime_compatible,
     exists (
       select 1 from policy_catalog
       where tablename = 'official_import_rollback_manifests'
@@ -276,6 +301,7 @@ booleans as (
     policy_checks.official_import_batches_supports_rpc_insert,
     policy_checks.official_import_batches_supports_rpc_lock_select,
     policy_checks.official_import_batches_supports_rpc_update_lifecycle,
+    policy_checks.official_import_batches_update_policy_runtime_compatible,
     policy_checks.official_import_rollback_manifests_supports_rpc_insert,
     policy_checks.people_supports_rpc_insert,
     policy_checks.families_supports_rpc_insert,
@@ -297,6 +323,7 @@ select
     and official_import_batches_supports_rpc_insert
     and official_import_batches_supports_rpc_lock_select
     and official_import_batches_supports_rpc_update_lifecycle
+    and official_import_batches_update_policy_runtime_compatible
     and official_import_rollback_manifests_supports_rpc_insert
     and people_supports_rpc_insert
     and families_supports_rpc_insert
@@ -313,6 +340,14 @@ from booleans;
 
 Expected owner verification status:
 `A16BQ_EXPECTED_VERIFY=a16bq_downstream_rpc_write_contract_verified_TRUE`.
+
+The official_import_batches UPDATE check is runtime-compatible when the UPDATE
+policy is authenticated, requires `imports.create`, scopes both USING and WITH
+CHECK to the owned import session, and requires
+`updated_by=current_profile_id()` in WITH CHECK. It intentionally does not
+require a literal `completed` token because the RPC makes both `pending ->
+running` and `running -> completed` updates while setting `updated_by` to the
+current profile.
 
 If any boolean is false, stop and record a blocker. Do not retry A-16R from this
 phase.

@@ -1,5 +1,39 @@
 # Next AI Handoff
 
+## 2026-07-11 - A-16BR - Revisions INSERT RLS and anon grant cleanup candidate
+
+- Status:
+  `A16BR_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- SQL applied:
+  `A16BR_SQL_APPLIED=NO`.
+- A-16R retry:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Migration 0018 immutable:
+  `A16BR_MIGRATION_0018_IMMUTABLE_SHA256=7D62C16E201D452FD73B4E06C8F140361873C0C054A876EDDBFF28DD55FACC42`.
+- Migration 0019 immutable:
+  `A16BR_MIGRATION_0019_IMMUTABLE_SHA256=879A7472026683268A2343324D0CBA8EB6EE2E3E1D0A246CDE158478C0C38038`.
+- Migration 0020:
+  `A16BR_MIGRATION_0020=db/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`.
+- Supabase mirror:
+  `A16BR_SUPABASE_MIRROR=supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`;
+  `A16BR_MIRROR_MATCH=BYTE_FOR_BYTE_REQUIRED_BY_CHECKER`.
+- Verification SQL:
+  `A16BR_VERIFICATION_SQL=db/checks/20260711_check_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`.
+- Revisions blocker:
+  `A16BR_REVISIONS_INSERT_BLOCKER=FIX_CANDIDATE_READY`.
+- Anonymous grants:
+  `A16BR_ANON_GRANT_COUNT_BEFORE=56`;
+  `A16BR_ANON_GRANT_COUNT_EXPECTED_AFTER=0`.
+- Official import batch policy:
+  `A16BR_OFFICIAL_IMPORT_BATCH_UPDATE_STATUS=PASS_RUNTIME_COMPATIBLE`;
+  `A16BR_A16BQ_BATCH_LIFECYCLE_BOOLEAN=FALSE_NEGATIVE_CHECKER_TOO_STRICT`.
+- Safety:
+  no SQL run, no migration apply, no Supabase db push/repair/seed, no POST
+  `/official-import`, no import RPC, no session/genealogy mutation, no deploy,
+  and no A-16R retry.
+- Next owner action:
+  `A16BR_NEXT_OWNER_ACTION=REVIEW_MIGRATION_0020_THEN_SEPARATE_OWNER_SQL_APPLY_VERIFY_PHASE_NO_IMPORT_RETRY`.
+
 ## 2026-07-11 - A-16BP - Owner apply evidence record
 
 - Status:

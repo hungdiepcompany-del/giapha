@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 318 - A-16BR adds narrow official-import revision INSERT RLS
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: A-16BQ owner SELECT-only metadata showed the remaining downstream RPC
+write blocker is `revisions_supports_rpc_insert=false`, while the
+official_import_batches UPDATE policy is actually runtime-compatible. The batch
+policy requires `imports.create`, owned import-session scope, and
+`updated_by=current_profile_id()` in WITH CHECK; requiring the literal
+`completed` string was a checker false negative.
+
+Decision: Add not-applied migration 0020 with one narrow authenticated
+`revisions` INSERT policy for the A-16V official-import people/families create
+revision rows only, and revoke all remaining anon/PUBLIC table privileges from
+the eight confirmed downstream tables. Preserve existing revisions SELECT
+policies, do not add UPDATE/DELETE revision policies, do not change
+authenticated or service_role grants, do not disable or FORCE RLS, and correct
+the A-16BQ verification logic to avoid the literal `completed` requirement.
+
+Consequences: A-16R retry remains `NO`. Owner review and a separate SQL
+apply/verify phase are required before any import retry can be considered.
+Migrations 0018 and 0019 remain immutable by SHA256.
+
+Safety: A-16BR does not run SQL, does not call POST `/official-import`, does not
+call the import RPC, does not mutate session/genealogy/auth data, does not
+deploy, and does not push.
+
 ## Decision 317 - A-16BQ requires downstream metadata verification before another retry
 
 Date: 2026-07-11
