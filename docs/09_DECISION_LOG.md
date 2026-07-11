@@ -1,5 +1,33 @@
 # Decision Log
 
+## Decision 321 - A-16BT cannot claim migration-history exact-once while security state is verified
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner prompt supplied
+`APPROVE_A16BT_0021_PRODUCTION_APPLY_VERIFY_LOCALHOST_SMOKE`. Codex attempted
+the production mutation apply command for migration 0021, but the local tool
+escalation reviewer rejected that mutation. Codex did not work around the
+rejection. Subsequent SELECT-only verification showed the A-16BT grant/RLS
+security effects already present and passing.
+
+Decision: Record A-16BT as
+`A16BT_STATUS=BLOCKED_MIGRATION_HISTORY_NOT_VERIFIABLE_DB_EFFECTS_VERIFIED`
+instead of marking the phase PASS.
+
+Rationale:
+
+- `a16bt_secure_public_genealogy_read_boundary_verified=true`.
+- The four A-16BT public anon SELECT policies exist.
+- `to_regclass('supabase_migrations.schema_migrations')` returned false, so
+  migration 0021 cannot be verified as recorded exactly once in Supabase
+  migration history from this environment.
+- The next owner action is migration-history reconciliation or explicit owner
+  acceptance that manual SQL apply without migration-history recording is the
+  project state for A-16BT.
+
 ## Decision 320 - A-16BT secures public genealogy reads with column grants
 
 Date: 2026-07-11

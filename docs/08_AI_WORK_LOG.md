@@ -11359,6 +11359,70 @@ A-16AL - A-16R Official Import Runtime Marker Alignment
 - docs/09_DECISION_LOG.md
 - docs/99_NEXT_AI_HANDOFF.md
 
+## 2026-07-11 - A-16BT owner-approved production verify and localhost smoke continuation
+
+### Phase
+
+A-16BT - Owner-approved production verify and localhost smoke continuation
+
+### Viec da lam
+
+- Recomputed and confirmed migration 0020 SHA256:
+  `530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`.
+- Recomputed and confirmed migration 0021 SHA256:
+  `A7277E8A682610447BEC8142564C1A94B5FDE1AB4726C76D7DDF8205486B5D2C`.
+- Confirmed DB and Supabase migration 0021 mirrors are byte-identical.
+- Attempted the owner-approved production apply command, but the local tool
+  escalation reviewer rejected the production mutation. Codex did not work
+  around that rejection.
+- Ran A-16BT SELECT-only Supabase verification. The DB grant/RLS/security
+  effects are already present and PASS.
+- Ran metadata-only A-16BT policy count; verified 4 A-16BT public anon SELECT
+  policies exist.
+- Checked migration-history metadata; `supabase_migrations.schema_migrations`
+  was not available, so recorded-exactly-once migration state could not be
+  verified.
+- Ran anonymous localhost smoke for `/`, `/tree`, and `/admin/preview/public`.
+  `/people/[slug]` was safe-skipped because no public person link appeared in
+  rendered public routes and no arbitrary production row query was allowed.
+
+### Ket qua
+
+- `A16BT_STATUS=BLOCKED_MIGRATION_HISTORY_NOT_VERIFIABLE_DB_EFFECTS_VERIFIED`
+- `A16BT_MIGRATION_0021_APPLY_STATUS=DB_EFFECTS_ALREADY_PRESENT_CODEX_APPLY_NOT_EXECUTED_REVIEWER_BLOCKED`
+- `A16BT_MIGRATION_STATE_VERIFIED=BLOCKED_SUPABASE_MIGRATION_HISTORY_TABLE_NOT_PRESENT`
+- `A16BT_BROAD_ANON_SELECT_REVOKED=YES`
+- `A16BT_SAFE_COLUMN_GRANTS_VERIFIED=YES`
+- `A16BT_PRIVATE_COLUMN_EXPOSURE=NO`
+- `A16BT_ANON_RLS_VERIFIED=YES`
+- `A16BT_AUTHENTICATED_POLICIES_PRESERVED=YES`
+- `A16BT_IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `A16BT_DEPLOY=NO`
+- `A16BT_PUSH=NO`
+
+### Kiem tra
+
+- `npx supabase db query --linked --file db/checks/20260711_check_a16bt_secure_public_genealogy_read_boundary.sql`
+- `npx supabase db query --linked "select count(*)::int as a16bt_policy_count ..."`
+- `npx supabase db query --linked "select to_regclass('supabase_migrations.schema_migrations') is not null ..."`
+- `npm run check:a16bt-secure-public-genealogy-read-boundary`
+- `npm run check:a16br-revisions-insert-rls-and-anon-grant-cleanup`
+- `npm run check:a16bq-downstream-rpc-write-contract-read-only-verification`
+- `npm run check:env:safe`
+- `npm run check:migrations`
+- `npm run typecheck`
+- `npm run lint`
+- `npm run build` after safe `.next` cleanup for Windows `EPERM`.
+
+### Safety
+
+- No production genealogy rows queried.
+- No official-import RPC called.
+- No `POST /official-import` called.
+- No deploy and no push.
+- Migration files 0020 and 0021 were not edited.
+
 ## 2026-07-09 - A-16AK official import session duplicate readiness
 
 ### Phase

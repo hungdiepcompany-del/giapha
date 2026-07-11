@@ -3,10 +3,70 @@
 Runbook status:
 `A16BT_RUNBOOK_STATUS=OWNER_REVIEW_REQUIRED_NOT_APPLIED`.
 
-This runbook is documentation only. Codex did not run SQL, did not apply
-migration 0021, did not run `supabase db push`, did not repair migrations, did
-not query production genealogy rows, did not call the official-import RPC, did
-not call `POST /official-import`, did not deploy, and did not push.
+## 2026-07-11 - Owner-approved verification run result
+
+`A16BT_STATUS=BLOCKED_MIGRATION_HISTORY_NOT_VERIFIABLE_DB_EFFECTS_VERIFIED`.
+
+The prompt provided the owner approval marker
+`APPROVE_A16BT_0021_PRODUCTION_APPLY_VERIFY_LOCALHOST_SMOKE`, but the local
+tool escalation reviewer rejected the production mutation command for applying
+`db/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql`.
+Codex therefore did not execute the mutation apply command and did not attempt a
+workaround.
+
+Read-only Supabase verification then showed the A-16BT database effects are
+already present and valid:
+
+- `a16bt_secure_public_genealogy_read_boundary_verified=true`
+- `broad_anon_table_select_grant_count=0`
+- `broad_public_table_select_grant_count=0`
+- `missing_required_anon_column_grant_count=0`
+- `forbidden_private_column_anon_grant_count=0`
+- `notes_private_anon_select_privilege=false`
+- `forbidden_anon_mutation_grant_count=0`
+- `forbidden_public_mutation_grant_count=0`
+- `forbidden_anon_public_write_policy_count=0`
+- `rls_enabled_table_count=4`
+- `rls_disabled_table_count=0`
+- `a16br_revisions_insert_policy_remains_unchanged=true`
+- `rpc_remains_security_invoker=true`
+- `no_automatic_import_trigger=true`
+
+Additional metadata check:
+
+- `a16bt_policy_count=4`
+- `has_supabase_schema_migrations=false`
+
+Because the Supabase migration-history table was not available, this run cannot
+truthfully mark `A16BT_MIGRATION_STATE_VERIFIED=YES_RECORDED_EXACTLY_ONCE`.
+The verified state is:
+`A16BT_MIGRATION_STATE_VERIFIED=BLOCKED_SUPABASE_MIGRATION_HISTORY_TABLE_NOT_PRESENT`.
+
+Localhost smoke used anonymous localhost requests against Next dev:
+
+- `/`: HTTP 200, no private-field payload tokens found.
+- `/tree`: HTTP 200, no private-field payload tokens found.
+- `/people/[slug]`: `SAFE_SKIP_NO_PUBLIC_PERSON_LINK_IN_RENDERED_PUBLIC_ROUTES`;
+  no arbitrary production genealogy-row query was used to discover a slug.
+- `/admin/preview/public`: HTTP 200, no private-field payload tokens found.
+
+Validation:
+
+- `npm run check:a16bt-secure-public-genealogy-read-boundary`: PASS
+- `npm run check:a16br-revisions-insert-rls-and-anon-grant-cleanup`: PASS
+- `npm run check:a16bq-downstream-rpc-write-contract-read-only-verification`: PASS
+- `npm run check:env:safe`: PASS
+- `npm run check:migrations`: PASS
+- `npm run typecheck`: PASS
+- `npm run lint`: PASS
+- `npm run build`: PASS after safe workspace-local `.next` cleanup for Windows
+  `EPERM` on `D:\CODE\GIA PHẢ\.next\diagnostics\build-diagnostics.json`.
+
+Original candidate-runbook note before the owner-approved continuation: Codex
+did not run SQL, did not apply migration 0021, did not run `supabase db push`,
+did not repair migrations, did not query production genealogy rows, did not call
+the official-import RPC, did not call `POST /official-import`, did not deploy,
+and did not push.
 
 ## Owner approval marker
 
