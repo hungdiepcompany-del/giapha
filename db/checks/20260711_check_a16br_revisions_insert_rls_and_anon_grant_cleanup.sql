@@ -41,12 +41,15 @@ rpc_tables(table_name) as (
     ('import_duplicate_candidates'),
     ('import_relationship_candidates')
 ),
-revoke_target_tables(table_name) as (
+public_core_tables(table_name) as (
   values
     ('families'),
     ('family_children'),
     ('family_parents'),
-    ('people'),
+    ('people')
+),
+sensitive_revoke_tables(table_name) as (
+  values
     ('revisions'),
     ('import_session_warnings'),
     ('import_duplicate_candidates'),
@@ -126,10 +129,29 @@ forbidden_checks as (
     (
       select count(*)::integer
       from grant_catalog
-      where table_name in (select table_name from revoke_target_tables)
+      where table_name in (select table_name from public_core_tables)
+        and lower(grantee) = 'anon'
+        and privilege_type in ('INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER')
+    ) as forbidden_anon_mutation_grant_count,
+    (
+      select count(*)::integer
+      from grant_catalog
+      where table_name in (select table_name from public_core_tables)
+        and lower(grantee) = 'public'
+        and privilege_type in ('INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER')
+    ) as forbidden_public_mutation_grant_count,
+    (
+      select count(*)::integer
+      from grant_catalog
+      where table_name in (select table_name from sensitive_revoke_tables)
         and lower(grantee) in ('anon', 'public')
         and privilege_type in ('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER')
-    ) as forbidden_anon_public_table_grant_count,
+    ) as staging_and_revision_anon_grant_count,
+    (
+      select count(*)::integer
+      from public_core_tables
+      where has_table_privilege('anon', 'public.' || table_name, 'SELECT')
+    ) as public_core_anon_select_table_count,
     (
       select count(*)::integer
       from policy_catalog pc
@@ -138,7 +160,66 @@ forbidden_checks as (
         from unnest(pc.roles) as policy_role(role_name)
         where lower(policy_role.role_name::text) in ('anon', 'public')
       )
-    ) as forbidden_anon_public_policy_count
+      and pc.cmd in ('INSERT', 'UPDATE', 'DELETE')
+    ) as forbidden_anon_public_write_policy_count
+),
+public_read_contract_checks as (
+  select
+    has_table_privilege('anon', 'public.people', 'SELECT')
+    and has_table_privilege('anon', 'public.families', 'SELECT')
+    and has_table_privilege('anon', 'public.family_parents', 'SELECT')
+    and has_table_privilege('anon', 'public.family_children', 'SELECT')
+      as public_core_anon_select_contract,
+    exists (
+      select 1
+      from policy_catalog
+      where tablename = 'people'
+        and cmd = 'SELECT'
+        and exists (
+          select 1
+          from unnest(roles) as policy_role(role_name)
+          where lower(policy_role.role_name::text) in ('anon', 'public')
+        )
+        and normalized_qual like '%visibility = ''public''%'
+        and normalized_qual like '%deleted_at is null%'
+    ) as people_public_select_policy_exists_if_needed,
+    exists (
+      select 1
+      from policy_catalog
+      where tablename = 'families'
+        and cmd = 'SELECT'
+        and exists (
+          select 1
+          from unnest(roles) as policy_role(role_name)
+          where lower(policy_role.role_name::text) in ('anon', 'public')
+        )
+        and normalized_qual like '%visibility = ''public''%'
+        and normalized_qual like '%deleted_at is null%'
+    ) as families_public_select_policy_exists_if_needed,
+    exists (
+      select 1
+      from policy_catalog
+      where tablename = 'family_parents'
+        and cmd = 'SELECT'
+        and exists (
+          select 1
+          from unnest(roles) as policy_role(role_name)
+          where lower(policy_role.role_name::text) in ('anon', 'public')
+        )
+        and normalized_qual like '%deleted_at is null%'
+    ) as family_parents_public_select_policy_exists_if_needed,
+    exists (
+      select 1
+      from policy_catalog
+      where tablename = 'family_children'
+        and cmd = 'SELECT'
+        and exists (
+          select 1
+          from unnest(roles) as policy_role(role_name)
+          where lower(policy_role.role_name::text) in ('anon', 'public')
+        )
+        and normalized_qual like '%deleted_at is null%'
+    ) as family_children_public_select_policy_exists_if_needed
 ),
 revisions_policy_checks as (
   select
@@ -311,10 +392,15 @@ official_import_batch_policy_checks as (
 booleans as (
   select
     privilege_checks.missing_authenticated_required_privilege_count,
-    forbidden_checks.forbidden_anon_public_table_grant_count,
-    forbidden_checks.forbidden_anon_public_policy_count,
-    forbidden_checks.forbidden_anon_public_table_grant_count = 0 as no_anon_or_public_table_grants,
-    forbidden_checks.forbidden_anon_public_policy_count = 0 as no_anon_or_public_policies,
+    forbidden_checks.forbidden_anon_mutation_grant_count,
+    forbidden_checks.forbidden_public_mutation_grant_count,
+    forbidden_checks.staging_and_revision_anon_grant_count,
+    forbidden_checks.public_core_anon_select_table_count,
+    forbidden_checks.forbidden_anon_public_write_policy_count,
+    forbidden_checks.forbidden_anon_mutation_grant_count = 0 as no_anon_mutation_grants,
+    forbidden_checks.forbidden_public_mutation_grant_count = 0 as no_public_mutation_grants,
+    forbidden_checks.staging_and_revision_anon_grant_count = 0 as no_staging_or_revision_anon_public_grants,
+    forbidden_checks.forbidden_anon_public_write_policy_count = 0 as no_anon_or_public_write_policies,
     not exists (
       select 1
       from rls_catalog
@@ -328,17 +414,27 @@ booleans as (
       where trigger_definition ilike '%a16p_tx_execute_giapha4_official_import%'
         or trigger_function_name ilike '%a16p_tx_execute_giapha4_official_import%'
     ) as no_automatic_import_trigger,
+    public_read_contract_checks.*,
     revisions_policy_checks.*,
     official_import_batch_policy_checks.*
   from privilege_checks
   cross join forbidden_checks
+  cross join public_read_contract_checks
   cross join revisions_policy_checks
   cross join official_import_batch_policy_checks
   cross join rls_catalog
   group by
     privilege_checks.missing_authenticated_required_privilege_count,
-    forbidden_checks.forbidden_anon_public_table_grant_count,
-    forbidden_checks.forbidden_anon_public_policy_count,
+    forbidden_checks.forbidden_anon_mutation_grant_count,
+    forbidden_checks.forbidden_public_mutation_grant_count,
+    forbidden_checks.staging_and_revision_anon_grant_count,
+    forbidden_checks.public_core_anon_select_table_count,
+    forbidden_checks.forbidden_anon_public_write_policy_count,
+    public_read_contract_checks.public_core_anon_select_contract,
+    public_read_contract_checks.people_public_select_policy_exists_if_needed,
+    public_read_contract_checks.families_public_select_policy_exists_if_needed,
+    public_read_contract_checks.family_parents_public_select_policy_exists_if_needed,
+    public_read_contract_checks.family_children_public_select_policy_exists_if_needed,
     revisions_policy_checks.existing_revisions_select_policies_remain_unchanged,
     revisions_policy_checks.new_revisions_insert_policy_exists,
     revisions_policy_checks.new_revisions_policy_role_authenticated_only,
@@ -358,8 +454,15 @@ select
   *,
   (
     missing_authenticated_required_privilege_count = 0
-    and no_anon_or_public_table_grants
-    and no_anon_or_public_policies
+    and no_anon_mutation_grants
+    and no_public_mutation_grants
+    and no_staging_or_revision_anon_public_grants
+    and no_anon_or_public_write_policies
+    and public_core_anon_select_contract
+    and people_public_select_policy_exists_if_needed
+    and families_public_select_policy_exists_if_needed
+    and family_parents_public_select_policy_exists_if_needed
+    and family_children_public_select_policy_exists_if_needed
     and all_rpc_tables_rls_enabled
     and force_rls_table_count = 0
     and rpc_remains_security_invoker

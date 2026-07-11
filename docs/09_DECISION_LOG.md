@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 319 - A-16BR-FIX preserves verified public anon SELECT
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: Migration 0020 was still not applied. A critical review found that the
+original A-16BR `REVOKE ALL` on `people`, `families`, `family_parents`, and
+`family_children` would also remove anon SELECT. Source inspection showed the
+public home, public tree, public person detail, and admin public preview route
+through `lib/family/public-family-service.ts`, which uses the server Supabase
+anon client and directly selects the four core genealogy tables.
+
+Decision: Classify the public-read audit as
+`A16BR_PUBLIC_READ_CLASSIFICATION=BLOCKED_PRESERVE_PUBLIC_ANON_SELECT`. Supersede
+the old migration 0020 SHA
+`0A7F69196C97071C7304E4D0CE28DA1C134E95AF3DEFA00C8958FC7971591CF0` and correct
+the unapplied migration to preserve effective anon SELECT on
+`people`, `families`, `family_parents`, and `family_children` while revoking
+anon/PUBLIC mutation privileges from those tables. Continue revoking all
+anon/PUBLIC privileges from `revisions`, `import_session_warnings`,
+`import_duplicate_candidates`, and `import_relationship_candidates`. Preserve
+the A-16BR revisions INSERT policy because no concrete defect was found.
+
+Consequences: The corrected migration 0020 SHA is
+`530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`. The
+SELECT-only verification SQL now checks separate anon/PUBLIC mutation grant
+counts, sensitive staging/revisions anon grant cleanup, effective anon SELECT on
+the public core tables, public SELECT policies only where needed, and the
+revisions INSERT policy. Owner apply remains a separate later A-16BS decision.
+
+Safety: A-16BR-FIX does not run SQL, does not query production genealogy rows,
+does not apply migration 0020, does not call POST `/official-import`, does not
+call the import RPC, does not mutate session/genealogy/auth data, does not
+deploy, and does not push.
+
 ## Decision 318 - A-16BR adds narrow official-import revision INSERT RLS
 
 Date: 2026-07-11

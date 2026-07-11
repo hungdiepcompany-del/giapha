@@ -3,6 +3,12 @@
 Status:
 `A16BR_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
 
+Fix status:
+`A16BR_FIX_STATUS=PUBLIC_READ_PATH_VERIFIED`.
+
+Public read classification:
+`A16BR_PUBLIC_READ_CLASSIFICATION=BLOCKED_PRESERVE_PUBLIC_ANON_SELECT`.
+
 A-16R retry:
 `A16R_IMPORT_RETRY_NEXT=NO`.
 
@@ -25,6 +31,8 @@ Production evidence recorded from A-16BQ:
 - `A16BR_SUPABASE_MIRROR=supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`
 - `A16BR_VERIFICATION_SQL=db/checks/20260711_check_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`
 - `A16BR_MIRROR_MATCH=BYTE_FOR_BYTE_REQUIRED_BY_CHECKER`
+- `A16BR_MIGRATION_0020_SUPERSEDED_SHA256=0A7F69196C97071C7304E4D0CE28DA1C134E95AF3DEFA00C8958FC7971591CF0`
+- `A16BR_MIGRATION_0020_SHA256=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`
 
 ## Immutable migrations
 
@@ -64,20 +72,73 @@ Existing revisions SELECT policies are preserved:
 
 No UPDATE or DELETE policy is added for `revisions`.
 
+## Public read-path compatibility audit
+
+`A16BR_PUBLIC_DB_ACCESS_PATH=SERVER_SIDE_SUPABASE_ANON_CLIENT_DIRECT_TABLE_SELECT`.
+
+`A16BR_PUBLIC_ROUTES_INSPECTED=/,/tree,/people/[slug],/admin/preview/public`.
+
+Unauthenticated public reads are not static data, not a SECURITY DEFINER view/RPC,
+and not a service-role server boundary. They use
+`maybeCreateServerSupabaseClient()`, which creates a server Supabase client with
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`; requests without auth cookies therefore execute
+as the Supabase `anon` role.
+
+Verified source path:
+
+- `app/(public)/page.tsx` -> `getPublicFamilyStats()`.
+- `app/(public)/tree/page.tsx` -> `getPublicFamilyTreeGraph()`.
+- `app/(public)/people/[slug]/page.tsx` -> `getPublicPersonProfile(slug)`.
+- `app/(admin)/admin/preview/public/page.tsx` -> authenticated admin preview,
+  but the preview intentionally uses the same public graph service.
+- `lib/family/public-family-service.ts` reads `people`, `families`,
+  `family_parents`, and `family_children` directly through the server anon
+  client.
+
+`A16BR_ANON_SELECT_REQUIRED_TABLES=people,families,family_parents,family_children`.
+
+`A16BR_PUBLIC_CORE_ANON_SELECT_REQUIRED=YES`.
+
+Required public filters:
+
+- `people`: `visibility='public'` and `deleted_at is null`.
+- `families`: `visibility='public'` and `deleted_at is null`.
+- `family_parents`: relationship rows must be selectable for public graph edges,
+  with `deleted_at is null`.
+- `family_children`: relationship rows must be selectable for public graph
+  edges, with `deleted_at is null`.
+
+Conclusion: full anon SELECT revoke is unsafe for migration 0020. The old
+candidate SHA is superseded and must never be applied.
+
 ## Anonymous grant cleanup
 
 Before:
 `A16BR_ANON_GRANT_COUNT_BEFORE=56`.
 
-Expected after owner apply:
-`A16BR_ANON_GRANT_COUNT_EXPECTED_AFTER=0`.
+Expected after owner apply for staging and revisions tables:
+`A16BR_STAGING_AND_REVISION_ANON_GRANT_COUNT_EXPECTED_AFTER=0`.
 
-Migration 0020 revokes all privileges from `anon` and `PUBLIC` only on:
+Migration 0020 now preserves verified public read access and revokes only
+mutation privileges from `anon` and `PUBLIC` on the core public genealogy
+tables:
 
 - `public.families`
 - `public.family_children`
 - `public.family_parents`
 - `public.people`
+
+Mutation privileges revoked there:
+
+- `INSERT`
+- `UPDATE`
+- `DELETE`
+- `TRUNCATE`
+- `REFERENCES`
+- `TRIGGER`
+
+Migration 0020 continues to revoke all privileges from `anon` and `PUBLIC` on:
+
 - `public.revisions`
 - `public.import_session_warnings`
 - `public.import_duplicate_candidates`
@@ -86,6 +147,37 @@ Migration 0020 revokes all privileges from `anon` and `PUBLIC` only on:
 It does not revoke or change authenticated grants, does not change service_role
 privileges, does not disable RLS, does not FORCE RLS, and does not create
 anon/PUBLIC policies.
+
+## Corrected verification contract
+
+The SELECT-only verification SQL checks:
+
+- `forbidden_anon_mutation_grant_count=0`
+- `forbidden_public_mutation_grant_count=0`
+- `staging_and_revision_anon_grant_count=0`
+- `public_core_anon_select_contract=true`
+- no anon/PUBLIC write policies
+- required public SELECT policies exist only for the public read path
+- authenticated RPC privileges remain present
+- revisions INSERT policy remains present and authenticated-only
+- the final boolean uses the corrected public-read contract, not a blanket
+  zero-anon-SELECT expectation.
+
+`A16BR_REVISIONS_POLICY_STATUS=PRESERVED_NO_DEFECT_FOUND`.
+
+## Public page smoke plan
+
+`A16BR_PUBLIC_PAGE_SMOKE_PLAN=RUN_AFTER_OWNER_APPLY_BEFORE_ANY_A16R_RETRY`.
+
+Immediately after owner apply and SELECT-only verification, smoke:
+
+- `/`
+- `/tree`
+- a known public person detail URL `/people/[slug]` from the public UI
+- `/admin/preview/public` while authenticated as an admin
+
+Stop before any A-16R retry if a public page becomes empty, 500s, or loses
+expected public family graph edges.
 
 ## A-16BQ correction
 

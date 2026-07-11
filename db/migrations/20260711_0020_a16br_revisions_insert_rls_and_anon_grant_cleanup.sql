@@ -19,8 +19,8 @@
 -- Purpose:
 -- Add the narrow authenticated INSERT RLS policy needed for the SECURITY
 -- INVOKER official-import RPC to write its A-16V people/families revision
--- markers, and revoke the remaining confirmed anon/PUBLIC table privileges
--- from the eight downstream RPC tables.
+-- markers, preserve verified public-page anon SELECT on core public genealogy
+-- tables, and revoke unnecessary anon/PUBLIC mutation privileges.
 
 drop policy if exists a16br_revisions_insert_official_import_create
   on public.revisions;
@@ -65,17 +65,25 @@ comment on policy a16br_revisions_insert_official_import_create
 on public.revisions is
   'A-16BR candidate: narrow authenticated A-16V official-import revision INSERT policy for people/families create audit rows only.';
 
-revoke all privileges on table public.families from anon;
-revoke all privileges on table public.families from public;
+revoke insert, update, delete, truncate, references, trigger
+on table public.families from anon;
+revoke insert, update, delete, truncate, references, trigger
+on table public.families from public;
 
-revoke all privileges on table public.family_children from anon;
-revoke all privileges on table public.family_children from public;
+revoke insert, update, delete, truncate, references, trigger
+on table public.family_children from anon;
+revoke insert, update, delete, truncate, references, trigger
+on table public.family_children from public;
 
-revoke all privileges on table public.family_parents from anon;
-revoke all privileges on table public.family_parents from public;
+revoke insert, update, delete, truncate, references, trigger
+on table public.family_parents from anon;
+revoke insert, update, delete, truncate, references, trigger
+on table public.family_parents from public;
 
-revoke all privileges on table public.people from anon;
-revoke all privileges on table public.people from public;
+revoke insert, update, delete, truncate, references, trigger
+on table public.people from anon;
+revoke insert, update, delete, truncate, references, trigger
+on table public.people from public;
 
 revoke all privileges on table public.revisions from anon;
 revoke all privileges on table public.revisions from public;

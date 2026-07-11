@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BR-FIX - Public read-path compatibility audit before migration 0020 apply
+
+- Status:
+  `A16BR_FIX_STATUS=PUBLIC_READ_PATH_VERIFIED`.
+- Classification:
+  `A16BR_PUBLIC_READ_CLASSIFICATION=BLOCKED_PRESERVE_PUBLIC_ANON_SELECT`.
+- Public routes inspected:
+  `A16BR_PUBLIC_ROUTES_INSPECTED=/,/tree,/people/[slug],/admin/preview/public`.
+- Public database path:
+  `A16BR_PUBLIC_DB_ACCESS_PATH=SERVER_SIDE_SUPABASE_ANON_CLIENT_DIRECT_TABLE_SELECT`.
+- Required anon SELECT tables:
+  `A16BR_ANON_SELECT_REQUIRED_TABLES=people,families,family_parents,family_children`;
+  `A16BR_PUBLIC_CORE_ANON_SELECT_REQUIRED=YES`.
+- Migration 0020:
+  old full-anon-revoke SHA
+  `A16BR_MIGRATION_0020_SUPERSEDED_SHA256=0A7F69196C97071C7304E4D0CE28DA1C134E95AF3DEFA00C8958FC7971591CF0`
+  is superseded and must never be applied; corrected SHA
+  `A16BR_MIGRATION_0020_SHA256=530129F27EAD748641C71D2C26718043D0B51639FC6104EFFC4B9D222550C0FC`
+  preserves public core anon SELECT while revoking anon/PUBLIC mutation grants
+  on `people`, `families`, `family_parents`, and `family_children`.
+- Verification contract:
+  `forbidden_anon_mutation_grant_count=0`;
+  `forbidden_public_mutation_grant_count=0`;
+  `staging_and_revision_anon_grant_count=0`;
+  `public_core_anon_select_contract=true`.
+- Revisions policy:
+  `A16BR_REVISIONS_POLICY_STATUS=PRESERVED_NO_DEFECT_FOUND`.
+- Public smoke:
+  `A16BR_PUBLIC_PAGE_SMOKE_PLAN=RUN_AFTER_OWNER_APPLY_BEFORE_ANY_A16R_RETRY`.
+- Safety:
+  `A16BR_MIGRATION_0020_APPLIED=NO`;
+  `A16BS_APPLY_AUTHORIZED=NO`;
+  no SQL run, no migration apply, no Supabase db push/repair/seed, no POST
+  `/official-import`, no import RPC, no production genealogy-row query, no
+  deploy, no push, and `A16R_IMPORT_RETRY_NEXT=NO`.
+
 ## 2026-07-11 - A-16BR - Revisions INSERT RLS contract and anon grant cleanup candidate
 
 - Status:
@@ -7,7 +43,7 @@
 - Diagnosis recorded:
   `A16BR_REVISIONS_INSERT_BLOCKER=FIX_CANDIDATE_READY`;
   `A16BR_ANON_GRANT_COUNT_BEFORE=56`;
-  `A16BR_ANON_GRANT_COUNT_EXPECTED_AFTER=0`.
+  `A16BR_ANON_GRANT_COUNT_EXPECTED_AFTER=SUPERSEDED_BY_A16BR_FIX_PUBLIC_READ_CONTRACT`.
 - Candidate:
   `A16BR_MIGRATION_0020=db/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`;
   `A16BR_SUPABASE_MIRROR=supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql`.
