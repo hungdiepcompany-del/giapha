@@ -343,7 +343,8 @@
     "check:a16bj-final-read-only-official-import-retry-reconciliation-gate": "node scripts/check-a16bj-final-read-only-official-import-retry-reconciliation-gate.cjs",
     "verify:a16bj-final-read-only-reconciliation": "node scripts/verify-a16bj-final-read-only-reconciliation.cjs",
     "check:a16bl-import-session-for-update-rls-lock-visibility-diagnosis": "node scripts/check-a16bl-import-session-for-update-rls-lock-visibility-diagnosis.cjs",
-    "check:a16bm-official-import-row-lock-rls-fix-candidate": "node scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs"
+    "check:a16bm-official-import-row-lock-rls-fix-candidate": "node scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs",
+    "check:a16bo-revoke-anon-import-staging-grants": "node scripts/check-a16bo-revoke-anon-import-staging-grants.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

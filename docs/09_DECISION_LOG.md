@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 315 - A-16BO revokes anonymous import staging grants without changing policies
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The owner manually applied A-16BM migration 0018, and SELECT-only
+verification showed the A-16BM policies are semantically correct but anonymous
+table grants remain on `import_sessions` and `import_write_manifests`.
+PostgreSQL deparsing also made the old exact-text policy checks too brittle:
+`public.` prefixes may disappear, `IN (...)` may become `= ANY (...)`, and casts
+or whitespace may be added.
+
+Decision: Preserve migration 0018 byte-for-byte, add a separate not-applied
+0019 migration candidate that only revokes all privileges from `anon` and
+`PUBLIC` on the two import staging tables, and add SELECT-only verification
+that normalizes policy expressions before checking the A-16BM policy semantics.
+Do not alter, drop or recreate policies; do not change RLS; preserve
+authenticated SELECT/UPDATE grants.
+
+Consequences: A-16R retry remains `NO`. Owner review and a separate apply/verify
+phase are required before any further read-only reconciliation. The next
+verification gate can distinguish true anon/PUBLIC grants from policy deparser
+formatting differences.
+
+Safety: A-16BO does not run SQL, does not call POST `/official-import`, does not
+call the import RPC, does not mutate session/genealogy/auth data, does not
+deploy, and does not push.
+
 ## Decision 314 - A-16BM verification must use case-hardened public grant counts
 
 Date: 2026-07-11

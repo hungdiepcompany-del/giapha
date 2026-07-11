@@ -1,5 +1,29 @@
 # Next AI Handoff
 
+## 2026-07-11 - A-16BO - Post-apply anon grant hardening and policy deparser verification
+
+- Status:
+  `A16BO_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- A-16R retry:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Migration 0018 immutable check:
+  `A16BO_MIGRATION_0018_IMMUTABLE_SHA256=7D62C16E201D452FD73B4E06C8F140361873C0C054A876EDDBFF28DD55FACC42`.
+- Migration 0019:
+  `A16BO_MIGRATION_0019=db/migrations/20260711_0019_a16bo_revoke_anon_import_staging_grants.sql`.
+- Supabase mirror:
+  `A16BO_SUPABASE_MIRROR=supabase/migrations/20260711_0019_a16bo_revoke_anon_import_staging_grants.sql`;
+  `A16BO_MIRROR_MATCH=BYTE_FOR_BYTE_REQUIRED_BY_CHECKER`.
+- Verification SQL:
+  `A16BO_VERIFICATION_SQL=db/checks/20260711_check_a16bo_revoke_anon_import_staging_grants_and_policy_scope.sql`.
+- Anon grant blocker:
+  `A16BO_FORBIDDEN_ANON_GRANT_STATUS=CONFIRMED_14_PENDING_REVOKE`.
+- Policy normalization:
+  `A16BO_POLICY_VERIFICATION_NORMALIZATION=PG_POLICIES_DEPARSE_TOLERANT_NO_PUBLIC_PREFIX_NO_IN_TEXT_DEPENDENCY`.
+- Blocker:
+  `A16BO_BLOCKER=OWNER_REVIEW_AND_MANUAL_APPLY_VERIFY_REQUIRED_BEFORE_ANY_SEPARATE_RETRY`.
+- Next owner action:
+  `A16BO_NEXT_OWNER_ACTION=REVIEW_CANDIDATE_THEN_SEPARATE_SQL_APPLY_VERIFY_PHASE_NO_IMPORT_RETRY`.
+
 ## 2026-07-11 - A-16BM-FIX - Verification grant case hardening and policy metadata correction
 
 - Status:

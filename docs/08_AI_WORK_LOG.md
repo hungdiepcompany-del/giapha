@@ -1,5 +1,26 @@
 # AI Work Log
 
+## 2026-07-11 - A-16BO - Post-apply anon grant hardening and policy deparser verification
+
+- Status:
+  `A16BO_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- Migration 0018 immutable check:
+  `A16BO_MIGRATION_0018_IMMUTABLE_SHA256=7D62C16E201D452FD73B4E06C8F140361873C0C054A876EDDBFF28DD55FACC42`.
+- Migration 0019:
+  `A16BO_MIGRATION_0019=db/migrations/20260711_0019_a16bo_revoke_anon_import_staging_grants.sql`;
+  `A16BO_SUPABASE_MIRROR=supabase/migrations/20260711_0019_a16bo_revoke_anon_import_staging_grants.sql`.
+- Production blocker:
+  `A16BO_FORBIDDEN_ANON_GRANT_STATUS=CONFIRMED_14_PENDING_REVOKE`.
+- Policy semantics:
+  `A16BO_A16BM_POLICIES_SEMANTIC_STATUS=PASS_PRODUCTION_METADATA_CONFIRMED`;
+  `A16BO_POLICY_VERIFICATION_NORMALIZATION=PG_POLICIES_DEPARSE_TOLERANT_NO_PUBLIC_PREFIX_NO_IN_TEXT_DEPENDENCY`.
+- A-16R retry:
+  `A16R_IMPORT_RETRY_NEXT=NO`.
+- Safety:
+  no SQL run, no migration apply, no Supabase db push/repair/seed, no POST
+  `/official-import`, no import RPC, no session/genealogy mutation, no deploy,
+  and no push.
+
 ## 2026-07-11 - A-16BM-FIX - Verification grant case hardening and policy metadata correction
 
 - Status:
