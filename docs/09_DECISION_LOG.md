@@ -1,5 +1,34 @@
 # Decision Log
 
+## Decision 312 - A-16BL treats SELECT FOR UPDATE as an UPDATE RLS visibility contract
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: After A-16BK, production still returned HTTP 409 with
+`SESSION_NOT_FOUND_OR_NOT_OWNED` even though the session was already
+`owner_approved_for_db_write`, ownership matched the current owner profile,
+identity diagnostics passed, and production RPC metadata matched the repository
+contract. The RPC is `SECURITY INVOKER` and locks the session with
+`SELECT ... FOR UPDATE`.
+
+Decision: Diagnose the remaining blocker as a lock-visibility contract, not a
+normal SELECT ownership mismatch. PostgreSQL row locking requires UPDATE
+privilege and UPDATE RLS visibility for the locked row. The source SELECT policy
+can expose the owner-approved row, while the existing `import_sessions` UPDATE
+policy is preview-state-only and excludes `owner_approved_for_db_write`.
+
+Consequences: The minimum fix must preserve `FOR UPDATE`, stay
+`SECURITY INVOKER`, avoid service-role execution, and add a narrow owner/admin
+official-import UPDATE/lock policy only after owner SELECT-only metadata
+confirms production grants/RLS. `import_write_manifests` has the next likely
+lock/update risk and is included in the not-applied draft.
+
+Safety: A-16BL does not call POST `/official-import`, does not call the import
+RPC, does not run SQL or DB mutation, does not change session state, does not
+deploy, and does not print or commit raw/private data.
+
 ## Decision 311 - A-16BJ requires a final read-only reconciliation before another import retry
 
 Date: 2026-07-10

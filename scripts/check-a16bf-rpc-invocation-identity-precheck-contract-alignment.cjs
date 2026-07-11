@@ -214,6 +214,9 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A16BJ_FINAL_READ_ONLY_OFFICIAL_IMPORT_RETRY_RECONCILIATION_GATE.md",
   "scripts/check-a16bj-final-read-only-official-import-retry-reconciliation-gate.cjs",
   "scripts/verify-a16bj-final-read-only-reconciliation.cjs",
+  "docs/PLAN_A16BL_IMPORT_SESSION_FOR_UPDATE_RLS_LOCK_VISIBILITY_DIAGNOSIS.md",
+  "scripts/a16bl-import-session-for-update-rls-fix-candidate.sql.draft",
+  "scripts/check-a16bl-import-session-for-update-rls-lock-visibility-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

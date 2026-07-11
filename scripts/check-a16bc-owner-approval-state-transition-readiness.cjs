@@ -206,6 +206,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/verify-a16be-session-ownership-contract.cjs",
+  "docs/PLAN_A16BL_IMPORT_SESSION_FOR_UPDATE_RLS_LOCK_VISIBILITY_DIAGNOSIS.md",
+  "scripts/a16bl-import-session-for-update-rls-fix-candidate.sql.draft",
+  "scripts/check-a16bl-import-session-for-update-rls-lock-visibility-diagnosis.cjs",
 ]);
 
 for (const file of changedFiles) {

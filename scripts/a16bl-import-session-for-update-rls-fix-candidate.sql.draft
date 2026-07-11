@@ -1,0 +1,135 @@
+-- A16BL_IMPORT_SESSION_FOR_UPDATE_RLS_FIX_CANDIDATE
+-- SQL_CANDIDATE_STATUS=NOT_APPLIED
+-- DO_NOT_RUN_AUTOMATICALLY
+-- OWNER_MANUAL_REVIEW_REQUIRED
+-- DO_NOT_RUN_SUPABASE_DB_PUSH
+-- DO_NOT_RUN_SUPABASE_MIGRATION_REPAIR
+-- NO_SEED_DATA
+-- NO_REAL_GENEALOGY_WRITE
+-- NO_SESSION_STATE_CHANGE_IN_A16BL
+-- NO_OFFICIAL_IMPORT_EXECUTION
+-- NO_SERVICE_ROLE_EXECUTION
+-- NO_SECURITY_DEFINER_SWITCH
+-- PRESERVE_SELECT_FOR_UPDATE_CONCURRENCY_LOCK
+--
+-- Purpose:
+-- Provide a narrow draft for a later owner-approved schema phase if A-16BL
+-- metadata confirms that SECURITY INVOKER SELECT ... FOR UPDATE loses
+-- visibility because UPDATE grants/RLS do not cover the owner-approved official
+-- import state.
+--
+-- This is a draft artifact, not a migration. Do not apply from this phase.
+
+grant select, update on table public.import_sessions to authenticated;
+grant select, update on table public.import_write_manifests to authenticated;
+
+drop policy if exists a16bl_import_sessions_update_official_import_owner_lock
+  on public.import_sessions;
+
+create policy a16bl_import_sessions_update_official_import_owner_lock
+on public.import_sessions
+for update
+to authenticated
+using (
+  public.has_permission('imports.create')
+  and public.has_permission('people.create')
+  and public.has_permission('relationships.create')
+  and public.has_permission('permissions.manage')
+  and created_by = public.current_profile_id()
+  and approved_by = public.current_profile_id()
+  and approved_at is not null
+  and status in (
+    'owner_approved_for_db_write',
+    'write_started',
+    'rollback_required'
+  )
+)
+with check (
+  public.has_permission('imports.create')
+  and public.has_permission('people.create')
+  and public.has_permission('relationships.create')
+  and public.has_permission('permissions.manage')
+  and created_by = public.current_profile_id()
+  and approved_by = public.current_profile_id()
+  and updated_by = public.current_profile_id()
+  and approved_at is not null
+  and status in (
+    'owner_approved_for_db_write',
+    'write_started',
+    'write_completed',
+    'rollback_required',
+    'rolled_back'
+  )
+);
+
+drop policy if exists a16bl_import_write_manifests_update_official_import_owner_lock
+  on public.import_write_manifests;
+
+create policy a16bl_import_write_manifests_update_official_import_owner_lock
+on public.import_write_manifests
+for update
+to authenticated
+using (
+  public.has_permission('imports.create')
+  and public.has_permission('people.create')
+  and public.has_permission('relationships.create')
+  and public.has_permission('permissions.manage')
+  and approved_by = public.current_profile_id()
+  and approved_at is not null
+  and status in (
+    'owner_approved',
+    'ready_for_apply',
+    'write_started',
+    'rollback_required'
+  )
+  and exists (
+    select 1
+    from public.import_sessions owned_session
+    where owned_session.id = import_write_manifests.import_session_id
+      and owned_session.created_by = public.current_profile_id()
+      and owned_session.approved_by = public.current_profile_id()
+      and owned_session.status in (
+        'owner_approved_for_db_write',
+        'write_started',
+        'write_completed',
+        'rollback_required',
+        'rolled_back'
+      )
+  )
+)
+with check (
+  public.has_permission('imports.create')
+  and public.has_permission('people.create')
+  and public.has_permission('relationships.create')
+  and public.has_permission('permissions.manage')
+  and approved_by = public.current_profile_id()
+  and updated_by = public.current_profile_id()
+  and approved_at is not null
+  and status in (
+    'owner_approved',
+    'ready_for_apply',
+    'write_started',
+    'write_completed',
+    'rollback_required',
+    'rolled_back'
+  )
+  and exists (
+    select 1
+    from public.import_sessions owned_session
+    where owned_session.id = import_write_manifests.import_session_id
+      and owned_session.created_by = public.current_profile_id()
+      and owned_session.approved_by = public.current_profile_id()
+      and owned_session.status in (
+        'owner_approved_for_db_write',
+        'write_started',
+        'write_completed',
+        'rollback_required',
+        'rolled_back'
+      )
+  )
+);
+
+-- Before any later apply phase, separately verify authenticated INSERT grants
+-- and RLS for people, families, family_children, family_parents,
+-- couple_relationships, revisions, official_import_batches and rollback
+-- manifests. This draft does not broaden those tables.
