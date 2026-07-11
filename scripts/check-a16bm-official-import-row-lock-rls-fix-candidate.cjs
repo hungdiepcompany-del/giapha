@@ -128,6 +128,11 @@ for (const token of [
   "new_manifest_policy_parent_session_owner_scoped",
   "no_anon_or_public_policies",
   "no_anon_or_public_table_grants",
+  "lower(grantee) in ('anon', 'public')",
+  "forbidden_anon_public_table_grant_count",
+  "forbidden_anon_public_policy_count",
+  "forbidden_counts.forbidden_anon_public_table_grant_count = 0 as no_anon_or_public_table_grants",
+  "forbidden_counts.forbidden_anon_public_policy_count = 0 as no_anon_or_public_policies",
   "rpc_remains_security_invoker",
   "no_automatic_import_trigger",
   "a16bm_row_lock_rls_fix_verified",
@@ -146,6 +151,11 @@ for (const token of [
   "A16BM_IMPORT_SESSIONS_POLICY_SCOPE=AUTHENTICATED_IMPORTS_CREATE_OWNER_PROFILE_APPROVED_ROW_OWNER_APPROVED_FOR_DB_WRITE_TO_WRITE_COMPLETED_ONLY",
   "A16BM_IMPORT_WRITE_MANIFESTS_POLICY_SCOPE=AUTHENTICATED_IMPORTS_CREATE_PARENT_SESSION_OWNER_SCOPED_OWNER_APPROVED_OR_READY_FOR_APPLY_TO_WRITE_COMPLETED_ONLY",
   "A16BM_GRANT_SCOPE=GRANT_SELECT_UPDATE_TO_AUTHENTICATED_ON_IMPORT_SESSIONS_AND_IMPORT_WRITE_MANIFESTS_ONLY",
+  "A16BM_FIX_PUBLIC_GRANT_CHECK=LOWER_GRANTEE_MATCHES_ANON_PUBLIC",
+  "A16BM_FIX_FORBIDDEN_GRANT_COUNT_CHECK=forbidden_anon_public_table_grant_count_EQUALS_0",
+  "A16BM_FIX_FORBIDDEN_POLICY_COUNT_CHECK=forbidden_anon_public_policy_count_EQUALS_0",
+  "A16BM_FIX_POLICY_COMMENT_STATUS=APPLIED_METADATA_COMMENTS_DO_NOT_SAY_NOT_APPLIED",
+  "A16BM_FIX_RPC_UPDATE_ORDER=MANIFEST_WRITE_COMPLETED_BEFORE_SESSION_WRITE_COMPLETED_PARENT_CHECK_COMPATIBLE",
   "A16BM_EXISTING_POLICIES_PRESERVED=YES_PREVIEW_STATE_POLICIES_NOT_REMOVED_OR_REPLACED",
   "A16BM_REAL_GENEALOGY_INSERT_RLS_REVIEW=INDEPENDENT_DOWNSTREAM_GRANT_RLS_RISK_NOT_CHANGED_IN_A16BM",
   "A16BM_BLOCKER=OWNER_REVIEW_AND_MANUAL_APPLY_VERIFY_REQUIRED_BEFORE_ANY_SEPARATE_RETRY",
@@ -159,6 +169,8 @@ for (const token of [
   "A16BM_RUNBOOK_POST_OFFICIAL_IMPORT_ALLOWED=NO",
   "A16BM_RUNBOOK_IMPORT_RPC_ALLOWED=NO",
   "A16BM_RUNBOOK_SELECT_FOR_UPDATE_ALLOWED=NO",
+  "forbidden_anon_public_table_grant_count",
+  "forbidden_anon_public_policy_count",
   "A16BM_NEXT_PHASE_AFTER_APPLY_VERIFY=A16BN_POST_APPLY_READ_ONLY_RLS_AND_DOWNSTREAM_RPC_RISK_RECONCILIATION_NO_IMPORT",
 ]) {
   requireIncludes(runbook, token, `runbook token ${token}`);
@@ -192,6 +204,7 @@ if (
 
 rejectPattern(dbMigration, /\bgrant\b[\s\S]{0,120}\bto\s+(anon|public)\b/i, "candidate must not grant anon/public");
 rejectPattern(dbMigration, /\bcreate\s+policy\b[\s\S]{0,240}\bto\s+(anon|public)\b/i, "candidate must not create anon/public policy");
+rejectPattern(dbMigration, /comment\s+on\s+policy[\s\S]{0,300}NOT_APPLIED/i, "applied policy metadata comments must not say NOT_APPLIED");
 rejectPattern(dbMigration, /using\s*\(\s*true\s*\)|with\s+check\s*\(\s*true\s*\)/i, "candidate must not use broad true policy");
 rejectPattern(dbMigration, /disable\s+row\s+level\s+security/i, "candidate must not disable RLS");
 rejectPattern(dbMigration, /security\s+definer/i, "candidate must not add SECURITY DEFINER");
@@ -200,6 +213,7 @@ rejectPattern(dbMigration, /\ba16p_tx_execute_giapha4_official_import\s*\(/i, "c
 rejectPattern(dbMigration, /\b(insert|update|delete)\s+public\.(people|families|family_parents|family_children|couple_relationships|revisions)\b/i, "candidate must not write genealogy tables");
 
 rejectPattern(verifySql, /^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate)\b/im, "verification SQL must remain SELECT-only");
+rejectPattern(verifySql, /\bgrantee\s+in\s*\(\s*'anon'\s*,\s*'public'\s*\)/i, "verification SQL must lower-case grantee before anon/public comparison");
 rejectPattern(verifySql, /\bfor\s+update\b/i, "verification SQL must not lock production rows");
 rejectPattern(verifySql, /\ba16p_tx_execute_giapha4_official_import\s*\(/i, "verification SQL must not invoke import RPC");
 rejectPattern(doc + runbook, /A16R_IMPORT_RETRY_NEXT=YES|A16BM_A16R_RETRY_NEXT=YES/i, "docs must keep A-16R retry NO");

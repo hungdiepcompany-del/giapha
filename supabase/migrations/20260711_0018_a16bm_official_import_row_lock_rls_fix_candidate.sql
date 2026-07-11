@@ -116,8 +116,8 @@ with check (
 
 comment on policy a16bm_import_sessions_update_official_import_owner_lock
 on public.import_sessions is
-  'A-16BM candidate: owner/admin official-import row-lock visibility and write_completed transition for SECURITY INVOKER RPC. NOT_APPLIED.';
+  'A-16BM candidate: owner/admin official-import row-lock visibility and write_completed transition for SECURITY INVOKER RPC.';
 
 comment on policy a16bm_import_write_manifests_update_official_import_owner_lock
 on public.import_write_manifests is
-  'A-16BM candidate: owner/admin official-import write-manifest row-lock visibility and write_completed transition. NOT_APPLIED.';
+  'A-16BM candidate: owner/admin official-import write-manifest row-lock visibility and write_completed transition.';

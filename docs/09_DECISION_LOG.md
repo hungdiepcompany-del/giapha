@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 314 - A-16BM verification must use case-hardened public grant counts
+
+Date: 2026-07-11
+
+Status: Accepted
+
+Context: The A-16BM candidate is still not applied, but its SELECT-only
+verification and persisted policy comments needed tightening before owner
+review. Case-sensitive `grantee in ('anon', 'public')` can miss catalog values
+reported as `PUBLIC`, and `NOT_APPLIED` inside `COMMENT ON POLICY` would become
+misleading production metadata after a later approved apply.
+
+Decision: Keep the migration candidate and Supabase mirror byte-for-byte,
+change verification SQL to compare `lower(grantee)` against `anon` and
+`public`, expose sanitized
+`forbidden_anon_public_table_grant_count` and
+`forbidden_anon_public_policy_count`, and require both counts to be zero for
+`a16bm_row_lock_rls_fix_verified`. Remove `NOT_APPLIED` only from persisted
+policy comments while preserving source-file candidate headers.
+
+Consequences: A-16R retry remains `NO`. The A-16BM owner apply/verify path now
+has explicit count evidence for forbidden anon/PUBLIC grants and policies, and
+future production policy comments no longer carry a stale not-applied label.
+The RPC order remains compatible because `import_write_manifests` is updated to
+`write_completed` before `import_sessions` is updated afterward.
+
+Safety: A-16BM-FIX does not run SQL, does not call POST `/official-import`,
+does not call the import RPC, does not mutate session/genealogy/auth data, does
+not deploy, and does not push.
+
 ## Decision 313 - A-16BM adds a not-applied row-lock RLS schema fix candidate
 
 Date: 2026-07-11

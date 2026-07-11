@@ -58,8 +58,28 @@ trigger_catalog as (
     and n.nspname = 'public'
     and c.relname in ('import_sessions', 'import_write_manifests')
 ),
+forbidden_counts as (
+  select
+    (
+      select count(*)::integer
+      from grant_catalog
+      where lower(grantee) in ('anon', 'public')
+        and privilege_type in ('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER')
+    ) as forbidden_anon_public_table_grant_count,
+    (
+      select count(*)::integer
+      from policy_catalog pc
+      where exists (
+        select 1
+        from unnest(pc.roles) as policy_role(role_name)
+        where lower(policy_role.role_name::text) in ('anon', 'public')
+      )
+    ) as forbidden_anon_public_policy_count
+),
 booleans as (
   select
+    forbidden_counts.forbidden_anon_public_table_grant_count,
+    forbidden_counts.forbidden_anon_public_policy_count,
     has_table_privilege('authenticated', 'public.import_sessions', 'SELECT') as authenticated_has_select_on_import_sessions,
     has_table_privilege('authenticated', 'public.import_sessions', 'UPDATE') as authenticated_has_update_on_import_sessions,
     has_table_privilege('authenticated', 'public.import_write_manifests', 'SELECT') as authenticated_has_select_on_import_write_manifests,
@@ -134,17 +154,8 @@ booleans as (
         and qual like '%owned_session.created_by = public.current_profile_id()%'
         and qual like '%owned_session.status = ''owner_approved_for_db_write''%'
     ) as new_manifest_policy_parent_session_owner_scoped,
-    not exists (
-      select 1
-      from policy_catalog
-      where roles::text ~* '(anon|public)'
-    ) as no_anon_or_public_policies,
-    not exists (
-      select 1
-      from grant_catalog
-      where grantee in ('anon', 'public')
-        and privilege_type in ('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER')
-    ) as no_anon_or_public_table_grants,
+    forbidden_counts.forbidden_anon_public_policy_count = 0 as no_anon_or_public_policies,
+    forbidden_counts.forbidden_anon_public_table_grant_count = 0 as no_anon_or_public_table_grants,
     exists (
       select 1 from rpc_catalog where security_definer = false
     ) as rpc_remains_security_invoker,
@@ -154,6 +165,7 @@ booleans as (
       where trigger_definition ilike '%a16p_tx_execute_giapha4_official_import%'
         or trigger_function_name ilike '%a16p_tx_execute_giapha4_official_import%'
     ) as no_automatic_import_trigger
+  from forbidden_counts
 )
 select
   *,

@@ -1,5 +1,27 @@
 # Next AI Handoff
 
+## 2026-07-11 - A-16BM-FIX - Verification grant case hardening and policy metadata correction
+
+- Status:
+  `A16BM_FIX_STATUS=READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- A-16R retry:
+  `A16BM_A16R_RETRY_NEXT=NO`.
+- Public grant check:
+  `A16BM_FIX_PUBLIC_GRANT_CHECK=LOWER_GRANTEE_MATCHES_ANON_PUBLIC`.
+- Forbidden grant count:
+  `A16BM_FIX_FORBIDDEN_GRANT_COUNT_CHECK=forbidden_anon_public_table_grant_count_EQUALS_0`.
+- Forbidden policy count:
+  `A16BM_FIX_FORBIDDEN_POLICY_COUNT_CHECK=forbidden_anon_public_policy_count_EQUALS_0`.
+- Policy comment metadata:
+  `A16BM_FIX_POLICY_COMMENT_STATUS=APPLIED_METADATA_COMMENTS_DO_NOT_SAY_NOT_APPLIED`.
+- RPC update order:
+  `A16BM_FIX_RPC_UPDATE_ORDER=MANIFEST_WRITE_COMPLETED_BEFORE_SESSION_WRITE_COMPLETED_PARENT_CHECK_COMPATIBLE`.
+- Mirror requirement:
+  `A16BM_MIRROR_MATCH=BYTE_FOR_BYTE_REQUIRED_BY_CHECKER`.
+- Next action:
+  owner review/apply remains a separate phase; do not retry A-16R until a
+  later approved apply/verify and downstream read-only reconciliation pass.
+
 ## 2026-07-11 - A-16BM - Official import row-lock RLS schema fix candidate
 
 - Status:

@@ -25,6 +25,8 @@ Required owner approval marker for a later apply phase:
 
 The SELECT-only verification SQL must return these booleans:
 
+- `forbidden_anon_public_table_grant_count`
+- `forbidden_anon_public_policy_count`
 - `authenticated_has_select_on_import_sessions`
 - `authenticated_has_update_on_import_sessions`
 - `authenticated_has_select_on_import_write_manifests`
@@ -45,6 +47,10 @@ The SELECT-only verification SQL must return these booleans:
 - `rpc_remains_security_invoker`
 - `no_automatic_import_trigger`
 - `a16bm_row_lock_rls_fix_verified`
+
+The overall verification is true only when both sanitized forbidden counts are
+zero. The grant check must compare `lower(grantee)` to `anon` and `public` so it
+detects `anon`, `public`, and `PUBLIC`.
 
 Expected verification classification after apply:
 `A16BM_EXPECTED_POST_APPLY_VERIFY=a16bm_row_lock_rls_fix_verified_TRUE`.
