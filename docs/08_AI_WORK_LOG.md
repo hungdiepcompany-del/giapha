@@ -1,5 +1,58 @@
 # AI Work Log
 
+## 2026-07-12 - A-16BU post-apply read-only verification
+
+### Phase
+
+A-16BU - owner-confirmed migration 0022 manual SQL apply, metadata-only
+post-apply verification
+
+### Viec da lam
+
+- Recorded owner marker:
+  `OWNER_CONFIRMED_A16BU_0022_MANUAL_SQL_APPLY_SUCCEEDED`.
+- Added SELECT-only metadata verifier
+  `db/checks/20260712_check_a16bu_official_import_is_living_null_contract_post_apply.sql`.
+- Ran the verifier against the linked Supabase project using catalog/function
+  metadata only.
+- Confirmed the official-import RPC exists with unchanged signature, SECURITY
+  INVOKER, fixed search_path, corrected non-null `is_living` fallback, no old
+  nullable `candidate ? 'isLiving'` branch, and no anon/PUBLIC EXECUTE grants.
+- Did not query genealogy rows, modify data, call import RPC, retry A16R,
+  deploy, or push.
+
+### Ket qua
+
+- `A16BU_STATUS=POST_APPLY_READ_ONLY_VERIFIED`
+- `FUNCTION_EXISTS_WITH_UNCHANGED_SIGNATURE=YES`
+- `SECURITY_INVOKER_PRESERVED=YES`
+- `FIXED_SEARCH_PATH_PRESERVED=YES`
+- `CORRECTED_IS_LIVING_NON_NULL_FALLBACK_PRESENT=YES`
+- `OLD_NULLABLE_IS_LIVING_BRANCH_ABSENT=YES`
+- `ANON_EXECUTE_GRANT_COUNT_ZERO=YES`
+- `PUBLIC_EXECUTE_GRANT_COUNT_ZERO=YES`
+- `MIGRATION_0016_HASH_MATCH=YES`
+- `MIGRATION_0022_HASH_MATCH=YES`
+- `SQL_EXECUTED=YES_READ_ONLY_METADATA_ONLY`
+- `GENEALOGY_ROWS_QUERIED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=OWNER_DECIDE_SEPARATE_A16R_RETRY_PHASE_AFTER_REVIEWING_POST_APPLY_EVIDENCE`
+
+### Kiem tra
+
+- `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a16bu_official_import_is_living_null_contract_post_apply.sql`: PASS
+- `npm.cmd run check:a16bu-post-apply-read-only-verification`: PASS
+- `npm.cmd run check:a16bu-official-import-is-living-null-contract-fix`: PASS
+- `npm.cmd run check:env:safe`: PASS
+- `npm.cmd run check:migrations`: PASS
+- `npm.cmd run typecheck`: PASS
+- `npm.cmd run lint`: PASS
+- `git diff --check`: PASS
+
 ## 2026-07-12 - A-16BU official import is_living null contract fix candidate
 
 ### Phase

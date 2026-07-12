@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 326 - A-16BU post-apply verification accepts metadata-only evidence
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: The owner provided
+`OWNER_CONFIRMED_A16BU_0022_MANUAL_SQL_APPLY_SUCCEEDED` after manually applying
+migration 0022. The required follow-up was read-only verification only.
+
+Decision: Treat A-16BU as post-apply verified when the SELECT-only metadata
+query confirms the official-import RPC exists with unchanged signature,
+SECURITY INVOKER, fixed search_path, corrected non-null `is_living` fallback,
+absence of the old nullable branch, and no anon/PUBLIC EXECUTE grants.
+
+Rationale:
+
+- The verification reads only metadata and function definition text; it does
+  not query genealogy rows.
+- The verifier does not call
+  `public.a16p_tx_execute_giapha4_official_import(...)`.
+- No A16R retry, deploy, push, grant/RLS mutation, or production data mutation
+  is part of this phase.
+
+Safety:
+
+- `SQL_EXECUTED=YES_READ_ONLY_METADATA_ONLY`
+- `GENEALOGY_ROWS_QUERIED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 325 - A-16BU fixes official import is_living null derivation
 
 Date: 2026-07-12

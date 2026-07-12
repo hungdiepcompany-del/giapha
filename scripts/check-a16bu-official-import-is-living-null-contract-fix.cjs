@@ -260,6 +260,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
   "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
   "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
+  "docs/PLAN_A16BU_POST_APPLY_READ_ONLY_VERIFICATION.md",
+  "db/checks/20260712_check_a16bu_official_import_is_living_null_contract_post_apply.sql",
+  "scripts/check-a16bu-post-apply-read-only-verification.cjs",
 ]);
 
 for (const file of changedFiles) {
