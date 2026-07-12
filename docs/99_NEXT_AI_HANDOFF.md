@@ -1,5 +1,48 @@
 # Next AI Handoff
 
+## 2026-07-12 - A-16R - Import completed post-import verification
+
+- Status:
+  `A16R_STATUS=IMPORT_COMPLETED_POST_IMPORT_VERIFICATION`.
+- Owner evidence recorded:
+  `Status=IMPORT_COMPLETED`;
+  `Imported people count=102`;
+  `Warnings count=0`;
+  `Transaction helper call count=1`;
+  all same-run gates passed.
+- Verification SQL:
+  `db/checks/20260712_check_a16r_import_completed_post_import_verification.sql`.
+- Verification scope:
+  `A16R_POST_IMPORT_SQL_SCOPE=SELECT_ONLY_AGGREGATE_POST_IMPORT_VERIFICATION`.
+- Result:
+  `SESSION_COMPLETED_STATE=write_completed`;
+  `IMPORTED_PEOPLE_COUNT=102`;
+  `IMPORTED_RELATIONSHIP_COUNT=201`;
+  `AUDIT_RECORD_COUNT=169`;
+  `ROLLBACK_MANIFEST_STATUS=ready`;
+  `ROLLBACK_MANIFEST_COUNT=1`;
+  `TRANSACTION_HELPER_CALL_COUNT=1`;
+  `WRITE_MANIFEST_STATUS=write_completed`;
+  `BASIC_TREE_PEOPLE_VISIBLE=YES`;
+  `BASIC_TREE_RELATIONSHIPS_VISIBLE=YES`;
+  `BASIC_TREE_AUDIT_REVISIONS_VISIBLE=YES`;
+  `UNRESOLVED_BLOCKER_WARNING_COUNT=0`.
+- Warning note:
+  owner same-run result warnings count was `0`; stored session warning counter
+  remains `46` from earlier review evidence and was recorded separately.
+- Safety:
+  `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`;
+  `MUTATION_SQL_EXECUTED=NO`;
+  `IMPORT_RPC_CALLED=NO`;
+  `OFFICIAL_IMPORT_RETRY=NO`;
+  `OFFICIAL_IMPORT_CLICKED=NO`;
+  `A16R_RETRY=NO`;
+  `CODE_CHANGED=NO_RUNTIME_CODE_CHANGED`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Next action:
+  `NEXT_ACTION=OWNER_REVIEW_IMPORT_COMPLETION_EVIDENCE_THEN_PLAN_SEPARATE_BACKUP_AND_POST_IMPORT_SMOKE`.
+
 ## 2026-07-12 - A-16BU - Post-apply read-only verification
 
 - Status:

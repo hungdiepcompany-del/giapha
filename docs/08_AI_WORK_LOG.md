@@ -1,5 +1,62 @@
 # AI Work Log
 
+## 2026-07-12 - A-16R import completed post-import verification
+
+### Phase
+
+A-16R - successful official import evidence record and post-import read-only
+verification
+
+### Viec da lam
+
+- Recorded owner evidence:
+  `Status=IMPORT_COMPLETED`, `Imported people count=102`,
+  `Warnings count=0`, `Transaction helper call count=1`, and
+  `All same-run gates passed`.
+- Added SELECT-only verifier
+  `db/checks/20260712_check_a16r_import_completed_post_import_verification.sql`.
+- Ran the verifier against the linked Supabase project and confirmed the
+  session reached `write_completed`, one completed audit batch exists, one
+  ready rollback manifest exists, write manifest counts match, audit revisions
+  are visible by count, and the created core tree rows are visible by count.
+- Recorded the warning nuance: owner same-run result warnings were `0`; the
+  stored session warning counter remains `46`; unresolved blocker warnings are
+  `0`.
+- Did not call import RPC again, did not click or retry official import, did
+  not execute mutation SQL, did not change runtime code, did not deploy, and
+  did not push.
+
+### Ket qua
+
+- `A16R_STATUS=IMPORT_COMPLETED_POST_IMPORT_VERIFICATION`
+- `SESSION_COMPLETED_STATE=write_completed`
+- `OWNER_EVIDENCE_IMPORT_STATUS=IMPORT_COMPLETED`
+- `IMPORTED_PEOPLE_COUNT=102`
+- `IMPORTED_RELATIONSHIP_COUNT=201`
+- `AUDIT_RECORD_COUNT=169`
+- `ROLLBACK_MANIFEST_STATUS=ready`
+- `ROLLBACK_MANIFEST_COUNT=1`
+- `TRANSACTION_HELPER_CALL_COUNT=1`
+- `WRITE_MANIFEST_STATUS=write_completed`
+- `BASIC_TREE_PEOPLE_VISIBLE=YES`
+- `BASIC_TREE_RELATIONSHIPS_VISIBLE=YES`
+- `BASIC_TREE_AUDIT_REVISIONS_VISIBLE=YES`
+- `OWNER_RESULT_WARNINGS_COUNT=0`
+- `STORED_SESSION_WARNING_COUNT=46`
+- `UNRESOLVED_BLOCKER_WARNING_COUNT=0`
+- `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`
+- `MUTATION_SQL_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `OFFICIAL_IMPORT_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=OWNER_REVIEW_IMPORT_COMPLETION_EVIDENCE_THEN_PLAN_SEPARATE_BACKUP_AND_POST_IMPORT_SMOKE`
+
+### Kiem tra
+
+- `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a16r_import_completed_post_import_verification.sql`: PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification`: PASS
+
 ## 2026-07-12 - A-16BU post-apply read-only verification
 
 ### Phase

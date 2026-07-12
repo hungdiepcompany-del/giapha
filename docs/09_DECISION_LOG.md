@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 327 - A-16R import completion accepted after read-only post-import verification
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: The owner reported a successful A-16R official import run with
+`Status=IMPORT_COMPLETED`, `Imported people count=102`, `Warnings count=0`,
+`Transaction helper call count=1`, and all same-run gates passed. The follow-up
+scope was documentation and post-import read-only verification only.
+
+Decision: Accept
+`A16R_STATUS=IMPORT_COMPLETED_POST_IMPORT_VERIFICATION` after the SELECT-only
+post-import verifier confirms the session is `write_completed`, exactly one
+completed audit batch exists, the transaction helper produced one batch, the
+rollback manifest is `ready`, write-manifest and rollback counts match the
+batch, and basic core tree visibility succeeds by count.
+
+Rationale:
+
+- The verifier confirms 102 imported people and 201 imported relationship rows
+  through the audit batch, rollback manifest, write manifest, and active core
+  tree counts.
+- Audit revision evidence is present and count-matched at `169`.
+- The owner same-run result warnings count is recorded as `0`; the stored
+  session warning counter remains `46`, so the database safety gate separately
+  verifies unresolved blocker warnings are `0`.
+- No official import RPC retry, click, deploy, push, runtime code change, or
+  mutation SQL belongs to this evidence-record phase.
+
+Safety:
+
+- `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`
+- `MUTATION_SQL_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `OFFICIAL_IMPORT_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 326 - A-16BU post-apply verification accepts metadata-only evidence
 
 Date: 2026-07-12

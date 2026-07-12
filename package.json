@@ -350,7 +350,8 @@
     "check:a16br-revisions-insert-rls-and-anon-grant-cleanup": "node scripts/check-a16br-revisions-insert-rls-and-anon-grant-cleanup.cjs",
     "check:a16bt-secure-public-genealogy-read-boundary": "node scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs",
     "check:a16bu-official-import-is-living-null-contract-fix": "node scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
-    "check:a16bu-post-apply-read-only-verification": "node scripts/check-a16bu-post-apply-read-only-verification.cjs"
+    "check:a16bu-post-apply-read-only-verification": "node scripts/check-a16bu-post-apply-read-only-verification.cjs",
+    "check:a16r-import-completed-post-import-verification": "node scripts/check-a16r-import-completed-post-import-verification.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
