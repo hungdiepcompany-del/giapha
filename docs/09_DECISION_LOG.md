@@ -1,5 +1,55 @@
 # Decision Log
 
+## Decision 335 - A-17N-TX2F corrects post-apply verifier active graph scope
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: After owner manual apply of migration 0024, the initial A-17N-TX2
+post-apply verifier reported count drift because it compared total physical
+rows to the active A-17A/A-17E graph baseline. Production has one deleted
+legacy family and two row-level active parent memberships under that deleted
+family. Active graph counts remain unchanged.
+
+Decision: Correct the verifier to use active family + active membership +
+active owning family for pass/fail baseline counts. Keep total physical rows,
+deleted family count and orphan-active memberships as informational/advisory
+metrics, not production drift.
+
+Rationale:
+
+- A-17A and A-17E use active graph scope for tree/reconciliation baselines.
+- Physical row totals include soft-deleted legacy data and should not be used
+  as active graph drift evidence.
+- Orphan-active memberships under deleted families are data-quality advisories
+  for later reconciliation work.
+- The idempotency table has zero rows and no executor revision rows exist, so
+  there is no evidence that the transaction executor was called.
+
+Safety:
+
+- `A17N_TX2_INITIAL_RESULT=FALSE_NEGATIVE_COUNT_SCOPE_BUG`
+- `A17N_TX2F_STATUS=PASS_STATIC_CORRECTION_DB_EXECUTION_SAFE_SKIP`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `MIGRATION_0024_DATA_MUTATION=NO`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_0024_CHANGED=NO`
+- `SQL_MUTATION_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `CORRECTED_POST_APPLY_VERIFIER_EXECUTED=SAFE_SKIP`
+- `A17N_R_READINESS=BLOCKED_CORRECTED_VERIFIER_NOT_RERUN_BY_CODEX`
+
+Next:
+
+- `NEXT_ACTION=RESTORE_LINKED_SUPABASE_ACCESS_AND_RUN_CORRECTED_VERIFIER_BEFORE_A17N_R`
+
 ## Decision 334 - A-17N-TX1 creates admin canonical family transaction executor candidate
 
 Date: 2026-07-12

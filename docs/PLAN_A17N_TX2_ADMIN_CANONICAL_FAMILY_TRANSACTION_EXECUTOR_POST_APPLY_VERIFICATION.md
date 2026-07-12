@@ -1,0 +1,84 @@
+# A-17N-TX2 - Admin Canonical Family Transaction Executor Post-Apply Verification
+
+## Status
+
+- `A17N_TX2_STATUS=SAFE_SKIP_CORRECTED_VERIFIER_NOT_EXECUTED_LINKED_ACCESS_UNAVAILABLE`
+- `A17N_TX2_INITIAL_RESULT=FALSE_NEGATIVE_COUNT_SCOPE_BUG`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `MIGRATION_0024_DATA_MUTATION=NO`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+
+## Corrected Active Scope
+
+- `CORRECTED_ACTIVE_SCOPE=active family + active membership + active owning family`
+- `ACTIVE_FAMILY_COUNT=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT=73`
+
+The initial post-apply verifier compared total physical rows to the A-17A/A-17E
+active graph baseline. That was a verifier count-scope bug, not production data
+drift. The corrected verifier compares active family rows and active
+memberships whose owning family is also active.
+
+## Informational Physical Rows
+
+- `TOTAL_FAMILY_ROWS=75`
+- `TOTAL_PARENT_MEMBERSHIP_ROWS=142`
+- `TOTAL_CHILD_MEMBERSHIP_ROWS=74`
+- `DELETED_FAMILY_COUNT=1`
+
+The additional physical family row is a previously deleted legacy family. Total
+physical rows are recorded for diagnostics only and must not be treated as
+active graph drift.
+
+## Advisory Memberships
+
+- `ORPHAN_ACTIVE_PARENT_MEMBERSHIP_UNDER_DELETED_FAMILY_COUNT=2`
+- `ORPHAN_ACTIVE_CHILD_MEMBERSHIP_UNDER_DELETED_FAMILY_COUNT=0`
+- `DO_NOT_DELETE_ORPHAN_ACTIVE_ROWS_IN_THIS_PHASE=YES`
+- `DO_NOT_RESTORE_DELETED_FAMILY_IN_THIS_PHASE=YES`
+- `DEFER_CLEANUP_TO_RECONCILIATION_DATA_QUALITY=YES`
+
+The two row-level active parent memberships under the deleted legacy family are
+data-quality advisories for later reconciliation/data-quality work. They are not
+evidence that migration 0024 or the transaction executor modified genealogy
+data.
+
+## Function And Security Results
+
+- `FUNCTION_EXISTS=YES`
+- `EXACT_ARGUMENT_TYPES_MATCH=YES`
+- `RETURN_TYPE_JSONB=YES`
+- `VOLATILITY_VOLATILE=YES`
+- `SECURITY_INVOKER=YES`
+- `FIXED_SEARCH_PATH=YES`
+- `AUTHENTICATED_EXECUTE_GRANT=YES`
+- `ANON_EXECUTE_COUNT=0`
+- `PUBLIC_EXECUTE_COUNT=0`
+- `IDEMPOTENCY_TABLE_EXISTS=YES`
+- `IDEMPOTENCY_RLS_ENABLED=YES`
+- `IDEMPOTENCY_ROW_COUNT=0`
+- `CANONICAL_KEY_BACKFILL_COUNT=0`
+- `OWNER_DECISION_ROW_COUNT=0`
+- `RECONCILIATION_BATCH_ROW_COUNT=0`
+- `ROLLBACK_MANIFEST_ROW_COUNT=0`
+
+## Safety
+
+- `A17N_R_REMAINS_BLOCKED_UNTIL_CORRECTED_POST_APPLY_VERIFIER_PASSES=YES`
+- `A17N_R_READINESS=BLOCKED_CORRECTED_VERIFIER_NOT_RERUN_BY_CODEX`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_0024_CHANGED=NO`
+- `SQL_MUTATION_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+## Verification
+
+- `CORRECTED_POST_APPLY_VERIFIER_EXECUTED=SAFE_SKIP`
+- `CORRECTED_POST_APPLY_VERIFIER_RESULT=SAFE_SKIP_LINKED_ACCESS_UNAVAILABLE`
+- `SAFE_SKIP_REASON=SUPABASE_CONNECTOR_USAGE_LIMIT`

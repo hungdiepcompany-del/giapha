@@ -310,6 +310,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
   "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
+  "docs/PLAN_A17N_TX2_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_POST_APPLY_VERIFICATION.md",
+  "docs/PLAN_A17N_TX2F_POST_APPLY_VERIFIER_ACTIVE_SCOPE_CORRECTION.md",
+  "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
 ]);
 
 for (const file of changedFiles) {

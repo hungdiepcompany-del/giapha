@@ -230,6 +230,9 @@ const allowedChangedFiles = new Set([
   "db/checks/20260712_check_a17n_tx1_admin_canonical_family_transaction_executor.sql",
   "docs/PLAN_A17N_TX1_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
+  "docs/PLAN_A17N_TX2_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_POST_APPLY_VERIFICATION.md",
+  "docs/PLAN_A17N_TX2F_POST_APPLY_VERIFIER_ACTIVE_SCOPE_CORRECTION.md",
+  "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
   ...a17nTx1MigrationFiles,
 ]);
 

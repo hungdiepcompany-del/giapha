@@ -46,14 +46,52 @@ idempotency_rows as (
 ),
 baseline_counts as (
   select
-    (select count(*)::integer from public.families) as family_count,
-    (select count(*)::integer from public.family_parents) as family_parent_count,
-    (select count(*)::integer from public.family_children) as family_child_count,
+    (select count(*)::integer from public.families) as total_family_rows,
+    (select count(*)::integer from public.families where deleted_at is null) as active_family_count,
+    (select count(*)::integer from public.families where deleted_at is not null) as deleted_family_count,
+    (select count(*)::integer from public.family_parents) as total_parent_membership_rows,
+    (select count(*)::integer from public.family_parents where deleted_at is null) as row_active_parent_membership_count,
+    (
+      select count(*)::integer
+      from public.family_parents fp
+      join public.families f on f.id = fp.family_id
+      where fp.deleted_at is null
+        and f.deleted_at is null
+    ) as active_parent_membership_count,
+    (
+      select count(*)::integer
+      from public.family_parents fp
+      join public.families f on f.id = fp.family_id
+      where fp.deleted_at is null
+        and f.deleted_at is not null
+    ) as orphan_active_parent_membership_count,
+    (select count(*)::integer from public.family_children) as total_child_membership_rows,
+    (select count(*)::integer from public.family_children where deleted_at is null) as row_active_child_membership_count,
+    (
+      select count(*)::integer
+      from public.family_children fc
+      join public.families f on f.id = fc.family_id
+      where fc.deleted_at is null
+        and f.deleted_at is null
+    ) as active_child_membership_count,
+    (
+      select count(*)::integer
+      from public.family_children fc
+      join public.families f on f.id = fc.family_id
+      where fc.deleted_at is null
+        and f.deleted_at is not null
+    ) as orphan_active_child_membership_count,
     (
       select count(*)::integer
       from public.families
       where canonical_key is not null
     ) as canonical_key_backfill_count,
+    (
+      select count(*)::integer
+      from public.revisions
+      where change_reason = 'A-17N-TX1 admin canonical family transaction executor'
+        or after_json ->> 'source' = 'A-17N-TX1 admin canonical family transaction executor'
+    ) as transaction_executor_revision_count,
     (
       select count(*)::integer
       from public.family_reconciliation_batches
@@ -204,18 +242,89 @@ from (
   union all
   select
     'a17n_tx1_existing_family_count_unchanged',
-    (select family_count = 74 from baseline_counts),
-    jsonb_build_object('family_count', (select family_count from baseline_counts))
+    (select active_family_count = 74 from baseline_counts),
+    jsonb_build_object(
+      'active_family_count', (select active_family_count from baseline_counts),
+      'total_family_rows', (select total_family_rows from baseline_counts),
+      'deleted_family_count', (select deleted_family_count from baseline_counts),
+      'active_scope', 'active family'
+    )
   union all
   select
     'a17n_tx1_parent_count_unchanged',
-    (select family_parent_count = 140 from baseline_counts),
-    jsonb_build_object('family_parent_count', (select family_parent_count from baseline_counts))
+    (select active_parent_membership_count = 140 from baseline_counts),
+    jsonb_build_object(
+      'active_parent_membership_count', (select active_parent_membership_count from baseline_counts),
+      'total_parent_membership_rows', (select total_parent_membership_rows from baseline_counts),
+      'row_active_parent_membership_count', (select row_active_parent_membership_count from baseline_counts),
+      'orphan_active_parent_membership_count', (select orphan_active_parent_membership_count from baseline_counts),
+      'active_scope', 'active membership + active owning family'
+    )
   union all
   select
     'a17n_tx1_child_count_unchanged',
-    (select family_child_count = 73 from baseline_counts),
-    jsonb_build_object('family_child_count', (select family_child_count from baseline_counts))
+    (select active_child_membership_count = 73 from baseline_counts),
+    jsonb_build_object(
+      'active_child_membership_count', (select active_child_membership_count from baseline_counts),
+      'total_child_membership_rows', (select total_child_membership_rows from baseline_counts),
+      'row_active_child_membership_count', (select row_active_child_membership_count from baseline_counts),
+      'orphan_active_child_membership_count', (select orphan_active_child_membership_count from baseline_counts),
+      'active_scope', 'active membership + active owning family'
+    )
+  union all
+  select
+    'a17n_tx2_total_physical_rows_informational',
+    (
+      select total_family_rows = 75
+        and total_parent_membership_rows = 142
+        and total_child_membership_rows = 74
+      from baseline_counts
+    ),
+    jsonb_build_object(
+      'total_family_rows', (select total_family_rows from baseline_counts),
+      'total_parent_membership_rows', (select total_parent_membership_rows from baseline_counts),
+      'total_child_membership_rows', (select total_child_membership_rows from baseline_counts),
+      'baseline_contract', 'informational only; not active graph drift'
+    )
+  union all
+  select
+    'a17n_tx2_row_level_active_rows_informational',
+    (
+      select row_active_parent_membership_count = 142
+        and row_active_child_membership_count = 73
+      from baseline_counts
+    ),
+    jsonb_build_object(
+      'row_active_parent_membership_count', (select row_active_parent_membership_count from baseline_counts),
+      'row_active_child_membership_count', (select row_active_child_membership_count from baseline_counts),
+      'baseline_contract', 'informational only; owning family scope is checked separately'
+    )
+  union all
+  select
+    'a17n_tx2_deleted_family_count_advisory',
+    (select deleted_family_count = 1 from baseline_counts),
+    jsonb_build_object('deleted_family_count', (select deleted_family_count from baseline_counts))
+  union all
+  select
+    'a17n_tx2_orphan_active_parent_membership_advisory',
+    (select orphan_active_parent_membership_count = 2 from baseline_counts),
+    jsonb_build_object(
+      'orphan_active_parent_membership_count', (select orphan_active_parent_membership_count from baseline_counts),
+      'advisory', 'active parent memberships under deleted families are deferred to reconciliation/data-quality work'
+    )
+  union all
+  select
+    'a17n_tx2_orphan_active_child_membership_advisory',
+    (select orphan_active_child_membership_count = 0 from baseline_counts),
+    jsonb_build_object(
+      'orphan_active_child_membership_count', (select orphan_active_child_membership_count from baseline_counts),
+      'advisory', 'active child memberships under deleted families are deferred to reconciliation/data-quality work'
+    )
+  union all
+  select
+    'a17n_tx2_no_transaction_executor_revision_rows',
+    (select transaction_executor_revision_count = 0 from baseline_counts),
+    jsonb_build_object('transaction_executor_revision_count', (select transaction_executor_revision_count from baseline_counts))
   union all
   select
     'a17n_tx1_no_canonical_key_backfill',

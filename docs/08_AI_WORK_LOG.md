@@ -1,5 +1,94 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N-TX2F post-apply verifier active-scope correction
+
+### Phase
+
+A-17N-TX2F - post-apply verifier active-scope correction
+
+### Viec da lam
+
+- Verified preflight: branch `main`, worktree clean, local and `origin/main`
+  synchronized, A-17N-TX1 commit `65efe38` present at HEAD.
+- Corrected the SELECT-only post-apply verifier
+  `db/checks/20260712_check_a17n_tx1_admin_canonical_family_transaction_executor.sql`
+  so baseline checks use active graph scope:
+  active family + active membership + active owning family.
+- Preserved total physical row counts as informational diagnostics.
+- Added orphan-active membership diagnostics for active memberships under
+  deleted owning families.
+- Added A-17N-TX2 and A-17N-TX2F documentation and checker
+  `scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs`.
+- Did not create a migration, modify migration 0024, execute mutation SQL, call
+  the transaction executor, create idempotency rows, modify genealogy data, run
+  reconciliation, call official import RPC, deploy or push.
+
+### Ket qua
+
+- `A17N_TX2F_STATUS=PASS_STATIC_CORRECTION_DB_EXECUTION_SAFE_SKIP`
+- `A17N_TX2_STATUS=SAFE_SKIP_CORRECTED_VERIFIER_NOT_EXECUTED_LINKED_ACCESS_UNAVAILABLE`
+- `A17N_TX2_INITIAL_RESULT=FALSE_NEGATIVE_COUNT_SCOPE_BUG`
+- `INITIAL_FAILURE_CLASSIFICATION=FALSE_NEGATIVE_COUNT_SCOPE_BUG`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `MIGRATION_0024_DATA_MUTATION=NO`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `CORRECTED_ACTIVE_SCOPE=active family + active membership + active owning family`
+- `ACTIVE_FAMILY_COUNT=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT=73`
+- `TOTAL_FAMILY_ROWS=75`
+- `TOTAL_PARENT_MEMBERSHIP_ROWS=142`
+- `TOTAL_CHILD_MEMBERSHIP_ROWS=74`
+- `DELETED_FAMILY_COUNT=1`
+- `ORPHAN_ACTIVE_PARENT_MEMBERSHIP_UNDER_DELETED_FAMILY_COUNT=2`
+- `ORPHAN_ACTIVE_CHILD_MEMBERSHIP_UNDER_DELETED_FAMILY_COUNT=0`
+- `DO_NOT_DELETE_ORPHAN_ACTIVE_ROWS_IN_THIS_PHASE=YES`
+- `DO_NOT_RESTORE_DELETED_FAMILY_IN_THIS_PHASE=YES`
+- `DEFER_CLEANUP_TO_RECONCILIATION_DATA_QUALITY=YES`
+- `A17N_R_REMAINS_BLOCKED_UNTIL_CORRECTED_POST_APPLY_VERIFIER_PASSES=YES`
+- `A17N_R_READINESS=BLOCKED_CORRECTED_VERIFIER_NOT_RERUN_BY_CODEX`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_0024_CHANGED=NO`
+- `SQL_MUTATION_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `CORRECTED_POST_APPLY_VERIFIER_EXECUTED=SAFE_SKIP`
+- `CORRECTED_POST_APPLY_VERIFIER_RESULT=SAFE_SKIP_LINKED_ACCESS_UNAVAILABLE`
+- `SAFE_SKIP_REASON=SUPABASE_CONNECTOR_USAGE_LIMIT`
+- `NEXT_ACTION=RESTORE_LINKED_SUPABASE_ACCESS_AND_RUN_CORRECTED_VERIFIER_BEFORE_A17N_R`
+
+### Kiem tra
+
+- `npm.cmd run check:a17n-tx2f-post-apply-verifier-active-scope-correction` - PASS
+- `CORRECTED_A17N_TX2_POST_APPLY_VERIFIER_DB_RUN` - SAFE_SKIP (`SAFE_SKIP_REASON=SUPABASE_CONNECTOR_USAGE_LIMIT`)
+- `npm.cmd run check:a17n-tx1-admin-canonical-family-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17n-admin-parent-child-canonical-write-path` - PASS
+- `npm.cmd run check:a17m-canonical-family-domain-service` - PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence` - PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design` - PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract` - PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract` - PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit` - PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run` - PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design` - PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate` - PASS
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification` - PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `git diff --check` - PASS
+
 ## 2026-07-12 - A-17N-TX1 admin canonical family transaction executor candidate
 
 ### Phase
