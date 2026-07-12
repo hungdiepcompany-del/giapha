@@ -315,6 +315,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
   "docs/PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md",
   "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
+  "docs/PLAN_A17N_DR_DEPLOY_PRODUCTION_NO_MUTATION_SMOKE_EVIDENCE.md",
+  "scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs",
   "app/(admin)/admin/tree/edit/actions.ts",
   "lib/family/admin-canonical-family-link-service.ts",
   "lib/family/admin-canonical-family-runtime-service.ts",

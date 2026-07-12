@@ -1,5 +1,64 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N-DR deploy and production no-mutation smoke evidence
+
+### Phase
+
+A-17N-DR - record deploy and production no-mutation smoke evidence
+
+### Viec da lam
+
+- Verified preflight: branch `main`, working tree clean, local and
+  `origin/main` synchronized at `0/0`, and `origin/main` contains A-17N-R
+  runtime commit `256d746`.
+- Recorded owner-confirmed Cloudflare production deployment evidence for
+  `DEPLOYED_COMMIT=256d746` at
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Recorded owner manual browser no-mutation smoke evidence:
+  admin/tree/edit routes accessible, authentication successful, father/mother/
+  child/spouse modes open, Vietnamese UI rendered, no runtime error, no form
+  submit, no completed relationship action, and no network request to
+  `execute_admin_canonical_family_parent_child_write`.
+- Recorded corrected SELECT-only verifier baseline before and after smoke:
+  active counts remain `74 / 140 / 73`, physical counts remain `75 / 142 / 74`,
+  idempotency rows `0`, transaction executor revision rows `0`, no canonical
+  key backfill, and no owner decision/reconciliation/rollback rows.
+- Updated A-17N-R active status from owner-review pending to deployed and
+  no-mutation smoke verified.
+- Added `scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs`
+  and package script
+  `check:a17n-dr-deploy-production-no-mutation-smoke-evidence`.
+- Did not change runtime code, migrations, SQL, admin actions, importer,
+  add-spouse, public tree, graph/layout, production data or package
+  dependencies.
+- Did not execute SQL, call RPCs, submit forms, call the official import RPC,
+  deploy from Codex, run import, or reconcile legacy families.
+
+### Ket qua
+
+- `A17N_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE_RECORDED`
+- `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED`
+- `PUSH_STATUS=PASS`
+- `PUSHED_COMMIT=256d746`
+- `REMOTE_SYNC_AFTER_PUSH=0_0`
+- `CLOUDFLARE_DEPLOY_STATUS=PASS`
+- `DEPLOYED_COMMIT=256d746`
+- `PRODUCTION_BASE_URL=https://web-gia-pha.hungdiepcompany.workers.dev`
+- `DATABASE_BASELINE_BEFORE_SMOKE=PASS`
+- `BROWSER_NO_MUTATION_SMOKE=PASS`
+- `DATABASE_BASELINE_AFTER_SMOKE=PASS`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `A17O_READINESS=READY_A17N_DEPLOY_SMOKE_EVIDENCE_RECORDED`
+
+### Kiem tra
+
+- Full required validation run recorded in
+  `PLAN_A17N_DR_DEPLOY_PRODUCTION_NO_MUTATION_SMOKE_EVIDENCE.md`.
+
 ## 2026-07-12 - A-17N-R admin parent/child canonical runtime integration
 
 ### Phase

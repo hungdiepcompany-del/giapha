@@ -1,5 +1,60 @@
 # Decision Log
 
+## Decision 338 - A-17N-DR records deployed canonical admin no-mutation smoke
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: A-17N-R completed the canonical admin parent/child runtime integration
+at commit `256d746`, but repository documentation still recorded the phase as
+ready for owner review with deploy/smoke pending. A-17O correctly stopped
+because deploy and production no-mutation smoke evidence had not yet been
+recorded.
+
+Decision: Record owner-confirmed deployment of A-17N-R commit `256d746` and
+owner manual production browser/database no-mutation smoke evidence. Mark
+A-17N-R as deployed and no-mutation smoke verified, and open A-17O readiness.
+
+Rationale:
+
+- The deployed revision is confirmed as `256d746`.
+- The production URL is
+  `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Browser smoke verified authenticated admin tree/edit route access and UI
+  mode activation without submitting any relationship form.
+- Network evidence showed no request to
+  `execute_admin_canonical_family_parent_child_write`.
+- Corrected SELECT-only before/after database baselines remained unchanged:
+  active families/parents/children `74 / 140 / 73`, idempotency rows `0`, and
+  transaction executor revision rows `0`.
+
+Safety:
+
+- `A17N_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE_RECORDED`
+- `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED`
+- `CLOUDFLARE_DEPLOY_STATUS=PASS`
+- `DEPLOYED_COMMIT=256d746`
+- `DATABASE_BASELINE_BEFORE_SMOKE=PASS`
+- `BROWSER_NO_MUTATION_SMOKE=PASS`
+- `DATABASE_BASELINE_AFTER_SMOKE=PASS`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `RUNTIME_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DEPLOY_EXECUTED_BY_THIS_PHASE=NO`
+
+Next:
+
+- `A17O_READINESS=READY_A17N_DEPLOY_SMOKE_EVIDENCE_RECORDED`
+- `NEXT_ACTION=RETRY_A17O_OFFICIAL_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX`
+
 ## Decision 337 - A-17N-R activates canonical admin parent child runtime writes
 
 Date: 2026-07-12

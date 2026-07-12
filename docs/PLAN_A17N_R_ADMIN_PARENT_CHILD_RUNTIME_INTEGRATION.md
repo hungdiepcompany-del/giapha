@@ -2,7 +2,7 @@
 
 Date: 2026-07-12
 
-Status: `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW`
+Status: `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED`
 
 ## Preconditions
 
@@ -33,7 +33,29 @@ Activated files:
 - `lib/family/canonical-family-supabase-repository.ts`
 - `lib/family/admin-canonical-family-link-service.ts`
 
-No migration, SQL, production smoke mutation, deploy or push was performed.
+During the original A-17N-R implementation phase, no migration, SQL,
+production smoke mutation, deploy or push was performed. A later evidence-only
+phase, A-17N-DR, recorded owner-confirmed deployment and production
+no-mutation smoke evidence for commit `256d746`.
+
+## Deploy And Smoke Evidence
+
+- `A17N_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE_RECORDED`
+- `PUSH_STATUS=PASS`
+- `PUSHED_COMMIT=256d746`
+- `REMOTE_SYNC_AFTER_PUSH=0_0`
+- `CLOUDFLARE_DEPLOY_STATUS=PASS`
+- `DEPLOYED_COMMIT=256d746`
+- `PRODUCTION_BASE_URL=https://web-gia-pha.hungdiepcompany.workers.dev`
+- `DATABASE_BASELINE_BEFORE_SMOKE=PASS`
+- `BROWSER_NO_MUTATION_SMOKE=PASS`
+- `DATABASE_BASELINE_AFTER_SMOKE=PASS`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `A17O_READINESS=READY_A17N_DEPLOY_SMOKE_EVIDENCE_RECORDED`
 
 ## Runtime Contract
 
@@ -164,11 +186,14 @@ raw RPC payloads or raw Supabase errors.
 - `MIGRATION_CREATED=NO`
 - `SQL_EXECUTED=NO`
 - `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`
+- `PRODUCTION_MUTATION_SMOKE_EXECUTED_BY_CODEX=NO`
 - `GENEALOGY_ROWS_MODIFIED_BY_PHASE=NO`
 - `RECONCILIATION_EXECUTED=NO`
 - `OFFICIAL_IMPORT_RPC_CALLED=NO`
-- `DEPLOY=NO`
-- `PUSH=NO`
+- `DEPLOY_EXECUTED_BY_A17N_R_PHASE=NO`
+- `PUSH_EXECUTED_BY_A17N_R_PHASE=NO`
+- `DEPLOY_RECORDED_BY_A17N_DR=YES`
+- `PUSH_RECORDED_BY_A17N_DR=YES`
 - `PACKAGE_DEPENDENCY_INSTALLED=NO`
 
 Legacy advisories remain deferred:
@@ -222,4 +247,4 @@ phase.
 
 ## Next
 
-- `NEXT_ACTION=OWNER_REVIEW_A17N_R_THEN_SEPARATE_A17N_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE`
+- `NEXT_ACTION=RETRY_A17O_OFFICIAL_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX`

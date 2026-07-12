@@ -161,7 +161,13 @@ for (const [relativePath, forbiddenToken] of [
 }
 
 for (const token of [
-  "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW",
+  "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED",
+  "A17N_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE_RECORDED",
+  "DEPLOYED_COMMIT=256d746",
+  "DATABASE_BASELINE_BEFORE_SMOKE=PASS",
+  "BROWSER_NO_MUTATION_SMOKE=PASS",
+  "DATABASE_BASELINE_AFTER_SMOKE=PASS",
+  "A17O_READINESS=READY_A17N_DEPLOY_SMOKE_EVIDENCE_RECORDED",
   "PRECONDITION_TX2_PASS=YES",
   "ADMIN_PARENT_ACTION_INTEGRATED=YES",
   "ADMIN_CHILD_ACTION_INTEGRATED=YES",
@@ -186,20 +192,20 @@ for (const token of [
   "CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=2",
   "MIGRATION_CREATED=NO",
   "SQL_EXECUTED=NO",
-  "PRODUCTION_MUTATION_SMOKE_EXECUTED=NO",
+  "PRODUCTION_MUTATION_SMOKE_EXECUTED_BY_CODEX=NO",
   "OFFICIAL_IMPORT_RPC_CALLED=NO",
-  "DEPLOY=NO",
-  "PUSH=NO",
-  "OWNER_REVIEW_A17N_R_THEN_SEPARATE_A17N_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE",
+  "DEPLOY_EXECUTED_BY_A17N_R_PHASE=NO",
+  "PUSH_EXECUTED_BY_A17N_R_PHASE=NO",
+  "RETRY_A17O_OFFICIAL_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX",
 ]) {
   requireIncludes(doc, token, `A-17N-R doc token ${token}`);
 }
 
 for (const [content, token, label] of [
   [index, "PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md", "index A-17N-R"],
-  [workLog, "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW", "work log A-17N-R"],
+  [workLog, "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED", "work log A-17N-R"],
   [decisionLog, "Decision 337 - A-17N-R activates canonical admin parent child runtime writes", "decision A-17N-R"],
-  [handoff, "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW", "handoff A-17N-R"],
+  [handoff, "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_DEPLOYED_AND_NO_MUTATION_SMOKE_VERIFIED", "handoff A-17N-R"],
 ]) {
   requireIncludes(content, token, label);
 }
@@ -225,6 +231,7 @@ const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
   "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
+  "scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
@@ -238,6 +245,7 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17N_DR_DEPLOY_PRODUCTION_NO_MUTATION_SMOKE_EVIDENCE.md",
 ]);
 
 for (const changedFile of changedFiles) {
