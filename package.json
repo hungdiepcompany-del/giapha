@@ -359,7 +359,8 @@
     "check:a17e-family-duplicate-read-only-audit": "node scripts/check-a17e-family-duplicate-read-only-audit.cjs",
     "check:a17f-family-reconciliation-dry-run": "node scripts/check-a17f-family-reconciliation-dry-run.cjs",
     "check:a17g-family-reconciliation-rollback-design": "node scripts/check-a17g-family-reconciliation-rollback-design.cjs",
-    "check:a17h-canonical-family-schema-foundation-candidate": "node scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs"
+    "check:a17h-canonical-family-schema-foundation-candidate": "node scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
+    "check:a17i-canonical-family-schema-post-apply-verification": "node scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

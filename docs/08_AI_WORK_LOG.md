@@ -1,5 +1,87 @@
 # AI Work Log
 
+## 2026-07-12 - A-17I canonical family schema post-apply verification
+
+### Phase
+
+A-17SQL-H and A-17I - owner manual schema apply evidence and post-apply
+verification record
+
+### Viec da lam
+
+- Recorded owner manual apply evidence for
+  `db/migrations/20260712_0023_a17h_canonical_family_schema_foundation_candidate.sql`.
+- Recorded owner-provided SELECT-only A-17I post-apply verification results.
+- Added docs:
+  `docs/PLAN_A17SQL_H_OWNER_MANUAL_SCHEMA_APPLY.md` and
+  `docs/PLAN_A17I_CANONICAL_FAMILY_SCHEMA_POST_APPLY_VERIFICATION.md`.
+- Added checker
+  `scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs`
+  and package script
+  `check:a17i-canonical-family-schema-post-apply-verification`.
+- Did not rerun the migration, did not execute mutation SQL, did not modify
+  family records, did not backfill canonical keys, did not create decisions,
+  batches or rollback manifests, did not run reconciliation, did not change
+  runtime write paths, did not deploy, did not push and did not call official
+  import RPC.
+
+### Ket qua
+
+- `A17SQL_H_STATUS=PASS_OWNER_MANUAL_SCHEMA_APPLY_COMPLETED`
+- `A17I_STATUS=PASS_SCHEMA_POST_APPLY_VERIFIED`
+- `MIGRATION_APPLY_EVIDENCE_RECORDED=YES`
+- `POST_APPLY_VERIFICATION_RECORDED=YES`
+- `MIGRATION_FILE=db/migrations/20260712_0023_a17h_canonical_family_schema_foundation_candidate.sql`
+- `MIGRATION_SHA256=B5E62D048F284D9E4F03E2294FE060E696E7905890D88587A18503E0786A07AA`
+- `EXISTING_FAMILY_COUNT_BEFORE=74`
+- `EXISTING_FAMILY_COUNT_AFTER=74`
+- `EXPECTED_COLUMNS_PRESENT=YES`
+- `EXPECTED_CONSTRAINTS_PRESENT=YES`
+- `CANONICAL_LOOKUP_INDEX_PRESENT=YES`
+- `UNIQUE_INDEX_LEGACY_SAFE=YES`
+- `NEW_TABLES_RLS_ENABLED=YES`
+- `ANON_GRANT_COUNT=0`
+- `PUBLIC_GRANT_COUNT=0`
+- `ANON_POLICY_COUNT=0`
+- `PUBLIC_POLICY_COUNT=0`
+- `AUTHENTICATED_POLICY_COUNT=9`
+- `OWNER_DECISION_ROW_COUNT=0`
+- `RECONCILIATION_BATCH_ROW_COUNT=0`
+- `ROLLBACK_MANIFEST_ROW_COUNT=0`
+- `CANONICAL_KEY_BACKFILL_COUNT=0`
+- `MERGED_OR_VOIDED_LEGACY_FAMILY_COUNT=0`
+- `INVALID_PERSON_REFERENCE_COUNT=2`
+- `INACTIVE_OR_SOFT_DELETED_MEMBERSHIP_COUNT=1`
+- `LAYOUT_REFERENCES_AFFECTED_COUNT=3`
+- `SQL_MUTATION_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=START_SEPARATE_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE_PHASE`
+
+### Kiem tra
+
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification`: PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate`: PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence`: PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design`: PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract`: PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract`: PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit`: PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run`: PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design`: PASS
+- `npm.cmd run check:env:safe`: PASS
+- `npm.cmd run check:migrations`: PASS
+- `npm.cmd run check:relationships`: PASS
+- `npm.cmd run check:tree-viewer`: PASS
+- `npm.cmd run check:tree-editor`: PASS
+- `npm.cmd run check:public-privacy`: PASS
+- `npm.cmd run typecheck`: PASS
+- `npm.cmd run lint`: PASS
+- `npm.cmd run build`: PASS
+
 ## 2026-07-12 - A-17H canonical family schema foundation candidate
 
 ### Phase

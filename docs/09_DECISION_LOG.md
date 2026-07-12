@@ -1,5 +1,52 @@
 # Decision Log
 
+## Decision 331 - A-17I records owner manual apply and post-apply verification
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: The owner manually applied A-17H migration 0023 and then executed the
+A-17I SELECT-only post-apply verifier. Codex was asked to record evidence only,
+without rerunning migration SQL, mutating genealogy data, creating
+reconciliation records, changing runtime write paths, deploying or pushing.
+
+Decision: Record
+`A17SQL_H_STATUS=PASS_OWNER_MANUAL_SCHEMA_APPLY_COMPLETED` and
+`A17I_STATUS=PASS_SCHEMA_POST_APPLY_VERIFIED` based on owner-provided evidence.
+Accept the post-apply result that family count remained `74 -> 74`, expected
+schema objects exist, RLS is enabled on 3 new tables, anon/PUBLIC grants and
+policies are absent, authenticated policies count is 9, and no canonical keys,
+owner decisions, reconciliation batches or rollback manifests were seeded.
+
+Rationale:
+
+- Migration SHA matches the A-17H candidate:
+  `B5E62D048F284D9E4F03E2294FE060E696E7905890D88587A18503E0786A07AA`.
+- Existing family rows were not modified by apply verification.
+- The partial unique canonical index is present and legacy-safe.
+- Reconciliation remains blocked because 22 duplicate parent-set groups require
+  owner review, there are 0 safe automatic merge groups, 2 invalid person
+  references, 1 inactive or soft-deleted membership, 3 layout references touching
+  duplicate families, and repaired write paths still need a separate phase.
+
+Safety:
+
+- `SQL_MUTATION_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `CANONICAL_KEYS_BACKFILLED=NO`
+- `OWNER_DECISION_ROWS_CREATED=0`
+- `RECONCILIATION_BATCH_ROWS_CREATED=0`
+- `ROLLBACK_MANIFEST_ROWS_CREATED=0`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `NEXT_ACTION=START_SEPARATE_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE_PHASE`
+
 ## Decision 330 - A-17H canonical family schema foundation candidate
 
 Date: 2026-07-12
