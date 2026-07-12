@@ -209,6 +209,17 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
+  "lib/family/canonical-family-types.ts",
+  "lib/family/canonical-family-errors.ts",
+  "lib/family/canonical-family-identity.ts",
+  "lib/family/canonical-family-repository.ts",
+  "lib/family/canonical-family-service.ts",
+  "scripts/check-a17a-tree-baseline-evidence.cjs",
+  "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
+  "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
+  "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
+  "scripts/check-a17m-canonical-family-domain-service.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -218,7 +229,10 @@ for (const file of changedFiles) {
   }
   if (file.startsWith("supabase/.temp/")) failures.push(`forbidden supabase temp ${file}`);
   if (/\.(xls|xlsx|csv|zip)$/i.test(file)) failures.push(`forbidden data/evidence file ${file}`);
-  if (/^(app|components|lib|services)\//.test(file)) {
+  if (
+    /^(app|components|lib|services)\//.test(file) &&
+    !file.startsWith("lib/family/canonical-family-")
+  ) {
     failures.push(`forbidden runtime app code change ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {

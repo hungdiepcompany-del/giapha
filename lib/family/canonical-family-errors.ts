@@ -1,0 +1,36 @@
+export const CANONICAL_FAMILY_ERROR_CODES = [
+  "CANONICAL_FAMILY_INVALID_PARENT_ID",
+  "CANONICAL_FAMILY_DUPLICATE_PARENT_ID",
+  "CANONICAL_FAMILY_CONFLICTING_PARENT_ROLE",
+  "CANONICAL_FAMILY_ZERO_PARENT_AMBIGUOUS",
+  "CANONICAL_FAMILY_TOO_MANY_PARENTS",
+  "CANONICAL_FAMILY_PERSON_REFERENCE_MISSING",
+  "CANONICAL_FAMILY_LEGACY_DUPLICATE_REVIEW_REQUIRED",
+  "CANONICAL_FAMILY_MULTIPLE_ACTIVE_CANONICAL_MATCHES",
+  "CANONICAL_FAMILY_METADATA_CONFLICT",
+  "CANONICAL_FAMILY_RELATIONSHIP_PERIOD_AMBIGUOUS",
+  "CANONICAL_FAMILY_MERGED_RECORD_NOT_REUSABLE",
+  "CANONICAL_FAMILY_VOIDED_RECORD_NOT_REUSABLE",
+  "CANONICAL_FAMILY_TRANSACTION_EXECUTOR_REQUIRED",
+] as const;
+
+export type CanonicalFamilyErrorCode =
+  (typeof CANONICAL_FAMILY_ERROR_CODES)[number];
+
+export type CanonicalFamilyOperation =
+  | "NORMALIZE_PARENT_SET"
+  | "BUILD_CANONICAL_IDENTITY"
+  | "LOOKUP_CANONICAL_FAMILY"
+  | "DECIDE_REUSE_OR_CREATE"
+  | "PLAN_CANONICAL_FAMILY_MUTATION";
+
+export type CanonicalFamilyDiagnostic = {
+  code: CanonicalFamilyErrorCode;
+  operation: CanonicalFamilyOperation;
+  counts?: Record<string, number>;
+  flags?: Record<string, boolean>;
+  idHashes?: string[];
+};
+
+export type CanonicalFamilyWarning = CanonicalFamilyDiagnostic;
+export type CanonicalFamilyBlocker = CanonicalFamilyDiagnostic;

@@ -210,6 +210,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
+  "lib/family/canonical-family-types.ts",
+  "lib/family/canonical-family-errors.ts",
+  "lib/family/canonical-family-identity.ts",
+  "lib/family/canonical-family-repository.ts",
+  "lib/family/canonical-family-service.ts",
+  "scripts/check-a17m-canonical-family-domain-service.cjs",
+  "scripts/check-a16r-import-completed-post-import-verification.cjs",
 ]);
 
 for (const changedFile of changedFiles) {

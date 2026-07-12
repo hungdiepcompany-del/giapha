@@ -1,5 +1,56 @@
 # Decision Log
 
+## Decision 332 - A-17M creates dormant canonical family domain service foundation
+
+Date: 2026-07-12
+
+Status: Accepted for owner review
+
+Context: A-17H schema foundation has been manually applied and A-17I
+post-apply verification passed. Current production data still contains 22
+owner-review duplicate parent-set groups, 38 redundant family records, 0 safe
+automatic groups, 2 invalid person references, 1 inactive/soft-deleted
+membership and 3 layout references touching duplicate families. Existing write
+paths still create child-scoped families.
+
+Decision: Add a dormant server-side canonical family domain service foundation
+without changing current production write paths. The foundation provides
+deterministic canonical identity, parent-set normalization, lookup/decision
+contracts, repository interfaces, mutation planning and no-PII diagnostics.
+Production integration remains deferred to separate A-17N, A-17O and A-17P
+phases.
+
+Rationale:
+
+- Child IDs, display names and private genealogy data are excluded from
+  canonical identity.
+- Parent order is normalized deterministically.
+- Legacy duplicates require owner review and are not automatically classified
+  safe.
+- Mutation plans require a future transaction executor and cannot execute
+  multi-table writes in A-17M.
+- The new service has zero production callers at the end of A-17M.
+
+Safety:
+
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `PRODUCTION_FAMILY_CREATED=NO`
+- `PRODUCTION_MEMBERSHIP_CREATED=NO`
+- `EXISTING_FAMILY_ROWS_UPDATED=NO`
+- `CANONICAL_KEYS_BACKFILLED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+
+Next:
+
+- `NEXT_ACTION=OWNER_REVIEW_A17M_THEN_START_SEPARATE_A17N_ADMIN_PARENT_CHILD_WRITE_PATH_INTEGRATION`
+
 ## Decision 331 - A-17I records owner manual apply and post-apply verification
 
 Date: 2026-07-12
