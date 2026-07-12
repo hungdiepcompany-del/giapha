@@ -348,7 +348,8 @@
     "check:a16bp-revoke-anon-import-staging-grants-apply-verify": "node scripts/check-a16bp-revoke-anon-import-staging-grants-apply-verify.cjs",
     "check:a16bq-downstream-rpc-write-contract-read-only-verification": "node scripts/check-a16bq-downstream-rpc-write-contract-read-only-verification.cjs",
     "check:a16br-revisions-insert-rls-and-anon-grant-cleanup": "node scripts/check-a16br-revisions-insert-rls-and-anon-grant-cleanup.cjs",
-    "check:a16bt-secure-public-genealogy-read-boundary": "node scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs"
+    "check:a16bt-secure-public-genealogy-read-boundary": "node scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs",
+    "check:a16bu-official-import-is-living-null-contract-fix": "node scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

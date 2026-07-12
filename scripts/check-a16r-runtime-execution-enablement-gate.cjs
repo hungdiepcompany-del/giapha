@@ -293,6 +293,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16bm-official-import-row-lock-rls-fix-candidate.cjs",
   "scripts/check-a16t-official-import-audit-rollback-idempotency-schema.cjs",
   "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  "docs/PLAN_A16BU_OFFICIAL_IMPORT_IS_LIVING_NULL_CONTRACT_FIX.md",
+  "scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
+  "scripts/check-a16bq-downstream-rpc-write-contract-read-only-verification.cjs",
+  "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
+  "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -310,9 +315,15 @@ for (const file of changedFiles) {
     file ===
       "supabase/migrations/20260711_0018_a16bm_official_import_row_lock_rls_fix_candidate.sql" ||
     file === "db/checks/20260711_check_a16bm_official_import_row_lock_rls_fix.sql";
+  const isApprovedA16buCorrectiveMigration =
+    file ===
+      "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql" ||
+    file ===
+      "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql";
   if (
     /^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file) &&
-    !isApprovedA16bmSqlCandidate
+    !isApprovedA16bmSqlCandidate &&
+    !isApprovedA16buCorrectiveMigration
   ) {
     failures.push(`forbidden SQL/check file ${file}`);
   }

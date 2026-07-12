@@ -1,5 +1,42 @@
 # Next AI Handoff
 
+## 2026-07-12 - A-16BU - Official import is_living null contract fix candidate
+
+- Status:
+  `A16BU_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- Production failure evidence:
+  official import POST was rejected with HTTP 409 after the transaction helper
+  was called once; blocker `A16AH_BLOCKED_TRANSACTION_RPC_FAILED`; database
+  error was `people.is_living` NOT NULL violation; imported people count
+  remained `0`.
+- Identity/session/RPC visibility:
+  previously passed for the owner/admin retry path; no A-16BF identity blocker
+  remained.
+- Root cause:
+  `IS_LIVING_NULL_SOURCE_CONTRACT=A16V_CANDIDATE_EXISTS_BRANCH_TREATS_JSON_NULL_AS_PRESENT`.
+- Corrective migration:
+  `CORRECTIVE_MIGRATION=db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql`;
+  mirror
+  `supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql`.
+- Hashes:
+  `MIGRATION_0016_SHA256=68B98F59F575CADA6A0AB3AA0ACB856ED78984A5320A4DD784DB97E0D2317903`;
+  `DB_MIGRATION_SHA256=97EC8E3108033CB4F26E86B5E348C5A15BF33DCC46650F384735482FA4712CA3`;
+  `SUPABASE_MIRROR_SHA256=97EC8E3108033CB4F26E86B5E348C5A15BF33DCC46650F384735482FA4712CA3`;
+  `MIRROR_MATCH=YES`.
+- Contract:
+  same function signature, SECURITY INVOKER, fixed search_path, permission
+  checks, ownership checks, locking, all-or-nothing transaction, audit,
+  rollback, idempotency, and anon/PUBLIC execute revokes preserved.
+- Safety:
+  `SQL_EXECUTED=NO`;
+  `MIGRATION_APPLIED=NO`;
+  `IMPORT_RPC_CALLED=NO`;
+  `A16R_RETRY=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Next action:
+  `NEXT_ACTION=OWNER_REVIEW_CORRECTIVE_MIGRATION_THEN_SEPARATE_APPLY_VERIFY_PHASE`.
+
 ## 2026-07-11 - A-16BT - Owner-confirmed GitHub Actions deploy succeeded
 
 - Deploy evidence status:

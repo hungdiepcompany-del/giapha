@@ -16,6 +16,8 @@ const manifestReadServicePath = "lib/import/giapha4/manifest-read-service.ts";
 const postRoutePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const officialImportServicePath = "lib/import/giapha4/official-import-service.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const confirmationClientPath =
+  "components/imports/a16r-official-import-confirmation-client.tsx";
 const packagePath = "package.json";
 const wranglerPath = "wrangler.toml";
 
@@ -71,6 +73,7 @@ const manifestReadService = read(manifestReadServicePath);
 const postRoute = read(postRoutePath);
 const officialImportService = read(officialImportServicePath);
 const panel = read(panelPath);
+const confirmationClient = read(confirmationClientPath);
 const packageJson = readJson(packagePath);
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
@@ -170,7 +173,10 @@ for (const [content, token, label] of [
   [postRoute, "confirmRuntimeExecutionEnablementMarker", "POST route runtime marker parse"],
   [officialImportService, "const canRunOfficialImport = reasons.length === 0", "official import service candidate gate"],
   [officialImportService, "A16R_BLOCKED_RUNTIME_EXECUTION_NOT_ENABLED_AFTER_A16V_VERIFY", "official import service runtime blocker"],
-  [panel, "aria-disabled=\"true\"", "official import UI disabled"],
+  [panel, "canSubmit={a16rSameRunPreflight.officialImportEnabled}", "official import UI preflight submit gate"],
+  [panel, "lockedReasons={a16rSameRunLockedReasons}", "official import UI locked reasons"],
+  [confirmationClient, "if (!canSubmit)", "official import client fail-closed branch"],
+  [confirmationClient, "aria-disabled=\"true\"", "official import UI disabled"],
 ]) {
   requireIncludes(content, token, label);
 }
@@ -269,6 +275,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16v-a16r-execution-retry-requirements.cjs",
   "scripts/check-a16v-marker-verification-fix.cjs",
   "scripts/check-a16v-apply-verify.cjs",
+  "docs/PLAN_A16BU_OFFICIAL_IMPORT_IS_LIVING_NULL_CONTRACT_FIX.md",
+  "scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
+  "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
+  "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+  "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
+  "scripts/check-a16bq-downstream-rpc-write-contract-read-only-verification.cjs",
+  "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
+  "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
 ]);
 
 for (const file of changedFiles) {
@@ -276,7 +290,12 @@ for (const file of changedFiles) {
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(`forbidden env file ${file}`);
   if (file.startsWith("supabase/.temp/")) failures.push(`forbidden supabase temp ${file}`);
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`forbidden spreadsheet/csv ${file}`);
-  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
+  const isApprovedA16buCorrectiveMigration =
+    file ===
+      "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql" ||
+    file ===
+      "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql";
+  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file) && !isApprovedA16buCorrectiveMigration) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
   if (

@@ -1,5 +1,72 @@
 # AI Work Log
 
+## 2026-07-12 - A-16BU official import is_living null contract fix candidate
+
+### Phase
+
+A-16BU - corrective migration candidate for official import `people.is_living`
+NULL failure
+
+### Viec da lam
+
+- Confirmed the production failure evidence supplied by owner: official import
+  POST reached the transaction helper once, then blocked with
+  `A16AH_BLOCKED_TRANSACTION_RPC_FAILED` because `people.is_living` received
+  NULL.
+- Confirmed identity/session/RPC visibility had already passed before this
+  phase and no A-16BF identity blocker remained.
+- Confirmed root cause in migration 0016:
+  `candidate ? 'isLiving'` treats JSON null as present, allowing
+  `(candidate ->> 'isLiving')::boolean` to produce SQL NULL.
+- Created not-applied corrective migration 0022 in both DB and Supabase mirrors.
+- Preserved the RPC signature, SECURITY INVOKER, fixed search_path, permission
+  checks, ownership checks, locking, audit, rollback, idempotency, and execute
+  revokes.
+- Added checker `check:a16bu-official-import-is-living-null-contract-fix`.
+- Did not execute SQL, apply migration, call import RPC, retry A16R, deploy, or
+  push.
+
+### Ket qua
+
+- `A16BU_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`
+- `ROOT_CAUSE_CONFIRMED=YES`
+- `IS_LIVING_NULL_SOURCE_CONTRACT=A16V_CANDIDATE_EXISTS_BRANCH_TREATS_JSON_NULL_AS_PRESENT`
+- `MIGRATION_0016_HASH_MATCH=YES`
+- `MIGRATION_0016_SHA256=68B98F59F575CADA6A0AB3AA0ACB856ED78984A5320A4DD784DB97E0D2317903`
+- `CORRECTIVE_MIGRATION=db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql`
+- `DB_MIGRATION_SHA256=97EC8E3108033CB4F26E86B5E348C5A15BF33DCC46650F384735482FA4712CA3`
+- `SUPABASE_MIRROR_SHA256=97EC8E3108033CB4F26E86B5E348C5A15BF33DCC46650F384735482FA4712CA3`
+- `MIRROR_MATCH=YES`
+- `IS_LIVING_NEVER_NULL_STATIC_VERIFIED=YES`
+- `FUNCTION_SIGNATURE_PRESERVED=YES`
+- `SECURITY_INVOKER_PRESERVED=YES`
+- `ANON_PUBLIC_EXECUTE_REVOKED=YES`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=OWNER_REVIEW_CORRECTIVE_MIGRATION_THEN_SEPARATE_APPLY_VERIFY_PHASE`
+
+### Kiem tra
+
+- `npm.cmd run check:a16bu-official-import-is-living-null-contract-fix`: PASS
+- `npm.cmd run check:a16v-official-import-real-transaction-execution-branch`: PASS
+- `npm.cmd run check:a16bf-rpc-invocation-identity-precheck-contract-alignment`: PASS
+- `npm.cmd run check:a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis`: PASS
+- `npm.cmd run check:a16bi-same-client-rpc-binding-production-contract-read-only-verification`: PASS
+- `npm.cmd run check:a16bq-downstream-rpc-write-contract-read-only-verification`: PASS
+- `npm.cmd run check:a16r-runtime-execution-enablement-gate`: PASS
+- `npm.cmd run check:a16r-runtime-execution-enablement-owner-review`: PASS
+- `npm.cmd run check:a16r-official-import-gate-readiness-diagnosis`: PASS
+- `npm.cmd run check:env:safe`: PASS
+- `npm.cmd run check:migrations`: PASS
+- `npm.cmd run typecheck`: PASS
+- `npm.cmd run lint`: PASS
+- `npm.cmd run build`: PASS
+- `git diff --check`: PASS
+
 ## 2026-07-11 - A-16BT owner-confirmed GitHub Actions deploy evidence
 
 ### Phase

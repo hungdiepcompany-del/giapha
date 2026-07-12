@@ -178,6 +178,16 @@ const allowedChangedFiles = new Set([
   "lib/family/tree-graph-builder.ts",
   "lib/family/tree-types.ts",
   "lib/privacy/privacy-service.ts",
+  "docs/PLAN_A16BU_OFFICIAL_IMPORT_IS_LIVING_NULL_CONTRACT_FIX.md",
+  "scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
+  "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
+  "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+  "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-gate.cjs",
+  "scripts/check-a16r-runtime-execution-enablement-owner-review.cjs",
+  "scripts/check-a16r-official-import-gate-readiness-diagnosis.cjs",
+  "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
+  "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
 ]);
 for (const file of changedFiles) {
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
@@ -188,6 +198,8 @@ for (const file of changedFiles) {
       "supabase/migrations/20260711_0020_a16br_revisions_insert_rls_and_anon_grant_cleanup.sql",
       "db/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql",
       "supabase/migrations/20260711_0021_a16bt_secure_public_genealogy_read_boundary.sql",
+      "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
+      "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
     ].includes(file)
   ) {
     failures.push(`migration must not change in A-16BQ: ${file}`);

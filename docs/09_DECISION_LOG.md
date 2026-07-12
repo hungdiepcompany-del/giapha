@@ -1,5 +1,52 @@
 # Decision Log
 
+## Decision 325 - A-16BU fixes official import is_living null derivation
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: Owner-provided production evidence showed the official import POST
+reached the transaction helper once (`canRunOfficialImport=true`) and blocked
+with `A16AH_BLOCKED_TRANSACTION_RPC_FAILED` because the database rejected NULL
+for `people.is_living`. Imported people count remained `0`.
+
+Decision: Create a not-applied corrective migration 0022 that replaces
+`public.a16p_tx_execute_giapha4_official_import` with the same signature,
+SECURITY INVOKER mode, fixed search_path, permission checks, ownership checks,
+locking, audit, rollback, all-or-nothing transaction, idempotency, and execute
+revokes, while changing only the `is_living` derivation.
+
+New derivation contract:
+
+```sql
+case
+  when lower(btrim(coalesce(candidate ->> 'isLiving', ''))) in ('true', 'false')
+    then lower(btrim(candidate ->> 'isLiving'))::boolean
+  else nullif(btrim(coalesce(candidate ->> 'deathDateText', '')), '') is null
+end
+```
+
+Rationale:
+
+- `candidate ? 'isLiving'` is true for JSON null, so the old A-16V expression
+  could produce SQL NULL.
+- The corrected expression preserves explicit true/false booleans and strings,
+  then fail-safe falls back to `deathDateText` for null, missing, empty, or
+  invalid values.
+- The expression is deterministic and non-null for the import fixtures.
+- A-16R retry remains blocked until owner reviews/applies/verifies this
+  corrective migration in a separate phase.
+
+Safety:
+
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `A16R_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 324 - A-16BT deploy evidence accepted from owner marker
 
 Date: 2026-07-11

@@ -11,6 +11,8 @@ const reconciliationDocPath = "docs/PLAN_A16V_PRODUCTION_RUNTIME_EVIDENCE_RECONC
 const servicePath = "lib/import/giapha4/official-import-service.ts";
 const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const panelPath = "components/imports/import-session-manifest-panel.tsx";
+const confirmationClientPath =
+  "components/imports/a16r-official-import-confirmation-client.tsx";
 const packagePath = "package.json";
 
 function read(relativePath) {
@@ -61,6 +63,7 @@ const service = read(servicePath);
 const route = read(routePath);
 const a16ah = read("docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md");
 const panel = read(panelPath);
+const confirmationClient = read(confirmationClientPath);
 const packageJson = readJson(packagePath);
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
@@ -136,8 +139,14 @@ for (const token of [
   requireIncludes(route, token, `route token ${token}`);
 }
 
-for (const token of ["disabled", "aria-disabled=\"true\""]) {
-  requireIncludes(panel, token, `panel token ${token}`);
+for (const [content, token, label] of [
+  [panel, "canSubmit={a16rSameRunPreflight.officialImportEnabled}", "panel official import canSubmit gate"],
+  [panel, "lockedReasons={a16rSameRunLockedReasons}", "panel official import lock reasons"],
+  [confirmationClient, "if (!canSubmit)", "confirmation client fail-closed branch"],
+  [confirmationClient, "disabled", "confirmation client disabled button"],
+  [confirmationClient, "aria-disabled=\"true\"", "confirmation client locked aria-disabled"],
+]) {
+  requireIncludes(content, token, label);
 }
 
 if (
@@ -221,6 +230,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16r-run-retry-official-import-bundle.cjs",
   "scripts/check-a16t-apply-verify.cjs",
   "scripts/check-a16t-grant-rls-hardening-fix.cjs",
+  "docs/PLAN_A16BU_OFFICIAL_IMPORT_IS_LIVING_NULL_CONTRACT_FIX.md",
+  "scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
+  "scripts/check-a16bf-rpc-invocation-identity-precheck-contract-alignment.cjs",
+  "scripts/check-a16bh-production-a16bf-identity-precheck-rpc-contract-drift-diagnosis.cjs",
+  "scripts/check-a16bi-same-client-rpc-binding-production-contract-read-only-verification.cjs",
+  "scripts/check-a16bq-downstream-rpc-write-contract-read-only-verification.cjs",
+  "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
+  "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql",
   routePath,
   "docs/PLAN_A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE.md",
   "scripts/check-a16ah-official-import-runtime-execution-branch-candidate.cjs",
@@ -277,7 +294,12 @@ for (const file of changedFiles) {
   if (file === ".env.local" || file.endsWith(".env.local")) failures.push(`forbidden env file ${file}`);
   if (file.startsWith("supabase/.temp/")) failures.push(`forbidden supabase temp ${file}`);
   if (/\.(xls|xlsx|csv)$/i.test(file)) failures.push(`forbidden spreadsheet/csv ${file}`);
-  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file)) {
+  const isApprovedA16buCorrectiveMigration =
+    file ===
+      "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql" ||
+    file ===
+      "supabase/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql";
+  if (/^(db\/migrations|supabase\/migrations|db\/checks)\//.test(file) && !isApprovedA16buCorrectiveMigration) {
     failures.push(`forbidden SQL/check file ${file}`);
   }
 }
