@@ -1,5 +1,54 @@
 # Next AI Handoff
 
+## 2026-07-12 - A-17N - Admin parent/child canonical write path blocker
+
+- Status:
+  `A17N_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED_FOUNDATION_READY`.
+- Preflight:
+  `PRECONDITION_A17M_COMMIT_PRESENT=YES`;
+  `WORKTREE_CLEAN_BEFORE_PHASE=YES`;
+  `REMOTE_SYNC_BEFORE_PHASE=LOCAL_AHEAD_2_NO_DIVERGENCE`.
+- Files:
+  `lib/family/admin-canonical-family-link-service.ts`;
+  `docs/PLAN_A17N_ADMIN_PARENT_CHILD_CANONICAL_WRITE_PATH.md`;
+  `scripts/check-a17n-admin-parent-child-canonical-write-path.cjs`.
+- Old behavior confirmed:
+  `app/(admin)/admin/tree/edit/actions.ts` still creates a new family
+  unconditionally before adding parent/child memberships in parent and child
+  tree actions.
+- Foundation:
+  `planAndExecuteAdminParentLink`;
+  `planAndExecuteAdminChildLink`;
+  `AdminCanonicalFamilyTransactionExecutor`;
+  stable Vietnamese result messages;
+  no direct Supabase client;
+  no service role;
+  no SQL;
+  no migration.
+- Blocker:
+  `TRANSACTION_BOUNDARY_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED`.
+  No approved admin parent/child transaction executor exists. The A-16
+  official-import transaction RPC is scoped to import and must not be reused for
+  admin family edits.
+- Integration:
+  `ADMIN_PARENT_ACTION_INTEGRATED=NO_BLOCKED`;
+  `ADMIN_CHILD_ACTION_INTEGRATED=NO_BLOCKED`;
+  `UNCONDITIONAL_PARENT_FAMILY_CREATE_REMOVED=NO_BLOCKED`;
+  `UNCONDITIONAL_CHILD_FAMILY_CREATE_REMOVED=NO_BLOCKED`;
+  `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`.
+- Safety:
+  `MIGRATION_CREATED=NO`;
+  `SQL_EXECUTED=NO`;
+  `MIGRATION_APPLIED=NO`;
+  `LEGACY_RECONCILIATION_EXECUTED=NO`;
+  `OFFICIAL_IMPORT_RPC_CALLED=NO`;
+  `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`;
+  `PACKAGE_DEPENDENCY_INSTALLED=NO`.
+- Next action:
+  `OWNER_REVIEW_A17N_THEN_START_SEPARATE_A17O_IMPORTER_CANONICAL_GROUPING_FIX`.
+
 ## 2026-07-12 - A-17M - Canonical family domain service foundation
 
 - Status:

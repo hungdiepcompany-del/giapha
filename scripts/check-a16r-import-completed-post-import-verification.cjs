@@ -220,6 +220,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
   "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
   "scripts/check-a17m-canonical-family-domain-service.cjs",
+  "lib/family/admin-canonical-family-link-service.ts",
+  "docs/PLAN_A17N_ADMIN_PARENT_CHILD_CANONICAL_WRITE_PATH.md",
+  "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
 ]);
 
 for (const file of changedFiles) {
@@ -231,7 +234,8 @@ for (const file of changedFiles) {
   if (/\.(xls|xlsx|csv|zip)$/i.test(file)) failures.push(`forbidden data/evidence file ${file}`);
   if (
     /^(app|components|lib|services)\//.test(file) &&
-    !file.startsWith("lib/family/canonical-family-")
+    !file.startsWith("lib/family/canonical-family-") &&
+    file !== "lib/family/admin-canonical-family-link-service.ts"
   ) {
     failures.push(`forbidden runtime app code change ${file}`);
   }

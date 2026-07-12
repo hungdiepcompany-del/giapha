@@ -309,6 +309,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
   "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
+  "lib/family/admin-canonical-family-link-service.ts",
+  "docs/PLAN_A17N_ADMIN_PARENT_CHILD_CANONICAL_WRITE_PATH.md",
+  "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
 ]);
 
 for (const changedFile of changedFiles) {

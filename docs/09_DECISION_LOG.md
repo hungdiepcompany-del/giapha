@@ -1,5 +1,53 @@
 # Decision Log
 
+## Decision 333 - A-17N blocks admin canonical write activation until a transaction executor exists
+
+Date: 2026-07-12
+
+Status: Accepted for owner review
+
+Context: A-17M added a dormant canonical family domain service foundation, and
+A-17N attempted to integrate admin parent/child write paths. The current admin
+tree actions create families and memberships through sequential Supabase calls:
+family create, parent insert, child insert and independent revision writes. No
+approved general transaction executor exists for admin parent/child edits. The
+existing official-import transaction RPC is scoped to A-16 import and must not
+be reused or broadened in A-17N.
+
+Decision: Add a fail-closed admin canonical family application-service
+foundation, but do not wire production admin parent/child actions until a
+separate owner-approved transaction executor/RPC phase exists. Do not add
+SECURITY DEFINER, SQL, migration, trigger, grant, service role bypass or
+sequential replacement writes in A-17N.
+
+Rationale:
+
+- A-17N writes span optional person creation, family creation/update, parent
+  membership, child membership, canonical metadata and audit.
+- Without an atomic executor, replacing unconditional family creation would
+  still risk partial data.
+- Wiring actions to a fail-closed service would block live admin relationship
+  edits without actually completing the safe write path.
+- A new mutation RPC requires a separate SQL/migration/security review phase.
+
+Safety:
+
+- `A17N_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED_FOUNDATION_READY`
+- `ADMIN_PARENT_ACTION_INTEGRATED=NO_BLOCKED`
+- `ADMIN_CHILD_ACTION_INTEGRATED=NO_BLOCKED`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`
+- `TRANSACTION_BOUNDARY_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `LEGACY_RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `NEXT_ACTION=OWNER_REVIEW_A17N_THEN_START_SEPARATE_A17O_IMPORTER_CANONICAL_GROUPING_FIX`
+
 ## Decision 332 - A-17M creates dormant canonical family domain service foundation
 
 Date: 2026-07-12

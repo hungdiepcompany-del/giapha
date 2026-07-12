@@ -1,5 +1,103 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N admin parent/child canonical write path blocker
+
+### Phase
+
+A-17N - admin parent/child canonical write-path integration attempt
+
+### Viec da lam
+
+- Verified preflight: branch `main`, worktree clean, A-17M commit
+  `4cf8903 feat: add canonical family domain service foundation` present,
+  local branch ahead of `origin/main` by 2 commits with no divergence.
+- Mapped existing admin tree parent/child write flows and confirmed the
+  unconditional family creation sources in
+  `app/(admin)/admin/tree/edit/actions.ts`.
+- Confirmed no approved general admin parent/child transaction executor exists.
+  The existing official-import transaction RPC is scoped to A-16 import and was
+  not reused.
+- Added fail-closed application-service foundation
+  `lib/family/admin-canonical-family-link-service.ts` with
+  `planAndExecuteAdminParentLink` and `planAndExecuteAdminChildLink`.
+- Added checker
+  `scripts/check-a17n-admin-parent-child-canonical-write-path.cjs` and package
+  script `check:a17n-admin-parent-child-canonical-write-path`.
+- Did not wire production admin parent/child actions because doing so without
+  an approved atomic executor would either keep partial-write risk or block
+  live admin relationship edits.
+- Did not create migration, execute SQL, apply migration, run reconciliation,
+  call official import RPC, deploy, push or install dependencies.
+
+### Ket qua
+
+- `A17N_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED_FOUNDATION_READY`
+- `PRECONDITION_A17M_COMMIT_PRESENT=YES`
+- `WORKTREE_CLEAN_BEFORE_PHASE=YES`
+- `REMOTE_SYNC_BEFORE_PHASE=LOCAL_AHEAD_2_NO_DIVERGENCE`
+- `ADMIN_PARENT_ACTION_INTEGRATED=NO_BLOCKED`
+- `ADMIN_CHILD_ACTION_INTEGRATED=NO_BLOCKED`
+- `UNCONDITIONAL_PARENT_FAMILY_CREATE_REMOVED=NO_BLOCKED`
+- `UNCONDITIONAL_CHILD_FAMILY_CREATE_REMOVED=NO_BLOCKED`
+- `DIRECT_PARENT_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=NO_BLOCKED`
+- `DIRECT_CHILD_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=NO_BLOCKED`
+- `CANONICAL_FAMILY_REUSE_SUPPORTED=FOUNDATION_ONLY_BLOCKED`
+- `CANONICAL_FAMILY_CREATE_SUPPORTED=FOUNDATION_ONLY_BLOCKED`
+- `SINGLE_PARENT_FAMILY_EXTENSION_SUPPORTED=FOUNDATION_ONLY_BLOCKED`
+- `MULTIPLE_SPOUSE_CONTEXT_FAILS_CLOSED=YES`
+- `LEGACY_DUPLICATE_REVIEW_REQUIRED=YES`
+- `CYCLE_VALIDATION_PRESERVED=YES`
+- `PERMISSION_VALIDATION_PRESERVED=YES`
+- `AUDIT_VALIDATION_PRESERVED=FOUNDATION_REQUIRES_TRANSACTION_EXECUTOR`
+- `TRANSACTION_BOUNDARY_STATUS=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED`
+- `SECOND_CHILD_REUSES_FAMILY_TEST=BLOCKED_FOUNDATION_PASS`
+- `EIGHT_CHILDREN_ONE_FAMILY_TEST=PASS_A17M_IDENTITY`
+- `SECOND_PARENT_EXTENDS_FAMILY_TEST=BLOCKED_FOUNDATION_PASS`
+- `MULTIPLE_CANDIDATE_FAIL_CLOSED_TEST=PASS`
+- `DUPLICATE_LINK_NO_OP_TEST=PASS`
+- `CYCLE_BLOCK_TEST=PASS`
+- `ATOMIC_ROLLBACK_TEST=BLOCKED_TRANSACTION_EXECUTOR_REQUIRED`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`
+- `IMPORTER_RUNTIME_CHANGED=NO`
+- `ADD_SPOUSE_RUNTIME_CHANGED=NO`
+- `PUBLIC_TREE_RUNTIME_CHANGED=NO`
+- `GRAPH_LAYOUT_RUNTIME_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `LEGACY_RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+- `NEXT_ACTION=OWNER_REVIEW_A17N_THEN_START_SEPARATE_A17O_IMPORTER_CANONICAL_GROUPING_FIX`
+
+### Kiem tra
+
+- `npm.cmd run check:a17n-admin-parent-child-canonical-write-path` - PASS
+- `npm.cmd run check:a17m-canonical-family-domain-service` - PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence` - PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design` - PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract` - PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract` - PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit` - PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run` - PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design` - PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate` - PASS
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification` - PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `git diff --check` - PASS
+
 ## 2026-07-12 - A-17M canonical family domain service foundation
 
 ### Phase
