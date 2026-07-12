@@ -351,7 +351,11 @@
     "check:a16bt-secure-public-genealogy-read-boundary": "node scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs",
     "check:a16bu-official-import-is-living-null-contract-fix": "node scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
     "check:a16bu-post-apply-read-only-verification": "node scripts/check-a16bu-post-apply-read-only-verification.cjs",
-    "check:a16r-import-completed-post-import-verification": "node scripts/check-a16r-import-completed-post-import-verification.cjs"
+    "check:a16r-import-completed-post-import-verification": "node scripts/check-a16r-import-completed-post-import-verification.cjs",
+    "check:a17a-tree-baseline-evidence": "node scripts/check-a17a-tree-baseline-evidence.cjs",
+    "check:a17b-canonical-family-unit-design": "node scripts/check-a17b-canonical-family-unit-design.cjs",
+    "check:a17c-phatue-oriented-tree-ux-contract": "node scripts/check-a17c-phatue-oriented-tree-ux-contract.cjs",
+    "check:a17d-canonical-tree-graph-contract": "node scripts/check-a17d-canonical-tree-graph-contract.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

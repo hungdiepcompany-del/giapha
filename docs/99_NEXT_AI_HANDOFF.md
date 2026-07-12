@@ -1,5 +1,71 @@
 # Next AI Handoff
 
+## 2026-07-12 - A-17A to A-17D - Tree architecture foundation
+
+- Status:
+  `A17AD_BUNDLE_STATUS=PASS_TREE_ARCHITECTURE_FOUNDATION_READY_FOR_OWNER_REVIEW`;
+  `A17A_STATUS=PASS_READ_ONLY_BASELINE_RECORDED`;
+  `A17B_STATUS=CANONICAL_FAMILY_DESIGN_READY_FOR_OWNER_REVIEW`;
+  `A17C_STATUS=PHATUE_ORIENTED_UX_CONTRACT_READY_FOR_OWNER_REVIEW`;
+  `A17D_STATUS=CANONICAL_GRAPH_CONTRACT_READY_FOR_OWNER_REVIEW`.
+- Docs:
+  `docs/PLAN_A17AD_TREE_ARCHITECTURE_FOUNDATION_BUNDLE.md`;
+  `docs/PLAN_A17A_TREE_BASELINE_EVIDENCE.md`;
+  `docs/PLAN_A17B_CANONICAL_FAMILY_UNIT_DESIGN.md`;
+  `docs/PLAN_A17C_PHATUE_ORIENTED_TREE_UX_CONTRACT.md`;
+  `docs/PLAN_A17D_CANONICAL_TREE_GRAPH_CONTRACT.md`.
+- Verifier:
+  `db/checks/20260712_check_a17a_tree_baseline_evidence.sql`.
+- SELECT-only production baseline:
+  `people_count=110`;
+  `families_count=74`;
+  `family_parents_count=140`;
+  `family_children_count=73`;
+  `couple_relationships_count=3`;
+  `duplicate_parent_set_group_count=22`;
+  `redundant_family_count_estimate=38`;
+  `families_with_multiple_children=0`;
+  `connected_component_count=5`;
+  `largest_connected_component_people_count=99`;
+  `saved_tree_layout_count=1`;
+  `saved_tree_layout_node_count=13`;
+  `locked_layout_node_count=0`.
+- Source behavior confirmed:
+  importer creates per-child family rows; admin add-parent/add-child currently
+  create new family rows; add-spouse creates couple metadata without canonical
+  family linkage; graph can render couple and family concepts separately;
+  generic ELK layout is not generation-aware; editor mount auto-layout can
+  override saved positions; viewer search lacks Vietnamese diacritic
+  normalization; global fit behavior is current default.
+- A-17B contract:
+  canonical family is not child-keyed; sorted active parent IDs are necessary
+  but not sufficient; identity also considers union, period, status,
+  provenance and legacy exceptions; merge safety classes are
+  `SAFE_AUTOMATIC_CANDIDATE`, `OWNER_REVIEW_REQUIRED`, `BLOCKED_AMBIGUOUS`,
+  and `NOT_A_DUPLICATE`.
+- A-17C contract:
+  Phả Tuệ is structural inspiration only, not copied code/assets/styling/schema;
+  view modes are `Gia đình trực tiếp`, `Tổ tiên`, `Hậu duệ`,
+  `Toàn bộ cây`, `Theo chi/nhánh`, and `Người chưa kết nối`.
+- A-17D contract:
+  graph types are `TreePersonNode`, `TreeFamilyUnit`, `TreeGraphEdge`, and
+  `TreeGraphContext`; saved layout priority is locked saved, saved, generated,
+  fallback; diagnostics are counts/codes only.
+- Safety:
+  `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`;
+  `MUTATION_SQL_EXECUTED=NO`;
+  `MIGRATION_CREATED=NO`;
+  `MIGRATION_APPLIED=NO`;
+  `RECONCILIATION_EXECUTED=NO`;
+  `IMPORT_RPC_CALLED=NO`;
+  `OFFICIAL_IMPORT_RETRY=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Owner marker:
+  `APPROVE_A17_CANONICAL_FAMILY_AND_TREE_UX_DESIGN`.
+- Next action:
+  `OWNER_REVIEW_A17AD_THEN_RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`.
+
 ## 2026-07-12 - A-16R - Import completed post-import verification
 
 - Status:

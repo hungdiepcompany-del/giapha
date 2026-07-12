@@ -1,5 +1,75 @@
 # AI Work Log
 
+## 2026-07-12 - A-17A to A-17D tree architecture foundation
+
+### Phase
+
+A-17A to A-17D - read-only tree baseline, canonical family design, Phả
+Tuệ-oriented UX contract and canonical graph contract
+
+### Viec da lam
+
+- Added SELECT-only structural verifier
+  `db/checks/20260712_check_a17a_tree_baseline_evidence.sql`.
+- Ran the verifier against the linked Supabase project and recorded aggregate
+  production metrics only, with no names, dates, home towns, private notes,
+  emails, auth IDs, raw genealogy rows or import payloads.
+- Recorded current source behavior for importer family creation, admin
+  add-parent/add-child/add-spouse actions, family service, graph builder, ELK
+  layout, saved layout, public/admin projections, Vietnamese search and
+  `fitView`.
+- Added A-17B canonical family design with identity contract, merge safety
+  classes, domain operations and 20 required case behaviors.
+- Added A-17C Phả Tuệ-oriented UX contract using structural inspiration only,
+  Vietnamese view modes, focus-person navigation, compact family units,
+  Vietnamese editing labels, search normalization and older-user/mobile rules.
+- Added A-17D canonical graph contract for `TreePersonNode`,
+  `TreeFamilyUnit`, `TreeGraphEdge`, `TreeGraphContext`, layout priority,
+  handles, connected components and no-PII diagnostics.
+- Added checkers for A-17A, A-17B, A-17C and A-17D and package scripts.
+- Did not create/apply migrations, did not reconcile, did not run mutation SQL,
+  did not call import RPC, did not retry official import, did not deploy and
+  did not push.
+
+### Ket qua
+
+- `A17AD_BUNDLE_STATUS=PASS_TREE_ARCHITECTURE_FOUNDATION_READY_FOR_OWNER_REVIEW`
+- `A17A_STATUS=PASS_READ_ONLY_BASELINE_RECORDED`
+- `A17B_STATUS=CANONICAL_FAMILY_DESIGN_READY_FOR_OWNER_REVIEW`
+- `A17C_STATUS=PHATUE_ORIENTED_UX_CONTRACT_READY_FOR_OWNER_REVIEW`
+- `A17D_STATUS=CANONICAL_GRAPH_CONTRACT_READY_FOR_OWNER_REVIEW`
+- `people_count=110`
+- `families_count=74`
+- `family_parents_count=140`
+- `family_children_count=73`
+- `couple_relationships_count=3`
+- `duplicate_parent_set_group_count=22`
+- `redundant_family_count_estimate=38`
+- `families_with_multiple_children=0`
+- `connected_component_count=5`
+- `largest_connected_component_people_count=99`
+- `saved_tree_layout_count=1`
+- `saved_tree_layout_node_count=13`
+- `locked_layout_node_count=0`
+- `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`
+- `MUTATION_SQL_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `OFFICIAL_IMPORT_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=OWNER_REVIEW_A17AD_THEN_RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`
+
+### Kiem tra
+
+- `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a17a_tree_baseline_evidence.sql`: PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence`: PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design`: PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract`: PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract`: PASS
+
 ## 2026-07-12 - A-16R import completed post-import verification
 
 ### Phase

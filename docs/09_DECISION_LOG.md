@@ -1,5 +1,52 @@
 # Decision Log
 
+## Decision 328 - A-17 canonical family tree foundation accepted for owner review
+
+Date: 2026-07-12
+
+Status: Accepted for owner review
+
+Context: A-16R official import completed and post-import verification passed,
+but the current tree architecture review found likely child-scoped family rows,
+duplicate parent-set groups, couple/family duplication risk, generic layout,
+saved-layout overwrite risk and inconsistent Vietnamese search.
+
+Decision: Record the A-17A to A-17D foundation as a read-only architecture
+bundle. The next tree architecture should use canonical family units, compact
+family junction graph nodes, focus-person/component-aware Vietnamese UX, and
+privacy-safe diagnostics. No schema, migration, reconciliation or runtime
+implementation is approved by this decision.
+
+Rationale:
+
+- A-17A SELECT-only baseline found `people_count=110`,
+  `families_count=74`, `family_children_count=73`,
+  `families_with_multiple_children=0`,
+  `duplicate_parent_set_group_count=22` and
+  `redundant_family_count_estimate=38`, which supports the concern that many
+  current family rows are child-scoped.
+- Source review confirmed importer per-child family behavior, admin add-parent
+  and add-child new-family behavior, add-spouse/couple separation, generic ELK
+  layout, saved-layout overwrite risk, global fit behavior and viewer search
+  normalization gap.
+- A-17B defines canonical family identity using more than sorted parent IDs,
+  including union identity, period, status, provenance and legacy exceptions.
+- A-17C defines Vietnamese view modes and older-user-oriented tree UX without
+  copying proprietary Phả Tuệ code, assets, styling or schema.
+- A-17D defines graph and layout contracts with no-PII diagnostics.
+
+Safety:
+
+- `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`
+- `MUTATION_SQL_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `OFFICIAL_IMPORT_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 327 - A-16R import completion accepted after read-only post-import verification
 
 Date: 2026-07-12
