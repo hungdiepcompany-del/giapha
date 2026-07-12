@@ -363,6 +363,7 @@
     "check:a17i-canonical-family-schema-post-apply-verification": "node scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
     "check:a17m-canonical-family-domain-service": "node scripts/check-a17m-canonical-family-domain-service.cjs",
     "check:a17n-admin-parent-child-canonical-write-path": "node scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
+    "check:a17n-r-admin-parent-child-runtime-integration": "node scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
     "check:a17n-tx1-admin-canonical-family-transaction-executor-candidate": "node scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
     "check:a17n-tx2f-post-apply-verifier-active-scope-correction": "node scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs"
   },

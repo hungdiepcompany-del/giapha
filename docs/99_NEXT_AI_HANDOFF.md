@@ -1,5 +1,77 @@
 # Next AI Handoff
 
+## 2026-07-12 - A-17N-R - Admin parent/child canonical runtime integration
+
+- Status:
+  `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW`.
+- Preconditions:
+  `PRECONDITION_TX2_PASS=YES`;
+  `A17N_TX2R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_VERIFIER_RECORDED`;
+  `WORKTREE_CLEAN_BEFORE_PHASE=YES`;
+  `REMOTE_SYNC_BEFORE_PHASE=YES`.
+- Runtime integration:
+  `ADMIN_PARENT_ACTION_INTEGRATED=YES`;
+  `ADMIN_CHILD_ACTION_INTEGRATED=YES`;
+  `CANONICAL_APPLICATION_SERVICE_ACTIVE=YES`;
+  `TRANSACTION_EXECUTOR_ADAPTER_CREATED=YES`;
+  `APPROVED_RPC_USED=YES`;
+  `APPROVED_RPC=public.execute_admin_canonical_family_parent_child_write`;
+  `END_USER_SERVER_CONTEXT_USED=YES`;
+  `SERVICE_ROLE_USED=NO`.
+- Removed old write path:
+  `UNCONDITIONAL_PARENT_FAMILY_CREATE_REMOVED=YES`;
+  `UNCONDITIONAL_CHILD_FAMILY_CREATE_REMOVED=YES`;
+  `DIRECT_PARENT_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=YES`;
+  `DIRECT_CHILD_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=YES`;
+  `SEQUENTIAL_MUTATION_FALLBACK_PRESENT=NO`.
+- Preserved guards:
+  `IDEMPOTENCY_KEY_REQUIRED=YES`;
+  `MUTATION_PLAN_HASH_REQUIRED=YES`;
+  `PERMISSION_VALIDATION_PRESERVED=YES`;
+  `PROFILE_VALIDATION_PRESERVED=YES`;
+  `CYCLE_VALIDATION_PRESERVED=YES`;
+  `LEGACY_DUPLICATE_FAILS_CLOSED=YES`;
+  `MULTIPLE_SPOUSE_CONTEXT_FAILS_CLOSED=YES`.
+- New-person limitation:
+  `NEW_PERSON_AND_LINK_STATUS=BLOCKED_NEW_PERSON_TRANSACTION_CONTRACT_REQUIRED`;
+  existing-person parent/child linking is activated, but create-person plus
+  parent/child link is still blocked before person creation because the
+  approved executor does not include person creation atomically.
+- Production caller boundary:
+  `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=2`;
+  only `addParentFromTreeAction` and `addChildFromTreeAction` call the
+  canonical runtime service.
+- Untouched surfaces:
+  `IMPORTER_RUNTIME_CHANGED=NO`;
+  `ADD_SPOUSE_RUNTIME_CHANGED=NO`;
+  `PUBLIC_TREE_RUNTIME_CHANGED=NO`;
+  `GRAPH_LAYOUT_RUNTIME_CHANGED=NO`;
+  `TRANSACTION_EXECUTOR_SQL_CHANGED=NO`.
+- Safety:
+  `MIGRATION_CREATED=NO`;
+  `SQL_EXECUTED=NO`;
+  `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`;
+  `GENEALOGY_ROWS_MODIFIED_BY_PHASE=NO`;
+  `RECONCILIATION_EXECUTED=NO`;
+  `OFFICIAL_IMPORT_RPC_CALLED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`;
+  `PACKAGE_DEPENDENCY_INSTALLED=NO`.
+- Files:
+  `app/(admin)/admin/tree/edit/actions.ts`;
+  `lib/family/admin-canonical-family-link-service.ts`;
+  `lib/family/admin-canonical-family-runtime-service.ts`;
+  `lib/family/admin-canonical-family-transaction-adapter.ts`;
+  `lib/family/canonical-family-supabase-repository.ts`;
+  `docs/PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md`;
+  `scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs`.
+- Validation:
+  required A-17N-R, A-17N, A-17N-TX1, A-17N-TX2F, A-17M, A-17A through
+  A-17I, A-16R post-import, relationship/tree/privacy/env/migration,
+  typecheck, lint, build and diff checks should be consulted in the phase doc.
+- Next action:
+  `NEXT_ACTION=OWNER_REVIEW_A17N_R_THEN_SEPARATE_A17N_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE`.
+
 ## 2026-07-12 - A-17N-TX2R - Owner manual production verifier PASS recorded
 
 - Status:

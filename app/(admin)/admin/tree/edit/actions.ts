@@ -4,12 +4,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import {
-  addChildToFamily,
-  addParentToFamily,
-  createCoupleRelationship,
-  createFamily,
-} from "@/lib/family/relationship-service";
+  linkExistingChildFromTree,
+  linkExistingParentFromTree,
+} from "@/lib/family/admin-canonical-family-runtime-service";
 import { createPerson } from "@/lib/family/people-service";
+import { createCoupleRelationship } from "@/lib/family/relationship-service";
 import {
   resetTreeLayout,
   saveTreeNodePositions,
@@ -117,14 +116,6 @@ function parsePositions(formData: FormData): TreeNodePositionInput[] {
   });
 }
 
-async function createTreeFamily(label: string, notes: string | null) {
-  return createFamily({
-    family_label: label,
-    visibility: "family",
-    notes,
-  });
-}
-
 export async function saveTreeLayoutAction(formData: FormData) {
   try {
     const result = await saveTreeNodePositions(parsePositions(formData));
@@ -158,34 +149,15 @@ export async function addParentFromTreeAction(formData: FormData) {
     "parent") as ParentRole;
   const relationshipType = (requiredText(formData, "relationship_type") ||
     "unknown") as ParentRelationshipType;
-  const notes = requiredText(formData, "notes") || null;
-  const family = await createTreeFamily("Family created from tree editor", notes);
-
-  if (!family.ok) {
-    redirectWithError(formData, family.error);
-  }
-
-  const parent = await addParentToFamily({
-    family_id: family.data.id,
-    person_id: parentId,
-    parent_role: parentRole,
-    relationship_type: relationshipType,
-    notes,
+  const result = await linkExistingParentFromTree({
+    childId,
+    parentId,
+    parentRole,
+    relationshipType,
   });
 
-  if (!parent.ok) {
-    redirectWithError(formData, parent.error);
-  }
-
-  const child = await addChildToFamily({
-    family_id: family.data.id,
-    person_id: childId,
-    child_relationship_type: "biological",
-    notes,
-  });
-
-  if (!child.ok) {
-    redirectWithError(formData, child.error);
+  if (!result.ok) {
+    redirectWithError(formData, result.message);
   }
 
   revalidateTreePaths();
@@ -199,34 +171,15 @@ export async function addChildFromTreeAction(formData: FormData) {
     formData,
     "child_relationship_type",
   ) || "biological") as ChildRelationshipType;
-  const notes = requiredText(formData, "notes") || null;
-  const family = await createTreeFamily("Family created from tree editor", notes);
-
-  if (!family.ok) {
-    redirectWithError(formData, family.error);
-  }
-
-  const parent = await addParentToFamily({
-    family_id: family.data.id,
-    person_id: parentId,
-    parent_role: "parent",
-    relationship_type: "unknown",
-    notes,
+  const result = await linkExistingChildFromTree({
+    parentId,
+    childId,
+    childRelationshipType,
+    explicitFamilyId: optionalText(formData, "family_id"),
   });
 
-  if (!parent.ok) {
-    redirectWithError(formData, parent.error);
-  }
-
-  const child = await addChildToFamily({
-    family_id: family.data.id,
-    person_id: childId,
-    child_relationship_type: childRelationshipType,
-    notes,
-  });
-
-  if (!child.ok) {
-    redirectWithError(formData, child.error);
+  if (!result.ok) {
+    redirectWithError(formData, result.message);
   }
 
   revalidateTreePaths();
@@ -259,6 +212,22 @@ export async function createPersonAndAttachFromTreeAction(formData: FormData) {
   const selectedId = requiredText(formData, "selected_person_id");
   const relationKind = requiredText(formData, "relation_kind");
   const formMode = requiredText(formData, "form_mode");
+
+  if (
+    relationKind === "father" ||
+    relationKind === "mother" ||
+    relationKind === "child"
+  ) {
+    redirectWithError(
+      formData,
+      "Chưa thể tạo thành viên mới kèm quan hệ trong cùng một giao dịch an toàn.",
+    );
+  }
+
+  if (relationKind !== "spouse") {
+    redirectWithError(formData, "Loại quan hệ không hợp lệ.");
+  }
+
   const birthDateInput = dateInputToDate(optionalText(formData, "birth_date"));
   const deathDateInput = dateInputToDate(optionalText(formData, "death_date"));
   const birthDate = birthDateInput ?? yearToDate(optionalText(formData, "birth_year"));
@@ -288,100 +257,19 @@ export async function createPersonAndAttachFromTreeAction(formData: FormData) {
 
   const newPersonId = person.data.id;
   const notes = "Tạo nhanh từ Cây gia phả";
+  const spouse = await createCoupleRelationship({
+    person1_id: selectedId,
+    person2_id: newPersonId,
+    relationship_status: "married",
+    visibility: "family",
+    notes,
+  });
 
-  if (relationKind === "father" || relationKind === "mother") {
-    const family = await createTreeFamily("Family created from tree editor", notes);
-
-    if (!family.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${family.error}`,
-      );
-    }
-
-    const parent = await addParentToFamily({
-      family_id: family.data.id,
-      person_id: newPersonId,
-      parent_role: relationKind,
-      relationship_type: "biological",
-      notes,
-    });
-
-    if (!parent.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${parent.error}`,
-      );
-    }
-
-    const child = await addChildToFamily({
-      family_id: family.data.id,
-      person_id: selectedId,
-      child_relationship_type: "biological",
-      notes,
-    });
-
-    if (!child.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${child.error}`,
-      );
-    }
-  } else if (relationKind === "child") {
-    const family = await createTreeFamily("Family created from tree editor", notes);
-
-    if (!family.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${family.error}`,
-      );
-    }
-
-    const parent = await addParentToFamily({
-      family_id: family.data.id,
-      person_id: selectedId,
-      parent_role: "parent",
-      relationship_type: "unknown",
-      notes,
-    });
-
-    if (!parent.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${parent.error}`,
-      );
-    }
-
-    const child = await addChildToFamily({
-      family_id: family.data.id,
-      person_id: newPersonId,
-      child_relationship_type: "biological",
-      notes,
-    });
-
-    if (!child.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${child.error}`,
-      );
-    }
-  } else if (relationKind === "spouse") {
-    const spouse = await createCoupleRelationship({
-      person1_id: selectedId,
-      person2_id: newPersonId,
-      relationship_status: "married",
-      visibility: "family",
-      notes,
-    });
-
-    if (!spouse.ok) {
-      redirectWithError(
-        formData,
-        `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${spouse.error}`,
-      );
-    }
-  } else {
-    redirectWithError(formData, "Loại quan hệ không hợp lệ.");
+  if (!spouse.ok) {
+    redirectWithError(
+      formData,
+      `Đã tạo thành viên mới nhưng chưa gắn được quan hệ: ${spouse.error}`,
+    );
   }
 
   revalidateTreePaths();

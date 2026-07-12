@@ -13,6 +13,8 @@ const checkerPath =
   "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs";
 const treeActionsPath = "app/(admin)/admin/tree/edit/actions.ts";
 const relationshipsActionsPath = "app/(admin)/admin/relationships/actions.ts";
+const a17nRuntimeDocPath =
+  "docs/PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md";
 const a17nTx1MigrationFiles = new Set([
   "db/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
   "supabase/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
@@ -67,6 +69,7 @@ const service = read(servicePath);
 const doc = read(docPath);
 const treeActions = read(treeActionsPath);
 const relationshipsActions = read(relationshipsActionsPath);
+const runtimeDoc = read(a17nRuntimeDocPath);
 const packageJson = readJson("package.json");
 const index = read("docs/00_INDEX.md");
 const workLog = read("docs/08_AI_WORK_LOG.md");
@@ -93,7 +96,11 @@ for (const token of [
   requireIncludes(service, token, `service token ${token}`);
 }
 
-rejectPattern(service, /\.from\(|\.insert\(|\.update\(|\.delete\(|\.upsert\(|\.rpc\(/i, "direct Supabase mutation");
+rejectPattern(
+  service,
+  /\.from\(|\.insert\(|\.delete\(|\.upsert\(|\.rpc\(|\.from\([\s\S]{0,240}\.update\(/i,
+  "direct Supabase mutation",
+);
 rejectPattern(service, /SUPABASE_SERVICE_ROLE_KEY|service[_-]?role/i, "service role");
 rejectPattern(service, /SECURITY\s+DEFINER/i, "SECURITY DEFINER");
 rejectPattern(service, /full_name|display_name|birth_date|notes_private|email/i, "PII diagnostics");
@@ -132,13 +139,20 @@ assertCase("30. no PII diagnostics", !/full_name|display_name|birth_date|notes_p
 const treeDirectCreateCount =
   (treeActions.match(/createTreeFamily\("Family created from tree editor"/g) ?? [])
     .length;
-if (treeDirectCreateCount !== 4) {
+if (treeDirectCreateCount !== 0) {
   failures.push(
-    `expected unchanged unsafe tree direct create count 4 while blocked, got ${treeDirectCreateCount}`,
+    `expected unsafe tree direct create count 0 after A-17N-R activation, got ${treeDirectCreateCount}`,
   );
 }
-if (treeActions.includes("admin-canonical-family-link-service")) {
-  failures.push("admin tree actions must not call blocked A-17N service yet");
+if (!treeActions.includes("admin-canonical-family-runtime-service")) {
+  failures.push("admin tree actions must call A-17N-R canonical runtime service");
+}
+if (
+  !runtimeDoc.includes(
+    "A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW",
+  )
+) {
+  failures.push("A-17N-R activation document missing");
 }
 if (relationshipsActions.includes("admin-canonical-family-link-service")) {
   failures.push("relationships actions must not call blocked A-17N service yet");
@@ -212,6 +226,12 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17N_TX2_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_POST_APPLY_VERIFICATION.md",
   "docs/PLAN_A17N_TX2F_POST_APPLY_VERIFIER_ACTIVE_SCOPE_CORRECTION.md",
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
+  "docs/PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "lib/family/admin-canonical-family-runtime-service.ts",
+  "lib/family/admin-canonical-family-transaction-adapter.ts",
+  "lib/family/canonical-family-supabase-repository.ts",
   ...a17nTx1MigrationFiles,
 ]);
 

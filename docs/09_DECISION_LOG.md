@@ -1,5 +1,69 @@
 # Decision Log
 
+## Decision 337 - A-17N-R activates canonical admin parent child runtime writes
+
+Date: 2026-07-12
+
+Status: Accepted for owner review before deploy
+
+Context: A-17N created a dormant admin parent/child canonical write-path
+application service but blocked production activation until an approved atomic
+transaction executor existed. A-17N-TX1 created that executor candidate,
+the owner manually applied migration 0024, and A-17N-TX2R recorded the owner
+manual production SELECT-only verifier PASS with idempotency rows and executor
+revision rows both still zero.
+
+Decision: Activate the existing-person admin tree add-parent and add-child
+runtime paths through the A-17M/A-17N application service and the approved
+`public.execute_admin_canonical_family_parent_child_write` SECURITY INVOKER RPC.
+Use the authenticated end-user Supabase server client, preserve active profile
+and `relationships.create` plus `relationships.update` validation, compute a
+deterministic idempotency key and mutation-plan hash, and remove the old
+sequential family/membership write fallback from tree actions.
+
+Rationale:
+
+- Parent/child edits span family create/reuse, canonical metadata, memberships
+  and audit; they need the approved atomic executor rather than sequential app
+  writes.
+- The executor is SECURITY INVOKER and should run under the authenticated owner
+  context, not the service-role boundary.
+- A deterministic idempotency key and mutation-plan hash preserve retry safety
+  and conflict detection.
+- Ambiguous legacy duplicates, multiple spouse/family contexts, cycles and
+  invalid references must fail closed before RPC.
+- The approved executor does not create people, so new-person parent/child
+  linking remains blocked before person creation.
+
+Safety:
+
+- `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW`
+- `ADMIN_PARENT_ACTION_INTEGRATED=YES`
+- `ADMIN_CHILD_ACTION_INTEGRATED=YES`
+- `APPROVED_RPC_USED=YES`
+- `END_USER_SERVER_CONTEXT_USED=YES`
+- `SERVICE_ROLE_USED=NO`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=2`
+- `SEQUENTIAL_MUTATION_FALLBACK_PRESENT=NO`
+- `NEW_PERSON_AND_LINK_STATUS=BLOCKED_NEW_PERSON_TRANSACTION_CONTRACT_REQUIRED`
+- `IMPORTER_RUNTIME_CHANGED=NO`
+- `ADD_SPOUSE_RUNTIME_CHANGED=NO`
+- `PUBLIC_TREE_RUNTIME_CHANGED=NO`
+- `GRAPH_LAYOUT_RUNTIME_CHANGED=NO`
+- `TRANSACTION_EXECUTOR_SQL_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED_BY_PHASE=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `NEXT_ACTION=OWNER_REVIEW_A17N_R_THEN_SEPARATE_A17N_DEPLOY_AND_PRODUCTION_NO_MUTATION_SMOKE`
+
 ## Decision 336 - A-17N-TX2R records owner manual production verifier PASS
 
 Date: 2026-07-12

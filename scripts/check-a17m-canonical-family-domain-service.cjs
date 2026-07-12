@@ -322,6 +322,12 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17N_TX2_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_POST_APPLY_VERIFICATION.md",
   "docs/PLAN_A17N_TX2F_POST_APPLY_VERIFIER_ACTIVE_SCOPE_CORRECTION.md",
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
+  "docs/PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
+  "app/(admin)/admin/tree/edit/actions.ts",
+  "lib/family/admin-canonical-family-runtime-service.ts",
+  "lib/family/admin-canonical-family-transaction-adapter.ts",
+  "lib/family/canonical-family-supabase-repository.ts",
   ...a17nTx1MigrationFiles,
 ]);
 

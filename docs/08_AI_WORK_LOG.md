@@ -1,5 +1,76 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N-R admin parent/child canonical runtime integration
+
+### Phase
+
+A-17N-R - activate canonical admin parent/child runtime writes
+
+### Viec da lam
+
+- Verified preflight: branch `main`, working tree clean before phase,
+  local and `origin/main` synchronized, commit `4d291ba` present, and
+  A-17N-TX2R evidence recorded as PASS.
+- Replaced existing-person admin tree add-parent/add-child direct family
+  creation and membership write chains with a canonical runtime service.
+- Added an authenticated end-user Supabase runtime service using
+  `createServerSupabaseClient`, active profile lookup, role/permission lookup,
+  family-context reads, cycle validation and A-17M domain planning.
+- Added a narrow RPC adapter for
+  `public.execute_admin_canonical_family_parent_child_write` with deterministic
+  idempotency key and mutation-plan hash requirements.
+- Added an RLS-visible Supabase canonical family repository for canonical
+  lookup, legacy candidate lookup, people existence validation and membership
+  reads.
+- Kept new-person parent/child linking fail-closed with
+  `BLOCKED_NEW_PERSON_TRANSACTION_CONTRACT_REQUIRED`.
+- Added `scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs` and
+  package script `check:a17n-r-admin-parent-child-runtime-integration`.
+- Updated A-17N documentation/checker expectations so the historical
+  foundation remains recorded while A-17N-R owns the activated runtime contract.
+- Did not create migrations, execute SQL, run production mutation smoke,
+  modify transaction executor SQL, call official import RPC, deploy or push.
+
+### Ket qua
+
+- `A17N_R_STATUS=PASS_RUNTIME_INTEGRATION_READY_FOR_OWNER_REVIEW`
+- `PRECONDITION_TX2_PASS=YES`
+- `ADMIN_PARENT_ACTION_INTEGRATED=YES`
+- `ADMIN_CHILD_ACTION_INTEGRATED=YES`
+- `CANONICAL_APPLICATION_SERVICE_ACTIVE=YES`
+- `TRANSACTION_EXECUTOR_ADAPTER_CREATED=YES`
+- `APPROVED_RPC_USED=YES`
+- `END_USER_SERVER_CONTEXT_USED=YES`
+- `SERVICE_ROLE_USED=NO`
+- `UNCONDITIONAL_PARENT_FAMILY_CREATE_REMOVED=YES`
+- `UNCONDITIONAL_CHILD_FAMILY_CREATE_REMOVED=YES`
+- `DIRECT_PARENT_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=YES`
+- `DIRECT_CHILD_MEMBERSHIP_INSERT_REMOVED_FROM_ACTION=YES`
+- `SEQUENTIAL_MUTATION_FALLBACK_PRESENT=NO`
+- `IDEMPOTENCY_KEY_REQUIRED=YES`
+- `MUTATION_PLAN_HASH_REQUIRED=YES`
+- `PERMISSION_VALIDATION_PRESERVED=YES`
+- `PROFILE_VALIDATION_PRESERVED=YES`
+- `CYCLE_VALIDATION_PRESERVED=YES`
+- `LEGACY_DUPLICATE_FAILS_CLOSED=YES`
+- `MULTIPLE_SPOUSE_CONTEXT_FAILS_CLOSED=YES`
+- `NEW_PERSON_AND_LINK_STATUS=BLOCKED_NEW_PERSON_TRANSACTION_CONTRACT_REQUIRED`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=2`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED_BY_PHASE=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+### Kiem tra
+
+- `npm.cmd run typecheck` - PASS before documentation/checker updates.
+- Full required validation run recorded in
+  `PLAN_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION.md`.
+
 ## 2026-07-12 - A-17N-TX2R owner manual production verifier PASS
 
 ### Phase
