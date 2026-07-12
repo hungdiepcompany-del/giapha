@@ -1,5 +1,108 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N-TX1 admin canonical family transaction executor candidate
+
+### Phase
+
+A-17N-TX1 - admin canonical family transaction executor candidate
+
+### Viec da lam
+
+- Verified preflight: branch `main`, worktree clean before phase, A-17N
+  foundation present, local branch ahead of `origin/main` by 3 commits with no
+  divergence.
+- Created not-applied migration candidate
+  `db/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql`.
+- Mirrored the migration byte-for-byte under
+  `supabase/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql`.
+- Added SELECT-only post-apply verifier
+  `db/checks/20260712_check_a17n_tx1_admin_canonical_family_transaction_executor.sql`.
+- Added checker
+  `scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs`
+  and package script
+  `check:a17n-tx1-admin-canonical-family-transaction-executor-candidate`.
+- Did not apply SQL, execute SQL, call the candidate RPC, integrate admin
+  actions, create production families/memberships, run reconciliation, call the
+  official import RPC, deploy or push.
+
+### Ket qua
+
+- `A17N_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`
+- `PRECONDITION_A17N_FOUNDATION_PRESENT=YES`
+- `WORKTREE_CLEAN_BEFORE_PHASE=YES`
+- `REMOTE_SYNC_BEFORE_PHASE=LOCAL_AHEAD_3_NO_DIVERGENCE`
+- `TRANSACTION_EXECUTOR_CREATED=YES`
+- `SUPPORTED_OPERATION_ADD_PARENT=YES`
+- `SUPPORTED_OPERATION_ADD_CHILD=YES`
+- `UNSUPPORTED_IMPORTER_OPERATION=YES`
+- `UNSUPPORTED_ADD_SPOUSE_OPERATION=YES`
+- `UNSUPPORTED_RECONCILIATION_OPERATION=YES`
+- `SECURITY_MODE=SECURITY_INVOKER`
+- `FIXED_SEARCH_PATH=YES`
+- `AUTH_UID_REQUIRED=YES`
+- `ACTOR_PROFILE_VALIDATED=YES`
+- `PERMISSION_VALIDATED=YES`
+- `SERVICE_ROLE_REQUIRED=NO`
+- `PUBLIC_EXECUTE_GRANTED=NO`
+- `ANON_EXECUTE_GRANTED=NO`
+- `IDEMPOTENCY_REQUIRED=YES`
+- `MUTATION_PLAN_HASH_REQUIRED=YES`
+- `ROW_LOCKS_PRESENT=YES`
+- `CONCURRENCY_VERSION_CHECK_PRESENT=YES`
+- `CANONICAL_UNIQUENESS_PROTECTED=YES`
+- `FAMILY_STATUS_GUARDS_PRESENT=YES`
+- `PERSON_REFERENCE_GUARDS_PRESENT=YES`
+- `SELF_RELATIONSHIP_BLOCKED=YES`
+- `CYCLE_GUARD_PRESENT=YES`
+- `FAMILY_CREATE_ATOMIC=YES`
+- `FAMILY_REUSE_ATOMIC=YES`
+- `PARENT_MEMBERSHIP_ATOMIC=YES`
+- `CHILD_MEMBERSHIP_ATOMIC=YES`
+- `AUDIT_ATOMIC=YES`
+- `PARTIAL_WRITE_POSSIBLE=NO`
+- `ADMIN_PARENT_ACTION_INTEGRATED=NO`
+- `ADMIN_CHILD_ACTION_INTEGRATED=NO`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`
+- `POST_APPLY_VERIFIER_CREATED=YES`
+- `POST_APPLY_VERIFIER_EXECUTED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `PRODUCTION_FAMILY_CREATED=NO`
+- `PRODUCTION_MEMBERSHIP_CREATED=NO`
+- `EXISTING_FAMILY_ROWS_UPDATED=NO`
+- `CANONICAL_KEYS_BACKFILLED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=OWNER_REVIEW_A17N_TX1_THEN_RUN_SEPARATE_A17SQL_N_TX1_MANUAL_APPLY`
+
+### Kiem tra
+
+- `npm.cmd run check:a17n-tx1-admin-canonical-family-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17n-admin-parent-child-canonical-write-path` - PASS
+- `npm.cmd run check:a17m-canonical-family-domain-service` - PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence` - PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design` - PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract` - PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract` - PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit` - PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run` - PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design` - PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate` - PASS
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification` - PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `git diff --check` - PASS
+
 ## 2026-07-12 - A-17N admin parent/child canonical write path blocker
 
 ### Phase

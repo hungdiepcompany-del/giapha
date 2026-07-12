@@ -1,5 +1,58 @@
 # Decision Log
 
+## Decision 334 - A-17N-TX1 creates admin canonical family transaction executor candidate
+
+Date: 2026-07-12
+
+Status: Accepted for owner review
+
+Context: A-17N proved that admin parent/child canonical write-path activation
+needs an atomic transaction executor before production actions can stop using
+sequential family and membership writes. The executor must not reuse the A-16
+official-import RPC, must not broaden importer behavior, and must preserve the
+separate owner review/apply boundary.
+
+Decision: Create a not-applied SQL migration candidate for
+`public.execute_admin_canonical_family_parent_child_write` and its idempotency
+table. The function is `SECURITY INVOKER`, uses a fixed search path, requires
+authenticated identity, matching actor profile, `relationships.create` and
+`relationships.update`, stable idempotency and mutation-plan hash checks, row
+locks, optimistic concurrency, canonical uniqueness, family status guards,
+person reference guards, self-relationship and cycle blockers, and atomic audit
+revision insertion.
+
+Rationale:
+
+- Parent/child admin writes span canonical family create/reuse, parent
+  membership, child membership, canonical metadata and audit.
+- Sequential client writes cannot guarantee rollback across those surfaces.
+- A narrow invoker RPC keeps the operation under the authenticated user/RLS
+  boundary instead of adding service-role or SECURITY DEFINER bypass.
+- A separate manual apply and post-apply verification phase is required before
+  any runtime action integration.
+
+Safety:
+
+- `A17N_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`
+- `SECURITY_MODE=SECURITY_INVOKER`
+- `SERVICE_ROLE_REQUIRED=NO`
+- `PUBLIC_EXECUTE_GRANTED=NO`
+- `ANON_EXECUTE_GRANTED=NO`
+- `ADMIN_PARENT_ACTION_INTEGRATED=NO`
+- `ADMIN_CHILD_ACTION_INTEGRATED=NO`
+- `CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `OWNER_REVIEW_MARKER_REQUIRED=APPROVE_A17N_TX1_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_CANDIDATE`
+- `NEXT_ACTION=OWNER_REVIEW_A17N_TX1_THEN_RUN_SEPARATE_A17SQL_N_TX1_MANUAL_APPLY`
+
 ## Decision 333 - A-17N blocks admin canonical write activation until a transaction executor exists
 
 Date: 2026-07-12

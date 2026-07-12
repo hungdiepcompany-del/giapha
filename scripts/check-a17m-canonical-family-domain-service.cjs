@@ -17,6 +17,10 @@ const sourceFiles = [
 ];
 const docPath = "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md";
 const checkerPath = "scripts/check-a17m-canonical-family-domain-service.cjs";
+const a17nTx1MigrationFiles = new Set([
+  "db/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
+  "supabase/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
+]);
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -312,10 +316,18 @@ const allowedChangedFiles = new Set([
   "lib/family/admin-canonical-family-link-service.ts",
   "docs/PLAN_A17N_ADMIN_PARENT_CHILD_CANONICAL_WRITE_PATH.md",
   "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
+  "db/checks/20260712_check_a17n_tx1_admin_canonical_family_transaction_executor.sql",
+  "docs/PLAN_A17N_TX1_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
+  ...a17nTx1MigrationFiles,
 ]);
 
 for (const changedFile of changedFiles) {
-  if (changedFile.startsWith("db/migrations/") || changedFile.startsWith("supabase/migrations/")) {
+  if (
+    (changedFile.startsWith("db/migrations/") ||
+      changedFile.startsWith("supabase/migrations/")) &&
+    !a17nTx1MigrationFiles.has(changedFile)
+  ) {
     failures.push(`migration changed during A-17M: ${changedFile}`);
   }
   if (!allowedChangedFiles.has(changedFile)) {

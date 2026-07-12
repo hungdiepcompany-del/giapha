@@ -27,6 +27,10 @@ const expectedMigrationSha =
   "B5E62D048F284D9E4F03E2294FE060E696E7905890D88587A18503E0786A07AA";
 const expectedPriorMigrationSha =
   "97EC8E3108033CB4F26E86B5E348C5A15BF33DCC46650F384735482FA4712CA3";
+const a17nTx1MigrationFiles = new Set([
+  "db/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
+  "supabase/migrations/20260712_0024_a17n_tx1_admin_canonical_family_transaction_executor_candidate.sql",
+]);
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -271,6 +275,10 @@ const allowedChangedFiles = new Set([
   "lib/family/admin-canonical-family-link-service.ts",
   "docs/PLAN_A17N_ADMIN_PARENT_CHILD_CANONICAL_WRITE_PATH.md",
   "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
+  "db/checks/20260712_check_a17n_tx1_admin_canonical_family_transaction_executor.sql",
+  "docs/PLAN_A17N_TX1_ADMIN_CANONICAL_FAMILY_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
+  ...a17nTx1MigrationFiles,
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "package.json",
   "docs/00_INDEX.md",
@@ -284,7 +292,8 @@ for (const changedFile of changedFiles) {
     (changedFile.startsWith("db/migrations/") ||
       changedFile.startsWith("supabase/migrations/")) &&
     changedFile !== dbMigrationPath &&
-    changedFile !== supabaseMigrationPath
+    changedFile !== supabaseMigrationPath &&
+    !a17nTx1MigrationFiles.has(changedFile)
   ) {
     failures.push(`prior migration changed: ${changedFile}`);
   }
