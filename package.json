@@ -358,7 +358,8 @@
     "check:a17d-canonical-tree-graph-contract": "node scripts/check-a17d-canonical-tree-graph-contract.cjs",
     "check:a17e-family-duplicate-read-only-audit": "node scripts/check-a17e-family-duplicate-read-only-audit.cjs",
     "check:a17f-family-reconciliation-dry-run": "node scripts/check-a17f-family-reconciliation-dry-run.cjs",
-    "check:a17g-family-reconciliation-rollback-design": "node scripts/check-a17g-family-reconciliation-rollback-design.cjs"
+    "check:a17g-family-reconciliation-rollback-design": "node scripts/check-a17g-family-reconciliation-rollback-design.cjs",
+    "check:a17h-canonical-family-schema-foundation-candidate": "node scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

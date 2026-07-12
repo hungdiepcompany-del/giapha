@@ -1,5 +1,57 @@
 # Decision Log
 
+## Decision 330 - A-17H canonical family schema foundation candidate
+
+Date: 2026-07-12
+
+Status: Accepted for owner review
+
+Context: A-17E/A-17F verified 74 current family rows, 22 owner-review duplicate
+parent-set groups, 38 redundant-family estimate, expected future family count
+36, and zero automatic-safe groups. A-17G defined rollback requirements, but no
+schema foundation existed yet for owner decisions, all-or-nothing batches or
+rollback manifests.
+
+Decision: Create a not-applied, additive migration candidate for canonical
+family schema foundation as migration 0023, mirrored byte-identically under
+`db/migrations` and `supabase/migrations`. The schema extends `families` with
+canonical metadata and adds owner decision, reconciliation batch and rollback
+manifest structures. Do not execute reconciliation, do not backfill canonical
+keys, do not mutate existing rows and do not create any reconciliation RPC.
+
+Rationale:
+
+- `canonical_key` is nullable, so current write paths stay compatible.
+- The canonical unique index is partial for active `canonical` rows with a
+  non-null key, so legacy duplicate rows do not block owner apply.
+- Owner decisions are review records only; they do not execute merges.
+- Batch and rollback manifest records provide future all-or-nothing and
+  rollback traceability, but the migration seeds no rows.
+- New tables enable RLS, have authenticated-only policies and explicitly add no
+  anon/PUBLIC policies or grants.
+
+Safety:
+
+- `DB_MIGRATION_SHA256=B5E62D048F284D9E4F03E2294FE060E696E7905890D88587A18503E0786A07AA`
+- `SUPABASE_MIRROR_SHA256=B5E62D048F284D9E4F03E2294FE060E696E7905890D88587A18503E0786A07AA`
+- `MIRROR_MATCH=YES`
+- `PRIOR_MIGRATIONS_UNCHANGED=YES`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `CANONICAL_KEYS_BACKFILLED=NO`
+- `FAMILY_RECONCILIATION_EXECUTED=NO`
+- `RECONCILIATION_RPC_CREATED=NO`
+- `AUTOMATIC_MERGE_TRIGGER_CREATED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `OWNER_REVIEW_MARKER_REQUIRED=APPROVE_A17H_CANONICAL_FAMILY_SCHEMA_CANDIDATE`
+- `NEXT_ACTION=OWNER_REVIEW_A17H_THEN_RUN_SEPARATE_A17SQL_H_MANUAL_APPLY_PHASE`
+
 ## Decision 329 - A-17E to A-17G family reconciliation remains read-only and blocked
 
 Date: 2026-07-12
