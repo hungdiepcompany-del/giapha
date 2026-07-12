@@ -1,5 +1,56 @@
 # Decision Log
 
+## Decision 336 - A-17N-TX2R records owner manual production verifier PASS
+
+Date: 2026-07-12
+
+Status: Accepted
+
+Context: A-17N-R previously stopped because repository evidence still recorded
+the corrected A-17N-TX2 verifier as SAFE_SKIP due unavailable linked database
+execution in Codex. After commit `bab0643`, the owner manually ran the
+corrected SELECT-only verifier in the production Supabase SQL Editor, and the
+verifier returned PASS for every check.
+
+Decision: Record the owner manual production SELECT-only verifier PASS as the
+authoritative A-17N-TX2 evidence. Update docs and checker expectations so
+A-17N-R readiness is open for a separate runtime integration phase, while
+preserving all no-mutation boundaries.
+
+Rationale:
+
+- The production verifier was SELECT-only and owner-executed outside Codex.
+- Corrected active graph counts remain `74 / 140 / 73`.
+- Physical totals `75 / 142 / 74` remain informational.
+- The deleted family and orphan-active parent memberships remain data-quality
+  advisories for later reconciliation work.
+- `IDEMPOTENCY_ROW_COUNT=0` and `TRANSACTION_EXECUTOR_REVISION_COUNT=0`
+  confirm the transaction executor has not been called.
+
+Safety:
+
+- `A17N_TX2R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_VERIFIER_RECORDED`
+- `A17N_TX2F_STATUS=PASS_ACTIVE_SCOPE_CORRECTION_VERIFIED`
+- `A17N_TX2_STATUS=PASS_CORRECTED_ACTIVE_SCOPE_POST_APPLY_VERIFIED`
+- `CORRECTED_POST_APPLY_VERIFIER_EXECUTED=OWNER_MANUAL_PRODUCTION_SELECT_ONLY`
+- `CORRECTED_POST_APPLY_VERIFIER_RESULT=PASS`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `IDEMPOTENCY_ROW_COUNT=0`
+- `TRANSACTION_EXECUTOR_REVISION_COUNT=0`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_0024_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `A17N_R_READINESS=READY_POST_APPLY_VERIFIER_PASS_RECORDED`
+- `NEXT_ACTION=START_SEPARATE_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION`
+
 ## Decision 335 - A-17N-TX2F corrects post-apply verifier active graph scope
 
 Date: 2026-07-12

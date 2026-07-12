@@ -1,5 +1,78 @@
 # AI Work Log
 
+## 2026-07-12 - A-17N-TX2R owner manual production verifier PASS
+
+### Phase
+
+A-17N-TX2R - record owner manual production verifier PASS
+
+### Viec da lam
+
+- Verified preflight: branch `main`, working tree clean, local and
+  `origin/main` synchronized at `0/0`, HEAD includes
+  `bab0643 fix: correct canonical family verifier active scope`.
+- Recorded owner-provided evidence that the corrected A-17N-TX2 SELECT-only
+  verifier was run manually in the production Supabase SQL Editor and returned
+  PASS for every check.
+- Updated A-17N-TX2/A-17N-TX2F documentation, index, decision log, handoff and
+  checker expectations from linked-access SAFE_SKIP to owner manual production
+  SELECT-only PASS.
+- Confirmed migration 0024 SHA remains unchanged in db and Supabase mirrors.
+- Did not execute SQL, call RPC, call the transaction executor, mutate
+  genealogy data, change runtime code, deploy or push.
+
+### Ket qua
+
+- `A17N_TX2R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_VERIFIER_RECORDED`
+- `OWNER_MANUAL_PRODUCTION_VERIFIER_EVIDENCE_RECORDED=YES`
+- `A17N_TX2F_STATUS=PASS_ACTIVE_SCOPE_CORRECTION_VERIFIED`
+- `A17N_TX2_STATUS=PASS_CORRECTED_ACTIVE_SCOPE_POST_APPLY_VERIFIED`
+- `CORRECTED_POST_APPLY_VERIFIER_EXECUTED=OWNER_MANUAL_PRODUCTION_SELECT_ONLY`
+- `CORRECTED_POST_APPLY_VERIFIER_RESULT=PASS`
+- `INITIAL_FAILURE_CLASSIFICATION=FALSE_NEGATIVE_COUNT_SCOPE_BUG`
+- `PRODUCTION_DATA_DRIFT=NO`
+- `MIGRATION_0024_DATA_MUTATION=NO`
+- `TRANSACTION_EXECUTOR_CALLED=NO`
+- `ACTIVE_FAMILY_COUNT=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT=73`
+- `TOTAL_FAMILY_ROWS=75`
+- `TOTAL_PARENT_MEMBERSHIP_ROWS=142`
+- `TOTAL_CHILD_MEMBERSHIP_ROWS=74`
+- `DELETED_FAMILY_COUNT=1`
+- `ORPHAN_ACTIVE_PARENT_MEMBERSHIP_COUNT=2`
+- `ORPHAN_ACTIVE_CHILD_MEMBERSHIP_COUNT=0`
+- `IDEMPOTENCY_ROW_COUNT=0`
+- `TRANSACTION_EXECUTOR_REVISION_COUNT=0`
+- `CANONICAL_KEY_BACKFILL_COUNT=0`
+- `RECONCILIATION_ROWS_CREATED=0`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_0024_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `A17N_R_READINESS=READY_POST_APPLY_VERIFIER_PASS_RECORDED`
+- `NEXT_ACTION=START_SEPARATE_A17N_R_ADMIN_PARENT_CHILD_RUNTIME_INTEGRATION`
+
+### Kiem tra
+
+- `npm.cmd run check:a17n-tx2f-post-apply-verifier-active-scope-correction` - PASS.
+- A-17N-TX1, A-17N, A-17M, A-17A through A-17I, A-16R post-import,
+  relationship, tree editor/viewer, public privacy, env-safe and migration
+  checkers - PASS.
+- `npm.cmd run typecheck` - PASS.
+- `npm.cmd run lint` - PASS.
+- Direct `npm.cmd run build` in the checkout failed before compile on the known
+  Windows `.next` artifact ACL lock:
+  `EPERM: operation not permitted, unlink 'D:\CODE\GIA PHẢ\.next\build\56416d4ae4ce586f.js'`.
+- Clean temp-copy `npm.cmd run build` under `.tmp\a17n-tx2r-build-20260712`
+  with `.next`, `.open-next`, `.wrangler`, `node_modules`, git metadata and
+  env files excluded - PASS.
+- `git diff --check` - PASS.
+
 ## 2026-07-12 - A-17N-TX2F post-apply verifier active-scope correction
 
 ### Phase
