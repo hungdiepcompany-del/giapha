@@ -1,0 +1,174 @@
+#!/usr/bin/env node
+
+const fs = require("node:fs");
+const path = require("node:path");
+const childProcess = require("node:child_process");
+
+const root = process.cwd();
+const failures = [];
+
+const docPath = "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md";
+const sqlPath = "db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql";
+const summaryPath = "docs/PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md";
+
+const allowedChangedFiles = new Set([
+  "db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql",
+  "db/checks/20260712_check_a17f_family_reconciliation_dry_run.sql",
+  "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
+  "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",
+  "docs/PLAN_A17G_FAMILY_RECONCILIATION_ROLLBACK_DESIGN.md",
+  "docs/PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md",
+  "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
+  "scripts/check-a17f-family-reconciliation-dry-run.cjs",
+  "scripts/check-a17g-family-reconciliation-rollback-design.cjs",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17AD_TREE_ARCHITECTURE_FOUNDATION_BUNDLE.md",
+  "scripts/check-a17a-tree-baseline-evidence.cjs",
+  "package.json",
+]);
+
+function read(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return "";
+  }
+  return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readJson(relativePath) {
+  const content = read(relativePath);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    failures.push(`${relativePath} is not valid JSON`);
+    return null;
+  }
+}
+
+function requireIncludes(content, token, label = token) {
+  if (!content.includes(token)) failures.push(`missing ${label}`);
+}
+
+function rejectPattern(content, pattern, label = String(pattern)) {
+  if (pattern.test(content)) failures.push(`forbidden ${label}`);
+}
+
+function stripSqlComments(sql) {
+  return sql.replace(/\/\*[\s\S]*?\*\//g, "").replace(/--.*$/gm, "");
+}
+
+function git(args) {
+  try {
+    return childProcess.execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    failures.push(`git ${args.join(" ")} failed`);
+    return "";
+  }
+}
+
+const doc = read(docPath);
+const sql = read(sqlPath);
+const sqlWithoutComments = stripSqlComments(sql);
+const summary = read(summaryPath);
+const index = read("docs/00_INDEX.md");
+const workLog = read("docs/08_AI_WORK_LOG.md");
+const decisionLog = read("docs/09_DECISION_LOG.md");
+const handoff = read("docs/99_NEXT_AI_HANDOFF.md");
+const packageJson = readJson("package.json");
+
+for (const token of [
+  "A17E_STATUS=PASS_READ_ONLY_FAMILY_DUPLICATE_AUDIT_RECORDED",
+  "A17E_SQL=db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql",
+  "PRODUCTION_AUDIT_QUERY_STATUS=PASS_READ_ONLY",
+  "people_count",
+  "current_family_count",
+  "family_parent_membership_count",
+  "family_child_membership_count",
+  "couple_relationship_count",
+  "normalized_parent_set_count",
+  "duplicate_parent_set_group_count",
+  "redundant_family_count",
+  "safe_automatic_group_count",
+  "owner_review_group_count",
+  "blocked_ambiguous_group_count",
+  "children_in_equivalent_families_count",
+  "invalid_person_reference_count",
+  "layout_records_referencing_duplicate_families_count",
+  "SAFE_AUTOMATIC_CANDIDATE_GROUPS=0",
+  "OWNER_REVIEW_REQUIRED_GROUPS=22",
+  "BLOCKED_AMBIGUOUS_GROUPS=0",
+  "NOT_A_DUPLICATE_GROUPS=13",
+]) {
+  requireIncludes(doc, token, `A17E doc token ${token}`);
+}
+
+for (const token of [
+  "A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT",
+  "SELECT_ONLY_STRUCTURAL_AUDIT",
+  "NO_PII_OUTPUT",
+  "family_parent_sets as",
+  "family_metadata as",
+  "family_couple_metadata as",
+  "group_classifications as",
+  "DUPLICATE_GROUP",
+  "SAFE_AUTOMATIC_CANDIDATE",
+  "OWNER_REVIEW_REQUIRED",
+  "BLOCKED_AMBIGUOUS",
+  "NOT_A_DUPLICATE",
+  "md5(parent_set_key)",
+]) {
+  requireIncludes(sql, token, `A17E SQL token ${token}`);
+}
+
+rejectPattern(sqlWithoutComments, /^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate|call)\b/im, "A17E SQL must stay SELECT-only");
+rejectPattern(sqlWithoutComments, /\ba16p_tx_execute_giapha4_official_import\s*\(/i, "A17E SQL must not call official import RPC");
+rejectPattern(sqlWithoutComments, /\bfor\s+update\b/i, "A17E SQL must not lock rows");
+
+for (const [content, token, label] of [
+  [index, "PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md", "index A17E entry"],
+  [workLog, "A17E_STATUS=PASS_READ_ONLY_FAMILY_DUPLICATE_AUDIT_RECORDED", "work log A17E status"],
+  [decisionLog, "Decision 329 - A-17E to A-17G family reconciliation remains read-only and blocked", "decision A17EG entry"],
+  [handoff, "A17E_STATUS=PASS_READ_ONLY_FAMILY_DUPLICATE_AUDIT_RECORDED", "handoff A17E status"],
+  [summary, "A17EG_BUNDLE_STATUS=PASS_READ_ONLY_AUDIT_DRY_RUN_READY_FOR_OWNER_REVIEW_RECONCILIATION_BLOCKED", "summary status"],
+]) {
+  requireIncludes(content, token, label);
+}
+
+if (
+  packageJson?.scripts?.["check:a17e-family-duplicate-read-only-audit"] !==
+  "node scripts/check-a17e-family-duplicate-read-only-audit.cjs"
+) {
+  failures.push("missing package script check:a17e-family-duplicate-read-only-audit");
+}
+
+const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
+  .split(/\r?\n/)
+  .map((line) => line.slice(3).trim())
+  .filter(Boolean);
+
+for (const file of changedFiles) {
+  if (!allowedChangedFiles.has(file)) failures.push(`unexpected changed file ${file}`);
+  if (file === ".env.local" || file.endsWith(".env.local")) failures.push(`forbidden env file ${file}`);
+  if (file.startsWith("supabase/.temp/")) failures.push(`forbidden supabase temp ${file}`);
+  if (/\.(xls|xlsx|csv|zip)$/i.test(file)) failures.push(`forbidden data/evidence file ${file}`);
+}
+
+rejectPattern(doc + sql + summary, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, "secret-like token");
+rejectPattern(doc + summary, /MIGRATION_APPLIED=YES|GENEALOGY_ROWS_MODIFIED=YES|RECONCILIATION_EXECUTED=YES|IMPORT_RPC_CALLED=YES|DEPLOY=YES|PUSH=YES/i, "closed safety boundary drift");
+
+if (failures.length > 0) {
+  console.error("A-17E family duplicate read-only audit check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("A-17E family duplicate read-only audit check passed.");

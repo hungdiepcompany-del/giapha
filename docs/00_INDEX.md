@@ -1,10 +1,17 @@
 # Bản đồ tài liệu
 
+## A-17 family reconciliation audit bundle
+
+- `PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md`: `A17EG_BUNDLE_STATUS=PASS_READ_ONLY_AUDIT_DRY_RUN_READY_FOR_OWNER_REVIEW_RECONCILIATION_BLOCKED`, expected family count after 36, owner-review groups 22, invalid person references 2, owner marker `APPROVE_A17_FAMILY_RECONCILIATION_DRY_RUN`.
+- `PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md`: `A17E_STATUS=PASS_READ_ONLY_FAMILY_DUPLICATE_AUDIT_RECORDED`, verifier `20260712_check_a17e_family_duplicate_read_only_audit.sql`.
+- `PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md`: `A17F_STATUS=PASS_READ_ONLY_RECONCILIATION_DRY_RUN_READY_FOR_OWNER_REVIEW`, expected family rows `74 -> 36`, parent rows `140 -> 66`, child rows remain `73`.
+- `PLAN_A17G_FAMILY_RECONCILIATION_ROLLBACK_DESIGN.md`: `A17G_STATUS=ROLLBACK_CONTRACT_READY_FOR_OWNER_REVIEW`, rollback manifest, restore order, edit-conflict classes and backup evidence requirements.
+
 Không bắt AI đọc tất cả file `.md` mỗi lần. AI chỉ đọc file liên quan task để tiết kiệm token và tránh loãng context.
 
 | File | Mục đích | Khi nào cần đọc |
 | --- | --- | --- |
-| PLAN_A17AD_TREE_ARCHITECTURE_FOUNDATION_BUNDLE.md | A-17A to A-17D summary for the post-import tree architecture foundation: read-only baseline, canonical family design, Phả Tuệ-oriented UX contract, canonical graph contract, safety boundaries and owner review marker. | Khi can confirm `A17AD_BUNDLE_STATUS=PASS_TREE_ARCHITECTURE_FOUNDATION_READY_FOR_OWNER_REVIEW`, owner marker `APPROVE_A17_CANONICAL_FAMILY_AND_TREE_UX_DESIGN`, or next action `OWNER_REVIEW_A17AD_THEN_RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`. |
+| PLAN_A17AD_TREE_ARCHITECTURE_FOUNDATION_BUNDLE.md | A-17A to A-17D summary for the post-import tree architecture foundation: read-only baseline, canonical family design, Phả Tuệ-oriented UX contract, canonical graph contract, safety boundaries and recorded owner approval marker. | Khi can confirm `A17AD_BUNDLE_STATUS=OWNER_APPROVED_READY_FOR_SEPARATE_A17E_A17G`, owner marker `APPROVE_A17_CANONICAL_FAMILY_AND_TREE_UX_DESIGN`, or next action `RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`. |
 | PLAN_A17A_TREE_BASELINE_EVIDENCE.md | A-17A records SELECT-only production tree baseline metrics and source behavior evidence for importer, admin relationship actions, graph builder, ELK layout, saved layout, public/admin projections, search and fitView. | Khi can confirm `A17A_STATUS=PASS_READ_ONLY_BASELINE_RECORDED`, SQL verifier `20260712_check_a17a_tree_baseline_evidence.sql`, or baseline counts such as 110 people, 74 families, 22 duplicate parent-set groups and 38 redundant-family estimate. |
 | PLAN_A17B_CANONICAL_FAMILY_UNIT_DESIGN.md | A-17B defines the canonical family domain model, merge safety classes and required operations before any schema or reconciliation phase. | Khi can review `A17B_STATUS=CANONICAL_FAMILY_DESIGN_READY_FOR_OWNER_REVIEW`, canonical identity rules, required operations like `findOrCreateCanonicalFamily`, or 20 case behaviors. |
 | PLAN_A17C_PHATUE_ORIENTED_TREE_UX_CONTRACT.md | A-17C defines the Phả Tuệ-oriented but non-copying tree UX contract with Vietnamese view modes, focus-person navigation, compact family-unit visuals, editing labels, search normalization and older-user/mobile requirements. | Khi can review `A17C_STATUS=PHATUE_ORIENTED_UX_CONTRACT_READY_FOR_OWNER_REVIEW`, view modes `Gia đình trực tiếp`, `Tổ tiên`, `Hậu duệ`, `Toàn bộ cây`, `Theo chi/nhánh`, `Người chưa kết nối`, or Vietnamese tree UX rules. |

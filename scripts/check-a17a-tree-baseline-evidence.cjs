@@ -23,6 +23,15 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17b-canonical-family-unit-design.cjs",
   "scripts/check-a17c-phatue-oriented-tree-ux-contract.cjs",
   "scripts/check-a17d-canonical-tree-graph-contract.cjs",
+  "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
+  "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",
+  "docs/PLAN_A17G_FAMILY_RECONCILIATION_ROLLBACK_DESIGN.md",
+  "docs/PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md",
+  "db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql",
+  "db/checks/20260712_check_a17f_family_reconciliation_dry_run.sql",
+  "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
+  "scripts/check-a17f-family-reconciliation-dry-run.cjs",
+  "scripts/check-a17g-family-reconciliation-rollback-design.cjs",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -156,7 +165,8 @@ for (const [content, token, label] of [
   [workLog, "A17A_STATUS=PASS_READ_ONLY_BASELINE_RECORDED", "work log A17A status"],
   [decisionLog, "Decision 328 - A-17 canonical family tree foundation accepted for owner review", "decision A17 entry"],
   [handoff, "A17A_STATUS=PASS_READ_ONLY_BASELINE_RECORDED", "handoff A17A status"],
-  [summary, "A17AD_BUNDLE_STATUS=PASS_TREE_ARCHITECTURE_FOUNDATION_READY_FOR_OWNER_REVIEW", "summary status"],
+  [summary, "A17AD_BUNDLE_STATUS=OWNER_APPROVED_READY_FOR_SEPARATE_A17E_A17G", "summary status"],
+  [summary, "A17_OWNER_APPROVAL_RECORDED=YES", "summary owner approval"],
 ]) {
   requireIncludes(content, token, label);
 }

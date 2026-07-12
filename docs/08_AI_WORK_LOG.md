@@ -1,5 +1,102 @@
 # AI Work Log
 
+## 2026-07-12 - A-17E to A-17G family reconciliation audit dry-run
+
+### Phase
+
+A-17E to A-17G - read-only duplicate audit, deterministic reconciliation
+dry-run and rollback design
+
+### Viec da lam
+
+- Added SELECT-only duplicate audit verifier
+  `db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql`.
+- Ran A-17E against linked Supabase and recorded aggregate metrics plus
+  anonymized duplicate-group hashes only.
+- Added SELECT-only deterministic dry-run verifier
+  `db/checks/20260712_check_a17f_family_reconciliation_dry_run.sql`.
+- Ran A-17F against linked Supabase and recorded proposed counts plus
+  preservation invariants without modifying production data.
+- Added rollback contract design for future reconciliation batches.
+- Added checkers for A-17E, A-17F and A-17G and package scripts.
+- Kept current relationship editing/import paths restricted because write-path
+  repair and schema foundation are not yet implemented.
+- Did not create schema, did not create/apply migrations, did not modify
+  genealogy rows, did not create reconciliation RPC, did not execute
+  reconciliation, did not call import RPC, did not deploy and did not push.
+
+### Ket qua
+
+- `A17EG_BUNDLE_STATUS=PASS_READ_ONLY_AUDIT_DRY_RUN_READY_FOR_OWNER_REVIEW_RECONCILIATION_BLOCKED`
+- `A17E_STATUS=PASS_READ_ONLY_FAMILY_DUPLICATE_AUDIT_RECORDED`
+- `A17F_STATUS=PASS_READ_ONLY_RECONCILIATION_DRY_RUN_READY_FOR_OWNER_REVIEW`
+- `A17G_STATUS=ROLLBACK_CONTRACT_READY_FOR_OWNER_REVIEW`
+- `PRODUCTION_AUDIT_QUERY_STATUS=PASS_READ_ONLY`
+- `PEOPLE_COUNT=110`
+- `CURRENT_FAMILY_COUNT=74`
+- `FAMILY_PARENT_MEMBERSHIP_COUNT=140`
+- `FAMILY_CHILD_MEMBERSHIP_COUNT=73`
+- `COUPLE_RELATIONSHIP_COUNT=3`
+- `NORMALIZED_PARENT_SET_COUNT=35`
+- `DUPLICATE_PARENT_SET_GROUP_COUNT=22`
+- `REDUNDANT_FAMILY_COUNT=38`
+- `SAFE_AUTOMATIC_GROUP_COUNT=0`
+- `OWNER_REVIEW_GROUP_COUNT=22`
+- `BLOCKED_AMBIGUOUS_GROUP_COUNT=0`
+- `INVALID_PERSON_REFERENCE_COUNT=2`
+- `EXPECTED_FAMILY_COUNT_AFTER=36`
+- `EXPECTED_FAMILY_RECORDS_MERGED=38`
+- `EXPECTED_PARENT_ROWS_AFTER=66`
+- `EXPECTED_CHILD_ROWS_AFTER=73`
+- `EXPECTED_COUPLE_LINK_UPDATES=0`
+- `EXPECTED_LAYOUT_REFERENCE_UPDATES=2`
+- `PEOPLE_PRESERVATION_INVARIANT=PASS`
+- `PARENT_SEMANTICS_PRESERVATION_INVARIANT=PASS`
+- `CHILD_SEMANTICS_PRESERVATION_INVARIANT=PASS`
+- `COUPLE_SEMANTICS_PRESERVATION_INVARIANT=PASS`
+- `CONNECTED_COMPONENT_PRESERVATION_INVARIANT=PASS`
+- `A17EG_PRODUCTION_RECONCILIATION_ALLOWED=NO`
+- `NEXT_ACTION=OWNER_REVIEW_A17EG_THEN_CREATE_SEPARATE_A17H_SCHEMA_FOUNDATION_CANDIDATE`
+
+### Kiem tra
+
+- `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a17e_family_duplicate_read_only_audit.sql`: PASS
+- `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a17f_family_reconciliation_dry_run.sql`: PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit`: PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run`: PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design`: PASS
+
+## 2026-07-12 - A-17 owner approval recorded
+
+### Phase
+
+A-17 owner approval marker record only
+
+### Viec da lam
+
+- Recorded owner marker:
+  `APPROVE_A17_CANONICAL_FAMILY_AND_TREE_UX_DESIGN`.
+- Marked the A-17A to A-17D architecture foundation as owner-approved and
+  ready for a separate A-17E/A-17G read-only audit/dry-run bundle.
+- Did not run SQL, did not create/apply migrations, did not reconcile data, did
+  not call import RPC, did not retry official import, did not deploy and did
+  not push.
+
+### Ket qua
+
+- `A17_OWNER_APPROVAL_RECORDED=YES`
+- `A17AD_BUNDLE_STATUS=OWNER_APPROVED_READY_FOR_SEPARATE_A17E_A17G`
+- `SQL_EXECUTED=NO`
+- `MUTATION_SQL_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `OFFICIAL_IMPORT_RETRY=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`
+
 ## 2026-07-12 - A-17A to A-17D tree architecture foundation
 
 ### Phase

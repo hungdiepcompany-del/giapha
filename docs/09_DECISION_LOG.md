@@ -1,10 +1,56 @@
 # Decision Log
 
-## Decision 328 - A-17 canonical family tree foundation accepted for owner review
+## Decision 329 - A-17E to A-17G family reconciliation remains read-only and blocked
 
 Date: 2026-07-12
 
 Status: Accepted for owner review
+
+Context: The owner approved the A-17A to A-17D canonical family/tree UX design
+foundation. The next allowed bundle was read-only duplicate audit,
+reconciliation dry-run and rollback design only.
+
+Decision: Accept the A-17E to A-17G bundle as read-only evidence and design.
+Do not allow production reconciliation yet. The future path must be owner
+review, separate schema foundation, repaired/deployed write paths, backup
+evidence, and only then a separate reconciliation candidate.
+
+Rationale:
+
+- A-17E found `DUPLICATE_PARENT_SET_GROUP_COUNT=22` and
+  `REDUNDANT_FAMILY_COUNT=38`, but all duplicate groups are
+  `OWNER_REVIEW_REQUIRED`; `SAFE_AUTOMATIC_GROUP_COUNT=0`.
+- A-17E also found `INVALID_PERSON_REFERENCE_COUNT=2` and
+  `LAYOUT_REFERENCES_AFFECTED_COUNT=3`.
+- A-17F dry-run shows a deterministic future proposal of family rows `74 -> 36`,
+  parent rows `140 -> 66`, child rows remaining `73`, and layout reference
+  updates `2`, while all preservation invariants pass.
+- A-17G defines rollback manifest, restore order, post-reconciliation edit
+  conflict handling and mandatory backup evidence, but no rollback schema or RPC
+  exists yet.
+
+Safety:
+
+- `SCHEMA_CREATED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_APPLIED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_RPC_CREATED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next:
+
+- `OWNER_REVIEW_MARKER_REQUIRED=APPROVE_A17_FAMILY_RECONCILIATION_DRY_RUN`
+- `NEXT_ACTION=OWNER_REVIEW_A17EG_THEN_CREATE_SEPARATE_A17H_SCHEMA_FOUNDATION_CANDIDATE`
+
+## Decision 328 - A-17 canonical family tree foundation accepted for owner review
+
+Date: 2026-07-12
+
+Status: Owner approved
 
 Context: A-16R official import completed and post-import verification passed,
 but the current tree architecture review found likely child-scoped family rows,
@@ -46,6 +92,13 @@ Safety:
 - `OFFICIAL_IMPORT_RETRY=NO`
 - `DEPLOY=NO`
 - `PUSH=NO`
+
+Owner acceptance:
+
+- `A17_OWNER_APPROVAL_RECORDED=YES`
+- `A17_OWNER_APPROVAL_MARKER=APPROVE_A17_CANONICAL_FAMILY_AND_TREE_UX_DESIGN`
+- `A17AD_BUNDLE_STATUS=OWNER_APPROVED_READY_FOR_SEPARATE_A17E_A17G`
+- `NEXT_ACTION=RUN_SEPARATE_A17E_A17G_READ_ONLY_AUDIT_DRY_RUN_BUNDLE`
 
 ## Decision 327 - A-16R import completion accepted after read-only post-import verification
 
