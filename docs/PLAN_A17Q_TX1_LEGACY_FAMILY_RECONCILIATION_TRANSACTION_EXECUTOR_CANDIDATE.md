@@ -9,6 +9,7 @@ Status:
 `A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
 `A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
 `A17Q_TX1_FIX3_STATUS=PASS_FINAL_INTEGRITY_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+`A17Q_TX1_FIX3_REVIEW_STATUS=PASS_OWNER_REVIEW_APPROVED_FINAL_MIGRATION_FOR_MANUAL_APPLY_CANDIDATE`
 
 ## Scope
 
@@ -57,6 +58,8 @@ matches the committed JSON exactly. Production display names are not committed.
 - `FIX2_OWNER_REVIEW_FILE=docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md`
 - `FIX2_OWNER_REVIEW_CHECKER_FILE=scripts/check-a17q-tx1-fix2-owner-review.cjs`
 - `FIX3_CHECKER_FILE=scripts/check-a17q-tx1-fix3-final-integrity-contract.cjs`
+- `FIX3_OWNER_REVIEW_FILE=docs/PLAN_A17Q_TX1_FIX3_OWNER_REVIEW_FINAL_MIGRATION_CANDIDATE.md`
+- `FIX3_OWNER_REVIEW_CHECKER_FILE=scripts/check-a17q-tx1-fix3-owner-review.cjs`
 
 The superseded SHAs must never be applied. Migration 0026 is still not applied
 after FIX2; no migration 0027 was created.
@@ -231,13 +234,42 @@ migration 0026 and without creating migration 0027:
 - `SELECT_ONLY_VERIFIER_UPDATED=YES`
 - `MIGRATION_0026_APPLIED=NO`
 - `MIGRATION_0027_CREATED=NO`
-- `NEXT_ACTION=A17Q_TX1_FIX3_OWNER_REVIEW_FINAL_MIGRATION_CANDIDATE`
+- `NEXT_ACTION=A17Q_TX1_MANUAL_MIGRATION_APPLY_AND_SELECT_ONLY_VERIFICATION`
 
 The corrected candidate now stores `success_result_sha256`, verifies stored
 success JSON batch ID and decision-pack hash during fresh execution and replay,
 directly checks global active canonical-key uniqueness and approved canonical
 key ownership, and validates global duplicate active parent/child memberships
 plus same-family parent/child overlap before `graph_validation_passed=true`.
+
+## FIX3 Owner Review
+
+Final source-only owner review of FIX3 at commit `3066ea9` approved the
+candidate for a separate manual apply and SELECT-only verification phase:
+
+- `A17Q_TX1_FIX3_REVIEW_STATUS=PASS_OWNER_REVIEW_APPROVED_FINAL_MIGRATION_FOR_MANUAL_APPLY_CANDIDATE`
+- `REVIEWED_COMMIT=3066ea9`
+- `REVIEWED_MIGRATION_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `CANONICAL_UNIQUENESS_REVIEW=PASS`
+- `GLOBAL_MEMBERSHIP_INTEGRITY_REVIEW=PASS`
+- `GRAPH_COMPLETION_GATE_REVIEW=PASS`
+- `FRESH_SUCCESS_RESULT_INTEGRITY_REVIEW=PASS`
+- `COMPLETED_REPLAY_INTEGRITY_REVIEW=PASS`
+- `SUCCESS_PERSISTENCE_ORDER_REVIEW=PASS`
+- `SELECT_ONLY_VERIFIER_REVIEW=PASS`
+- `BLOCKER_COUNT=0`
+- `BLOCKERS=NONE`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `NEXT_ACTION=A17Q_TX1_MANUAL_MIGRATION_APPLY_AND_SELECT_ONLY_VERIFICATION`
+
+The review verified that canonical uniqueness is not inferred from update
+counts, graph success is gated after global membership and ancestry checks,
+fresh success JSON is persisted and re-read with SHA-256 verification before
+completion, completed replay verifies durable stored evidence before returning,
+and the SELECT-only verifier contains source evidence for all FIX3 checks while
+never calling the executor.
 
 ## Boundary Evidence
 
@@ -259,6 +291,8 @@ plus same-family parent/child overlap before `graph_validation_passed=true`.
 
 - `VALIDATION_SUMMARY=PASS`
 - `npm.cmd run check:a17q-tx1-fix2-exact-post-state-reconciliation-contract` - PASS
+- `npm.cmd run check:a17q-tx1-fix3-final-integrity-contract` - PASS
+- `npm.cmd run check:a17q-tx1-fix3-owner-review` - PASS
 - `npm.cmd run check:a17q-tx1-fix1-hardened-reconciliation-executor` - PASS
 - `npm.cmd run check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate` - PASS
 - `npm.cmd run check:a17p-r-immutable-owner-decision-pack` - PASS
@@ -272,7 +306,7 @@ plus same-family parent/child overlap before `graph_validation_passed=true`.
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY`
+`NEXT_ACTION=A17Q_TX1_MANUAL_MIGRATION_APPLY_AND_SELECT_ONLY_VERIFICATION`
 
 ## A-17Q-TX1-FIX1 Owner Review
 

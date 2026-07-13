@@ -235,7 +235,12 @@ if (runtimeCallers.length > 0) {
   failures.push(`runtime caller present: ${runtimeCallers.join(", ")}`);
 }
 
-requireIncludes(planDoc, "NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY", "plan doc FIX2 owner-review next action");
+if (
+  !planDoc.includes("NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY") &&
+  !planDoc.includes("NEXT_ACTION=A17Q_TX1_MANUAL_MIGRATION_APPLY_AND_SELECT_ONLY_VERIFICATION")
+) {
+  failures.push("missing plan doc current A17Q next action");
+}
 requireIncludes(index, reviewDocPath.replace(/^docs\//, ""), "index review doc");
 requireIncludes(workLog, "A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED");
 requireIncludes(decisionLog, "A-17Q-TX1-FIX1-REVIEW blocks migration 0026 apply");

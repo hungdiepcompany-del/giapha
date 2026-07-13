@@ -646,6 +646,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md",
   "scripts/check-a17q-tx1-fix2-owner-review.cjs",
   "scripts/check-a17q-tx1-fix3-final-integrity-contract.cjs",
+  "docs/PLAN_A17Q_TX1_FIX3_OWNER_REVIEW_FINAL_MIGRATION_CANDIDATE.md",
+  "scripts/check-a17q-tx1-fix3-owner-review.cjs",
   "scripts/check-export-import-boundary-design.cjs",
   "scripts/check-export-import-final-readiness.cjs",
 ]);

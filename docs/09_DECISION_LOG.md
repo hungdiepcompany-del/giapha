@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 356 - A-17Q-TX1-FIX3-REVIEW approves final migration candidate source
+
+Date: 2026-07-13
+
+Status: Source review PASS; migration 0026 remains not applied
+
+Context: A-17Q-TX1-FIX3 corrected the four owner-review blockers from FIX2 by
+adding direct canonical uniqueness checks, global membership integrity checks,
+stored success-result SHA-256 integrity and SELECT-only verifier evidence.
+
+Decision: Approve the reviewed migration 0026 source at commit `3066ea9` as
+the final manual-apply candidate. This does not authorize migration apply,
+production dry-run or production execution; those remain separate owner phases.
+
+Evidence:
+
+- `A17Q_TX1_FIX3_REVIEW_STATUS=PASS_OWNER_REVIEW_APPROVED_FINAL_MIGRATION_FOR_MANUAL_APPLY_CANDIDATE`
+- `REVIEWED_COMMIT=3066ea9`
+- `REVIEWED_MIGRATION_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `CANONICAL_UNIQUENESS_REVIEW=PASS`
+- `GLOBAL_MEMBERSHIP_INTEGRITY_REVIEW=PASS`
+- `GRAPH_COMPLETION_GATE_REVIEW=PASS`
+- `FRESH_SUCCESS_RESULT_INTEGRITY_REVIEW=PASS`
+- `COMPLETED_REPLAY_INTEGRITY_REVIEW=PASS`
+- `SUCCESS_PERSISTENCE_ORDER_REVIEW=PASS`
+- `SELECT_ONLY_VERIFIER_REVIEW=PASS`
+- `BLOCKER_COUNT=0`
+- `BLOCKERS=NONE`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 355 - A-17Q-TX1-FIX3 finalizes integrity contract
 
 Date: 2026-07-13
