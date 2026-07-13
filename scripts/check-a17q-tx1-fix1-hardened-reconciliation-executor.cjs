@@ -93,9 +93,12 @@ for (const token of [
   "POST_STATE_VERIFIED_BEFORE_COMPLETED=YES",
   "MIGRATION_0026_APPLIED=NO",
   "MIGRATION_0027_CREATED=NO",
-  "OWNER_REVIEW_REQUIRED_AGAIN=YES",
 ]) {
   requireIncludes(doc, token, `doc ${token}`);
+}
+
+if (!doc.includes("OWNER_REVIEW_REQUIRED_AGAIN=YES") && !doc.includes("OWNER_REVIEW_REQUIRED_AGAIN=NO")) {
+  failures.push("missing doc OWNER_REVIEW_REQUIRED_AGAIN status");
 }
 
 for (const token of [

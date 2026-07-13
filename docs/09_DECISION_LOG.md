@@ -1,5 +1,47 @@
 # Decision Log
 
+## Decision 357 - A-17Q-TX1R records legacy family reconciliation executor manual apply verification
+
+Date: 2026-07-13
+
+Status: Manual apply and SELECT-only verifier evidence recorded; no reconciliation executed
+
+Context: The owner reported that migration 0026 with SHA
+`9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+was manually applied to Supabase project `frkyeuxrlcflmsxxsolp`, and that the
+SELECT-only verifier passed with all contract fields true.
+
+Decision: Record the manual production schema apply and verifier PASS evidence
+without calling the reconciliation executor or changing runtime code. The next
+phase may prepare the separate production reconciliation dry-run path, but this
+record does not authorize execution.
+
+Evidence:
+
+- `A17Q_TX1R_STATUS=PASS_MANUAL_APPLY_VERIFICATION_EVIDENCE_RECORDED`
+- `A17Q_TX1_MANUAL_APPLY_STATUS=PASS_MIGRATION_APPLIED_AND_SELECT_ONLY_VERIFIED_NO_RECONCILIATION`
+- `TARGET_PROJECT_REF=frkyeuxrlcflmsxxsolp`
+- `MIGRATION_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `FUNCTION_EXISTS=YES`
+- `FUNCTION_SECURITY_MODE=SECURITY_INVOKER`
+- `FUNCTION_SEARCH_PATH=public, auth, pg_temp`
+- `PUBLIC_EXECUTE_ALLOWED=NO`
+- `ANON_EXECUTE_ALLOWED=NO`
+- `AUTHENTICATED_EXECUTE_GRANT=YES`
+- `ALL_EMBEDDED_HASHES_MATCH=YES`
+- `FIX3_SOURCE_CONTRACT_PRESENT=YES`
+- `SUCCESS_RESULT_STORAGE_PRESENT=YES`
+- `SUCCESS_RESULT_SHA256_STORAGE_PRESENT=YES`
+- `DECISION_PACK_BATCH_COUNT=0`
+- `COMPLETED_RECONCILIATION_BATCH_COUNT=0`
+- `ROLLBACK_MANIFEST_COUNT=0`
+- `DATABASE_SCHEMA_CHANGED=YES`
+- `GENEALOGY_DATA_MUTATED=NO`
+- `RPC_CALLED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 356 - A-17Q-TX1-FIX3-REVIEW approves final migration candidate source
 
 Date: 2026-07-13

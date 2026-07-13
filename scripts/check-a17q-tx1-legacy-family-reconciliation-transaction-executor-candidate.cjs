@@ -581,16 +581,39 @@ for (const token of [
   "MIGRATION_APPLY_AUTHORIZED=NO",
   "PRODUCTION_DRY_RUN_AUTHORIZED=NO",
   "PRODUCTION_EXECUTION_AUTHORIZED=NO",
-  "SQL_EXECUTED=NO",
-  "PRODUCTION_QUERIED=NO",
   "RPC_CALLED=NO",
-  "DATABASE_MUTATION=NO",
   "RECONCILIATION_EXECUTED=NO",
   "RUNTIME_CHANGED=NO",
   "DEPLOY=NO",
   "PUSH=NO",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
+}
+
+if (
+  !doc.includes("SQL_EXECUTED=NO") &&
+  !(
+    doc.includes("A17Q_TX1R_STATUS=PASS_MANUAL_APPLY_VERIFICATION_EVIDENCE_RECORDED") &&
+    doc.includes("SQL_EXECUTED=YES") &&
+    doc.includes("SQL_SCOPE=MIGRATION_0026_AND_SELECT_ONLY_VERIFIER") &&
+    doc.includes("SQL_EXECUTED_BY_CODEX=NO")
+  )
+) {
+  failures.push("missing doc SQL execution boundary");
+}
+
+if (
+  !doc.includes("PRODUCTION_QUERIED=NO") &&
+  !(
+    doc.includes("A17Q_TX1R_STATUS=PASS_MANUAL_APPLY_VERIFICATION_EVIDENCE_RECORDED") &&
+    doc.includes("PRODUCTION_QUERIED=YES_SELECT_ONLY_VERIFIER_BY_OWNER")
+  )
+) {
+  failures.push("missing doc production query boundary");
+}
+
+if (!doc.includes("DATABASE_MUTATION=NO") && !doc.includes("GENEALOGY_DATA_MUTATED=NO")) {
+  failures.push("missing doc mutation boundary");
 }
 
 requireIncludes(index, "PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md");
