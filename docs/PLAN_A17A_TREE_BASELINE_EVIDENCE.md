@@ -140,6 +140,17 @@ The audit distinguishes:
 - `VIEWER_VIETNAMESE_SEARCH_NORMALIZATION_GAP_CONFIRMED=YES`
 - `TECHNICAL_ENUM_LABEL_LEAK_RISK_CONFIRMED=YES`
 
+## A-17P Follow-Up
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `A17P_USES_A17A_BASELINE=YES`
+- `A17P_SELECT_ONLY_AUDIT_FILE=db/checks/20260713_check_a17p_legacy_family_reconciliation_audit.sql`
+- `A17P_RECONCILIATION_EXECUTED=NO`
+
+A-17P carries this baseline forward into a review pack and SELECT-only audit
+query for later owner execution. It does not refresh production data or mutate
+the tree.
+
 ## Validation
 
 - `npx.cmd --yes supabase db query --linked --file db/checks/20260712_check_a17a_tree_baseline_evidence.sql`: PASS

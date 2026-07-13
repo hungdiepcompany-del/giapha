@@ -371,7 +371,8 @@
     "check:a17o-tx1-grouped-official-import-transaction-executor-candidate": "node scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
     "check:a17o-tx1r-grouped-import-executor-manual-apply-verification": "node scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
     "check:a17o-r-grouped-importer-runtime-integration": "node scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
-    "check:a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence": "node scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs"
+    "check:a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence": "node scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs",
+    "check:a17p-legacy-reconciliation-audit-dry-run-owner-review-pack": "node scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

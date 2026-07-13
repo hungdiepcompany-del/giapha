@@ -1,5 +1,45 @@
 # Decision Log
 
+## Decision 344 - A-17P prepares legacy reconciliation review pack
+
+Date: 2026-07-13
+
+Status: Accepted review-pack preparation, no execution
+
+Context: A-17O-DR records that the grouped official importer runtime is pushed,
+deployed and covered by production no-import-mutation smoke. A-17N-DR records
+that admin parent/child canonical writes are also deployed. The known future
+write paths are fixed, but legacy fragmented family rows still require owner
+review before any reconciliation execution.
+
+Decision: Prepare only the read-only audit, pure dry-run planner, synthetic
+fixture suite and owner review pack. Keep decision pack hash, owner approval
+marker and execution batch unassigned. Do not query production, execute SQL,
+modify runtime, create migrations, backfill canonical keys, reconcile, deploy
+or push in this phase.
+
+Evidence:
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `CURRENT_BASELINE_ACTIVE_FAMILIES=74`
+- `CURRENT_BASELINE_ACTIVE_PARENT_MEMBERSHIPS=140`
+- `CURRENT_BASELINE_ACTIVE_CHILD_MEMBERSHIPS=73`
+- `EXPECTED_DUPLICATE_PARENT_SET_GROUP_COUNT=22`
+- `REDUNDANT_FAMILY_ESTIMATE=38`
+- `FAMILIES_WITH_MULTIPLE_CHILDREN=0`
+- `SELECT_ONLY_AUDIT_STATIC_CHECK=PASS`
+- `DRY_RUN_DATABASE_CALL_COUNT=0`
+- `DRY_RUN_RPC_CALL_COUNT=0`
+- `OWNER_AUTO_APPROVAL_PRESENT=NO`
+- `DECISION_PACK_FINALIZED=NO`
+- `DECISION_PACK_HASH_CREATED=NO`
+- `SYNTHETIC_FIXTURE_COUNT=30`
+- `DELETED_FAMILY_AUTOMATIC_ACTION_PLANNED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+
+Safety: All reconciliation material is advisory and owner-review-only. The
+deleted family with active parent memberships remains a separate owner decision.
+
 ## Decision 343 - A-17O-DR records grouped importer deploy smoke evidence
 
 Date: 2026-07-13

@@ -93,6 +93,16 @@ Conflict classes:
 The future rollback verifier must compare post-reconciliation `updated_at`,
 soft-delete fields, membership counts and semantic hashes against the manifest.
 
+## A-17P Follow-Up
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `A17P_ROLLBACK_FORECAST_CREATED=YES`
+- `A17P_ROLLBACK_EXECUTABLE_SQL_CREATED=NO`
+- `A17P_DECISION_PACK_HASH_CREATED=NO`
+
+A-17P adds non-executable rollback forecasts per review group. The executable
+rollback contract remains reserved for a later owner-approved transaction phase.
+
 ## Backup Requirements Before Future A-17K
 
 `BACKUP_EVIDENCE_REQUIREMENTS_DEFINED=YES`

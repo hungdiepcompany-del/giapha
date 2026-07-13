@@ -95,3 +95,16 @@ Owner review marker required:
 Next action:
 
 `OWNER_REVIEW_A17EG_THEN_CREATE_SEPARATE_A17H_SCHEMA_FOUNDATION_CANDIDATE`
+
+## A-17P Follow-Up
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `A17_LEGACY_RECONCILIATION_READINESS=READY_ALL_KNOWN_WRITE_PATHS_FIXED_AND_DEPLOYED`
+- `A17P_SELECT_ONLY_AUDIT_FILE=db/checks/20260713_check_a17p_legacy_family_reconciliation_audit.sql`
+- `A17P_OWNER_REVIEW_PACK_TEMPLATE_CREATED=YES`
+- `A17P_OWNER_APPROVAL_RECORDED=NO`
+- `A17P_RECONCILIATION_EXECUTED=NO`
+
+A-17P starts only after A-17H/I schema verification, A-17N deployed admin
+write-path repair and A-17O deployed grouped importer repair are recorded.
+It prepares owner review material but does not approve or execute merges.

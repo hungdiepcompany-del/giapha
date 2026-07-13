@@ -76,6 +76,18 @@ Blocking evidence for later production reconciliation:
 - `LAYOUT_REFERENCES_AFFECTED_COUNT=3`
 - `CURRENT_WRITE_PATHS_STILL_UNSAFE=YES`
 
+## A-17P Follow-Up
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `A17P_EXPECTED_DUPLICATE_PARENT_SET_GROUP_COUNT=22`
+- `A17P_REDUNDANT_FAMILY_ESTIMATE=38`
+- `A17P_OWNER_REVIEW_REQUIRED=YES`
+- `A17P_SAFE_AUTOMATIC_GROUP_COUNT=0`
+
+A-17P supersedes the old "write paths still unsafe" blocker with recorded
+A-17N-DR and A-17O-DR deploy evidence, but keeps all duplicate parent-set groups
+owner-reviewed and non-executable.
+
 ## Duplicate-Group Distinctions
 
 The SQL distinguishes:

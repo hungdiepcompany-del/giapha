@@ -204,6 +204,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+  "docs/PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md",
+  "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md",
+  "db/checks/20260713_check_a17p_legacy_family_reconciliation_audit.sql",
+  "scripts/a17p-legacy-reconciliation-planner.cjs",
+  "scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs",
+  "docs/PLAN_A17A_TREE_BASELINE_EVIDENCE.md",
+  "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
+  "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",
+  "docs/PLAN_A17G_FAMILY_RECONCILIATION_ROLLBACK_DESIGN.md",
+  "docs/PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md",
 ]);
 
 for (const file of changedFiles) {

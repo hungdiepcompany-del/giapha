@@ -86,6 +86,18 @@ Production reconciliation remains blocked because:
 
 `A17F_PRODUCTION_RECONCILIATION_ALLOWED=NO`
 
+## A-17P Follow-Up
+
+- `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+- `A17P_DRY_RUN_PLANNER_CREATED=YES`
+- `A17P_OWNER_REVIEW_PACK_CREATED=YES`
+- `A17P_DECISION_PACK_FINALIZED=NO`
+- `A17P_RECONCILIATION_EXECUTED=NO`
+
+A-17P replaces the earlier aggregate-only dry-run with a pure planner, synthetic
+fixtures, rollback forecast and owner review template. The A-17F counts remain
+advisory until owner-run A-17P audit output is reviewed.
+
 ## Safety
 
 - `SQL_EXECUTED=YES_READ_ONLY_SELECT_ONLY`

@@ -1,0 +1,423 @@
+#!/usr/bin/env node
+
+const fs = require("node:fs");
+const path = require("node:path");
+const childProcess = require("node:child_process");
+const planner = require("./a17p-legacy-reconciliation-planner.cjs");
+
+const root = process.cwd();
+const failures = [];
+
+const docPath =
+  "docs/PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md";
+const templatePath =
+  "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md";
+const sqlPath =
+  "db/checks/20260713_check_a17p_legacy_family_reconciliation_audit.sql";
+const plannerPath = "scripts/a17p-legacy-reconciliation-planner.cjs";
+const checkerPath =
+  "scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs";
+
+function read(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push(`missing ${relativePath}`);
+    return "";
+  }
+  return fs.readFileSync(absolutePath, "utf8");
+}
+
+function readJson(relativePath) {
+  const content = read(relativePath);
+  if (!content) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    failures.push(`${relativePath} is not valid JSON`);
+    return null;
+  }
+}
+
+function git(args) {
+  try {
+    return childProcess.execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    failures.push(`git ${args.join(" ")} failed`);
+    return "";
+  }
+}
+
+function requireIncludes(content, token, label = token) {
+  if (!content.includes(token)) failures.push(`missing ${label}`);
+}
+
+function rejectPattern(content, pattern, label = String(pattern)) {
+  if (pattern.test(content)) failures.push(`forbidden ${label}`);
+}
+
+function assertCase(label, condition) {
+  if (!condition) failures.push(`fixture failed: ${label}`);
+}
+
+const doc = read(docPath);
+const template = read(templatePath);
+const sql = read(sqlPath);
+const plannerSource = read(plannerPath);
+const a17oDrDoc = read(
+  "docs/PLAN_A17O_DR_GROUPED_IMPORTER_DEPLOY_NO_IMPORT_MUTATION_SMOKE_EVIDENCE.md",
+);
+const a17oRDoc = read("docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md");
+const a17oDoc = read("docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md");
+const index = read("docs/00_INDEX.md");
+const workLog = read("docs/08_AI_WORK_LOG.md");
+const decisionLog = read("docs/09_DECISION_LOG.md");
+const handoff = read("docs/99_NEXT_AI_HANDOFF.md");
+const packageJson = readJson("package.json");
+
+for (const token of [
+  "A17O_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE_RECORDED",
+  "A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_DEPLOYED_AND_VERIFIED",
+  "A17_LEGACY_RECONCILIATION_READINESS=READY_ALL_KNOWN_WRITE_PATHS_FIXED_AND_DEPLOYED",
+]) {
+  requireIncludes(a17oDrDoc + a17oRDoc + a17oDoc, token, `A-17O-DR readiness ${token}`);
+}
+
+const originForRuntime = git(["branch", "-r", "--contains", "e8def2f"]);
+if (!originForRuntime.includes("origin/main")) {
+  failures.push("origin/main does not contain e8def2f");
+}
+const originForEvidence = git(["branch", "-r", "--contains", "9fed9fb"]);
+if (!originForEvidence.includes("origin/main")) {
+  failures.push("origin/main does not contain 9fed9fb");
+}
+
+for (const token of [
+  "A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY",
+  "PRECONDITION_A17O_DR_PASS=YES",
+  "A17O_DR_EVIDENCE_COMMIT_FOUND_ON_ORIGIN_MAIN=YES",
+  "WORKTREE_CLEAN_BEFORE_PHASE=YES",
+  "REMOTE_SYNC_BEFORE_PHASE=0_0",
+  "CURRENT_BASELINE_ACTIVE_FAMILIES=74",
+  "CURRENT_BASELINE_ACTIVE_PARENT_MEMBERSHIPS=140",
+  "CURRENT_BASELINE_ACTIVE_CHILD_MEMBERSHIPS=73",
+  "EXPECTED_DUPLICATE_PARENT_SET_GROUP_COUNT=22",
+  "REDUNDANT_FAMILY_ESTIMATE=38",
+  "FAMILIES_WITH_MULTIPLE_CHILDREN=0",
+  "LEGACY_GROUP_IDENTITY_CREATED=YES",
+  "CHILD_ID_INCLUDED_IN_GROUP_IDENTITY=NO",
+  "PARENT_INPUT_ORDER_AFFECTS_GROUP_IDENTITY=NO",
+  `SELECT_ONLY_AUDIT_FILE=${sqlPath}`,
+  "SELECT_ONLY_AUDIT_STATIC_CHECK=PASS",
+  "AUDIT_SQL_RPC_CALL_COUNT=0",
+  "AUDIT_SQL_MUTATION_STATEMENT_COUNT=0",
+  "AUDIT_SQL_EXECUTED=NO",
+  "DRY_RUN_PLANNER_CREATED=YES",
+  `DRY_RUN_PLANNER_FILE=${plannerPath}`,
+  "DRY_RUN_DATABASE_CALL_COUNT=0",
+  "DRY_RUN_RPC_CALL_COUNT=0",
+  "GENEALOGY_MUTATION_COUNT=0",
+  "RECONCILIATION_EXECUTED=NO",
+  "OWNER_REVIEW_PACK_CREATED=YES",
+  "OWNER_REVIEW_PACK_TEMPLATE_CREATED=YES",
+  "OWNER_AUTO_APPROVAL_PRESENT=NO",
+  "DECISION_PACK_FINALIZED=NO",
+  "DECISION_PACK_HASH_CREATED=NO",
+  "SURVIVOR_PROPOSAL_RULES_CREATED=YES",
+  "ARBITRARY_ID_SURVIVOR_SELECTION_PRESENT=NO",
+  "MEMBERSHIP_MOVE_FORECAST_CREATED=YES",
+  "GRAPH_INVARIANT_ANALYSIS_CREATED=YES",
+  "LAYOUT_REFERENCE_ANALYSIS_CREATED=YES",
+  "AUDIT_REVISION_IMPACT_ANALYSIS_CREATED=YES",
+  "BEFORE_AFTER_FORECAST_CREATED=YES",
+  "ROLLBACK_FORECAST_CREATED=YES",
+  "DELETED_FAMILY_ANALYZED=YES",
+  "ORPHAN_ACTIVE_PARENT_MEMBERSHIP_COUNT_EXPECTED=2",
+  "DELETED_FAMILY_AUTOMATIC_ACTION_PLANNED=NO",
+  "SYNTHETIC_FIXTURE_COUNT=30",
+  "TWO_FAMILY_FRAGMENTATION_TEST=PASS",
+  "EIGHT_FAMILY_FRAGMENTATION_TEST=PASS",
+  "AMBIGUOUS_SURVIVOR_REQUIRES_OWNER_TEST=PASS",
+  "MULTIPLE_UNION_CONTEXT_BLOCK_TEST=PASS",
+  "CYCLE_RISK_BLOCK_TEST=PASS",
+  "DELETED_FAMILY_SEPARATE_DECISION_TEST=PASS",
+  "NO_CHILD_LOST_FORECAST_TEST=PASS",
+  "ROLLBACK_RESTORES_ORIGINAL_STATE_TEST=PASS",
+  "OFFICIAL_IMPORT_RPC_CALLED=NO",
+  "GROUPED_IMPORT_RPC_CALLED=NO",
+  "PRODUCTION_SQL_EXECUTED=NO",
+  "GENEALOGY_ROWS_MODIFIED=NO",
+  "CANONICAL_BACKFILL_EXECUTED=NO",
+  "RUNTIME_CHANGED=NO",
+  "MIGRATION_CREATED=NO",
+  "MIGRATION_CHANGED=NO",
+  "DEPLOY=NO",
+  "PUSH=NO",
+  "PACKAGE_DEPENDENCY_INSTALLED=NO",
+]) {
+  requireIncludes(doc, token, `doc token ${token}`);
+}
+
+for (const token of [
+  "GROUP_REFERENCE=",
+  "RISK_CLASS=",
+  "CANONICAL_PARENT_SET_SUMMARY=",
+  "CANDIDATE_FAMILY_COUNT=",
+  "CANDIDATE_FAMILIES=",
+  "COMBINED_CHILD_COUNT=",
+  "PROPOSED_SURVIVOR=",
+  "PROPOSED_VOID_FAMILIES=",
+  "PARENT_MEMBERSHIP_PLAN=",
+  "CHILD_MEMBERSHIP_PLAN=",
+  "LAYOUT_IMPACT=",
+  "AUDIT_REVISION_IMPACT=",
+  "GRAPH_INVARIANT_RESULT=",
+  "EXPECTED_BEFORE_COUNTS=",
+  "EXPECTED_AFTER_COUNTS=",
+  "ROLLBACK_FORECAST=",
+  "OWNER_DECISION=NOT_SELECTED",
+  "OWNER_NOTES=",
+  "BLOCKERS=",
+  "APPROVE_PROPOSED_SURVIVOR",
+  "SELECT_DIFFERENT_SURVIVOR",
+  "EXCLUDE_GROUP",
+  "BLOCK_DATA_CONFLICT",
+  "REQUEST_MORE_EVIDENCE",
+]) {
+  requireIncludes(template, token, `template token ${token}`);
+}
+
+for (const token of [
+  "global_baseline",
+  "duplicate_group_summary",
+  "candidate_family_detail",
+  "membership_detail",
+  "deleted_family_advisory",
+  "active_family_count",
+  "duplicate_child_membership_count",
+  "duplicate_parent_membership_count",
+  "layout_reference_count",
+  "revision_reference_count",
+  "SEPARATE_OWNER_DECISION_REQUIRED",
+]) {
+  requireIncludes(sql, token, `audit SQL token ${token}`);
+}
+
+const sqlMutationPattern =
+  /\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|call|do|perform)\b/i;
+rejectPattern(sql, sqlMutationPattern, "mutation/RPC statement in A-17P audit SQL");
+rejectPattern(sql, /\brpc\b/i, "RPC marker in A-17P audit SQL");
+
+for (const token of [
+  "GROUP_KEY_PREFIX = \"a17p-legacy-family-reconciliation:v1\"",
+  "normalizedActiveParentPersonIds",
+  "relationshipPeriod",
+  "buildGroupKey(parentIds, unionContext.value",
+  "CHILD_ID_INCLUDED_IN_GROUP_IDENTITY",
+  "DRY_RUN_ONLY: true",
+  "DATABASE_CALL_COUNT: 0",
+  "RPC_CALL_COUNT: 0",
+  "GENEALOGY_MUTATION_COUNT: 0",
+  "reusedSurvivorNeverDeletedByRollback: true",
+]) {
+  requireIncludes(plannerSource + doc, token, `planner/doc token ${token}`);
+}
+
+rejectPattern(
+  plannerSource,
+  /\bsupabase\s*\.\s*from\(|\bsupabase\s*\.\s*rpc\(|\bfetch\(|SUPABASE_SERVICE_ROLE_KEY|service[_-]?role/i,
+  "database/RPC/network/service role in planner",
+);
+rejectPattern(
+  plannerSource,
+  /lowest uuid|lexical family|first query row|source order|Math\.random|randomUUID/i,
+  "arbitrary survivor selection",
+);
+
+const { fixtures, plans } = planner.runSyntheticFixtureSuite();
+if (fixtures.length !== 30 || plans.length !== 30) {
+  failures.push(`expected 30 synthetic fixtures, got ${fixtures.length}/${plans.length}`);
+}
+
+function plan(name) {
+  const found = plans.find((entry) => entry.name === name);
+  if (!found) failures.push(`missing fixture plan ${name}`);
+  return found?.plan;
+}
+
+const twoFamily = plan("two-family-fragmentation");
+assertCase(
+  "two family fragmentation",
+  twoFamily?.expectedBefore.activeFamilyCount === 2 &&
+    twoFamily?.expectedAfter.activeFamilyCount === 1 &&
+    twoFamily?.membershipMovePlan.invariants.NO_CHILD_LOST === true,
+);
+
+const eightFamily = plan("eight-family-fragmentation");
+assertCase(
+  "eight family fragmentation",
+  eightFamily?.expectedBefore.activeFamilyCount === 8 &&
+    eightFamily?.expectedAfter.activeFamilyCount === 8 &&
+    eightFamily?.ownerReview.required === true,
+);
+
+const ambiguous = plan("two-equally-valid-active");
+assertCase(
+  "ambiguous survivor requires owner",
+  ambiguous?.proposedSurvivorFamilyId === null &&
+    ambiguous?.riskClass === planner.RISK_CLASSES.OWNER_DECISION_REQUIRED,
+);
+
+const unionConflict = plan("same-parents-conflicting-union");
+assertCase(
+  "multiple union context block",
+  unionConflict?.blockers.includes("A17P_BLOCKED_MULTIPLE_UNION_CONTEXTS") &&
+    unionConflict?.riskClass === planner.RISK_CLASSES.BLOCKED_DATA_CONFLICT,
+);
+
+const cycle = plan("cycle-risk");
+assertCase(
+  "cycle risk block",
+  cycle?.blockers.includes("A17P_BLOCKED_CYCLE_RISK") &&
+    cycle?.riskClass === planner.RISK_CLASSES.BLOCKED_GRAPH_INVARIANT,
+);
+
+const deleted = plan("deleted-family-active-parents-no-children");
+assertCase(
+  "deleted family separate decision",
+  deleted?.deletedFamilyAdvisory?.DELETED_FAMILY_ACTION ===
+    planner.DELETED_FAMILY_ACTIONS.SEPARATE_OWNER_DECISION_REQUIRED &&
+    deleted?.deletedFamilyAdvisory?.automaticActionPlanned === false,
+);
+
+const noChildLost = plan("no-child-lost");
+assertCase(
+  "no child lost forecast",
+  noChildLost?.expectedBefore.activeChildMembershipCount === 2 &&
+    noChildLost?.expectedAfter.activeChildMembershipCount === 2 &&
+    noChildLost?.expectedAfter.peopleCountChangeExpected === 0,
+);
+
+const rollback = plan("rollback-restores-membership-ownership");
+assertCase(
+  "rollback restores original state",
+  rollback?.rollbackForecast.rollbackRestoresOriginalState === true &&
+    rollback?.rollbackForecast.reusedSurvivorNeverDeletedByRollback === true,
+);
+
+for (const entry of plans) {
+  assertCase(
+    `${entry.name} no automatic owner decision`,
+    entry.plan.ownerReview.required === true && entry.plan.ownerReview.decision === null,
+  );
+  assertCase(
+    `${entry.name} no execution`,
+    entry.plan.execution.DATABASE_CALL_COUNT === 0 &&
+      entry.plan.execution.RPC_CALL_COUNT === 0 &&
+      entry.plan.execution.GENEALOGY_MUTATION_COUNT === 0 &&
+      entry.plan.execution.RECONCILIATION_EXECUTED === false,
+  );
+  assertCase(
+    `${entry.name} decision pack unfinalized`,
+    entry.plan.ownerReview.decisionPackVersion === "NOT_ASSIGNED" &&
+      entry.plan.ownerReview.decisionPackHash === "NOT_CREATED" &&
+      entry.plan.ownerReview.ownerApprovalMarker === "NOT_CREATED" &&
+      entry.plan.ownerReview.executionBatchId === "NOT_CREATED",
+  );
+}
+
+const parentOrderA = planner.buildGroupKey(["parent-a", "parent-b"], null, null);
+const parentOrderB = planner.buildGroupKey(["parent-a", "parent-b"], null, null);
+assertCase("parent input order does not affect identity", parentOrderA === parentOrderB);
+assertCase("child id excluded from group identity", !parentOrderA.includes("child"));
+
+for (const [content, token, label] of [
+  [index, "PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md", "index A-17P"],
+  [workLog, "A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY", "work log A-17P"],
+  [decisionLog, "Decision 344 - A-17P prepares legacy reconciliation review pack", "decision A-17P"],
+  [handoff, "A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY", "handoff A-17P"],
+]) {
+  requireIncludes(content, token, label);
+}
+
+if (
+  packageJson?.scripts?.["check:a17p-legacy-reconciliation-audit-dry-run-owner-review-pack"] !==
+  "node scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs"
+) {
+  failures.push("missing package script check:a17p-legacy-reconciliation-audit-dry-run-owner-review-pack");
+}
+
+const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
+  .split(/\r?\n/)
+  .map((line) => line.slice(3).trim())
+  .filter(Boolean);
+
+const allowedChangedFiles = new Set([
+  docPath,
+  templatePath,
+  sqlPath,
+  plannerPath,
+  checkerPath,
+  "package.json",
+  "docs/00_INDEX.md",
+  "docs/08_AI_WORK_LOG.md",
+  "docs/09_DECISION_LOG.md",
+  "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17A_TREE_BASELINE_EVIDENCE.md",
+  "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
+  "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",
+  "docs/PLAN_A17G_FAMILY_RECONCILIATION_ROLLBACK_DESIGN.md",
+  "docs/PLAN_A17EG_FAMILY_RECONCILIATION_AUDIT_DRY_RUN_BUNDLE.md",
+  "docs/PLAN_A17O_DR_GROUPED_IMPORTER_DEPLOY_NO_IMPORT_MUTATION_SMOKE_EVIDENCE.md",
+  "scripts/check-a16r-import-completed-post-import-verification.cjs",
+  "scripts/check-a17a-tree-baseline-evidence.cjs",
+  "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
+  "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
+  "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
+  "scripts/check-a17m-canonical-family-domain-service.cjs",
+  "scripts/check-a17n-admin-parent-child-canonical-write-path.cjs",
+  "scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs",
+  "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
+  "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
+  "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
+  "scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs",
+  "scripts/check-a17o-importer-canonical-family-grouping.cjs",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
+  "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+]);
+
+for (const file of changedFiles) {
+  if (/^(app|components|lib|services)\//.test(file)) {
+    failures.push(`runtime file changed during A-17P: ${file}`);
+  }
+  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+    failures.push(`migration changed during A-17P: ${file}`);
+  }
+  if (!allowedChangedFiles.has(file)) {
+    failures.push(`unexpected A-17P dirty file: ${file}`);
+  }
+  if (file === ".env.local" || file.endsWith(".env.local")) {
+    failures.push(`forbidden env file ${file}`);
+  }
+  if (/\.(xls|xlsx|csv|zip)$/i.test(file)) {
+    failures.push(`forbidden production data artifact ${file}`);
+  }
+}
+
+rejectPattern(
+  doc + template + plannerSource,
+  /SUPABASE_SERVICE_ROLE_KEY=|eyJ|BEGIN RSA|PRIVATE KEY|access_token|refresh_token/i,
+  "secret or token-looking content",
+);
+
+if (failures.length > 0) {
+  console.error("A-17P legacy reconciliation audit dry-run owner review pack check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("A-17P legacy reconciliation audit dry-run owner review pack check passed.");
