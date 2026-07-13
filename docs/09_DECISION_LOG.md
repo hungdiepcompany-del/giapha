@@ -1,5 +1,40 @@
 # Decision Log
 
+## Decision 346 - A-17P-FIX2 adds owner-facing review query
+
+Date: 2026-07-13
+
+Status: Accepted owner-review support, no execution
+
+Context: A-17P manual review correctly blocked because the review materials did
+not include an owner-facing SELECT-only query with parent, role and child names.
+The corrected FIX1 audit was verified, but survivor selection must not happen
+from hashes, UUID order, created-at order or query row order.
+
+Decision: Add a separate owner-facing SELECT-only review query for the 22
+legacy duplicate parent-set groups. Preserve exact parent-set grouping from
+FIX1, include parent and child display names, expose family IDs only in the
+owner-run SQL result, keep owner decision fields null, and keep the deleted
+family advisory outside the normal group decision batch.
+
+Evidence:
+
+- `A17P_FIX2_STATUS=PASS_OWNER_FACING_LEGACY_FAMILY_REVIEW_QUERY_READY`
+- `OWNER_FACING_QUERY_FILE=db/checks/20260713_check_a17p_owner_facing_legacy_family_review.sql`
+- `EXACT_PARENT_SET_GROUPING_PRESERVED=YES`
+- `PARENT_DISPLAY_NAMES_INCLUDED=YES`
+- `PARENT_ROLES_INCLUDED=YES`
+- `CHILD_DISPLAY_NAMES_INCLUDED=YES`
+- `FAMILY_IDS_INCLUDED_FOR_OWNER_SELECTION=YES`
+- `PRIVATE_FIELDS_EXCLUDED=YES`
+- `OWNER_REVIEW_INTEGRITY_RESULT_SET_CREATED=YES`
+- `AUTOMATIC_OWNER_APPROVAL_PRESENT=NO`
+- `OWNER_DECISION_PLACEHOLDERS_NULL=YES`
+
+Safety: Codex did not execute SQL, call RPCs, mutate database rows, run
+reconciliation, create migrations, change runtime behavior, deploy or push.
+Production names and IDs remain absent from committed docs and fixtures.
+
 ## Decision 345 - A-17P-FIX1 corrects legacy reconciliation audit joins
 
 Date: 2026-07-13

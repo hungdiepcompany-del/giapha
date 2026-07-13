@@ -5,6 +5,9 @@ Date: 2026-07-13
 Status:
 `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
 `A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED`
+`A17P_MANUAL_STATUS=BLOCKED_OWNER_FACING_REVIEW_QUERY_MISSING`
+`A17P_FIX1_MANUAL_STATUS=PASS_CORRECTED_SELECT_ONLY_AUDIT_VERIFIED`
+`A17P_FIX2_STATUS=PASS_OWNER_FACING_LEGACY_FAMILY_REVIEW_QUERY_READY`
 
 ## Scope
 
@@ -196,6 +199,77 @@ EXPECTED_REDUNDANT_FAMILY_FORECAST=38
 These are current production evidence expectations only, not permanent schema
 invariants.
 
+## A-17P-FIX2 Owner-Facing Review Query
+
+- `A17P_MANUAL_STATUS=BLOCKED_OWNER_FACING_REVIEW_QUERY_MISSING`
+- `A17P_FIX1_MANUAL_STATUS=PASS_CORRECTED_SELECT_ONLY_AUDIT_VERIFIED`
+- `A17P_FIX2_STATUS=PASS_OWNER_FACING_LEGACY_FAMILY_REVIEW_QUERY_READY`
+- `OWNER_FACING_REVIEW_QUERY_CREATED=YES`
+- `OWNER_FACING_QUERY_FILE=db/checks/20260713_check_a17p_owner_facing_legacy_family_review.sql`
+- `EXACT_PARENT_SET_GROUPING_PRESERVED=YES`
+- `PARENT_DISPLAY_NAMES_INCLUDED=YES`
+- `PARENT_ROLES_INCLUDED=YES`
+- `CHILD_DISPLAY_NAMES_INCLUDED=YES`
+- `FAMILY_IDS_INCLUDED_FOR_OWNER_SELECTION=YES`
+- `PRIVATE_FIELDS_EXCLUDED=YES`
+- `GROUP_SUMMARY_RESULT_SET_CREATED=YES`
+- `CANDIDATE_FAMILY_RESULT_SET_CREATED=YES`
+- `PARENT_DETAIL_RESULT_SET_CREATED=YES`
+- `CHILD_DETAIL_RESULT_SET_CREATED=YES`
+- `SPECIAL_CASE_RESULT_SET_CREATED=YES`
+- `OWNER_REVIEW_INTEGRITY_RESULT_SET_CREATED=YES`
+- `ONE_PARENT_GROUP_WARNING_INCLUDED=YES`
+- `DELETED_FAMILY_REVIEW_SEPARATE=YES`
+- `AUTOMATIC_OWNER_APPROVAL_PRESENT=NO`
+- `OWNER_DECISION_PLACEHOLDERS_NULL=YES`
+- `EXPECTED_GROUP_COUNT=22`
+- `EXPECTED_CANDIDATE_FAMILY_COUNT=60`
+- `EXPECTED_PARENT_DETAIL_ROWS=117`
+- `EXPECTED_CHILD_DETAIL_ROWS=60`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `MIGRATION_CREATED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+
+FIX2 adds the missing owner-facing SELECT-only review query. It does not execute
+the query and does not populate docs with real production names or IDs. The
+query is intended for the owner to run in the Gia Phả production Supabase
+project and inspect names in the owner session only.
+
+Owner-facing result sets:
+
+```text
+owner_review_group_summary
+owner_review_candidate_family
+owner_review_parent_detail
+owner_review_child_detail
+owner_review_special_cases
+owner_review_integrity
+```
+
+Display-name contract:
+
+```text
+display_name -> full_name -> Không rõ tên
+```
+
+The query shows owner-run `family_id`, parent/child person IDs and membership
+IDs only in the SQL result so the owner can choose a survivor safely. These IDs
+must not be copied into committed docs, fixtures or logs. Owner-decision fields
+remain null placeholders and no family is automatically approved.
+
+Manual next action:
+
+```text
+OWNER_RUN_A17P_OWNER_FACING_SELECT_ONLY_REVIEW_QUERY
+```
+
 ## Dry-Run Planner
 
 - `DRY_RUN_PLANNER_CREATED=YES`
@@ -383,5 +457,5 @@ A-17P-FIX1 static tests added:
 
 ## Next
 
-- `NEXT_ACTION=OWNER_RERUN_CORRECTED_A17P_SELECT_ONLY_AUDIT`
+- `NEXT_ACTION=OWNER_RUN_A17P_OWNER_FACING_SELECT_ONLY_REVIEW_QUERY`
 - `EXPECTED_SUCCESS_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
