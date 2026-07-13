@@ -352,6 +352,8 @@ const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
   "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "docs/PLAN_A17O_DR_GROUPED_IMPORTER_DEPLOY_NO_IMPORT_MUTATION_SMOKE_EVIDENCE.md",
+  "scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs",
   "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
   "package.json",
   "docs/00_INDEX.md",

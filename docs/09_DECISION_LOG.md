@@ -1,5 +1,51 @@
 # Decision Log
 
+## Decision 343 - A-17O-DR records grouped importer deploy smoke evidence
+
+Date: 2026-07-13
+
+Status: Accepted deploy and no-import-mutation evidence
+
+Context: A-17O-R connected the future official-import source path to grouped
+planning and the verified grouped executor adapter. The owner later confirmed
+that runtime commit `e8def2f` was pushed, deployed to production and covered by
+browser no-import-mutation smoke plus before/after database verifier evidence.
+
+Decision: Record A-17O-DR as documentation/checker evidence only. Mark A-17O-R
+as deployed and verified, keep official import execution closed for this phase,
+and open the next separate legacy canonical family reconciliation design phase.
+
+Evidence:
+
+- `A17O_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE_RECORDED`
+- `A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_DEPLOYED_AND_VERIFIED`
+- `RUNTIME_COMMIT=e8def2f`
+- `PUSH_STATUS=PASS`
+- `PUSHED_COMMIT=e8def2f`
+- `CLOUDFLARE_DEPLOY_STATUS=PASS`
+- `DEPLOYED_COMMIT=e8def2f`
+- `DATABASE_BEFORE_SMOKE=PASS`
+- `BROWSER_NO_IMPORT_MUTATION_SMOKE=PASS`
+- `DATABASE_AFTER_SMOKE=PASS`
+- `GROUPED_RPC_VISIBLE_IN_NETWORK=NO`
+- `OLD_IMPORT_RPC_VISIBLE_IN_NETWORK=NO`
+- `IMPORT_FORM_SUBMITTED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+- `ACTIVE_FAMILY_COUNT_AFTER=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT_AFTER=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT_AFTER=73`
+- `GROUPED_BATCH_COUNT_AFTER=0`
+- `IDEMPOTENCY_ROW_COUNT_AFTER=0`
+- `GROUPED_EXECUTOR_REVISION_COUNT_AFTER=0`
+- `GROUPED_ROLLBACK_MANIFEST_COUNT_AFTER=0`
+- `CANONICAL_KEY_BACKFILL_COUNT_AFTER=0`
+- `COMPLETED_PRODUCTION_SESSION_STILL_NON_EXECUTABLE=YES`
+- `A17_LEGACY_RECONCILIATION_READINESS=READY_ALL_KNOWN_WRITE_PATHS_FIXED_AND_DEPLOYED`
+
+Safety: Codex did not execute SQL, deploy, call import RPCs, submit import
+forms, mutate genealogy rows, run reconciliation, install dependencies or
+change runtime code in this evidence phase.
+
 ## Decision 342 - A-17O-R activates grouped official importer runtime source path
 
 Date: 2026-07-13

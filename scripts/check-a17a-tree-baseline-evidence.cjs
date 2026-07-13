@@ -74,6 +74,8 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
   "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
   "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "docs/PLAN_A17O_DR_GROUPED_IMPORTER_DEPLOY_NO_IMPORT_MUTATION_SMOKE_EVIDENCE.md",
+  "scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs",
   "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   "components/imports/import-session-manifest-panel.tsx",
   "lib/import/giapha4/dry-run-mapping-preview-service.ts",

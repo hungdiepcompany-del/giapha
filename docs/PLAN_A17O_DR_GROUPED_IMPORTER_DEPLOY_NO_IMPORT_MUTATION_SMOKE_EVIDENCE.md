@@ -1,0 +1,134 @@
+# A-17O-DR - Grouped Importer Deploy And No-Import-Mutation Smoke Evidence
+
+Date: 2026-07-13
+
+Status: `A17O_DR_STATUS=PASS_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE_RECORDED`
+
+## Scope
+
+This phase records owner-confirmed deploy and production no-import-mutation
+smoke evidence for A-17O-R commit `e8def2f`.
+
+It is documentation and checker reconciliation only. Codex did not change
+runtime importer behavior, execute SQL, call either import executor, submit the
+official import form, run reconciliation, deploy, install dependencies, create
+or modify migrations, or mutate genealogy data.
+
+## Repository Preconditions
+
+- `BRANCH=main`
+- `WORKTREE_CLEAN=YES`
+- `REMOTE_SYNC=0_0`
+- `RUNTIME_COMMIT=e8def2f`
+- `RUNTIME_COMMIT_PRESENT_ON_ORIGIN_MAIN=YES`
+- `ORIGIN_MAIN_CONTAINS_E8DEF2F=YES`
+- `PUSH_STATUS=PASS`
+- `PUSHED_COMMIT=e8def2f`
+
+## Runtime Source Evidence
+
+- `A17O_R_SOURCE_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED`
+- `A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_DEPLOYED_AND_VERIFIED`
+- `GROUPED_EXECUTOR_RPC_NAME=a17o_tx_execute_grouped_giapha4_official_import`
+- `CANONICAL_GROUPING_RUNTIME_ACTIVE=YES`
+- `FUTURE_IMPORT_CALLS_GROUPED_EXECUTOR=YES`
+- `ACTIVE_FUTURE_IMPORT_CALLS_OLD_EXECUTOR=NO`
+
+## Deployment Evidence
+
+- `CLOUDFLARE_DEPLOY_STATUS=PASS`
+- `DEPLOYED_COMMIT=e8def2f`
+- `PRODUCTION_BASE_URL=https://web-gia-pha.hungdiepcompany.workers.dev`
+- `DEPLOY_EXECUTED_BY_PHASE=NO`
+
+The production deployment was owner-confirmed as commit `e8def2f`, the A-17O-R
+grouped official importer runtime integration commit.
+
+## Browser No-Import-Mutation Smoke
+
+- `DATABASE_BEFORE_SMOKE=PASS`
+- `BROWSER_NO_IMPORT_MUTATION_SMOKE=PASS`
+- `DATABASE_AFTER_SMOKE=PASS`
+- `IMPORT_ADMIN_ROUTE_ACCESSIBLE=YES`
+- `AUTHENTICATION_SUCCESS=YES`
+- `VIETNAMESE_UI_RENDERED=YES`
+- `BROWSER_RUNTIME_ERROR=NO`
+- `GROUPED_RPC_VISIBLE_IN_NETWORK=NO`
+- `OLD_IMPORT_RPC_VISIBLE_IN_NETWORK=NO`
+- `IMPORT_FORM_SUBMITTED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+
+The browser smoke reached the authenticated admin import route and observed the
+Vietnamese UI without submitting the form. No grouped executor RPC or old import
+RPC request was visible in the browser network evidence.
+
+## Database Baseline Before Smoke
+
+- `ACTIVE_FAMILY_COUNT_BEFORE=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT_BEFORE=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT_BEFORE=73`
+- `GROUPED_BATCH_COUNT_BEFORE=0`
+- `IDEMPOTENCY_ROW_COUNT_BEFORE=0`
+- `GROUPED_EXECUTOR_REVISION_COUNT_BEFORE=0`
+- `GROUPED_ROLLBACK_MANIFEST_COUNT_BEFORE=0`
+- `CANONICAL_KEY_BACKFILL_COUNT_BEFORE=0`
+
+## Database Baseline After Smoke
+
+- `ACTIVE_FAMILY_COUNT_AFTER=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT_AFTER=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT_AFTER=73`
+- `GROUPED_BATCH_COUNT_AFTER=0`
+- `IDEMPOTENCY_ROW_COUNT_AFTER=0`
+- `GROUPED_EXECUTOR_REVISION_COUNT_AFTER=0`
+- `GROUPED_ROLLBACK_MANIFEST_COUNT_AFTER=0`
+- `CANONICAL_KEY_BACKFILL_COUNT_AFTER=0`
+
+## Executor Verification Evidence
+
+- `NEW_GROUPED_EXECUTOR_EXISTS=YES`
+- `OLD_EXECUTOR_PRESERVED=YES`
+- `SECURITY_INVOKER=YES`
+- `FIXED_SEARCH_PATH=YES`
+- `AUTHENTICATED_EXECUTE_COUNT=1`
+- `ANON_EXECUTE_COUNT=0`
+- `PUBLIC_EXECUTE_COUNT=0`
+- `COMPLETED_PRODUCTION_SESSION_STILL_NON_EXECUTABLE=YES`
+
+## Conclusions
+
+- `A17_LEGACY_RECONCILIATION_READINESS=READY_ALL_KNOWN_WRITE_PATHS_FIXED_AND_DEPLOYED`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `PRODUCTION_DATA_DRIFT=NO`
+
+## Safety
+
+- `RUNTIME_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `MIGRATION_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+- `DEPLOY_EXECUTED_BY_PHASE=NO`
+- `PUSH_EXECUTED_BY_PHASE=NO`
+
+Runtime worker guardrail review:
+
+- `MAIN_WORKER_TOUCHED=NO`
+- `RUNTIME_DEPENDENCY_ADDED=NO`
+- `NEW_SERVICE_WORKER_CREATED=NO`
+- `OPENNEXT_WRANGLER_CONFIG_CHANGED=NO`
+- `WORKER_SIZE_RISK=NO`
+- `SERVICE_BOUNDARY_RECOMMENDATION=NONE`
+
+## Validation
+
+- `CHECKER=scripts/check-a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence.cjs`
+- `PACKAGE_SCRIPT=check:a17o-dr-grouped-importer-deploy-no-import-mutation-smoke-evidence`
+- `VALIDATION_SUMMARY=PASS`
+
+## Next
+
+- `NEXT_ACTION=START_A17_LEGACY_CANONICAL_FAMILY_RECONCILIATION_EXECUTION_DESIGN`
