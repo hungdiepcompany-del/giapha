@@ -7,6 +7,7 @@ Status:
 `A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
 `A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
 `A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+`A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
 
 ## Scope
 
@@ -50,6 +51,8 @@ matches the committed JSON exactly. Production display names are not committed.
 - `CHECKER_FILE=scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs`
 - `FIX1_CHECKER_FILE=scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs`
 - `FIX2_CHECKER_FILE=scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs`
+- `FIX2_OWNER_REVIEW_FILE=docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md`
+- `FIX2_OWNER_REVIEW_CHECKER_FILE=scripts/check-a17q-tx1-fix2-owner-review.cjs`
 
 The superseded SHAs must never be applied. Migration 0026 is still not applied
 after FIX2; no migration 0027 was created.
@@ -175,6 +178,23 @@ FIX2 completes the remaining owner-review blockers without applying migration
 - `SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION` persists and rereads the success
   result while the batch is still `running`; only then does
   `BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT` mark the batch completed.
+
+## FIX2 Owner Review
+
+Owner review of FIX2 at commit `ec36b65` remains blocked:
+
+- `A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
+- `REVIEWED_MIGRATION_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `BLOCKER_COUNT=4`
+- `BLOCKERS=CANONICAL_KEY_NOT_RECOMPUTED, GRAPH_OR_CYCLE_VALIDATION_INCOMPLETE, REPLAY_NOT_USING_STORED_RESULT, VERIFIER_SOURCE_EVIDENCE_INCOMPLETE`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `NEXT_ACTION=A17Q_TX1_FIX3`
+
+The review is source-only evidence. Codex did not apply migration 0026, execute
+SQL, run the SELECT-only verifier, call the executor, query production, change
+runtime code, deploy or push.
 
 ## Boundary Evidence
 

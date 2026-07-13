@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-07-13 - A-17Q-TX1-FIX2-REVIEW - Exact post-state review blocked
+
+- Status:
+  `A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`.
+- Reviewed authority:
+  `REVIEWED_COMMIT=ec36b65`;
+  `REVIEWED_MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`;
+  `REVIEWED_MIGRATION_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`;
+  `SUPERSEDED_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`.
+- Evidence artifacts:
+  `REVIEW_EVIDENCE_FILE=docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md`;
+  `FIX2_OWNER_REVIEW_CHECKER=scripts/check-a17q-tx1-fix2-owner-review.cjs`;
+  `PACKAGE_SCRIPT=check:a17q-tx1-fix2-owner-review`.
+- Positive review notes:
+  immutable manifest, SECURITY INVOKER/search_path/grants, pre-mutation
+  snapshots and audit, exact child mapping, parent/role, family void and merge
+  target post-state checks passed source review.
+- Blockers:
+  `CANONICAL_KEY_NOT_RECOMPUTED`;
+  `GRAPH_OR_CYCLE_VALIDATION_INCOMPLETE`;
+  `REPLAY_NOT_USING_STORED_RESULT`;
+  `VERIFIER_SOURCE_EVIDENCE_INCOMPLETE`.
+- Gate:
+  `MIGRATION_APPLY_AUTHORIZED=NO`;
+  `PRODUCTION_DRY_RUN_AUTHORIZED=NO`;
+  `PRODUCTION_EXECUTION_AUTHORIZED=NO`;
+  `MIGRATION_0026_APPLIED=NO`;
+  `MIGRATION_0027_CREATED=NO`.
+- Boundary:
+  `SQL_EXECUTED=NO`;
+  `PRODUCTION_QUERIED=NO`;
+  `RPC_CALLED=NO`;
+  `DATABASE_MUTATION=NO`;
+  `RECONCILIATION_EXECUTED=NO`;
+  `RUNTIME_CHANGED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Next action:
+  `NEXT_ACTION=A17Q_TX1_FIX3`.
+
 ## 2026-07-13 - A-17Q-TX1-FIX2 - Exact post-state contract ready for owner review
 
 - Status:

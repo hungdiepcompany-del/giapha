@@ -357,6 +357,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_RECONCILIATION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17q-tx1-fix1-owner-review.cjs",
   "scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs",
+  "docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md",
+  "scripts/check-a17q-tx1-fix2-owner-review.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",

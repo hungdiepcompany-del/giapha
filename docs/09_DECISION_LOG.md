@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 354 - A-17Q-TX1-FIX2-REVIEW blocks migration 0026 apply
+
+Date: 2026-07-13
+
+Status: Blocked; additional source correction required before any manual apply
+
+Context: Owner review of commit `ec36b65` and migration 0026 SHA
+`AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+confirmed that FIX2 improved exact post-state validation, but several high-risk
+contracts are still not proven strongly enough for a reconciliation executor.
+
+Decision: Do not approve migration 0026 for manual apply, production dry-run or
+execution. Keep the reviewed migration unchanged in this review phase and start
+a separate A-17Q-TX1-FIX3 source-correction phase.
+
+Evidence:
+
+- `A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
+- `REVIEWED_COMMIT=ec36b65`
+- `REVIEWED_MIGRATION_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `BLOCKER_COUNT=4`
+- `BLOCKERS=CANONICAL_KEY_NOT_RECOMPUTED, GRAPH_OR_CYCLE_VALIDATION_INCOMPLETE, REPLAY_NOT_USING_STORED_RESULT, VERIFIER_SOURCE_EVIDENCE_INCOMPLETE`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 353 - A-17Q-TX1-FIX2 completes exact post-state contract
 
 Date: 2026-07-13

@@ -380,7 +380,8 @@
     "check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate": "node scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
     "check:a17q-tx1-fix1-hardened-reconciliation-executor": "node scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs",
     "check:a17q-tx1-fix1-owner-review": "node scripts/check-a17q-tx1-fix1-owner-review.cjs",
-    "check:a17q-tx1-fix2-exact-post-state-reconciliation-contract": "node scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs"
+    "check:a17q-tx1-fix2-exact-post-state-reconciliation-contract": "node scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs",
+    "check:a17q-tx1-fix2-owner-review": "node scripts/check-a17q-tx1-fix2-owner-review.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
