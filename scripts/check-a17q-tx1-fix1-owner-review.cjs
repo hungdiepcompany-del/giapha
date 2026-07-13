@@ -20,6 +20,8 @@ const planDocPath =
 
 const expectedSha =
   "B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934";
+const fix2Sha =
+  "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
 const supersededSha =
   "696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B";
 
@@ -96,8 +98,14 @@ const handoff = read("docs/99_NEXT_AI_HANDOFF.md");
 const packageJson = JSON.parse(read("package.json"));
 
 if (migration !== mirror) failures.push("migration mirrors are not byte-identical");
-if (sha256(dbMigrationPath) !== expectedSha) failures.push("reviewed db migration SHA changed");
-if (sha256(supabaseMigrationPath) !== expectedSha) failures.push("reviewed Supabase migration SHA changed");
+const currentDbSha = sha256(dbMigrationPath);
+const currentMirrorSha = sha256(supabaseMigrationPath);
+if (currentDbSha !== expectedSha && currentDbSha !== fix2Sha) {
+  failures.push("reviewed db migration SHA changed outside accepted FIX2 correction");
+}
+if (currentMirrorSha !== expectedSha && currentMirrorSha !== fix2Sha) {
+  failures.push("reviewed Supabase migration SHA changed outside accepted FIX2 correction");
+}
 if (listMigrationFilesContaining("0027").length > 0) failures.push("migration 0027 must not exist");
 
 for (const token of [
@@ -171,15 +179,26 @@ for (const token of [
   }
 }
 
-requireMatch(
-  migration,
-  /update\s+public\.family_reconciliation_batches\s+set\s+status\s*=\s*'completed',\s+actual_counts\s*=\s*v_result/s,
-  "same-statement completed status and actual_counts write evidence",
-);
+if (currentDbSha === expectedSha) {
+  requireMatch(
+    migration,
+    /update\s+public\.family_reconciliation_batches\s+set\s+status\s*=\s*'completed',\s+actual_counts\s*=\s*v_result/s,
+    "same-statement completed status and actual_counts write evidence",
+  );
+} else {
+  requireIncludes(planDoc, `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=${expectedSha}`, "FIX2 supersedes reviewed SHA");
+  requireIncludes(planDoc, `A17Q_TX1_FIX2_NEW_SHA256=${fix2Sha}`, "FIX2 current SHA");
+  requireIncludes(migration, "SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION", "FIX2 success result before completed");
+  requireIncludes(migration, "BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT", "FIX2 completed after success result");
+}
 rejectIncludes(migration, "expected_child_membership_ids", "exact child-membership id post-state proof");
 rejectIncludes(migration, "expected_parent_membership_ids", "exact parent-membership id post-state proof");
 rejectIncludes(migration, "canonical_key_conflict", "canonical-key conflict proof token");
-rejectIncludes(migration.toLowerCase(), "recursive", "ancestry-cycle recursive graph validation");
+if (currentDbSha === expectedSha) {
+  rejectIncludes(migration.toLowerCase(), "recursive", "ancestry-cycle recursive graph validation");
+} else {
+  requireIncludes(migration.toLowerCase(), "recursive", "FIX2 ancestry-cycle recursive graph validation");
+}
 
 if (/^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate|call)\b/im.test(verifierCode)) {
   failures.push("verifier must remain SELECT-only");
@@ -208,7 +227,7 @@ if (runtimeCallers.length > 0) {
   failures.push(`runtime caller present: ${runtimeCallers.join(", ")}`);
 }
 
-requireIncludes(planDoc, "NEXT_ACTION=A17Q_TX1_FIX2", "plan doc blocked next action");
+requireIncludes(planDoc, "NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY", "plan doc FIX2 owner-review next action");
 requireIncludes(index, reviewDocPath.replace(/^docs\//, ""), "index review doc");
 requireIncludes(workLog, "A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED");
 requireIncludes(decisionLog, "A-17Q-TX1-FIX1-REVIEW blocks migration 0026 apply");
@@ -223,7 +242,7 @@ if (
 
 console.log("A-17Q-TX1-FIX1 owner review checker");
 console.log("A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED");
-console.log(`REVIEWED_MIGRATION_SHA256=${sha256(dbMigrationPath)}`);
+console.log(`REVIEWED_MIGRATION_SHA256=${currentDbSha}`);
 console.log(`MIRROR_MATCH=${migration === mirror ? "YES" : "NO"}`);
 console.log("MIGRATION_0026_APPLIED=NO");
 console.log("MIGRATION_0027_CREATED=NO");

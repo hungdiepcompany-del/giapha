@@ -1,5 +1,67 @@
 # AI Work Log
 
+## 2026-07-13 - A-17Q-TX1-FIX2 exact post-state reconciliation contract
+
+Phase: A-17Q-TX1-FIX2 - Complete Exact Post-State and Replay-Safe Reconciliation Contract
+
+Status:
+
+- `A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+- `A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
+- `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `A17Q_TX1_FIX2_NEW_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `MIRROR_MATCH=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+
+Implementation:
+
+- Corrected existing not-applied migration 0026 in both `db/migrations` and `supabase/migrations`.
+- Added `family_reconciliation_batches.success_result` with object-shape constraint in migration 0026 for replay-safe durable success evidence.
+- Reworked completed replay to require stored `success_result` with matching decision pack, owner marker and hashes.
+- Added exact locked snapshots for normalized parent sets, expected child final mappings, expected parent/role final states and void-to-survivor mappings.
+- Recomputed safe group refs from parent sets and canonical keys from the A-17N serialized parent identity contract.
+- Drove genealogy mutations from expected-state snapshots and added exact post-state anti-join validation for child, parent/role, family/canonical and graph invariants.
+- Expanded pre-mutation audit content with actor, hashes, expected counts, manifest hashes and validation evidence.
+- Persisted and reread `success_result` while the batch is still `running`; only then can the batch be marked `completed`.
+- Added checker `scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs`.
+- Added package script `check:a17q-tx1-fix2-exact-post-state-reconciliation-contract`.
+
+Contract:
+
+- `EXACT_CHILD_POST_STATE_CONTRACT=YES`
+- `EXACT_PARENT_ROLE_POST_STATE_CONTRACT=YES`
+- `EXACT_FAMILY_CANONICAL_POST_STATE_CONTRACT=YES`
+- `EXACT_GRAPH_POST_STATE_CONTRACT=YES`
+- `REPLAY_SAFE_SUCCESS_RESULT_CONTRACT=YES`
+- `ACTIVE_RUNTIME_CALLER_COUNT=0`
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_VOIDED=NO`
+- `MEMBERSHIP_MOVED=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+
+Next:
+
+- `NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY`
+
 ## 2026-07-13 - A-17Q-TX1-FIX1 owner review blocks migration apply
 
 Phase: A-17Q-TX1-FIX1-REVIEW - Owner Review Hardened Reconciliation Executor Candidate

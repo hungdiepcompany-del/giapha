@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-13 - A-17Q-TX1-FIX2 - Exact post-state contract ready for owner review
+
+- Status:
+  `A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`.
+- Artifacts:
+  `MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`;
+  `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`;
+  `SELECT_ONLY_VERIFIER_FILE=db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql`;
+  `FIX2_CHECKER_FILE=scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs`;
+  `PACKAGE_SCRIPT=check:a17q-tx1-fix2-exact-post-state-reconciliation-contract`.
+- Hashes:
+  `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`;
+  `A17Q_TX1_FIX2_NEW_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`;
+  `MIRROR_MATCH=YES`.
+- Completed source contracts:
+  `EXACT_CHILD_POST_STATE_CONTRACT=YES`;
+  `EXACT_PARENT_ROLE_POST_STATE_CONTRACT=YES`;
+  `EXACT_FAMILY_CANONICAL_POST_STATE_CONTRACT=YES`;
+  `EXACT_GRAPH_POST_STATE_CONTRACT=YES`;
+  `REPLAY_SAFE_SUCCESS_RESULT_CONTRACT=YES`.
+- Gate:
+  `MIGRATION_APPLY_AUTHORIZED=NO`;
+  `PRODUCTION_DRY_RUN_AUTHORIZED=NO`;
+  `PRODUCTION_EXECUTION_AUTHORIZED=NO`;
+  `MIGRATION_0026_APPLIED=NO`;
+  `MIGRATION_0027_CREATED=NO`.
+- Boundary:
+  `SQL_EXECUTED=NO`;
+  `PRODUCTION_QUERIED=NO`;
+  `RPC_CALLED=NO`;
+  `DATABASE_MUTATION=NO`;
+  `RECONCILIATION_EXECUTED=NO`;
+  `RUNTIME_CHANGED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Next action:
+  `NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY`.
+
 ## 2026-07-13 - A-17Q-TX1-FIX1-REVIEW - Hardened executor review blocked
 
 - Status:

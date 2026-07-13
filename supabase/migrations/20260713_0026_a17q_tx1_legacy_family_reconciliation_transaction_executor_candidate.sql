@@ -46,6 +46,26 @@ comment on policy a17q_tx1_revisions_insert_legacy_family_reconciliation
 on public.revisions is
   'A-17Q-TX1 candidate: narrow authenticated revision INSERT policy for the legacy family reconciliation transaction executor only.';
 
+alter table public.family_reconciliation_batches
+  add column if not exists success_result jsonb;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'family_reconciliation_batches_success_result_shape_check'
+      and conrelid = 'public.family_reconciliation_batches'::regclass
+  ) then
+    alter table public.family_reconciliation_batches
+      add constraint family_reconciliation_batches_success_result_shape_check
+      check (success_result is null or jsonb_typeof(success_result) = 'object');
+  end if;
+end $$;
+
+comment on column public.family_reconciliation_batches.success_result is
+  'A-17Q-TX1 candidate: durable exact success JSON persisted before a batch can be marked completed; used for replay-safe idempotency.';
+
 create or replace function public.execute_admin_a17q_legacy_family_reconciliation(
   p_owner_approval_marker text,
   p_decision_pack_sha256 text,
@@ -98,8 +118,11 @@ declare
   v_precondition_check_count integer := 0;
   v_existing_batch public.family_reconciliation_batches%rowtype;
   v_replay_result jsonb;
+  v_stored_success_result jsonb;
+  v_persisted_success_result jsonb;
   v_pre_mutation_audit_id uuid;
   v_post_mutation_audit_id uuid;
+  v_pre_mutation_audit_insert_count integer := 0;
   v_survivor_role_update_count integer := 0;
   v_child_move_count integer := 0;
   v_parent_deactivation_count integer := 0;
@@ -116,6 +139,27 @@ declare
   v_approved_void_parent_count integer := 0;
   v_approved_active_survivor_count integer := 0;
   v_approved_active_void_count integer := 0;
+  v_parent_set_mismatch_count integer := 0;
+  v_unlisted_active_family_same_parent_set_count integer := 0;
+  v_missing_expected_child_mapping_count integer := 0;
+  v_unexpected_child_mapping_count integer := 0;
+  v_duplicate_active_survivor_child_count integer := 0;
+  v_active_child_under_void_family_count integer := 0;
+  v_missing_expected_parent_state_count integer := 0;
+  v_unexpected_parent_state_count integer := 0;
+  v_duplicate_active_survivor_parent_count integer := 0;
+  v_active_parent_under_void_family_count integer := 0;
+  v_survivor_role_correction_mismatch_count integer := 0;
+  v_superseded_role_correction_mismatch_count integer := 0;
+  v_missing_expected_family_state_count integer := 0;
+  v_unexpected_family_state_count integer := 0;
+  v_survivor_canonical_key_mismatch_count integer := 0;
+  v_duplicate_active_parent_set_family_count integer := 0;
+  v_self_parent_relation_count integer := 0;
+  v_same_family_parent_child_overlap_count integer := 0;
+  v_ancestry_cycle_count integer := 0;
+  v_success_result_persist_count integer := 0;
+  v_completion_update_count integer := 0;
   v_graph_validation_passed boolean := false;
   v_people_before_hash text;
   v_people_after_hash text;
@@ -215,6 +259,40 @@ begin
   create temporary table a17q_deleted_family_advisory (
     family_id uuid primary key,
     safe_family_ref text not null
+  ) on commit drop;
+
+  create temporary table a17q_group_parent_sets (
+    safe_group_ref text primary key,
+    parent_person_ids uuid[] not null,
+    recomputed_safe_group_ref text not null,
+    serialized_identity text not null,
+    expected_canonical_key text not null
+  ) on commit drop;
+
+  create temporary table a17q_expected_child_final_mapping (
+    membership_id uuid primary key,
+    child_person_id uuid not null,
+    source_family_id uuid not null,
+    expected_final_family_id uuid not null,
+    child_relationship_type text,
+    expected_action text not null
+  ) on commit drop;
+
+  create temporary table a17q_expected_parent_final_state (
+    membership_id uuid primary key,
+    parent_person_id uuid not null,
+    source_family_id uuid not null,
+    expected_active_after boolean not null,
+    expected_role_after text not null,
+    relationship_type text not null,
+    disposition text not null,
+    expected_final_family_id uuid not null
+  ) on commit drop;
+
+  create temporary table a17q_void_to_survivor_mapping (
+    family_id uuid primary key,
+    survivor_family_id uuid not null,
+    safe_group_ref text not null
   ) on commit drop;
 
   insert into a17q_approved_groups (
@@ -365,10 +443,18 @@ begin
         and v_existing_batch.owner_execution_marker = v_owner_marker
         and v_existing_batch.dry_run_hash = v_forecast_sha
         and v_existing_batch.status = 'completed' then
-        v_replay_result := v_existing_batch.actual_counts;
+        -- REPLAY_REQUIRES_DURABLE_SUCCESS_RESULT: a completed batch without this JSON is not replay-safe.
+        v_replay_result := v_existing_batch.success_result;
         if jsonb_typeof(v_replay_result) <> 'object'
           or coalesce(v_replay_result ->> 'status', '') <> 'RECONCILIATION_COMPLETED'
-          or coalesce(v_replay_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED' then
+          or coalesce(v_replay_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED'
+          or coalesce(v_replay_result ->> 'decision_pack_sha256', '') <> v_decision_pack_sha
+          or coalesce(v_replay_result ->> 'owner_approval_marker', '') <> v_owner_marker
+          or coalesce(v_replay_result ->> 'approved_group_plan_sha256', '') <> v_approved_group_sha
+          or coalesce(v_replay_result ->> 'role_correction_plan_sha256', '') <> v_role_correction_sha
+          or coalesce(v_replay_result ->> 'excluded_scope_sha256', '') <> v_excluded_scope_sha
+          or coalesce(v_replay_result ->> 'forecast_sha256', '') <> v_forecast_sha
+          or nullif(v_replay_result ->> 'batch_id', '') is null then
           raise exception 'A17Q_RECONCILIATION_BATCH_REQUIRES_RECOVERY';
         end if;
 
@@ -407,6 +493,131 @@ begin
   join a17q_approved_families approved on approved.family_id = fc.family_id
   order by fc.family_id, fc.person_id, fc.id
   for update;
+
+  -- EXACT_EXPECTED_POST_STATE_SNAPSHOT: all later mutations and post-state checks use these locked rows.
+  insert into a17q_group_parent_sets (
+    safe_group_ref,
+    parent_person_ids,
+    recomputed_safe_group_ref,
+    serialized_identity,
+    expected_canonical_key
+  )
+  select
+    groups.safe_group_ref,
+    parent_sets.parent_person_ids,
+    md5(coalesce(array_to_string(parent_sets.parent_person_ids, ','), 'NO_PARENT_SET')) as recomputed_safe_group_ref,
+    parent_sets.serialized_identity,
+    'canonical-family:v1:' || encode(digest(convert_to(parent_sets.serialized_identity, 'UTF8'), 'sha256'), 'hex')
+  from a17q_approved_groups groups
+  join lateral (
+    select
+      coalesce(array_agg(distinct fp.person_id order by fp.person_id), array[]::uuid[]) as parent_person_ids,
+      '{"parentIds":['
+        || coalesce(string_agg(to_json(fp.person_id::text)::text, ',' order by fp.person_id), '')
+        || '],"relationshipPeriod":null,"unionIdentity":null,"version":1}' as serialized_identity
+    from public.family_parents fp
+    where fp.family_id = groups.survivor_family_id
+      and fp.deleted_at is null
+  ) parent_sets on true;
+
+  insert into a17q_void_to_survivor_mapping (
+    family_id,
+    survivor_family_id,
+    safe_group_ref
+  )
+  select approved.family_id, approved.survivor_family_id, approved.safe_group_ref
+  from a17q_approved_families approved
+  where not approved.is_survivor;
+
+  insert into a17q_expected_child_final_mapping (
+    membership_id,
+    child_person_id,
+    source_family_id,
+    expected_final_family_id,
+    child_relationship_type,
+    expected_action
+  )
+  select
+    fc.id,
+    fc.person_id,
+    fc.family_id,
+    case when approved.is_survivor then fc.family_id else approved.survivor_family_id end,
+    fc.child_relationship_type,
+    case when approved.is_survivor then 'KEEP_ON_SURVIVOR' else 'MOVE_TO_SURVIVOR' end
+  from public.family_children fc
+  join a17q_approved_families approved on approved.family_id = fc.family_id
+  where fc.deleted_at is null;
+
+  insert into a17q_expected_parent_final_state (
+    membership_id,
+    parent_person_id,
+    source_family_id,
+    expected_active_after,
+    expected_role_after,
+    relationship_type,
+    disposition,
+    expected_final_family_id
+  )
+  select
+    fp.id,
+    fp.person_id,
+    fp.family_id,
+    approved.is_survivor,
+    case when approved.is_survivor then coalesce(role_plan.target_role, fp.parent_role) else fp.parent_role end,
+    fp.relationship_type,
+    case
+      when approved.is_survivor and role_plan.membership_id is not null then 'SURVIVOR_ROLE_CORRECTED'
+      when approved.is_survivor then 'SURVIVOR_MEMBERSHIP_UNCHANGED'
+      when role_plan.membership_id is not null then 'ROLE_CORRECTION_SUPERSEDED_BY_MEMBERSHIP_DEACTIVATION'
+      else 'VOID_MEMBERSHIP_DEACTIVATED'
+    end,
+    case when approved.is_survivor then fp.family_id else approved.survivor_family_id end
+  from public.family_parents fp
+  join a17q_approved_families approved on approved.family_id = fp.family_id
+  left join a17q_role_corrections role_plan on role_plan.membership_id = fp.id
+  where fp.deleted_at is null;
+
+  select count(*) into v_parent_set_mismatch_count
+  from (
+    select
+      approved.safe_group_ref,
+      approved.family_id,
+      coalesce(array_agg(distinct fp.person_id order by fp.person_id), array[]::uuid[]) as family_parent_ids
+    from a17q_approved_families approved
+    left join public.family_parents fp
+      on fp.family_id = approved.family_id
+     and fp.deleted_at is null
+    group by approved.safe_group_ref, approved.family_id
+  ) family_sets
+  join a17q_group_parent_sets group_sets on group_sets.safe_group_ref = family_sets.safe_group_ref
+  where family_sets.family_parent_ids is distinct from group_sets.parent_person_ids
+     or md5(coalesce(array_to_string(family_sets.family_parent_ids, ','), 'NO_PARENT_SET')) is distinct from family_sets.safe_group_ref
+     or cardinality(family_sets.family_parent_ids) <> 2;
+
+  if v_parent_set_mismatch_count <> 0 then
+    raise exception 'A17Q_SAFE_GROUP_REF_MISMATCH';
+  end if;
+
+  select count(*) into v_unlisted_active_family_same_parent_set_count
+  from (
+    select
+      f.id as family_id,
+      coalesce(array_agg(distinct fp.person_id order by fp.person_id), array[]::uuid[]) as parent_person_ids
+    from public.families f
+    join public.family_parents fp on fp.family_id = f.id and fp.deleted_at is null
+    where f.deleted_at is null
+      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+    group by f.id
+  ) active_family_sets
+  join a17q_group_parent_sets group_sets
+    on group_sets.parent_person_ids = active_family_sets.parent_person_ids
+  left join a17q_approved_families approved
+    on approved.family_id = active_family_sets.family_id
+  where approved.family_id is null;
+
+  if v_unlisted_active_family_same_parent_set_count <> 0 then
+    raise exception 'A17Q_UNEXPECTED_FAMILY_IN_APPROVED_PARENT_SET';
+  end if;
 
   select encode(digest(coalesce(jsonb_agg(to_jsonb(p) order by p.id), '[]'::jsonb)::text, 'sha256'), 'hex')
   into v_people_before_hash
@@ -868,7 +1079,9 @@ begin
       'source', 'A-17Q-TX1 legacy family reconciliation transaction executor',
       'batch_id', v_batch_id,
       'rollback_manifest_id', v_rollback_manifest_id,
+      'actor_profile_id', v_profile_id,
       'owner_marker', v_owner_marker,
+      'owner_approval_marker', v_owner_marker,
       'idempotency_key', btrim(p_idempotency_key),
       'decision_pack_sha256', v_decision_pack_sha,
       'approved_group_plan_sha256', v_approved_group_sha,
@@ -882,36 +1095,83 @@ begin
       'layout_before_hash', v_layout_before_hash,
       'excluded_before_hash', v_excluded_before_hash,
       'deleted_before_hash', v_deleted_before_hash,
-      'precondition_check_count', v_precondition_check_count
+      'precondition_check_count', v_precondition_check_count,
+      'precondition_failure_count', v_precondition_failure_count,
+      'approved_group_count', 21,
+      'approved_family_count', 57,
+      'survivor_count', 21,
+      'void_family_count', 36,
+      'approved_parent_membership_snapshot_count', (select count(*) from a17q_expected_parent_final_state),
+      'approved_child_membership_snapshot_count', (select count(*) from a17q_expected_child_final_mapping),
+      'child_membership_keep_count', (select count(*) from a17q_expected_child_final_mapping where expected_action = 'KEEP_ON_SURVIVOR'),
+      'child_membership_move_count', (select count(*) from a17q_expected_child_final_mapping where expected_action = 'MOVE_TO_SURVIVOR'),
+      'parent_membership_deactivation_count', (select count(*) from a17q_expected_parent_final_state where expected_active_after is false),
+      'role_correction_plan_count', 36,
+      'role_correction_applied_to_survivor_count', (select count(*) from a17q_expected_parent_final_state where disposition = 'SURVIVOR_ROLE_CORRECTED'),
+      'role_correction_superseded_by_void_count', (select count(*) from a17q_expected_parent_final_state where disposition = 'ROLE_CORRECTION_SUPERSEDED_BY_MEMBERSHIP_DEACTIVATION'),
+      'excluded_group_count', 1,
+      'deleted_family_count', 1,
+      'normalized_parent_set_validation_passed', true,
+      'group_safe_ref_validation_passed', true,
+      'unexpected_parent_set_family_count', v_unlisted_active_family_same_parent_set_count,
+      'group_safe_refs_sha256', (
+        select encode(digest(coalesce(jsonb_agg(safe_group_ref order by safe_group_ref), '[]'::jsonb)::text, 'sha256'), 'hex')
+        from a17q_approved_groups
+      ),
+      'survivor_family_ids_sha256', (
+        select encode(digest(coalesce(jsonb_agg(survivor_family_id::text order by survivor_family_id), '[]'::jsonb)::text, 'sha256'), 'hex')
+        from a17q_approved_groups
+      ),
+      'void_family_ids_sha256', (
+        select encode(digest(coalesce(jsonb_agg(family_id::text order by family_id), '[]'::jsonb)::text, 'sha256'), 'hex')
+        from a17q_void_to_survivor_mapping
+      ),
+      'role_correction_membership_ids_sha256', (
+        select encode(digest(coalesce(jsonb_agg(membership_id::text order by membership_id), '[]'::jsonb)::text, 'sha256'), 'hex')
+        from a17q_role_corrections
+      )
     ),
     v_profile_id,
     'A-17Q-TX1 legacy family reconciliation transaction executor'
   )
   returning id into v_pre_mutation_audit_id;
 
+  get diagnostics v_pre_mutation_audit_insert_count = row_count;
+
+  if v_pre_mutation_audit_id is null or v_pre_mutation_audit_insert_count <> 1 then
+    raise exception 'A17Q_PRE_MUTATION_AUDIT_INSERT_FAILED';
+  end if;
+
   -- FIRST_GENEALOGY_MUTATION: no family/parent/child row is changed before the pre-mutation audit above.
   with survivor_role_updates as (
     update public.family_parents fp
-    set parent_role = role_plan.target_role,
+    set parent_role = expected.expected_role_after,
         updated_by = v_profile_id,
         updated_at = v_now
-    from a17q_role_corrections role_plan
-    where role_plan.applies_to_survivor
-      and fp.id = role_plan.membership_id
+    from a17q_expected_parent_final_state expected
+    join a17q_role_corrections role_plan on role_plan.membership_id = expected.membership_id
+    where expected.disposition = 'SURVIVOR_ROLE_CORRECTED'
+      and expected.expected_active_after
+      and fp.id = expected.membership_id
+      and fp.family_id = expected.source_family_id
+      and fp.person_id = expected.parent_person_id
       and fp.parent_role = role_plan.expected_current_role
-      and fp.relationship_type = 'biological'
-    returning fp.id, fp.family_id, fp.person_id, role_plan.expected_current_role, role_plan.target_role
+      and fp.relationship_type = expected.relationship_type
+      and fp.deleted_at is null
+    returning fp.id, fp.family_id, fp.person_id, role_plan.expected_current_role, expected.expected_role_after as target_role
   ),
   moved_children as (
     update public.family_children fc
-    set family_id = approved.survivor_family_id,
+    set family_id = expected.expected_final_family_id,
         updated_by = v_profile_id,
         updated_at = v_now
-    from a17q_approved_families approved
-    where not approved.is_survivor
-      and fc.family_id = approved.family_id
+    from a17q_expected_child_final_mapping expected
+    where expected.expected_action = 'MOVE_TO_SURVIVOR'
+      and fc.id = expected.membership_id
+      and fc.family_id = expected.source_family_id
+      and fc.person_id = expected.child_person_id
       and fc.deleted_at is null
-    returning fc.id, approved.family_id as old_family_id, fc.family_id as new_family_id, fc.person_id
+    returning fc.id, expected.source_family_id as old_family_id, fc.family_id as new_family_id, fc.person_id
   ),
   deactivated_parents as (
     update public.family_parents fp
@@ -920,15 +1180,17 @@ begin
         delete_reason = 'A-17Q-TX1 legacy family reconciliation parent membership superseded by survivor family',
         updated_by = v_profile_id,
         updated_at = v_now
-    from a17q_approved_families approved
-    where not approved.is_survivor
-      and fp.family_id = approved.family_id
+    from a17q_expected_parent_final_state expected
+    where expected.expected_active_after is false
+      and fp.id = expected.membership_id
+      and fp.family_id = expected.source_family_id
+      and fp.person_id = expected.parent_person_id
       and fp.deleted_at is null
     returning fp.id, fp.family_id, fp.person_id
   ),
   canonicalized_survivors as (
     update public.families f
-    set canonical_key = groups.canonical_key,
+    set canonical_key = parent_sets.expected_canonical_key,
         canonical_status = 'canonical',
         canonicalized_at = v_now,
         canonicalized_by = v_profile_id,
@@ -936,6 +1198,7 @@ begin
         updated_by = v_profile_id,
         updated_at = v_now
     from a17q_approved_groups groups
+    join a17q_group_parent_sets parent_sets on parent_sets.safe_group_ref = groups.safe_group_ref
     where f.id = groups.survivor_family_id
       and f.deleted_at is null
     returning f.id
@@ -947,9 +1210,8 @@ begin
         reconciliation_batch_id = v_batch_id,
         updated_by = v_profile_id,
         updated_at = v_now
-    from a17q_approved_families approved
-    where not approved.is_survivor
-      and f.id = approved.family_id
+    from a17q_void_to_survivor_mapping approved
+    where f.id = approved.family_id
       and f.deleted_at is null
     returning f.id, approved.survivor_family_id
   )
@@ -1068,6 +1330,213 @@ begin
   from public.families f
   join a17q_deleted_family_advisory deleted on deleted.family_id = f.id;
 
+  -- EXACT_POST_STATE_VALIDATION: anti-join the actual graph against the locked expected child/parent/family state.
+  select count(*) into v_missing_expected_child_mapping_count
+  from a17q_expected_child_final_mapping expected
+  left join public.family_children fc
+    on fc.id = expected.membership_id
+   and fc.person_id = expected.child_person_id
+   and fc.family_id = expected.expected_final_family_id
+   and fc.deleted_at is null
+   and fc.child_relationship_type is not distinct from expected.child_relationship_type
+  where fc.id is null;
+
+  select count(*) into v_unexpected_child_mapping_count
+  from public.family_children fc
+  join a17q_approved_groups groups on groups.survivor_family_id = fc.family_id
+  left join a17q_expected_child_final_mapping expected
+    on expected.membership_id = fc.id
+   and expected.expected_final_family_id = fc.family_id
+   and expected.child_person_id = fc.person_id
+  where fc.deleted_at is null
+    and expected.membership_id is null;
+
+  select count(*) into v_duplicate_active_survivor_child_count
+  from (
+    select fc.family_id, fc.person_id
+    from public.family_children fc
+    join a17q_approved_groups groups on groups.survivor_family_id = fc.family_id
+    where fc.deleted_at is null
+    group by fc.family_id, fc.person_id
+    having count(*) > 1
+  ) duplicates;
+
+  select count(*) into v_active_child_under_void_family_count
+  from public.family_children fc
+  join a17q_void_to_survivor_mapping voided on voided.family_id = fc.family_id
+  where fc.deleted_at is null;
+
+  select count(*) into v_missing_expected_parent_state_count
+  from a17q_expected_parent_final_state expected
+  left join public.family_parents fp
+    on fp.id = expected.membership_id
+   and fp.person_id = expected.parent_person_id
+   and fp.family_id = expected.source_family_id
+   and fp.relationship_type = expected.relationship_type
+   and fp.parent_role = expected.expected_role_after
+   and (
+     (expected.expected_active_after and fp.deleted_at is null)
+     or (
+       expected.expected_active_after is false
+       and fp.deleted_at is not null
+       and fp.delete_reason = 'A-17Q-TX1 legacy family reconciliation parent membership superseded by survivor family'
+     )
+   )
+  where fp.id is null;
+
+  select count(*) into v_unexpected_parent_state_count
+  from public.family_parents fp
+  join a17q_approved_families approved on approved.family_id = fp.family_id
+  left join a17q_expected_parent_final_state expected
+    on expected.membership_id = fp.id
+   and expected.parent_person_id = fp.person_id
+   and expected.source_family_id = fp.family_id
+  where fp.deleted_at is null
+    and expected.membership_id is null;
+
+  select count(*) into v_duplicate_active_survivor_parent_count
+  from (
+    select fp.family_id, fp.person_id
+    from public.family_parents fp
+    join a17q_approved_families approved
+      on approved.is_survivor
+     and approved.family_id = fp.family_id
+    where fp.deleted_at is null
+    group by fp.family_id, fp.person_id
+    having count(*) > 1
+  ) duplicates;
+
+  select count(*) into v_active_parent_under_void_family_count
+  from public.family_parents fp
+  join a17q_void_to_survivor_mapping voided on voided.family_id = fp.family_id
+  where fp.deleted_at is null;
+
+  select count(*) into v_survivor_role_correction_mismatch_count
+  from a17q_expected_parent_final_state expected
+  join public.family_parents fp on fp.id = expected.membership_id
+  where expected.disposition = 'SURVIVOR_ROLE_CORRECTED'
+    and (
+      fp.deleted_at is not null
+      or fp.parent_role is distinct from expected.expected_role_after
+      or fp.relationship_type is distinct from 'biological'
+    );
+
+  select count(*) into v_superseded_role_correction_mismatch_count
+  from a17q_expected_parent_final_state expected
+  join public.family_parents fp on fp.id = expected.membership_id
+  where expected.disposition = 'ROLE_CORRECTION_SUPERSEDED_BY_MEMBERSHIP_DEACTIVATION'
+    and (
+      fp.deleted_at is null
+      or fp.delete_reason is distinct from 'A-17Q-TX1 legacy family reconciliation parent membership superseded by survivor family'
+    );
+
+  select count(*) into v_missing_expected_family_state_count
+  from a17q_approved_families approved
+  join public.families f on f.id = approved.family_id
+  left join a17q_group_parent_sets parent_sets on parent_sets.safe_group_ref = approved.safe_group_ref
+  where (
+      approved.is_survivor
+      and (
+        f.deleted_at is not null
+        or f.canonical_status is distinct from 'canonical'
+        or f.merged_into_family_id is not null
+        or f.canonical_key is distinct from parent_sets.expected_canonical_key
+        or f.reconciliation_batch_id is distinct from v_batch_id
+      )
+    )
+    or (
+      not approved.is_survivor
+      and (
+        f.deleted_at is not null
+        or f.canonical_status is distinct from 'merged'
+        or f.merged_into_family_id is distinct from approved.survivor_family_id
+        or f.reconciliation_batch_id is distinct from v_batch_id
+      )
+    );
+
+  select count(*) into v_unexpected_family_state_count
+  from public.families f
+  join a17q_approved_families approved on approved.family_id = f.id
+  where f.deleted_at is not null
+     or (
+       approved.is_survivor
+       and coalesce(f.canonical_status, 'legacy_unreviewed') in ('merged', 'voided')
+     )
+     or (
+       not approved.is_survivor
+       and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+     );
+
+  select count(*) into v_survivor_canonical_key_mismatch_count
+  from public.families f
+  join a17q_approved_groups groups on groups.survivor_family_id = f.id
+  join a17q_group_parent_sets parent_sets on parent_sets.safe_group_ref = groups.safe_group_ref
+  where f.canonical_key is distinct from parent_sets.expected_canonical_key;
+
+  select count(*) into v_duplicate_active_parent_set_family_count
+  from (
+    select active_sets.parent_person_ids
+    from (
+      select
+        f.id,
+        coalesce(array_agg(distinct fp.person_id order by fp.person_id), array[]::uuid[]) as parent_person_ids
+      from public.families f
+      join public.family_parents fp on fp.family_id = f.id and fp.deleted_at is null
+      where f.deleted_at is null
+        and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+      group by f.id
+    ) active_sets
+    join a17q_group_parent_sets parent_sets on parent_sets.parent_person_ids = active_sets.parent_person_ids
+    group by active_sets.parent_person_ids
+    having count(*) > 1
+  ) duplicate_parent_sets;
+
+  select count(*) into v_same_family_parent_child_overlap_count
+  from public.family_parents fp
+  join public.family_children fc
+    on fc.family_id = fp.family_id
+   and fc.person_id = fp.person_id
+   and fc.deleted_at is null
+  join public.families f on f.id = fp.family_id
+  where fp.deleted_at is null
+    and f.deleted_at is null
+    and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided');
+
+  v_self_parent_relation_count := v_same_family_parent_child_overlap_count;
+
+  with recursive family_edges(parent_person_id, child_person_id) as (
+    select fp.person_id, fc.person_id
+    from public.family_parents fp
+    join public.family_children fc on fc.family_id = fp.family_id
+    join public.families f on f.id = fp.family_id
+    where fp.deleted_at is null
+      and fc.deleted_at is null
+      and f.deleted_at is null
+      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+  ),
+  ancestry_walk(ancestor_id, descendant_id, path, cycle_detected) as (
+    select
+      edges.parent_person_id,
+      edges.child_person_id,
+      array[edges.parent_person_id, edges.child_person_id]::uuid[],
+      edges.parent_person_id = edges.child_person_id
+    from family_edges edges
+    union all
+    select
+      walk.ancestor_id,
+      edges.child_person_id,
+      walk.path || edges.child_person_id,
+      edges.child_person_id = any(walk.path)
+    from ancestry_walk walk
+    join family_edges edges on edges.parent_person_id = walk.descendant_id
+    where not walk.cycle_detected
+      and cardinality(walk.path) < 128
+  )
+  select count(*) into v_ancestry_cycle_count
+  from ancestry_walk
+  where cycle_detected
+     or ancestor_id = descendant_id;
+
   if v_post_family_count <> v_expected_active_family_after
     or v_post_parent_count <> v_expected_active_parent_after
     or v_post_child_count <> v_expected_active_child_after
@@ -1082,6 +1551,35 @@ begin
     or v_excluded_after_hash is distinct from v_excluded_before_hash
     or v_deleted_after_hash is distinct from v_deleted_before_hash then
     raise exception 'A17Q_POST_STATE_VALIDATION_FAILED';
+  end if;
+
+  if v_missing_expected_child_mapping_count <> 0
+    or v_unexpected_child_mapping_count <> 0
+    or v_duplicate_active_survivor_child_count <> 0
+    or v_active_child_under_void_family_count <> 0 then
+    raise exception 'A17Q_EXACT_CHILD_POST_STATE_VALIDATION_FAILED';
+  end if;
+
+  if v_missing_expected_parent_state_count <> 0
+    or v_unexpected_parent_state_count <> 0
+    or v_duplicate_active_survivor_parent_count <> 0
+    or v_active_parent_under_void_family_count <> 0
+    or v_survivor_role_correction_mismatch_count <> 0
+    or v_superseded_role_correction_mismatch_count <> 0 then
+    raise exception 'A17Q_EXACT_PARENT_ROLE_POST_STATE_VALIDATION_FAILED';
+  end if;
+
+  if v_missing_expected_family_state_count <> 0
+    or v_unexpected_family_state_count <> 0
+    or v_survivor_canonical_key_mismatch_count <> 0
+    or v_duplicate_active_parent_set_family_count <> 0 then
+    raise exception 'A17Q_EXACT_FAMILY_CANONICAL_POST_STATE_VALIDATION_FAILED';
+  end if;
+
+  if v_self_parent_relation_count <> 0
+    or v_same_family_parent_child_overlap_count <> 0
+    or v_ancestry_cycle_count <> 0 then
+    raise exception 'A17Q_EXACT_GRAPH_POST_STATE_VALIDATION_FAILED';
   end if;
 
   if exists (
@@ -1176,7 +1674,28 @@ begin
       'deleted_after_hash', v_deleted_after_hash,
       'excluded_scope_unchanged', true,
       'deleted_family_unchanged', true,
-      'graph_validation_passed', v_graph_validation_passed
+      'graph_validation_passed', v_graph_validation_passed,
+      'exact_child_post_state_passed', true,
+      'missing_expected_child_mapping_count', v_missing_expected_child_mapping_count,
+      'unexpected_child_mapping_count', v_unexpected_child_mapping_count,
+      'duplicate_active_survivor_child_count', v_duplicate_active_survivor_child_count,
+      'active_child_under_void_family_count', v_active_child_under_void_family_count,
+      'exact_parent_role_post_state_passed', true,
+      'missing_expected_parent_state_count', v_missing_expected_parent_state_count,
+      'unexpected_parent_state_count', v_unexpected_parent_state_count,
+      'duplicate_active_survivor_parent_count', v_duplicate_active_survivor_parent_count,
+      'active_parent_under_void_family_count', v_active_parent_under_void_family_count,
+      'survivor_role_correction_mismatch_count', v_survivor_role_correction_mismatch_count,
+      'superseded_role_correction_mismatch_count', v_superseded_role_correction_mismatch_count,
+      'exact_family_canonical_post_state_passed', true,
+      'missing_expected_family_state_count', v_missing_expected_family_state_count,
+      'unexpected_family_state_count', v_unexpected_family_state_count,
+      'survivor_canonical_key_mismatch_count', v_survivor_canonical_key_mismatch_count,
+      'duplicate_active_parent_set_family_count', v_duplicate_active_parent_set_family_count,
+      'exact_graph_post_state_passed', true,
+      'self_parent_relation_count', v_self_parent_relation_count,
+      'same_family_parent_child_overlap_count', v_same_family_parent_child_overlap_count,
+      'ancestry_cycle_count', v_ancestry_cycle_count
     ),
     v_profile_id,
     'A-17Q-TX1 legacy family reconciliation transaction executor'
@@ -1242,18 +1761,81 @@ begin
     'deleted_family_unchanged', true,
     'graph_validation_status', 'PASSED',
     'graph_validation_passed', v_graph_validation_passed,
+    'exact_child_post_state_passed', true,
+    'missing_expected_child_mapping_count', v_missing_expected_child_mapping_count,
+    'unexpected_child_mapping_count', v_unexpected_child_mapping_count,
+    'duplicate_active_survivor_child_count', v_duplicate_active_survivor_child_count,
+    'active_child_under_void_family_count', v_active_child_under_void_family_count,
+    'exact_parent_role_post_state_passed', true,
+    'missing_expected_parent_state_count', v_missing_expected_parent_state_count,
+    'unexpected_parent_state_count', v_unexpected_parent_state_count,
+    'duplicate_active_survivor_parent_count', v_duplicate_active_survivor_parent_count,
+    'active_parent_under_void_family_count', v_active_parent_under_void_family_count,
+    'survivor_role_correction_mismatch_count', v_survivor_role_correction_mismatch_count,
+    'superseded_role_correction_mismatch_count', v_superseded_role_correction_mismatch_count,
+    'exact_family_canonical_post_state_passed', true,
+    'missing_expected_family_state_count', v_missing_expected_family_state_count,
+    'unexpected_family_state_count', v_unexpected_family_state_count,
+    'survivor_canonical_key_mismatch_count', v_survivor_canonical_key_mismatch_count,
+    'duplicate_active_parent_set_family_count', v_duplicate_active_parent_set_family_count,
+    'exact_graph_post_state_passed', true,
+    'self_parent_relation_count', v_self_parent_relation_count,
+    'same_family_parent_child_overlap_count', v_same_family_parent_child_overlap_count,
+    'ancestry_cycle_count', v_ancestry_cycle_count,
+    'success_result_persisted_before_completed', true,
     'rollback_ready', true
   );
 
-  -- STORE_COMPLETE_SUCCESS_RESULT.
+  -- STORE_COMPLETE_SUCCESS_RESULT / SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION.
+  update public.family_reconciliation_batches
+  set success_result = v_result,
+      actual_counts = v_result,
+      updated_by = v_profile_id,
+      updated_at = v_now
+  where id = v_batch_id
+    and status = 'running'
+  returning success_result into v_persisted_success_result;
+
+  get diagnostics v_success_result_persist_count = row_count;
+
+  if v_success_result_persist_count <> 1
+    or v_persisted_success_result is null
+    or v_persisted_success_result is distinct from v_result then
+    raise exception 'A17Q_SUCCESS_RESULT_PERSIST_FAILED';
+  end if;
+
+  select success_result into v_stored_success_result
+  from public.family_reconciliation_batches
+  where id = v_batch_id
+  for update;
+
+  if v_stored_success_result is null
+    or v_stored_success_result is distinct from v_result
+    or jsonb_typeof(v_stored_success_result) <> 'object'
+    or coalesce(v_stored_success_result ->> 'status', '') <> 'RECONCILIATION_COMPLETED'
+    or coalesce(v_stored_success_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED' then
+    raise exception 'A17Q_SUCCESS_RESULT_PERSIST_FAILED';
+  end if;
+
+  -- BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT.
   update public.family_reconciliation_batches
   set status = 'completed',
-      actual_counts = v_result,
+      actual_counts = v_stored_success_result,
       completed_at = v_now,
       updated_by = v_profile_id,
       updated_at = v_now
   where id = v_batch_id
-  returning actual_counts into v_result;
+    and status = 'running'
+    and success_result = v_stored_success_result
+  returning success_result into v_result;
+
+  get diagnostics v_completion_update_count = row_count;
+
+  if v_completion_update_count <> 1
+    or v_result is null
+    or v_result is distinct from v_stored_success_result then
+    raise exception 'A17Q_BATCH_COMPLETION_UPDATE_FAILED';
+  end if;
 
   return v_result;
 end;

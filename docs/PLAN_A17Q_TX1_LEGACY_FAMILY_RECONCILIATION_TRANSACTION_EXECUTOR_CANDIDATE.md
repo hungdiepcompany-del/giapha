@@ -6,6 +6,7 @@ Status:
 `A17P_R_STATUS=PASS_IMMUTABLE_OWNER_DECISION_PACK_FINALIZED`
 `A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
 `A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
+`A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
 
 ## Scope
 
@@ -38,17 +39,20 @@ matches the committed JSON exactly. Production display names are not committed.
 - `MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
 - `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
 - `A17Q_TX1_OLD_SHA256_SUPERSEDED=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
-- `DB_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
-- `SUPABASE_MIRROR_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `A17Q_TX1_FIX2_NEW_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `DB_MIGRATION_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `SUPABASE_MIRROR_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
 - `MIRROR_MATCH=YES`
 - `SELECT_ONLY_VERIFIER_CREATED=YES`
 - `SELECT_ONLY_VERIFIER_FILE=db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql`
 - `CHECKER_CREATED=YES`
 - `CHECKER_FILE=scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs`
 - `FIX1_CHECKER_FILE=scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs`
+- `FIX2_CHECKER_FILE=scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs`
 
-The superseded SHA must never be applied. Migration 0026 is still not applied
-after FIX1; no migration 0027 was created.
+The superseded SHAs must never be applied. Migration 0026 is still not applied
+after FIX2; no migration 0027 was created.
 
 ## RPC Contract
 
@@ -109,6 +113,11 @@ after FIX1; no migration 0027 was created.
 - `MUTATION_ORDER_CONTRACT_MATCHES_REVIEW=YES`
 - `AUDIT_PRE_MUTATION_PRESENT=YES`
 - `POST_STATE_VERIFIED_BEFORE_COMPLETED=YES`
+- `EXACT_CHILD_POST_STATE_CONTRACT=YES`
+- `EXACT_PARENT_ROLE_POST_STATE_CONTRACT=YES`
+- `EXACT_FAMILY_CANONICAL_POST_STATE_CONTRACT=YES`
+- `EXACT_GRAPH_POST_STATE_CONTRACT=YES`
+- `REPLAY_SAFE_SUCCESS_RESULT_CONTRACT=YES`
 - `ACTIVE_RUNTIME_CALLER_COUNT=0`
 - `RECONCILIATION_AUTHORIZED_FOR_DESIGN_ONLY=YES`
 - `RECONCILIATION_EXECUTION_AUTHORIZED=NO`
@@ -143,6 +152,30 @@ FIX1 hardens the review-blocked areas:
   `STORE_COMPLETE_SUCCESS_RESULT`.
 - graph validation is never hardcoded to pass.
 
+FIX2 completes the remaining owner-review blockers without applying migration
+0026:
+
+- `success_result jsonb` is added to `family_reconciliation_batches` in the
+  not-applied migration and constrained to JSON objects when present.
+- replay requires `success_result` to exist and match the completed decision
+  pack, hashes and owner marker; a completed batch without durable success JSON
+  fails closed as recovery-required.
+- `EXACT_EXPECTED_POST_STATE_SNAPSHOT` creates locked temporary snapshots for
+  normalized parent sets, expected child final mappings, expected parent final
+  states and void-to-survivor mappings.
+- safe group refs are recomputed with the A-17P parent-set rule and canonical
+  keys are computed with the A-17N serialized parent identity contract.
+- genealogy mutations read from the expected-state snapshots, then
+  `EXACT_POST_STATE_VALIDATION` anti-joins actual rows back to those snapshots.
+- child, parent/role, family/canonical and graph failures have separate
+  fail-closed exception classes.
+- the pre-mutation audit now records actor, hashes, expected snapshot counts,
+  manifest hashes and validation pass evidence before the first genealogy
+  mutation.
+- `SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION` persists and rereads the success
+  result while the batch is still `running`; only then does
+  `BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT` mark the batch completed.
+
 ## Boundary Evidence
 
 - `SQL_EXECUTED=NO`
@@ -162,6 +195,7 @@ FIX1 hardens the review-blocked areas:
 ## Validation
 
 - `VALIDATION_SUMMARY=PASS`
+- `npm.cmd run check:a17q-tx1-fix2-exact-post-state-reconciliation-contract` - PASS
 - `npm.cmd run check:a17q-tx1-fix1-hardened-reconciliation-executor` - PASS
 - `npm.cmd run check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate` - PASS
 - `npm.cmd run check:a17p-r-immutable-owner-decision-pack` - PASS
@@ -175,7 +209,7 @@ FIX1 hardens the review-blocked areas:
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_TX1_FIX2`
+`NEXT_ACTION=A17Q_TX1_FIX2_OWNER_REVIEW_BEFORE_APPLY`
 
 ## A-17Q-TX1-FIX1 Owner Review
 
@@ -194,3 +228,6 @@ pre-mutation audit order, mutation counts and aggregate post-state checks, but
 the hardened migration is still not approved for apply. A-17Q-TX1-FIX2 must
 prove exact child, parent, role, family, canonical and graph post-state contracts
 and store the durable success result before marking the batch completed.
+
+A-17Q-TX1-FIX2 source correction records those contracts in migration 0026 and
+keeps apply unauthorized until a separate owner review/manual apply phase.

@@ -44,6 +44,22 @@ with expected as (
   from information_schema.routine_privileges rp
   join expected e on e.function_name = rp.routine_name
   where rp.routine_schema = 'public'
+), column_evidence as (
+  select exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'family_reconciliation_batches'
+      and column_name = 'success_result'
+      and data_type = 'jsonb'
+  ) as a17q_tx1_success_result_column_present
+), constraint_evidence as (
+  select exists (
+    select 1
+    from pg_constraint
+    where conname = 'family_reconciliation_batches_success_result_shape_check'
+      and conrelid = 'public.family_reconciliation_batches'::regclass
+  ) as a17q_tx1_success_result_shape_constraint_present
 ), batch_evidence as (
   select
     count(*) filter (where approved_audit_hash = (select decision_pack_sha256 from expected)) as a17q_tx1_decision_pack_batch_count,
@@ -101,12 +117,30 @@ select
   exists(select 1 from function_meta where function_source like '%RUNNING_BATCH_INSERT%') as a17q_tx1_running_batch_insert_marker_present,
   exists(select 1 from function_meta where function_source like '%PRE_MUTATION_AUDIT_BEFORE_GENEALOGY_MUTATION%') as a17q_tx1_pre_mutation_audit_marker_present,
   exists(select 1 from function_meta where function_source like '%FIRST_GENEALOGY_MUTATION%') as a17q_tx1_first_genealogy_mutation_marker_present,
+  exists(select 1 from function_meta where function_source like '%EXACT_EXPECTED_POST_STATE_SNAPSHOT%') as a17q_tx1_exact_expected_post_state_snapshot_present,
+  exists(select 1 from function_meta where function_source like '%a17q_group_parent_sets%') as a17q_tx1_group_parent_set_snapshot_present,
+  exists(select 1 from function_meta where function_source like '%a17q_expected_child_final_mapping%') as a17q_tx1_child_expected_mapping_present,
+  exists(select 1 from function_meta where function_source like '%a17q_expected_parent_final_state%') as a17q_tx1_parent_expected_state_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_SAFE_GROUP_REF_MISMATCH%') as a17q_tx1_safe_group_ref_mismatch_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_UNEXPECTED_FAMILY_IN_APPROVED_PARENT_SET%') as a17q_tx1_unlisted_parent_set_guard_present,
   exists(select 1 from function_meta where function_source like '%A17Q_MUTATION_ROW_COUNT_MISMATCH%') as a17q_tx1_mutation_count_guard_present,
   exists(select 1 from function_meta where function_source like '%REAL_POST_STATE_VALIDATION%') as a17q_tx1_real_post_state_validation_present,
+  exists(select 1 from function_meta where function_source like '%EXACT_POST_STATE_VALIDATION%') as a17q_tx1_exact_post_state_validation_present,
   exists(select 1 from function_meta where function_source like '%A17Q_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_post_state_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%A17Q_GRAPH_VALIDATION_FAILED%') as a17q_tx1_graph_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_EXACT_CHILD_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_child_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_EXACT_PARENT_ROLE_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_parent_role_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_EXACT_FAMILY_CANONICAL_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_family_canonical_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_EXACT_GRAPH_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_graph_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION%') as a17q_tx1_success_result_before_completed_marker_present,
+  exists(select 1 from function_meta where function_source like '%BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT%') as a17q_tx1_completed_after_success_result_marker_present,
+  exists(select 1 from function_meta where function_source like '%REPLAY_REQUIRES_DURABLE_SUCCESS_RESULT%') as a17q_tx1_replay_requires_durable_success_result_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_SUCCESS_RESULT_PERSIST_FAILED%') as a17q_tx1_success_result_persist_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_BATCH_COMPLETION_UPDATE_FAILED%') as a17q_tx1_batch_completion_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%STORE_COMPLETE_SUCCESS_RESULT%') as a17q_tx1_store_success_result_marker_present,
   exists(select 1 from function_meta where function_source like '%NEW_EXECUTION_COMPLETED%') as a17q_tx1_new_execution_completed_status_present,
+  (select a17q_tx1_success_result_column_present from column_evidence) as a17q_tx1_success_result_column_present,
+  (select a17q_tx1_success_result_shape_constraint_present from constraint_evidence) as a17q_tx1_success_result_shape_constraint_present,
   (select a17q_tx1_revision_insert_policy_exists from policy_evidence) as a17q_tx1_revision_insert_policy_exists,
   (select a17q_tx1_decision_pack_batch_count from batch_evidence) as a17q_tx1_decision_pack_batch_count,
   (select a17q_tx1_completed_batch_count from batch_evidence) as a17q_tx1_completed_batch_count,

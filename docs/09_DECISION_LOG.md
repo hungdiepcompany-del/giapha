@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 353 - A-17Q-TX1-FIX2 completes exact post-state contract
+
+Date: 2026-07-13
+
+Status: Source corrected; migration 0026 remains not applied
+
+Context: A-17Q-TX1-FIX1-REVIEW blocked manual apply because exact
+child/parent/role/family/canonical/graph post-state checks and durable success
+result ordering were not fully proven in source.
+
+Decision: Correct the existing not-applied migration 0026 in place, keep db and
+Supabase mirrors byte-identical, add no migration 0027, and require a separate
+owner review/manual apply phase before any production execution. The FIX1 SHA is
+superseded and must never be applied.
+
+Evidence:
+
+- `A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+- `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `A17Q_TX1_FIX2_NEW_SHA256=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `MIRROR_MATCH=YES`
+- `EXACT_CHILD_POST_STATE_CONTRACT=YES`
+- `EXACT_PARENT_ROLE_POST_STATE_CONTRACT=YES`
+- `EXACT_FAMILY_CANONICAL_POST_STATE_CONTRACT=YES`
+- `EXACT_GRAPH_POST_STATE_CONTRACT=YES`
+- `REPLAY_SAFE_SUCCESS_RESULT_CONTRACT=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 352 - A-17Q-TX1-FIX1-REVIEW blocks migration 0026 apply
 
 Date: 2026-07-13
