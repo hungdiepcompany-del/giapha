@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 349 - A-17P-R finalizes immutable owner decision pack
+
+Date: 2026-07-13
+
+Status: Accepted immutable decision pack, execution not authorized
+
+Context: A-17P manual owner approval recorded a 21-group reconciliation policy
+from the A-17P-FIX3 owner-facing production result. Before any transaction
+executor can be designed, the owner decision needs a machine-readable,
+deterministic and hash-protected artifact with explicit execution boundaries.
+
+Decision: Create `docs/evidence/A17P_OWNER_DECISION_PACK.json` and
+`docs/evidence/A17P_OWNER_DECISION_PACK.sha256` using schema
+`a17p-owner-decision-pack:v1`. The pack includes 21 approved groups, 21
+survivors, 36 families to void, 36 owner-confirmed role corrections, the
+excluded one-parent group, the deleted-family advisory, forecast counts and
+canonical SHA-256 hashes. The pack is an authority candidate for later design
+only; reconciliation execution remains unauthorized.
+
+Evidence:
+
+- `A17P_R_STATUS=PASS_IMMUTABLE_OWNER_DECISION_PACK_FINALIZED`
+- `APPROVED_GROUP_COUNT=21`
+- `APPROVED_CANDIDATE_FAMILY_COUNT=57`
+- `APPROVED_SURVIVOR_COUNT=21`
+- `APPROVED_VOID_FAMILY_COUNT=36`
+- `ROLE_CORRECTION_GROUP_COUNT=8`
+- `ROLE_CORRECTION_FAMILY_COUNT=18`
+- `ROLE_CORRECTION_MEMBERSHIP_COUNT=36`
+- `ROLE_CORRECTION_DISTINCT_PERSON_COUNT=16`
+- `DECISION_PACK_SHA256=777a8bb13ff45eb9f46fd817c392098ada4a2d550cad8e6ee4c6cd896b874ad0`
+
+Safety: The decision pack contains no production names and no private/contact
+or authentication data. Codex did not execute SQL, query production, call RPCs,
+mutate database rows, void families, move memberships, change relationship
+roles, create migrations, change runtime behavior, deploy or push.
+
 ## Decision 348 - A-17P manual owner approval recorded for 21 groups
 
 Date: 2026-07-13

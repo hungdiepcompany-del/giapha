@@ -3,11 +3,12 @@
 Decision pack status:
 
 ```text
-DECISION_PACK_VERSION=NOT_ASSIGNED
-DECISION_PACK_HASH=NOT_CREATED
+DECISION_PACK_VERSION=a17p-owner-decision-pack:v1
+DECISION_PACK_HASH=777a8bb13ff45eb9f46fd817c392098ada4a2d550cad8e6ee4c6cd896b874ad0
 OWNER_APPROVAL_MARKER=NOT_CREATED
 EXECUTION_BATCH_ID=NOT_CREATED
 OWNER_AUTO_APPROVAL_PRESENT=NO
+RECONCILIATION_EXECUTION_AUTHORIZED=NO
 ```
 Use one section per owner-reviewed group. Do not paste production names,
 private notes, raw import payloads, cookies, tokens or service-role values into

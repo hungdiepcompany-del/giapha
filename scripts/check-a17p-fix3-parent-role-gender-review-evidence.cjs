@@ -17,6 +17,9 @@ const checkerPath =
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs";
 const manualApprovalCheckerPath =
   "scripts/check-a17p-manual-owner-approval-evidence.cjs";
+const a17pRCheckerPath = "scripts/check-a17p-r-immutable-owner-decision-pack.cjs";
+const a17pRPackPath = "docs/evidence/A17P_OWNER_DECISION_PACK.json";
+const a17pRShaPath = "docs/evidence/A17P_OWNER_DECISION_PACK.sha256";
 
 const expectedAdvisoryGroups = [
   "697e2ea051fc81496e186ce579ad0990",
@@ -335,6 +338,9 @@ const allowedChangedFiles = new Set([
   templatePath,
   checkerPath,
   manualApprovalCheckerPath,
+  a17pRCheckerPath,
+  a17pRPackPath,
+  a17pRShaPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

@@ -10,6 +10,9 @@ const failures = [];
 const docPath =
   "docs/PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md";
 const checkerPath = "scripts/check-a17p-manual-owner-approval-evidence.cjs";
+const a17pRCheckerPath = "scripts/check-a17p-r-immutable-owner-decision-pack.cjs";
+const a17pRPackPath = "docs/evidence/A17P_OWNER_DECISION_PACK.json";
+const a17pRShaPath = "docs/evidence/A17P_OWNER_DECISION_PACK.sha256";
 
 const approvedRoleGroups = [
   "697e2ea051fc81496e186ce579ad0990",
@@ -179,11 +182,15 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
 const allowedChangedFiles = new Set([
   docPath,
   checkerPath,
+  a17pRCheckerPath,
+  a17pRPackPath,
+  a17pRShaPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md",
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs",
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs",
   "scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs",
