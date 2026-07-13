@@ -15,6 +15,8 @@ const templatePath =
   "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md";
 const checkerPath =
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs";
+const manualApprovalCheckerPath =
+  "scripts/check-a17p-manual-owner-approval-evidence.cjs";
 
 const expectedAdvisoryGroups = [
   "697e2ea051fc81496e186ce579ad0990",
@@ -332,6 +334,7 @@ const allowedChangedFiles = new Set([
   docPath,
   templatePath,
   checkerPath,
+  manualApprovalCheckerPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

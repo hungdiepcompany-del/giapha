@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 348 - A-17P manual owner approval recorded for 21 groups
+
+Date: 2026-07-13
+
+Status: Accepted owner approval evidence, decision pack not finalized
+
+Context: The owner ran the A-17P-FIX3 owner-facing production result review and
+approved reconciliation execution for 21 of the 22 reviewed duplicate
+parent-set groups. The one-parent group remains excluded pending separate
+one-parent and deleted-family context reconciliation. The deleted family remains
+a separate reconciliation decision.
+
+Decision: Record the owner approval marker
+`A17P_MANUAL_21_GROUP_RECONCILIATION_APPROVED`, the 21 approved execution
+groups, the excluded group reference, the equivalent-candidate survivor policy
+and the eight role-confirmation group references as sanitized evidence. Do not
+finalize a decision pack, create a pack hash, execute reconciliation, mutate
+database rows or change relationship roles in this record phase.
+
+Evidence:
+
+- `A17P_MANUAL_APPROVAL_STATUS=PASS_OWNER_APPROVED_21_GROUP_RECONCILIATION_RECORDED`
+- `VERIFIED_SOURCE=A17P_FIX3_OWNER_FACING_PRODUCTION_RESULT`
+- `TOTAL_REVIEWED_GROUP_COUNT=22`
+- `APPROVED_EXECUTION_GROUP_COUNT=21`
+- `EXCLUDED_GROUP_COUNT=1`
+- `EXCLUDED_GROUP_REF=721e2ae3d95dd418af40b6459531b870`
+- `DELETED_FAMILY_DECISION=SEPARATE_RECONCILIATION_REQUIRED`
+- `SURVIVOR_POLICY=FAMILY_REVIEW_ORDER_1_FOR_EACH_OF_THE_21_APPROVED_GROUPS`
+- `OWNER_CONFIRMS_ROLE_CORRECTION_GROUP_COUNT=8`
+- `EXPECTED_VOID_FAMILY_COUNT=36`
+
+Safety: Production person names supplied during owner review are not committed
+to repository docs. Codex did not execute SQL, call RPCs, mutate database rows,
+change relationship roles, run reconciliation, create migrations, change
+runtime behavior, deploy or push.
+
 ## Decision 347 - A-17P-FIX3 adds parent role gender review evidence
 
 Date: 2026-07-13

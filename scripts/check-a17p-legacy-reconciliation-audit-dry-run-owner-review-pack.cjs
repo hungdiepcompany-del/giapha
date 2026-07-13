@@ -23,6 +23,8 @@ const fix2CheckerPath =
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs";
 const fix3CheckerPath =
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs";
+const manualApprovalCheckerPath =
+  "scripts/check-a17p-manual-owner-approval-evidence.cjs";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -598,6 +600,7 @@ const allowedChangedFiles = new Set([
   checkerPath,
   fix2CheckerPath,
   fix3CheckerPath,
+  manualApprovalCheckerPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
