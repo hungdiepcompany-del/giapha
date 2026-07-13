@@ -18,6 +18,7 @@ active_child_memberships as (
 person_display_names as (
   select
     id as person_id,
+    gender as person_gender,
     coalesce(nullif(btrim(display_name), ''), nullif(btrim(full_name), ''), 'Không rõ tên')
       as display_name_for_owner
   from public.people
@@ -161,6 +162,46 @@ candidate_parent_membership_rows as (
     fp.person_id,
     fp.parent_role,
     fp.relationship_type,
+    pdn.person_gender as parent_gender,
+    case
+      when lower(coalesce(pdn.person_gender, '')) = 'male' then 'father'
+      when lower(coalesce(pdn.person_gender, '')) = 'female' then 'mother'
+      else null
+    end as expected_role_from_gender,
+    case
+      when lower(coalesce(fp.parent_role, 'unknown')) not in ('father', 'mother')
+        then 'ROLE_NOT_GENDER_SPECIFIC'
+      when pdn.person_gender is null
+        or nullif(btrim(pdn.person_gender), '') is null
+        or lower(pdn.person_gender) = 'unknown'
+        then 'GENDER_UNKNOWN'
+      when lower(pdn.person_gender) = 'male'
+        and lower(coalesce(fp.parent_role, 'unknown')) = 'mother'
+        then 'POTENTIAL_MISMATCH'
+      when lower(pdn.person_gender) = 'female'
+        and lower(coalesce(fp.parent_role, 'unknown')) = 'father'
+        then 'POTENTIAL_MISMATCH'
+      when lower(pdn.person_gender) in ('male', 'female')
+        then 'CONSISTENT'
+      else 'OWNER_CONFIRMATION_REQUIRED'
+    end as role_gender_review_status,
+    case
+      when lower(coalesce(fp.parent_role, 'unknown')) not in ('father', 'mother')
+        then 'Parent role is generic or unknown; owner may confirm if needed.'
+      when pdn.person_gender is null
+        or nullif(btrim(pdn.person_gender), '') is null
+        or lower(pdn.person_gender) = 'unknown'
+        then 'Gender evidence is unknown; owner must not infer role automatically.'
+      when lower(pdn.person_gender) = 'male'
+        and lower(coalesce(fp.parent_role, 'unknown')) = 'mother'
+        then 'Gender evidence suggests father while current relationship_role is mother.'
+      when lower(pdn.person_gender) = 'female'
+        and lower(coalesce(fp.parent_role, 'unknown')) = 'father'
+        then 'Gender evidence suggests mother while current relationship_role is father.'
+      when lower(pdn.person_gender) not in ('male', 'female')
+        then 'Gender evidence is not male/female; owner confirmation is required.'
+      else null
+    end as role_gender_warning,
     pdn.display_name_for_owner
   from candidate_family_pairs_base cfp
   join active_parent_memberships fp on fp.family_id = cfp.family_id
@@ -295,6 +336,24 @@ parent_type_conflicts as (
   ) conflicts
   group by safe_group_ref
 ),
+role_gender_review_by_group as (
+  select
+    safe_group_ref,
+    count(*) filter (
+      where role_gender_review_status = 'POTENTIAL_MISMATCH'
+    )::integer as potential_role_gender_mismatch_parent_count,
+    count(distinct family_id) filter (
+      where role_gender_review_status = 'POTENTIAL_MISMATCH'
+    )::integer as potential_role_gender_mismatch_family_count,
+    bool_or(role_gender_review_status in (
+      'POTENTIAL_MISMATCH',
+      'GENDER_UNKNOWN',
+      'ROLE_NOT_GENDER_SPECIFIC',
+      'OWNER_CONFIRMATION_REQUIRED'
+    )) as role_gender_owner_review_required
+  from candidate_parent_membership_rows
+  group by safe_group_ref
+),
 group_review_ordering as (
   select
     dg.*,
@@ -302,6 +361,12 @@ group_review_ordering as (
       as relationship_role_conflict_count,
     coalesce(ptc.relationship_type_conflict_count, 0)::integer
       as relationship_type_conflict_count,
+    coalesce(rgr.potential_role_gender_mismatch_parent_count, 0)::integer
+      as potential_role_gender_mismatch_parent_count,
+    coalesce(rgr.potential_role_gender_mismatch_family_count, 0)::integer
+      as potential_role_gender_mismatch_family_count,
+    coalesce(rgr.role_gender_owner_review_required, false)
+      as role_gender_owner_review_required,
     row_number() over (
       order by
         case
@@ -318,6 +383,7 @@ group_review_ordering as (
   from duplicate_groups_base dg
   left join parent_role_conflicts prc on prc.safe_group_ref = dg.safe_group_ref
   left join parent_type_conflicts ptc on ptc.safe_group_ref = dg.safe_group_ref
+  left join role_gender_review_by_group rgr on rgr.safe_group_ref = dg.safe_group_ref
 ),
 candidate_family_review_ordering as (
   select
@@ -494,7 +560,28 @@ owner_review_integrity as (
         and active_child_memberships = 0
         and layout_reference_count = 0
     ) as deleted_family_advisory_present_pass,
-    true as no_automatic_owner_approval_pass
+    true as no_automatic_owner_approval_pass,
+    (
+      select count(*) = count(parent_gender)
+      from candidate_parent_membership_rows
+    ) as parent_gender_evidence_present_pass,
+    exists (
+      select 1
+      from candidate_parent_membership_rows
+      where role_gender_review_status = 'POTENTIAL_MISMATCH'
+    ) as role_gender_advisory_present_pass,
+    (
+      select count(distinct safe_group_ref)::integer
+      from candidate_parent_membership_rows
+      where role_gender_review_status = 'POTENTIAL_MISMATCH'
+    ) as potential_role_gender_mismatch_group_count,
+    (
+      select count(*)::integer
+      from candidate_parent_membership_rows
+      where role_gender_review_status = 'POTENTIAL_MISMATCH'
+    ) as potential_role_gender_mismatch_parent_count,
+    true as no_automatic_role_correction_pass,
+    true as owner_role_confirmation_placeholders_null_pass
 ),
 owner_review_rows as (
   select
@@ -557,7 +644,23 @@ owner_review_rows as (
     null::boolean as all_candidate_families_have_displayable_child_pass,
     null::boolean as one_parent_group_present_pass,
     null::boolean as deleted_family_advisory_present_pass,
-    null::boolean as no_automatic_owner_approval_pass
+    null::boolean as no_automatic_owner_approval_pass,
+    gro.potential_role_gender_mismatch_parent_count
+      as potential_role_gender_mismatch_parent_count,
+    gro.potential_role_gender_mismatch_family_count
+      as potential_role_gender_mismatch_family_count,
+    gro.role_gender_owner_review_required
+      as role_gender_owner_review_required,
+    null::text as parent_gender,
+    null::text as expected_role_from_gender,
+    null::text as role_gender_review_status,
+    null::text as role_gender_warning,
+    null::text as owner_confirmed_relationship_role,
+    null::boolean as parent_gender_evidence_present_pass,
+    null::boolean as role_gender_advisory_present_pass,
+    null::integer as potential_role_gender_mismatch_group_count,
+    null::boolean as no_automatic_role_correction_pass,
+    null::boolean as owner_role_confirmation_placeholders_null_pass
   from group_review_ordering gro
   left join parent_summaries_by_group psg on psg.safe_group_ref = gro.safe_group_ref
   left join child_summaries_by_group csg on csg.safe_group_ref = gro.safe_group_ref
@@ -630,6 +733,19 @@ owner_review_rows as (
     null::boolean,
     null::boolean,
     null::boolean,
+    null::boolean,
+    null::integer,
+    null::integer,
+    null::boolean,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::boolean,
     null::boolean
   from candidate_family_review_ordering cfp
   union all
@@ -687,6 +803,19 @@ owner_review_rows as (
     null::boolean,
     null::boolean,
     null::boolean,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::integer,
+    null::boolean,
+    cpmr.parent_gender,
+    cpmr.expected_role_from_gender,
+    cpmr.role_gender_review_status,
+    cpmr.role_gender_warning,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
     null::boolean,
     null::boolean
   from candidate_parent_membership_rows cpmr
@@ -750,6 +879,19 @@ owner_review_rows as (
     null::boolean,
     null::boolean,
     null::boolean,
+    null::boolean,
+    null::integer,
+    null::integer,
+    null::boolean,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::boolean,
     null::boolean
   from candidate_child_membership_rows ccmr
   join group_review_ordering gro on gro.safe_group_ref = ccmr.safe_group_ref
@@ -812,6 +954,19 @@ owner_review_rows as (
     null::boolean,
     null::boolean,
     null::boolean,
+    null::boolean,
+    gro.potential_role_gender_mismatch_parent_count,
+    gro.potential_role_gender_mismatch_family_count,
+    gro.role_gender_owner_review_required,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::boolean,
     null::boolean
   from group_review_ordering gro
   join candidate_family_review_ordering cfp on cfp.safe_group_ref = gro.safe_group_ref
@@ -872,8 +1027,97 @@ owner_review_rows as (
     null::boolean,
     null::boolean,
     null::boolean,
+    null::boolean,
+    null::integer,
+    null::integer,
+    null::boolean,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::boolean,
     null::boolean
   from deleted_family_advisory dfa
+  union all
+  select
+    'owner_review_role_gender_advisory'::text,
+    gro.group_review_order,
+    cpmr.safe_group_ref,
+    cpmr.family_id,
+    cpmr.safe_family_ref,
+    cfp.family_review_order,
+    null::integer,
+    null::integer,
+    null::integer,
+    null::text,
+    null::text,
+    null::integer,
+    null::integer,
+    null::integer,
+    null::integer,
+    null::integer,
+    'OWNER_CONFIRMATION_REQUIRED',
+    null::text,
+    null::text,
+    null::boolean,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::timestamptz,
+    null::timestamptz,
+    null::integer,
+    null::text,
+    cpmr.role_gender_warning,
+    null::boolean,
+    null::text,
+    cpmr.person_id,
+    md5(cpmr.person_id::text),
+    cpmr.display_name_for_owner,
+    cpmr.parent_role,
+    cpmr.relationship_type,
+    null::uuid,
+    null::text,
+    null::text,
+    cpmr.membership_id,
+    md5(cpmr.membership_id::text),
+    null::text,
+    null::text,
+    null::integer,
+    null::integer,
+    null::integer,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::integer,
+    null::boolean,
+    cpmr.parent_gender,
+    cpmr.expected_role_from_gender,
+    cpmr.role_gender_review_status,
+    cpmr.role_gender_warning,
+    null::text,
+    null::boolean,
+    null::boolean,
+    null::integer,
+    null::boolean,
+    null::boolean
+  from candidate_parent_membership_rows cpmr
+  join group_review_ordering gro on gro.safe_group_ref = cpmr.safe_group_ref
+  join candidate_family_review_ordering cfp
+    on cfp.safe_group_ref = cpmr.safe_group_ref
+   and cfp.safe_family_ref = cpmr.safe_family_ref
+  where cpmr.role_gender_review_status = 'POTENTIAL_MISMATCH'
   union all
   select
     'owner_review_integrity'::text,
@@ -930,7 +1174,20 @@ owner_review_rows as (
     ori.all_candidate_families_have_displayable_child_pass,
     ori.one_parent_group_present_pass,
     ori.deleted_family_advisory_present_pass,
-    ori.no_automatic_owner_approval_pass
+    ori.no_automatic_owner_approval_pass,
+    ori.potential_role_gender_mismatch_parent_count,
+    null::integer,
+    null::boolean,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    null::text,
+    ori.parent_gender_evidence_present_pass,
+    ori.role_gender_advisory_present_pass,
+    ori.potential_role_gender_mismatch_group_count,
+    ori.no_automatic_role_correction_pass,
+    ori.owner_role_confirmation_placeholders_null_pass
   from owner_review_integrity ori
 )
 select
@@ -954,8 +1211,9 @@ order by
     when 'owner_review_group_summary' then 1
     when 'owner_review_candidate_family' then 2
     when 'owner_review_parent_detail' then 3
-    when 'owner_review_child_detail' then 4
-    when 'owner_review_special_cases' then 5
+    when 'owner_review_role_gender_advisory' then 4
+    when 'owner_review_child_detail' then 5
+    when 'owner_review_special_cases' then 6
     else 9
   end,
   group_review_order nulls last,

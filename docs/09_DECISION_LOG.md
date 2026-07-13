@@ -1,5 +1,38 @@
 # Decision Log
 
+## Decision 347 - A-17P-FIX3 adds parent role gender review evidence
+
+Date: 2026-07-13
+
+Status: Accepted advisory evidence, no role correction
+
+Context: The owner-facing A-17P review query needs enough evidence for the
+owner to compare current `family_parents.parent_role` values with
+`people.gender` before deciding survivor/void actions. This must remain
+SELECT-only and must not rewrite relationship roles or infer missing father or
+mother context.
+
+Decision: Extend the owner-facing legacy family review query with
+`parent_gender`, `expected_role_from_gender`, `role_gender_review_status`,
+`role_gender_warning` and null owner confirmation placeholders. Add a dedicated
+`owner_review_role_gender_advisory` result set and integrity fields for parent
+gender evidence, advisory presence, mismatch counts, no automatic role
+correction and null owner confirmation placeholders.
+
+Evidence:
+
+- `A17P_FIX3_STATUS=PASS_PARENT_ROLE_GENDER_REVIEW_EVIDENCE_READY`
+- `PARENT_GENDER_INCLUDED=YES`
+- `ROLE_GENDER_ADVISORY_CREATED=YES`
+- `ROLE_GENDER_INTEGRITY_FIELDS_CREATED=YES`
+- `AUTOMATIC_ROLE_CORRECTION_PRESENT=NO`
+- `OWNER_ROLE_CONFIRMATION_PLACEHOLDERS_NULL=YES`
+- `EXPECTED_ROLE_GENDER_MISMATCH_GROUP_COUNT=8`
+
+Safety: Codex did not execute SQL, call RPCs, mutate database rows, change
+relationship roles, run reconciliation, create migrations, change runtime
+behavior, deploy or push.
+
 ## Decision 346 - A-17P-FIX2 adds owner-facing review query
 
 Date: 2026-07-13

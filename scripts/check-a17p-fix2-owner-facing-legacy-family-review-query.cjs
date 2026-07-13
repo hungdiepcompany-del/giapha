@@ -17,6 +17,8 @@ const templatePath =
   "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md";
 const checkerPath =
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs";
+const fix3CheckerPath =
+  "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -474,6 +476,7 @@ const allowedChangedFiles = new Set([
   docPath,
   templatePath,
   checkerPath,
+  fix3CheckerPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

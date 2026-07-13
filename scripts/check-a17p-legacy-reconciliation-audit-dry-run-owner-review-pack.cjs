@@ -21,6 +21,8 @@ const fix2OwnerSqlPath =
   "db/checks/20260713_check_a17p_owner_facing_legacy_family_review.sql";
 const fix2CheckerPath =
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs";
+const fix3CheckerPath =
+  "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -595,6 +597,7 @@ const allowedChangedFiles = new Set([
   plannerPath,
   checkerPath,
   fix2CheckerPath,
+  fix3CheckerPath,
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",

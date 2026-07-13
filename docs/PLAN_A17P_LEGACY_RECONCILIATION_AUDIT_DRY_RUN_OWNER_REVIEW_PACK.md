@@ -8,6 +8,7 @@ Status:
 `A17P_MANUAL_STATUS=BLOCKED_OWNER_FACING_REVIEW_QUERY_MISSING`
 `A17P_FIX1_MANUAL_STATUS=PASS_CORRECTED_SELECT_ONLY_AUDIT_VERIFIED`
 `A17P_FIX2_STATUS=PASS_OWNER_FACING_LEGACY_FAMILY_REVIEW_QUERY_READY`
+`A17P_FIX3_STATUS=PASS_PARENT_ROLE_GENDER_REVIEW_EVIDENCE_READY`
 
 ## Scope
 
@@ -268,6 +269,137 @@ Manual next action:
 
 ```text
 OWNER_RUN_A17P_OWNER_FACING_SELECT_ONLY_REVIEW_QUERY
+```
+
+## A-17P-FIX3 Parent Role Gender Review Evidence
+
+- `A17P_FIX3_STATUS=PASS_PARENT_ROLE_GENDER_REVIEW_EVIDENCE_READY`
+- `PARENT_GENDER_INCLUDED=YES`
+- `ROLE_GENDER_ADVISORY_CREATED=YES`
+- `ROLE_GENDER_INTEGRITY_FIELDS_CREATED=YES`
+- `AUTOMATIC_ROLE_CORRECTION_PRESENT=NO`
+- `OWNER_ROLE_CONFIRMATION_PLACEHOLDERS_NULL=YES`
+- `EXPECTED_GROUP_COUNT=22`
+- `EXPECTED_ROLE_GENDER_MISMATCH_GROUP_COUNT=8`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+FIX3 extends the owner-facing SELECT-only query with gender evidence for parent
+memberships. It compares `people.gender` to the current
+`family_parents.parent_role` only to produce owner-facing advisory evidence.
+It does not infer, rewrite, repair or normalize relationship roles.
+
+The `owner_review_parent_detail` result set now includes:
+
+```text
+parent_gender
+expected_role_from_gender
+role_gender_review_status
+role_gender_warning
+owner_confirmed_relationship_role
+```
+
+The `role_gender_review_status` values are limited to:
+
+```text
+CONSISTENT
+POTENTIAL_MISMATCH
+GENDER_UNKNOWN
+ROLE_NOT_GENDER_SPECIFIC
+OWNER_CONFIRMATION_REQUIRED
+```
+
+Review semantics:
+
+```text
+gender=male + role=mother  => POTENTIAL_MISMATCH
+gender=female + role=father => POTENTIAL_MISMATCH
+gender unknown/null         => GENDER_UNKNOWN
+role parent/unknown         => ROLE_NOT_GENDER_SPECIFIC
+```
+
+The `owner_review_group_summary` result set now includes:
+
+```text
+potential_role_gender_mismatch_parent_count
+potential_role_gender_mismatch_family_count
+role_gender_owner_review_required
+```
+
+The query also adds:
+
+```text
+result_set=owner_review_role_gender_advisory
+```
+
+Each advisory row exposes:
+
+```text
+group_review_order
+safe_group_ref
+family_id
+safe_family_ref
+parent_person_id
+parent_display_name
+parent_gender
+current_relationship_role
+expected_role_from_gender
+role_gender_review_status
+owner_confirmed_relationship_role
+owner_notes
+```
+
+The owner fields remain placeholders:
+
+```text
+owner_confirmed_relationship_role=NULL
+owner_notes=NULL
+```
+
+The `owner_review_integrity` result set now includes:
+
+```text
+parent_gender_evidence_present_pass
+role_gender_advisory_present_pass
+potential_role_gender_mismatch_group_count
+potential_role_gender_mismatch_parent_count
+no_automatic_role_correction_pass
+owner_role_confirmation_placeholders_null_pass
+```
+
+Current production evidence expectation for the next owner-run query:
+
+```text
+POTENTIAL_ROLE_GENDER_MISMATCH_GROUP_COUNT=8
+```
+
+The expected advisory groups for owner verification are:
+
+```text
+697e2ea051fc81496e186ce579ad0990
+f8a4b569a15428f13eb7c7a633219d8a
+669d75955c5ed0e3616936f0beeea162
+6e3ab58476a5c3ca27b63fd740c55e56
+a33cc1f6470a638e2607615fe6959eb7
+b34bbc4b9a7e5d3d71733d808c894e6c
+c0d499673c250e0b883a899dc6a27101
+e309bb5c052bf74a4228b00e4146eda0
+```
+
+These group references are recorded as production evidence expectations only.
+They are not hardcoded in the query and are not permanent invariants.
+
+Next action:
+
+```text
+NEXT_ACTION=PUSH_FIX3_AND_RERUN_OWNER_FACING_SELECT_ONLY_QUERY
 ```
 
 ## Dry-Run Planner

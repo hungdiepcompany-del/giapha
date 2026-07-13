@@ -1,5 +1,44 @@
 # AI Work Log
 
+## 2026-07-13 - A-17P-FIX3 parent role gender review evidence
+
+Phase: A-17P-FIX3 - Add Parent Role and Gender Consistency Evidence
+
+Status:
+
+- `A17P_FIX3_STATUS=PASS_PARENT_ROLE_GENDER_REVIEW_EVIDENCE_READY`
+- `PARENT_GENDER_INCLUDED=YES`
+- `ROLE_GENDER_ADVISORY_CREATED=YES`
+- `ROLE_GENDER_INTEGRITY_FIELDS_CREATED=YES`
+- `AUTOMATIC_ROLE_CORRECTION_PRESENT=NO`
+- `OWNER_ROLE_CONFIRMATION_PLACEHOLDERS_NULL=YES`
+- `EXPECTED_GROUP_COUNT=22`
+- `EXPECTED_ROLE_GENDER_MISMATCH_GROUP_COUNT=8`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Implementation:
+
+- Extended `db/checks/20260713_check_a17p_owner_facing_legacy_family_review.sql` with parent gender evidence, role/gender review status and advisory rows.
+- Added checker `scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs`.
+- Added package script `check:a17p-fix3-parent-role-gender-review-evidence`.
+- Updated the A-17P plan, owner review template, index, decision log and handoff.
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+
+Next:
+
+- `NEXT_ACTION=PUSH_FIX3_AND_RERUN_OWNER_FACING_SELECT_ONLY_QUERY`
+
 ## 2026-07-13 - A-17P-FIX2 owner-facing legacy family review query
 
 Phase: A-17P-FIX2 - Add Owner-Facing SELECT-Only Legacy Family Review Query
