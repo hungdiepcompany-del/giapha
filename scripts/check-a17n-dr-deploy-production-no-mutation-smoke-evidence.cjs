@@ -191,10 +191,16 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17h-canonical-family-schema-foundation-candidate.cjs",
   "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
+  "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "scripts/check-a17o-importer-canonical-family-grouping.cjs",
 ]);
 
 for (const file of changedFiles) {
-  if (/^(app|components|lib|services)\//.test(file)) {
+  if (
+    /^(app|components|lib|services)\//.test(file) &&
+    file !== "lib/import/giapha4/canonical-family-grouping.ts"
+  ) {
     failures.push(`runtime file changed during A-17N-DR: ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {

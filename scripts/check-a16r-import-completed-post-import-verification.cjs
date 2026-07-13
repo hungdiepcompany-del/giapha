@@ -237,6 +237,9 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
   "docs/PLAN_A17N_DR_DEPLOY_PRODUCTION_NO_MUTATION_SMOKE_EVIDENCE.md",
   "scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs",
+  "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "scripts/check-a17o-importer-canonical-family-grouping.cjs",
   "app/(admin)/admin/tree/edit/actions.ts",
   "lib/family/admin-canonical-family-runtime-service.ts",
   "lib/family/admin-canonical-family-transaction-adapter.ts",
@@ -257,6 +260,7 @@ for (const file of changedFiles) {
     file !== "lib/family/admin-canonical-family-link-service.ts" &&
     file !== "lib/family/admin-canonical-family-runtime-service.ts" &&
     file !== "lib/family/admin-canonical-family-transaction-adapter.ts" &&
+    file !== "lib/import/giapha4/canonical-family-grouping.ts" &&
     file !== "app/(admin)/admin/tree/edit/actions.ts"
   ) {
     failures.push(`forbidden runtime app code change ${file}`);

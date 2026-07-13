@@ -366,7 +366,8 @@
     "check:a17n-dr-deploy-production-no-mutation-smoke-evidence": "node scripts/check-a17n-dr-deploy-production-no-mutation-smoke-evidence.cjs",
     "check:a17n-r-admin-parent-child-runtime-integration": "node scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
     "check:a17n-tx1-admin-canonical-family-transaction-executor-candidate": "node scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
-    "check:a17n-tx2f-post-apply-verifier-active-scope-correction": "node scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs"
+    "check:a17n-tx2f-post-apply-verifier-active-scope-correction": "node scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
+    "check:a17o-importer-canonical-family-grouping": "node scripts/check-a17o-importer-canonical-family-grouping.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

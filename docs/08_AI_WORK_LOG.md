@@ -1,5 +1,61 @@
 # AI Work Log
 
+## 2026-07-13 - A-17O official importer canonical grouping foundation
+
+### Phase
+
+A-17O - Official Importer Canonical Family Grouping Fix
+
+### Viec da lam
+
+- Verified A-17N-DR readiness evidence and clean synced baseline before edits.
+- Located current per-child family creation in the official import transaction
+  RPC replacement SQL: `clear_children` creates `gen_random_uuid() as family_id`
+  per child fingerprint.
+- Added dormant canonical import grouping foundation for future Gia Pha 4 imports.
+- Added scoped checker `check:a17o-importer-canonical-family-grouping`.
+- Recorded docs, decision log and handoff evidence.
+
+### Ket qua
+
+- `A17O_STATUS=BLOCKED_IMPORT_TRANSACTION_EXECUTOR_GROUPED_FAMILY_SUPPORT_REQUIRED`
+- `CANONICAL_IMPORT_GROUPING_CREATED=YES`
+- `CANONICAL_GROUP_KEY_VERSION=a17o-import-family-group:v1`
+- `CHILD_ID_INCLUDED_IN_GROUP_KEY=NO`
+- `PARENT_INPUT_ORDER_AFFECTS_GROUP_KEY=NO`
+- `SIBLINGS_GROUPED_BY_PARENT_SET=YES`
+- `EXISTING_IMPORT_TRANSACTION_EXECUTOR_SUPPORTS_GROUPED_FAMILIES=NO`
+- `IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=NO`
+
+### Safety
+
+- `OFFICIAL_IMPORT_COMPLETED_SESSION_REOPENED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+- `PRODUCTION_MUTATION_SMOKE_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+
+### Files
+
+- `lib/import/giapha4/canonical-family-grouping.ts`
+- `docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md`
+- `scripts/check-a17o-importer-canonical-family-grouping.cjs`
+- `package.json`
+- `docs/00_INDEX.md`
+- `docs/08_AI_WORK_LOG.md`
+- `docs/09_DECISION_LOG.md`
+- `docs/99_NEXT_AI_HANDOFF.md`
+
+### Next
+
+- `NEXT_ACTION=START_SEPARATE_A17O_TX1_GROUPED_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE`
+
 ## 2026-07-12 - A-17N-DR deploy and production no-mutation smoke evidence
 
 ### Phase

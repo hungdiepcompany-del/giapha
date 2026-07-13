@@ -1,5 +1,30 @@
 # Decision Log
 
+## Decision 339 - A-17O keeps importer grouping dormant until grouped transaction executor exists
+
+Date: 2026-07-13
+
+Chon:
+
+Add a dormant source grouping foundation for Gia Pha 4 official imports, but do
+not activate importer runtime grouping while the current official import RPC
+still creates one family per child.
+
+Ly do:
+
+- The current `public.a16p_tx_execute_giapha4_official_import` implementation
+  creates a new `family_id` in `clear_children` for each child fingerprint.
+- The route and service call the RPC directly; there is no grouped family
+  payload contract for one family with multiple children.
+- Activating app-side grouping before transaction support would make preview,
+  audit, rollback and idempotency counts disagree with actual database writes.
+
+Ket luan:
+
+- `A17O_STATUS=BLOCKED_IMPORT_TRANSACTION_EXECUTOR_GROUPED_FAMILY_SUPPORT_REQUIRED`
+- `IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=NO`
+- `NEXT_ACTION=START_SEPARATE_A17O_TX1_GROUPED_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE`
+
 ## Decision 338 - A-17N-DR records deployed canonical admin no-mutation smoke
 
 Date: 2026-07-12
