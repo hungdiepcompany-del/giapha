@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 341 - A-17O-TX1R records grouped executor production verification
+
+Date: 2026-07-13
+
+Status: Accepted evidence
+
+Context: A-17O-TX1 created a grouped official-import transaction executor
+candidate and SELECT-only verifier. The owner manually applied migration 0025
+to Gia Pha production and ran the verifier.
+
+Decision: Record owner-provided production evidence that migration 0025 is
+applied and the SELECT-only verifier passed. Mark the grouped executor as
+available for a future, separate runtime integration phase. Do not change
+runtime importer code, call either official import executor, retry import,
+execute SQL, reconcile families, deploy, or mutate production genealogy data in
+this evidence phase.
+
+Evidence:
+
+- `A17O_TX1R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED`
+- `A17SQL_O_TX1_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY`
+- `MIGRATION_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`
+- `NEW_GROUPED_EXECUTOR_EXISTS=YES`
+- `OLD_EXECUTOR_PRESERVED=YES`
+- `SECURITY_INVOKER=YES`
+- `FIXED_SEARCH_PATH=YES`
+- `AUTHENTICATED_EXECUTE_COUNT=1`
+- `ANON_EXECUTE_COUNT=0`
+- `PUBLIC_EXECUTE_COUNT=0`
+- `ACTIVE_FAMILY_COUNT_AFTER=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT_AFTER=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT_AFTER=73`
+- `GROUPED_BATCH_COUNT=0`
+- `IDEMPOTENCY_ROW_COUNT=0`
+- `GROUPED_EXECUTOR_REVISION_COUNT=0`
+- `GROUPED_ROLLBACK_MANIFEST_COUNT=0`
+- `CANONICAL_KEY_BACKFILL_COUNT=0`
+- `A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED`
+
 ## Decision 340 - A-17O-TX1 adds grouped official import executor candidate
 
 Date: 2026-07-13

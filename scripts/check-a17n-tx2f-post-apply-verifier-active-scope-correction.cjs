@@ -263,6 +263,8 @@ const allowedChangedFiles = new Set([
   "db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql",
   "docs/PLAN_A17O_TX1_GROUPED_OFFICIAL_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
+  "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
+  "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
   ...a17oTx1MigrationFiles,
   "app/(admin)/admin/tree/edit/actions.ts",
   "lib/family/admin-canonical-family-link-service.ts",

@@ -1,5 +1,86 @@
 # AI Work Log
 
+## 2026-07-13 - A-17O-TX1R grouped executor manual apply verification
+
+Phase: A-17O-TX1R - Record Grouped Import Executor Manual Apply Verification
+
+Status:
+
+- `A17O_TX1R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED`
+- `A17SQL_O_TX1_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY`
+- `SOURCE_COMMIT=0f02c93`
+- `MIGRATION_FILE=db/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql`
+- `MIGRATION_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`
+- `MIGRATION_APPLIED=YES_OWNER_MANUAL_PRODUCTION`
+- `VERIFIER_FILE=db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql`
+- `VERIFIER_SELECT_ONLY=YES`
+- `VERIFIER_ALL_REQUIRED_CHECKS_PASS=YES`
+- `NEW_GROUPED_EXECUTOR_EXISTS=YES`
+- `OLD_EXECUTOR_PRESERVED=YES`
+- `SECURITY_INVOKER=YES`
+- `FIXED_SEARCH_PATH=YES`
+- `AUTHENTICATED_EXECUTE_COUNT=1`
+- `ANON_EXECUTE_COUNT=0`
+- `PUBLIC_EXECUTE_COUNT=0`
+- `ACTIVE_FAMILY_COUNT_AFTER=74`
+- `ACTIVE_PARENT_MEMBERSHIP_COUNT_AFTER=140`
+- `ACTIVE_CHILD_MEMBERSHIP_COUNT_AFTER=73`
+- `GROUPED_BATCH_COUNT=0`
+- `IDEMPOTENCY_ROW_COUNT=0`
+- `GROUPED_EXECUTOR_REVISION_COUNT=0`
+- `GROUPED_ROLLBACK_MANIFEST_COUNT=0`
+- `CANONICAL_KEY_BACKFILL_COUNT=0`
+- `COMPLETED_PRODUCTION_SESSION_STILL_NON_EXECUTABLE=YES`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `A17O_IMPORTER_RUNTIME_ACTIVE=NO`
+- `SQL_EXECUTED_BY_PHASE=NO`
+- `DEPLOY=NO`
+
+Implementation:
+
+- Added `docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md`.
+- Added checker `scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs`.
+- Updated A-17O and A-17O-TX1 docs to mark grouped executor production apply and SELECT-only verification as recorded.
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+- `npm.cmd run check:a17o-tx1r-grouped-import-executor-manual-apply-verification` - PASS
+- `npm.cmd run check:a17o-tx1-grouped-official-import-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17o-importer-canonical-family-grouping` - PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification` - PASS
+- `npm.cmd run check:a17n-dr-deploy-production-no-mutation-smoke-evidence` - PASS
+- `npm.cmd run check:a17n-r-admin-parent-child-runtime-integration` - PASS
+- `npm.cmd run check:a17n-tx1-admin-canonical-family-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17n-tx2f-post-apply-verifier-active-scope-correction` - PASS
+- `npm.cmd run check:a17n-admin-parent-child-canonical-write-path` - PASS
+- `npm.cmd run check:a17m-canonical-family-domain-service` - PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence` - PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design` - PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract` - PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract` - PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit` - PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run` - PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design` - PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate` - PASS
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+
+Next action:
+
+- `NEXT_ACTION=START_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION`
+
 ## 2026-07-13 - A-17O-TX1 grouped official import transaction executor candidate
 
 Phase: A-17O-TX1 - Grouped Official Import Transaction Executor Candidate

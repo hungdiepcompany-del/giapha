@@ -327,7 +327,9 @@ rejectPattern(
 );
 
 for (const token of [
-  "A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED",
+  "A17O_TX1_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED",
+  "A17SQL_O_TX1_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY",
+  "A17O_TX1R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED",
   `MIGRATION_FILE=${dbMigrationPath}`,
   `SUPABASE_MIRROR_FILE=${supabaseMigrationPath}`,
   `DB_MIGRATION_SHA256=${migrationSha}`,
@@ -353,9 +355,10 @@ for (const token of [
   "ROLLBACK_DISTINGUISHES_CREATED_VS_PREEXISTING=YES",
   "COMPLETED_PRODUCTION_SESSION_REOPENED=NO",
   "POST_APPLY_VERIFIER_CREATED=YES",
-  "POST_APPLY_VERIFIER_EXECUTED=NO",
-  "SQL_EXECUTED=NO",
-  "MIGRATION_APPLIED=NO",
+  "POST_APPLY_VERIFIER_EXECUTED=YES_OWNER_MANUAL_PRODUCTION",
+  "SQL_EXECUTED_BY_PHASE=NO",
+  "MIGRATION_APPLIED=YES_OWNER_MANUAL_PRODUCTION",
+  "A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED",
   "OFFICIAL_IMPORT_RPC_CALLED=NO",
   "DEPLOY=NO",
   "PUSH=NO",
@@ -365,13 +368,21 @@ for (const token of [
 
 for (const [content, token, label] of [
   [index, "PLAN_A17O_TX1_GROUPED_OFFICIAL_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE.md", "index A17O-TX1"],
-  [workLog, "A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED", "work log A17O-TX1"],
+  [
+    workLog,
+    "A17O_TX1R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED",
+    "work log A17O-TX1R",
+  ],
   [
     decisionLog,
     "Decision 340 - A-17O-TX1 adds grouped official import executor candidate",
     "decision A17O-TX1",
   ],
-  [handoff, "A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED", "handoff A17O-TX1"],
+  [
+    handoff,
+    "A17O_TX1R_STATUS=PASS_OWNER_MANUAL_PRODUCTION_APPLY_AND_SELECT_ONLY_VERIFY_RECORDED",
+    "handoff A17O-TX1R",
+  ],
 ]) {
   requireIncludes(content, token, label);
 }
@@ -409,7 +420,9 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
+  "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
+  "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
