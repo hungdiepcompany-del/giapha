@@ -58,6 +58,16 @@ with expected as (
   join public.family_reconciliation_batches batches
     on batches.id = manifests.reconciliation_batch_id
   where batches.approved_audit_hash = (select decision_pack_sha256 from expected)
+), policy_evidence as (
+  select exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'revisions'
+      and policyname = 'a17q_tx1_revisions_insert_legacy_family_reconciliation'
+      and cmd = 'INSERT'
+      and roles = array['authenticated']::name[]
+  ) as a17q_tx1_revision_insert_policy_exists
 )
 select
   'a17q_tx1_function_contract' as result_set,
@@ -82,6 +92,22 @@ select
   exists(select 1 from function_meta where function_source like '%' || (select deleted_family_id::text from expected) || '%') as a17q_tx1_deleted_family_guard_embedded,
   exists(select 1 from function_meta where function_source like '%pg_try_advisory_xact_lock%') as a17q_tx1_advisory_lock_present,
   exists(select 1 from function_meta where function_source like '%for update%') as a17q_tx1_row_locking_present,
+  exists(select 1 from function_meta where function_source like '%IDEMPOTENCY_STATE_CHECK%') as a17q_tx1_idempotency_state_check_present,
+  exists(select 1 from function_meta where function_source like '%REPLAY_COMPLETED_SUCCESS%') as a17q_tx1_idempotency_replay_success_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_IDEMPOTENCY_KEY_CONFLICT%') as a17q_tx1_idempotency_conflict_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_RECONCILIATION_BATCH_REQUIRES_RECOVERY%') as a17q_tx1_recovery_required_guard_present,
+  exists(select 1 from function_meta where function_source like '%FULL_PRECONDITION_VALIDATION%') as a17q_tx1_full_precondition_validation_present,
+  exists(select 1 from function_meta where function_source like '%DRY_RUN_NOT_CONSUMED%') as a17q_tx1_dry_run_not_consumed_present,
+  exists(select 1 from function_meta where function_source like '%RUNNING_BATCH_INSERT%') as a17q_tx1_running_batch_insert_marker_present,
+  exists(select 1 from function_meta where function_source like '%PRE_MUTATION_AUDIT_BEFORE_GENEALOGY_MUTATION%') as a17q_tx1_pre_mutation_audit_marker_present,
+  exists(select 1 from function_meta where function_source like '%FIRST_GENEALOGY_MUTATION%') as a17q_tx1_first_genealogy_mutation_marker_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_MUTATION_ROW_COUNT_MISMATCH%') as a17q_tx1_mutation_count_guard_present,
+  exists(select 1 from function_meta where function_source like '%REAL_POST_STATE_VALIDATION%') as a17q_tx1_real_post_state_validation_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_post_state_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_GRAPH_VALIDATION_FAILED%') as a17q_tx1_graph_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%STORE_COMPLETE_SUCCESS_RESULT%') as a17q_tx1_store_success_result_marker_present,
+  exists(select 1 from function_meta where function_source like '%NEW_EXECUTION_COMPLETED%') as a17q_tx1_new_execution_completed_status_present,
+  (select a17q_tx1_revision_insert_policy_exists from policy_evidence) as a17q_tx1_revision_insert_policy_exists,
   (select a17q_tx1_decision_pack_batch_count from batch_evidence) as a17q_tx1_decision_pack_batch_count,
   (select a17q_tx1_completed_batch_count from batch_evidence) as a17q_tx1_completed_batch_count,
   (select a17q_tx1_rollback_manifest_count from rollback_evidence) as a17q_tx1_rollback_manifest_count;

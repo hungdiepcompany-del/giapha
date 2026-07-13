@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 351 - A-17Q-TX1-FIX1 hardens migration 0026 before apply
+
+Date: 2026-07-13
+
+Context: Owner review found that the A-17Q-TX1 executor candidate was not ready
+for apply because idempotency replay, precondition coverage, mutation order,
+pre-mutation audit and post-state verification were incomplete.
+
+Decision: Correct the existing not-applied migration 0026 in place, keep db and
+Supabase mirrors byte-identical, and do not create migration 0027. The old
+migration SHA is superseded and must never be applied. The hardened candidate
+requires a fresh owner review before any manual apply.
+
+Evidence:
+
+- `A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
+- `A17Q_TX1_OLD_SHA256_SUPERSEDED=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `DB_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `SUPABASE_MIRROR_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `MIRROR_MATCH=YES`
+- `IDEMPOTENCY_REPLAY_CONTRACT_IMPLEMENTED=YES`
+- `PRECONDITION_REVIEW_COMPLETE=YES`
+- `MUTATION_ORDER_CONTRACT_MATCHES_REVIEW=YES`
+- `AUDIT_PRE_MUTATION_PRESENT=YES`
+- `POST_STATE_VERIFIED_BEFORE_COMPLETED=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 350 - A-17Q-TX1 creates fail-closed reconciliation executor candidate
 
 Date: 2026-07-13

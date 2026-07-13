@@ -5,6 +5,7 @@ Date: 2026-07-13
 Status:
 `A17P_R_STATUS=PASS_IMMUTABLE_OWNER_DECISION_PACK_FINALIZED`
 `A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
+`A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
 
 ## Scope
 
@@ -36,13 +37,18 @@ matches the committed JSON exactly. Production display names are not committed.
 - `MIGRATION_CANDIDATE_CREATED=YES`
 - `MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
 - `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
-- `DB_MIGRATION_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
-- `SUPABASE_MIRROR_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `A17Q_TX1_OLD_SHA256_SUPERSEDED=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `DB_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `SUPABASE_MIRROR_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
 - `MIRROR_MATCH=YES`
 - `SELECT_ONLY_VERIFIER_CREATED=YES`
 - `SELECT_ONLY_VERIFIER_FILE=db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql`
 - `CHECKER_CREATED=YES`
 - `CHECKER_FILE=scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs`
+- `FIX1_CHECKER_FILE=scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs`
+
+The superseded SHA must never be applied. Migration 0026 is still not applied
+after FIX1; no migration 0027 was created.
 
 ## RPC Contract
 
@@ -98,12 +104,20 @@ matches the committed JSON exactly. Production display names are not committed.
 - `ROW_LOCKING_SUPPORTED=YES`
 - `GRAPH_VALIDATION_SUPPORTED=YES`
 - `FAIL_CLOSED_PRECONDITIONS=YES`
+- `IDEMPOTENCY_REPLAY_CONTRACT_IMPLEMENTED=YES`
+- `PRECONDITION_REVIEW_COMPLETE=YES`
+- `MUTATION_ORDER_CONTRACT_MATCHES_REVIEW=YES`
+- `AUDIT_PRE_MUTATION_PRESENT=YES`
+- `POST_STATE_VERIFIED_BEFORE_COMPLETED=YES`
 - `ACTIVE_RUNTIME_CALLER_COUNT=0`
 - `RECONCILIATION_AUTHORIZED_FOR_DESIGN_ONLY=YES`
 - `RECONCILIATION_EXECUTION_AUTHORIZED=NO`
 - `MIGRATION_APPLY_AUTHORIZED=NO`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
 - `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
 - `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `OWNER_REVIEW_REQUIRED_AGAIN=YES`
 
 The candidate rejects hash/marker mismatch, unauthenticated callers, missing
 profile context, missing permissions, concurrent execution, existing running or
@@ -111,6 +125,23 @@ completed batch for the decision pack, excluded/deleted family leakage into the
 executable scope, baseline drift, unexpected layout references, stale role
 states, duplicate child memberships, self parent/child rows, and inactive
 touched people.
+
+FIX1 hardens the review-blocked areas:
+
+- idempotency replay now returns only a stored completed success for the same
+  key, same hashes and same marker; conflicting keys or incomplete batches fail
+  closed.
+- dry-run returns `DRY_RUN_NOT_CONSUMED` and never inserts a reconciliation
+  batch.
+- `RUNNING_BATCH_INSERT` occurs only after full precondition validation.
+- `PRE_MUTATION_AUDIT_BEFORE_GENEALOGY_MUTATION` is written before the first
+  genealogy mutation.
+- mutation row counts are captured from the mutation CTE and checked before any
+  completed result is stored.
+- `REAL_POST_STATE_VALIDATION` verifies counts, unchanged people/layout/excluded
+  and deleted-family hashes, and graph constraints before
+  `STORE_COMPLETE_SUCCESS_RESULT`.
+- graph validation is never hardcoded to pass.
 
 ## Boundary Evidence
 
@@ -131,6 +162,7 @@ touched people.
 ## Validation
 
 - `VALIDATION_SUMMARY=PASS`
+- `npm.cmd run check:a17q-tx1-fix1-hardened-reconciliation-executor` - PASS
 - `npm.cmd run check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate` - PASS
 - `npm.cmd run check:a17p-r-immutable-owner-decision-pack` - PASS
 - A-17P manual/FIX2/FIX3/base owner-review checkers - PASS
@@ -143,4 +175,4 @@ touched people.
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_TX1_OWNER_REVIEW_MIGRATION_CANDIDATE`
+`NEXT_ACTION=A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_MIGRATION_CANDIDATE`

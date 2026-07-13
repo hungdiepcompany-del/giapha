@@ -377,7 +377,8 @@
     "check:a17p-fix3-parent-role-gender-review-evidence": "node scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs",
     "check:a17p-manual-owner-approval-evidence": "node scripts/check-a17p-manual-owner-approval-evidence.cjs",
     "check:a17p-r-immutable-owner-decision-pack": "node scripts/check-a17p-r-immutable-owner-decision-pack.cjs",
-    "check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate": "node scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs"
+    "check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate": "node scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
+    "check:a17q-tx1-fix1-hardened-reconciliation-executor": "node scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

@@ -1,5 +1,69 @@
 # AI Work Log
 
+## 2026-07-13 - A-17Q-TX1-FIX1 hardened reconciliation executor contract
+
+Phase: A-17Q-TX1-FIX1 - Harden Legacy Family Reconciliation Transaction Executor Contract
+
+Status:
+
+- `A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED`
+- `A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
+- `A17Q_TX1_REVIEW_STATUS=BLOCKED_SOURCE_CORRECTION_REQUIRED` superseded by source correction
+- `A17Q_TX1_OLD_SHA256_SUPERSEDED=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `DB_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `SUPABASE_MIRROR_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `MIRROR_MATCH=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `OWNER_REVIEW_REQUIRED_AGAIN=YES`
+
+Hardening:
+
+- `IDEMPOTENCY_REPLAY_CONTRACT_IMPLEMENTED=YES`
+- `PRECONDITION_REVIEW_COMPLETE=YES`
+- `MUTATION_ORDER_CONTRACT_MATCHES_REVIEW=YES`
+- `AUDIT_PRE_MUTATION_PRESENT=YES`
+- `POST_STATE_VERIFIED_BEFORE_COMPLETED=YES`
+- `GRAPH_VALIDATION_HARDCODED_PASS=NO`
+- `ACTIVE_RUNTIME_CALLER_COUNT=0`
+
+Implementation:
+
+- Corrected existing not-applied migration 0026 in both `db/migrations` and `supabase/migrations`.
+- Added narrow A-17Q revision insert policy for executor audit rows.
+- Hardened dry-run/idempotency behavior so dry-run does not consume a batch and replay only returns stored completed success.
+- Moved running batch insert after full precondition validation.
+- Added pre-mutation audit before genealogy mutation and post-mutation audit after real post-state validation.
+- Captured mutation CTE row counts and fail-closed on mismatches.
+- Added post-state count/hash/graph validation before storing completed result.
+- Extended SELECT-only verifier and base checker.
+- Added checker `scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs`.
+- Added package script `check:a17q-tx1-fix1-hardened-reconciliation-executor`.
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_VOIDED=NO`
+- `MEMBERSHIP_MOVED=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+
+Next:
+
+- `NEXT_ACTION=A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_MIGRATION_CANDIDATE`
+
 ## 2026-07-13 - A-17Q-TX1 legacy family reconciliation transaction executor candidate
 
 Phase: A-17Q-TX1 - Design Legacy Family Reconciliation Transaction Executor Candidate

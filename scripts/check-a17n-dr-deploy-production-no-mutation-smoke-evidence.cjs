@@ -225,6 +225,7 @@ const allowedChangedFiles = new Set([
   "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
   "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
+  "scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs",
   "docs/PLAN_A17A_TREE_BASELINE_EVIDENCE.md",
   "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
   "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",

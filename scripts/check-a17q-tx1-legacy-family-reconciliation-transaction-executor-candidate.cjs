@@ -330,10 +330,16 @@ for (const token of [
   "public.current_profile_id()",
   "public.has_permission('relationships.update')",
   "public.has_permission('permissions.manage')",
+  "a17q_tx1_revisions_insert_legacy_family_reconciliation",
   "pg_try_advisory_xact_lock",
   "A17Q_TX1_CONCURRENT_EXECUTION_REJECTED",
   "A17Q_TX1_DECISION_PACK_HASH_MISMATCH",
   "A17Q_TX1_PRECONDITION_DRIFT_DETECTED",
+  "IDEMPOTENCY_STATE_CHECK",
+  "A17Q_IDEMPOTENCY_KEY_CONFLICT",
+  "A17Q_RECONCILIATION_BATCH_REQUIRES_RECOVERY",
+  "REPLAY_COMPLETED_SUCCESS",
+  "FULL_PRECONDITION_VALIDATION",
   "create temporary table a17q_approved_groups",
   "create temporary table a17q_approved_families",
   "create temporary table a17q_role_corrections",
@@ -341,6 +347,15 @@ for (const token of [
   "create temporary table a17q_deleted_family_advisory",
   "for update",
   "DRY_RUN_NOT_CONSUMED",
+  "RUNNING_BATCH_INSERT",
+  "PRE_MUTATION_AUDIT_BEFORE_GENEALOGY_MUTATION",
+  "FIRST_GENEALOGY_MUTATION",
+  "A17Q_MUTATION_ROW_COUNT_MISMATCH",
+  "REAL_POST_STATE_VALIDATION",
+  "A17Q_POST_STATE_VALIDATION_FAILED",
+  "A17Q_GRAPH_VALIDATION_FAILED",
+  "STORE_COMPLETE_SUCCESS_RESULT",
+  "NEW_EXECUTION_COMPLETED",
   "insert into public.family_reconciliation_rollback_manifests",
   "insert into public.family_reconciliation_batches",
   "insert into public.revisions",
@@ -417,6 +432,22 @@ for (const token of [
   "a17q_tx1_deleted_family_guard_embedded",
   "a17q_tx1_advisory_lock_present",
   "a17q_tx1_row_locking_present",
+  "a17q_tx1_idempotency_state_check_present",
+  "a17q_tx1_idempotency_replay_success_present",
+  "a17q_tx1_idempotency_conflict_guard_present",
+  "a17q_tx1_recovery_required_guard_present",
+  "a17q_tx1_full_precondition_validation_present",
+  "a17q_tx1_dry_run_not_consumed_present",
+  "a17q_tx1_running_batch_insert_marker_present",
+  "a17q_tx1_pre_mutation_audit_marker_present",
+  "a17q_tx1_first_genealogy_mutation_marker_present",
+  "a17q_tx1_mutation_count_guard_present",
+  "a17q_tx1_real_post_state_validation_present",
+  "a17q_tx1_post_state_failure_guard_present",
+  "a17q_tx1_graph_failure_guard_present",
+  "a17q_tx1_store_success_result_marker_present",
+  "a17q_tx1_new_execution_completed_status_present",
+  "a17q_tx1_revision_insert_policy_exists",
   "a17q_tx1_completed_batch_count",
 ]) {
   requireIncludes(verifier, token, `verifier token ${token}`);
@@ -495,19 +526,19 @@ assertCase(
 );
 assertCase("survivor role correction applies", simulatePlan(baseFixture).survivorRoleCorrections === 1);
 assertCase("void role correction superseded", simulatePlan(baseFixture).supersededRoleCorrections === 1);
-assertCase("dry-run no mutation token", migration.includes("'mutation_applied', p_dry_run_only is not true"));
+assertCase("dry-run no mutation token", migration.includes("'mutation_applied', false"));
 assertCase("same idempotency key locks batch", migration.includes("batch_lock.idempotency_key"));
 assertCase("different hash blocks", migration.includes("A17Q_TX1_DECISION_PACK_HASH_MISMATCH"));
-assertCase("second decision pack execution blocks", migration.includes("DECISION_PACK_ALREADY_RUNNING_OR_COMPLETED"));
+assertCase("second decision pack execution blocks", migration.includes("A17Q_DECISION_PACK_ALREADY_EXECUTED"));
 assertCase("rollback covers families", migration.includes("affected_family_records_before"));
 assertCase("rollback covers parent memberships", migration.includes("parent_memberships_before"));
 assertCase("rollback covers child memberships", migration.includes("child_memberships_before"));
-assertCase("graph validation failure rolls back through exception", migration.includes("A17Q_TX1_PRECONDITION_DRIFT_DETECTED"));
+assertCase("graph validation failure rolls back through exception", migration.includes("A17Q_GRAPH_VALIDATION_FAILED"));
 assertCase("people rows are not updated", !/\bupdate\s+public\.people\b/i.test(migration));
 
 const runtimeFiles = listFiles(".");
 const runtimeCallers = runtimeFiles.filter((file) => {
-  if (file === checkerPath) return false;
+  if (file === checkerPath || file.startsWith("scripts/check-a17q-tx1")) return false;
   const content = read(file);
   return content.includes("execute_admin_a17q_legacy_family_reconciliation");
 });
@@ -515,6 +546,7 @@ requireEqual("active runtime caller count", runtimeCallers.length, 0);
 
 for (const token of [
   "A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED",
+  "A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED",
   `MIGRATION_FILE=${dbMigrationPath}`,
   "SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
   "RPC_NAME=public.execute_admin_a17q_legacy_family_reconciliation",
@@ -540,6 +572,11 @@ for (const token of [
   "ROW_LOCKING_SUPPORTED=YES",
   "GRAPH_VALIDATION_SUPPORTED=YES",
   "FAIL_CLOSED_PRECONDITIONS=YES",
+  "IDEMPOTENCY_REPLAY_CONTRACT_IMPLEMENTED=YES",
+  "PRECONDITION_REVIEW_COMPLETE=YES",
+  "MUTATION_ORDER_CONTRACT_MATCHES_REVIEW=YES",
+  "AUDIT_PRE_MUTATION_PRESENT=YES",
+  "POST_STATE_VERIFIED_BEFORE_COMPLETED=YES",
   "RECONCILIATION_EXECUTION_AUTHORIZED=NO",
   "MIGRATION_APPLY_AUTHORIZED=NO",
   "PRODUCTION_DRY_RUN_AUTHORIZED=NO",
@@ -557,9 +594,9 @@ for (const token of [
 }
 
 requireIncludes(index, "PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md");
-requireIncludes(workLog, "A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED");
+requireIncludes(workLog, "A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED");
 requireIncludes(decisionLog, "A-17Q-TX1");
-requireIncludes(handoff, "A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED");
+requireIncludes(handoff, "A17Q_TX1_FIX1_STATUS=PASS_HARDENED_TRANSACTION_EXECUTOR_CANDIDATE_NOT_APPLIED");
 requireEqual(
   "package script",
   packageJson?.scripts?.["check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate"],

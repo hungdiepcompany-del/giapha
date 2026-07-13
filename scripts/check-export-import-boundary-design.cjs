@@ -68,6 +68,12 @@ const PHASE_125_ALLOWED_RUNTIME_FILES = new Set([
   "lib/family/json-exporter.ts",
 ]);
 
+const A17Q_TX1_ALLOWED_SQL_FILES = new Set([
+  "db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql",
+  "db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+]);
+
 function filterAllowedStatus(statusText, allowedFiles) {
   return statusText
     .split(/\r?\n/)
@@ -249,7 +255,7 @@ if (packageHead && packageJson) {
 const status = gitOutput(["status", "--short"]);
 for (const line of status.split(/\r?\n/).filter(Boolean)) {
   const file = line.slice(3).trim().replaceAll("\\", "/");
-  if (file.toLowerCase().endsWith(".sql")) {
+  if (file.toLowerCase().endsWith(".sql") && !A17Q_TX1_ALLOWED_SQL_FILES.has(file)) {
     failures.push(`SQL file changed or added: ${file}`);
   }
 }
@@ -273,7 +279,9 @@ for (const [label, pathspecs] of [
   const filteredStatus =
     label === "runtime app surface changed"
       ? filterAllowedStatus(pathStatus, PHASE_125_ALLOWED_RUNTIME_FILES)
-      : pathStatus;
+      : label === "migration files changed"
+        ? filterAllowedStatus(pathStatus, A17Q_TX1_ALLOWED_SQL_FILES)
+        : pathStatus;
   if (filteredStatus.trim()) failures.push(`${label}: ${filteredStatus.trim()}`);
 }
 

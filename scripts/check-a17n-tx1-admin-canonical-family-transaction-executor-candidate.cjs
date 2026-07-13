@@ -365,6 +365,7 @@ const allowedChangedFiles = new Set([
   "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
   "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
+  "scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs",
   ]);
 
 for (const file of changedFiles) {
