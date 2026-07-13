@@ -1,6 +1,10 @@
 import "server-only";
 
 import {
+  buildA17OGroupedImportPreviewCounts,
+  type A17OGroupedImportPlanCounts,
+} from "@/lib/import/giapha4/canonical-family-grouping";
+import {
   A16K_AUDITED_DRY_RUN_SESSION_ID,
   A16K_IMPORT_DRY_RUN_REQUIRED_MARKER,
   getImportDryRunApprovalGate,
@@ -86,6 +90,11 @@ export type DryRunMappingPreviewSummary = {
   warningCount: number;
   canProceedToOfficialImport: false;
   exportCapped?: false;
+  groupedFamilyImportPlan: A17OGroupedImportPlanCounts & {
+    previewExplanationVi: "Các anh, chị, em có cùng cha mẹ sẽ được nhập vào cùng một gia đình.";
+    dryRunSourceOnly: true;
+    groupedExecutorMutationCall: false;
+  };
 };
 
 export type DryRunMappingPreviewResult = {
@@ -221,6 +230,7 @@ export function buildDryRunMappingPreview(
   const stagedRelationshipCount =
     manifest.session?.relationshipCandidateCount ??
     manifest.relationshipsPreview.length;
+  const groupedFamilyImportPlan = buildA17OGroupedImportPreviewCounts(manifest);
 
   const result: DryRunMappingPreviewResult = {
     ok: manifest.ok,
@@ -256,6 +266,13 @@ export function buildDryRunMappingPreview(
       blockedByErrorCount,
       warningCount,
       canProceedToOfficialImport: false,
+      groupedFamilyImportPlan: {
+        ...groupedFamilyImportPlan,
+        previewExplanationVi:
+          "Các anh, chị, em có cùng cha mẹ sẽ được nhập vào cùng một gia đình.",
+        dryRunSourceOnly: true,
+        groupedExecutorMutationCall: false,
+      },
     },
     proposedPeople,
     proposedRelationships,

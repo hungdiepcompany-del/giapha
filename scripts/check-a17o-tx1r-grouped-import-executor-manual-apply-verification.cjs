@@ -152,13 +152,13 @@ for (const token of [
   "GENEALOGY_ROWS_MODIFIED=NO",
   "RECONCILIATION_EXECUTED=NO",
   "A17O_IMPORTER_RUNTIME_ACTIVE=NO",
-  "RUNTIME_CHANGED=NO",
+  "A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED",
   "MIGRATION_CREATED=NO",
   "MIGRATION_CHANGED=NO",
   "DEPLOY=NO",
   "PACKAGE_DEPENDENCY_INSTALLED=NO",
   "A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED",
-  "NEXT_ACTION=START_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION",
+  "NEXT_ACTION=OWNER_REVIEW_A17O_R_THEN_SEPARATE_PUSH_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE",
 ]) {
   requireIncludes(evidenceDoc, token, `evidence token ${token}`);
 }
@@ -174,7 +174,7 @@ for (const token of [
 }
 
 for (const token of [
-  "A17O_STATUS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED_FOR_RUNTIME_INTEGRATION",
+  "A17O_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED",
   "A17O_TX1_GROUPED_EXECUTOR_CANDIDATE_APPLIED=YES_OWNER_MANUAL_PRODUCTION",
   "A17O_TX1_GROUPED_EXECUTOR_CANDIDATE_VERIFIED=YES",
   "A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED",
@@ -247,6 +247,7 @@ const allowedChangedFiles = new Set([
   evidenceDocPath,
   tx1DocPath,
   a17oDocPath,
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
   checkerPath,
   "package.json",
   "docs/00_INDEX.md",
@@ -266,10 +267,29 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
+]);
+
+const a17oRRuntimeFiles = new Set([
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
 ]);
 
 for (const file of changedFiles) {
-  if (/^(app|components|lib|services)\//.test(file)) {
+  if (/^(app|components|lib|services)\//.test(file) && !a17oRRuntimeFiles.has(file)) {
     failures.push(`runtime file changed during A-17O-TX1R: ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {

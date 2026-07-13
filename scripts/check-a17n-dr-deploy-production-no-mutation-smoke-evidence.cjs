@@ -196,6 +196,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17i-canonical-family-schema-post-apply-verification.cjs",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
   "lib/import/giapha4/canonical-family-grouping.ts",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
   "db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql",
@@ -203,13 +204,31 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
   ...a17oTx1MigrationFiles,
+]);
+
+const a17oRRuntimeFiles = new Set([
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
 ]);
 
 for (const file of changedFiles) {
   if (
     /^(app|components|lib|services)\//.test(file) &&
-    file !== "lib/import/giapha4/canonical-family-grouping.ts"
+    !a17oRRuntimeFiles.has(file)
   ) {
     failures.push(`runtime file changed during A-17N-DR: ${file}`);
   }

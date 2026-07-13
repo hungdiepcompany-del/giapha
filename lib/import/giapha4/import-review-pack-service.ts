@@ -43,6 +43,16 @@ export type ImportReviewPack = {
     proposedRelationshipPreviewCount: number;
     blockedByErrorCount: number;
     warningCount: number;
+    sourceChildRelationshipCount: number;
+    canonicalFamilyGroupCount: number;
+    plannedNewFamilyCount: number;
+    plannedReusedFamilyCount: number;
+    plannedParentMembershipCount: number;
+    plannedChildMembershipCount: number;
+    duplicateParentRowsRemoved: number;
+    duplicateChildRowsRemoved: number;
+    ownerReviewFamilyGroupCount: number;
+    blockedFamilyGroupCount: number;
   };
   duplicateDecisionSummary: {
     totalDuplicateCandidates: number;
@@ -122,6 +132,26 @@ export function buildImportReviewPackFromManifest(
         dryRunPreview.summary.proposedRelationshipPreviewCount,
       blockedByErrorCount: dryRunPreview.summary.blockedByErrorCount,
       warningCount: dryRunPreview.summary.warningCount,
+      sourceChildRelationshipCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.sourceChildRelationshipCount,
+      canonicalFamilyGroupCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.canonicalFamilyGroupCount,
+      plannedNewFamilyCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.plannedNewFamilyCount,
+      plannedReusedFamilyCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.plannedReusedFamilyCount,
+      plannedParentMembershipCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.plannedParentMembershipCount,
+      plannedChildMembershipCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.plannedChildMembershipCount,
+      duplicateParentRowsRemoved:
+        dryRunPreview.summary.groupedFamilyImportPlan.duplicateParentRowsRemoved,
+      duplicateChildRowsRemoved:
+        dryRunPreview.summary.groupedFamilyImportPlan.duplicateChildRowsRemoved,
+      ownerReviewFamilyGroupCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.ownerReviewFamilyGroupCount,
+      blockedFamilyGroupCount:
+        dryRunPreview.summary.groupedFamilyImportPlan.blockedFamilyGroupCount,
     },
     duplicateDecisionSummary,
     ownerReviewNotes: [

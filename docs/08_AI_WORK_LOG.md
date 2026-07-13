@@ -1,5 +1,55 @@
 # AI Work Log
 
+## 2026-07-13 - A-17O-R grouped official importer runtime integration
+
+Phase: A-17O-R - Grouped Official Importer Runtime Integration
+
+Status:
+
+- `A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED`
+- `PRECONDITION_A17O_TX1R_PASS=YES`
+- `WORKTREE_CLEAN_BEFORE_PHASE=YES`
+- `REMOTE_SYNC_BEFORE_PHASE=0_0`
+- `GROUPED_EXECUTOR_ADAPTER_CREATED=YES`
+- `GROUPED_EXECUTOR_NAME=public.a17o_tx_execute_grouped_giapha4_official_import`
+- `GROUPED_EXECUTOR_ARGUMENTS_EXACT=YES`
+- `END_USER_SERVER_CONTEXT_USED=YES`
+- `SERVICE_ROLE_USED=NO`
+- `CANONICAL_GROUPING_RUNTIME_ACTIVE=YES`
+- `FUTURE_IMPORT_CALLS_GROUPED_EXECUTOR=YES`
+- `ACTIVE_FUTURE_IMPORT_CALLS_OLD_EXECUTOR=NO`
+- `OLD_EXECUTOR_FALLBACK_PRESENT=NO`
+- `SEQUENTIAL_MUTATION_FALLBACK_PRESENT=NO`
+- `IMPORT_PREVIEW_GROUP_COUNTS_UPDATED=YES`
+- `IMPORT_DRY_RUN_GROUP_COUNTS_UPDATED=YES`
+- `ROLLBACK_GROUPING_UPDATED=YES`
+- `AUDIT_GROUPING_UPDATED=YES`
+- `IDEMPOTENCY_GROUPING_UPDATED=YES`
+- `COMPLETED_OFFICIAL_IMPORT_REJECTED_BEFORE_RPC=YES`
+- `COMPLETED_PRODUCTION_SESSION_GROUPED_RPC_CALL_COUNT=0`
+- `COMPLETED_PRODUCTION_SESSION_OLD_RPC_CALL_COUNT=0`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `PRODUCTION_IMPORT_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Implementation:
+
+- Added grouped plan builder and source-only preview count contract to `lib/import/giapha4/canonical-family-grouping.ts`.
+- Added `lib/import/giapha4/grouped-official-import-executor-adapter.ts`.
+- Switched the future official-import service path to grouped planning and the grouped executor adapter, preserving same-run identity precheck and session/approval gates.
+- Added grouped preview/review-pack metrics and Vietnamese sibling grouping copy.
+- Added `docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md`.
+- Added checker `scripts/check-a17o-r-grouped-importer-runtime-integration.cjs`.
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS_PENDING_FINAL_FULL_RUN`
+
 ## 2026-07-13 - A-17O-TX1R grouped executor manual apply verification
 
 Phase: A-17O-TX1R - Record Grouped Import Executor Manual Apply Verification

@@ -632,6 +632,69 @@ export function ImportSessionManifestPanel({
               />
             </div>
 
+            <div className="rounded-md border border-emerald-200 bg-white p-3 text-sm leading-6 text-emerald-950">
+              {dryRunPreview.summary.groupedFamilyImportPlan.previewExplanationVi}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <MetricCard
+                label="Quan hệ cha mẹ nguồn"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .sourceChildRelationshipCount
+                }
+              />
+              <MetricCard
+                label="Nhóm gia đình"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .canonicalFamilyGroupCount
+                }
+              />
+              <MetricCard
+                label="Gia đình mới dự kiến"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .plannedNewFamilyCount
+                }
+              />
+              <MetricCard
+                label="Gia đình dùng lại"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .plannedReusedFamilyCount
+                }
+              />
+              <MetricCard
+                label="Cha mẹ trong nhóm"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .plannedParentMembershipCount
+                }
+              />
+              <MetricCard
+                label="Con trong nhóm"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .plannedChildMembershipCount
+                }
+              />
+              <MetricCard
+                label="Dòng cha mẹ trùng bỏ"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .duplicateParentRowsRemoved
+                }
+              />
+              <MetricCard
+                label="Dòng con trùng bỏ"
+                value={
+                  dryRunPreview.summary.groupedFamilyImportPlan
+                    .duplicateChildRowsRemoved
+                }
+              />
+            </div>
+
             {dryRunPreview.proposedPeople.length > 0 ? (
               <div className="grid gap-2">
                 <h4 className="text-sm font-bold text-stone-950">

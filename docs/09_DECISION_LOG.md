@@ -1,5 +1,43 @@
 # Decision Log
 
+## Decision 342 - A-17O-R activates grouped official importer runtime source path
+
+Date: 2026-07-13
+
+Status: Accepted source integration, not deployed
+
+Context: A-17O-TX1R recorded owner manual production apply and SELECT-only
+verification PASS for the grouped official-import executor
+`public.a17o_tx_execute_grouped_giapha4_official_import`. The completed Gia Pha
+4 production import session must never be retried or passed to either executor.
+
+Decision: Connect only the future official-import source path to A-17O grouped
+planning and the grouped executor adapter. Preserve same-run authenticated
+identity precheck, permission gates, session state gates, approval marker,
+manifest hash, rollback confirmation and audit confirmation. Keep dry-run
+source-only because the SQL dry-run flag deliberately returns a blocked result
+instead of simulating mutation.
+
+Evidence:
+
+- `A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED`
+- `FUTURE_IMPORT_CALLS_GROUPED_EXECUTOR=YES`
+- `ACTIVE_FUTURE_IMPORT_CALLS_OLD_EXECUTOR=NO`
+- `GROUPED_EXECUTOR_ADAPTER_CREATED=YES`
+- `END_USER_SERVER_CONTEXT_USED=YES`
+- `SERVICE_ROLE_USED=NO`
+- `COMPLETED_OFFICIAL_IMPORT_REJECTED_BEFORE_RPC=YES`
+- `COMPLETED_PRODUCTION_SESSION_GROUPED_RPC_CALL_COUNT=0`
+- `COMPLETED_PRODUCTION_SESSION_OLD_RPC_CALL_COUNT=0`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `SQL_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Safety: No migration was created or modified, no SQL was executed, no
+production import endpoint was called, no official import RPC was called, no
+genealogy rows were modified, and no reconciliation was executed.
+
 ## Decision 341 - A-17O-TX1R records grouped executor production verification
 
 Date: 2026-07-13

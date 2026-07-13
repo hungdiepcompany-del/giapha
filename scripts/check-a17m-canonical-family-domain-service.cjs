@@ -241,7 +241,8 @@ for (const token of [
   "REPOSITORY_CONTRACT_CREATED=YES",
   "DOMAIN_ERROR_CODES_CREATED=YES",
   "NO_PII_DIAGNOSTICS_CREATED=YES",
-  "CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=0",
+  "CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=1",
+  "CANONICAL_FAMILY_PRODUCTION_CALLER=A17O_R_GROUPED_OFFICIAL_IMPORT_PLAN_BUILDER",
   "CURRENT_WRITE_PATHS_REMAIN_UNCHANGED=YES",
   "A-17N",
   "A-17O",
@@ -279,7 +280,7 @@ for (const scanPath of runtimeScanPaths) {
     }
   }
 }
-if (productionCallerCount !== 0) {
+if (productionCallerCount !== 1) {
   failures.push(`CANONICAL_FAMILY_PRODUCTION_CALLER_COUNT=${productionCallerCount}`);
 }
 
@@ -338,6 +339,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
   "app/(admin)/admin/tree/edit/actions.ts",
   "lib/family/admin-canonical-family-runtime-service.ts",
   "lib/family/admin-canonical-family-transaction-adapter.ts",

@@ -10,7 +10,6 @@ const failures = [];
 
 const sourcePath = "lib/import/giapha4/canonical-family-grouping.ts";
 const servicePath = "lib/import/giapha4/official-import-service.ts";
-const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const migration0022 =
   "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql";
 const a17oTx1DbMigration =
@@ -150,7 +149,6 @@ function assertCase(label, condition) {
 
 const source = read(sourcePath);
 const service = read(servicePath);
-const route = read(routePath);
 const migration = read(migration0022);
 const doc = read(docPath);
 const index = read("docs/00_INDEX.md");
@@ -244,7 +242,10 @@ assertCase(
 for (const token of [
   "A17O_CANONICAL_IMPORT_GROUP_KEY_VERSION",
   "a17o-import-family-group:v1",
-  "A17O_IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE = false",
+  "A17O_IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE = true",
+  "A17O_GROUPED_PLAN_CONTRACT_VERSION",
+  "buildA17OGroupedOfficialImportPlan",
+  "buildA17OGroupedImportPreviewCounts",
   "A17O_BLOCKED_IMPORT_TRANSACTION_EXECUTOR_GROUPED_FAMILY_SUPPORT_REQUIRED",
   "buildA17OCanonicalImportGroupKey",
   "buildA17OCanonicalImportFamilyGroupingPlan",
@@ -271,7 +272,7 @@ for (const token of [
 }
 
 for (const token of [
-  "A17O_STATUS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED_FOR_RUNTIME_INTEGRATION",
+  "A17O_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED",
   "CURRENT_PER_CHILD_FAMILY_CREATION_LOCATED=YES",
   "EXISTING_IMPORT_TRANSACTION_EXECUTOR_SUPPORTS_GROUPED_FAMILIES=NO",
   "CANONICAL_IMPORT_GROUPING_CREATED=YES",
@@ -285,12 +286,12 @@ for (const token of [
   "DUPLICATE_CHILD_ROWS_DEDUPLICATED=YES",
   "AMBIGUOUS_PARENT_SET_FAILS_CLOSED=YES",
   "LEGACY_DUPLICATE_REQUIRES_REVIEW=YES",
-  "IMPORT_PREVIEW_GROUP_COUNTS_UPDATED=NO",
-  "IMPORT_DRY_RUN_GROUP_COUNTS_UPDATED=NO",
-  "ROLLBACK_GROUPING_UPDATED=NO",
-  "AUDIT_GROUPING_UPDATED=NO",
-  "IDEMPOTENCY_GROUPING_UPDATED=NO",
-  "IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=NO",
+  "IMPORT_PREVIEW_GROUP_COUNTS_UPDATED=YES",
+  "IMPORT_DRY_RUN_GROUP_COUNTS_UPDATED=YES",
+  "ROLLBACK_GROUPING_UPDATED=YES",
+  "AUDIT_GROUPING_UPDATED=YES",
+  "IDEMPOTENCY_GROUPING_UPDATED=YES",
+  "IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=YES",
   "A17O_TX1_GROUPED_EXECUTOR_CANDIDATE_APPLIED=YES_OWNER_MANUAL_PRODUCTION",
   "A17O_TX1_GROUPED_EXECUTOR_CANDIDATE_VERIFIED=YES",
   "A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED",
@@ -301,7 +302,7 @@ for (const token of [
   "SQL_EXECUTED=NO",
   "DEPLOY=NO",
   "PUSH=NO",
-  "NEXT_ACTION_AFTER_TX1R=START_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION",
+  "NEXT_ACTION_AFTER_TX1R=A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION_COMPLETED_SOURCE_ONLY",
 ]) {
   requireIncludes(doc, token, `doc token ${token}`);
 }
@@ -334,16 +335,8 @@ if (
   failures.push("missing package script check:a17o-importer-canonical-family-grouping");
 }
 
-rejectPattern(
-  route,
-  /canonical-family-grouping|buildA17OCanonicalImportFamilyGroupingPlan/,
-  "official import route runtime grouping activation",
-);
-rejectPattern(
-  service,
-  /canonical-family-grouping|buildA17OCanonicalImportFamilyGroupingPlan/,
-  "official import service runtime grouping activation",
-);
+requireIncludes(service, "buildA17OGroupedOfficialImportPlan", "official import grouped runtime activation");
+requireIncludes(service, "A17O_GROUPED_OFFICIAL_IMPORT_RPC_FUNCTION_NAME", "official import grouped executor adapter");
 rejectPattern(
   source,
   /\.rpc\(|\.from\(\s*["']|fetch\(|SUPABASE_SERVICE_ROLE_KEY|service[_-]?role/i,
@@ -358,11 +351,19 @@ const allowedChangedFiles = new Set([
   sourcePath,
   docPath,
   checkerPath,
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
   "package.json",
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "lib/import/giapha4/official-import-service.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "components/imports/import-session-manifest-panel.tsx",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",
@@ -379,6 +380,7 @@ const allowedChangedFiles = new Set([
   "db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql",
   "docs/PLAN_A17O_TX1_GROUPED_OFFICIAL_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
 ]);

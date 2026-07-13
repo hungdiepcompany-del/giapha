@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import {
   A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
-  A16U_REQUIRED_A16R_RETRY_MARKER,
   getOfficialImportRuntimeCandidate,
   type OfficialImportConfirmation,
 } from "@/lib/import/giapha4/official-import-service";
@@ -63,8 +62,11 @@ function missingConfirmationReasons(
 ) {
   const reasons: string[] = [];
 
-  if (confirmation.confirmMarker !== A16U_REQUIRED_A16R_RETRY_MARKER) {
-    reasons.push("Thiếu hoặc sai confirmMarker.");
+  if (
+    typeof confirmation.confirmMarker !== "string" ||
+    confirmation.confirmMarker.trim().length === 0
+  ) {
+    reasons.push("Thiếu confirmMarker cho phiên import đang được phê duyệt.");
   }
   if (confirmation.confirmSessionId !== sessionId) {
     reasons.push("confirmSessionId không khớp phiên nhập.");

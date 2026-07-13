@@ -249,6 +249,14 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
   "app/(admin)/admin/tree/edit/actions.ts",
   "lib/family/admin-canonical-family-runtime-service.ts",
   "lib/family/admin-canonical-family-transaction-adapter.ts",
@@ -271,6 +279,12 @@ for (const file of changedFiles) {
     file !== "lib/family/admin-canonical-family-runtime-service.ts" &&
     file !== "lib/family/admin-canonical-family-transaction-adapter.ts" &&
     file !== "lib/import/giapha4/canonical-family-grouping.ts" &&
+    file !== "app/api/admin/import-sessions/[sessionId]/official-import/route.ts" &&
+    file !== "components/imports/import-session-manifest-panel.tsx" &&
+    file !== "lib/import/giapha4/dry-run-mapping-preview-service.ts" &&
+    file !== "lib/import/giapha4/grouped-official-import-executor-adapter.ts" &&
+    file !== "lib/import/giapha4/import-review-pack-service.ts" &&
+    file !== "lib/import/giapha4/official-import-service.ts" &&
     file !== "app/(admin)/admin/tree/edit/actions.ts"
   ) {
     failures.push(`forbidden runtime app code change ${file}`);

@@ -2,15 +2,16 @@
 
 Date: 2026-07-13
 
-Status: `A17O_STATUS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED_FOR_RUNTIME_INTEGRATION`
+Status: `A17O_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED`
 
 ## Scope
 
-A-17O inspected the official Gia Pha 4 import path and added a dormant source
-grouping foundation so future imports can group siblings by canonical parent
-set. A-17O-TX1R later recorded that the grouped transaction executor was
-owner-applied to production and verified by the SELECT-only verifier, so the
-next separate phase may integrate importer runtime grouping.
+A-17O inspected the official Gia Pha 4 import path and added a source grouping
+foundation so future imports can group siblings by canonical parent set.
+A-17O-TX1R later recorded that the grouped transaction executor was
+owner-applied to production and verified by the SELECT-only verifier. A-17O-R
+then connected the future official-import source path to grouped planning and
+the grouped executor adapter without executing import, SQL, deploy or push.
 
 ## Preconditions
 
@@ -56,25 +57,26 @@ or one-family-many-children plan from application code.
 - `DUPLICATE_CHILD_ROWS_DEDUPLICATED=YES`
 - `AMBIGUOUS_PARENT_SET_FAILS_CLOSED=YES`
 - `LEGACY_DUPLICATE_REQUIRES_REVIEW=YES`
-- `IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=NO`
+- `IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE=YES`
 
 The foundation lives in
 `lib/import/giapha4/canonical-family-grouping.ts`. It is pure, fixture-testable
-code with no production caller. It does not call Supabase, execute SQL, read
-production rows, or call import endpoints.
+code. A-17O-R now uses it in the future official-import source path after the
+same-run gates pass. The grouping code itself does not call Supabase, execute
+SQL, read production rows, or call import endpoints.
 
 ## Runtime Surfaces
 
-- `IMPORT_PREVIEW_GROUP_COUNTS_UPDATED=NO`
-- `IMPORT_DRY_RUN_GROUP_COUNTS_UPDATED=NO`
-- `ROLLBACK_GROUPING_UPDATED=NO`
-- `AUDIT_GROUPING_UPDATED=NO`
-- `IDEMPOTENCY_GROUPING_UPDATED=NO`
+- `IMPORT_PREVIEW_GROUP_COUNTS_UPDATED=YES`
+- `IMPORT_DRY_RUN_GROUP_COUNTS_UPDATED=YES`
+- `ROLLBACK_GROUPING_UPDATED=YES`
+- `AUDIT_GROUPING_UPDATED=YES`
+- `IDEMPOTENCY_GROUPING_UPDATED=YES`
 
-These remain unchanged because grouped-family support must first be added to a
-separate transaction executor/RPC candidate. Activating preview, dry-run,
-rollback, audit or idempotency counts against the current executor would create
-a misleading app-side plan that the database transaction cannot honor.
+These are active in source through A-17O-R. Preview and dry-run stay source-only
+and never call the grouped executor with mutation enabled. Rollback, audit and
+idempotency result handling are validated from the grouped executor result; the
+executor remains the only writer for audit, rollback and genealogy rows.
 
 ## Fixture Tests
 
@@ -124,6 +126,6 @@ a misleading app-side plan that the database transaction cannot honor.
 
 - `NEXT_ACTION=START_SEPARATE_A17O_TX1_GROUPED_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE`
 - `NEXT_ACTION_AFTER_TX1_CANDIDATE=OWNER_REVIEW_A17O_TX1_THEN_RUN_SEPARATE_A17SQL_O_TX1_MANUAL_APPLY`
-- `NEXT_ACTION_AFTER_TX1R=START_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION`
+- `NEXT_ACTION_AFTER_TX1R=A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION_COMPLETED_SOURCE_ONLY`
 - `IF_GROUPED_TRANSACTION_SUPPORT_MISSING_NEXT_ACTION=START_SEPARATE_A17O_TX1_GROUPED_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE`
-- `IF_GROUPED_TRANSACTION_SUPPORT_PRESENT_NEXT_ACTION=SEPARATE_A17O_DEPLOY_AND_NO_IMPORT_MUTATION_SMOKE`
+- `IF_GROUPED_TRANSACTION_SUPPORT_PRESENT_NEXT_ACTION=OWNER_REVIEW_A17O_R_THEN_SEPARATE_PUSH_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE`

@@ -100,7 +100,12 @@ p_dry_run_only boolean
 ## Runtime Readiness
 
 - `A17O_RUNTIME_INTEGRATION_READINESS=READY_GROUPED_EXECUTOR_APPLIED_AND_VERIFIED`
-- `NEXT_ACTION=START_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION`
+- `A17O_R_STATUS=PASS_GROUPED_IMPORTER_RUNTIME_SOURCE_INTEGRATED`
+- `NEXT_ACTION=OWNER_REVIEW_A17O_R_THEN_SEPARATE_PUSH_DEPLOY_AND_PRODUCTION_NO_IMPORT_MUTATION_SMOKE`
+
+A-17O-R has since connected the future official-import source path to grouped
+planning and the grouped executor adapter without calling RPCs, executing SQL,
+deploying, pushing, or reopening the completed production import session.
 
 ## Validation
 

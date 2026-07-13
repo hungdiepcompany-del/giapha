@@ -402,7 +402,7 @@ if (
 }
 
 requireIncludes(source, "buildA17OCanonicalImportFamilyGroupingPlan", "A-17O source grouping builder");
-requireIncludes(source, "A17O_IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE = false", "A-17O runtime remains dormant");
+requireIncludes(source, "A17O_IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE = true", "A-17O-R runtime source integration active");
 
 const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
@@ -420,9 +420,19 @@ const allowedChangedFiles = new Set([
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
+  "docs/PLAN_A17M_CANONICAL_FAMILY_DOMAIN_SERVICE.md",
   "docs/PLAN_A17O_TX1R_GROUPED_IMPORT_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
+  "docs/PLAN_A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION.md",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
+  "components/imports/import-session-manifest-panel.tsx",
+  "lib/import/giapha4/canonical-family-grouping.ts",
+  "lib/import/giapha4/dry-run-mapping-preview-service.ts",
+  "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
+  "lib/import/giapha4/import-review-pack-service.ts",
+  "lib/import/giapha4/official-import-service.ts",
   "scripts/check-a16r-import-completed-post-import-verification.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
   "scripts/check-a17e-family-duplicate-read-only-audit.cjs",

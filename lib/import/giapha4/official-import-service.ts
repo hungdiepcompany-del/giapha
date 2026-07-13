@@ -1,7 +1,17 @@
 ﻿import "server-only";
 
+import {
+  buildA17OGroupedOfficialImportPlan,
+} from "@/lib/import/giapha4/canonical-family-grouping";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildDuplicateDecisionSummary } from "@/lib/import/giapha4/duplicate-decision-review-service";
+import {
+  A17O_GROUPED_OFFICIAL_IMPORT_RPC_FUNCTION_NAME,
+  A17O_GROUPED_OFFICIAL_IMPORT_RPC_NAME,
+  executeA17OGroupedOfficialImportWithSupabase,
+  type A17OGroupedOfficialImportExecutorInput,
+  type A17OGroupedOfficialImportExecutorResult,
+} from "@/lib/import/giapha4/grouped-official-import-executor-adapter";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import {
   getImportManifest,
@@ -27,6 +37,9 @@ export const A16P_TX_TRANSACTION_RPC_NAME =
 
 export const A16P_TX_TRANSACTION_RPC_FUNCTION_NAME =
   "a16p_tx_execute_giapha4_official_import";
+
+export const A17O_R_GROUPED_IMPORTER_RUNTIME_MARKER =
+  "A17O_R_GROUPED_IMPORTER_RUNTIME_INTEGRATION" as const;
 
 export const A16P_TX_TRANSACTION_HELPER_NOT_APPLIED_BLOCKER =
   "BLOCKED_TRANSACTION_HELPER_NOT_APPLIED";
@@ -102,6 +115,7 @@ export type OfficialImportCandidateStatus =
   | "BLOCKED"
   | "CANDIDATE_READY_NOT_EXECUTED"
   | "WOULD_IMPORT"
+  | "IDEMPOTENT_REPLAY"
   | "IMPORT_COMPLETED";
 
 export type OfficialImportConfirmation = {
@@ -121,20 +135,18 @@ export type OfficialImportConfirmation = {
   confirmAuditReviewed?: unknown;
 };
 
-type JsonRecord = Record<string, unknown>;
-
 type OfficialImportSameRunSupabaseClient = {
   rpc: (
     functionName:
       | typeof A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME
-      | typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
+      | typeof A17O_GROUPED_OFFICIAL_IMPORT_RPC_FUNCTION_NAME,
     args?: Record<string, unknown>,
   ) => Promise<{ data: unknown; error: { message?: string } | null }>;
   from: (table: "import_sessions") => {
     select: (columns: "created_by") => {
       eq: (
         column: "id",
-        value: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+        value: string,
       ) => {
         maybeSingle: <T>() => Promise<{
           data: T | null;
@@ -145,30 +157,11 @@ type OfficialImportSameRunSupabaseClient = {
   };
 };
 
-export type OfficialImportTransactionExecutorInput = {
-  rpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
-  rpcFunctionName: typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME;
-  sessionId: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
-  confirmMarker: typeof A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
-  manifestHash: string | null;
-  reviewPackHash: string | null;
-  actorProfileId: string | null;
-  sameRunRpcClient?: OfficialImportSameRunSupabaseClient | null;
-};
+export type OfficialImportTransactionExecutorInput =
+  A17OGroupedOfficialImportExecutorInput;
 
-export type OfficialImportTransactionExecutorResult = {
-  ok: boolean;
-  status: "IMPORT_COMPLETED" | "BLOCKED";
-  importedPeopleCount: number;
-  importedRelationshipCount: number;
-  skippedCount: number;
-  warningsCount: number;
-  auditBatchId: string | null;
-  rollbackManifestCount: number;
-  idempotencyKey: string | null;
-  blockedReasons: string[];
-  piiPrinted: false;
-};
+export type OfficialImportTransactionExecutorResult =
+  A17OGroupedOfficialImportExecutorResult;
 
 export type OfficialImportTransactionExecutor = (
   input: OfficialImportTransactionExecutorInput,
@@ -244,8 +237,8 @@ export type OfficialImportCandidateResult = {
     | "A16AE_RUNTIME_ENABLEMENT_CANDIDATE_READY_NOT_EXECUTED"
     | "A16AH_REAL_TRANSACTION_EXECUTION_BRANCH_DISABLED_NOT_EXECUTED"
     | "A16AH_REAL_TRANSACTION_EXECUTION_BRANCH_EXECUTED";
-  transactionRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
-  transactionRpcFunctionName: typeof A16P_TX_TRANSACTION_RPC_FUNCTION_NAME;
+  transactionRpcName: typeof A17O_GROUPED_OFFICIAL_IMPORT_RPC_NAME;
+  transactionRpcFunctionName: typeof A17O_GROUPED_OFFICIAL_IMPORT_RPC_FUNCTION_NAME;
   transactionBranchContract: {
     marker: typeof A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER;
     sqlCandidateRequired: false;
@@ -260,7 +253,7 @@ export type OfficialImportCandidateResult = {
     marker: typeof A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER;
     sqlCandidateStatus: "OWNER_APPLIED_VERIFIED";
     verificationEvidenceSource: "docs/PLAN_A16V_APPLY_VERIFY.md";
-    canonicalRpcName: typeof A16P_TX_TRANSACTION_RPC_NAME;
+    canonicalRpcName: typeof A17O_GROUPED_OFFICIAL_IMPORT_RPC_NAME;
     allOrNothing: true;
     idempotencyGuard: "import_session_id";
     auditBatchTable: "official_import_batches";
@@ -306,17 +299,19 @@ export type OfficialImportCandidateResult = {
     table: "official_import_rollback_manifests";
     expectedFields: ["import_batch_id", "import_session_id", "created_people_ids"];
   };
+  groupedImporterRuntime: {
+    marker: typeof A17O_R_GROUPED_IMPORTER_RUNTIME_MARKER;
+    groupedPlanContractVersion: 1;
+    familyGroupCount: number;
+    createdFamilyCount: number;
+    reusedFamilyCount: number;
+    parentMembershipCount: number;
+    childMembershipCount: number;
+    mutationPlanHash: string | null;
+    idempotencyKey: string | null;
+  };
   message: string;
 };
-
-function toRecord(value: unknown): JsonRecord {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-  return value as JsonRecord;
-}
-
-function toNumber(value: unknown) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
 
 function toStringOrNull(value: unknown) {
   return typeof value === "string" && value ? value : null;
@@ -379,8 +374,11 @@ function validateConfirmation(
 ) {
   const reasons: string[] = [];
 
-  if (confirmation.confirmMarker !== A16U_REQUIRED_A16R_RETRY_MARKER) {
-    reasons.push("confirmMarker khÃ´ng khá»›p marker session-specific A-16R.");
+  if (
+    typeof confirmation.confirmMarker !== "string" ||
+    confirmation.confirmMarker.trim().length === 0
+  ) {
+    reasons.push("Thiếu confirmMarker cho phiên import đang được phê duyệt.");
   }
   if (confirmation.confirmSessionId !== sessionId) {
     reasons.push("confirmSessionId khÃ´ng khá»›p phiÃªn import Ä‘ang Ä‘Æ°á»£c yÃªu cáº§u.");
@@ -477,9 +475,6 @@ function buildNoGoReasons(params: {
       `Import session must be ${A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE} before official import can run.`,
     );
   }
-  if (params.manifest.session?.id && params.manifest.session.id !== A16U_REQUIRED_SESSION_ID) {
-    reasons.push("PhiÃªn import khÃ´ng khá»›p session Ä‘Ã£ Ä‘Æ°á»£c preflight cho A-16U.");
-  }
   if (validation.summary.errorCount > 0) {
     reasons.push("CÃ²n lá»—i validation trong staging.");
   }
@@ -520,7 +515,7 @@ function buildBlockedRuntimeReason(runtimeEnablementApproved: boolean) {
 }
 
 async function runRpcInvocationIdentityPrecheck(params: {
-  sessionId: typeof A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
+  sessionId: string;
   actor: PermissionContext;
   sameRunRpcClient?: OfficialImportSameRunSupabaseClient | null;
   precheckAndImportRpcUseSameClientInstance?: boolean;
@@ -672,16 +667,8 @@ export async function getOfficialImportRpcIdentityPrecheckDiagnostic(params: {
   sessionId: string;
   actor: PermissionContext;
 }) {
-  if (params.sessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID) {
-    return buildBlockedRpcInvocationIdentityPrecheck({
-      rpcVisibleProfileResult: "MISMATCHED_SESSION_OWNER",
-      authenticatedAuthUserPresent: Boolean(params.actor.user),
-      runtimePermissionProfilePresent: Boolean(params.actor.profile?.id),
-    });
-  }
-
   return runRpcInvocationIdentityPrecheck({
-    sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    sessionId: params.sessionId,
     actor: params.actor,
     precheckAndImportRpcUseSameClientInstance: false,
   });
@@ -695,6 +682,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
 }): OfficialImportCandidateResult {
   const sessionId = params.manifest.session?.id ?? String(params.confirmation.confirmSessionId ?? "");
   const { dryRun, reasons } = buildNoGoReasons(params);
+  const groupedCounts = dryRun.summary.groupedFamilyImportPlan;
   const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
     params.confirmation,
   );
@@ -739,8 +727,8 @@ export function buildOfficialImportRuntimeCandidate(params: {
     transactionStatus: canRunOfficialImport
       ? "A16AH_REAL_TRANSACTION_EXECUTION_BRANCH_DISABLED_NOT_EXECUTED"
       : "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
-    transactionRpcName: A16P_TX_TRANSACTION_RPC_NAME,
-    transactionRpcFunctionName: A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
+    transactionRpcName: A17O_GROUPED_OFFICIAL_IMPORT_RPC_NAME,
+    transactionRpcFunctionName: A17O_GROUPED_OFFICIAL_IMPORT_RPC_FUNCTION_NAME,
     transactionBranchContract: {
       marker: A16U_OFFICIAL_IMPORT_TRANSACTION_BRANCH_MARKER,
       sqlCandidateRequired: false,
@@ -755,7 +743,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
       marker: A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER,
       sqlCandidateStatus: "OWNER_APPLIED_VERIFIED",
       verificationEvidenceSource: "docs/PLAN_A16V_APPLY_VERIFY.md",
-      canonicalRpcName: A16P_TX_TRANSACTION_RPC_NAME,
+      canonicalRpcName: A17O_GROUPED_OFFICIAL_IMPORT_RPC_NAME,
       allOrNothing: true,
       idempotencyGuard: "import_session_id",
       auditBatchTable: "official_import_batches",
@@ -801,6 +789,17 @@ export function buildOfficialImportRuntimeCandidate(params: {
       table: "official_import_rollback_manifests",
       expectedFields: ["import_batch_id", "import_session_id", "created_people_ids"],
     },
+    groupedImporterRuntime: {
+      marker: A17O_R_GROUPED_IMPORTER_RUNTIME_MARKER,
+      groupedPlanContractVersion: 1,
+      familyGroupCount: groupedCounts.canonicalFamilyGroupCount,
+      createdFamilyCount: 0,
+      reusedFamilyCount: 0,
+      parentMembershipCount: groupedCounts.plannedParentMembershipCount,
+      childMembershipCount: groupedCounts.plannedChildMembershipCount,
+      mutationPlanHash: null,
+      idempotencyKey: null,
+    },
     message:
       canRunOfficialImport
         ? "A-16AH runtime execution branch candidate đã đủ gate cùng lượt, nhưng execution branch chưa bật nên chưa gọi RPC và chưa chạy nhập chính thức."
@@ -811,75 +810,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
 export async function executeOfficialImportTransactionWithSupabase(
   input: OfficialImportTransactionExecutorInput,
 ): Promise<OfficialImportTransactionExecutorResult> {
-  const supabase =
-    input.sameRunRpcClient ?? (await maybeCreateServerSupabaseClient());
-  if (!supabase) {
-    return {
-      ok: false,
-      status: "BLOCKED",
-      importedPeopleCount: 0,
-      importedRelationshipCount: 0,
-      skippedCount: 0,
-      warningsCount: 0,
-      auditBatchId: null,
-      rollbackManifestCount: 0,
-      idempotencyKey: null,
-      blockedReasons: ["A16AH_BLOCKED_SUPABASE_SERVER_CLIENT_UNAVAILABLE"],
-      piiPrinted: false,
-    };
-  }
-
-  const rpcClient = supabase as unknown as OfficialImportSameRunSupabaseClient;
-
-  const { data, error } = await rpcClient.rpc(
-    A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
-    {
-      p_import_session_id: input.sessionId,
-      p_confirm_marker: input.confirmMarker,
-      p_confirm_manifest_hash: input.manifestHash,
-      p_confirm_review_pack_hash: input.reviewPackHash,
-      p_confirm_validation_errors_resolved: true,
-      p_confirm_rollback_reviewed: true,
-      p_confirm_audit_reviewed: true,
-      p_dry_run_only: false,
-    },
-  );
-
-  if (error) {
-    return {
-      ok: false,
-      status: "BLOCKED",
-      importedPeopleCount: 0,
-      importedRelationshipCount: 0,
-      skippedCount: 0,
-      warningsCount: 0,
-      auditBatchId: null,
-      rollbackManifestCount: 0,
-      idempotencyKey: input.sessionId,
-      blockedReasons: [
-        "A16AH_BLOCKED_TRANSACTION_RPC_FAILED",
-        error.message ?? "Unknown RPC error",
-      ],
-      piiPrinted: false,
-    };
-  }
-
-  const payload = toRecord(data);
-  return {
-    ok: payload.ok === true,
-    status: payload.status === "IMPORT_COMPLETED" ? "IMPORT_COMPLETED" : "BLOCKED",
-    importedPeopleCount: toNumber(payload.created_people_count),
-    importedRelationshipCount: toNumber(payload.created_relationship_count),
-    skippedCount: toNumber(payload.skipped_relationship_count),
-    warningsCount: 0,
-    auditBatchId: toStringOrNull(payload.audit_batch_id),
-    rollbackManifestCount: toNumber(payload.rollback_manifest_count),
-    idempotencyKey: toStringOrNull(payload.idempotency_key),
-    blockedReasons: Array.isArray(payload.blocked_reasons)
-      ? payload.blocked_reasons.map(String)
-      : [],
-    piiPrinted: false,
-  };
+  return executeA17OGroupedOfficialImportWithSupabase(input);
 }
 
 export async function executeOfficialImportRuntimeCandidate(params: {
@@ -907,7 +838,7 @@ export async function executeOfficialImportRuntimeCandidate(params: {
 
   const rpcInvocationIdentityPrecheck =
     await runRpcInvocationIdentityPrecheck({
-      sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+      sessionId: candidate.sessionId,
       actor: params.actor,
       sameRunRpcClient,
       precheckAndImportRpcUseSameClientInstance: true,
@@ -947,15 +878,73 @@ export async function executeOfficialImportRuntimeCandidate(params: {
     };
   }
 
+  const confirmMarker =
+    typeof params.confirmation.confirmMarker === "string"
+      ? params.confirmation.confirmMarker
+      : "";
+  const groupedPlanResult = buildA17OGroupedOfficialImportPlan({
+    manifest: params.manifest,
+    sessionId: candidate.sessionId,
+    approvalMarker: confirmMarker,
+    actorProfileId: params.actor.profile?.id ?? "",
+  });
+
+  if (!groupedPlanResult.ok) {
+    return {
+      ...candidate,
+      ok: false,
+      status: "BLOCKED",
+      blockedReasons: [
+        ...candidate.blockedReasons,
+        ...groupedPlanResult.blockedReasons,
+      ],
+      rollbackManifestPreview: {
+        ...candidate.rollbackManifestPreview,
+        status: "BLOCKED",
+        reason: "A17O_R_GROUPED_PLAN_BLOCKED_BEFORE_RPC",
+      },
+      auditManifestPreview: {
+        ...candidate.auditManifestPreview,
+        status: "BLOCKED",
+        reason: "A17O_R_GROUPED_PLAN_BLOCKED_BEFORE_RPC",
+      },
+      transactionStatus: "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
+      runtimeExecutionBranch: {
+        ...candidate.runtimeExecutionBranch,
+        enabled: true,
+        sameRunGatePassed: false,
+        executorCallCount: 0,
+        status: "GATE_BLOCKED_NOT_EXECUTED",
+        blocker: "A17O_R_GROUPED_PLAN_BLOCKED_BEFORE_RPC",
+      },
+      rpcInvocationIdentityPrecheck,
+      groupedImporterRuntime: {
+        ...candidate.groupedImporterRuntime,
+        familyGroupCount: groupedPlanResult.counts.canonicalFamilyGroupCount,
+        parentMembershipCount:
+          groupedPlanResult.counts.plannedParentMembershipCount,
+        childMembershipCount:
+          groupedPlanResult.counts.plannedChildMembershipCount,
+      },
+      message:
+        "Đã lập kế hoạch nhập theo nhóm gia đình, nhưng grouped plan chưa đủ điều kiện nên chưa gọi RPC.",
+    };
+  }
+
   const executor = params.executor ?? executeOfficialImportTransactionWithSupabase;
   const executionResult = await executor({
-    rpcName: A16P_TX_TRANSACTION_RPC_NAME,
-    rpcFunctionName: A16P_TX_TRANSACTION_RPC_FUNCTION_NAME,
-    sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
-    confirmMarker: A16R_AUDITED_OFFICIAL_IMPORT_MARKER,
+    sessionId: candidate.sessionId,
+    confirmMarker,
     manifestHash: params.manifest.session?.previewManifestHash ?? null,
     reviewPackHash: null,
-    actorProfileId: params.actor.profile?.id ?? null,
+    groupedPlan: groupedPlanResult.groupedPlan,
+    idempotencyKey: groupedPlanResult.idempotencyKey,
+    mutationPlanHash: groupedPlanResult.mutationPlanHash,
+    confirmValidationErrorsResolved: true,
+    confirmRollbackReviewed: true,
+    confirmAuditReviewed: true,
+    dryRunOnly: false,
+    expectedCounts: groupedPlanResult.counts,
     sameRunRpcClient,
   });
 
@@ -996,9 +985,23 @@ export async function executeOfficialImportRuntimeCandidate(params: {
         : "A16AH_REAL_TRANSACTION_EXECUTION_BRANCH_RPC_BLOCKED",
     },
     rpcInvocationIdentityPrecheck,
+    groupedImporterRuntime: {
+      ...candidate.groupedImporterRuntime,
+      familyGroupCount: groupedPlanResult.counts.canonicalFamilyGroupCount,
+      createdFamilyCount: executionResult.createdFamilyCount,
+      reusedFamilyCount: executionResult.reusedFamilyCount,
+      parentMembershipCount:
+        executionResult.createdParentMembershipCount +
+        executionResult.existingParentMembershipCount,
+      childMembershipCount:
+        executionResult.createdChildMembershipCount +
+        executionResult.existingChildMembershipCount,
+      mutationPlanHash: groupedPlanResult.mutationPlanHash,
+      idempotencyKey: groupedPlanResult.idempotencyKey,
+    },
     message: executionResult.ok
-      ? "A-16AH runtime execution branch called the approved transaction helper exactly once after all same-run gates passed."
-      : "A-16AH runtime execution branch reached the approved transaction helper once, but the helper returned a blocked result.",
+      ? "A-17O-R runtime execution branch called the approved grouped transaction helper exactly once after all same-run gates passed."
+      : "Không thể hoàn tất nhập dữ liệu. Không có thay đổi nào được ghi nhận.",
   };
 }
 
