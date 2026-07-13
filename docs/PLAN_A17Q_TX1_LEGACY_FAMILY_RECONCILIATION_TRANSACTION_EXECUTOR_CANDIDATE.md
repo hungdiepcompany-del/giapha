@@ -175,4 +175,22 @@ FIX1 hardens the review-blocked areas:
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_MIGRATION_CANDIDATE`
+`NEXT_ACTION=A17Q_TX1_FIX2`
+
+## A-17Q-TX1-FIX1 Owner Review
+
+- `A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
+- `REVIEWED_COMMIT=842e7b4`
+- `REVIEWED_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `REVIEW_EVIDENCE_FILE=docs/PLAN_A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_RECONCILIATION_EXECUTOR_CANDIDATE.md`
+- `FIX1_OWNER_REVIEW_CHECKER=scripts/check-a17q-tx1-fix1-owner-review.cjs`
+- `BLOCKER_COUNT=10`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+
+The review records that FIX1 improved replay, dry-run, precondition order,
+pre-mutation audit order, mutation counts and aggregate post-state checks, but
+the hardened migration is still not approved for apply. A-17Q-TX1-FIX2 must
+prove exact child, parent, role, family, canonical and graph post-state contracts
+and store the durable success result before marking the batch completed.

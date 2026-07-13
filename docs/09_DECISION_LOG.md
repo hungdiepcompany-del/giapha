@@ -1,5 +1,35 @@
 # Decision Log
 
+## Decision 352 - A-17Q-TX1-FIX1-REVIEW blocks migration 0026 apply
+
+Date: 2026-07-13
+
+Status: Blocked; additional source correction required before any manual apply
+
+Context: Owner review of commit `842e7b4` and migration 0026 SHA
+`B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+confirmed that FIX1 addressed several prior review issues, but the source still
+does not prove all high-risk post-mutation contracts at exact manifest level.
+
+Decision: Do not approve migration 0026 for manual apply, production dry-run or
+execution. Keep the reviewed migration unchanged in this review phase and start
+a separate A-17Q-TX1-FIX2 source-correction phase.
+
+Evidence:
+
+- `A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
+- `REVIEWED_COMMIT=842e7b4`
+- `REVIEWED_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `BLOCKER_COUNT=10`
+- `BLOCKERS=EXACT_PARENT_SET_NOT_PROVEN, CHILD_MAPPING_POST_STATE_NOT_VERIFIED, PARENT_POST_STATE_NOT_VERIFIED, ROLE_POST_STATE_NOT_VERIFIED, FAMILY_POST_STATE_NOT_VERIFIED, CANONICAL_POST_STATE_NOT_VERIFIED, GRAPH_VALIDATION_HARDCODED_OR_INCOMPLETE, SUCCESS_RESULT_NOT_STORED_BEFORE_COMPLETION, SELECT_ONLY_VERIFIER_SOURCE_EVIDENCE_INCOMPLETE, PRE_MUTATION_AUDIT_CONTENT_INCOMPLETE`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 351 - A-17Q-TX1-FIX1 hardens migration 0026 before apply
 
 Date: 2026-07-13

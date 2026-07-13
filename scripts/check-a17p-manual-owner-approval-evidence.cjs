@@ -200,6 +200,8 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
   "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
   "scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs",
+  "docs/PLAN_A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_RECONCILIATION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17q-tx1-fix1-owner-review.cjs",
   "scripts/check-export-import-boundary-design.cjs",
   "scripts/check-export-import-final-readiness.cjs",
 ]);

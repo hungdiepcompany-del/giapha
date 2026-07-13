@@ -1,5 +1,58 @@
 # AI Work Log
 
+## 2026-07-13 - A-17Q-TX1-FIX1 owner review blocks migration apply
+
+Phase: A-17Q-TX1-FIX1-REVIEW - Owner Review Hardened Reconciliation Executor Candidate
+
+Status:
+
+- `A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED`
+- `REVIEWED_COMMIT=842e7b4`
+- `REVIEWED_MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
+- `REVIEWED_MIGRATION_SHA256=B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934`
+- `SUPERSEDED_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+
+Source review:
+
+- PASS: immutable manifest, security/invoker/search path, authorization/hash gates, idempotency replay/conflict/recovery branches, lock/precondition order, dry-run purity, rollback-before-mutation order, mutation CTE row-count enforcement, excluded/deleted/people/layout guards, post-audit, grants and no runtime caller.
+- BLOCKED: exact parent set, child mapping post-state, parent post-state, role post-state, family void post-state, canonical post-state, graph validation completeness, durable success result before completed status, SELECT-only verifier source-evidence depth, and pre-mutation audit content.
+- `BLOCKER_COUNT=10`
+- `BLOCKERS=EXACT_PARENT_SET_NOT_PROVEN, CHILD_MAPPING_POST_STATE_NOT_VERIFIED, PARENT_POST_STATE_NOT_VERIFIED, ROLE_POST_STATE_NOT_VERIFIED, FAMILY_POST_STATE_NOT_VERIFIED, CANONICAL_POST_STATE_NOT_VERIFIED, GRAPH_VALIDATION_HARDCODED_OR_INCOMPLETE, SUCCESS_RESULT_NOT_STORED_BEFORE_COMPLETION, SELECT_ONLY_VERIFIER_SOURCE_EVIDENCE_INCOMPLETE, PRE_MUTATION_AUDIT_CONTENT_INCOMPLETE`
+
+Artifacts:
+
+- `REVIEW_EVIDENCE_FILE=docs/PLAN_A17Q_TX1_FIX1_OWNER_REVIEW_HARDENED_RECONCILIATION_EXECUTOR_CANDIDATE.md`
+- `FIX1_OWNER_REVIEW_CHECKER=scripts/check-a17q-tx1-fix1-owner-review.cjs`
+- `PACKAGE_SCRIPT=check:a17q-tx1-fix1-owner-review`
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_VOIDED=NO`
+- `MEMBERSHIP_MOVED=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS_BLOCKED_REVIEW_EVIDENCE_RECORDED`
+
+Next:
+
+- `NEXT_ACTION=A17Q_TX1_FIX2`
+
 ## 2026-07-13 - A-17Q-TX1-FIX1 hardened reconciliation executor contract
 
 Phase: A-17Q-TX1-FIX1 - Harden Legacy Family Reconciliation Transaction Executor Contract

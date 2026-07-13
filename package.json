@@ -378,7 +378,8 @@
     "check:a17p-manual-owner-approval-evidence": "node scripts/check-a17p-manual-owner-approval-evidence.cjs",
     "check:a17p-r-immutable-owner-decision-pack": "node scripts/check-a17p-r-immutable-owner-decision-pack.cjs",
     "check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate": "node scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
-    "check:a17q-tx1-fix1-hardened-reconciliation-executor": "node scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs"
+    "check:a17q-tx1-fix1-hardened-reconciliation-executor": "node scripts/check-a17q-tx1-fix1-hardened-reconciliation-executor.cjs",
+    "check:a17q-tx1-fix1-owner-review": "node scripts/check-a17q-tx1-fix1-owner-review.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
