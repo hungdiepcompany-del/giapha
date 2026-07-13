@@ -256,8 +256,15 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
+const allowedA17QTx1Migrations = new Set([
+  "db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+]);
 for (const file of changedFiles) {
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (
+    /^(db\/migrations|supabase\/migrations)\//.test(file) &&
+    !allowedA17QTx1Migrations.has(file)
+  ) {
     failures.push(`migration changed during A-17O-R: ${file}`);
   }
 }

@@ -194,13 +194,18 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs",
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs",
   "scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs",
+  "db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql",
+  "db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
 ]);
 
 for (const file of changedFiles) {
   if (/^(app|components|lib|services)\//.test(file)) {
     failures.push(`runtime file changed during A-17P manual approval record: ${file}`);
   }
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (/^(db\/migrations|supabase\/migrations)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`migration changed during A-17P manual approval record: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {

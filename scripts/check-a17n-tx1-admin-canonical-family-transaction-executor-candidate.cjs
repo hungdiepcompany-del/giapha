@@ -360,6 +360,11 @@ const allowedChangedFiles = new Set([
   "lib/family/admin-canonical-family-runtime-service.ts",
   "lib/family/admin-canonical-family-transaction-adapter.ts",
   "lib/family/canonical-family-supabase-repository.ts",
+  "db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql",
+  "db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
   ]);
 
 for (const file of changedFiles) {

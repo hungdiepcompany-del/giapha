@@ -1,5 +1,45 @@
 # Decision Log
 
+## Decision 350 - A-17Q-TX1 creates fail-closed reconciliation executor candidate
+
+Date: 2026-07-13
+
+Status: Accepted candidate design, migration not applied and execution not authorized
+
+Context: A-17P-R finalized an immutable owner decision pack for 21 approved
+legacy duplicate-family groups. The next step is a transaction executor
+candidate that is bound to that exact pack, preserves the excluded one-parent
+group and deleted-family advisory outside executable scope, and fails closed on
+hash, permission or production-state drift.
+
+Decision: Create mirrored migration 0026 with one narrow
+`SECURITY INVOKER` RPC, `public.execute_admin_a17q_legacy_family_reconciliation`.
+The candidate embeds the A-17P-R decision pack, requires the owner marker and
+all five hashes, requires authenticated profile context plus
+`relationships.update` and `permissions.manage`, uses advisory and row locks,
+supports a non-mutating dry-run path, creates rollback/audit/idempotency
+evidence before execution, and has no runtime caller. A SELECT-only verifier and
+static checker are created for owner review and later manual apply verification.
+
+Evidence:
+
+- `A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
+- `MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
+- `DB_MIGRATION_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `RPC_NAME=public.execute_admin_a17q_legacy_family_reconciliation`
+- `APPROVED_GROUP_COUNT=21`
+- `APPROVED_CANDIDATE_FAMILY_COUNT=57`
+- `VOID_FAMILY_COUNT=36`
+- `ROLE_CORRECTION_PLAN_COUNT=36`
+- `EXCLUDED_SCOPE_EXECUTABLE=NO`
+- `DELETED_FAMILY_EXECUTABLE=NO`
+- `ACTIVE_RUNTIME_CALLER_COUNT=0`
+
+Safety: Codex did not execute SQL, query production, call RPCs, mutate
+database rows, void families, move memberships, change relationship roles,
+apply the migration, change runtime application code, deploy or push. Owner
+review, manual apply, production dry-run and execution remain separate gates.
+
 ## Decision 349 - A-17P-R finalizes immutable owner decision pack
 
 Date: 2026-07-13

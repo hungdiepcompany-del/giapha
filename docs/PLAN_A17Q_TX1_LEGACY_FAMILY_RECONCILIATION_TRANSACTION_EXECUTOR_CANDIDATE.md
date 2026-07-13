@@ -1,0 +1,146 @@
+# A-17Q-TX1 - Legacy Family Reconciliation Transaction Executor Candidate
+
+Date: 2026-07-13
+
+Status:
+`A17P_R_STATUS=PASS_IMMUTABLE_OWNER_DECISION_PACK_FINALIZED`
+`A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED`
+
+## Scope
+
+A-17Q-TX1 creates a not-applied database migration candidate for the exact
+immutable A-17P-R owner decision pack. The candidate adds one narrow
+`SECURITY INVOKER` RPC that can validate the committed decision pack, perform a
+SELECT-backed dry-run, and, only after a future explicit owner apply/execution
+phase, reconcile the 21 approved legacy duplicate-family groups in one
+transaction.
+
+This phase does not run SQL, apply a migration, query production, call an RPC,
+deploy, push, change runtime application code, or execute reconciliation.
+
+## Source Authority
+
+- `DECISION_PACK_FILE=docs/evidence/A17P_OWNER_DECISION_PACK.json`
+- `DECISION_PACK_SHA256=777a8bb13ff45eb9f46fd817c392098ada4a2d550cad8e6ee4c6cd896b874ad0`
+- `APPROVED_GROUP_PLAN_SHA256=7dd719c926dc560aa69bc7070c395535942823e87739d9893d0161713e151740`
+- `ROLE_CORRECTION_PLAN_SHA256=ee255398f84dc2ce899d14056fb0573f771202ca7ad71e598cbbe7fc47707a9f`
+- `EXCLUDED_SCOPE_SHA256=7898280dab816af96b6a9277b93b49429c5db8a71c9f24739a7d55660a0bdd61`
+- `FORECAST_SHA256=4c0beb0de1589a7728b7f8b4918844e3103aa773ad3a5ab8e87d1ab2cead9ff3`
+- `OWNER_APPROVAL_MARKER=A17P_MANUAL_21_GROUP_RECONCILIATION_APPROVED`
+
+The SQL manifest is embedded from the decision pack and the checker verifies it
+matches the committed JSON exactly. Production display names are not committed.
+
+## Candidate Artifacts
+
+- `MIGRATION_CANDIDATE_CREATED=YES`
+- `MIGRATION_FILE=db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
+- `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql`
+- `DB_MIGRATION_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `SUPABASE_MIRROR_SHA256=696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B`
+- `MIRROR_MATCH=YES`
+- `SELECT_ONLY_VERIFIER_CREATED=YES`
+- `SELECT_ONLY_VERIFIER_FILE=db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql`
+- `CHECKER_CREATED=YES`
+- `CHECKER_FILE=scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs`
+
+## RPC Contract
+
+- `RPC_NAME=public.execute_admin_a17q_legacy_family_reconciliation`
+- `RPC_SIGNATURE=p_owner_approval_marker text, p_decision_pack_sha256 text, p_approved_group_plan_sha256 text, p_role_correction_plan_sha256 text, p_excluded_scope_sha256 text, p_forecast_sha256 text, p_idempotency_key text, p_confirm_backup_reviewed boolean, p_confirm_rollback_reviewed boolean, p_confirm_audit_reviewed boolean, p_confirm_excluded_scope_reviewed boolean, p_dry_run_only boolean`
+- `RPC_RETURN_TYPE=jsonb`
+- `RPC_SECURITY_MODE=SECURITY_INVOKER`
+- `RPC_SEARCH_PATH=public, auth, pg_temp`
+- `SERVICE_ROLE_REQUIRED=NO`
+- `PUBLIC_EXECUTE_GRANTED=NO`
+- `ANON_EXECUTE_GRANTED=NO`
+- `AUTHENTICATED_EXECUTE_GRANTED=YES`
+- `AUTH_UID_REQUIRED=YES`
+- `PROFILE_REQUIRED=YES`
+- `PERMISSION_MODEL=relationships.update plus permissions.manage`
+- `DECISION_PACK_SHA256_EMBEDDED=YES`
+- `APPROVED_GROUP_PLAN_SHA256_EMBEDDED=YES`
+- `ROLE_CORRECTION_PLAN_SHA256_EMBEDDED=YES`
+- `EXCLUDED_SCOPE_SHA256_EMBEDDED=YES`
+- `FORECAST_SHA256_EMBEDDED=YES`
+
+## Approved Scope
+
+- `APPROVED_GROUP_COUNT=21`
+- `APPROVED_CANDIDATE_FAMILY_COUNT=57`
+- `SURVIVOR_FAMILY_COUNT=21`
+- `VOID_FAMILY_COUNT=36`
+- `CHILD_MEMBERSHIP_MOVE_COUNT=36`
+- `CHILD_MEMBERSHIP_PRESERVED_COUNT=57`
+- `CHILD_MEMBERSHIP_LOST_COUNT=0`
+- `PARENT_MEMBERSHIP_DEACTIVATION_COUNT=72`
+- `ROLE_CORRECTION_PLAN_COUNT=36`
+- `ROLE_CORRECTION_APPLIED_TO_SURVIVORS_COUNT=16`
+- `ROLE_CORRECTION_SUPERSEDED_BY_VOID_COUNT=20`
+
+## Excluded Scope
+
+- `EXCLUDED_GROUP_COUNT=1`
+- `EXCLUDED_GROUP_REF=721e2ae3d95dd418af40b6459531b870`
+- `EXCLUDED_GROUP_CANDIDATE_COUNT=3`
+- `EXCLUDED_SCOPE_EXECUTABLE=NO`
+- `DELETED_FAMILY_ADVISORY_COUNT=1`
+- `DELETED_FAMILY_REF=990de69e-2239-4a00-995c-6292ce4a814a`
+- `DELETED_SAFE_FAMILY_REF=16ead1f516a885724a2bddd11e14472b`
+- `DELETED_FAMILY_EXECUTABLE=NO`
+
+## Safety Contract
+
+- `DRY_RUN_SUPPORTED=YES`
+- `ROLLBACK_MANIFEST_SUPPORTED=YES`
+- `IDEMPOTENCY_SUPPORTED=YES`
+- `ADVISORY_LOCK_SUPPORTED=YES`
+- `ROW_LOCKING_SUPPORTED=YES`
+- `GRAPH_VALIDATION_SUPPORTED=YES`
+- `FAIL_CLOSED_PRECONDITIONS=YES`
+- `ACTIVE_RUNTIME_CALLER_COUNT=0`
+- `RECONCILIATION_AUTHORIZED_FOR_DESIGN_ONLY=YES`
+- `RECONCILIATION_EXECUTION_AUTHORIZED=NO`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+
+The candidate rejects hash/marker mismatch, unauthenticated callers, missing
+profile context, missing permissions, concurrent execution, existing running or
+completed batch for the decision pack, excluded/deleted family leakage into the
+executable scope, baseline drift, unexpected layout references, stale role
+states, duplicate child memberships, self parent/child rows, and inactive
+touched people.
+
+## Boundary Evidence
+
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_VOIDED=NO`
+- `MEMBERSHIP_MOVED=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `PACKAGE_DEPENDENCY_INSTALLED=NO`
+
+## Validation
+
+- `VALIDATION_SUMMARY=PASS`
+- `npm.cmd run check:a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17p-r-immutable-owner-decision-pack` - PASS
+- A-17P manual/FIX2/FIX3/base owner-review checkers - PASS
+- A-17A through A-17I, A-17M, A-17N and A-17O related checkers - PASS
+- Relationship, tree viewer/editor, public privacy, export/backup, migration and env-safe checks - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+- `git diff --check` - PASS
+
+## Next Action
+
+`NEXT_ACTION=A17Q_TX1_OWNER_REVIEW_MIGRATION_CANDIDATE`

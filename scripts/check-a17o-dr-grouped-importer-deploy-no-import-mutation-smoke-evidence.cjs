@@ -202,6 +202,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
   "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
   "scripts/check-a17o-tx1r-grouped-import-executor-manual-apply-verification.cjs",
   "docs/PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md",
@@ -216,6 +217,11 @@ const allowedChangedFiles = new Set([
   "docs/evidence/A17P_OWNER_DECISION_PACK.sha256",
   "scripts/check-a17p-manual-owner-approval-evidence.cjs",
   "scripts/check-a17p-r-immutable-owner-decision-pack.cjs",
+  "db/checks/20260713_check_a17q_tx1_legacy_family_reconciliation_executor_candidate.sql",
+  "db/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0026_a17q_tx1_legacy_family_reconciliation_transaction_executor_candidate.sql",
+  "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
   "docs/PLAN_A17A_TREE_BASELINE_EVIDENCE.md",
   "docs/PLAN_A17E_FAMILY_DUPLICATE_READ_ONLY_AUDIT.md",
   "docs/PLAN_A17F_FAMILY_RECONCILIATION_DRY_RUN.md",
@@ -227,7 +233,7 @@ for (const file of changedFiles) {
   if (/^(app|components|lib|services)\//.test(file)) {
     failures.push(`runtime file changed during A-17O-DR: ${file}`);
   }
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (/^(db\/migrations|supabase\/migrations)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`migration changed during A-17O-DR: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
