@@ -12,6 +12,7 @@ Status:
 `A17Q_TX1_FIX3_REVIEW_STATUS=PASS_OWNER_REVIEW_APPROVED_FINAL_MIGRATION_FOR_MANUAL_APPLY_CANDIDATE`
 `A17Q_TX1R_STATUS=PASS_MANUAL_APPLY_VERIFICATION_EVIDENCE_RECORDED`
 `A17Q_TX1_MANUAL_APPLY_STATUS=PASS_MIGRATION_APPLIED_AND_SELECT_ONLY_VERIFIED_NO_RECONCILIATION`
+`A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED`
 
 ## Scope
 
@@ -64,6 +65,9 @@ matches the committed JSON exactly. Production display names are not committed.
 - `FIX3_OWNER_REVIEW_CHECKER_FILE=scripts/check-a17q-tx1-fix3-owner-review.cjs`
 - `TX1R_MANUAL_APPLY_VERIFICATION_FILE=docs/PLAN_A17Q_TX1R_LEGACY_FAMILY_RECONCILIATION_EXECUTOR_MANUAL_APPLY_VERIFICATION.md`
 - `TX1R_MANUAL_APPLY_VERIFICATION_CHECKER=scripts/check-a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification.cjs`
+- `DR1_DRY_RUN_SQL_FILE=db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql`
+- `DR1_POST_DRY_RUN_VERIFIER_FILE=db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
+- `DR1_CHECKER_FILE=scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs`
 
 The superseded SHAs must never be applied. Migration 0026 has now been applied
 manually by the owner using the FIX3 SHA above; no migration 0027 was created.
@@ -322,11 +326,34 @@ without calling the reconciliation executor:
 - `RECONCILIATION_EXECUTED=NO`
 - `NEXT_ACTION=A17Q_DRY_RUN_PREPARE_PRODUCTION_RECONCILIATION`
 
+## A-17Q-DR1 Production Dry-Run Bundle
+
+A-17Q-DR1 prepares the owner-reviewable dry-run statement and post-dry-run
+SELECT-only verifier without executing the RPC:
+
+- `A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED`
+- `DRY_RUN_SQL_FILE=db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql`
+- `POST_DRY_RUN_VERIFIER_FILE=db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
+- `DRY_RUN_CALL_COUNT=1`
+- `DRY_RUN_FLAG_TRUE=YES`
+- `NON_DRY_RUN_CALL_PRESENT=NO`
+- `DRY_RUN_IDEMPOTENCY_KEY=A17Q_DR1_DRY_RUN_20260713_E04238C_001`
+- `EXPECTED_FORECAST=74/140/73_TO_38/68/73`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+- `NEXT_ACTION=A17Q_DR2_OWNER_REVIEW_AND_MANUAL_PRODUCTION_DRY_RUN`
+
 ## Validation
 
 - `VALIDATION_SUMMARY=PASS`
 - `npm.cmd run check:a17q-tx1-fix2-exact-post-state-reconciliation-contract` - PASS
 - `npm.cmd run check:a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification` - PASS
+- `npm.cmd run check:a17q-dr1-production-reconciliation-dry-run-bundle` - PASS
 - `npm.cmd run check:a17q-tx1-fix3-final-integrity-contract` - PASS
 - `npm.cmd run check:a17q-tx1-fix3-owner-review` - PASS
 - `npm.cmd run check:a17q-tx1-fix1-hardened-reconciliation-executor` - PASS
@@ -342,7 +369,7 @@ without calling the reconciliation executor:
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_DRY_RUN_PREPARE_PRODUCTION_RECONCILIATION`
+`NEXT_ACTION=A17Q_DR2_OWNER_REVIEW_AND_MANUAL_PRODUCTION_DRY_RUN`
 
 ## A-17Q-TX1-FIX1 Owner Review
 

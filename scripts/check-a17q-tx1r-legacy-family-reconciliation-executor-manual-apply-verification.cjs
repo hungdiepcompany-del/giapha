@@ -240,6 +240,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17p-fix2-owner-facing-legacy-family-review-query.cjs",
   "scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs",
   "scripts/check-a17a-tree-baseline-evidence.cjs",
+  "db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql",
+  "db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql",
+  "docs/PLAN_A17Q_DR1_PRODUCTION_RECONCILIATION_DRY_RUN_BUNDLE.md",
+  "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
 ]);
 for (const file of changedFiles) {
   if (/^(app|components|lib|server|services)\//.test(file)) {

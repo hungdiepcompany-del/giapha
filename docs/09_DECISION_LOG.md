@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 358 - A-17Q-DR1 prepares production reconciliation dry-run bundle
+
+Date: 2026-07-13
+
+Status:
+`A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED`
+
+Decision:
+Prepare a separate owner-reviewable dry-run SQL statement and a separate
+SELECT-only post-dry-run verifier before any production dry-run execution of
+`public.execute_admin_a17q_legacy_family_reconciliation`.
+
+Evidence:
+
+- `DRY_RUN_SQL_FILE=db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql`
+- `POST_DRY_RUN_VERIFIER_FILE=db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
+- `CHECKER=scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs`
+- `DRY_RUN_CALL_COUNT=1`
+- `DRY_RUN_FLAG_TRUE=YES`
+- `NON_DRY_RUN_CALL_PRESENT=NO`
+- `EXPECTED_FORECAST=74/140/73_TO_38/68/73`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next action:
+`A17Q_DR2_OWNER_REVIEW_AND_MANUAL_PRODUCTION_DRY_RUN`
+
 ## Decision 357 - A-17Q-TX1R records legacy family reconciliation executor manual apply verification
 
 Date: 2026-07-13

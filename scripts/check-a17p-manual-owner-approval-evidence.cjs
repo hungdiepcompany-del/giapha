@@ -224,6 +224,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17q-tx1-fix3-owner-review.cjs",
   "docs/PLAN_A17Q_TX1R_LEGACY_FAMILY_RECONCILIATION_EXECUTOR_MANUAL_APPLY_VERIFICATION.md",
   "scripts/check-a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification.cjs",
+  "db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql",
+  "db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql",
+  "docs/PLAN_A17Q_DR1_PRODUCTION_RECONCILIATION_DRY_RUN_BUNDLE.md",
+  "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
   "scripts/check-export-import-boundary-design.cjs",
   "scripts/check-export-import-final-readiness.cjs",
 ]);

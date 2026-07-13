@@ -1,5 +1,41 @@
 # AI Work Log
 
+## 2026-07-13 - A-17Q-DR1 production reconciliation dry-run bundle prepared
+
+Phase: A-17Q-DR1 - Prepare Production Reconciliation Dry-Run Bundle
+
+Status:
+`A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED`
+
+Evidence:
+
+- `TX1R_EVIDENCE_COMMIT=e04238c`
+- `MIGRATION_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `DRY_RUN_SQL_FILE=db/manual/20260713_a17q_dr1_production_reconciliation_dry_run.sql`
+- `POST_DRY_RUN_VERIFIER_FILE=db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
+- `CHECKER=scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs`
+- `PACKAGE_SCRIPT=check:a17q-dr1-production-reconciliation-dry-run-bundle`
+- `DRY_RUN_CALL_COUNT=1`
+- `DRY_RUN_FLAG_TRUE=YES`
+- `NON_DRY_RUN_CALL_PRESENT=NO`
+- `EXPECTED_FORECAST=74/140/73_TO_38/68/73`
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Validation:
+`VALIDATION_SUMMARY=PASS`
+
+Next action:
+`NEXT_ACTION=A17Q_DR2_OWNER_REVIEW_AND_MANUAL_PRODUCTION_DRY_RUN`
+
 ## 2026-07-13 - A-17Q-TX1R manual apply verification evidence recorded
 
 Phase: A-17Q-TX1R - Record Manual Apply and SELECT-Only Verification Evidence
