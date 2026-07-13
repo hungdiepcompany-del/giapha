@@ -221,6 +221,10 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
+const a17oTx1MigrationFiles = new Set([
+  "db/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql",
+  "supabase/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql",
+]);
 
 const allowedChangedFiles = new Set([
   treeActionsPath,
@@ -244,6 +248,10 @@ const allowedChangedFiles = new Set([
   "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md",
   "lib/import/giapha4/canonical-family-grouping.ts",
   "scripts/check-a17o-importer-canonical-family-grouping.cjs",
+  "db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql",
+  "docs/PLAN_A17O_TX1_GROUPED_OFFICIAL_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
+  ...a17oTx1MigrationFiles,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
@@ -252,7 +260,10 @@ const allowedChangedFiles = new Set([
 ]);
 
 for (const changedFile of changedFiles) {
-  if (/^(db\/migrations|supabase\/migrations)\//.test(changedFile)) {
+  if (
+    /^(db\/migrations|supabase\/migrations)\//.test(changedFile) &&
+    !a17oTx1MigrationFiles.has(changedFile)
+  ) {
     failures.push(`migration changed during A-17N-R: ${changedFile}`);
   }
   if (!allowedChangedFiles.has(changedFile)) {

@@ -1,5 +1,48 @@
 # Decision Log
 
+## Decision 340 - A-17O-TX1 adds grouped official import executor candidate
+
+Date: 2026-07-13
+
+Status: Proposed candidate, not applied
+
+Context: A-17O confirmed that the current official import executor creates one
+family per child. The importer grouping foundation is dormant until the
+database transaction boundary can create or reuse one canonical family and
+attach multiple children atomically.
+
+Decision: Add a new not-applied migration 0025 that creates
+`public.a17o_tx_execute_grouped_giapha4_official_import` as a SECURITY INVOKER
+candidate executor, plus grouped execution idempotency metadata and grouped
+rollback summary metadata. Preserve
+`public.a16p_tx_execute_giapha4_official_import` unchanged for existing
+completed import compatibility.
+
+Rationale:
+
+- The grouped payload must be validated inside the same transaction that writes
+  people, families, memberships, revisions, audit batch and rollback manifest.
+- The old executor remains useful historical contract evidence and must not be
+  changed by a candidate that has not been owner-reviewed or applied.
+- Runtime activation, owner manual apply, post-apply verification and any
+  official import retry remain separate phases.
+
+Safety:
+
+- `A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`
+- `OLD_EXECUTOR_SIGNATURE_CHANGED=NO`
+- `OLD_EXECUTOR_DROPPED=NO`
+- `GROUPED_EXECUTOR_CREATED=YES`
+- `SECURITY_MODE=SECURITY_INVOKER`
+- `GROUPED_PAYLOAD_SUPPORT=YES`
+- `ONE_FAMILY_MULTIPLE_CHILDREN_SUPPORTED=YES`
+- `ROLLBACK_DISTINGUISHES_CREATED_VS_PREEXISTING=YES`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Decision 339 - A-17O keeps importer grouping dormant until grouped transaction executor exists
 
 Date: 2026-07-13

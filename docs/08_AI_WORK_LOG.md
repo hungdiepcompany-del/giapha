@@ -1,5 +1,77 @@
 # AI Work Log
 
+## 2026-07-13 - A-17O-TX1 grouped official import transaction executor candidate
+
+Phase: A-17O-TX1 - Grouped Official Import Transaction Executor Candidate
+
+Status:
+
+- `A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`
+- `MIGRATION_FILE=db/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql`
+- `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql`
+- `DB_MIGRATION_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`
+- `SUPABASE_MIRROR_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`
+- `MIRROR_MATCH=YES`
+- `OLD_EXECUTOR_SIGNATURE_CHANGED=NO`
+- `OLD_EXECUTOR_DROPPED=NO`
+- `GROUPED_EXECUTOR_CREATED=YES`
+- `SECURITY_MODE=SECURITY_INVOKER`
+- `GROUPED_PAYLOAD_SUPPORT=YES`
+- `ONE_FAMILY_MULTIPLE_CHILDREN_SUPPORTED=YES`
+- `ROLLBACK_DISTINGUISHES_CREATED_VS_PREEXISTING=YES`
+- `POST_APPLY_VERIFIER_CREATED=YES`
+- `POST_APPLY_VERIFIER_EXECUTED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `OFFICIAL_IMPORT_RPC_CALLED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Implementation:
+
+- Added not-applied migration 0025 for new grouped official-import executor
+  candidate `public.a17o_tx_execute_grouped_giapha4_official_import`.
+- Added `official_import_grouped_execution_idempotency`, grouped batch metadata
+  columns and grouped rollback summary metadata.
+- Preserved the existing `public.a16p_tx_execute_giapha4_official_import`
+  executor unchanged for historical completed-import compatibility.
+- Added SELECT-only post-apply verifier and static checker.
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+- `npm.cmd run check:a17o-tx1-grouped-official-import-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17o-importer-canonical-family-grouping` - PASS
+- `npm.cmd run check:a16r-import-completed-post-import-verification` - PASS
+- `npm.cmd run check:a17n-dr-deploy-production-no-mutation-smoke-evidence` - PASS
+- `npm.cmd run check:a17n-r-admin-parent-child-runtime-integration` - PASS
+- `npm.cmd run check:a17n-tx1-admin-canonical-family-transaction-executor-candidate` - PASS
+- `npm.cmd run check:a17n-tx2f-post-apply-verifier-active-scope-correction` - PASS
+- `npm.cmd run check:a17n-admin-parent-child-canonical-write-path` - PASS
+- `npm.cmd run check:a17m-canonical-family-domain-service` - PASS
+- `npm.cmd run check:a17a-tree-baseline-evidence` - PASS
+- `npm.cmd run check:a17b-canonical-family-unit-design` - PASS
+- `npm.cmd run check:a17c-phatue-oriented-tree-ux-contract` - PASS
+- `npm.cmd run check:a17d-canonical-tree-graph-contract` - PASS
+- `npm.cmd run check:a17e-family-duplicate-read-only-audit` - PASS
+- `npm.cmd run check:a17f-family-reconciliation-dry-run` - PASS
+- `npm.cmd run check:a17g-family-reconciliation-rollback-design` - PASS
+- `npm.cmd run check:a17h-canonical-family-schema-foundation-candidate` - PASS
+- `npm.cmd run check:a17i-canonical-family-schema-post-apply-verification` - PASS
+- `npm.cmd run check:migrations` - PASS
+- `npm.cmd run check:relationships` - PASS
+- `npm.cmd run check:tree-editor` - PASS
+- `npm.cmd run check:tree-viewer` - PASS
+- `npm.cmd run check:public-privacy` - PASS
+- `npm.cmd run check:env:safe` - PASS
+- `npm.cmd run typecheck` - PASS
+- `npm.cmd run lint` - PASS
+- `npm.cmd run build` - PASS
+
+Next action:
+
+- `NEXT_ACTION=OWNER_REVIEW_A17O_TX1_THEN_RUN_SEPARATE_A17SQL_O_TX1_MANUAL_APPLY`
+
 ## 2026-07-13 - A-17O official importer canonical grouping foundation
 
 ### Phase

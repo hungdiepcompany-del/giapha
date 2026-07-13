@@ -1,5 +1,46 @@
 # Next AI Handoff
 
+## 2026-07-13 - A-17O-TX1 - Grouped official import executor candidate
+
+- Status:
+  `A17O_TX1_STATUS=CANDIDATE_READY_NOT_APPLIED_OWNER_REVIEW_REQUIRED`.
+- Migration:
+  `MIGRATION_FILE=db/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql`;
+  `SUPABASE_MIRROR_FILE=supabase/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql`;
+  `DB_MIGRATION_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`;
+  `SUPABASE_MIRROR_SHA256=87EE4675746D948C3B32E8E7809A5945F8EA153EC2A6107355EF3E271E3DD4B2`;
+  `MIRROR_MATCH=YES`.
+- Candidate:
+  `NEW_GROUPED_EXECUTOR_NAME=public.a17o_tx_execute_grouped_giapha4_official_import`;
+  `SECURITY_MODE=SECURITY_INVOKER`;
+  `FIXED_SEARCH_PATH=YES`;
+  `GROUPED_PAYLOAD_SUPPORT=YES`;
+  `ONE_FAMILY_MULTIPLE_CHILDREN_SUPPORTED=YES`;
+  `IDEMPOTENCY_REQUIRED=YES`;
+  `ROLLBACK_DISTINGUISHES_CREATED_VS_PREEXISTING=YES`.
+- Preservation:
+  `OLD_EXECUTOR_NAME=public.a16p_tx_execute_giapha4_official_import`;
+  `OLD_EXECUTOR_SIGNATURE_CHANGED=NO`;
+  `OLD_EXECUTOR_DROPPED=NO`;
+  completed import compatibility remains preserved.
+- Verifier:
+  `POST_APPLY_VERIFIER_FILE=db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql`;
+  `POST_APPLY_VERIFIER_CREATED=YES`;
+  `POST_APPLY_VERIFIER_EXECUTED=NO`;
+  SELECT-only, no RPC call and no row locks.
+- Boundary:
+  `A17O_IMPORTER_RUNTIME_ACTIVE=NO`;
+  `PRODUCTION_IMPORT_ENDPOINT_CALLED=NO`;
+  `OFFICIAL_IMPORT_RPC_CALLED=NO`;
+  `SQL_EXECUTED=NO`;
+  `MIGRATION_APPLIED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Owner gate:
+  `OWNER_REVIEW_MARKER_REQUIRED=APPROVE_A17O_TX1_GROUPED_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE`.
+- Next action:
+  `NEXT_ACTION=OWNER_REVIEW_A17O_TX1_THEN_RUN_SEPARATE_A17SQL_O_TX1_MANUAL_APPLY`.
+
 ## 2026-07-13 - A-17O - Importer canonical grouping foundation blocked by executor
 
 - Status:

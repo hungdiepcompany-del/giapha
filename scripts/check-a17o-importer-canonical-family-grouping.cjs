@@ -13,8 +13,15 @@ const servicePath = "lib/import/giapha4/official-import-service.ts";
 const routePath = "app/api/admin/import-sessions/[sessionId]/official-import/route.ts";
 const migration0022 =
   "db/migrations/20260712_0022_a16bu_official_import_is_living_null_contract_fix.sql";
+const a17oTx1DbMigration =
+  "db/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql";
+const a17oTx1SupabaseMigration =
+  "supabase/migrations/20260713_0025_a17o_tx1_grouped_official_import_transaction_executor_candidate.sql";
 const docPath = "docs/PLAN_A17O_IMPORTER_CANONICAL_FAMILY_GROUPING_FIX.md";
 const checkerPath = "scripts/check-a17o-importer-canonical-family-grouping.cjs";
+
+// A17O_TX1_GROUPED_EXECUTOR_CANDIDATE_PRESENT=YES
+// check:a17o-tx1-grouped-official-import-transaction-executor-candidate
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -356,10 +363,19 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17n-r-admin-parent-child-runtime-integration.cjs",
   "scripts/check-a17n-tx1-admin-canonical-family-transaction-executor-candidate.cjs",
   "scripts/check-a17n-tx2f-post-apply-verifier-active-scope-correction.cjs",
+  a17oTx1DbMigration,
+  a17oTx1SupabaseMigration,
+  "db/checks/20260713_check_a17o_tx1_grouped_official_import_transaction_executor.sql",
+  "docs/PLAN_A17O_TX1_GROUPED_OFFICIAL_IMPORT_TRANSACTION_EXECUTOR_CANDIDATE.md",
+  "scripts/check-a17o-tx1-grouped-official-import-transaction-executor-candidate.cjs",
 ]);
 
 for (const file of changedFiles) {
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (
+    /^(db\/migrations|supabase\/migrations)\//.test(file) &&
+    file !== a17oTx1DbMigration &&
+    file !== a17oTx1SupabaseMigration
+  ) {
     failures.push(`migration changed during A-17O: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) {
