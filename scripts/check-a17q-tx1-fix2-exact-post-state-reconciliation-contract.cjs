@@ -16,7 +16,8 @@ const verifierPath =
 const docPath =
   "docs/PLAN_A17Q_TX1_LEGACY_FAMILY_RECONCILIATION_TRANSACTION_EXECUTOR_CANDIDATE.md";
 const oldSha = "B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934";
-const newSha = "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
+const fix2Sha = "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
+const fix3Sha = "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -77,7 +78,7 @@ const packageJson = JSON.parse(read("package.json"));
 if (migration !== mirror) failures.push("migration mirror is not byte-identical");
 
 const actualSha = sha256(dbMigrationPath);
-if (actualSha !== newSha) failures.push(`unexpected migration SHA ${actualSha}`);
+if (actualSha !== fix2Sha && actualSha !== fix3Sha) failures.push(`unexpected migration SHA ${actualSha}`);
 if (actualSha === oldSha) failures.push("migration SHA still equals superseded FIX1 SHA");
 
 for (const folder of ["db/migrations", "supabase/migrations"]) {
@@ -195,7 +196,7 @@ if (/\bfor\s+update\b/i.test(verifierCode)) failures.push("verifier must not loc
 for (const token of [
   "A17Q_TX1_FIX2_STATUS=PASS_EXACT_POST_STATE_RECONCILIATION_CONTRACT_READY_NOT_APPLIED",
   `A17Q_TX1_FIX2_OLD_SHA256_SUPERSEDED=${oldSha}`,
-  `A17Q_TX1_FIX2_NEW_SHA256=${newSha}`,
+  `A17Q_TX1_FIX2_NEW_SHA256=${fix2Sha}`,
   "EXACT_CHILD_POST_STATE_CONTRACT=YES",
   "EXACT_PARENT_ROLE_POST_STATE_CONTRACT=YES",
   "EXACT_FAMILY_CANONICAL_POST_STATE_CONTRACT=YES",
@@ -205,6 +206,12 @@ for (const token of [
   "MIGRATION_0027_CREATED=NO",
 ]) {
   requireIncludes(doc, token, `doc ${token}`);
+}
+
+if (actualSha === fix3Sha) {
+  requireIncludes(doc, `A17Q_TX1_FIX3_OLD_SHA256_SUPERSEDED=${fix2Sha}`, "doc FIX3 supersedes FIX2 SHA");
+  requireIncludes(doc, `A17Q_TX1_FIX3_NEW_SHA256=${fix3Sha}`, "doc FIX3 current SHA");
+  requireIncludes(doc, "A17Q_TX1_FIX3_STATUS=PASS_FINAL_INTEGRITY_RECONCILIATION_CONTRACT_READY_NOT_APPLIED", "doc FIX3 status");
 }
 
 requireIncludes(index, "check:a17q-tx1-fix2-exact-post-state-reconciliation-contract");

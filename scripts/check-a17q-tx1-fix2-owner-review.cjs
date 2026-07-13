@@ -20,6 +20,8 @@ const planDocPath =
 
 const reviewedSha =
   "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
+const fix3Sha =
+  "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
 const supersededFix1Sha =
   "B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934";
 
@@ -77,8 +79,8 @@ const packageJson = JSON.parse(read("package.json"));
 
 if (migration !== mirror) failures.push("migration mirrors are not byte-identical");
 const actualSha = sha256(dbMigrationPath);
-if (actualSha !== reviewedSha) failures.push(`unexpected migration SHA ${actualSha}`);
-if (sha256(supabaseMigrationPath) !== reviewedSha) failures.push("unexpected Supabase mirror SHA");
+if (actualSha !== reviewedSha && actualSha !== fix3Sha) failures.push(`unexpected migration SHA ${actualSha}`);
+if (![reviewedSha, fix3Sha].includes(sha256(supabaseMigrationPath))) failures.push("unexpected Supabase mirror SHA");
 if (actualSha === supersededFix1Sha) failures.push("migration SHA still equals superseded FIX1 SHA");
 if (listMigrationFilesContaining("0027").length > 0) failures.push("migration 0027 must not exist");
 
@@ -154,6 +156,15 @@ requireIncludes(
   "plan doc FIX2 review status",
 );
 requireIncludes(planDoc, "NEXT_ACTION=A17Q_TX1_FIX3", "plan doc FIX3 next action");
+if (actualSha === fix3Sha) {
+  requireIncludes(planDoc, `A17Q_TX1_FIX3_OLD_SHA256_SUPERSEDED=${reviewedSha}`, "plan doc FIX3 supersedes reviewed SHA");
+  requireIncludes(planDoc, `A17Q_TX1_FIX3_NEW_SHA256=${fix3Sha}`, "plan doc FIX3 current SHA");
+  requireIncludes(
+    planDoc,
+    "A17Q_TX1_FIX3_STATUS=PASS_FINAL_INTEGRITY_RECONCILIATION_CONTRACT_READY_NOT_APPLIED",
+    "plan doc FIX3 status",
+  );
+}
 requireIncludes(index, "check:a17q-tx1-fix2-owner-review", "index package script");
 requireIncludes(index, "PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md", "index review doc");
 requireIncludes(workLog, "A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED");

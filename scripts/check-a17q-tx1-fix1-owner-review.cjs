@@ -22,6 +22,8 @@ const expectedSha =
   "B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934";
 const fix2Sha =
   "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
+const fix3Sha =
+  "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
 const supersededSha =
   "696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B";
 
@@ -100,10 +102,10 @@ const packageJson = JSON.parse(read("package.json"));
 if (migration !== mirror) failures.push("migration mirrors are not byte-identical");
 const currentDbSha = sha256(dbMigrationPath);
 const currentMirrorSha = sha256(supabaseMigrationPath);
-if (currentDbSha !== expectedSha && currentDbSha !== fix2Sha) {
+if (currentDbSha !== expectedSha && currentDbSha !== fix2Sha && currentDbSha !== fix3Sha) {
   failures.push("reviewed db migration SHA changed outside accepted FIX2 correction");
 }
-if (currentMirrorSha !== expectedSha && currentMirrorSha !== fix2Sha) {
+if (currentMirrorSha !== expectedSha && currentMirrorSha !== fix2Sha && currentMirrorSha !== fix3Sha) {
   failures.push("reviewed Supabase migration SHA changed outside accepted FIX2 correction");
 }
 if (listMigrationFilesContaining("0027").length > 0) failures.push("migration 0027 must not exist");
@@ -190,6 +192,12 @@ if (currentDbSha === expectedSha) {
   requireIncludes(planDoc, `A17Q_TX1_FIX2_NEW_SHA256=${fix2Sha}`, "FIX2 current SHA");
   requireIncludes(migration, "SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION", "FIX2 success result before completed");
   requireIncludes(migration, "BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT", "FIX2 completed after success result");
+  if (currentDbSha === fix3Sha) {
+    requireIncludes(planDoc, `A17Q_TX1_FIX3_OLD_SHA256_SUPERSEDED=${fix2Sha}`, "FIX3 supersedes FIX2 SHA");
+    requireIncludes(planDoc, `A17Q_TX1_FIX3_NEW_SHA256=${fix3Sha}`, "FIX3 current SHA");
+    requireIncludes(migration, "FRESH_RESULT_INTEGRITY_VERIFIED_BEFORE_COMPLETION", "FIX3 fresh result integrity");
+    requireIncludes(migration, "COMPLETED_REPLAY_INTEGRITY_VERIFIED", "FIX3 replay integrity");
+  }
 }
 rejectIncludes(migration, "expected_child_membership_ids", "exact child-membership id post-state proof");
 rejectIncludes(migration, "expected_parent_membership_ids", "exact parent-membership id post-state proof");

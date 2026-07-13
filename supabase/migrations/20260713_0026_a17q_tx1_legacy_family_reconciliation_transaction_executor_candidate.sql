@@ -47,7 +47,8 @@ on public.revisions is
   'A-17Q-TX1 candidate: narrow authenticated revision INSERT policy for the legacy family reconciliation transaction executor only.';
 
 alter table public.family_reconciliation_batches
-  add column if not exists success_result jsonb;
+  add column if not exists success_result jsonb,
+  add column if not exists success_result_sha256 text;
 
 do $$
 begin
@@ -61,10 +62,24 @@ begin
       add constraint family_reconciliation_batches_success_result_shape_check
       check (success_result is null or jsonb_typeof(success_result) = 'object');
   end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'family_reconciliation_batches_success_result_sha256_check'
+      and conrelid = 'public.family_reconciliation_batches'::regclass
+  ) then
+    alter table public.family_reconciliation_batches
+      add constraint family_reconciliation_batches_success_result_sha256_check
+      check (success_result_sha256 is null or success_result_sha256 ~ '^[0-9a-f]{64}$');
+  end if;
 end $$;
 
 comment on column public.family_reconciliation_batches.success_result is
   'A-17Q-TX1 candidate: durable exact success JSON persisted before a batch can be marked completed; used for replay-safe idempotency.';
+
+comment on column public.family_reconciliation_batches.success_result_sha256 is
+  'A-17Q-TX1-FIX3 candidate: SHA-256 of durable success_result JSON, verified before completion and replay.';
 
 create or replace function public.execute_admin_a17q_legacy_family_reconciliation(
   p_owner_approval_marker text,
@@ -120,6 +135,10 @@ declare
   v_replay_result jsonb;
   v_stored_success_result jsonb;
   v_persisted_success_result jsonb;
+  v_success_result_sha256 text;
+  v_persisted_success_result_sha256 text;
+  v_stored_success_result_sha256 text;
+  v_recomputed_success_result_sha256 text;
   v_pre_mutation_audit_id uuid;
   v_post_mutation_audit_id uuid;
   v_pre_mutation_audit_insert_count integer := 0;
@@ -155,8 +174,14 @@ declare
   v_unexpected_family_state_count integer := 0;
   v_survivor_canonical_key_mismatch_count integer := 0;
   v_duplicate_active_parent_set_family_count integer := 0;
+  v_global_duplicate_active_canonical_key_count integer := 0;
+  v_approved_key_owned_by_unexpected_active_family_count integer := 0;
+  v_approved_key_active_owner_count integer := 0;
+  v_void_family_canonical_active_count integer := 0;
   v_self_parent_relation_count integer := 0;
   v_same_family_parent_child_overlap_count integer := 0;
+  v_global_duplicate_active_parent_membership_count integer := 0;
+  v_global_duplicate_active_child_membership_count integer := 0;
   v_ancestry_cycle_count integer := 0;
   v_success_result_persist_count integer := 0;
   v_completion_update_count integer := 0;
@@ -443,9 +468,12 @@ begin
         and v_existing_batch.owner_execution_marker = v_owner_marker
         and v_existing_batch.dry_run_hash = v_forecast_sha
         and v_existing_batch.status = 'completed' then
-        -- REPLAY_REQUIRES_DURABLE_SUCCESS_RESULT: a completed batch without this JSON is not replay-safe.
+        -- REPLAY_REQUIRES_DURABLE_SUCCESS_RESULT / COMPLETED_REPLAY_INTEGRITY_VERIFIED:
+        -- a completed batch without durable JSON plus matching hash is not replay-safe.
         v_replay_result := v_existing_batch.success_result;
-        if jsonb_typeof(v_replay_result) <> 'object'
+        v_recomputed_success_result_sha256 := encode(digest(coalesce(v_replay_result, '{}'::jsonb)::text, 'sha256'), 'hex');
+        if v_replay_result is null
+          or jsonb_typeof(v_replay_result) <> 'object'
           or coalesce(v_replay_result ->> 'status', '') <> 'RECONCILIATION_COMPLETED'
           or coalesce(v_replay_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED'
           or coalesce(v_replay_result ->> 'decision_pack_sha256', '') <> v_decision_pack_sha
@@ -454,7 +482,8 @@ begin
           or coalesce(v_replay_result ->> 'role_correction_plan_sha256', '') <> v_role_correction_sha
           or coalesce(v_replay_result ->> 'excluded_scope_sha256', '') <> v_excluded_scope_sha
           or coalesce(v_replay_result ->> 'forecast_sha256', '') <> v_forecast_sha
-          or nullif(v_replay_result ->> 'batch_id', '') is null then
+          or coalesce(v_replay_result ->> 'batch_id', '') <> v_existing_batch.id::text
+          or coalesce(v_existing_batch.success_result_sha256, '') <> v_recomputed_success_result_sha256 then
           raise exception 'A17Q_RECONCILIATION_BATCH_REQUIRES_RECOVERY';
         end if;
 
@@ -462,7 +491,9 @@ begin
           'idempotency_status', 'REPLAY_COMPLETED_SUCCESS',
           'replayed_successfully', true,
           'mutation_applied', false,
-          'dry_run', false
+          'dry_run', false,
+          'replay_mutation_path_count', 0,
+          'stored_success_result_sha256', v_existing_batch.success_result_sha256
         );
       end if;
 
@@ -1491,6 +1522,65 @@ begin
     having count(*) > 1
   ) duplicate_parent_sets;
 
+  -- GLOBAL_DUPLICATE_ACTIVE_CANONICAL_KEY_CHECK / APPROVED_CANONICAL_KEY_OWNER_CHECK.
+  select count(*) into v_global_duplicate_active_canonical_key_count
+  from (
+    select f.canonical_key
+    from public.families f
+    where f.deleted_at is null
+      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+      and f.canonical_key is not null
+    group by f.canonical_key
+    having count(*) > 1
+  ) duplicate_active_keys;
+
+  select count(*) into v_approved_key_owned_by_unexpected_active_family_count
+  from public.families f
+  join a17q_group_parent_sets parent_sets on parent_sets.expected_canonical_key = f.canonical_key
+  left join a17q_approved_groups groups on groups.survivor_family_id = f.id
+  where f.deleted_at is null
+    and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+    and groups.survivor_family_id is null;
+
+  select count(distinct f.id) into v_approved_key_active_owner_count
+  from public.families f
+  join a17q_group_parent_sets parent_sets on parent_sets.expected_canonical_key = f.canonical_key
+  join a17q_approved_groups groups on groups.survivor_family_id = f.id
+  where f.deleted_at is null
+    and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided');
+
+  select count(*) into v_void_family_canonical_active_count
+  from public.families f
+  join a17q_void_to_survivor_mapping voided on voided.family_id = f.id
+  where f.deleted_at is null
+    and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided');
+
+  -- GLOBAL_DUPLICATE_ACTIVE_PARENT_MEMBERSHIP_CHECK / GLOBAL_DUPLICATE_ACTIVE_CHILD_MEMBERSHIP_CHECK.
+  select count(*) into v_global_duplicate_active_parent_membership_count
+  from (
+    select fp.family_id, fp.person_id
+    from public.family_parents fp
+    join public.families f on f.id = fp.family_id
+    where fp.deleted_at is null
+      and f.deleted_at is null
+      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+    group by fp.family_id, fp.person_id
+    having count(*) > 1
+  ) duplicate_active_parent_memberships;
+
+  select count(*) into v_global_duplicate_active_child_membership_count
+  from (
+    select fc.family_id, fc.person_id
+    from public.family_children fc
+    join public.families f on f.id = fc.family_id
+    where fc.deleted_at is null
+      and f.deleted_at is null
+      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
+    group by fc.family_id, fc.person_id
+    having count(*) > 1
+  ) duplicate_active_child_memberships;
+
+  -- GLOBAL_PARENT_CHILD_OVERLAP_CHECK.
   select count(*) into v_same_family_parent_child_overlap_count
   from public.family_parents fp
   join public.family_children fc
@@ -1572,44 +1662,23 @@ begin
   if v_missing_expected_family_state_count <> 0
     or v_unexpected_family_state_count <> 0
     or v_survivor_canonical_key_mismatch_count <> 0
-    or v_duplicate_active_parent_set_family_count <> 0 then
+    or v_duplicate_active_parent_set_family_count <> 0
+    or v_global_duplicate_active_canonical_key_count <> 0
+    or v_approved_key_owned_by_unexpected_active_family_count <> 0
+    or v_approved_key_active_owner_count <> 21
+    or v_void_family_canonical_active_count <> 0 then
     raise exception 'A17Q_EXACT_FAMILY_CANONICAL_POST_STATE_VALIDATION_FAILED';
   end if;
 
   if v_self_parent_relation_count <> 0
     or v_same_family_parent_child_overlap_count <> 0
+    or v_global_duplicate_active_parent_membership_count <> 0
+    or v_global_duplicate_active_child_membership_count <> 0
     or v_ancestry_cycle_count <> 0 then
     raise exception 'A17Q_EXACT_GRAPH_POST_STATE_VALIDATION_FAILED';
   end if;
 
   if exists (
-    select 1
-    from public.family_parents fp
-    join public.family_children fc
-      on fc.family_id = fp.family_id
-     and fc.person_id = fp.person_id
-     and fc.deleted_at is null
-    join public.families f on f.id = fp.family_id
-    where fp.deleted_at is null
-      and f.deleted_at is null
-      and coalesce(f.canonical_status, 'legacy_unreviewed') not in ('merged', 'voided')
-  ) or exists (
-    select 1
-    from public.family_parents fp
-    join a17q_approved_families approved
-      on approved.is_survivor
-     and approved.family_id = fp.family_id
-    where fp.deleted_at is null
-    group by fp.family_id, fp.person_id
-    having count(*) > 1
-  ) or exists (
-    select 1
-    from public.family_children fc
-    join a17q_approved_groups groups on groups.survivor_family_id = fc.family_id
-    where fc.deleted_at is null
-    group by fc.family_id, fc.person_id
-    having count(*) > 1
-  ) or exists (
     select 1
     from public.family_children fc
     join a17q_approved_families approved
@@ -1692,9 +1761,15 @@ begin
       'unexpected_family_state_count', v_unexpected_family_state_count,
       'survivor_canonical_key_mismatch_count', v_survivor_canonical_key_mismatch_count,
       'duplicate_active_parent_set_family_count', v_duplicate_active_parent_set_family_count,
+      'global_duplicate_active_canonical_key_count', v_global_duplicate_active_canonical_key_count,
+      'approved_key_owned_by_unexpected_active_family_count', v_approved_key_owned_by_unexpected_active_family_count,
+      'approved_key_active_owner_count', v_approved_key_active_owner_count,
+      'void_family_canonical_active_count', v_void_family_canonical_active_count,
       'exact_graph_post_state_passed', true,
       'self_parent_relation_count', v_self_parent_relation_count,
       'same_family_parent_child_overlap_count', v_same_family_parent_child_overlap_count,
+      'global_duplicate_active_parent_membership_count', v_global_duplicate_active_parent_membership_count,
+      'global_duplicate_active_child_membership_count', v_global_duplicate_active_child_membership_count,
       'ancestry_cycle_count', v_ancestry_cycle_count
     ),
     v_profile_id,
@@ -1778,42 +1853,68 @@ begin
     'unexpected_family_state_count', v_unexpected_family_state_count,
     'survivor_canonical_key_mismatch_count', v_survivor_canonical_key_mismatch_count,
     'duplicate_active_parent_set_family_count', v_duplicate_active_parent_set_family_count,
+    'global_duplicate_active_canonical_key_count', v_global_duplicate_active_canonical_key_count,
+    'approved_key_owned_by_unexpected_active_family_count', v_approved_key_owned_by_unexpected_active_family_count,
+    'approved_key_active_owner_count', v_approved_key_active_owner_count,
+    'void_family_canonical_active_count', v_void_family_canonical_active_count,
     'exact_graph_post_state_passed', true,
     'self_parent_relation_count', v_self_parent_relation_count,
     'same_family_parent_child_overlap_count', v_same_family_parent_child_overlap_count,
+    'global_duplicate_active_parent_membership_count', v_global_duplicate_active_parent_membership_count,
+    'global_duplicate_active_child_membership_count', v_global_duplicate_active_child_membership_count,
     'ancestry_cycle_count', v_ancestry_cycle_count,
     'success_result_persisted_before_completed', true,
     'rollback_ready', true
   );
 
+  -- FRESH_RESULT_INTEGRITY_VERIFIED_BEFORE_COMPLETION.
+  if coalesce(v_result ->> 'batch_id', '') <> v_batch_id::text
+    or coalesce(v_result ->> 'decision_pack_sha256', '') <> v_decision_pack_sha then
+    raise exception 'A17Q_SUCCESS_RESULT_INTEGRITY_FAILED';
+  end if;
+
+  v_success_result_sha256 := encode(digest(v_result::text, 'sha256'), 'hex');
+
   -- STORE_COMPLETE_SUCCESS_RESULT / SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION.
   update public.family_reconciliation_batches
   set success_result = v_result,
+      success_result_sha256 = v_success_result_sha256,
       actual_counts = v_result,
       updated_by = v_profile_id,
       updated_at = v_now
   where id = v_batch_id
     and status = 'running'
-  returning success_result into v_persisted_success_result;
+  returning success_result, success_result_sha256
+  into v_persisted_success_result, v_persisted_success_result_sha256;
 
   get diagnostics v_success_result_persist_count = row_count;
 
   if v_success_result_persist_count <> 1
     or v_persisted_success_result is null
-    or v_persisted_success_result is distinct from v_result then
+    or v_persisted_success_result is distinct from v_result
+    or coalesce(v_persisted_success_result ->> 'batch_id', '') <> v_batch_id::text
+    or coalesce(v_persisted_success_result ->> 'decision_pack_sha256', '') <> v_decision_pack_sha
+    or coalesce(v_persisted_success_result_sha256, '') <> v_success_result_sha256 then
     raise exception 'A17Q_SUCCESS_RESULT_PERSIST_FAILED';
   end if;
 
-  select success_result into v_stored_success_result
+  select success_result, success_result_sha256
+  into v_stored_success_result, v_stored_success_result_sha256
   from public.family_reconciliation_batches
   where id = v_batch_id
   for update;
+
+  v_recomputed_success_result_sha256 := encode(digest(coalesce(v_stored_success_result, '{}'::jsonb)::text, 'sha256'), 'hex');
 
   if v_stored_success_result is null
     or v_stored_success_result is distinct from v_result
     or jsonb_typeof(v_stored_success_result) <> 'object'
     or coalesce(v_stored_success_result ->> 'status', '') <> 'RECONCILIATION_COMPLETED'
-    or coalesce(v_stored_success_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED' then
+    or coalesce(v_stored_success_result ->> 'idempotency_status', '') <> 'NEW_EXECUTION_COMPLETED'
+    or coalesce(v_stored_success_result ->> 'batch_id', '') <> v_batch_id::text
+    or coalesce(v_stored_success_result ->> 'decision_pack_sha256', '') <> v_decision_pack_sha
+    or coalesce(v_stored_success_result_sha256, '') <> v_success_result_sha256
+    or v_recomputed_success_result_sha256 <> v_success_result_sha256 then
     raise exception 'A17Q_SUCCESS_RESULT_PERSIST_FAILED';
   end if;
 
@@ -1827,6 +1928,7 @@ begin
   where id = v_batch_id
     and status = 'running'
     and success_result = v_stored_success_result
+    and success_result_sha256 = v_stored_success_result_sha256
   returning success_result into v_result;
 
   get diagnostics v_completion_update_count = row_count;

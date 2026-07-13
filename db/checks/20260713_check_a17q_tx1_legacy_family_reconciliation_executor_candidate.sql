@@ -45,28 +45,52 @@ with expected as (
   join expected e on e.function_name = rp.routine_name
   where rp.routine_schema = 'public'
 ), column_evidence as (
-  select exists (
-    select 1
-    from information_schema.columns
-    where table_schema = 'public'
-      and table_name = 'family_reconciliation_batches'
-      and column_name = 'success_result'
-      and data_type = 'jsonb'
-  ) as a17q_tx1_success_result_column_present
+  select
+    exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'family_reconciliation_batches'
+        and column_name = 'success_result'
+        and data_type = 'jsonb'
+    ) as a17q_tx1_success_result_column_present,
+    exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'family_reconciliation_batches'
+        and column_name = 'success_result_sha256'
+        and data_type = 'text'
+    ) as a17q_tx1_success_result_sha256_column_present
 ), constraint_evidence as (
-  select exists (
-    select 1
-    from pg_constraint
-    where conname = 'family_reconciliation_batches_success_result_shape_check'
-      and conrelid = 'public.family_reconciliation_batches'::regclass
-  ) as a17q_tx1_success_result_shape_constraint_present
+  select
+    exists (
+      select 1
+      from pg_constraint
+      where conname = 'family_reconciliation_batches_success_result_shape_check'
+        and conrelid = 'public.family_reconciliation_batches'::regclass
+    ) as a17q_tx1_success_result_shape_constraint_present,
+    exists (
+      select 1
+      from pg_constraint
+      where conname = 'family_reconciliation_batches_success_result_sha256_check'
+        and conrelid = 'public.family_reconciliation_batches'::regclass
+    ) as a17q_tx1_success_result_sha256_constraint_present
 ), batch_evidence as (
   select
     count(*) filter (where approved_audit_hash = (select decision_pack_sha256 from expected)) as a17q_tx1_decision_pack_batch_count,
     count(*) filter (
       where approved_audit_hash = (select decision_pack_sha256 from expected)
         and status = 'completed'
-    ) as a17q_tx1_completed_batch_count
+    ) as a17q_tx1_completed_batch_count,
+    count(*) filter (
+      where approved_audit_hash = (select decision_pack_sha256 from expected)
+        and status = 'completed'
+        and jsonb_typeof(success_result) = 'object'
+        and coalesce(success_result ->> 'batch_id', '') = id::text
+        and coalesce(success_result ->> 'decision_pack_sha256', '') = (select decision_pack_sha256 from expected)
+        and coalesce(success_result_sha256, '') = encode(digest(success_result::text, 'sha256'), 'hex')
+    ) as a17q_tx1_completed_batch_stored_success_integrity_count
   from public.family_reconciliation_batches
 ), rollback_evidence as (
   select count(*) as a17q_tx1_rollback_manifest_count
@@ -132,16 +156,39 @@ select
   exists(select 1 from function_meta where function_source like '%A17Q_EXACT_PARENT_ROLE_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_parent_role_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%A17Q_EXACT_FAMILY_CANONICAL_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_family_canonical_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%A17Q_EXACT_GRAPH_POST_STATE_VALIDATION_FAILED%') as a17q_tx1_exact_graph_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%GLOBAL_DUPLICATE_ACTIVE_CANONICAL_KEY_CHECK%') as a17q_tx1_global_duplicate_active_canonical_key_check_present,
+  exists(select 1 from function_meta where function_source like '%APPROVED_CANONICAL_KEY_OWNER_CHECK%') as a17q_tx1_approved_canonical_key_owner_check_present,
+  exists(select 1 from function_meta where function_source like '%global_duplicate_active_canonical_key_count%') as a17q_tx1_global_canonical_key_result_field_present,
+  exists(select 1 from function_meta where function_source like '%approved_key_owned_by_unexpected_active_family_count%') as a17q_tx1_unexpected_approved_key_owner_result_field_present,
+  exists(select 1 from function_meta where function_source like '%approved_key_active_owner_count%') as a17q_tx1_approved_key_owner_count_result_field_present,
+  exists(select 1 from function_meta where function_source like '%void_family_canonical_active_count%') as a17q_tx1_void_family_canonical_active_result_field_present,
+  exists(select 1 from function_meta where function_source like '%GLOBAL_DUPLICATE_ACTIVE_PARENT_MEMBERSHIP_CHECK%') as a17q_tx1_global_duplicate_parent_membership_check_present,
+  exists(select 1 from function_meta where function_source like '%GLOBAL_DUPLICATE_ACTIVE_CHILD_MEMBERSHIP_CHECK%') as a17q_tx1_global_duplicate_child_membership_check_present,
+  exists(select 1 from function_meta where function_source like '%GLOBAL_PARENT_CHILD_OVERLAP_CHECK%') as a17q_tx1_global_parent_child_overlap_check_present,
+  exists(select 1 from function_meta where function_source like '%global_duplicate_active_parent_membership_count%') as a17q_tx1_global_parent_duplicate_result_field_present,
+  exists(select 1 from function_meta where function_source like '%global_duplicate_active_child_membership_count%') as a17q_tx1_global_child_duplicate_result_field_present,
   exists(select 1 from function_meta where function_source like '%SUCCESS_RESULT_PERSISTED_BEFORE_COMPLETION%') as a17q_tx1_success_result_before_completed_marker_present,
   exists(select 1 from function_meta where function_source like '%BATCH_COMPLETED_UPDATE_AFTER_SUCCESS_RESULT%') as a17q_tx1_completed_after_success_result_marker_present,
   exists(select 1 from function_meta where function_source like '%REPLAY_REQUIRES_DURABLE_SUCCESS_RESULT%') as a17q_tx1_replay_requires_durable_success_result_present,
+  exists(select 1 from function_meta where function_source like '%COMPLETED_REPLAY_INTEGRITY_VERIFIED%') as a17q_tx1_completed_replay_integrity_verified_present,
+  exists(select 1 from function_meta where function_source like '%FRESH_RESULT_INTEGRITY_VERIFIED_BEFORE_COMPLETION%') as a17q_tx1_fresh_result_integrity_before_completion_present,
+  exists(select 1 from function_meta where function_source like '%success_result_sha256%') as a17q_tx1_success_result_sha256_source_present,
+  exists(select 1 from function_meta where function_source like '%v_existing_batch.success_result_sha256%') as a17q_tx1_replay_stored_sha256_check_present,
+  exists(select 1 from function_meta where function_source like '%v_stored_success_result_sha256%') as a17q_tx1_fresh_stored_sha256_check_present,
+  exists(select 1 from function_meta where function_source like '%digest(v_result::text, ''sha256'')%') as a17q_tx1_fresh_result_sha256_compute_present,
+  exists(select 1 from function_meta where function_source like '%digest(coalesce(v_stored_success_result, ''{}''::jsonb)::text, ''sha256'')%') as a17q_tx1_stored_result_sha256_recompute_present,
+  exists(select 1 from function_meta where function_source like '%replay_mutation_path_count%') as a17q_tx1_replay_mutation_path_count_zero_present,
   exists(select 1 from function_meta where function_source like '%A17Q_SUCCESS_RESULT_PERSIST_FAILED%') as a17q_tx1_success_result_persist_failure_guard_present,
+  exists(select 1 from function_meta where function_source like '%A17Q_SUCCESS_RESULT_INTEGRITY_FAILED%') as a17q_tx1_success_result_integrity_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%A17Q_BATCH_COMPLETION_UPDATE_FAILED%') as a17q_tx1_batch_completion_failure_guard_present,
   exists(select 1 from function_meta where function_source like '%STORE_COMPLETE_SUCCESS_RESULT%') as a17q_tx1_store_success_result_marker_present,
   exists(select 1 from function_meta where function_source like '%NEW_EXECUTION_COMPLETED%') as a17q_tx1_new_execution_completed_status_present,
   (select a17q_tx1_success_result_column_present from column_evidence) as a17q_tx1_success_result_column_present,
+  (select a17q_tx1_success_result_sha256_column_present from column_evidence) as a17q_tx1_success_result_sha256_column_present,
   (select a17q_tx1_success_result_shape_constraint_present from constraint_evidence) as a17q_tx1_success_result_shape_constraint_present,
+  (select a17q_tx1_success_result_sha256_constraint_present from constraint_evidence) as a17q_tx1_success_result_sha256_constraint_present,
   (select a17q_tx1_revision_insert_policy_exists from policy_evidence) as a17q_tx1_revision_insert_policy_exists,
   (select a17q_tx1_decision_pack_batch_count from batch_evidence) as a17q_tx1_decision_pack_batch_count,
   (select a17q_tx1_completed_batch_count from batch_evidence) as a17q_tx1_completed_batch_count,
+  (select a17q_tx1_completed_batch_stored_success_integrity_count from batch_evidence) as a17q_tx1_completed_batch_stored_success_integrity_count,
   (select a17q_tx1_rollback_manifest_count from rollback_evidence) as a17q_tx1_rollback_manifest_count;

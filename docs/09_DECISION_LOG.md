@@ -1,5 +1,44 @@
 # Decision Log
 
+## Decision 355 - A-17Q-TX1-FIX3 finalizes integrity contract
+
+Date: 2026-07-13
+
+Status: Source corrected; migration 0026 remains not applied
+
+Context: A-17Q-TX1-FIX2-REVIEW blocked manual apply because global active
+canonical-key ownership, global duplicate active parent/child membership
+checks, stored replay result hash/batch integrity and SELECT-only verifier
+source evidence were still incomplete.
+
+Decision: Correct the existing not-applied migration 0026 in place, keep db and
+Supabase mirrors byte-identical, add no migration 0027, and require a separate
+owner review/manual apply phase before any production execution. The FIX2 SHA is
+superseded and must never be applied.
+
+Evidence:
+
+- `A17Q_TX1_FIX3_STATUS=PASS_FINAL_INTEGRITY_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+- `A17Q_TX1_FIX3_OLD_SHA256_SUPERSEDED=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `A17Q_TX1_FIX3_NEW_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `MIRROR_MATCH=YES`
+- `GLOBAL_DUPLICATE_ACTIVE_CANONICAL_KEY_CHECK=YES`
+- `APPROVED_CANONICAL_KEY_OWNER_CHECK=YES`
+- `GLOBAL_DUPLICATE_ACTIVE_PARENT_MEMBERSHIP_CHECK=YES`
+- `GLOBAL_DUPLICATE_ACTIVE_CHILD_MEMBERSHIP_CHECK=YES`
+- `GLOBAL_PARENT_CHILD_OVERLAP_CHECK=YES`
+- `SUCCESS_RESULT_SHA256_STORAGE=YES`
+- `FRESH_RESULT_INTEGRITY_VERIFIED_BEFORE_COMPLETION=YES`
+- `COMPLETED_REPLAY_INTEGRITY_VERIFIED=YES`
+- `REPLAY_MUTATION_PATH_COUNT=0`
+- `SELECT_ONLY_VERIFIER_UPDATED=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
 ## Decision 354 - A-17Q-TX1-FIX2-REVIEW blocks migration 0026 apply
 
 Date: 2026-07-13

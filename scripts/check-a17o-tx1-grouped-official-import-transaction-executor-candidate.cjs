@@ -474,6 +474,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs",
   "docs/PLAN_A17Q_TX1_FIX2_OWNER_REVIEW_EXACT_POST_STATE_RECONCILIATION_CANDIDATE.md",
   "scripts/check-a17q-tx1-fix2-owner-review.cjs",
+  "scripts/check-a17q-tx1-fix3-final-integrity-contract.cjs",
 ]);
 
 for (const file of changedFiles) {

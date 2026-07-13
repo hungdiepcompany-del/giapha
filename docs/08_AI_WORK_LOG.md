@@ -1,5 +1,70 @@
 # AI Work Log
 
+## 2026-07-13 - A-17Q-TX1-FIX3 final integrity contract
+
+Phase: A-17Q-TX1-FIX3 - Final Integrity Contract Correction
+
+Status:
+
+- `A17Q_TX1_FIX3_STATUS=PASS_FINAL_INTEGRITY_RECONCILIATION_CONTRACT_READY_NOT_APPLIED`
+- `A17Q_TX1_FIX3_OLD_SHA256_SUPERSEDED=AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D`
+- `A17Q_TX1_FIX3_NEW_SHA256=9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66`
+- `MIRROR_MATCH=YES`
+- `MIGRATION_0026_APPLIED=NO`
+- `MIGRATION_0027_CREATED=NO`
+- `MIGRATION_APPLY_AUTHORIZED=NO`
+- `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
+- `PRODUCTION_EXECUTION_AUTHORIZED=NO`
+
+Implementation:
+
+- Corrected existing not-applied migration 0026 in both `db/migrations` and `supabase/migrations`.
+- Added nullable `family_reconciliation_batches.success_result_sha256` plus a 64-character lowercase SHA-256 constraint.
+- Added direct global active canonical-key duplicate and approved canonical-key owner verification.
+- Added global active family-parent and family-child duplicate membership checks.
+- Kept same-family active parent/child overlap and cycle validation as prerequisites before `graph_validation_passed=true`.
+- Verified fresh success JSON batch ID and decision-pack hash, computed SHA-256, persisted JSON plus hash while the batch is still `running`, reread and recomputed before completion, then returned stored JSON.
+- Hardened completed replay to verify stored batch ID, decision-pack hash and recomputed SHA-256 before returning, with `REPLAY_MUTATION_PATH_COUNT=0`.
+- Extended the SELECT-only verifier with FIX3 source markers and stored result hash metadata checks.
+- Added checker `scripts/check-a17q-tx1-fix3-final-integrity-contract.cjs`.
+- Added package script `check:a17q-tx1-fix3-final-integrity-contract`.
+
+Contract:
+
+- `GLOBAL_DUPLICATE_ACTIVE_CANONICAL_KEY_CHECK=YES`
+- `APPROVED_CANONICAL_KEY_OWNER_CHECK=YES`
+- `GLOBAL_DUPLICATE_ACTIVE_PARENT_MEMBERSHIP_CHECK=YES`
+- `GLOBAL_DUPLICATE_ACTIVE_CHILD_MEMBERSHIP_CHECK=YES`
+- `GLOBAL_PARENT_CHILD_OVERLAP_CHECK=YES`
+- `SUCCESS_RESULT_SHA256_STORAGE=YES`
+- `FRESH_RESULT_INTEGRITY_VERIFIED_BEFORE_COMPLETION=YES`
+- `COMPLETED_REPLAY_INTEGRITY_VERIFIED=YES`
+- `REPLAY_MUTATION_PATH_COUNT=0`
+- `SELECT_ONLY_VERIFIER_UPDATED=YES`
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `PRODUCTION_QUERIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_VOIDED=NO`
+- `MEMBERSHIP_MOVED=NO`
+- `RELATIONSHIP_ROLE_CHANGED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+
+Next:
+
+- `NEXT_ACTION=A17Q_TX1_FIX3_OWNER_REVIEW_FINAL_MIGRATION_CANDIDATE`
+
 ## 2026-07-13 - A-17Q-TX1-FIX2 owner review blocks migration apply
 
 Phase: A-17Q-TX1-FIX2-REVIEW - Owner Review Exact Post-State Reconciliation Candidate
