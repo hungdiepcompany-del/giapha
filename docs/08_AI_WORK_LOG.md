@@ -1,5 +1,49 @@
 # AI Work Log
 
+## 2026-07-13 - A-17P-FIX1 legacy reconciliation audit aggregation correction
+
+Phase: A-17P-FIX1 - Correct Legacy Reconciliation Audit Aggregation and Group Mapping
+
+Status:
+
+- `A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED`
+- `AUDIT_QUERY_CORRECTED=YES`
+- `EXACT_PARENT_SET_GROUP_MAPPING=YES`
+- `JOIN_FAN_OUT_REMOVED=YES`
+- `CANDIDATE_CHILD_COUNTS_CORRECTED=YES`
+- `DUPLICATE_CHILD_COUNTS_CORRECTED=YES`
+- `MEMBERSHIP_DETAIL_GROUP_MAPPING_CORRECTED=YES`
+- `LAYOUT_COUNTS_CORRECTED=YES`
+- `REVISION_COUNTS_CORRECTED=YES`
+- `DELETED_FAMILY_SCOPE_CORRECTED=YES`
+- `AUDIT_INTEGRITY_RESULT_SET_ADDED=YES`
+- `EXPECTED_GROUP_COUNT=22`
+- `EXPECTED_CANDIDATE_FAMILY_COUNT=60`
+- `EXPECTED_REDUNDANT_FAMILY_FORECAST=38`
+- `SQL_EXECUTED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `GENEALOGY_ROWS_MODIFIED=NO`
+- `MIGRATION_CREATED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Implementation:
+
+- Corrected `db/checks/20260713_check_a17p_legacy_family_reconciliation_audit.sql` to build candidate groups from exact normalized parent sets.
+- Split parent, child, layout, revision and deleted-family counts into independent aggregate CTEs before joining.
+- Corrected membership detail mapping to emit only `(safe_group_ref, safe_family_ref)` pairs present in candidate-family detail.
+- Added the `audit_integrity` result set for owner rerun validation.
+- Strengthened `scripts/check-a17p-legacy-reconciliation-audit-dry-run-owner-review-pack.cjs` with static fan-out and group-mapping tests.
+- Updated A-17P docs, index, decision log and handoff.
+
+Validation:
+
+- `VALIDATION_SUMMARY=PASS`
+
+Next:
+
+- `NEXT_ACTION=OWNER_RERUN_CORRECTED_A17P_SELECT_ONLY_AUDIT`
+
 ## 2026-07-13 - A-17P legacy reconciliation audit dry-run owner review pack
 
 Phase: A-17P - Legacy Reconciliation Audit, Dry-run and Owner Review Pack
@@ -69,7 +113,7 @@ Validation:
 
 Next:
 
-- `NEXT_ACTION=OWNER_RUN_A17P_SELECT_ONLY_PRODUCTION_AUDIT_AND_REVIEW_GROUPS`
+- `NEXT_ACTION=OWNER_RERUN_CORRECTED_A17P_SELECT_ONLY_AUDIT`
 
 ## 2026-07-13 - A-17O-DR grouped importer deploy and no-import-mutation smoke evidence
 

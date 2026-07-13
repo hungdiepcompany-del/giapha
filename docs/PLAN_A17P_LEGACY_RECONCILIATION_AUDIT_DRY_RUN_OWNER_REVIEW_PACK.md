@@ -4,6 +4,7 @@ Date: 2026-07-13
 
 Status:
 `A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`
+`A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED`
 
 ## Scope
 
@@ -128,6 +129,72 @@ The generated SQL returns structured JSON payloads for:
 It does not call RPCs and contains no mutation statement. Owner may run it later
 and paste sanitized aggregate/group evidence into the review pack. Production
 names must stay out of committed docs and logs.
+
+## A-17P-FIX1 Corrected Audit Aggregation
+
+- `A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED`
+- `AUDIT_QUERY_CORRECTED=YES`
+- `EXACT_PARENT_SET_GROUP_MAPPING=YES`
+- `JOIN_FAN_OUT_REMOVED=YES`
+- `CANDIDATE_CHILD_COUNTS_CORRECTED=YES`
+- `DUPLICATE_CHILD_COUNTS_CORRECTED=YES`
+- `MEMBERSHIP_DETAIL_GROUP_MAPPING_CORRECTED=YES`
+- `LAYOUT_COUNTS_CORRECTED=YES`
+- `REVISION_COUNTS_CORRECTED=YES`
+- `DELETED_FAMILY_SCOPE_CORRECTED=YES`
+- `AUDIT_INTEGRITY_RESULT_SET_ADDED=YES`
+
+Owner-observed production output from the first A-17P SELECT-only run remains
+read-only evidence:
+
+- `DUPLICATE_GROUP_COUNT=22`
+- `EXPECTED_CANDIDATE_FAMILY_COUNT=60`
+- `REDUNDANT_FAMILY_FORECAST=38`
+- `TWO_PARENT_CANDIDATE_COUNT=57`
+- `ONE_PARENT_CANDIDATE_COUNT=3`
+- `EACH_CANDIDATE_FAMILY_HAS_ONE_DISTINCT_CHILD=YES`
+- `EXPECTED_PARENT_MEMBERSHIP_DETAIL_ROWS=117`
+- `EXPECTED_CHILD_MEMBERSHIP_DETAIL_ROWS=60`
+- `PRODUCTION_MUTATION_OCCURRED=NO`
+
+The corrected audit builds duplicate groups from the complete normalized parent
+set only. A family is never associated with a group through a single shared
+parent. Parent counts, child counts, layout references, revision references and
+deleted-family advisory counts are calculated in independent aggregate CTEs
+before they are joined to group output.
+
+The corrected duplicate-child semantics count the same child person appearing
+across more than one candidate family inside the same exact reconciliation
+group. Distinct siblings in separate one-child legacy families do not create a
+duplicate-child finding. Duplicate-parent semantics use exact parent person,
+role and relationship type within candidate families.
+
+The SQL now also returns `result_set='audit_integrity'` with these fields:
+
+```text
+candidate_group_count
+candidate_family_count
+candidate_pair_uniqueness_pass
+membership_pairs_subset_of_candidate_pairs_pass
+candidate_child_counts_match_detail_pass
+candidate_parent_counts_match_group_identity_pass
+duplicate_child_count_semantics_pass
+duplicate_parent_count_semantics_pass
+deleted_family_advisory_matches_global_scope_pass
+layout_counts_not_join_multiplied_pass
+revision_counts_not_join_multiplied_pass
+```
+
+For the current manual rerun, the expected aggregate evidence is:
+
+```text
+EXPECTED_GROUP_COUNT=22
+EXPECTED_CANDIDATE_FAMILY_COUNT=60
+EXPECTED_REDUNDANT_FAMILY_FORECAST=38
+```
+
+These are current production evidence expectations only, not permanent schema
+invariants.
 
 ## Dry-Run Planner
 
@@ -303,7 +370,18 @@ All fixtures use synthetic IDs and no production names or row snapshots.
 - `TEMP_COPY_BUILD_STATUS=NOT_REQUIRED`
 - `VALIDATION_SUMMARY=PASS`
 
+A-17P-FIX1 static tests added:
+
+- two families sharing only father but different mothers remain separate;
+- two families sharing only mother but different fathers remain separate;
+- child counts are not multiplied by two parents;
+- revision counts are not multiplied by candidate-family count;
+- layout counts are not multiplied by membership joins;
+- membership detail cannot contain a non-candidate family;
+- duplicate child count remains zero when siblings are distinct;
+- deleted-family advisory and global orphan scope agree.
+
 ## Next
 
-- `NEXT_ACTION=OWNER_RUN_A17P_SELECT_ONLY_PRODUCTION_AUDIT_AND_REVIEW_GROUPS`
+- `NEXT_ACTION=OWNER_RERUN_CORRECTED_A17P_SELECT_ONLY_AUDIT`
 - `EXPECTED_SUCCESS_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY`

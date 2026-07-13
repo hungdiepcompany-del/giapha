@@ -1,5 +1,46 @@
 # Decision Log
 
+## Decision 345 - A-17P-FIX1 corrects legacy reconciliation audit joins
+
+Date: 2026-07-13
+
+Status: Accepted audit correction, no execution
+
+Context: The first owner-run A-17P SELECT-only audit found that several result
+sets were internally inconsistent because joins multiplied rows or associated a
+family to a duplicate group through only one shared parent. The observed safe
+production evidence remained read-only: active baseline `74/140/73`, duplicate
+groups `22`, candidate families `60`, redundant forecast `38`, and no
+production mutation.
+
+Decision: Correct the existing A-17P SELECT-only audit before owner review.
+Build groups only from the complete normalized parent set, calculate parent,
+child, layout, revision and deleted-family counts in independent aggregate CTEs,
+and add an `audit_integrity` result set that checks candidate pair uniqueness,
+membership subset mapping, child/parent count agreement, duplicate semantics,
+deleted-family scope agreement and non-multiplied layout/revision counts.
+
+Evidence:
+
+- `A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED`
+- `AUDIT_QUERY_CORRECTED=YES`
+- `EXACT_PARENT_SET_GROUP_MAPPING=YES`
+- `JOIN_FAN_OUT_REMOVED=YES`
+- `CANDIDATE_CHILD_COUNTS_CORRECTED=YES`
+- `DUPLICATE_CHILD_COUNTS_CORRECTED=YES`
+- `MEMBERSHIP_DETAIL_GROUP_MAPPING_CORRECTED=YES`
+- `LAYOUT_COUNTS_CORRECTED=YES`
+- `REVISION_COUNTS_CORRECTED=YES`
+- `DELETED_FAMILY_SCOPE_CORRECTED=YES`
+- `AUDIT_INTEGRITY_RESULT_SET_ADDED=YES`
+- `EXPECTED_GROUP_COUNT=22`
+- `EXPECTED_CANDIDATE_FAMILY_COUNT=60`
+- `EXPECTED_REDUNDANT_FAMILY_FORECAST=38`
+
+Safety: Codex did not execute SQL, call RPCs, run reconciliation, mutate
+genealogy rows, create migrations, deploy or push. The next action is owner
+rerun of the corrected SELECT-only audit.
+
 ## Decision 344 - A-17P prepares legacy reconciliation review pack
 
 Date: 2026-07-13

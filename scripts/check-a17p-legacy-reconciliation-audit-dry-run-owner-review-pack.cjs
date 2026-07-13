@@ -97,6 +97,17 @@ if (!originForEvidence.includes("origin/main")) {
 
 for (const token of [
   "A17P_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK_READY",
+  "A17P_FIX1_STATUS=PASS_LEGACY_RECONCILIATION_AUDIT_AGGREGATION_GROUP_MAPPING_CORRECTED",
+  "AUDIT_QUERY_CORRECTED=YES",
+  "EXACT_PARENT_SET_GROUP_MAPPING=YES",
+  "JOIN_FAN_OUT_REMOVED=YES",
+  "CANDIDATE_CHILD_COUNTS_CORRECTED=YES",
+  "DUPLICATE_CHILD_COUNTS_CORRECTED=YES",
+  "MEMBERSHIP_DETAIL_GROUP_MAPPING_CORRECTED=YES",
+  "LAYOUT_COUNTS_CORRECTED=YES",
+  "REVISION_COUNTS_CORRECTED=YES",
+  "DELETED_FAMILY_SCOPE_CORRECTED=YES",
+  "AUDIT_INTEGRITY_RESULT_SET_ADDED=YES",
   "PRECONDITION_A17O_DR_PASS=YES",
   "A17O_DR_EVIDENCE_COMMIT_FOUND_ON_ORIGIN_MAIN=YES",
   "WORKTREE_CLEAN_BEFORE_PHASE=YES",
@@ -105,8 +116,14 @@ for (const token of [
   "CURRENT_BASELINE_ACTIVE_PARENT_MEMBERSHIPS=140",
   "CURRENT_BASELINE_ACTIVE_CHILD_MEMBERSHIPS=73",
   "EXPECTED_DUPLICATE_PARENT_SET_GROUP_COUNT=22",
+  "EXPECTED_CANDIDATE_FAMILY_COUNT=60",
   "REDUNDANT_FAMILY_ESTIMATE=38",
   "FAMILIES_WITH_MULTIPLE_CHILDREN=0",
+  "EACH_CANDIDATE_FAMILY_HAS_ONE_DISTINCT_CHILD=YES",
+  "TWO_PARENT_CANDIDATE_COUNT=57",
+  "ONE_PARENT_CANDIDATE_COUNT=3",
+  "EXPECTED_PARENT_MEMBERSHIP_DETAIL_ROWS=117",
+  "EXPECTED_CHILD_MEMBERSHIP_DETAIL_ROWS=60",
   "LEGACY_GROUP_IDENTITY_CREATED=YES",
   "CHILD_ID_INCLUDED_IN_GROUP_IDENTITY=NO",
   "PARENT_INPUT_ORDER_AFFECTS_GROUP_IDENTITY=NO",
@@ -196,7 +213,30 @@ for (const token of [
   "candidate_family_detail",
   "membership_detail",
   "deleted_family_advisory",
+  "audit_integrity",
+  "candidate_family_pairs",
+  "candidate_parent_membership_rows",
+  "candidate_child_membership_rows",
+  "family_parent_counts",
+  "family_child_counts",
+  "family_layout_refs",
+  "family_revision_refs",
+  "deleted_family_parent_counts",
+  "deleted_family_child_counts",
+  "deleted_family_layout_refs",
+  "deleted_family_revision_refs",
   "active_family_count",
+  "candidate_group_count",
+  "candidate_family_count",
+  "candidate_pair_uniqueness_pass",
+  "membership_pairs_subset_of_candidate_pairs_pass",
+  "candidate_child_counts_match_detail_pass",
+  "candidate_parent_counts_match_group_identity_pass",
+  "duplicate_child_count_semantics_pass",
+  "duplicate_parent_count_semantics_pass",
+  "deleted_family_advisory_matches_global_scope_pass",
+  "layout_counts_not_join_multiplied_pass",
+  "revision_counts_not_join_multiplied_pass",
   "duplicate_child_membership_count",
   "duplicate_parent_membership_count",
   "layout_reference_count",
@@ -210,6 +250,21 @@ const sqlMutationPattern =
   /\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|call|do|perform)\b/i;
 rejectPattern(sql, sqlMutationPattern, "mutation/RPC statement in A-17P audit SQL");
 rejectPattern(sql, /\brpc\b/i, "RPC marker in A-17P audit SQL");
+rejectPattern(
+  sql,
+  /fp\.person_id\s*=\s*any\s*\(\s*dg\.parent_ids\s*\)/i,
+  "membership detail mapping by partial parent overlap",
+);
+rejectPattern(
+  sql,
+  /family_parent_sets[\s\S]*left join active_child_memberships/i,
+  "parent-set CTE joined directly to child memberships",
+);
+rejectPattern(
+  sql,
+  /deleted_family_advisory as \([\s\S]*left join public\.family_parents[\s\S]*left join public\.family_children/i,
+  "deleted-family advisory fan-out join",
+);
 
 for (const token of [
   "GROUP_KEY_PREFIX = \"a17p-legacy-family-reconciliation:v1\"",
@@ -333,6 +388,179 @@ const parentOrderA = planner.buildGroupKey(["parent-a", "parent-b"], null, null)
 const parentOrderB = planner.buildGroupKey(["parent-a", "parent-b"], null, null);
 assertCase("parent input order does not affect identity", parentOrderA === parentOrderB);
 assertCase("child id excluded from group identity", !parentOrderA.includes("child"));
+
+function buildStaticAuditModel(families) {
+  const activeFamilies = families.filter((family) => !family.deleted);
+  const parentSetKey = (family) =>
+    Array.from(new Set(family.parents ?? [])).sort().join(",");
+  const groups = new Map();
+  for (const family of activeFamilies) {
+    const key = parentSetKey(family);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(family);
+  }
+
+  const duplicateGroups = Array.from(groups.entries())
+    .filter(([, groupFamilies]) => groupFamilies.length > 1)
+    .map(([key, groupFamilies]) => {
+      const candidateFamilyPairs = groupFamilies.map((family) => `${key}:${family.id}`);
+      const childRows = groupFamilies.flatMap((family) =>
+        (family.children ?? []).map((child) => ({
+          groupKey: key,
+          familyId: family.id,
+          child,
+        })),
+      );
+      const parentRows = groupFamilies.flatMap((family) =>
+        (family.parents ?? []).map((parent) => ({
+          groupKey: key,
+          familyId: family.id,
+          parent,
+          role: family.parentRoles?.[parent] ?? "parent",
+          type: family.parentTypes?.[parent] ?? "biological",
+        })),
+      );
+      const childFamilyOccurrences = new Map();
+      for (const row of childRows) {
+        if (!childFamilyOccurrences.has(row.child)) {
+          childFamilyOccurrences.set(row.child, new Set());
+        }
+        childFamilyOccurrences.get(row.child).add(row.familyId);
+      }
+      const parentFamilyOccurrences = new Map();
+      for (const row of parentRows) {
+        const parentIdentity = `${row.parent}|${row.role}|${row.type}`;
+        if (!parentFamilyOccurrences.has(parentIdentity)) {
+          parentFamilyOccurrences.set(parentIdentity, new Set());
+        }
+        parentFamilyOccurrences.get(parentIdentity).add(row.familyId);
+      }
+      const duplicateChildMembershipCount = Array.from(childFamilyOccurrences.values())
+        .filter((familyIds) => familyIds.size > 1)
+        .reduce((sum, familyIds) => sum + familyIds.size - 1, 0);
+      const duplicateParentMembershipCount = Array.from(parentFamilyOccurrences.values())
+        .filter((familyIds) => familyIds.size > 1)
+        .reduce((sum, familyIds) => sum + familyIds.size - 1, 0);
+
+      return {
+        key,
+        parentCount: key ? key.split(",").length : 0,
+        candidateFamilyCount: groupFamilies.length,
+        candidateFamilyPairs,
+        childRows,
+        parentRows,
+        childCountsByFamily: new Map(
+          groupFamilies.map((family) => [family.id, (family.children ?? []).length]),
+        ),
+        layoutReferenceCount: groupFamilies.reduce(
+          (sum, family) => sum + (family.layoutRefs ?? 0),
+          0,
+        ),
+        revisionReferenceCount: groupFamilies.reduce(
+          (sum, family) => sum + (family.revisionRefs ?? 0),
+          0,
+        ),
+        duplicateChildMembershipCount,
+        duplicateParentMembershipCount,
+      };
+    });
+
+  const deletedFamilies = families.filter((family) => family.deleted);
+  const globalDeletedParentCount = deletedFamilies.reduce(
+    (sum, family) => sum + (family.parents ?? []).length,
+    0,
+  );
+  const advisoryDeletedParentCount = deletedFamilies.reduce(
+    (sum, family) => sum + (family.parents ?? []).length,
+    0,
+  );
+
+  return {
+    duplicateGroups,
+    candidateFamilyCount: duplicateGroups.reduce(
+      (sum, group) => sum + group.candidateFamilyCount,
+      0,
+    ),
+    candidatePairSet: new Set(
+      duplicateGroups.flatMap((group) => group.candidateFamilyPairs),
+    ),
+    globalDeletedParentCount,
+    advisoryDeletedParentCount,
+  };
+}
+
+const sharedFatherModel = buildStaticAuditModel([
+  { id: "family-1", parents: ["father-1", "mother-1"], children: ["child-1"] },
+  { id: "family-2", parents: ["father-1", "mother-2"], children: ["child-2"] },
+]);
+assertCase(
+  "two families sharing only father remain separate groups",
+  sharedFatherModel.duplicateGroups.length === 0,
+);
+
+const sharedMotherModel = buildStaticAuditModel([
+  { id: "family-1", parents: ["father-1", "mother-1"], children: ["child-1"] },
+  { id: "family-2", parents: ["father-2", "mother-1"], children: ["child-2"] },
+]);
+assertCase(
+  "two families sharing only mother remain separate groups",
+  sharedMotherModel.duplicateGroups.length === 0,
+);
+
+const siblingGroupModel = buildStaticAuditModel([
+  {
+    id: "family-1",
+    parents: ["father-1", "mother-1"],
+    children: ["child-1"],
+    layoutRefs: 1,
+    revisionRefs: 2,
+  },
+  {
+    id: "family-2",
+    parents: ["mother-1", "father-1"],
+    children: ["child-2"],
+    layoutRefs: 1,
+    revisionRefs: 3,
+  },
+  { id: "family-3", parents: ["father-1", "mother-2"], children: ["child-3"] },
+]);
+const siblingGroup = siblingGroupModel.duplicateGroups[0];
+assertCase(
+  "child count not multiplied by two parents",
+  siblingGroup?.childRows.length === 2 &&
+    siblingGroup?.childCountsByFamily.get("family-1") === 1 &&
+    siblingGroup?.childCountsByFamily.get("family-2") === 1,
+);
+assertCase(
+  "revision count not multiplied by candidate-family count",
+  siblingGroup?.revisionReferenceCount === 5,
+);
+assertCase(
+  "layout count not multiplied by membership joins",
+  siblingGroup?.layoutReferenceCount === 2,
+);
+assertCase(
+  "membership detail cannot contain a non-candidate family",
+  siblingGroup?.candidateFamilyCount === 2 &&
+    siblingGroup?.childRows.every((row) =>
+      siblingGroupModel.candidatePairSet.has(`${row.groupKey}:${row.familyId}`),
+    ) &&
+    !siblingGroupModel.candidatePairSet.has(`${siblingGroup?.key}:family-3`),
+);
+assertCase(
+  "duplicate child count remains zero when siblings are distinct",
+  siblingGroup?.duplicateChildMembershipCount === 0,
+);
+
+const deletedScopeModel = buildStaticAuditModel([
+  { id: "active-1", parents: ["father-1", "mother-1"], children: ["child-1"] },
+  { id: "deleted-1", parents: ["father-2", "mother-2"], children: [], deleted: true },
+]);
+assertCase(
+  "deleted-family advisory and global orphan scope agree",
+  deletedScopeModel.globalDeletedParentCount === 2 &&
+    deletedScopeModel.advisoryDeletedParentCount === 2,
+);
 
 for (const [content, token, label] of [
   [index, "PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md", "index A-17P"],
