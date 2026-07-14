@@ -8746,3 +8746,9 @@ Lý do:
 - Gia phả dễ bị sửa/xóa nhầm.
 - Cần khôi phục.
 - Cần lưu lịch sử thay đổi.
+# 2026-07-14 - A-17Q dry-run must use authenticated owner session
+
+- Decision: replace the Supabase SQL Editor dry-run path with an owner/admin application route that calls the A-17Q executor through the real signed-in user's server-cookie Supabase client.
+- Reason: the executor is `SECURITY INVOKER` and correctly requires `auth.uid()` plus `current_profile_id`; SQL Editor does not provide the application user's authenticated Supabase session.
+- Safety contract: the source caller hardcodes `p_dry_run_only=true`, all approved hashes, owner marker and confirmation booleans; no request input can enable non-dry-run execution.
+- Boundary: no service role, no JWT claim spoofing, no migration change, no RPC call during source phase, no deploy and no push.

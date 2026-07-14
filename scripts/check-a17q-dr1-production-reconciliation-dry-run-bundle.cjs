@@ -299,12 +299,19 @@ const allowedChangedFiles = new Set([
   dryRunSqlPath,
   postDryRunVerifierPath,
   dr1DocPath,
+  "docs/PLAN_A17Q_DR1_FIX1_AUTHENTICATED_DRY_RUN_CALLER.md",
   planDocPath,
   "docs/00_INDEX.md",
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
   "package.json",
+  "components/layout/admin-shell.tsx",
+  "app/(admin)/admin/reconciliation/a17q/dry-run/page.tsx",
+  "app/api/admin/a17q/reconciliation-dry-run/route.ts",
+  "components/reconciliation/a17q-authenticated-dry-run-client.tsx",
+  "lib/reconciliation/a17q-authenticated-dry-run.ts",
+  "scripts/check-a17q-dr1-fix1-authenticated-dry-run-caller.cjs",
   "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
   "scripts/check-a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification.cjs",
   "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
@@ -316,7 +323,7 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17a-tree-baseline-evidence.cjs",
 ]);
 for (const file of changedFiles) {
-  if (/^(app|components|lib|server|services)\//.test(file)) {
+  if (/^(app|components|lib|server|services)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`runtime file changed during A-17Q-DR1: ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {

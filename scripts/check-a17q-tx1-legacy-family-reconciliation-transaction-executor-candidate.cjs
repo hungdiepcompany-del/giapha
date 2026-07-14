@@ -542,7 +542,16 @@ const runtimeCallers = runtimeFiles.filter((file) => {
   const content = read(file);
   return content.includes("execute_admin_a17q_legacy_family_reconciliation");
 });
-requireEqual("active runtime caller count", runtimeCallers.length, 0);
+const approvedDryRunRuntimeCallers = runtimeCallers.filter((file) => {
+  const content = read(file);
+  return (
+    file === "lib/reconciliation/a17q-authenticated-dry-run.ts" &&
+    content.includes("p_dry_run_only: true") &&
+    !content.includes("p_dry_run_only: false") &&
+    !content.includes("dryRunOnly: false")
+  );
+});
+requireEqual("active non-dry-run runtime caller count", runtimeCallers.length - approvedDryRunRuntimeCallers.length, 0);
 
 for (const token of [
   "A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED",

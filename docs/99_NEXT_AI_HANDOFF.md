@@ -12385,3 +12385,20 @@ Phase 1 - Project foundation:
 - Chỉ đọc thêm docs liên quan task
 - Không đọc toàn bộ .md nếu task nhỏ
 - Không bỏ export/backup khỏi thiết kế
+# 2026-07-14 - A-17Q-DR1-FIX1 authenticated dry-run caller prepared
+
+Status:
+`A17Q_DR1_FIX1_STATUS=PASS_AUTHENTICATED_DRY_RUN_CALLER_PREPARED_NOT_EXECUTED`
+
+Owner/admin dry-run now has an application authenticated session path instead of the invalid Supabase SQL Editor path:
+
+- Page: `/admin/reconciliation/a17q/dry-run`
+- API: `/api/admin/a17q/reconciliation-dry-run`
+- RPC: `execute_admin_a17q_legacy_family_reconciliation`
+- Client auth context: `createServerSupabaseClient()` from real server cookies.
+- Gate: authenticated user, visible profile, OWNER/ADMIN role, and `relationships.update` plus `permissions.manage`.
+- Hardcoded: owner marker, all five approved hashes, four confirmation booleans and `p_dry_run_only=true`.
+- No service role, no JWT spoofing, no non-dry-run path, no RPC call by Codex, no SQL execution, no mutation, no migration change, no deploy and no push.
+
+Next action:
+`A17Q_DR2_DEPLOY_AND_RUN_AUTHENTICATED_PRODUCTION_DRY_RUN`

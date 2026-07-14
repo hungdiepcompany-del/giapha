@@ -91,6 +91,11 @@ const navGroups = [
         label: "Trạng thái hệ thống",
         description: "Chỉ hiển thị có/không, không lộ secret",
       },
+      {
+        href: "/admin/reconciliation/a17q/dry-run",
+        label: "A-17Q dry-run",
+        description: "Owner/admin cookie-session reconciliation dry-run",
+      },
     ],
   },
 ];

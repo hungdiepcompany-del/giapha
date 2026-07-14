@@ -13954,3 +13954,12 @@ Documentation foundation
 - Chưa tạo migration.
 - Chưa cài package.
 - Thư mục hiện tại chưa phải Git repo tại thời điểm tạo tài liệu.
+# 2026-07-14 - A-17Q-DR1-FIX1 authenticated dry-run caller prepared
+
+- Added the owner/admin authenticated cookie-session dry-run caller for A-17Q because the Supabase SQL Editor path does not carry the application user's Supabase auth context.
+- Added `/admin/reconciliation/a17q/dry-run` and `/api/admin/a17q/reconciliation-dry-run`.
+- The caller uses `createServerSupabaseClient`, checks the signed-in user, profile, OWNER/ADMIN role and `relationships.update` plus `permissions.manage` before showing/invoking the action.
+- Hardcoded RPC contract: `execute_admin_a17q_legacy_family_reconciliation`, `p_dry_run_only=true`, owner marker, five approved hashes and four confirmation booleans.
+- `SERVICE_ROLE_USED=NO`, `JWT_CLAIMS_SPOOFED=NO`, `NON_DRY_RUN_PATH_COUNT=0`, `ACTIVE_EXECUTION_PATH_COUNT=0`.
+- No RPC was called by Codex, no SQL was executed, no database mutation, no migration change, no deploy and no push.
+- Added `check:a17q-dr1-fix1-authenticated-dry-run-caller`.

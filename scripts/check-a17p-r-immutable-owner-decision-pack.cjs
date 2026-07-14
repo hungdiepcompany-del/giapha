@@ -435,6 +435,13 @@ const allowedChangedFiles = new Set([
   "docs/08_AI_WORK_LOG.md",
   "docs/09_DECISION_LOG.md",
   "docs/99_NEXT_AI_HANDOFF.md",
+  "docs/PLAN_A17Q_DR1_FIX1_AUTHENTICATED_DRY_RUN_CALLER.md",
+  "components/layout/admin-shell.tsx",
+  "app/(admin)/admin/reconciliation/a17q/dry-run/page.tsx",
+  "app/api/admin/a17q/reconciliation-dry-run/route.ts",
+  "components/reconciliation/a17q-authenticated-dry-run-client.tsx",
+  "lib/reconciliation/a17q-authenticated-dry-run.ts",
+  "scripts/check-a17q-dr1-fix1-authenticated-dry-run-caller.cjs",
   "docs/PLAN_A17P_LEGACY_RECONCILIATION_AUDIT_DRY_RUN_OWNER_REVIEW_PACK.md",
   "docs/templates/A17P_LEGACY_RECONCILIATION_OWNER_REVIEW_PACK_TEMPLATE.md",
   "scripts/check-a17p-manual-owner-approval-evidence.cjs",
@@ -480,7 +487,7 @@ const allowedChangedFiles = new Set([
 ]);
 
 for (const file of changedFiles) {
-  if (/^(app|components|lib|services)\//.test(file)) {
+  if (/^(app|components|lib|services)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`runtime file changed during A-17P-R: ${file}`);
   }
   if (/^(db\/migrations|supabase\/migrations)\//.test(file) && !allowedChangedFiles.has(file)) {
