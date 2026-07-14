@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-EXEC2-TX4 reconciliation completed and recorded
+
+- `A17Q_EXEC2_TX4_STATUS=PASS_RECONCILIATION_COMPLETED_VERIFIED_RECORDED_AND_PUSHED`.
+- Recorded owner-supplied production evidence for the same bundled phase `A17Q_EXEC2_TX4_SINGLE_IDEMPOTENT_RETRY_VERIFY_RECORD_AND_PUSH`.
+- Attempt 1 reached the authenticated production RPC once and failed with `RPC_ERROR_JSONB_ARGUMENT_LIMIT_TRANSACTION_ROLLED_BACK`; `ATTEMPT1_MUTATION_APPLIED=NO`.
+- Migration 0029 TX4 patch was owner-applied after the argument-limit failure; migration SHA remains `F73DB2848156306A03975C7CA8918087673E7BF3380A4D94FF0B1DC403D9DA7C`.
+- Attempt 2 used unchanged idempotency key `A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001`, completed reconciliation, and was the only retry.
+- `TOTAL_FORM_SUBMIT_COUNT=2`, `THIRD_SUBMISSION_ATTEMPTED=NO`, `RPC_CALLED_AGAIN_AFTER_SUCCESS=NO`.
+- Corrected final SELECT-only verifier PASS in project `frkyeuxrlcflmsxxsolp`: active post-state `38/68/73`, decision-pack/completed/rollback counts `1/1/1`, 21 active survivors, 36 merged void families, 57 child memberships preserved, child loss `0`, graph integrity PASS, ancestry cycle count `0`, pre/post audit counts `1/1`, stored success-result integrity PASS.
+- Corrected verifier false-negative by comparing nonempty audit before/after hashes instead of nonexistent `success_result` after-hash keys; added `scripts/check-a17q-exec2-tx4-final-verifier-hash-contract.cjs` and package alias `check:a17q-exec2-tx4-final-verifier-hash-contract`.
+- Added final evidence doc `docs/PLAN_A17Q_EXEC2_TX4_SINGLE_IDEMPOTENT_RETRY_FINAL_EVIDENCE.md`.
+- Boundary: Codex did not call RPC, did not submit the form, did not run SQL, did not rerun migrations 0028/0029, did not run UI smoke, and did not deploy.
+- Next action: `A17Q_RECONCILIATION_COMPLETE`.
+
 ## 2026-07-14 - A-17Q-TX3R manual apply evidence recorded
 
 - `A17Q_TX3R_STATUS=PASS_TX3C_MANUAL_APPLY_EVIDENCE_RECORDED_EXEC2_READINESS_PENDING`.

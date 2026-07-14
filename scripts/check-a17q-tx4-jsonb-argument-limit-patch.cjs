@@ -485,7 +485,6 @@ for (const untouchedPath of [
   "app/api/admin/a17q/reconciliation-execute/route.ts",
   "app/(admin)/admin/reconciliation/a17q/execute/page.tsx",
   "lib/reconciliation/a17q-authenticated-execution.ts",
-  "db/checks/20260714_check_a17q_exec2_final_post_reconciliation_verification.sql",
 ]) {
   if (read(untouchedPath) !== gitHeadContent(untouchedPath)) {
     failures.push(`${untouchedPath} changed unexpectedly`);

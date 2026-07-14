@@ -1,5 +1,55 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q reconciliation completed after TX4 single idempotent retry
+
+Current status:
+
+```text
+A17Q_EXEC2_TX4_STATUS=PASS_RECONCILIATION_COMPLETED_VERIFIED_RECORDED_AND_PUSHED
+PROJECT_REF=frkyeuxrlcflmsxxsolp
+ATTEMPT1_SUBMIT_COUNT=1
+ATTEMPT1_RESULT=RPC_ERROR_JSONB_ARGUMENT_LIMIT_TRANSACTION_ROLLED_BACK
+TX4_RETRY_SUBMIT_COUNT=1
+ATTEMPT2_RESULT=RECONCILIATION_COMPLETED
+TOTAL_FORM_SUBMIT_COUNT=2
+THIRD_SUBMISSION_ATTEMPTED=NO
+IDEMPOTENCY_KEY=A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001
+IDEMPOTENCY_KEY_UNCHANGED=YES
+RECONCILIATION_EXECUTED=YES
+MUTATION_APPLIED=YES
+ACTIVE_POST_STATE=38/68/73
+DECISION_PACK_BATCH_COUNT=1
+COMPLETED_BATCH_COUNT=1
+ROLLBACK_MANIFEST_COUNT=1
+APPROVED_GROUP_COUNT=21
+APPROVED_SURVIVOR_ACTIVE_COUNT=21
+APPROVED_VOID_MERGED_COUNT=36
+CHILD_LOSS_COUNT=0
+ANCESTRY_CYCLE_COUNT=0
+STORED_SUCCESS_RESULT_INTEGRITY_PASS=TRUE
+GLOBAL_GRAPH_INTEGRITY_PASS=TRUE
+```
+
+What changed:
+
+- Added `docs/PLAN_A17Q_EXEC2_TX4_SINGLE_IDEMPOTENT_RETRY_FINAL_EVIDENCE.md`.
+- Corrected the final verifier false-negative for people/layout/excluded/deleted
+  unchanged checks by comparing nonempty audit before/after hashes instead of
+  nonexistent `success_result` after-hash keys.
+- Added checker `scripts/check-a17q-exec2-tx4-final-verifier-hash-contract.cjs`.
+- Added package alias `check:a17q-exec2-tx4-final-verifier-hash-contract`.
+
+Important:
+
+- Do not submit the A17Q execution form again.
+- Do not call or replay `public.execute_admin_a17q_legacy_family_reconciliation`.
+- Do not rerun migrations 0028 or 0029.
+- Do not change the idempotency key.
+- This evidence-only commit was not deployed.
+
+Next action:
+`A17Q_RECONCILIATION_COMPLETE`
+
 ## 2026-07-14 - A-17Q-TX3R manual apply evidence and EXEC2 readiness
 
 Current status:

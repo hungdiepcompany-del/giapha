@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 364 - A-17Q reconciliation completion is accepted after TX4 single idempotent retry
+
+Date: 2026-07-14
+
+Status:
+`A17Q_EXEC2_TX4_STATUS=PASS_RECONCILIATION_COMPLETED_VERIFIED_RECORDED_AND_PUSHED`
+
+Decision:
+Accept owner-supplied production evidence that the owner-approved A17Q
+reconciliation completed on the single TX4 idempotent retry with unchanged
+idempotency key `A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001`, after the
+first authenticated execution attempt rolled back on the PostgreSQL JSONB
+argument-limit error.
+
+Rationale:
+Attempt 1 reached the authenticated RPC once and failed with
+`RPC_ERROR_JSONB_ARGUMENT_LIMIT_TRANSACTION_ROLLED_BACK`, leaving no mutation.
+Migration 0029 then patched only oversized JSONB builders. Attempt 2 completed
+the reconciliation, and the corrected SELECT-only final verifier confirmed
+active post-state `38/68/73`, batch/completed/rollback counts `1/1/1`, 21 active
+survivors, 36 merged void families, 57 child memberships preserved, child loss
+`0`, graph integrity PASS, pre/post audit counts `1/1`, and stored
+success-result integrity PASS.
+
+Boundary:
+
+- do not submit the execution form again;
+- do not call or replay the reconciliation RPC again;
+- do not rerun migrations 0028 or 0029;
+- do not change the idempotency key;
+- do not deploy this evidence-only commit;
+- A17Q reconciliation is complete; next action is
+  `A17Q_RECONCILIATION_COMPLETE`.
+
 ## Decision 363 - A-17Q-TX3R records owner manual apply before EXEC2
 
 Date: 2026-07-14
