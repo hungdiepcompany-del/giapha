@@ -8817,3 +8817,10 @@ Lý do:
 - Reason: the dry-run evidence is now PASS and the real execution must use the same authenticated end-user cookie session boundary as dry-run, with a distinct route and explicit owner confirmation before the RPC can be called.
 - Safety contract: the execution caller hardcodes the approved marker, five hashes, one execution idempotency key and `p_dry_run_only=false`; it requires the exact phrase `EXECUTE_A17Q_21_GROUP_RECONCILIATION` plus backup, rollback, audit and excluded-scope confirmations before POST can call the RPC.
 - Boundary: no service role, no JWT spoofing, no RPC on page load, no alternate non-dry-run path, no SQL execution, no reconciliation execution in EXEC1, no deploy and no push.
+
+# 2026-07-14 - A-17Q-EXEC1-FIX1 requires visible execution contract and final verifier before deploy
+
+- Decision: A-17Q-EXEC2 cannot proceed until the execution page visibly shows the immutable owner execution contract and a complete SELECT-only final verifier exists for both initial execution and idempotency replay.
+- Reason: the non-dry-run route is intentionally dangerous; the owner must see the exact marker, hashes, idempotency key, `p_dry_run_only=false` and expected scope before the typed confirmation can submit.
+- Safety contract: final verification must be a separate SELECT-only SQL file that never calls the executor and verifies post-state, graph integrity, audit evidence, rollback manifest, stored success-result SHA-256, excluded/deleted scope and no people/layout mutation.
+- Boundary: no RPC call, no SQL execution, no database mutation, no migration change, no deploy and no push in A-17Q-EXEC1-FIX1.

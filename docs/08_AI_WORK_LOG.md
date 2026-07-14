@@ -14061,3 +14061,28 @@ Documentation foundation
 - `RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RECONCILIATION_EXECUTED=NO`, `RUNTIME_CHANGED=YES`, `DEPLOY=NO`, `PUSH=NO`.
 - Added `check:a17q-exec1-authenticated-single-execution-caller`.
 - `NEXT_ACTION=A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`.
+
+# 2026-07-14 - A-17Q-EXEC1-FIX1 execution guard and final verifier completed
+
+- `A17Q_EXEC1_FIX1_STATUS=PASS_EXECUTION_GUARD_AND_FINAL_VERIFIER_READY_NOT_DEPLOYED`.
+- Added visible immutable execution contract on `/admin/reconciliation/a17q/execute`.
+- `VISIBLE_OWNER_MARKER=YES`.
+- `VISIBLE_FIVE_HASHES=YES`.
+- `VISIBLE_IDEMPOTENCY_KEY=YES`.
+- `VISIBLE_DRY_RUN_FALSE=YES`.
+- `EXPECTED_SCOPE_VISIBLE=YES`.
+- `PAGE_LOAD_RPC_CALL_COUNT=0`.
+- Visible expected scope is `21` groups, `21` survivors, `36` void families, `36` child moves, `72` parent deactivations, `0` child loss and post-state `38 / 68 / 73`.
+- Created `FINAL_VERIFIER_FILE=db/checks/20260714_check_a17q_exec2_final_post_reconciliation_verification.sql`.
+- `FINAL_VERIFIER_SELECT_ONLY=YES`.
+- `FINAL_VERIFIER_EXECUTOR_CALL_COUNT=0`.
+- `INITIAL_AND_REPLAY_VERIFICATION_SUPPORTED=YES`.
+- The final verifier checks active post-state, survivor/void family state, child preservation, parent membership final state, role corrections, excluded/deleted scope, people/layout hash preservation, graph/canonical integrity, audit evidence, rollback manifest count and stored success-result SHA-256 integrity.
+- `RPC_CALLED=NO`.
+- `DATABASE_MUTATION=NO`.
+- `RECONCILIATION_EXECUTED=NO`.
+- `MIGRATION_CHANGED=NO`.
+- `DEPLOY=NO`.
+- `PUSH=NO`.
+- Added `check:a17q-exec1-fix1-execution-guard-final-verifier`.
+- `NEXT_ACTION=A17Q_EXEC2_REAPPROVE_DEPLOY_EXECUTE_ONCE_AND_FINAL_VERIFY`.

@@ -12580,3 +12580,51 @@ Next action:
 `A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`
 
 `NEXT_ACTION=A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`
+
+# 2026-07-14 - A-17Q-EXEC1-FIX1 execution guard and final verifier
+
+Status:
+`A17Q_EXEC1_FIX1_STATUS=PASS_EXECUTION_GUARD_AND_FINAL_VERIFIER_READY_NOT_DEPLOYED`
+
+What changed:
+
+- The owner-only execution page now visibly displays the immutable execution contract before submit.
+- `VISIBLE_OWNER_MARKER=YES`
+- `VISIBLE_FIVE_HASHES=YES`
+- `VISIBLE_IDEMPOTENCY_KEY=YES`
+- `VISIBLE_DRY_RUN_FALSE=YES`
+- `EXPECTED_SCOPE_VISIBLE=YES`
+- `PAGE_LOAD_RPC_CALL_COUNT=0`
+- `FINAL_VERIFIER_FILE=db/checks/20260714_check_a17q_exec2_final_post_reconciliation_verification.sql`
+- `FINAL_VERIFIER_SELECT_ONLY=YES`
+- `FINAL_VERIFIER_EXECUTOR_CALL_COUNT=0`
+- `INITIAL_AND_REPLAY_VERIFICATION_SUPPORTED=YES`
+
+Final verifier covers:
+
+- active post-state `38 / 68 / 73`
+- 21 active survivors and 36 void families merged into configured survivors
+- 57 approved child memberships preserved and child loss `0`
+- active survivor parent memberships `42`
+- 16 active survivor role corrections and 20 superseded role rows inactive
+- excluded and deleted scope unchanged
+- people/layout hashes unchanged
+- duplicate canonical/parent/child/overlap/cycle counts all zero
+- completed batch and rollback manifest counts equal `1`
+- pre/post mutation audit evidence exists
+- stored success-result SHA-256, batch ID and decision-pack hash match
+
+Boundary:
+
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MIGRATION_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Checker:
+`check:a17q-exec1-fix1-execution-guard-final-verifier`
+
+Next action:
+`NEXT_ACTION=A17Q_EXEC2_REAPPROVE_DEPLOY_EXECUTE_ONCE_AND_FINAL_VERIFY`
