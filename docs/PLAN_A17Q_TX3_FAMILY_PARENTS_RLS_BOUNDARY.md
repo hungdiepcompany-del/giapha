@@ -207,6 +207,42 @@ GIT_PUSH=NO
 
 After owner review and manual apply in a later phase, rerun the TX3 verifier/checker and only then consider a single owner execution retry under a separate explicit marker.
 
+## TX3C Validation Separation
+
+A17Q_TX3C is classified as:
+
+```text
+PHASE_CHANGE_CLASS=DATABASE_SCHEMA+EXTERNAL_ADMIN_ACCESS
+```
+
+This classification does not imply frontend or application UI validation.
+Starting with A17Q_TX3C, application UI validation, external browser-access
+validation, and database mutation validation are independent gates. A
+database-only phase must not rerun general UI smoke unless a frontend-affecting
+change, UI-specific objective, new relevant deployment, or contradictory
+production evidence requires it.
+
+For TX3C:
+
+```text
+UI_VALIDATION_REQUIRED=NO
+UI_VALIDATION_REASON=database-only migration apply; no frontend-affecting change
+UI_SMOKE_EXECUTED=NO
+APPLICATION_UI_TESTED=NO
+BROWSER_ACCESS_REQUIRED=YES
+BROWSER_ACCESS_STATUS=PENDING_VISIBLE_SUPABASE_PROJECT_REF
+VISIBLE_EXTERNAL_TARGET_VERIFIED=PENDING
+DATABASE_TARGET_VERIFIED=REQUIRED
+MIGRATION_IDENTITY_VERIFIED=REQUIRED
+MIGRATION_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+EVIDENCE_REUSE_ALLOWED=YES
+RPC_CALLED=NO
+RECONCILIATION_EXECUTED=NO
+```
+
+The durable policy and TX3C checker are recorded in
+`docs/PLAN_A17Q_TX3C_VALIDATION_SEPARATION_MANUAL_APPLY.md`.
+
 ## Rollback Code Plan
 
 If owner review rejects this boundary, do not apply migration 0028. If 0028 is manually applied and must be rolled back before execution, a separate owner-approved patch should replace the RPC with the prior TX2 `SECURITY INVOKER` body from migration 0027 and preserve TX2 digest qualification.

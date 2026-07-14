@@ -1,5 +1,43 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q-TX3C validation separation policy ready
+
+Current status:
+
+```text
+A17Q_TX3C_VALIDATION_SEPARATION_STATUS=PASS_POLICY_READY
+POLICY_SEPARATION_IMPLEMENTED=YES
+PHASE_CHANGE_CLASS=DATABASE_SCHEMA+EXTERNAL_ADMIN_ACCESS
+UI_VALIDATION_REQUIRED=NO
+UI_VALIDATION_REASON=database-only migration apply; no frontend-affecting change
+UI_SMOKE_EXECUTED=NO
+APPLICATION_UI_TESTED=NO
+BROWSER_ACCESS_REQUIRED=YES
+DATABASE_TARGET_VERIFIED=REQUIRED
+MIGRATION_IDENTITY_VERIFIED=REQUIRED
+MIGRATION_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+EVIDENCE_REUSE_ALLOWED=YES
+RPC_CALLED=NO
+RECONCILIATION_EXECUTED=NO
+```
+
+What changed:
+
+- Added `docs/PLAN_A17Q_TX3C_VALIDATION_SEPARATION_MANUAL_APPLY.md`.
+- Added checker `scripts/check-a17q-tx3c-validation-separation.cjs`.
+- Added package alias `check:a17q-tx3c-validation-separation`.
+- TX3C now explicitly separates application UI validation, external
+  browser-access validation and database mutation validation.
+- Supabase Dashboard access through Chrome is `EXTERNAL_ADMIN_ACCESS`; it is not
+  Gia Pha application UI smoke.
+
+Next action:
+`A17Q_TX3C_MANUAL_APPLY_FROM_VISIBLE_SUPABASE_PROJECT_REF_GATE`
+
+Do not run general frontend UI smoke for TX3C unless frontend-affecting source,
+a UI-specific objective, a new relevant deployment, or contradictory production
+UI evidence appears. Do not call the reconciliation RPC.
+
 ## 2026-07-14 - A-17Q-TX3B-FIX1 owner contract ready for final review
 
 Current status:

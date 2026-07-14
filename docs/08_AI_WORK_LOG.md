@@ -1,5 +1,17 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-TX3C validation separation policy
+
+- `A17Q_TX3C_VALIDATION_SEPARATION_STATUS=PASS_POLICY_READY`.
+- Added `docs/PLAN_A17Q_TX3C_VALIDATION_SEPARATION_MANUAL_APPLY.md` to make application UI validation, external browser-access validation and database mutation validation independent gates starting with TX3C.
+- TX3C is classified as `PHASE_CHANGE_CLASS=DATABASE_SCHEMA+EXTERNAL_ADMIN_ACCESS`.
+- For TX3C, `UI_VALIDATION_REQUIRED=NO`, `UI_VALIDATION_REASON=database-only migration apply; no frontend-affecting change`, `UI_SMOKE_EXECUTED=NO` and `APPLICATION_UI_TESTED=NO`.
+- Supabase Dashboard/Chrome checks are categorized only as `BROWSER_ACCESS_REQUIRED=YES` and `EXTERNAL_ADMIN_ACCESS`; they do not count as Gia Pha application UI smoke.
+- Database mutation gates remain mandatory: target project `frkyeuxrlcflmsxxsolp`, migration file `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`, SHA `9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7`, visible SQL Editor project identity and owner authorization.
+- Added `scripts/check-a17q-tx3c-validation-separation.cjs` and package alias `check:a17q-tx3c-validation-separation` to fail if a database-only TX3C plan requires unrelated application UI smoke or omits evidence reuse, project identity, checksum, RPC/reconciliation prohibitions.
+- Safety: no migration or runtime source changed, no SQL executed, no RPC called, no reconciliation, no deploy and no push in the policy update.
+- Next action: `A17Q_TX3C_MANUAL_APPLY_FROM_VISIBLE_SUPABASE_PROJECT_REF_GATE`.
+
 ## 2026-07-14 - A-17Q-TX3B-FIX1 explicit owner and tracked mirror
 
 - `A17Q_TX3B_FIX1_STATUS=PASS_EXPLICIT_POSTGRES_OWNER_AND_TRACKED_MIRROR_READY_FOR_FINAL_REVIEW`.

@@ -1,5 +1,42 @@
 # Decision Log
 
+## Decision 362 - A-17Q-TX3C separates UI, browser access and database mutation validation
+
+Date: 2026-07-14
+
+Status:
+`A17Q_TX3C_VALIDATION_SEPARATION_STATUS=PASS_POLICY_READY`
+
+Decision:
+Starting with A17Q_TX3C, application UI validation, external browser-access
+validation, and database mutation validation are independent gates. A
+database-only phase must not rerun general UI smoke unless a frontend-affecting
+change, UI-specific objective, new relevant deployment, or contradictory
+production evidence requires it.
+
+Rationale:
+A17Q_TX3C is a database schema apply and external Supabase administrative-access
+phase. Chrome may be needed to reach Supabase SQL Editor, but that browser use
+does not inspect or validate Gia Pha application UI. Requiring general
+frontend/browser smoke for a database-only migration apply produced repeated
+blocked states that were about external project access, not application UI
+health.
+
+Boundary:
+
+- `PHASE_CHANGE_CLASS=DATABASE_SCHEMA+EXTERNAL_ADMIN_ACCESS`
+- `UI_VALIDATION_REQUIRED=NO`
+- `UI_SMOKE_EXECUTED=NO`
+- `APPLICATION_UI_TESTED=NO`
+- `BROWSER_ACCESS_REQUIRED=YES`
+- `DATABASE_TARGET_VERIFIED=REQUIRED`
+- `MIGRATION_IDENTITY_VERIFIED=REQUIRED`
+- `RPC_CALLED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+
+Checker:
+`check:a17q-tx3c-validation-separation`
+
 ## Decision 361 - A-17Q-TX3B-FIX1 pins the privileged transaction boundary owner
 
 Date: 2026-07-14

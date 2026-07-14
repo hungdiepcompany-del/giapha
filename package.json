@@ -392,7 +392,8 @@
     "check:a17q-exec1-authenticated-single-execution-caller": "node scripts/check-a17q-exec1-authenticated-single-execution-caller.cjs",
     "check:a17q-exec1-fix1-execution-guard-final-verifier": "node scripts/check-a17q-exec1-fix1-execution-guard-final-verifier.cjs",
     "check:a17q-tx3-family-parents-rls-boundary": "node scripts/check-a17q-tx3-family-parents-rls-boundary.cjs",
-    "check:a17q-tx3b-fix1-privileged-function-ownership": "node scripts/check-a17q-tx3-family-parents-rls-boundary.cjs"
+    "check:a17q-tx3b-fix1-privileged-function-ownership": "node scripts/check-a17q-tx3-family-parents-rls-boundary.cjs",
+    "check:a17q-tx3c-validation-separation": "node scripts/check-a17q-tx3c-validation-separation.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
