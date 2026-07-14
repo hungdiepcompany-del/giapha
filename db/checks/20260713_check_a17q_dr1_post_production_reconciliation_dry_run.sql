@@ -75,7 +75,12 @@ with expected as (
       '16ead1f516a885724a2bddd11e14472b'
     )) as unexpected_hash_collision_count
   from public.families f
-  where f.id = any((select excluded_family_ids from expected))
+  where f.id = any(
+    coalesce(
+      (select excluded_family_ids from expected),
+      array[]::uuid[]
+    )
+  )
 ), deleted_scope as (
   select
     count(*) as deleted_family_record_count,

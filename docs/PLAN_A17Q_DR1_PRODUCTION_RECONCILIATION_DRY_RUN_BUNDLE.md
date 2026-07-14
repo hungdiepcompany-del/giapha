@@ -58,6 +58,7 @@ mutation statement can run.
 - `POST_DRY_RUN_VERIFIER_FILE=db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
 - `POST_DRY_RUN_VERIFIER_SELECT_ONLY=YES`
 - `POST_DRY_RUN_VERIFIER_CALLS_EXECUTOR=NO`
+- `UUID_ARRAY_OPERATOR_FIX=A17Q_DR2_FIX1`
 
 The verifier checks:
 
@@ -69,6 +70,13 @@ The verifier checks:
 - `GENEALOGY_BASELINE_REMAINS=74/140/73`
 - `EXCLUDED_SCOPE_UNCHANGED=YES`
 - `DELETED_SCOPE_UNCHANGED=YES`
+
+A-17Q-DR2-FIX1 corrected the excluded-family UUID membership predicate after
+the first authenticated dry-run found PostgreSQL error `42883`:
+`operator does not exist: uuid = uuid[]`. The verifier now uses
+`ANY(COALESCE((select excluded_family_ids from expected), ARRAY[]::uuid[]))`
+instead of a scalar UUID comparison against a UUID-array subquery. The verifier
+remains SELECT-only and still does not call the reconciliation executor.
 
 ## Expected Dry-Run Result
 

@@ -542,7 +542,8 @@ const runtimeCallers = runtimeFiles.filter((file) => {
     file === checkerPath ||
     file.startsWith("scripts/check-a17q-tx1") ||
     file.startsWith("scripts/check-a17q-tx2") ||
-    file.startsWith("scripts/check-a17q-dr1")
+    file.startsWith("scripts/check-a17q-dr1") ||
+    file.startsWith("scripts/check-a17q-dr2")
   ) {
     return false;
   }

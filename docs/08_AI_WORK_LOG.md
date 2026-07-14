@@ -14023,3 +14023,23 @@ Documentation foundation
 - `VERIFIER_FALSE_NEGATIVE_FIXED=YES`, `DRY_RUN_BRANCH_PRESERVED=YES`, `DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES`.
 - `RPC_SOURCE_CHANGED=NO`, `MIGRATION_CHANGED=NO`, `MIGRATION_CREATED=NO`, `SQL_EXECUTED=NO`, `RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RUNTIME_CHANGED=NO`, `DEPLOY=NO`, `PUSH=NO`.
 - Validation includes `check:a17q-tx2-schema-qualified-pgcrypto-digest-patch`; full targeted validation is recorded in the phase commit output.
+
+# 2026-07-14 - A-17Q-DR2-FIX1 post-dry-run verifier UUID array corrected
+
+- `A17Q_DR2_FIX1_STATUS=PASS_POST_DRY_RUN_UUID_ARRAY_VERIFIER_CORRECTED`.
+- Root cause: PostgreSQL treated `f.id = any((select excluded_family_ids from expected))` as scalar `uuid = uuid[]` because the nested select returned one UUID-array row.
+- Corrected `db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql` to use typed UUID-array membership with `coalesce((select excluded_family_ids from expected), array[]::uuid[])`.
+- Added `docs/PLAN_A17Q_DR2_FIX1_POST_DRY_RUN_VERIFIER_UUID_ARRAY.md`.
+- Added `scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs`.
+- Added `check:a17q-dr2-fix1-post-dry-run-verifier-uuid-array`.
+- `UUID_EQUALS_UUID_ARRAY_COUNT=0`.
+- `VALID_UUID_ANY_OR_CONTAINMENT_CHECK_PRESENT=YES`.
+- `SELECT_ONLY_PRESERVED=YES`.
+- `EXECUTOR_CALL_COUNT=0`.
+- `MIGRATION_CHANGED=NO`.
+- `RPC_CHANGED=NO`.
+- `RUNTIME_CHANGED=NO`.
+- `SQL_EXECUTED=NO`.
+- `DRY_RUN_REPEATED=NO`.
+- `DATABASE_MUTATION=NO`.
+- `NEXT_ACTION=A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`.

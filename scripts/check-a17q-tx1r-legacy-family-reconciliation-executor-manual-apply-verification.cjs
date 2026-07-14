@@ -251,6 +251,8 @@ const allowedChangedFiles = new Set([
   "db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql",
   "docs/PLAN_A17Q_DR1_PRODUCTION_RECONCILIATION_DRY_RUN_BUNDLE.md",
   "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
+  "docs/PLAN_A17Q_DR2_FIX1_POST_DRY_RUN_VERIFIER_UUID_ARRAY.md",
+  "scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs",
   "docs/PLAN_A17Q_TX2_SCHEMA_QUALIFIED_PGCRYPTO_DIGEST_PATCH.md",
   "db/checks/20260714_check_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
   "db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",

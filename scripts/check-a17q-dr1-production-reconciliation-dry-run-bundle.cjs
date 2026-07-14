@@ -245,12 +245,19 @@ for (const token of [
   "active_child_membership_baseline_pass",
   "excluded_scope_unchanged_pass",
   "deleted_scope_unchanged_pass",
+  "coalesce(",
+  "array[]::uuid[]",
   "active_family_count = 74",
   "active_parent_membership_count = 140",
   "active_child_membership_count = 73",
 ]) {
   requireIncludes(verifier, token, `post-dry-run verifier ${token}`);
 }
+rejectPattern(
+  verifierCode,
+  /=\s*any\s*\(\s*\(\s*select\s+[a-z_]+_ids\b/i,
+  "scalar UUID compared to UUID array subquery in post-dry-run verifier",
+);
 
 for (const token of [
   "A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED",
@@ -325,6 +332,8 @@ const allowedChangedFiles = new Set([
   "db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
   "supabase/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
   "docs/PLAN_A17Q_TX2_SCHEMA_QUALIFIED_PGCRYPTO_DIGEST_PATCH.md",
+  "docs/PLAN_A17Q_DR2_FIX1_POST_DRY_RUN_VERIFIER_UUID_ARRAY.md",
+  "scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs",
   "scripts/check-a17p-r-immutable-owner-decision-pack.cjs",
   "scripts/check-a17p-manual-owner-approval-evidence.cjs",
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs",

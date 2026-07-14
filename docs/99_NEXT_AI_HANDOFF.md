@@ -12484,3 +12484,40 @@ Boundaries:
 
 Next action:
 `A17Q_TX2_RERUN_SELECT_ONLY_VERIFIER_AND_AUTHENTICATED_DRY_RUN`
+
+# 2026-07-14 - A-17Q-DR2-FIX1 post-dry-run verifier UUID array corrected
+
+Status:
+`A17Q_DR2_FIX1_STATUS=PASS_POST_DRY_RUN_UUID_ARRAY_VERIFIER_CORRECTED`
+
+Baseline:
+authenticated production dry-run returned PASS with `dry_run=true`,
+`execution_allowed=true`, `mutation_applied=false`, approved group count `21`,
+void family count `36`, child move count `36`, parent deactivation count `72`
+and expected post-state `38/68/73`. The separate post-dry-run verifier then
+failed with PostgreSQL `42883`: `operator does not exist: uuid = uuid[]`.
+
+Root cause:
+`f.id = any((select excluded_family_ids from expected))` was interpreted as a
+scalar UUID comparison against a UUID-array row.
+
+Correction:
+
+- `db/checks/20260713_check_a17q_dr1_post_production_reconciliation_dry_run.sql`
+  now uses `ANY(COALESCE((select excluded_family_ids from expected), ARRAY[]::uuid[]))`.
+- `docs/PLAN_A17Q_DR2_FIX1_POST_DRY_RUN_VERIFIER_UUID_ARRAY.md` records the phase.
+- `scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs` and
+  `check:a17q-dr2-fix1-post-dry-run-verifier-uuid-array` verify:
+  `UUID_EQUALS_UUID_ARRAY_COUNT=0`,
+  `VALID_UUID_ANY_OR_CONTAINMENT_CHECK_PRESENT=YES`,
+  `SELECT_ONLY_PRESERVED=YES`, and `EXECUTOR_CALL_COUNT=0`.
+
+Boundary:
+`MIGRATION_CHANGED=NO`, `RPC_CHANGED=NO`, `RUNTIME_CHANGED=NO`,
+`SQL_EXECUTED=NO`, `DRY_RUN_REPEATED=NO`, `DATABASE_MUTATION=NO`,
+`DEPLOY=NO`, `PUSH=NO`.
+
+Next action:
+`A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`
+
+`NEXT_ACTION=A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`

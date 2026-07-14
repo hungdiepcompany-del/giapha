@@ -8803,3 +8803,10 @@ Lý do:
 - Reason: production function source showed the reviewed branch `if p_dry_run_only is true then return v_result; end if;`, while the verifier searched only the stale literal `if p_dry_run_only then`.
 - Safety contract: the corrected verifier must accept the equivalent current predicate and also prove the dry-run return occurs before batch insert, rollback write, audit write, genealogy mutation and durable success-result write.
 - Boundary: no RPC source change, no migration 0028, no migration 0026/0027 edit, no SQL execution in FIX1, no RPC call, no runtime change, no deploy and no push.
+
+# 2026-07-14 - A-17Q-DR2-FIX1 corrects post-dry-run verifier UUID array membership
+
+- Decision: correct only the post-dry-run SELECT-only verifier predicate that compared a scalar UUID to a UUID-array subquery.
+- Reason: PostgreSQL interpreted `ANY((select excluded_family_ids from expected))` as an `ANY(subquery)` over a single `uuid[]` value, producing `operator does not exist: uuid = uuid[]`.
+- Safety contract: use explicit typed array membership with `ANY(COALESCE((select excluded_family_ids from expected), ARRAY[]::uuid[]))`; keep active baseline, batch, rollback, excluded-scope and deleted-scope checks intact.
+- Boundary: no migration/RPC/runtime change, no SQL execution in the source-fix phase, no dry-run repeat, no reconciliation and no deploy.
