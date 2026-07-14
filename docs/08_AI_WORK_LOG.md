@@ -1,5 +1,18 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q closeout execution surface retired in source
+
+- `A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING`.
+- Baseline: final A17Q evidence commit `80fc415` is pushed; reconciliation is complete with active post-state `38/68/73`, batch/completed/rollback counts `1/1/1`, child loss `0`, graph integrity PASS, stored success-result integrity PASS and `TOTAL_FORM_SUBMIT_COUNT=2`.
+- Replaced `/admin/reconciliation/a17q/execute` with a read-only Vietnamese completion screen showing `A-17Q đã hoàn tất`, completion date `14/07/2026`, final state `38/68/73`, no child loss, no ancestry cycle and audit/rollback evidence stored.
+- Hard-retired `/api/admin/a17q/reconciliation-execute`; all methods return HTTP `410` with `status=RETIRED`, `code=A17Q_RECONCILIATION_ALREADY_COMPLETED` and `rpcCalled=false`.
+- Removed A-17Q execution navigation entries from the admin shell.
+- Added `docs/PLAN_A17Q_CLOSEOUT_EXECUTION_SURFACE_RETIREMENT.md`.
+- Added checker `scripts/check-a17q-closeout-execution-surface-retirement.cjs` and package alias `check:a17q-closeout-execution-surface-retirement`.
+- Updated legacy EXEC1 checker to classify the old execution caller as superseded when the closeout retired page/API are present.
+- Boundary: no RPC call, no third submission, no migration 0028/0029 rerun, no new migration, no genealogy data mutation and no deploy yet in source step.
+- Next action: deploy the pushed closeout commit and run focused production smoke.
+
 ## 2026-07-14 - A-17Q-EXEC2-TX4 reconciliation completed and recorded
 
 - `A17Q_EXEC2_TX4_STATUS=PASS_RECONCILIATION_COMPLETED_VERIFIED_RECORDED_AND_PUSHED`.

@@ -87,6 +87,47 @@ const allRuntimeSource = listRuntimeFiles(".")
   .map((file) => `${file}\n${read(file)}`)
   .join("\n\n");
 
+const routeRetired =
+  route.includes('status: "RETIRED"') &&
+  route.includes("A17Q_RECONCILIATION_ALREADY_COMPLETED") &&
+  route.includes("rpcCalled: false") &&
+  route.includes("{ status: 410 }") &&
+  !route.includes("executeA17QAuthenticatedSingleExecution") &&
+  !route.includes("request.json()");
+const pageRetired =
+  page.includes("A-17Q đã hoàn tất") &&
+  page.includes("38 gia đình đang hoạt động") &&
+  page.includes("68 quan hệ cha/mẹ đang hoạt động") &&
+  page.includes("73 quan hệ con đang hoạt động") &&
+  !page.includes("A17QAuthenticatedExecutionClient") &&
+  !page.includes("A17Q_AUTHENTICATED_EXECUTION_CONFIRMATION_PHRASE") &&
+  !page.includes("EXECUTE_A17Q_21_GROUP_RECONCILIATION");
+
+if (routeRetired && pageRetired) {
+  requireIncludes(service, "p_dry_run_only: false", "historical execution helper unchanged");
+  requireIncludes(service, expected.rpcName, "historical RPC name retained");
+  rejectPattern(route, /\.rpc\s*\(/, "retired route Supabase RPC call");
+  rejectPattern(route, /confirmationPhrase|confirmBackupReviewed|confirmRollbackReviewed|confirmAuditReviewed|confirmExcludedScopeReviewed/, "retired route request-body reactivation");
+  rejectPattern(page, /<input\b|type="checkbox"|<button\b|fetch\(|method:\s*"POST"/i, "retired page execution control");
+
+  if (failures.length > 0) {
+    console.error("A17Q EXEC1 authenticated execution caller check failed:");
+    for (const failure of failures) console.error(`- ${failure}`);
+    process.exit(1);
+  }
+
+  console.log("A17Q_EXEC1_STATUS=PASS_SUPERSEDED_BY_A17Q_CLOSEOUT_RETIREMENT");
+  console.log("AUTHENTICATED_EXECUTION_CALLER_CREATED=HISTORICAL_ONLY");
+  console.log("EXECUTION_PAGE_RETIRED=YES");
+  console.log("EXECUTION_API_RETIRED=YES");
+  console.log("NON_DRY_RUN_ACTIVE_ROUTE_COUNT=0");
+  console.log("EXECUTION_HELPER_CALL_COUNT=0");
+  console.log("SUPABASE_RPC_CALL_COUNT=0");
+  console.log("RPC_CALLED=NO");
+  console.log("DATABASE_MUTATION=NO");
+  process.exit(0);
+}
+
 requireIncludes(
   service,
   'import { createServerSupabaseClient } from "@/lib/supabase/server";',

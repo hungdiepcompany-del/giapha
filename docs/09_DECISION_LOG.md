@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 365 - A-17Q execution surface is permanently retired after completion
+
+Date: 2026-07-14
+
+Status:
+`A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING`
+
+Decision:
+After final A17Q reconciliation completion, the operational execution page and
+mutation API are no longer valid runtime surfaces. The page is converted to a
+read-only Vietnamese completion screen and the API permanently returns HTTP
+`410` with code `A17Q_RECONCILIATION_ALREADY_COMPLETED` and `rpcCalled=false`.
+
+Rationale:
+The owner-approved reconciliation has already executed successfully and was
+verified with active post-state `38/68/73`, batch/completed/rollback counts
+`1/1/1`, child loss `0`, graph integrity PASS and stored success-result
+integrity PASS. Keeping an active form, confirmation phrase, immutable hashes,
+idempotency key or callable mutation endpoint exposed after completion creates
+unnecessary operational risk.
+
+Boundary:
+
+- do not call or replay the reconciliation RPC;
+- do not submit a third execution attempt;
+- do not rerun migrations 0028 or 0029;
+- do not delete audit or rollback evidence;
+- keep repository evidence and final verifier;
+- deploy only the pushed closeout commit through the approved Gia Phả
+  Cloudflare production workflow.
+
+Checker:
+`check:a17q-closeout-execution-surface-retirement`
+
 ## Decision 364 - A-17Q reconciliation completion is accepted after TX4 single idempotent retry
 
 Date: 2026-07-14

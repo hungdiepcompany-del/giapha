@@ -1,5 +1,45 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q closeout execution surface retirement
+
+Current status:
+
+```text
+A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING
+BASELINE_COMMIT=80fc415
+RECONCILIATION_EXECUTED=YES
+MUTATION_APPLIED=YES
+ACTIVE_POST_STATE=38/68/73
+TOTAL_FORM_SUBMIT_COUNT=2
+THIRD_SUBMISSION_ATTEMPTED=NO
+```
+
+What changed:
+
+- `/admin/reconciliation/a17q/execute` is now a read-only Vietnamese completion
+  page.
+- `/api/admin/a17q/reconciliation-execute` now returns HTTP `410`, status
+  `RETIRED`, code `A17Q_RECONCILIATION_ALREADY_COMPLETED`, and `rpcCalled=false`
+  for all methods.
+- Admin navigation no longer exposes A-17Q execution/dry-run operational links.
+- Added `docs/PLAN_A17Q_CLOSEOUT_EXECUTION_SURFACE_RETIREMENT.md`.
+- Added checker `scripts/check-a17q-closeout-execution-surface-retirement.cjs`.
+- Added package alias `check:a17q-closeout-execution-surface-retirement`.
+- Updated legacy EXEC1 checker to accept the approved retired state.
+
+Important:
+
+- Do not call or replay the reconciliation RPC.
+- Do not submit the execution form again.
+- Do not rerun migrations 0028 or 0029.
+- Do not create a new migration.
+- Do not mutate family data.
+- Deploy only the pushed closeout commit through the approved Gia Phả
+  Cloudflare production workflow.
+
+Next action:
+`DEPLOY_PUSHED_CLOSEOUT_COMMIT_AND_RUN_FOCUSED_PRODUCTION_SMOKE`
+
 ## 2026-07-14 - A-17Q reconciliation completed after TX4 single idempotent retry
 
 Current status:

@@ -1,23 +1,36 @@
 import { NextResponse } from "next/server";
 
-import {
-  executeA17QAuthenticatedSingleExecution,
-  type A17QAuthenticatedExecutionRequest,
-} from "@/lib/reconciliation/a17q-authenticated-execution";
-
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
-  const body = (await request.json().catch(() => ({}))) as
-    | A17QAuthenticatedExecutionRequest
-    | null;
-  const result = await executeA17QAuthenticatedSingleExecution(body ?? {});
-  const status =
-    result.status === "BLOCKED"
-      ? 403
-      : result.status === "CONFIRMATION_REQUIRED"
-        ? 400
-        : 200;
+const retiredExecutionResponse = {
+  ok: false,
+  status: "RETIRED",
+  code: "A17Q_RECONCILIATION_ALREADY_COMPLETED",
+  message:
+    "A-17Q reconciliation has already completed and this execution endpoint is permanently retired.",
+  rpcCalled: false,
+} as const;
 
-  return NextResponse.json(result, { status });
+function respondRetired() {
+  return NextResponse.json(retiredExecutionResponse, { status: 410 });
+}
+
+export async function GET() {
+  return respondRetired();
+}
+
+export async function POST() {
+  return respondRetired();
+}
+
+export async function PUT() {
+  return respondRetired();
+}
+
+export async function PATCH() {
+  return respondRetired();
+}
+
+export async function DELETE() {
+  return respondRetired();
 }

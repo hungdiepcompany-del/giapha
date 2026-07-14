@@ -45,10 +45,6 @@ function rejectPattern(content, pattern, label) {
   if (pattern.test(content)) failures.push(`forbidden ${label}`);
 }
 
-function count(pattern, content) {
-  return content.match(pattern)?.length ?? 0;
-}
-
 function gitHeadContent(relativePath) {
   try {
     return execFileSync("git", ["show", `HEAD:${relativePath}`], {
@@ -482,8 +478,6 @@ rejectPattern(code0029, /\bgrant\s+(?:insert|update|delete|all|all\s+privileges)
 rejectPattern(code0029, /\bexecute\s*\(/i, "dynamic SQL EXECUTE");
 
 for (const untouchedPath of [
-  "app/api/admin/a17q/reconciliation-execute/route.ts",
-  "app/(admin)/admin/reconciliation/a17q/execute/page.tsx",
   "lib/reconciliation/a17q-authenticated-execution.ts",
 ]) {
   if (read(untouchedPath) !== gitHeadContent(untouchedPath)) {

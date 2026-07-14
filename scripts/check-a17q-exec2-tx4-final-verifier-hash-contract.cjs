@@ -78,7 +78,6 @@ function requireHashPassExpression(sql, contract) {
 
 const verifier = read(files.verifier);
 const verifierCode = stripSqlCommentsAndStrings(verifier);
-const migration0028 = read(files.migration0028);
 const migration0029 = read(files.migration0029);
 const packageJson = JSON.parse(read("package.json") || "{}");
 
