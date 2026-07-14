@@ -4,6 +4,7 @@ Status:
 
 ```text
 A17Q_TX3A_STATUS=PASS_LOCAL_PATCH_READY_FOR_OWNER_REVIEW
+A17Q_TX3B_FIX1_STATUS=PASS_EXPLICIT_POSTGRES_OWNER_AND_TRACKED_MIRROR_READY_FOR_FINAL_REVIEW
 ROOT_CAUSE_PROVEN=YES
 PRIMARY_ROOT_CAUSE=RPC_SECURITY_INVOKER_INCORRECT_BOUNDARY
 PATCH_TYPE=LOCAL_MIGRATION_CANDIDATE_SECURITY_DEFINER_TRANSACTION_BOUNDARY
@@ -103,6 +104,10 @@ Migration candidate:
 ```text
 MIGRATION_CANDIDATE=db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql
 MIRROR=supabase/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql
+OLD_SHA256=413129868C04142B0A8EE7A7B9B11A9A832D3C68EC9D3D4B96C96A07935C65F5
+NEW_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+MIRROR_TRACKED=YES
+MIRROR_MATCH=YES
 ```
 
 The migration replaces only `public.execute_admin_a17q_legacy_family_reconciliation` by copying the already-applied TX2 digest-qualified body and changing the executable function mode from:
@@ -117,10 +122,18 @@ to:
 SECURITY DEFINER
 ```
 
+TX3B-FIX1 resolves the owner-review blockers using owner-provided production
+evidence that the current RPC owner is `postgres`, `postgres.rolbypassrls=true`,
+target tables are owned by `postgres`, RLS remains enabled and FORCE RLS is
+disabled. The candidate now explicitly assigns the exact RPC signature to
+`postgres` after the function definition and before reasserting the final
+execute grant contract.
+
 Preserved:
 
 ```text
 RPC signature unchanged
+explicit function owner=postgres
 fixed search_path=public, auth, pg_temp
 auth.uid/profile assertion preserved
 relationships.update and permissions.manage assertions preserved
@@ -154,12 +167,20 @@ This phase does not add a broad authenticated table-write policy, does not add `
 ```text
 CHECKER=scripts/check-a17q-tx3-family-parents-rls-boundary.cjs
 PACKAGE_SCRIPT=check:a17q-tx3-family-parents-rls-boundary
+FIX1_PACKAGE_SCRIPT=check:a17q-tx3b-fix1-privileged-function-ownership
 ```
 
 The checker verifies:
 
 - db and Supabase migration mirrors are byte-identical.
-- 0028 differs from 0027 only by TX3 header/comment and the intended `SECURITY DEFINER` transaction-boundary mode.
+- the Supabase migration mirror is tracked by Git.
+- no migration 0029 exists.
+- 0028 differs from 0027 only by TX3 header/comment, the intended
+  `SECURITY DEFINER` transaction-boundary mode, explicit `owner to postgres`
+  assignment and final revoke-all/grant contract.
+- the exact RPC signature is targeted by the owner statement.
+- owner assignment appears before final PUBLIC/anon revoke and authenticated
+  grant statements.
 - `family_parents` RLS remains enabled in schema source.
 - no new policy is added and no policy uses `true`.
 - no anon write grant is added.
@@ -174,7 +195,7 @@ The checker verifies:
 Owner review is still required before any apply:
 
 ```text
-NEXT_ALLOWED_PHASE=A17Q_TX3B_OWNER_REVIEW_RLS_PATCH
+NEXT_ALLOWED_PHASE=A17Q_TX3B_FINAL_OWNER_REVIEW
 OWNER_MARKERS_REQUIRED=OWNER_APPROVES_A17Q_TX3_FAMILY_PARENTS_RLS_BOUNDARY_PATCH_REVIEW
 SQL_APPLY=NO
 RPC_RETRY=NO

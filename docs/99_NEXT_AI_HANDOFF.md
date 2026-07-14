@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q-TX3B-FIX1 owner contract ready for final review
+
+Current status:
+
+```text
+A17Q_TX3B_FIX1_STATUS=PASS_EXPLICIT_POSTGRES_OWNER_AND_TRACKED_MIRROR_READY_FOR_FINAL_REVIEW
+PRODUCTION_FUNCTION_OWNER=postgres
+PRODUCTION_OWNER_BYPASSRLS=true
+TARGET_TABLE_OWNER_MATCH=YES
+TARGET_TABLE_FORCE_RLS=false
+OLD_SHA256=413129868C04142B0A8EE7A7B9B11A9A832D3C68EC9D3D4B96C96A07935C65F5
+NEW_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+NEXT_ALLOWED_PHASE=A17Q_TX3B_FINAL_OWNER_REVIEW
+```
+
+What changed:
+
+- Migration 0028 remains not applied.
+- `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`
+  now includes the exact `alter function ... owner to postgres;` statement after
+  the function definition and before final execute grant reassertion.
+- The final function permission contract now reasserts `revoke all` from
+  `PUBLIC`, `revoke all` from `anon`, and `grant execute` to `authenticated`.
+- The Supabase mirror is tracked and byte-identical.
+- Checker alias added:
+  `check:a17q-tx3b-fix1-privileged-function-ownership`.
+
+Do not apply migration 0028, retry the RPC, reconcile, deploy or push without a
+separate owner marker.
+
 ## 2026-07-14 - A-17Q-TX3A local patch ready, not applied
 
 Current status:

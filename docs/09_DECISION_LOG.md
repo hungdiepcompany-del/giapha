@@ -1,5 +1,39 @@
 # Decision Log
 
+## Decision 361 - A-17Q-TX3B-FIX1 pins the privileged transaction boundary owner
+
+Date: 2026-07-14
+
+Status:
+`A17Q_TX3B_FIX1_STATUS=PASS_EXPLICIT_POSTGRES_OWNER_AND_TRACKED_MIRROR_READY_FOR_FINAL_REVIEW`
+
+Decision:
+The not-applied migration 0028 candidate now explicitly assigns the exact
+`public.execute_admin_a17q_legacy_family_reconciliation(...)` signature owner to
+`postgres` and reasserts function permissions after ownership assignment.
+
+Rationale:
+The prior owner-review blocker was that a `SECURITY DEFINER` function owner was
+not explicit. The owner provided production evidence that the current RPC owner
+is `postgres`, `postgres.rolbypassrls=true`, all target tables are owned by
+`postgres`, RLS is enabled and FORCE RLS is disabled. That evidence is sufficient
+for this one-time privileged transaction-boundary patch and avoids assigning the
+function to `authenticated`, `anon`, `service_role` or a user-supplied role.
+
+Preserved boundary:
+
+- no migration apply;
+- no SQL execution by Codex;
+- no RPC retry;
+- no runtime change;
+- no RLS disable;
+- no table grant expansion;
+- PUBLIC and anon execute revoked after owner assignment;
+- authenticated execute granted only after owner assignment.
+
+Next action:
+`A17Q_TX3B_FINAL_OWNER_REVIEW`
+
 ## Decision 360 - A-17Q-TX3A uses a narrow transaction-boundary SECURITY DEFINER patch
 
 Date: 2026-07-14

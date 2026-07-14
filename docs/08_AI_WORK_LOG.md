@@ -1,5 +1,17 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-TX3B-FIX1 explicit owner and tracked mirror
+
+- `A17Q_TX3B_FIX1_STATUS=PASS_EXPLICIT_POSTGRES_OWNER_AND_TRACKED_MIRROR_READY_FOR_FINAL_REVIEW`.
+- Owner-provided production evidence accepted for this source phase: `PRODUCTION_FUNCTION_OWNER=postgres`, `PRODUCTION_OWNER_BYPASSRLS=true`, target table owners match `postgres`, RLS remains enabled and FORCE RLS is disabled.
+- Updated not-applied migration candidate `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql` to add the exact `alter function ... owner to postgres;` statement after the function definition and before the final grant contract.
+- Reasserted function permissions after owner assignment with `revoke all` from `PUBLIC`, `revoke all` from `anon`, and `grant execute` to `authenticated`.
+- Updated and tracked the Supabase mirror `supabase/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`; mirror parity is required by checker.
+- Updated `scripts/check-a17q-tx3-family-parents-rls-boundary.cjs` and added package alias `check:a17q-tx3b-fix1-privileged-function-ownership` to require explicit owner `postgres`, exact signature targeting, owner-before-grants ordering, tracked mirror, mirror parity, no migration 0029, no RLS disable and no table-grant expansion.
+- Hash changed from `413129868C04142B0A8EE7A7B9B11A9A832D3C68EC9D3D4B96C96A07935C65F5` to `9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7`.
+- Safety: `SQL_EXECUTED=NO`, `MIGRATION_APPLIED=NO`, `RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RECONCILIATION_EXECUTED=NO`, `DEPLOY=NO`, `PUSH=NO`.
+- Next action: `A17Q_TX3B_FINAL_OWNER_REVIEW`.
+
 ## 2026-07-14 - A-17Q-TX3A family_parents RLS boundary patch prepared
 
 - `A17Q_TX3A_STATUS=PASS_LOCAL_PATCH_READY_FOR_OWNER_REVIEW`.
