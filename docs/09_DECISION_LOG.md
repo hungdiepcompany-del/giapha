@@ -8810,3 +8810,10 @@ Lý do:
 - Reason: PostgreSQL interpreted `ANY((select excluded_family_ids from expected))` as an `ANY(subquery)` over a single `uuid[]` value, producing `operator does not exist: uuid = uuid[]`.
 - Safety contract: use explicit typed array membership with `ANY(COALESCE((select excluded_family_ids from expected), ARRAY[]::uuid[]))`; keep active baseline, batch, rollback, excluded-scope and deleted-scope checks intact.
 - Boundary: no migration/RPC/runtime change, no SQL execution in the source-fix phase, no dry-run repeat, no reconciliation and no deploy.
+
+# 2026-07-14 - A-17Q-EXEC1 prepares the single authenticated non-dry-run execution caller
+
+- Decision: add exactly one owner/admin application route for the approved A-17Q non-dry-run reconciliation execution while leaving the dry-run route unchanged.
+- Reason: the dry-run evidence is now PASS and the real execution must use the same authenticated end-user cookie session boundary as dry-run, with a distinct route and explicit owner confirmation before the RPC can be called.
+- Safety contract: the execution caller hardcodes the approved marker, five hashes, one execution idempotency key and `p_dry_run_only=false`; it requires the exact phrase `EXECUTE_A17Q_21_GROUP_RECONCILIATION` plus backup, rollback, audit and excluded-scope confirmations before POST can call the RPC.
+- Boundary: no service role, no JWT spoofing, no RPC on page load, no alternate non-dry-run path, no SQL execution, no reconciliation execution in EXEC1, no deploy and no push.

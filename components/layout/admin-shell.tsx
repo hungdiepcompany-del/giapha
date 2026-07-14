@@ -96,6 +96,11 @@ const navGroups = [
         label: "A-17Q dry-run",
         description: "Owner/admin cookie-session reconciliation dry-run",
       },
+      {
+        href: "/admin/reconciliation/a17q/execute",
+        label: "A-17Q execute",
+        description: "Owner-only single reconciliation execution",
+      },
     ],
   },
 ];

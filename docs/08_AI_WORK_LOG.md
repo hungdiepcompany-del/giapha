@@ -14043,3 +14043,21 @@ Documentation foundation
 - `DRY_RUN_REPEATED=NO`.
 - `DATABASE_MUTATION=NO`.
 - `NEXT_ACTION=A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`.
+
+# 2026-07-14 - A-17Q-EXEC1 single execution caller prepared
+
+- `A17Q_EXEC1_STATUS=PASS_SINGLE_EXECUTION_CALLER_PREPARED_NOT_EXECUTED`.
+- Recorded final authenticated DR2 evidence: `DRY_RUN=true`, `EXECUTION_ALLOWED=true`, `MUTATION_APPLIED=false`, forecast `21 groups / 21 survivors / 36 void families / 36 child moves / 72 parent deactivations / 0 child loss`, expected post-state `38/68/73`, active baseline after dry-run `74/140/73`, and batch/audit/rollback/idempotency counts `0`.
+- `ACTIVE_BASELINE_AFTER_DRY_RUN=74/140/73`.
+- `AUDIT_REVISION_COUNT=0`.
+- `IDEMPOTENCY_STATE_COUNT=0`.
+- `EXCLUDED_SCOPE_UNCHANGED=YES`.
+- `DELETED_FAMILY_UNCHANGED=YES`.
+- Added owner/admin authenticated cookie-session execution route `/admin/reconciliation/a17q/execute` and POST API `/api/admin/a17q/reconciliation-execute`.
+- The execution caller uses `createServerSupabaseClient`, requires authenticated user, visible profile, OWNER/ADMIN role, and `relationships.update` plus `permissions.manage`.
+- The execution caller hardcodes the approved marker, all five approved hashes, one execution idempotency key, `p_dry_run_only=false`, the exact phrase `EXECUTE_A17Q_21_GROUP_RECONCILIATION`, and four review confirmations.
+- `SERVER_COOKIE_SESSION_USED=YES`.
+- `DR2_EVIDENCE_RECORDED=YES`, `AUTHENTICATED_EXECUTION_CALLER_CREATED=YES`, `OWNER_SESSION_REQUIRED=YES`, `SERVICE_ROLE_USED=NO`, `JWT_SPOOFED=NO`, `EXACT_CONFIRMATION_REQUIRED=YES`, `NON_DRY_RUN_CALLER_COUNT=1`, `DRY_RUN_CALLER_UNCHANGED=YES`, `PAGE_LOAD_RPC_CALL_COUNT=0`.
+- `RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RECONCILIATION_EXECUTED=NO`, `RUNTIME_CHANGED=YES`, `DEPLOY=NO`, `PUSH=NO`.
+- Added `check:a17q-exec1-authenticated-single-execution-caller`.
+- `NEXT_ACTION=A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`.

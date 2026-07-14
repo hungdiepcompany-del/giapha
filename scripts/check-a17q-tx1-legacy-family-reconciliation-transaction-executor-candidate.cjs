@@ -543,7 +543,8 @@ const runtimeCallers = runtimeFiles.filter((file) => {
     file.startsWith("scripts/check-a17q-tx1") ||
     file.startsWith("scripts/check-a17q-tx2") ||
     file.startsWith("scripts/check-a17q-dr1") ||
-    file.startsWith("scripts/check-a17q-dr2")
+    file.startsWith("scripts/check-a17q-dr2") ||
+    file.startsWith("scripts/check-a17q-exec1")
   ) {
     return false;
   }
@@ -560,7 +561,33 @@ const approvedDryRunRuntimeCallers = runtimeCallers.filter((file) => {
     !content.includes("dryRunOnly: false")
   );
 });
-requireEqual("active non-dry-run runtime caller count", runtimeCallers.length - approvedDryRunRuntimeCallers.length, 0);
+const approvedExecutionRuntimeCallers = runtimeCallers.filter((file) => {
+  const normalizedFile = file.replace(/\\/g, "/");
+  const content = read(file);
+  return (
+    normalizedFile === "lib/reconciliation/a17q-authenticated-execution.ts" &&
+    content.includes("p_dry_run_only: false") &&
+    content.includes("A17Q_AUTHENTICATED_EXECUTION_CONFIRMATION_PHRASE") &&
+    content.includes("EXECUTE_A17Q_21_GROUP_RECONCILIATION") &&
+    content.includes("confirmBackupReviewed === true") &&
+    content.includes("confirmRollbackReviewed === true") &&
+    content.includes("confirmAuditReviewed === true") &&
+    content.includes("confirmExcludedScopeReviewed === true") &&
+    !content.includes("p_dry_run_only: true")
+  );
+});
+requireEqual(
+  "unexpected non-dry-run runtime caller count",
+  runtimeCallers.length -
+    approvedDryRunRuntimeCallers.length -
+    approvedExecutionRuntimeCallers.length,
+  0,
+);
+if (approvedExecutionRuntimeCallers.length > 1) {
+  failures.push(
+    `approved execution runtime caller count: expected at most 1, got ${approvedExecutionRuntimeCallers.length}`,
+  );
+}
 
 for (const token of [
   "A17Q_TX1_STATUS=PASS_TRANSACTION_EXECUTOR_CANDIDATE_CREATED_NOT_APPLIED",

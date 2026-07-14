@@ -146,11 +146,21 @@ const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])
   .split(/\r?\n/)
   .map((line) => line.slice(3).trim())
   .filter(Boolean);
+const allowedRuntimeChanges = new Set([
+  "app/(admin)/admin/reconciliation/a17q/execute/page.tsx",
+  "app/api/admin/a17q/reconciliation-execute/route.ts",
+  "components/reconciliation/a17q-authenticated-execution-client.tsx",
+  "components/layout/admin-shell.tsx",
+  "lib/reconciliation/a17q-authenticated-execution.ts",
+]);
 for (const file of changedFiles) {
   if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
     failures.push(`migration changed during A-17Q-DR2-FIX1: ${file}`);
   }
-  if (/^(app|components|lib|server|services)\//.test(file)) {
+  if (
+    /^(app|components|lib|server|services)\//.test(file) &&
+    !allowedRuntimeChanges.has(file)
+  ) {
     failures.push(`runtime changed during A-17Q-DR2-FIX1: ${file}`);
   }
 }

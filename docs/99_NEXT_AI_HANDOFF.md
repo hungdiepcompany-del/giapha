@@ -12521,3 +12521,62 @@ Next action:
 `A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`
 
 `NEXT_ACTION=A17Q_DR2_RERUN_POST_DRY_RUN_VERIFIER_ONLY`
+
+# 2026-07-14 - A-17Q-EXEC1 single execution caller prepared
+
+Status:
+`A17Q_EXEC1_STATUS=PASS_SINGLE_EXECUTION_CALLER_PREPARED_NOT_EXECUTED`
+
+Final DR2 no-mutation evidence is recorded:
+
+- `DR2_EVIDENCE_RECORDED=YES`
+- `DRY_RUN=true`
+- `EXECUTION_ALLOWED=true`
+- `MUTATION_APPLIED=false`
+- Forecast PASS: `21` groups, `21` survivors, `36` void families,
+  `36` child moves, `72` parent deactivations, `0` child loss, expected
+  post-state `38/68/73`.
+- Post-dry-run verifier PASS with active baseline `74/140/73`.
+- Decision-pack batch, audit revision, rollback manifest and idempotency counts
+  remain `0`.
+- Excluded and deleted scope unchanged.
+- `GENEALOGY_DATA_MUTATED=NO`.
+- `ACTIVE_BASELINE_AFTER_DRY_RUN=74/140/73`.
+- `AUDIT_REVISION_COUNT=0`.
+- `IDEMPOTENCY_STATE_COUNT=0`.
+- `EXCLUDED_SCOPE_UNCHANGED=YES`.
+- `DELETED_FAMILY_UNCHANGED=YES`.
+
+Runtime prepared for the next phase:
+
+- Page: `/admin/reconciliation/a17q/execute`
+- API: `/api/admin/a17q/reconciliation-execute`
+- RPC: `execute_admin_a17q_legacy_family_reconciliation`
+- Uses real server-cookie session via `createServerSupabaseClient`.
+- Requires authenticated owner/admin and `relationships.update` plus
+  `permissions.manage`.
+- Requires exact typed phrase `EXECUTE_A17Q_21_GROUP_RECONCILIATION`.
+- Requires backup, rollback, audit and excluded-scope confirmations.
+- Hardcodes one execution idempotency key and `p_dry_run_only=false`.
+- Dry-run route remains hardcoded `p_dry_run_only=true`.
+- `NON_DRY_RUN_CALLER_COUNT=1`.
+- `PAGE_LOAD_RPC_CALL_COUNT=0`.
+- `AUTHENTICATED_EXECUTION_CALLER_CREATED=YES`.
+- `OWNER_SESSION_REQUIRED=YES`.
+- `SERVER_COOKIE_SESSION_USED=YES`.
+- `SERVICE_ROLE_USED=NO`.
+- `JWT_SPOOFED=NO`.
+- `EXACT_CONFIRMATION_REQUIRED=YES`.
+- `DRY_RUN_CALLER_UNCHANGED=YES`.
+
+Boundary:
+`RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RECONCILIATION_EXECUTED=NO`,
+`RUNTIME_CHANGED=YES`, `DEPLOY=NO`, `PUSH=NO`.
+
+Checker:
+`check:a17q-exec1-authenticated-single-execution-caller`
+
+Next action:
+`A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`
+
+`NEXT_ACTION=A17Q_EXEC2_DEPLOY_OWNER_APPROVAL_EXECUTE_ONCE_AND_FINAL_VERIFY`
