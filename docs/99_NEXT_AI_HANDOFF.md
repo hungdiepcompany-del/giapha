@@ -12444,3 +12444,43 @@ Owner/admin dry-run now has an application authenticated session path instead of
 
 Next action:
 `A17Q_DR2_DEPLOY_AND_RUN_AUTHENTICATED_PRODUCTION_DRY_RUN`
+
+# 2026-07-14 - A-17Q-TX2-FIX1 verifier false negative corrected
+
+Status:
+`A17Q_TX2_FIX1_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED`
+
+The TX2 SELECT-only verifier no longer checks only the stale literal
+`if p_dry_run_only then`. It now accepts the reviewed production predicate
+`if p_dry_run_only is true then` through a whitespace-safe condition and proves
+the dry-run `return v_result;` occurs before:
+
+- batch insert;
+- rollback write;
+- audit write;
+- genealogy mutation;
+- durable success-result write.
+
+Evidence:
+
+- `VERIFIER_FALSE_NEGATIVE_FIXED=YES`
+- `DRY_RUN_BRANCH_PRESERVED=YES`
+- `DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES`
+- `DRY_RUN_MUTATION_PATH_COUNT=0`
+- `DIGEST_CONTRACT_PRESERVED=YES`
+- `SECURITY_CONTRACT_PRESERVED=YES`
+
+Boundaries:
+
+- `RPC_SOURCE_CHANGED=NO`
+- `MIGRATION_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next action:
+`A17Q_TX2_RERUN_SELECT_ONLY_VERIFIER_AND_AUTHENTICATED_DRY_RUN`

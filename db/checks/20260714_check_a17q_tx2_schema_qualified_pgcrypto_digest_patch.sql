@@ -58,6 +58,73 @@ grant_evidence as (
       where acl.privilege_type = 'EXECUTE'
         and acl.grantee = 0
     ) as public_execute_grant_present
+),
+dry_run_branch_evidence as (
+  select
+    regexp_instr(
+      lower(function_source),
+      'if[[:space:]]+p_dry_run_only([[:space:]]+is[[:space:]]+true)?[[:space:]]+then'
+    ) as dry_run_condition_pos,
+    strpos(lower(function_source), 'insert into public.family_reconciliation_batches') as batch_insert_pos,
+    least(
+      nullif(strpos(lower(function_source), 'insert into public.family_reconciliation_rollback_manifests'), 0),
+      nullif(strpos(lower(function_source), 'update public.family_reconciliation_rollback_manifests'), 0)
+    ) as rollback_write_pos,
+    strpos(lower(function_source), 'insert into public.revisions (') as audit_write_pos,
+    least(
+      nullif(strpos(lower(function_source), 'update public.family_parents fp'), 0),
+      nullif(strpos(lower(function_source), 'update public.family_children fc'), 0),
+      nullif(strpos(lower(function_source), 'update public.families f'), 0)
+    ) as genealogy_mutation_pos,
+    strpos(lower(function_source), 'success_result = v_result') as durable_success_result_write_pos,
+    function_source
+  from function_meta
+),
+dry_run_return_evidence as (
+  select
+    dry_run_condition_pos,
+    case
+      when dry_run_condition_pos > 0 then
+        dry_run_condition_pos
+        + regexp_instr(
+          substr(function_source, dry_run_condition_pos),
+          'return[[:space:]]+v_result[[:space:]]*;'
+        )
+        - 1
+      else 0
+    end as dry_run_return_pos,
+    batch_insert_pos,
+    rollback_write_pos,
+    audit_write_pos,
+    genealogy_mutation_pos,
+    durable_success_result_write_pos,
+    function_source
+  from dry_run_branch_evidence
+),
+dry_run_order_evidence as (
+  select
+    dry_run_condition_pos > 0 as dry_run_conditional_present,
+    dry_run_return_pos > dry_run_condition_pos as dry_run_return_present,
+    dry_run_return_pos > dry_run_condition_pos
+      and batch_insert_pos > dry_run_return_pos as dry_run_return_before_batch_insert,
+    dry_run_return_pos > dry_run_condition_pos
+      and rollback_write_pos > dry_run_return_pos as dry_run_return_before_rollback_write,
+    dry_run_return_pos > dry_run_condition_pos
+      and audit_write_pos > dry_run_return_pos as dry_run_return_before_audit_write,
+    dry_run_return_pos > dry_run_condition_pos
+      and genealogy_mutation_pos > dry_run_return_pos as dry_run_return_before_genealogy_mutation,
+    dry_run_return_pos > dry_run_condition_pos
+      and durable_success_result_write_pos > dry_run_return_pos as dry_run_return_before_durable_success_result_write,
+    case
+      when dry_run_return_pos <= dry_run_condition_pos then 1
+      else
+        (case when batch_insert_pos > 0 and batch_insert_pos < dry_run_return_pos then 1 else 0 end)
+        + (case when rollback_write_pos > 0 and rollback_write_pos < dry_run_return_pos then 1 else 0 end)
+        + (case when audit_write_pos > 0 and audit_write_pos < dry_run_return_pos then 1 else 0 end)
+        + (case when genealogy_mutation_pos > 0 and genealogy_mutation_pos < dry_run_return_pos then 1 else 0 end)
+        + (case when durable_success_result_write_pos > 0 and durable_success_result_write_pos < dry_run_return_pos then 1 else 0 end)
+    end as dry_run_mutation_path_count
+  from dry_run_return_evidence
 )
 select
   'a17q_tx2_schema_qualified_pgcrypto_digest_patch' as result_set,
@@ -82,6 +149,24 @@ select
   exists(select 1 from function_meta where function_source like '%A17P_MANUAL_21_GROUP_RECONCILIATION_APPROVED%') as owner_marker_preserved,
   exists(select 1 from function_meta where function_source like '%777a8bb13ff45eb9f46fd817c392098ada4a2d550cad8e6ee4c6cd896b874ad0%') as decision_pack_hash_preserved,
   exists(select 1 from function_meta where function_source like '%p_dry_run_only boolean%') as dry_run_signature_arg_present,
-  exists(select 1 from function_meta where function_source like '%if p_dry_run_only then%') as dry_run_branch_preserved,
+  (select dry_run_conditional_present from dry_run_order_evidence) as dry_run_conditional_present,
+  (select dry_run_return_present from dry_run_order_evidence) as dry_run_return_present,
+  (select dry_run_return_before_batch_insert from dry_run_order_evidence) as dry_run_return_before_batch_insert,
+  (select dry_run_return_before_rollback_write from dry_run_order_evidence) as dry_run_return_before_rollback_write,
+  (select dry_run_return_before_audit_write from dry_run_order_evidence) as dry_run_return_before_audit_write,
+  (select dry_run_return_before_genealogy_mutation from dry_run_order_evidence) as dry_run_return_before_genealogy_mutation,
+  (select dry_run_return_before_durable_success_result_write from dry_run_order_evidence) as dry_run_return_before_durable_success_result_write,
+  (select dry_run_mutation_path_count from dry_run_order_evidence) as dry_run_mutation_path_count,
+  (
+    select dry_run_conditional_present
+      and dry_run_return_present
+      and dry_run_return_before_batch_insert
+      and dry_run_return_before_rollback_write
+      and dry_run_return_before_audit_write
+      and dry_run_return_before_genealogy_mutation
+      and dry_run_return_before_durable_success_result_write
+      and dry_run_mutation_path_count = 0
+    from dry_run_order_evidence
+  ) as dry_run_branch_preserved,
   not exists(select 1 from function_meta where function_source like '%search_path = public, auth, extensions, pg_temp%') as extensions_not_added_to_search_path,
   not exists(select 1 from function_meta where function_source ~* '\bcreate[[:space:]]+extension\b') as no_extension_created_or_moved;

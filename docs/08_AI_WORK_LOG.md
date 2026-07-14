@@ -14013,3 +14013,13 @@ Documentation foundation
 - `SERVICE_ROLE_USED=NO`, `JWT_CLAIMS_SPOOFED=NO`, `NON_DRY_RUN_PATH_COUNT=0`, `ACTIVE_EXECUTION_PATH_COUNT=0`.
 - No RPC was called by Codex, no SQL was executed, no database mutation, no migration change, no deploy and no push.
 - Added `check:a17q-dr1-fix1-authenticated-dry-run-caller`.
+
+# 2026-07-14 - A-17Q-TX2-FIX1 dry-run verifier predicate corrected
+
+- `A17Q_TX2_FIX1_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED`.
+- Corrected `db/checks/20260714_check_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql` so `dry_run_branch_preserved` accepts the reviewed production predicate `if p_dry_run_only is true then` instead of the stale literal `if p_dry_run_only then`.
+- Strengthened the verifier to prove dry-run `return v_result;` occurs before batch insert, rollback write, audit write, genealogy mutation and durable success-result write.
+- Updated `scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs` to reject the stale verifier predicate and statically verify `DRY_RUN_MUTATION_PATH_COUNT=0`.
+- `VERIFIER_FALSE_NEGATIVE_FIXED=YES`, `DRY_RUN_BRANCH_PRESERVED=YES`, `DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES`.
+- `RPC_SOURCE_CHANGED=NO`, `MIGRATION_CHANGED=NO`, `MIGRATION_CREATED=NO`, `SQL_EXECUTED=NO`, `RPC_CALLED=NO`, `DATABASE_MUTATION=NO`, `RUNTIME_CHANGED=NO`, `DEPLOY=NO`, `PUSH=NO`.
+- Validation includes `check:a17q-tx2-schema-qualified-pgcrypto-digest-patch`; full targeted validation is recorded in the phase commit output.

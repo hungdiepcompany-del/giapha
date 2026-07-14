@@ -54,6 +54,17 @@ function count(pattern, content) {
   return (content.match(pattern) ?? []).length;
 }
 
+function firstIndex(content, token) {
+  return content.toLowerCase().indexOf(token.toLowerCase());
+}
+
+function firstExistingIndex(content, tokens) {
+  const positions = tokens
+    .map((token) => firstIndex(content, token))
+    .filter((position) => position >= 0);
+  return positions.length > 0 ? Math.min(...positions) : -1;
+}
+
 function findMatchingParen(text, openIndex) {
   let depth = 0;
   let inString = false;
@@ -175,10 +186,45 @@ const unqualifiedDigestCount = count(/(?<![\w.])digest\s*\(/g, patchMigration);
 const qualifiedEncodeCount = count(/pg_catalog\.encode\s*\(/g, patchMigration);
 const qualifiedConvertToCount = count(/pg_catalog\.convert_to\s*\(/g, patchMigration);
 
+const dryRunConditionMatch = patchMigration.match(/if\s+p_dry_run_only(\s+is\s+true)?\s+then/i);
+const dryRunConditionIndex = dryRunConditionMatch?.index ?? -1;
+const dryRunReturnIndex =
+  dryRunConditionIndex >= 0
+    ? firstIndex(patchMigration.slice(dryRunConditionIndex), "return v_result;") + dryRunConditionIndex
+    : -1;
+const dryRunWritePositions = {
+  batch_insert: firstIndex(patchMigration, "insert into public.family_reconciliation_batches"),
+  rollback_write: firstExistingIndex(patchMigration, [
+    "insert into public.family_reconciliation_rollback_manifests",
+    "update public.family_reconciliation_rollback_manifests",
+  ]),
+  audit_write: firstIndex(patchMigration, "insert into public.revisions ("),
+  genealogy_mutation: firstExistingIndex(patchMigration, [
+    "update public.family_parents fp",
+    "update public.family_children fc",
+    "update public.families f",
+  ]),
+  durable_success_result_write: firstIndex(patchMigration, "success_result = v_result"),
+};
+const dryRunMutationPathCount = Object.values(dryRunWritePositions).filter(
+  (position) => position >= 0 && position < dryRunReturnIndex,
+).length;
+
 if (qualifiedDigestCount !== 17) failures.push(`qualified digest count ${qualifiedDigestCount}`);
 if (unqualifiedDigestCount !== 0) failures.push(`unqualified digest count ${unqualifiedDigestCount}`);
 if (qualifiedEncodeCount !== 17) failures.push(`qualified encode count ${qualifiedEncodeCount}`);
 if (qualifiedConvertToCount !== 17) failures.push(`qualified convert_to count ${qualifiedConvertToCount}`);
+if (dryRunConditionIndex < 0) failures.push("dry-run conditional not found in 0027");
+if (dryRunReturnIndex <= dryRunConditionIndex) failures.push("dry-run return not found after conditional in 0027");
+for (const [label, position] of Object.entries(dryRunWritePositions)) {
+  if (position < 0) failures.push(`${label} not found in 0027`);
+  if (dryRunReturnIndex >= 0 && position >= 0 && dryRunReturnIndex >= position) {
+    failures.push(`dry-run return is not before ${label}`);
+  }
+}
+if (dryRunMutationPathCount !== 0) {
+  failures.push(`dry-run mutation path count ${dryRunMutationPathCount}`);
+}
 
 for (const token of [
   "create or replace function public.execute_admin_a17q_legacy_family_reconciliation(",
@@ -228,8 +274,21 @@ for (const token of [
   "authenticated_execute_grant_present",
   "anon_execute_grant_absent",
   "public_execute_grant_absent",
+  "dry_run_conditional_present",
+  "dry_run_return_present",
+  "dry_run_return_before_batch_insert",
+  "dry_run_return_before_rollback_write",
+  "dry_run_return_before_audit_write",
+  "dry_run_return_before_genealogy_mutation",
+  "dry_run_return_before_durable_success_result_write",
+  "dry_run_mutation_path_count",
+  "dry_run_branch_preserved",
+  "if[[:space:]]+p_dry_run_only([[:space:]]+is[[:space:]]+true)?[[:space:]]+then",
 ]) {
   requireIncludes(verifier, token, `verifier ${token}`);
+}
+if (verifier.includes("function_source like '%if p_dry_run_only then%'")) {
+  failures.push("TX2 verifier still contains stale dry-run literal predicate");
 }
 if (/^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate|call)\b/im.test(verifierCode)) {
   failures.push("TX2 verifier must remain SELECT-only");
@@ -240,13 +299,16 @@ if (/\bexecute_admin_a17q_legacy_family_reconciliation\s*\(/i.test(verifierCode)
 
 for (const token of [
   "A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED",
+  "A17Q_TX2_FIX1_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED",
   "PGCRYPTO_SCHEMA=extensions",
   "DIGEST_BYTEA_TEXT_EXISTS=YES",
   "UNQUALIFIED_EXECUTABLE_DIGEST_CALL_COUNT=0",
   "QUALIFIED_EXTENSIONS_DIGEST_CALL_COUNT=17",
+  "VERIFIER_FALSE_NEGATIVE_FIXED=YES",
+  "DRY_RUN_BRANCH_PRESERVED=YES",
+  "DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES",
   "RUNTIME_CHANGED=NO",
   "SQL_EXECUTED=NO",
-  "MIGRATION_APPLIED=NO",
   "RPC_CALLED=NO",
   "DATABASE_MUTATION=NO",
 ]) {
@@ -256,8 +318,9 @@ for (const token of [
 }
 requireIncludes(index, "PLAN_A17Q_TX2_SCHEMA_QUALIFIED_PGCRYPTO_DIGEST_PATCH.md");
 requireIncludes(decisionLog, "A-17Q-TX2 qualifies pgcrypto digest calls");
+requireIncludes(decisionLog, "A-17Q-TX2 verifier must prove dry-run return ordering");
 requireIncludes(workLog, "check:a17q-tx2-schema-qualified-pgcrypto-digest-patch");
-requireIncludes(handoff, "A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN");
+requireIncludes(handoff, "A17Q_TX2_RERUN_SELECT_ONLY_VERIFIER_AND_AUTHENTICATED_DRY_RUN");
 
 if (
   packageJson.scripts?.["check:a17q-tx2-schema-qualified-pgcrypto-digest-patch"] !==
@@ -278,6 +341,15 @@ console.log("RPC_SIGNATURE_UNCHANGED=YES");
 console.log("SECURITY_INVOKER_PRESERVED=YES");
 console.log("FIXED_SEARCH_PATH_PRESERVED=YES");
 console.log("GRANTS_PRESERVED=YES");
+console.log("A17Q_TX2_FIX1_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED");
+console.log("VERIFIER_FALSE_NEGATIVE_FIXED=YES");
+console.log("DRY_RUN_BRANCH_PRESERVED=YES");
+console.log("DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES");
+console.log(`DRY_RUN_MUTATION_PATH_COUNT=${dryRunMutationPathCount}`);
+console.log("DIGEST_CONTRACT_PRESERVED=YES");
+console.log("SECURITY_CONTRACT_PRESERVED=YES");
+console.log("RPC_SOURCE_CHANGED=NO");
+console.log("MIGRATION_CHANGED=NO");
 console.log("RUNTIME_CHANGED=NO");
 console.log("SQL_EXECUTED=NO");
 console.log("MIGRATION_APPLIED=NO");

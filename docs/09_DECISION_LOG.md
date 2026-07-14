@@ -8796,3 +8796,10 @@ Lý do:
 - Reason: the executor is `SECURITY INVOKER` and correctly requires `auth.uid()` plus `current_profile_id`; SQL Editor does not provide the application user's authenticated Supabase session.
 - Safety contract: the source caller hardcodes `p_dry_run_only=true`, all approved hashes, owner marker and confirmation booleans; no request input can enable non-dry-run execution.
 - Boundary: no service role, no JWT claim spoofing, no migration change, no RPC call during source phase, no deploy and no push.
+
+# 2026-07-14 - A-17Q-TX2 verifier must prove dry-run return ordering
+
+- Decision: classify the `dry_run_branch_preserved=false` TX2 verifier result as a verifier false negative and correct only the SELECT-only verifier/checker.
+- Reason: production function source showed the reviewed branch `if p_dry_run_only is true then return v_result; end if;`, while the verifier searched only the stale literal `if p_dry_run_only then`.
+- Safety contract: the corrected verifier must accept the equivalent current predicate and also prove the dry-run return occurs before batch insert, rollback write, audit write, genealogy mutation and durable success-result write.
+- Boundary: no RPC source change, no migration 0028, no migration 0026/0027 edit, no SQL execution in FIX1, no RPC call, no runtime change, no deploy and no push.

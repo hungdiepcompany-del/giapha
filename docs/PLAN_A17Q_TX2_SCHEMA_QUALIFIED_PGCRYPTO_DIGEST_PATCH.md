@@ -85,6 +85,52 @@ The checker verifies migration 0026 SHA remains unchanged and proves migration
 0027 equals migration 0026's RPC/grant body after the expected mechanical
 qualification of `digest`, `encode` and `convert_to`.
 
+## A-17Q-TX2-FIX1 Verifier Predicate Correction
+
+Status:
+`A17Q_TX2_FIX1_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED`
+
+Diagnostic source evidence classified the production
+`dry_run_branch_preserved=false` verifier result as a verifier false negative,
+not an RPC source defect:
+
+- `SOURCE_RPC_FIX_REQUIRED=NO`
+- `MIGRATION_0028_REQUIRED=NO`
+- `VERIFIER_FALSE_NEGATIVE_FIXED=YES`
+- `DRY_RUN_BRANCH_PRESERVED=YES`
+- `DRY_RUN_RETURN_BEFORE_ALL_WRITES=YES`
+- `DRY_RUN_MUTATION_PATH_COUNT=0`
+
+Root cause:
+the original SELECT-only verifier searched the stale literal predicate
+`if p_dry_run_only then`, while the reviewed and applied RPC source uses
+`if p_dry_run_only is true then`.
+
+The corrected verifier now accepts the reviewed equivalent condition with a
+whitespace-safe predicate and proves the dry-run `return v_result;` appears
+before:
+
+- `public.family_reconciliation_batches` insert;
+- rollback manifest insert/update;
+- revision audit insert;
+- genealogy mutations on `families`, `family_parents` or `family_children`;
+- durable `success_result = v_result` write.
+
+The checker now rejects the stale literal predicate and statically verifies the
+same return-before-write ordering from local migration 0027 source.
+
+FIX1 boundaries:
+
+- `RPC_SOURCE_CHANGED=NO`
+- `MIGRATION_CHANGED=NO`
+- `MIGRATION_CREATED=NO`
+- `SQL_EXECUTED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RUNTIME_CHANGED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
 ## Boundary
 
 - `SQL_EXECUTED=NO`
@@ -102,6 +148,6 @@ qualification of `digest`, `encode` and `convert_to`.
 
 ## Next Action
 
-`NEXT_ACTION=A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN`
+`NEXT_ACTION=A17Q_TX2_RERUN_SELECT_ONLY_VERIFIER_AND_AUTHENTICATED_DRY_RUN`
 
-`EXPECTED_SUCCESS_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`
+`EXPECTED_SUCCESS_STATUS=PASS_TX2_VERIFIER_FALSE_NEGATIVE_CORRECTED`
