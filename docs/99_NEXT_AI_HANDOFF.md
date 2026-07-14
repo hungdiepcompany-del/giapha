@@ -1,5 +1,49 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q-TX3R manual apply evidence and EXEC2 readiness
+
+Current status:
+
+```text
+A17Q_TX3R_STATUS=PASS_TX3C_MANUAL_APPLY_EVIDENCE_RECORDED_EXEC2_READINESS_PENDING
+A17Q_TX3C_STATUS=PASS_OWNER_MANUAL_MIGRATION_APPLIED_AND_VERIFIED
+TARGET_PROJECT_REF=frkyeuxrlcflmsxxsolp
+MIGRATION_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+MIGRATION_EXECUTED=YES
+MIGRATION_0028_RERUN_ALLOWED=NO
+FUNCTION_OWNER=postgres
+SECURITY_DEFINER=YES
+FIXED_SEARCH_PATH_VERIFIED=YES
+PUBLIC_EXECUTE_REVOKED=YES
+ANON_EXECUTE_REVOKED=YES
+AUTHENTICATED_EXECUTE_GRANTED=YES
+PRE_EXECUTION_ACTIVE_STATE=74/140/73
+DECISION_PACK_BATCH_COUNT=0
+COMPLETED_BATCH_COUNT=0
+ROLLBACK_MANIFEST_COUNT=0
+RPC_CALLED=NO
+RECONCILIATION_EXECUTED=NO
+FAMILY_DATA_MUTATED=NO
+UI_VALIDATION_REQUIRED=NO
+UI_SMOKE_EXECUTED=NO
+APPLICATION_UI_TESTED=NO
+```
+
+Important:
+
+- Migration 0028 was manually applied and verified by the owner; never rerun it.
+- The final post-reconciliation verifier is not proof of success before EXEC2
+  because completed batch and rollback manifest counts are still expected to be
+  `0`.
+- Next destructive phase requires:
+  `OWNER_APPROVES_A17Q_EXEC2_SINGLE_RECONCILIATION_EXECUTE_ONCE`.
+- TX3R may inspect `/admin/reconciliation/a17q/execute` read-only to verify the
+  immutable contract and decide whether deploy is required. Do not submit the
+  form or call the RPC.
+
+Next action:
+`A17Q_EXEC2_SINGLE_OWNER_EXECUTION_AND_FINAL_SELECT_ONLY_VERIFICATION`
+
 ## 2026-07-14 - A-17Q-TX3C validation separation policy ready
 
 Current status:

@@ -1,5 +1,37 @@
 # Decision Log
 
+## Decision 363 - A-17Q-TX3R records owner manual apply before EXEC2
+
+Date: 2026-07-14
+
+Status:
+`A17Q_TX3R_STATUS=PASS_TX3C_MANUAL_APPLY_EVIDENCE_RECORDED_EXEC2_READINESS_PENDING`
+
+Decision:
+Accept owner-supplied production evidence that migration 0028 was manually
+applied exactly once in Supabase project `frkyeuxrlcflmsxxsolp`, with SHA
+`9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7`, and record
+the database is ready for a separately authorized A17Q_EXEC2 single execution
+after read-only execution-page readiness inspection.
+
+Rationale:
+TX3C was blocked in Codex Chrome by external project access, but the owner
+completed the approved SQL Editor apply and SELECT-only verification in the
+correct project. The verified function now has owner `postgres`, runs as
+`SECURITY DEFINER`, preserves fixed search_path, revokes PUBLIC/anon EXECUTE and
+grants authenticated EXECUTE. Reconciliation remains unexecuted and pre-exec
+counts remain `74/140/73` with batch/completed/rollback counts `0/0/0`.
+
+Boundary:
+
+- migration 0028 must never be rerun;
+- do not call the reconciliation RPC in TX3R;
+- do not use the final post-reconciliation verifier as proof of success before
+  EXEC2;
+- do not deploy automatically;
+- require `OWNER_APPROVES_A17Q_EXEC2_SINGLE_RECONCILIATION_EXECUTE_ONCE` before
+  the destructive execution phase.
+
 ## Decision 362 - A-17Q-TX3C separates UI, browser access and database mutation validation
 
 Date: 2026-07-14

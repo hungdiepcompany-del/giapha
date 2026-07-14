@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-TX3R manual apply evidence recorded
+
+- `A17Q_TX3R_STATUS=PASS_TX3C_MANUAL_APPLY_EVIDENCE_RECORDED_EXEC2_READINESS_PENDING`.
+- Recorded trusted owner-supplied production evidence that A17Q_TX3C completed via manual Supabase SQL Editor apply in project `frkyeuxrlcflmsxxsolp`.
+- Migration file: `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`.
+- Migration SHA: `9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7`.
+- `MIGRATION_APPLIED_EXACTLY_ONCE_BY_OWNER=YES`; `MIGRATION_0028_RERUN_ALLOWED=NO`.
+- Function verification recorded: owner `postgres`, `SECURITY_DEFINER=YES`, fixed search_path verified, PUBLIC and anon execute revoked, authenticated execute granted.
+- Pre-execution database state remains `74/140/73`; decision-pack batch count `0`, completed batch count `0`, rollback manifest count `0`.
+- Reconciliation remains unexecuted: `RPC_CALLED=NO`, `RECONCILIATION_EXECUTED=NO`, `FAMILY_DATA_MUTATED=NO`.
+- Validation separation preserved: `PHASE_CHANGE_CLASS=DOCS_ONLY+CHECKER_ONLY+EXTERNAL_ADMIN_ACCESS`, `UI_VALIDATION_REQUIRED=NO`, `UI_SMOKE_EXECUTED=NO`, `APPLICATION_UI_TESTED=NO`.
+- Added `docs/PLAN_A17Q_TX3R_MANUAL_APPLY_EXEC2_READINESS.md` and `scripts/check-a17q-tx3r-manual-apply-exec2-readiness.cjs`.
+- Next owner marker required for the destructive phase: `OWNER_APPROVES_A17Q_EXEC2_SINGLE_RECONCILIATION_EXECUTE_ONCE`.
+
 ## 2026-07-14 - A-17Q-TX3C validation separation policy
 
 - `A17Q_TX3C_VALIDATION_SEPARATION_STATUS=PASS_POLICY_READY`.

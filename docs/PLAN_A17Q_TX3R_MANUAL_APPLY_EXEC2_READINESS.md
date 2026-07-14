@@ -1,0 +1,166 @@
+# A-17Q-TX3R - record manual apply and EXEC2 readiness
+
+Status:
+
+```text
+A17Q_TX3R_STATUS=PASS_TX3C_MANUAL_APPLY_EVIDENCE_RECORDED_EXEC2_READINESS_PENDING
+A17Q_TX3C_STATUS=PASS_OWNER_MANUAL_MIGRATION_APPLIED_AND_VERIFIED
+PHASE_CHANGE_CLASS=DOCS_ONLY+CHECKER_ONLY+EXTERNAL_ADMIN_ACCESS
+```
+
+## Trusted Production Evidence
+
+The owner manually applied migration 0028 in the Supabase SQL Editor for the
+target production project and then ran the approved read-only post-apply
+verification.
+
+```text
+EXECUTION_MODE=OWNER_MANUAL_SUPABASE_SQL_EDITOR
+TARGET_PROJECT_REF=frkyeuxrlcflmsxxsolp
+MIGRATION_FILE=db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql
+MIGRATION_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+MIGRATION_EXECUTED=YES
+MIGRATION_APPLIED_EXACTLY_ONCE_BY_OWNER=YES
+SQL_EXECUTION_RESULT=SUCCESS
+```
+
+Migration 0028 must never be rerun. If future verification shows it is already
+applied, use read-only verification only.
+
+```text
+MIGRATION_0028_RERUN_ALLOWED=NO
+MIGRATION_RERUN=NO
+```
+
+## Function Contract Verified
+
+```text
+FUNCTION_SIGNATURE=execute_admin_a17q_legacy_family_reconciliation(text,text,text,text,text,text,text,boolean,boolean,boolean,boolean,boolean)
+FUNCTION_OWNER=postgres
+SECURITY_DEFINER=YES
+FIXED_SEARCH_PATH_VERIFIED=YES
+PUBLIC_EXECUTE_REVOKED=YES
+ANON_EXECUTE_REVOKED=YES
+AUTHENTICATED_EXECUTE_GRANTED=YES
+POST_APPLY_DATABASE_VERIFICATION=PASS
+EXPECTED_OBJECTS_VERIFIED=YES
+EXPECTED_SECURITY_PROPERTIES_VERIFIED=YES
+EXPECTED_GRANTS_VERIFIED=YES
+```
+
+## Pre-Execution State Preserved
+
+```text
+PRE_EXECUTION_ACTIVE_STATE=74/140/73
+DECISION_PACK_BATCH_COUNT=0
+COMPLETED_BATCH_COUNT=0
+ROLLBACK_MANIFEST_COUNT=0
+GLOBAL_GRAPH_INTEGRITY_PASS=true
+ANCESTRY_CYCLE_COUNT_ZERO_PASS=true
+RECONCILIATION_EXECUTED=NO
+FAMILY_DATA_MUTATED=NO
+RPC_CALLED=NO
+UNRELATED_SQL_EXECUTED=NO
+UI_SMOKE_EXECUTED=NO
+DEPLOY=NO
+```
+
+The final post-reconciliation verifier is intentionally expected not to pass
+before EXEC2, because completed batch count and rollback manifest count must
+remain `0` before execution.
+
+```text
+FINAL_POST_RECONCILIATION_VERIFIER_EXPECTED_TO_PASS_BEFORE_EXEC2=NO
+FINAL_VERIFIER_PRE_EXECUTION_STATUS=NOT_RUN_NOT_VALID_BEFORE_EXEC2
+```
+
+## Validation Separation
+
+This phase records evidence and prepares a read-only production execution-page
+inspection. It does not change frontend or runtime source.
+
+```text
+PHASE_CHANGE_CLASS=DOCS_ONLY+CHECKER_ONLY+EXTERNAL_ADMIN_ACCESS
+UI_VALIDATION_REQUIRED=NO
+UI_SMOKE_EXECUTED=NO
+APPLICATION_UI_TESTED=NO
+BROWSER_ACCESS_SCOPE=EXEC2_READ_ONLY_CONTROL_SURFACE_INSPECTION_ONLY
+```
+
+Browser access may inspect `/admin/reconciliation/a17q/execute` only to verify
+the immutable contract and owner/admin gate. It must not submit the form or call
+the RPC.
+
+## EXEC2 Readiness Contract
+
+The currently deployed execution route may be reused only if the production page
+visibly contains the immutable contract below.
+
+```text
+EXECUTION_ROUTE=/admin/reconciliation/a17q/execute
+OWNER_APPROVAL_MARKER=A17P_MANUAL_21_GROUP_RECONCILIATION_APPROVED
+DECISION_PACK_SHA256=777a8bb13ff45eb9f46fd817c392098ada4a2d550cad8e6ee4c6cd896b874ad0
+APPROVED_GROUP_PLAN_SHA256=7dd719c926dc560aa69bc7070c395535942823e87739d9893d0161713e151740
+ROLE_CORRECTION_PLAN_SHA256=ee255398f84dc2ce899d14056fb0573f771202ca7ad71e598cbbe7fc47707a9f
+EXCLUDED_SCOPE_SHA256=7898280dab816af96b6a9277b93b49429c5db8a71c9f24739a7d55660a0bdd61
+FORECAST_SHA256=4c0beb0de1589a7728b7f8b4918844e3103aa773ad3a5ab8e87d1ab2cead9ff3
+EXECUTION_IDEMPOTENCY_KEY=A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001
+P_DRY_RUN_ONLY=false
+APPROVED_GROUP_COUNT=21
+SURVIVOR_COUNT=21
+VOID_FAMILY_COUNT=36
+CHILD_MOVE_COUNT=36
+PARENT_DEACTIVATION_COUNT=72
+CHILD_LOSS_COUNT=0
+EXPECTED_POST_STATE=38/68/73
+PAGE_LOAD_RPC_CALL_COUNT=0
+```
+
+The page must also show:
+
+```text
+EXACT_CONFIRMATION_GATE_REQUIRED=YES
+BACKUP_CONFIRMATION_REQUIRED=YES
+ROLLBACK_CONFIRMATION_REQUIRED=YES
+AUDIT_CONFIRMATION_REQUIRED=YES
+EXCLUDED_SCOPE_CONFIRMATION_REQUIRED=YES
+NO_NEW_IDEMPOTENCY_KEY=YES
+```
+
+Deployment decision:
+
+```text
+DEPLOY_REQUIRED=PENDING_READ_ONLY_EXEC2_PAGE_INSPECTION
+DEPLOY=NO
+```
+
+If the route is absent or the immutable contract differs, stop with
+`DEPLOY_REQUIRED=YES` and report the mismatch. Do not deploy automatically in
+TX3R.
+
+## Strict Boundary
+
+```text
+RPC_CALLED=NO
+RECONCILIATION_EXECUTED=NO
+FAMILY_DATA_MUTATED=NO
+MIGRATION_RERUN=NO
+IMPORT_EXECUTED=NO
+DEPLOY=NO
+```
+
+## Checker
+
+```text
+CHECKER=scripts/check-a17q-tx3r-manual-apply-exec2-readiness.cjs
+PACKAGE_SCRIPT=check:a17q-tx3r-manual-apply-exec2-readiness
+```
+
+## Next Owner Authorization
+
+The next destructive phase must require this exact owner marker:
+
+```text
+NEXT_OWNER_MARKER=OWNER_APPROVES_A17Q_EXEC2_SINGLE_RECONCILIATION_EXECUTE_ONCE
+NEXT_ACTION=A17Q_EXEC2_SINGLE_OWNER_EXECUTION_AND_FINAL_SELECT_ONLY_VERIFICATION
+```
