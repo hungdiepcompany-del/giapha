@@ -153,8 +153,12 @@ const allowedRuntimeChanges = new Set([
   "components/layout/admin-shell.tsx",
   "lib/reconciliation/a17q-authenticated-execution.ts",
 ]);
+const laterPhaseMigrationChanges = new Set([
+  "db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql",
+  "supabase/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql",
+]);
 for (const file of changedFiles) {
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (/^(db\/migrations|supabase\/migrations)\//.test(file) && !laterPhaseMigrationChanges.has(file)) {
     failures.push(`migration changed during A-17Q-DR2-FIX1: ${file}`);
   }
   if (

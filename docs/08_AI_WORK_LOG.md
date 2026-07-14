@@ -1,5 +1,16 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-TX3A family_parents RLS boundary patch prepared
+
+- `A17Q_TX3A_STATUS=PASS_LOCAL_PATCH_READY_FOR_OWNER_REVIEW`.
+- Recorded the blocked A17Q-EXEC2 owner execution attempt: deployed commit `c7d535d8c641f706ac2c7be18d4c64c03e73977c`, one authenticated owner execution attempt, `INITIAL_RPC_ERROR=new row violates row-level security policy for table "family_parents"`, no replay, no completed reconciliation, tracked active counts unchanged `74/140/73`, completed batch count `0`, rollback manifest count `0`.
+- Source diagnosis: A17Q RPC `public.execute_admin_a17q_legacy_family_reconciliation` was still `SECURITY INVOKER`; the first genealogy mutation after pre-mutation audit is direct `UPDATE public.family_parents fp` in the `survivor_role_updates` CTE, followed by direct `deactivated_parents` update. No `family_parents` insert/delete/upsert or trigger-generated secondary write exists.
+- `PRIMARY_ROOT_CAUSE=RPC_SECURITY_INVOKER_INCORRECT_BOUNDARY`.
+- Created local-only migration candidate `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql` and byte-identical Supabase mirror. It copies the TX2 digest-qualified function body and changes only the transaction-boundary RPC mode to `SECURITY DEFINER`, preserving fixed search_path, auth/profile/permission/hash/idempotency/dry-run/rollback/audit gates and execute grants.
+- Added `scripts/check-a17q-tx3-family-parents-rls-boundary.cjs` and `check:a17q-tx3-family-parents-rls-boundary`.
+- Safety: `SQL_APPLY=NO`, `RPC_RETRY=NO`, `RPC_REPLAY=NO`, `RECONCILIATION=NO`, `DB_MUTATION=NONE`, `DEPLOY=NO`, `GIT_PUSH=NO`.
+- Next action: `A17Q_TX3B_OWNER_REVIEW_RLS_PATCH`.
+
 ## 2026-07-14 - A-17Q-TX2 schema-qualified pgcrypto digest patch
 
 Phase: A-17Q-TX2 - Patch Schema-Qualified pgcrypto Digest Calls

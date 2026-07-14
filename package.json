@@ -390,7 +390,8 @@
     "check:a17q-dr2-fix1-post-dry-run-verifier-uuid-array": "node scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs",
     "check:a17q-tx2-schema-qualified-pgcrypto-digest-patch": "node scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs",
     "check:a17q-exec1-authenticated-single-execution-caller": "node scripts/check-a17q-exec1-authenticated-single-execution-caller.cjs",
-    "check:a17q-exec1-fix1-execution-guard-final-verifier": "node scripts/check-a17q-exec1-fix1-execution-guard-final-verifier.cjs"
+    "check:a17q-exec1-fix1-execution-guard-final-verifier": "node scripts/check-a17q-exec1-fix1-execution-guard-final-verifier.cjs",
+    "check:a17q-tx3-family-parents-rls-boundary": "node scripts/check-a17q-tx3-family-parents-rls-boundary.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

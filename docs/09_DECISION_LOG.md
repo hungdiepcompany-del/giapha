@@ -1,5 +1,41 @@
 # Decision Log
 
+## Decision 360 - A-17Q-TX3A uses a narrow transaction-boundary SECURITY DEFINER patch
+
+Date: 2026-07-14
+
+Status:
+`A17Q_TX3A_STATUS=PASS_LOCAL_PATCH_READY_FOR_OWNER_REVIEW`
+
+Decision:
+Prepare migration 0028 to replace only
+`public.execute_admin_a17q_legacy_family_reconciliation` as a
+`SECURITY DEFINER` transaction-boundary function.
+
+Rationale:
+The owner-authenticated A17Q execution reached the reviewed non-dry-run
+executor and failed on the first direct `UPDATE public.family_parents` with
+PostgreSQL RLS rejection. Active counts stayed `74/140/73`, completed batch and
+rollback manifest counts stayed `0`, and no replay occurred.
+
+Preserved gates:
+
+- fixed `search_path = public, auth, pg_temp`;
+- `auth.uid()` and profile assertion;
+- `relationships.update` plus `permissions.manage`;
+- owner marker and five immutable hashes;
+- idempotency, dry-run branch, rollback manifest, pre/post audit and final
+  post-state checks.
+
+Rejected alternatives:
+Do not disable RLS, do not add `USING (true)` or `WITH CHECK (true)`, do not
+grant writes to anon, do not broaden authenticated table grants, do not add a
+second runtime execution path, and do not use service role/JWT spoofing.
+
+Boundary:
+Local patch only; no SQL apply, no RPC retry/replay, no reconciliation, no
+deploy and no push in TX3A.
+
 ## Decision 359 - A-17Q-TX2 qualifies pgcrypto digest calls
 
 Date: 2026-07-14

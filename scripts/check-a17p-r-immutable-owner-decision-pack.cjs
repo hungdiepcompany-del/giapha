@@ -484,6 +484,10 @@ const allowedChangedFiles = new Set([
   "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
   "docs/PLAN_A17Q_DR2_FIX1_POST_DRY_RUN_VERIFIER_UUID_ARRAY.md",
   "scripts/check-a17q-dr2-fix1-post-dry-run-verifier-uuid-array.cjs",
+  "docs/PLAN_A17Q_TX3_FAMILY_PARENTS_RLS_BOUNDARY.md",
+  "scripts/check-a17q-tx3-family-parents-rls-boundary.cjs",
+  "db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql",
+  "supabase/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql",
   "scripts/check-export-import-boundary-design.cjs",
   "scripts/check-export-import-final-readiness.cjs",
 ]);

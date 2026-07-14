@@ -1,5 +1,37 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q-TX3A local patch ready, not applied
+
+Current status:
+
+```text
+A17Q_TX3A_STATUS=PASS_LOCAL_PATCH_READY_FOR_OWNER_REVIEW
+PRIMARY_ROOT_CAUSE=RPC_SECURITY_INVOKER_INCORRECT_BOUNDARY
+PATCH_TYPE=LOCAL_MIGRATION_CANDIDATE_SECURITY_DEFINER_TRANSACTION_BOUNDARY
+NEXT_ALLOWED_PHASE=A17Q_TX3B_OWNER_REVIEW_RLS_PATCH
+```
+
+What happened:
+
+- A17Q-EXEC2 deployed commit `c7d535d8c641f706ac2c7be18d4c64c03e73977c` and the owner submitted the exact execution phrase once.
+- RPC returned `new row violates row-level security policy for table "family_parents"`.
+- No replay was attempted.
+- Tracked active counts remained `74/140/73`; completed batch count `0`; rollback manifest count `0`.
+
+Local-only patch prepared:
+
+- `db/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`
+- `supabase/migrations/20260714_0028_a17q_tx3_family_parents_rls_boundary_patch.sql`
+- `scripts/check-a17q-tx3-family-parents-rls-boundary.cjs`
+- `docs/PLAN_A17Q_TX3_FAMILY_PARENTS_RLS_BOUNDARY.md`
+
+Do not apply migration 0028 yet. Do not retry the RPC, replay, reconcile,
+deploy or push without the next owner marker:
+
+```text
+OWNER_APPROVES_A17Q_TX3_FAMILY_PARENTS_RLS_BOUNDARY_PATCH_REVIEW
+```
+
 ## 2026-07-14 - A-17Q-TX2 - Schema-qualified pgcrypto digest patch ready
 
 - Status:
