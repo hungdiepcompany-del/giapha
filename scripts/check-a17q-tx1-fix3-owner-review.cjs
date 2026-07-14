@@ -21,6 +21,8 @@ const planDocPath =
 const expectedCommit = "3066ea9";
 const expectedSha =
   "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
+const allowedTx2Migration =
+  "20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -101,7 +103,12 @@ for (const folder of ["db/migrations", "supabase/migrations"]) {
   const migration0027 = fs
     .readdirSync(path.join(root, folder))
     .filter((file) => file.includes("0027"));
-  if (migration0027.length > 0) failures.push(`unexpected 0027 migration in ${folder}: ${migration0027.join(", ")}`);
+  if (
+    migration0027.length > 0 &&
+    (migration0027.length !== 1 || migration0027[0] !== allowedTx2Migration)
+  ) {
+    failures.push(`unexpected 0027 migration in ${folder}: ${migration0027.join(", ")}`);
+  }
 }
 
 for (const token of [
@@ -208,7 +215,15 @@ if (/\bfor\s+update\b/i.test(verifierCode)) failures.push("verifier must not loc
 const runtimeCallers = ["app", "components", "lib", "server", "services"]
   .flatMap((dir) => listFiles(dir))
   .filter((file) => read(file).includes("execute_admin_a17q_legacy_family_reconciliation"));
-if (runtimeCallers.length > 0) failures.push(`runtime caller present: ${runtimeCallers.join(", ")}`);
+const allowedDryRunOnlyRuntimeCallers = new Set([
+  "lib/reconciliation/a17q-authenticated-dry-run.ts",
+]);
+const unexpectedRuntimeCallers = runtimeCallers.filter(
+  (file) => !allowedDryRunOnlyRuntimeCallers.has(file),
+);
+if (unexpectedRuntimeCallers.length > 0) {
+  failures.push(`unexpected runtime caller present: ${unexpectedRuntimeCallers.join(", ")}`);
+}
 
 for (const token of [
   "A17Q_TX1_FIX3_REVIEW_STATUS=PASS_OWNER_REVIEW_APPROVED_FINAL_MIGRATION_FOR_MANUAL_APPLY_CANDIDATE",

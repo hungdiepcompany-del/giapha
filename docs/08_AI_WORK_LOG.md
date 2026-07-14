@@ -1,5 +1,55 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q-TX2 schema-qualified pgcrypto digest patch
+
+Phase: A-17Q-TX2 - Patch Schema-Qualified pgcrypto Digest Calls
+
+Status:
+`A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`
+
+Evidence:
+
+- `PGCRYPTO_SCHEMA=extensions`
+- `DIGEST_BYTEA_TEXT_EXISTS=YES`
+- `PATCH_MIGRATION_FILE=db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`
+- `PATCH_SUPABASE_MIRROR_FILE=supabase/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`
+- `PATCH_MIGRATION_SHA256=6CD412A9A00AE54C79999E4606BBAF58B141764F696CE823F44078859D37D9CB`
+- `MIRROR_MATCH=YES`
+- `UNQUALIFIED_EXECUTABLE_DIGEST_CALL_COUNT=0`
+- `QUALIFIED_EXTENSIONS_DIGEST_CALL_COUNT=17`
+- `RPC_SIGNATURE_UNCHANGED=YES`
+- `SECURITY_INVOKER_PRESERVED=YES`
+- `FIXED_SEARCH_PATH_PRESERVED=YES`
+- `GRANTS_PRESERVED=YES`
+- `RUNTIME_CHANGED=NO`
+
+Production cause:
+
+- `MIGRATION_0026_APPLIED=YES_OWNER_MANUAL_PRODUCTION`
+- `AUTHENTICATED_DRY_RUN_CALLED=YES_DRY_RUN_ONLY_ONCE`
+- `AUTHENTICATED_DRY_RUN_RESULT=RPC_ERROR`
+- `RPC_ERROR=function digest(bytea, unknown) does not exist`
+- `GENEALOGY_DATA_MUTATED=NO`
+
+Artifacts:
+
+- `SELECT_ONLY_VERIFIER_FILE=db/checks/20260714_check_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`
+- `CHECKER=scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs`
+- `PACKAGE_SCRIPT=check:a17q-tx2-schema-qualified-pgcrypto-digest-patch`
+
+Boundary:
+
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `DEPLOY=NO`
+- `PUSH=NO`
+
+Next action:
+`NEXT_ACTION=A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN`
+
 ## 2026-07-13 - A-17Q-DR1 production reconciliation dry-run bundle prepared
 
 Phase: A-17Q-DR1 - Prepare Production Reconciliation Dry-Run Bundle

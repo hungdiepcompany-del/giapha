@@ -20,6 +20,8 @@ const oldFix2Sha =
   "AF9F50098AAC6B9802AF667B80DB90B238BA83F8C6F1C267A9B542CA27C6E40D";
 const newFix3Sha =
   "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
+const allowedTx2Migration =
+  "20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -88,7 +90,12 @@ for (const folder of ["db/migrations", "supabase/migrations"]) {
   const migration0027 = fs
     .readdirSync(path.join(root, folder))
     .filter((file) => file.includes("0027"));
-  if (migration0027.length > 0) failures.push(`unexpected 0027 migration in ${folder}: ${migration0027.join(", ")}`);
+  if (
+    migration0027.length > 0 &&
+    (migration0027.length !== 1 || migration0027[0] !== allowedTx2Migration)
+  ) {
+    failures.push(`unexpected 0027 migration in ${folder}: ${migration0027.join(", ")}`);
+  }
 }
 
 for (const token of [

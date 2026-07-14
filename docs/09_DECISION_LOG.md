@@ -1,5 +1,49 @@
 # Decision Log
 
+## Decision 359 - A-17Q-TX2 qualifies pgcrypto digest calls
+
+Date: 2026-07-14
+
+Status:
+`A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`
+
+Decision:
+Create not-applied migration 0027 to replace only
+`public.execute_admin_a17q_legacy_family_reconciliation`, preserving the
+reviewed A-17Q transaction executor contract while schema-qualifying pgcrypto
+digest calls as `extensions.digest(..., 'sha256'::text)` and qualifying
+`pg_catalog.encode` plus `pg_catalog.convert_to`.
+
+Rationale:
+The authenticated owner-session production dry-run reached the applied 0026 RPC
+and failed before returning a result with
+`function digest(bytea, unknown) does not exist`. Owner-confirmed metadata says
+`extensions.digest(bytea,text)` exists. Adding `extensions` to the function
+search path would widen the reviewed security contract, so TX2 keeps
+`search_path=public, auth, pg_temp` and qualifies the pgcrypto calls directly.
+
+Evidence:
+
+- `PATCH_MIGRATION_FILE=db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`
+- `PATCH_MIGRATION_SHA256=6CD412A9A00AE54C79999E4606BBAF58B141764F696CE823F44078859D37D9CB`
+- `MIRROR_MATCH=YES`
+- `PGCRYPTO_SCHEMA=extensions`
+- `DIGEST_BYTEA_TEXT_EXISTS=YES`
+- `QUALIFIED_EXTENSIONS_DIGEST_CALL_COUNT=17`
+- `UNQUALIFIED_EXECUTABLE_DIGEST_CALL_COUNT=0`
+- `RPC_SIGNATURE_UNCHANGED=YES`
+- `SECURITY_INVOKER_PRESERVED=YES`
+- `FIXED_SEARCH_PATH_PRESERVED=YES`
+- `GRANTS_PRESERVED=YES`
+- `RUNTIME_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+
+Next action:
+`A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN`
+
 ## Decision 358 - A-17Q-DR1 prepares production reconciliation dry-run bundle
 
 Date: 2026-07-13

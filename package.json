@@ -386,7 +386,8 @@
     "check:a17q-tx1-fix3-owner-review": "node scripts/check-a17q-tx1-fix3-owner-review.cjs",
     "check:a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification": "node scripts/check-a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification.cjs",
     "check:a17q-dr1-production-reconciliation-dry-run-bundle": "node scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
-    "check:a17q-dr1-fix1-authenticated-dry-run-caller": "node scripts/check-a17q-dr1-fix1-authenticated-dry-run-caller.cjs"
+    "check:a17q-dr1-fix1-authenticated-dry-run-caller": "node scripts/check-a17q-dr1-fix1-authenticated-dry-run-caller.cjs",
+    "check:a17q-tx2-schema-qualified-pgcrypto-digest-patch": "node scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",

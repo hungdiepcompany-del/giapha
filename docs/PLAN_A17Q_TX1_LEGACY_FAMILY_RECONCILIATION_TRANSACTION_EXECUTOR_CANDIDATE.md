@@ -13,6 +13,7 @@ Status:
 `A17Q_TX1R_STATUS=PASS_MANUAL_APPLY_VERIFICATION_EVIDENCE_RECORDED`
 `A17Q_TX1_MANUAL_APPLY_STATUS=PASS_MIGRATION_APPLIED_AND_SELECT_ONLY_VERIFIED_NO_RECONCILIATION`
 `A17Q_DR1_STATUS=PASS_PRODUCTION_DRY_RUN_BUNDLE_PREPARED_NOT_EXECUTED`
+`A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`
 
 ## Scope
 
@@ -70,7 +71,10 @@ matches the committed JSON exactly. Production display names are not committed.
 - `DR1_CHECKER_FILE=scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs`
 
 The superseded SHAs must never be applied. Migration 0026 has now been applied
-manually by the owner using the FIX3 SHA above; no migration 0027 was created.
+manually by the owner using the FIX3 SHA above. A-17Q-TX2 later creates
+not-applied migration 0027 to preserve the reviewed RPC contract while
+schema-qualifying pgcrypto digest calls after the authenticated dry-run exposed
+the fixed-search-path `digest(...)` resolution defect.
 
 ## RPC Contract
 
@@ -151,7 +155,7 @@ manually by the owner using the FIX3 SHA above; no migration 0027 was created.
 - `RECONCILIATION_EXECUTION_AUTHORIZED=NO`
 - `MIGRATION_APPLY_AUTHORIZED=NO`
 - `MIGRATION_0026_APPLIED=YES_OWNER_MANUAL_PRODUCTION`
-- `MIGRATION_0027_CREATED=NO`
+- `MIGRATION_0027_CREATED=YES_A17Q_TX2_NOT_APPLIED`
 - `PRODUCTION_DRY_RUN_AUTHORIZED=NO`
 - `PRODUCTION_EXECUTION_AUTHORIZED=NO`
 - `OWNER_REVIEW_REQUIRED_AGAIN=NO`
@@ -347,6 +351,30 @@ SELECT-only verifier without executing the RPC:
 - `DEPLOY=NO`
 - `PUSH=NO`
 - `NEXT_ACTION=A17Q_DR2_OWNER_REVIEW_AND_MANUAL_PRODUCTION_DRY_RUN`
+
+## A-17Q-TX2 Digest Resolution Patch
+
+A-17Q-TX2 creates a not-applied patch migration after the authenticated
+owner-session production dry-run reached the applied 0026 RPC and failed before
+returning a result with `function digest(bytea, unknown) does not exist`:
+
+- `A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`
+- `PATCH_MIGRATION_FILE=db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`
+- `PATCH_MIGRATION_SHA256=6CD412A9A00AE54C79999E4606BBAF58B141764F696CE823F44078859D37D9CB`
+- `PGCRYPTO_SCHEMA=extensions`
+- `DIGEST_BYTEA_TEXT_EXISTS=YES`
+- `QUALIFIED_EXTENSIONS_DIGEST_CALL_COUNT=17`
+- `UNQUALIFIED_EXECUTABLE_DIGEST_CALL_COUNT=0`
+- `RPC_SIGNATURE_UNCHANGED=YES`
+- `SECURITY_INVOKER_PRESERVED=YES`
+- `FIXED_SEARCH_PATH_PRESERVED=YES`
+- `GRANTS_PRESERVED=YES`
+- `RUNTIME_CHANGED=NO`
+- `SQL_EXECUTED=NO`
+- `MIGRATION_APPLIED=NO`
+- `RPC_CALLED=NO`
+- `DATABASE_MUTATION=NO`
+- `NEXT_ACTION=A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN`
 
 ## Validation
 

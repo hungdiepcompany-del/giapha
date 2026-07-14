@@ -26,6 +26,8 @@ const fix3Sha =
   "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
 const supersededSha =
   "696441637B308257ED8B45991EAD2542B4A5A14A648BBE0CCC2D5E996DD18D3B";
+const allowedTx2Migration =
+  "20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -108,7 +110,14 @@ if (currentDbSha !== expectedSha && currentDbSha !== fix2Sha && currentDbSha !==
 if (currentMirrorSha !== expectedSha && currentMirrorSha !== fix2Sha && currentMirrorSha !== fix3Sha) {
   failures.push("reviewed Supabase migration SHA changed outside accepted FIX2 correction");
 }
-if (listMigrationFilesContaining("0027").length > 0) failures.push("migration 0027 must not exist");
+const migration0027Files = listMigrationFilesContaining("0027");
+if (
+  migration0027Files.length > 0 &&
+  (migration0027Files.length !== 2 ||
+    !migration0027Files.every((file) => path.basename(file) === allowedTx2Migration))
+) {
+  failures.push(`unexpected migration 0027 files: ${migration0027Files.join(", ")}`);
+}
 
 for (const token of [
   "A17Q_TX1_FIX1_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED",
@@ -231,8 +240,14 @@ const runtimeFiles = ["app", "components", "lib", "server", "services"]
 const runtimeCallers = runtimeFiles.filter((file) =>
   read(file).includes("execute_admin_a17q_legacy_family_reconciliation"),
 );
-if (runtimeCallers.length > 0) {
-  failures.push(`runtime caller present: ${runtimeCallers.join(", ")}`);
+const allowedDryRunOnlyRuntimeCallers = new Set([
+  "lib/reconciliation/a17q-authenticated-dry-run.ts",
+]);
+const unexpectedRuntimeCallers = runtimeCallers.filter(
+  (file) => !allowedDryRunOnlyRuntimeCallers.has(file.replace(/\\/g, "/")),
+);
+if (unexpectedRuntimeCallers.length > 0) {
+  failures.push(`unexpected runtime caller present: ${unexpectedRuntimeCallers.join(", ")}`);
 }
 
 if (

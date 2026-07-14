@@ -24,6 +24,8 @@ const fix3Sha =
   "9ABDF7EDC4BEAD60316A82098C72A21BB01464510F7AD3604E4D5FAB83490C66";
 const supersededFix1Sha =
   "B5F25A1F4583FCC4C54BA3385CE41624F0995EFB3A2383895D6107238A7B5934";
+const allowedTx2Migration =
+  "20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql";
 
 function read(relativePath) {
   const absolutePath = path.join(root, relativePath);
@@ -82,7 +84,14 @@ const actualSha = sha256(dbMigrationPath);
 if (actualSha !== reviewedSha && actualSha !== fix3Sha) failures.push(`unexpected migration SHA ${actualSha}`);
 if (![reviewedSha, fix3Sha].includes(sha256(supabaseMigrationPath))) failures.push("unexpected Supabase mirror SHA");
 if (actualSha === supersededFix1Sha) failures.push("migration SHA still equals superseded FIX1 SHA");
-if (listMigrationFilesContaining("0027").length > 0) failures.push("migration 0027 must not exist");
+const migration0027Files = listMigrationFilesContaining("0027");
+if (
+  migration0027Files.length > 0 &&
+  (migration0027Files.length !== 2 ||
+    !migration0027Files.every((file) => path.basename(file) === allowedTx2Migration))
+) {
+  failures.push(`unexpected migration 0027 files: ${migration0027Files.join(", ")}`);
+}
 
 for (const token of [
   "A17Q_TX1_FIX2_REVIEW_STATUS=BLOCKED_ADDITIONAL_SOURCE_CORRECTION_REQUIRED",

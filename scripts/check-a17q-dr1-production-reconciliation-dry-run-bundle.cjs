@@ -313,8 +313,18 @@ const allowedChangedFiles = new Set([
   "lib/reconciliation/a17q-authenticated-dry-run.ts",
   "scripts/check-a17q-dr1-fix1-authenticated-dry-run-caller.cjs",
   "scripts/check-a17q-dr1-production-reconciliation-dry-run-bundle.cjs",
+  "scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs",
+  "scripts/check-a17q-tx1-fix1-owner-review.cjs",
+  "scripts/check-a17q-tx1-fix2-exact-post-state-reconciliation-contract.cjs",
+  "scripts/check-a17q-tx1-fix2-owner-review.cjs",
+  "scripts/check-a17q-tx1-fix3-final-integrity-contract.cjs",
+  "scripts/check-a17q-tx1-fix3-owner-review.cjs",
   "scripts/check-a17q-tx1r-legacy-family-reconciliation-executor-manual-apply-verification.cjs",
   "scripts/check-a17q-tx1-legacy-family-reconciliation-transaction-executor-candidate.cjs",
+  "db/checks/20260714_check_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
+  "db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
+  "supabase/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql",
+  "docs/PLAN_A17Q_TX2_SCHEMA_QUALIFIED_PGCRYPTO_DIGEST_PATCH.md",
   "scripts/check-a17p-r-immutable-owner-decision-pack.cjs",
   "scripts/check-a17p-manual-owner-approval-evidence.cjs",
   "scripts/check-a17p-fix3-parent-role-gender-review-evidence.cjs",
@@ -326,7 +336,7 @@ for (const file of changedFiles) {
   if (/^(app|components|lib|server|services)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`runtime file changed during A-17Q-DR1: ${file}`);
   }
-  if (/^(db\/migrations|supabase\/migrations)\//.test(file)) {
+  if (/^(db\/migrations|supabase\/migrations)\//.test(file) && !allowedChangedFiles.has(file)) {
     failures.push(`migration changed during A-17Q-DR1: ${file}`);
   }
   if (!allowedChangedFiles.has(file)) failures.push(`unexpected A-17Q-DR1 dirty file: ${file}`);

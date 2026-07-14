@@ -538,14 +538,22 @@ assertCase("people rows are not updated", !/\bupdate\s+public\.people\b/i.test(m
 
 const runtimeFiles = listFiles(".");
 const runtimeCallers = runtimeFiles.filter((file) => {
-  if (file === checkerPath || file.startsWith("scripts/check-a17q-tx1") || file.startsWith("scripts/check-a17q-dr1")) return false;
+  if (
+    file === checkerPath ||
+    file.startsWith("scripts/check-a17q-tx1") ||
+    file.startsWith("scripts/check-a17q-tx2") ||
+    file.startsWith("scripts/check-a17q-dr1")
+  ) {
+    return false;
+  }
   const content = read(file);
   return content.includes("execute_admin_a17q_legacy_family_reconciliation");
 });
 const approvedDryRunRuntimeCallers = runtimeCallers.filter((file) => {
+  const normalizedFile = file.replace(/\\/g, "/");
   const content = read(file);
   return (
-    file === "lib/reconciliation/a17q-authenticated-dry-run.ts" &&
+    normalizedFile === "lib/reconciliation/a17q-authenticated-dry-run.ts" &&
     content.includes("p_dry_run_only: true") &&
     !content.includes("p_dry_run_only: false") &&
     !content.includes("dryRunOnly: false")

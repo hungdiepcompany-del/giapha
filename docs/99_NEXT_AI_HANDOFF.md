@@ -1,5 +1,47 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q-TX2 - Schema-qualified pgcrypto digest patch ready
+
+- Status:
+  `A17Q_TX2_STATUS=PASS_PGCRYPTO_DIGEST_PATCH_CANDIDATE_READY_NOT_APPLIED`.
+- Production cause:
+  `MIGRATION_0026_APPLIED=YES`;
+  authenticated owner dry-run reached the RPC and failed before result with
+  `function digest(bytea, unknown) does not exist`;
+  `GENEALOGY_DATA_MUTATED=NO`.
+- Patch artifacts:
+  `PATCH_MIGRATION_FILE=db/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`;
+  `PATCH_SUPABASE_MIRROR_FILE=supabase/migrations/20260714_0027_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`;
+  `PATCH_MIGRATION_SHA256=6CD412A9A00AE54C79999E4606BBAF58B141764F696CE823F44078859D37D9CB`;
+  `MIRROR_MATCH=YES`.
+- Digest contract:
+  `PGCRYPTO_SCHEMA=extensions`;
+  `DIGEST_BYTEA_TEXT_EXISTS=YES`;
+  `QUALIFIED_EXTENSIONS_DIGEST_CALL_COUNT=17`;
+  `UNQUALIFIED_EXECUTABLE_DIGEST_CALL_COUNT=0`;
+  `QUALIFIED_PG_CATALOG_ENCODE_CALL_COUNT=17`;
+  `QUALIFIED_PG_CATALOG_CONVERT_TO_CALL_COUNT=17`.
+- Preserved RPC contract:
+  `RPC_SIGNATURE_UNCHANGED=YES`;
+  `SECURITY_INVOKER_PRESERVED=YES`;
+  `FIXED_SEARCH_PATH_PRESERVED=YES`;
+  `GRANTS_PRESERVED=YES`;
+  `RUNTIME_CHANGED=NO`.
+- Verification artifacts:
+  `SELECT_ONLY_VERIFIER_FILE=db/checks/20260714_check_a17q_tx2_schema_qualified_pgcrypto_digest_patch.sql`;
+  `CHECKER=scripts/check-a17q-tx2-schema-qualified-pgcrypto-digest-patch.cjs`;
+  `PACKAGE_SCRIPT=check:a17q-tx2-schema-qualified-pgcrypto-digest-patch`.
+- Boundary:
+  `SQL_EXECUTED=NO`;
+  `MIGRATION_APPLIED=NO`;
+  `RPC_CALLED=NO`;
+  `DATABASE_MUTATION=NO`;
+  `RECONCILIATION_EXECUTED=NO`;
+  `DEPLOY=NO`;
+  `PUSH=NO`.
+- Next action:
+  `NEXT_ACTION=A17Q_TX2_MANUAL_APPLY_VERIFY_AND_RETRY_AUTHENTICATED_DRY_RUN`.
+
 ## 2026-07-13 - A-17Q-DR1 - Production reconciliation dry-run bundle prepared
 
 - Status:
