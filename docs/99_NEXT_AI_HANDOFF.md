@@ -1,5 +1,55 @@
 # Next AI Handoff
 
+## 2026-07-14 - A-17Q closeout production page smoke pass, API POST smoke still pending
+
+Current status:
+
+```text
+A17Q_CLOSEOUT_STATUS=BLOCKED_PRODUCTION_API_SMOKE_BROWSER_POST_POLICY
+BASELINE_COMMIT=80fc415
+CLOSEOUT_COMMIT=8d5a70b
+DEPLOY_STATUS=PASS_OWNER_CONFIRMED_GITHUB_ACTIONS
+PRODUCTION_PAGE_SMOKE=PASS
+PRODUCTION_API_SMOKE=BLOCKED_CHROME_TOOL_POST_POLICY
+```
+
+Verified:
+
+- Owner confirmed GitHub Actions Cloudflare production deployment succeeded for
+  commit `8d5a70b`.
+- Production route
+  `https://web-gia-pha.hungdiepcompany.workers.dev/admin/reconciliation/a17q/execute`
+  loaded for the signed-in owner account without redirecting to login.
+- The page showed owner account `hungdiepcompany@gmail.com`, role `OWNER`,
+  title `A-17Q đã hoàn tất`, final state `38/68/73`, no child loss and the
+  read-only completion screen.
+- The A-17Q main content had no execution form, inputs, checkboxes or execution
+  button.
+- Old debug/execution strings were absent: RPC name, API route debug line,
+  `DRY_RUN_ONLY`, owner marker, confirmation phrase, 64-character internal
+  hashes, idempotency key, permission debug block and mutation diagnostics.
+
+Blocked:
+
+- Codex could not complete the required authenticated browser-context API POST
+  smoke. The read-only evaluator exposed neither `fetch` nor constructible
+  `XMLHttpRequest`, and Chrome automation blocked the same-origin `javascript:`
+  POST path. No successful POST network request was completed by Codex.
+
+Important:
+
+- Do not call or replay the reconciliation RPC.
+- Do not submit a third execution attempt.
+- Do not rerun migrations 0028 or 0029.
+- Do not create a new migration.
+- Do not mutate family data.
+- The source API retirement contract remains expected to return HTTP `410`,
+  `status=RETIRED`, `code=A17Q_RECONCILIATION_ALREADY_COMPLETED` and
+  `rpcCalled=false`.
+
+Next action:
+`COMPLETE_A17Q_CLOSEOUT_API_POST_SMOKE_WITH_OWNER_APPROVED_BROWSER_METHOD_OR_MANUAL_EVIDENCE`
+
 ## 2026-07-14 - A-17Q closeout execution surface retirement
 
 Current status:

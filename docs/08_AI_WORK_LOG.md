@@ -1,5 +1,17 @@
 # AI Work Log
 
+## 2026-07-14 - A-17Q closeout deployed page smoke pass, API POST smoke blocked
+
+- `A17Q_CLOSEOUT_STATUS=BLOCKED_PRODUCTION_API_SMOKE_BROWSER_POST_POLICY`.
+- Owner confirmed GitHub Actions Cloudflare production deployment succeeded for closeout commit `8d5a70b`.
+- Production URL: `https://web-gia-pha.hungdiepcompany.workers.dev`.
+- Focused owner-session page smoke PASS for `/admin/reconciliation/a17q/execute`: exact route loaded without login redirect, owner account `hungdiepcompany@gmail.com` and role `OWNER` were visible, completion title `A-17Q đã hoàn tất` was visible, final state `38/68/73` was visible, no child loss was visible, and the read-only completion screen exposed no execution form, inputs, checkboxes or execution button in the A-17Q main content.
+- Old execution/debug contract strings were absent from the production page: RPC name, API route debug line, `DRY_RUN_ONLY`, owner marker, confirmation phrase, 64-character internal hashes, idempotency key, permission debug block and mutation diagnostics.
+- Production API POST smoke could not be completed by Codex because Chrome automation blocked the only available same-origin `javascript:` POST path, while the read-only evaluator exposed neither `fetch` nor constructible `XMLHttpRequest`. No successful API POST network request was completed by Codex.
+- Source-retirement contract remains verified: `/api/admin/a17q/reconciliation-execute` is expected to return HTTP `410`, `status=RETIRED`, `code=A17Q_RECONCILIATION_ALREADY_COMPLETED` and `rpcCalled=false`; helper and Supabase RPC call counts remain `0`.
+- Boundary: no reconciliation RPC call, no third submission, no migration 0028/0029 rerun, no new migration, no genealogy data mutation, no deploy by Codex.
+- Next action: complete the A17Q closeout API POST smoke using an owner-approved browser method or owner manual evidence, then close the phase.
+
 ## 2026-07-14 - A-17Q closeout execution surface retired in source
 
 - `A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING`.

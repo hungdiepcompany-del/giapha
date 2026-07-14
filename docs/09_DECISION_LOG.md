@@ -5,7 +5,7 @@
 Date: 2026-07-14
 
 Status:
-`A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING`
+`A17Q_CLOSEOUT_STATUS=BLOCKED_PRODUCTION_API_SMOKE_BROWSER_POST_POLICY`
 
 Decision:
 After final A17Q reconciliation completion, the operational execution page and
@@ -30,6 +30,15 @@ Boundary:
 - keep repository evidence and final verifier;
 - deploy only the pushed closeout commit through the approved Gia Phả
   Cloudflare production workflow.
+
+Production evidence update:
+
+- owner confirmed GitHub Actions deployment for commit `8d5a70b`;
+- production page smoke passed for the owner session and showed the read-only
+  completion screen with final state `38/68/73`;
+- the authenticated browser-context API POST smoke remains blocked by Chrome
+  automation policy, so the phase cannot be marked fully closed from Codex
+  evidence alone.
 
 Checker:
 `check:a17q-closeout-execution-surface-retirement`
