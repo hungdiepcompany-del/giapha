@@ -12772,3 +12772,83 @@ Checker:
 
 Next action:
 `NEXT_ACTION=A17Q_EXEC2_REAPPROVE_DEPLOY_EXECUTE_ONCE_AND_FINAL_VERIFY`
+
+# 2026-07-14 - A-17Q-TX4 JSONB argument-limit patch bundle
+
+Status:
+`A17Q_TX4_STATUS=PASS_JSONB_ARGUMENT_LIMIT_PATCH_READY_NOT_APPLIED`
+
+Confirmed production evidence:
+
+- First owner-approved EXEC2 submission reached the authenticated RPC exactly once.
+- `OWNER_EMAIL=hungdiepcompany@gmail.com`
+- `VISIBLE_ROLE=OWNER`
+- `PERMISSION_COUNT=25`
+- `EXECUTION_SUBMIT_COUNT=1`
+- `RPC_CALLED=YES`
+- `RPC_ERROR_MESSAGE=cannot pass more than 100 arguments to a function`
+- `SECOND_SUBMISSION_ATTEMPTED=NO`
+- `IDEMPOTENCY_KEY=A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001`
+
+Post-attempt state:
+
+- `DECISION_PACK_BATCH_COUNT=0`
+- `COMPLETED_BATCH_COUNT=0`
+- `ROLLBACK_MANIFEST_COUNT=0`
+- `ACTIVE_STATE_AFTER_ERROR=74/140/73`
+- `TRANSACTION_COMMITTED=NO`
+- `TRANSACTION_ROLLED_BACK=YES`
+- `PARTIAL_MUTATION_DETECTED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `MUTATION_APPLIED=NO`
+
+Root cause:
+
+- PostgreSQL function calls cannot exceed 100 arguments.
+- Syntax-aware checker proves the reviewed 0028 function had:
+  - post-mutation audit builder: `108` arguments / `54` key-value pairs;
+  - final success-result builder: `152` arguments / `76` key-value pairs.
+
+Prepared patch:
+
+- Migration: `db/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql`
+- Mirror: `supabase/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql`
+- SHA256: `F73DB2848156306A03975C7CA8918087673E7BF3380A4D94FF0B1DC403D9DA7C`
+- `MIRROR_MATCH=YES`
+- `MIGRATION_0029_APPLIED=NO`
+
+Patch contract:
+
+- Preserves exact RPC signature, return type, PL/pgSQL, `SECURITY DEFINER`,
+  owner `postgres`, fixed search path, PUBLIC/anon revokes and authenticated
+  execute grant.
+- Preserves owner/session/profile/permission gates, owner marker, five hashes,
+  idempotency behavior, dry-run behavior, mutation CTEs, rollback manifest,
+  audit behavior, post-state validation, graph validation, success-result hash
+  and completed replay behavior.
+- Only executable change: split oversized flat JSON constructors with `||`.
+- Patched chunks:
+  - post-mutation audit: `80/28`;
+  - final success result: `80/72`.
+
+Verification assets:
+
+- SELECT-only post-apply verifier:
+  `db/checks/20260714_check_a17q_tx4_jsonb_argument_limit_patch.sql`
+- Checker:
+  `check:a17q-tx4-jsonb-argument-limit-patch`
+
+Boundaries:
+
+- `MIGRATION_0028_RERUN=NO`
+- `RPC_RETRIED=NO`
+- `SECOND_SUBMISSION_ATTEMPTED=NO`
+- `RECONCILIATION_EXECUTED=NO`
+- `FAMILY_DATA_MUTATED=NO`
+- `RUNTIME_ROUTE_CHANGED=NO`
+- `FINAL_EXEC2_VERIFIER_CHANGED=NO`
+- `UI_SMOKE_EXECUTED=NO`
+- `DEPLOY=NO`
+
+Next action:
+`A17Q_TX4_OWNER_MANUAL_APPLY_VERIFY_THEN_SINGLE_IDEMPOTENT_EXECUTION_RETRY`

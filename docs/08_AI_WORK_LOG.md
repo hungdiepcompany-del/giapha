@@ -14135,3 +14135,17 @@ Documentation foundation
 - `PUSH=NO`.
 - Added `check:a17q-exec1-fix1-execution-guard-final-verifier`.
 - `NEXT_ACTION=A17Q_EXEC2_REAPPROVE_DEPLOY_EXECUTE_ONCE_AND_FINAL_VERIFY`.
+
+# 2026-07-14 - A-17Q-TX4 JSONB argument-limit patch prepared
+
+- `A17Q_TX4_STATUS=PASS_JSONB_ARGUMENT_LIMIT_PATCH_READY_NOT_APPLIED`.
+- Recorded first owner-approved EXEC2 attempt evidence: authenticated owner/admin route submitted exactly once, RPC was called, and the RPC failed with `cannot pass more than 100 arguments to a function`.
+- Post-attempt database evidence remained no-mutation: active state `74/140/73`, decision-pack batch count `0`, completed batch count `0`, rollback manifest count `0`, transaction committed `NO`, transaction rolled back `YES`.
+- Root cause proven by syntax-aware checker against migration 0028: post-mutation audit `jsonb_build_object` had `108` arguments (`54` key/value pairs), and final success-result `jsonb_build_object` had `152` arguments (`76` key/value pairs).
+- Added not-applied migration `db/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql` and byte-identical mirror `supabase/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql`.
+- Migration 0029 preserves the reviewed 0028 SECURITY DEFINER boundary, owner `postgres`, fixed search path, grants, hashes, idempotency, dry-run branch, mutation contract, audit contract and success-result key/value contract.
+- The only executable change is splitting the two oversized flat JSON builders with JSONB concatenation: post-mutation audit chunks `80/28`; final success result chunks `80/72`.
+- Added SELECT-only verifier `db/checks/20260714_check_a17q_tx4_jsonb_argument_limit_patch.sql`.
+- Added `scripts/check-a17q-tx4-jsonb-argument-limit-patch.cjs` and package script `check:a17q-tx4-jsonb-argument-limit-patch`.
+- `MIGRATION_0029_APPLIED=NO`, `MIGRATION_0028_RERUN=NO`, `RPC_RETRIED=NO`, `SECOND_SUBMISSION_ATTEMPTED=NO`, `RECONCILIATION_EXECUTED=NO`, `FAMILY_DATA_MUTATED=NO`, `DEPLOY=NO`.
+- `NEXT_ACTION=A17Q_TX4_OWNER_MANUAL_APPLY_VERIFY_THEN_SINGLE_IDEMPOTENT_EXECUTION_RETRY`.

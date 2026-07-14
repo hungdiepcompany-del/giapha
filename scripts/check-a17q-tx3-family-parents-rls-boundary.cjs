@@ -116,7 +116,12 @@ if (tx3 !== tx3Mirror) failures.push("0028 db/supabase mirrors differ");
 if (!isGitTracked(tx3MirrorPath)) failures.push("0028 Supabase mirror is not tracked by git");
 for (const dir of ["db/migrations", "supabase/migrations"]) {
   for (const entry of fs.readdirSync(dir)) {
-    if (/_0029_/.test(entry)) failures.push(`unexpected migration 0029 exists: ${dir}/${entry}`);
+    if (
+      /_0029_/.test(entry) &&
+      entry !== "20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql"
+    ) {
+      failures.push(`unexpected migration 0029 exists: ${dir}/${entry}`);
+    }
   }
 }
 if (normalizeTx3(tx3) !== normalizeTx2ToExpectedTx3(tx2)) {

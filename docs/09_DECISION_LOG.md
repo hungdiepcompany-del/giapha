@@ -8963,3 +8963,10 @@ Lý do:
 - Reason: the non-dry-run route is intentionally dangerous; the owner must see the exact marker, hashes, idempotency key, `p_dry_run_only=false` and expected scope before the typed confirmation can submit.
 - Safety contract: final verification must be a separate SELECT-only SQL file that never calls the executor and verifies post-state, graph integrity, audit evidence, rollback manifest, stored success-result SHA-256, excluded/deleted scope and no people/layout mutation.
 - Boundary: no RPC call, no SQL execution, no database mutation, no migration change, no deploy and no push in A-17Q-EXEC1-FIX1.
+
+# 2026-07-14 - A-17Q-TX4 splits oversized JSON builders without changing reconciliation semantics
+
+- Decision: patch the reviewed A-17Q reconciliation RPC by splitting only the two oversized `jsonb_build_object` constructors into flat JSONB concatenation chunks.
+- Reason: the first owner-approved EXEC2 submission reached the authenticated RPC once and PostgreSQL rejected the post-mutation path with `cannot pass more than 100 arguments to a function`; syntax-aware source evidence shows the post-mutation audit builder had `108` arguments and the final success-result builder had `152`.
+- Safety contract: migration 0029 must preserve the exact RPC signature, `SECURITY DEFINER`, owner `postgres`, fixed search path, grants, owner/profile/permission/hash/idempotency gates, dry-run branch, mutation scope, rollback/audit ordering, graph/post-state validation, durable success-result persistence and completed replay behavior.
+- Boundary: migration 0029 is prepared but not applied in TX4; no RPC retry, no second submission, no family data mutation, no runtime route change, no deploy.

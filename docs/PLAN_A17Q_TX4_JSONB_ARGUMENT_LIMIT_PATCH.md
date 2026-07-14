@@ -1,0 +1,182 @@
+# A-17Q-TX4 - JSONB argument-limit patch bundle
+
+Status:
+
+```text
+A17Q_TX4_STATUS=PASS_JSONB_ARGUMENT_LIMIT_PATCH_READY_NOT_APPLIED
+A17Q_EXEC2_ATTEMPT1_STATUS=BLOCKED_RPC_JSONB_FUNCTION_ARGUMENT_LIMIT
+```
+
+## Confirmed Production Evidence
+
+The first owner-approved EXEC2 submission reached the authenticated production
+RPC exactly once and failed before any transaction commit.
+
+```text
+OWNER_EMAIL=hungdiepcompany@gmail.com
+VISIBLE_ROLE=OWNER
+PERMISSION_COUNT=25
+REQUIRED_PERMISSIONS_PRESENT=YES
+CONFIRMATION_PHRASE_ACCEPTED=YES
+REVIEW_CONFIRMATIONS_ACCEPTED=YES
+EXECUTION_SUBMIT_COUNT=1
+RPC_CALLED=YES
+RPC_STATUS=RPC_ERROR
+RPC_ERROR_MESSAGE=cannot pass more than 100 arguments to a function
+IDEMPOTENCY_KEY=A17Q_EXEC1_SINGLE_EXECUTION_20260714_FBBF24C_001
+SECOND_SUBMISSION_ATTEMPTED=NO
+```
+
+Post-attempt SELECT-only evidence confirms the transaction rolled back and the
+genealogy baseline remained unchanged.
+
+```text
+DECISION_PACK_BATCH_COUNT=0
+COMPLETED_BATCH_COUNT=0
+ROLLBACK_MANIFEST_COUNT=0
+ACTIVE_FAMILY_COUNT=74
+ACTIVE_PARENT_MEMBERSHIP_COUNT=140
+ACTIVE_CHILD_MEMBERSHIP_COUNT=73
+TRANSACTION_COMMITTED=NO
+TRANSACTION_ROLLED_BACK=YES
+PARTIAL_MUTATION_DETECTED=NO
+RECONCILIATION_EXECUTED=NO
+MUTATION_APPLIED=NO
+```
+
+## Existing Applied Boundary
+
+Migration 0028 remains the currently applied security-boundary patch and must
+not be rerun.
+
+```text
+MIGRATION_0028_APPLIED=YES
+MIGRATION_0028_SHA256=9BBDB8CC9F161EC93A6B2FA97FE0F899C13242A270D2CAB328A95BE8893A23F7
+FUNCTION_OWNER=postgres
+SECURITY_DEFINER=YES
+FIXED_SEARCH_PATH_VERIFIED=YES
+PUBLIC_EXECUTE_REVOKED=YES
+ANON_EXECUTE_REVOKED=YES
+AUTHENTICATED_EXECUTE_GRANTED=YES
+MIGRATION_0028_RERUN_ALLOWED=NO
+```
+
+## Root Cause
+
+The TX4 syntax-aware checker parses executable `jsonb_build_object` calls in
+the reviewed 0028 function body and proves the PostgreSQL function argument
+limit failure.
+
+```text
+ROOT_CAUSE_PROVEN=YES
+POST_MUTATION_AUDIT_JSONB_BUILD_OBJECT_ARGUMENT_COUNT=108
+POST_MUTATION_AUDIT_KEY_VALUE_PAIR_COUNT=54
+FINAL_SUCCESS_RESULT_JSONB_BUILD_OBJECT_ARGUMENT_COUNT=152
+FINAL_SUCCESS_RESULT_KEY_VALUE_PAIR_COUNT=76
+POSTGRES_FUNCTION_ARGUMENT_LIMIT=100
+```
+
+No naive comma-count evidence is used; the checker is aware of nested
+parentheses, SQL strings, dollar-quoted strings and nested function calls.
+
+## Patch Candidate
+
+Migration 0029 replaces the same exact RPC signature using migration 0028 as
+the sole function-body authority. It changes only the oversized JSON object
+builders by splitting them into flat JSONB concatenation chunks.
+
+```text
+MIGRATION_0029_FILE=db/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql
+MIGRATION_0029_SHA256=F73DB2848156306A03975C7CA8918087673E7BF3380A4D94FF0B1DC403D9DA7C
+SUPABASE_MIRROR_FILE=supabase/migrations/20260714_0029_a17q_tx4_jsonb_argument_limit_patch.sql
+MIRROR_MATCH=YES
+MIGRATION_0029_APPLIED=NO
+```
+
+Patched constructor sizes:
+
+```text
+POST_MUTATION_AUDIT_PATCHED_CHUNK_ARGUMENT_COUNTS=80/28
+FINAL_SUCCESS_RESULT_PATCHED_CHUNK_ARGUMENT_COUNTS=80/72
+MAX_PATCHED_JSONB_BUILD_OBJECT_ARGUMENT_COUNT=92
+ALL_JSONB_BUILD_OBJECT_CALLS_WITHIN_LIMIT=YES
+```
+
+The remaining maximum `92`-argument constructor is an existing under-limit
+builder outside the two oversized expressions. The two patched oversized
+constructors are at or below the safer 80-argument chunk target.
+
+## Preserved Contract
+
+```text
+FUNCTION_SIGNATURE_PRESERVED=YES
+RETURN_TYPE_PRESERVED=YES
+PLPGSQL_LANGUAGE_PRESERVED=YES
+SECURITY_DEFINER_PRESERVED=YES
+FUNCTION_OWNER_POSTGRES_PRESERVED=YES
+FIXED_SEARCH_PATH_PRESERVED=YES
+PUBLIC_EXECUTE_REVOKED=YES
+ANON_EXECUTE_REVOKED=YES
+AUTHENTICATED_EXECUTE_GRANTED=YES
+OWNER_SESSION_PROFILE_PERMISSION_GATES_PRESERVED=YES
+OWNER_APPROVAL_MARKER_PRESERVED=YES
+HASHES_PRESERVED=YES
+IDEMPOTENCY_PRESERVED=YES
+DRY_RUN_BEHAVIOR_PRESERVED=YES
+DECISION_PACK_PRESERVED=YES
+MUTATION_CONTRACT_PRESERVED=YES
+ROLLBACK_MANIFEST_PRESERVED=YES
+AUDIT_CONTRACT_PRESERVED=YES
+POST_STATE_VALIDATION_PRESERVED=YES
+GRAPH_INTEGRITY_VALIDATION_PRESERVED=YES
+SUCCESS_RESULT_KEY_SET_PRESERVED=YES
+SUCCESS_RESULT_VALUE_EXPRESSIONS_PRESERVED=YES
+```
+
+The patched objects remain flat JSON objects. No dynamic text-to-JSON parser is
+introduced, no keys are added or removed, and no duplicate key exists across
+concatenated chunks.
+
+## SELECT-only Post-Apply Verifier
+
+```text
+SELECT_ONLY_VERIFIER_FILE=db/checks/20260714_check_a17q_tx4_jsonb_argument_limit_patch.sql
+SELECT_ONLY_VERIFIER_EXECUTOR_CALL_COUNT=0
+SELECT_ONLY_VERIFIER_MUTATION_COUNT=0
+RECONCILIATION_SUCCESS_CLAIMED=NO
+```
+
+The verifier is for a later owner manual apply phase. It checks the function
+metadata, owner, `SECURITY DEFINER`, fixed search path, grants, split-source
+markers, immutable hashes, idempotency parameter and pre-execution database
+state separately.
+
+## Boundary
+
+```text
+SQL_EXECUTED_BY_CODEX=NO
+MIGRATION_0029_APPLIED=NO
+MIGRATION_0028_RERUN=NO
+RPC_RETRIED=NO
+SECOND_SUBMISSION_ATTEMPTED=NO
+RECONCILIATION_EXECUTED=NO
+FAMILY_DATA_MUTATED=NO
+RUNTIME_ROUTE_CHANGED=NO
+FINAL_EXEC2_VERIFIER_CHANGED=NO
+UI_SMOKE_EXECUTED=NO
+DEPLOY=NO
+```
+
+## Checker
+
+```text
+CHECKER=scripts/check-a17q-tx4-jsonb-argument-limit-patch.cjs
+PACKAGE_SCRIPT=check:a17q-tx4-jsonb-argument-limit-patch
+CHECKER_STATUS=PASS
+```
+
+## Next Action
+
+```text
+NEXT_ACTION=A17Q_TX4_OWNER_MANUAL_APPLY_VERIFY_THEN_SINGLE_IDEMPOTENT_EXECUTION_RETRY
+```
