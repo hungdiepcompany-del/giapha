@@ -9047,3 +9047,11 @@ Lý do:
 - Reason: the first owner-approved EXEC2 submission reached the authenticated RPC once and PostgreSQL rejected the post-mutation path with `cannot pass more than 100 arguments to a function`; syntax-aware source evidence shows the post-mutation audit builder had `108` arguments and the final success-result builder had `152`.
 - Safety contract: migration 0029 must preserve the exact RPC signature, `SECURITY DEFINER`, owner `postgres`, fixed search path, grants, owner/profile/permission/hash/idempotency gates, dry-run branch, mutation scope, rollback/audit ordering, graph/post-state validation, durable success-result persistence and completed replay behavior.
 - Boundary: migration 0029 is prepared but not applied in TX4; no RPC retry, no second submission, no family data mutation, no runtime route change, no deploy.
+
+# 2026-08-03 - A-16 import workflow is current-session explicit
+
+- Decision: `/admin/exports/import` must be driven by an explicit current staging session in the URL, starting from the upload response and continuing through manifest review, validation, warning review, dry-run, duplicate review, mapping preview, owner approval and server-side readiness.
+- Reason: A-16I could create a new staging manifest while A-16G/A-16R still looked at old state or the historical A-16R audit session. That made the workflow contradictory and unsafe for owner-gated official import.
+- Safety contract: no latest-session fallback, no new hardcoded session UUID, no copied approvals or duplicate decisions between sessions, warning acknowledgements are bound to manifest/staging version, and approval/import markers are dynamically derived from the current session.
+- Official import contract: source readiness can be assembled, but the official import button remains disabled in A-16R2 and no transaction executor, RPC, production mutation, migration, push, deploy or commit is allowed.
+- Boundary: the historical A-16R session remains audit evidence only; the next possible execution phase must be a separate `A-16R3_OWNER_GATED_OFFICIAL_IMPORT_EXECUTION` phase with owner approval and production evidence.

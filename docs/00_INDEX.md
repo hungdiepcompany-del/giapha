@@ -1,5 +1,9 @@
 # Bản đồ tài liệu
 
+## A-16 import workflow
+
+- `PLAN_A16R2_TO_R2E_CURRENT_SESSION_IMPORT_WORKFLOW_COMPLETION_LOOP.md`: `A16R2_TO_R2E_STATUS=SOURCE_WORKFLOW_IMPLEMENTED_OFFICIAL_IMPORT_LOCKED`; unifies `/admin/exports/import` around an explicit current staging session, binds upload result to `?sessionId=<UUID>`, removes latest-session and historical A-16R runtime gates, adds warning review bound to manifest/staging version, dynamic owner approval/readiness markers, and keeps official import disabled. No official import, transaction executor, production mutation, migration, commit, push or deploy is performed in this phase.
+
 ## A-17 family reconciliation audit bundle
 
 - `PLAN_A17Q_CLOSEOUT_EXECUTION_SURFACE_RETIREMENT.md`: `A17Q_CLOSEOUT_STATUS=SOURCE_EXECUTION_SURFACE_RETIRED_DEPLOY_PENDING`, retires the completed A-17Q operational execution surface after final reconciliation evidence commit `80fc415`: `/admin/reconciliation/a17q/execute` becomes a read-only Vietnamese completion screen, `/api/admin/a17q/reconciliation-execute` permanently returns HTTP `410` with `A17Q_RECONCILIATION_ALREADY_COMPLETED` and `rpcCalled=false`, execution navigation is removed, audit/rollback/final evidence are preserved, migrations 0028/0029 and genealogy data are not changed, checker alias `check:a17q-closeout-execution-surface-retirement`; next action is deploy pushed closeout commit and run focused production smoke.

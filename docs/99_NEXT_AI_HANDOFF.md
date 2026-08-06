@@ -1,5 +1,73 @@
 # Next AI Handoff
 
+## 2026-08-03 A-16R2 to R2E current-session import workflow completion loop
+
+Status:
+`A16R2_TO_R2E_STATUS=SOURCE_WORKFLOW_IMPLEMENTED_OFFICIAL_IMPORT_LOCKED`
+
+Current source state:
+
+- Branch remains `main`.
+- Do not commit, push, deploy, run SQL, apply migrations, re-upload the Gia Pha
+  4 Excel file, edit/delete staging rows, or run official import unless the
+  owner explicitly starts the next phase.
+- Preserve inherited dirty Auth/OAuth, A17/A17P tree print, Supabase,
+  permission, `_guard`, `.next_locked_*`, temp logs and artifacts.
+- Historical A-16R session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` is audit
+  evidence only, not a runtime gate.
+
+Implemented:
+
+- Upload staging response exposes current `sessionId` and staging counts.
+- Upload success navigates to `/admin/exports/import?sessionId=<UUID>`.
+- `/admin/exports/import` reads only the explicit URL session and does not use a
+  latest-session fallback.
+- Manifest panel uses the explicit current session for manifest review,
+  validation, warning review, dry-run approval, duplicate/mapping/approval and
+  readiness gates.
+- Warning group review is session/manifest/staging-version/policy bound.
+- Owner approval and official import confirmation markers are dynamic per
+  session.
+- Official import UI remains disabled for this phase and no executor was called.
+- Legacy Excel/family JSON tools are separated from the primary current-session
+  workflow.
+- Added focused checker
+  `npm.cmd run check:a16r2-to-r2e-current-session-import-workflow-completion-loop`.
+
+Validation completed:
+
+- `npm.cmd run typecheck` PASS.
+- `npm.cmd run lint` PASS.
+- `npm.cmd run build` PASS.
+- `npm.cmd run check:a16r2-to-r2e-current-session-import-workflow-completion-loop` PASS.
+- `git diff --check` PASS with inherited line-ending warnings only.
+
+Known blocker:
+
+- `check:a16i-upload-parse-giapha4-manifest-staging`,
+  `check:a16g-import-session-read-manifest-runtime`,
+  `check:a16j-manifest-staging-review-validation-warnings`,
+  `check:a16l-dry-run-mapping-preview` and
+  `check:a16i5-import-review-pack-official-import-gate` fail on their frozen
+  single-phase allowlists. The failures enumerate inherited A17/Auth/guard/
+  artifact dirt and the intentional warning acknowledgement route; they do not
+  report a current-session invariant failure or any executor/mutation call.
+
+Next allowed phase:
+
+- `A-16R3_OWNER_GATED_OFFICIAL_IMPORT_EXECUTION`, and only after owner explicitly
+  authorizes production/deploy/RPC/official-import verification.
+
+Hard boundaries:
+
+- `TRANSACTION_EXECUTOR_CALL_COUNT=0`.
+- `OFFICIAL_IMPORT_EXECUTED=NO`.
+- `RUNTIME_GENEALOGY_MUTATION=NONE`.
+- `PRODUCTION_MUTATION=NONE`.
+- `MIGRATIONS_APPLIED=NO`.
+- `PUSH_RUN=NO`.
+- `DEPLOY_RUN=NO`.
+
 ## 2026-07-14 - A-17Q closeout production page smoke pass, API POST smoke still pending
 
 Current status:
