@@ -85,8 +85,12 @@ export const A16R_RUNTIME_EXECUTION_ENABLEMENT_APPROVAL_MISSING_BLOCKER =
 export const A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID =
   "2af4bfb6-a20e-453e-9804-1b8c0afbdd68" as const;
 
+export function buildA16ROfficialImportSessionMarker(sessionId: string) {
+  return `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${sessionId}`;
+}
+
 export const A16R_AUDITED_OFFICIAL_IMPORT_MARKER =
-  `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}` as const;
+  buildA16ROfficialImportSessionMarker(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID);
 
 export const A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_MARKER =
   "A16AH_OFFICIAL_IMPORT_RUNTIME_EXECUTION_BRANCH_CANDIDATE";
@@ -247,7 +251,7 @@ export type OfficialImportCandidateResult = {
     auditBatchTable: "official_import_batches";
     rollbackManifestTable: "official_import_rollback_manifests";
     canRunOfficialImport: boolean;
-    requiredExecutionMarker: typeof A16U_REQUIRED_A16R_RETRY_MARKER;
+    requiredExecutionMarker: string;
   };
   realTransactionExecutionBranchCandidate: {
     marker: typeof A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER;
@@ -374,11 +378,12 @@ function validateConfirmation(
 ) {
   const reasons: string[] = [];
 
-  if (
-    typeof confirmation.confirmMarker !== "string" ||
-    confirmation.confirmMarker.trim().length === 0
-  ) {
-    reasons.push("Thiếu confirmMarker cho phiên import đang được phê duyệt.");
+  const expectedSessionMarker = buildA16ROfficialImportSessionMarker(sessionId);
+
+  if (confirmation.confirmMarker !== expectedSessionMarker) {
+    reasons.push(
+      "confirmMarker khong khop marker nhap chinh thuc cua session hien tai.",
+    );
   }
   if (confirmation.confirmSessionId !== sessionId) {
     reasons.push("confirmSessionId khÃ´ng khá»›p phiÃªn import Ä‘ang Ä‘Æ°á»£c yÃªu cáº§u.");
@@ -683,6 +688,8 @@ export function buildOfficialImportRuntimeCandidate(params: {
   const sessionId = params.manifest.session?.id ?? String(params.confirmation.confirmSessionId ?? "");
   const { dryRun, reasons } = buildNoGoReasons(params);
   const groupedCounts = dryRun.summary.groupedFamilyImportPlan;
+  const sessionOfficialImportMarker =
+    buildA16ROfficialImportSessionMarker(sessionId);
   const runtimeEnablementApproved = hasRuntimeExecutionEnablementApproval(
     params.confirmation,
   );
@@ -737,7 +744,7 @@ export function buildOfficialImportRuntimeCandidate(params: {
       auditBatchTable: "official_import_batches",
       rollbackManifestTable: "official_import_rollback_manifests",
       canRunOfficialImport,
-      requiredExecutionMarker: A16U_REQUIRED_A16R_RETRY_MARKER,
+      requiredExecutionMarker: sessionOfficialImportMarker,
     },
     realTransactionExecutionBranchCandidate: {
       marker: A16V_OFFICIAL_IMPORT_REAL_TRANSACTION_EXECUTION_BRANCH_MARKER,

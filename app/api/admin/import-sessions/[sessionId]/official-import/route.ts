@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
+  buildA16ROfficialImportSessionMarker,
   getOfficialImportRuntimeCandidate,
   type OfficialImportConfirmation,
 } from "@/lib/import/giapha4/official-import-service";
@@ -18,7 +19,7 @@ const A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED =
 const lockedResponse = {
   ok: false,
   status: "LOCKED",
-  message: "Nhập chính thức chưa được bật trong môi trường này.",
+  message: "Nhap chinh thuc chua duoc bat trong moi truong nay.",
   canRunOfficialImport: false,
 };
 
@@ -62,55 +63,52 @@ function missingConfirmationReasons(
 ) {
   const reasons: string[] = [];
 
-  if (
-    typeof confirmation.confirmMarker !== "string" ||
-    confirmation.confirmMarker.trim().length === 0
-  ) {
-    reasons.push("Thiếu confirmMarker cho phiên import đang được phê duyệt.");
+  if (confirmation.confirmMarker !== buildA16ROfficialImportSessionMarker(sessionId)) {
+    reasons.push("confirmMarker khong khop marker nhap chinh thuc cua session hien tai.");
   }
   if (confirmation.confirmSessionId !== sessionId) {
-    reasons.push("confirmSessionId không khớp phiên nhập.");
+    reasons.push("confirmSessionId khong khop phien nhap.");
   }
   if (confirmation.confirmNoValidationErrors !== true) {
-    reasons.push("Chưa xác nhận không còn lỗi validation.");
+    reasons.push("Chua xac nhan validation errors bang 0.");
   }
   if (confirmation.confirmNoDryRunBlockers !== true) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n dry-run blockers báº±ng 0.");
+    reasons.push("Chua xac nhan dry-run blockers bang 0.");
   }
   if (confirmation.confirmDuplicateDecisionsComplete !== true) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n duplicate unresolved/needs_review báº±ng 0.");
+    reasons.push("Chua xac nhan duplicate unresolved/needs_review bang 0.");
   }
   if (confirmation.confirmA16TApplyVerified !== true) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n A-16T apply/verify PASS.");
+    reasons.push("Chua xac nhan A-16T apply/verify PASS.");
   }
   if (confirmation.confirmA16ULockedBranchReady !== true) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n A-16U locked branch ready.");
+    reasons.push("Chua xac nhan A-16U locked branch ready.");
   }
   if (confirmation.confirmA16VApplyVerified !== true) {
-    reasons.push("Chưa xác nhận A-16V apply/verify PASS.");
+    reasons.push("Chua xac nhan A-16V apply/verify PASS.");
   }
   if (confirmation.confirmA16VRealTransactionBranchReady !== true) {
-    reasons.push("Chưa xác nhận A-16V real transaction branch ready.");
+    reasons.push("Chua xac nhan A-16V real transaction branch ready.");
   }
   if (
     confirmation.confirmRuntimeExecutionEnablementMarker !==
     A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER
   ) {
     reasons.push(
-      "Thiếu marker APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY để xét bật runtime execution sau A-16V.",
+      "Thieu marker APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY.",
     );
   }
   if (confirmation.confirmProductionUiVisible !== true) {
-    reasons.push("ChÆ°a xÃ¡c nháº­n production UI nháº­p Excel Ä‘Ã£ hiá»ƒn thá»‹.");
+    reasons.push("Chua xac nhan production UI nhap Excel da hien thi.");
   }
   if (confirmation.confirmProductionDeployReady !== true) {
-    reasons.push("Chưa xác nhận production đã deploy bản A-16V.");
+    reasons.push("Chua xac nhan production da deploy ban A-16V.");
   }
   if (confirmation.confirmRollbackReviewed !== true) {
-    reasons.push("Chưa xác nhận đã rà soát rollback.");
+    reasons.push("Chua xac nhan rollback da duoc review.");
   }
   if (confirmation.confirmAuditReviewed !== true) {
-    reasons.push("Chưa xác nhận đã rà soát audit.");
+    reasons.push("Chua xac nhan audit da duoc review.");
   }
 
   return reasons;
@@ -124,7 +122,7 @@ export async function POST(request: Request, context: RouteContext) {
     return jsonError(401, {
       ok: false,
       status: "UNAUTHENTICATED",
-      message: "Bạn cần đăng nhập để yêu cầu ứng viên nhập chính thức.",
+      message: "Can dang nhap de yeu cau ung vien nhap chinh thuc.",
       canRunOfficialImport: false,
     });
   }
@@ -140,7 +138,7 @@ export async function POST(request: Request, context: RouteContext) {
       ok: false,
       status: "FORBIDDEN",
       message:
-        "Bạn chưa có đủ quyền để yêu cầu ứng viên nhập chính thức Gia Phả 4.",
+        "Thieu quyen strict de yeu cau ung vien nhap chinh thuc Gia Pha 4.",
       canRunOfficialImport: false,
     });
   }
@@ -164,7 +162,7 @@ export async function POST(request: Request, context: RouteContext) {
       ok: false,
       status: "PRECONDITION_FAILED",
       message:
-        "Chưa đủ xác nhận để xét ứng viên nhập chính thức. Chưa chạy nhập chính thức.",
+        "Chua du xac nhan de xet ung vien nhap chinh thuc. Chua chay official import.",
       blockedReasons: confirmationReasons,
       canRunOfficialImport: false,
     });
@@ -174,8 +172,7 @@ export async function POST(request: Request, context: RouteContext) {
     return jsonError(423, {
       ok: false,
       status: "LOCKED",
-      message:
-        "Nháº­p chÃ­nh thá»©c chÆ°a má»Ÿ execution branch trong runtime.",
+      message: "Nhap chinh thuc chua mo execution branch trong runtime.",
       blockedReasons: ["A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED"],
       canRunOfficialImport: false,
     });

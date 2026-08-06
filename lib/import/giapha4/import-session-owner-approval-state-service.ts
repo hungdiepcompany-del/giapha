@@ -9,9 +9,6 @@ import {
   type ImportWriteManifestPreview,
 } from "@/lib/import/giapha4/manifest-read-service";
 import { buildManifestValidationReview } from "@/lib/import/giapha4/manifest-validation-service";
-import {
-  A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
-} from "@/lib/import/giapha4/official-import-service";
 import type { PermissionContext } from "@/lib/permissions/permission-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 import { maybeCreateAdminSupabaseClient } from "@/lib/supabase/admin";
@@ -19,14 +16,31 @@ import { maybeCreateAdminSupabaseClient } from "@/lib/supabase/admin";
 export const A16BC_OWNER_APPROVAL_STATE_TRANSITION_MARKER =
   "A16BC_OWNER_APPROVAL_STATE_TRANSITION_CANDIDATE";
 
+const A16BC_HISTORICAL_A16R_AUDIT_SESSION_ID =
+  "2af4bfb6-a20e-453e-9804-1b8c0afbdd68" as const;
+
+export function buildA16BCReadyForOwnerApprovalMarker(sessionId: string) {
+  return `APPROVE_A16BC_READY_FOR_OWNER_APPROVAL_FOR_SESSION_${sessionId}`;
+}
+
+export function buildA16BCOwnerApprovedForDbWriteMarker(sessionId: string) {
+  return `APPROVE_A16BC_OWNER_APPROVED_FOR_DB_WRITE_FOR_SESSION_${sessionId}`;
+}
+
+export function buildA16BCOwnerApprovalStateRoute(sessionId: string) {
+  return `/api/admin/import-sessions/${sessionId}/owner-approval-state`;
+}
+
 export const A16BC_READY_FOR_OWNER_APPROVAL_MARKER =
-  `APPROVE_A16BC_READY_FOR_OWNER_APPROVAL_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}` as const;
+  buildA16BCReadyForOwnerApprovalMarker(A16BC_HISTORICAL_A16R_AUDIT_SESSION_ID);
 
 export const A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER =
-  `APPROVE_A16BC_OWNER_APPROVED_FOR_DB_WRITE_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}` as const;
+  buildA16BCOwnerApprovedForDbWriteMarker(
+    A16BC_HISTORICAL_A16R_AUDIT_SESSION_ID,
+  );
 
 export const A16BC_OWNER_APPROVAL_STATE_ROUTE =
-  `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/owner-approval-state` as const;
+  buildA16BCOwnerApprovalStateRoute(A16BC_HISTORICAL_A16R_AUDIT_SESSION_ID);
 
 export type A16BCOwnerApprovalAction =
   | "mark_ready_for_owner_approval"
@@ -69,7 +83,7 @@ function baseResult(
   return {
     ok: false,
     marker: A16BC_OWNER_APPROVAL_STATE_TRANSITION_MARKER,
-    sessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    sessionId: "",
     action: null,
     previousSessionState: null,
     nextSessionState: null,
@@ -112,10 +126,13 @@ function hasStrictOwnerAdminContext(context: PermissionContext) {
   );
 }
 
-function expectedMarkerForAction(action: A16BCOwnerApprovalAction) {
+function expectedMarkerForAction(
+  action: A16BCOwnerApprovalAction,
+  sessionId: string,
+) {
   return action === "mark_ready_for_owner_approval"
-    ? A16BC_READY_FOR_OWNER_APPROVAL_MARKER
-    : A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER;
+    ? buildA16BCReadyForOwnerApprovalMarker(sessionId)
+    : buildA16BCOwnerApprovedForDbWriteMarker(sessionId);
 }
 
 function buildGateReasons(params: {
@@ -138,13 +155,13 @@ function buildGateReasons(params: {
   if (!hasStrictOwnerAdminContext(params.actor)) {
     reasons.push("A16BC_BLOCKED_OWNER_ADMIN_STRICT_PERMISSION_CONTEXT_MISSING");
   }
-  if (params.sessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID) {
-    reasons.push("A16BC_BLOCKED_AUDITED_SESSION_MISMATCH");
-  }
   if (params.confirmation.confirmSessionId !== params.sessionId) {
     reasons.push("A16BC_BLOCKED_CONFIRM_SESSION_ID_MISMATCH");
   }
-  if (params.confirmation.confirmMarker !== expectedMarkerForAction(params.action)) {
+  if (
+    params.confirmation.confirmMarker !==
+    expectedMarkerForAction(params.action, params.sessionId)
+  ) {
     reasons.push("A16BC_BLOCKED_CONFIRM_MARKER_MISSING_OR_MISMATCHED");
   }
   if (!isConfirmed(params.confirmation.confirmNoValidationErrors)) {
@@ -356,7 +373,7 @@ export async function transitionImportSessionOwnerApprovalState(input: {
     });
   }
 
-  const marker = expectedMarkerForAction(action);
+  const marker = expectedMarkerForAction(action, input.sessionId);
   const gate = buildGateReasons({
     action,
     sessionId: input.sessionId,
@@ -430,7 +447,7 @@ export async function transitionImportSessionOwnerApprovalState(input: {
     httpStatus: 200,
     message:
       action === "mark_ready_for_owner_approval"
-        ? "A-16BC moved the audited session to ready_for_owner_approval. Official import was not executed."
-        : "A-16BC moved the audited session to owner_approved_for_db_write. Official import was not executed.",
+        ? "A-16BC moved the current session to ready_for_owner_approval. Official import was not executed."
+        : "A-16BC moved the current session to owner_approved_for_db_write. Official import was not executed.",
   });
 }

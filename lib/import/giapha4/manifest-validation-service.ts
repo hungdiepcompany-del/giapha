@@ -26,11 +26,15 @@ export type ManifestValidationIssue = {
 };
 
 export type ManifestValidationSummary = {
+  sessionId: string | null;
+  manifestId: string | null;
+  stagingVersion: string | null;
   peopleCount: number;
   relationshipCount: number;
   peoplePreviewCount: number;
   relationshipPreviewCount: number;
   errorCount: number;
+  blockerCount: number;
   warningCount: number;
   infoCount: number;
   canProceedToDryRun: false;
@@ -802,16 +806,38 @@ function summarize(
   relationshipPreviewCount: number,
   issues: ManifestValidationIssue[],
 ): ManifestValidationSummary {
+  const errorCount = issues.filter((item) => item.severity === "error").length;
   return {
+    sessionId: null,
+    manifestId: null,
+    stagingVersion: null,
     peopleCount,
     relationshipCount,
     peoplePreviewCount,
     relationshipPreviewCount,
-    errorCount: issues.filter((item) => item.severity === "error").length,
+    errorCount,
+    blockerCount: errorCount,
     warningCount: issues.filter((item) => item.severity === "warning").length,
     infoCount: issues.filter((item) => item.severity === "info").length,
     canProceedToDryRun: false,
   };
+}
+
+function manifestIdFor(manifest: ImportManifestReadResult) {
+  return (
+    manifest.session?.previewManifestHash ??
+    manifest.writeManifests[0]?.manifestHash ??
+    null
+  );
+}
+
+function stagingVersionFor(manifest: ImportManifestReadResult) {
+  if (!manifest.session) return null;
+  return [
+    manifest.session.mappingVersion,
+    manifest.session.parserVersion ?? "parser_unknown",
+    manifestIdFor(manifest) ?? "manifest_unknown",
+  ].join(":");
 }
 
 export function buildManifestValidationReview(
@@ -821,7 +847,12 @@ export function buildManifestValidationReview(
   const sessionId = manifest.session?.id ?? null;
 
   if (!manifest.ok) {
-    const summary = summarize(0, 0, 0, 0, issues);
+    const summary = {
+      ...summarize(0, 0, 0, 0, issues),
+      sessionId,
+      manifestId: manifestIdFor(manifest),
+      stagingVersion: stagingVersionFor(manifest),
+    };
 
     return {
       ok: false,
@@ -925,14 +956,19 @@ export function buildManifestValidationReview(
     );
   }
 
-  const summary = summarize(
-    manifest.session?.personCandidateCount ?? manifest.peoplePreview.length,
-    manifest.session?.relationshipCandidateCount ??
+  const summary = {
+    ...summarize(
+      manifest.session?.personCandidateCount ?? manifest.peoplePreview.length,
+      manifest.session?.relationshipCandidateCount ??
+        manifest.relationshipsPreview.length,
+      manifest.peoplePreview.length,
       manifest.relationshipsPreview.length,
-    manifest.peoplePreview.length,
-    manifest.relationshipsPreview.length,
-    issues,
-  );
+      issues,
+    ),
+    sessionId,
+    manifestId: manifestIdFor(manifest),
+    stagingVersion: stagingVersionFor(manifest),
+  };
 
   return {
     ok: true,
