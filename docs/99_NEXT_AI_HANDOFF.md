@@ -1,5 +1,32 @@
 # Next AI Handoff
 
+## 2026-08-07 A-16R2H1R2R Cloudflare PR preview build configuration fix
+
+Status:
+`A16R2H1R2R_STATUS=APPROVED_REMEDIATION_IN_PROGRESS`
+
+Root-cause evidence and constrained repair:
+
+- Failed non-production build `6d539c44-70f9-44cf-9329-5aaf6f9ac108` for commit
+  `dc30e607a5ba3d495fa16e01b72719e36a8781c5` installed dependencies but used
+  default `npx wrangler versions upload` with no OpenNext build command.
+- Cloudflare Dashboard identifies the connected Worker as `giapha`, while the
+  repository configuration previously named `web-gia-pha`.
+- `wrangler.toml` now targets `giapha`; the OpenNext wiring checker locks that
+  target and the established build-plus-upload/deploy scripts.
+- Apply the approved Workers Builds settings before retrying the PR:
+  `npx opennextjs-cloudflare build`, then
+  `npx opennextjs-cloudflare upload` for non-production branches; production
+  remains `npx opennextjs-cloudflare deploy -- --keep-vars` on `main`.
+
+Boundaries:
+
+- Do not run a production deploy, merge the PR, call official import, run SQL,
+  apply migrations, or mutate production data in this phase.
+- After the scoped source commit is pushed, inspect the automatic non-production
+  PR build. Do not claim success until the build details and preview result are
+  observed.
+
 ## 2026-08-03 A-16R2 to R2E current-session import workflow completion loop
 
 Status:

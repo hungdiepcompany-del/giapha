@@ -1,5 +1,32 @@
 # Decision Log
 
+## Decision 366 - Cloudflare PR builds use OpenNext commands and the connected Worker name
+
+Date: 2026-08-07
+
+Decision:
+
+For the connected Cloudflare Worker `giapha`, Workers Builds must run
+`npx opennextjs-cloudflare build` and then use OpenNext upload/deploy commands,
+not the default direct Wrangler version upload/deploy commands. The repository
+`wrangler.toml` names the same Worker. Non-production branches upload an
+unpromoted version; `main` retains the deploy command with `--keep-vars`.
+
+Rationale:
+
+The failed PR build installed dependencies successfully but had no OpenNext
+build command before `npx wrangler versions upload`, leaving the expected
+`.open-next` output unavailable. The prior `web-gia-pha` name also diverged
+from the Worker connected in the Dashboard.
+
+Boundary:
+
+- Applies only to the connected Worker `giapha` and its Workers Builds setup.
+- Does not promote a version, deploy production traffic, change secrets, or
+  alter database/import behavior.
+- Keep the existing local `deploy` and `upload` scripts as the regression
+  contract; the Worker Builds commands run the build step separately.
+
 ## Decision 365 - A-17Q execution surface is permanently retired after completion
 
 Date: 2026-07-14

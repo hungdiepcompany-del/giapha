@@ -23,6 +23,10 @@ const dependencies = {
   ...(packageJson.devDependencies || {}),
 };
 const scripts = packageJson.scripts || {};
+const expectedDeployScript =
+  "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars";
+const expectedUploadScript =
+  "opennextjs-cloudflare build && opennextjs-cloudflare upload";
 
 if (!dependencies["@opennextjs/cloudflare"]) {
   failures.push("package.json missing @opennextjs/cloudflare");
@@ -36,6 +40,14 @@ for (const scriptName of ["preview", "deploy", "upload", "cf-typegen"]) {
   if (!scripts[scriptName]) {
     failures.push(`package.json missing script ${scriptName}`);
   }
+}
+
+if (scripts.deploy !== expectedDeployScript) {
+  failures.push("package.json deploy script must build then deploy with --keep-vars");
+}
+
+if (scripts.upload !== expectedUploadScript) {
+  failures.push("package.json upload script must build then upload through OpenNext");
 }
 
 readFile("open-next.config.ts");
@@ -55,6 +67,10 @@ if (!wranglerConfig) {
 
 if (!wranglerConfig.includes(".open-next/worker.js")) {
   failures.push("wrangler config missing .open-next/worker.js");
+}
+
+if (!/^name\s*=\s*"giapha"\s*$/m.test(wranglerConfig)) {
+  failures.push("wrangler config must target the giapha Worker");
 }
 
 if (!wranglerConfig.includes(".open-next/assets")) {

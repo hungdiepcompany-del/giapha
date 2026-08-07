@@ -1,5 +1,23 @@
 # AI Work Log
 
+## 2026-08-07 - A-16R2H1R2R Cloudflare PR preview build configuration fix
+
+- `PHASE=A-16R2H1R2R_EVIDENCE_BASED_CLOUDFLARE_REMEDIATION_AND_PR_RETRY`.
+- Owner approval: `OWNER_APPROVED_A16R2H1R2R_PR_PREVIEW_BUILD_CONFIG_FIX`.
+- Evidence from failed PR build `6d539c44-70f9-44cf-9329-5aaf6f9ac108` showed that
+  Cloudflare installed dependencies, then ran the default preview command
+  `npx wrangler versions upload` without an OpenNext build step.
+- The connected Cloudflare Worker is `giapha`; `wrangler.toml` now targets that
+  Worker and the OpenNext wiring checker rejects a future target-name or
+  OpenNext upload/deploy-script drift.
+- Approved Dashboard configuration to apply before the PR retry:
+  - Build command: `npx opennextjs-cloudflare build`.
+  - Deploy command: `npx opennextjs-cloudflare deploy -- --keep-vars`.
+  - Non-production branch deploy command: `npx opennextjs-cloudflare upload`.
+- This phase does not run an application deploy, SQL, migration, official
+  import or production data mutation. The PR build is non-production and must
+  be observed after the source commit is pushed.
+
 ## 2026-08-03 - A-16R2 to R2E current-session import workflow completion loop
 
 - `PHASE=A-16R2_TO_R2E_CURRENT_SESSION_IMPORT_WORKFLOW_COMPLETION_LOOP`.
