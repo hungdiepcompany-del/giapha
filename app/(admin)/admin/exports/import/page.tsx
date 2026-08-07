@@ -113,7 +113,7 @@ export default async function AdminImportPage({
             <StatusCallout tone={configMissing ? "warning" : "info"} className="mb-6">
               {configMissing
                 ? message
-                : "Preview chi doc staging/import metadata. Khong tao thanh vien, quan he, layout cay, revision hoac official import."}
+                : "Preview chi doc staging/import metadata, không ghi dữ liệu. Khong tao thanh vien, quan he, layout cay, revision hoac official import."}
             </StatusCallout>
 
             {selectedSession.invalid ? (
