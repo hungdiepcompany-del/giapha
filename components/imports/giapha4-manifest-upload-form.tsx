@@ -97,6 +97,14 @@ export function GiaPha4ManifestUploadForm() {
         data,
       });
 
+      const uploadedSessionId = data.sessionId ?? data.summary.sessionId;
+      if (response.ok && uploadedSessionId) {
+        router.push(
+          `/admin/exports/import?sessionId=${encodeURIComponent(uploadedSessionId)}`,
+        );
+        return;
+      }
+
       if (response.ok) router.refresh();
     } catch {
       setState({

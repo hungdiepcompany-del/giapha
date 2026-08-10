@@ -7,25 +7,61 @@ import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
 import { getImportManifest } from "@/lib/import/giapha4/manifest-read-service";
-import { A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID } from "@/lib/import/giapha4/official-import-service";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminImportPage() {
+const HISTORICAL_A16R_AUDIT_SESSION_ID =
+  "2af4bfb6-a20e-453e-9804-1b8c0afbdd68";
+
+type AdminImportPageProps = {
+  searchParams?: Promise<{
+    sessionId?: string | string[];
+  }>;
+};
+
+function firstSearchParam(value: string | string[] | undefined) {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
+function normalizeImportSessionId(value: string | string[] | undefined) {
+  const raw = firstSearchParam(value)?.trim() ?? null;
+  if (!raw) return { raw, sessionId: null, invalid: false };
+
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      raw,
+    );
+
+  return {
+    raw,
+    sessionId: isUuid ? raw : null,
+    invalid: !isUuid,
+  };
+}
+
+export default async function AdminImportPage({
+  searchParams,
+}: AdminImportPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const selectedSession = normalizeImportSessionId(
+    resolvedSearchParams?.sessionId,
+  );
   const context = await getPermissionContext();
   const configMissing =
     context.reason === "missing_supabase_config" ||
     context.reason === "missing_admin_config";
   const canPreview = configMissing || context.permissions.includes("imports.create");
   const message = configMissing
-    ? "Chưa cấu hình Supabase. Trang vẫn cho kiểm tra cấu trúc JSON, nhưng không kiểm tra xung đột DB."
+    ? "Chua cau hinh Supabase. Trang van cho kiem tra cau truc JSON, nhung khong kiem tra xung dot DB."
     : !context.user
-      ? "Bạn cần đăng nhập để kiểm tra nhập dữ liệu."
-      : "Bạn chưa có quyền imports.create.";
-  const importManifestResult = canPreview
-    ? await getImportManifest(A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID)
-    : null;
+      ? "Ban can dang nhap de kiem tra nhap du lieu."
+      : "Ban chua co quyen imports.create.";
+  const importManifestResult =
+    canPreview && selectedSession.sessionId
+      ? await getImportManifest(selectedSession.sessionId)
+      : null;
   const strictOfficialImportPermissions = [
     "imports.create",
     "people.create",
@@ -62,10 +98,10 @@ export default async function AdminImportPage() {
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Nhập dữ liệu an toàn"
-          title="Kiểm tra và staging dữ liệu nhập"
-          description="Tải lên Gia Phả 4 hoặc kiểm tra family.json trong vùng an toàn. Xác nhận nhập dữ liệu chính thức vẫn đang tắt."
-          actions={<ActionLink href="/admin/exports">Quay lại Sao lưu / Xuất dữ liệu</ActionLink>}
+          eyebrow="Nhap du lieu an toan"
+          title="Kiem tra va staging du lieu nhap"
+          description="Tai len Gia Pha 4 theo session staging ro rang. Xac nhan nhap chinh thuc van khoa trong phase nay."
+          actions={<ActionLink href="/admin/exports">Quay lai Sao luu / Xuat du lieu</ActionLink>}
         />
 
         {!canPreview ? (
@@ -77,23 +113,48 @@ export default async function AdminImportPage() {
             <StatusCallout tone={configMissing ? "warning" : "info"} className="mb-6">
               {configMissing
                 ? message
-                : "Xem trước không ghi dữ liệu vào database. Chỉ bật nhập dữ liệu thật sau khi có giao dịch, kiểm tra cuối và log an toàn."}
+                : "Preview chi doc staging/import metadata, không ghi dữ liệu. Khong tao thanh vien, quan he, layout cay, revision hoac official import."}
             </StatusCallout>
-            <StatusCallout tone="info" className="mb-6">
-              Phiên đang rà soát cho A-16R là phiên đã kiểm toán:{" "}
-              {A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}. Không dùng phiên mới nhất
-              hoặc family.json backup làm cổng nhập chính thức.
-            </StatusCallout>
+
+            {selectedSession.invalid ? (
+              <StatusCallout tone="warning" className="mb-6">
+                Session ID trong URL khong hop le. Trang khong tu chon phien moi
+                nhat va khong doc session lich su thay the.
+              </StatusCallout>
+            ) : null}
+
+            {!selectedSession.sessionId && !selectedSession.invalid ? (
+              <StatusCallout tone="info" className="mb-6">
+                Chua chon phien nhap. Sau khi upload staging thanh cong, trang se
+                chuyen sang URL co sessionId cu the. Refresh, tab moi va
+                back/forward deu dua tren session trong URL.
+              </StatusCallout>
+            ) : null}
+
             <div className="grid gap-8">
               <GiaPha4ManifestUploadForm />
               {importManifestResult ? (
                 <ImportSessionManifestPanel
                   result={importManifestResult}
+                  currentSessionId={selectedSession.sessionId}
                   a16rPermissionDiagnostic={a16rPermissionDiagnostic}
                 />
               ) : null}
-              <GiaPha4ImportPreviewForm />
-              <JsonImportPreviewForm />
+
+              <details className="rounded-lg border border-stone-200 bg-white p-5">
+                <summary className="cursor-pointer text-sm font-semibold text-stone-950">
+                  Cong cu cu va lich su kiem toan
+                </summary>
+                <div className="mt-4 grid gap-6">
+                  <StatusCallout tone="info">
+                    Session A-16R lich su {HISTORICAL_A16R_AUDIT_SESSION_ID} chi
+                    la bang chung kiem toan. Workflow runtime hien tai khong dung
+                    session nay lam gate.
+                  </StatusCallout>
+                  <GiaPha4ImportPreviewForm />
+                  <JsonImportPreviewForm />
+                </div>
+              </details>
             </div>
           </div>
         )}

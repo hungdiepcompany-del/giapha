@@ -1,5 +1,67 @@
 # Decision Log
 
+## Decision 367 - Separate the production Worker from the PR preview Worker
+
+Date: 2026-08-10
+
+Decision:
+
+`web-gia-pha` is the canonical production Worker. `wrangler.toml` therefore
+targets `web-gia-pha` for production and for the manual GitHub Actions deploy
+path. `giapha` is the dedicated Cloudflare Workers Builds PR preview Worker.
+Cloudflare non-production Workers Builds must use
+`npx opennextjs-cloudflare upload --name giapha` to override the upload target
+without changing the repository production target.
+
+Rationale:
+
+The A-16R2H1R2R preview-build remediation was valid for the missing OpenNext
+build step, but its inference that the connected Worker should become the
+production target was incorrect. The production-worker identity audit confirmed
+that public production traffic belongs to `web-gia-pha`; assigning
+`wrangler.toml` to `giapha` would make a manual production deploy unsafe.
+`PREVIEW_BUILD_REMEDIATION=PASS` and
+`PRODUCTION_TARGET_CORRECTION_REQUIRED_AND_APPLIED`.
+
+Boundary:
+
+- Preserve the generic repository upload script without a Worker name.
+- Do not change the Cloudflare production deploy command, traffic, secrets,
+  production branch, database, or official-import boundary.
+- Do not merge the PR or run a production deploy without separate owner approval.
+
+## Decision 366 - Cloudflare PR builds use OpenNext commands and the connected Worker name
+
+Date: 2026-08-07
+
+Decision:
+
+For the connected Cloudflare Workers Builds Worker `giapha`, Workers Builds must run
+`npx opennextjs-cloudflare build` and then use OpenNext upload/deploy commands,
+not the default direct Wrangler version upload/deploy commands. A later
+production-worker identity audit corrected the original same-Worker assumption:
+the repository `wrangler.toml` names `web-gia-pha` for production and
+non-production builds explicitly upload to `giapha`. Non-production branches
+upload an unpromoted version; `main` retains the deploy command with `--keep-vars`.
+
+Rationale:
+
+The failed PR build installed dependencies successfully but had no OpenNext
+build command before `npx wrangler versions upload`, leaving the expected
+`.open-next` output unavailable. The prior `web-gia-pha` name was initially
+and incorrectly treated as divergent from the Worker connected in the Dashboard.
+It is the canonical production Worker, while `giapha` is the connected preview
+Worker.
+
+Boundary:
+
+- Applies to the connected preview Worker `giapha` and its Workers Builds setup;
+  `wrangler.toml` remains the `web-gia-pha` production contract.
+- Does not promote a version, deploy production traffic, change secrets, or
+  alter database/import behavior.
+- Keep the existing local `deploy` and `upload` scripts as the regression
+  contract; the Worker Builds commands run the build step separately.
+
 ## Decision 365 - A-17Q execution surface is permanently retired after completion
 
 Date: 2026-07-14
@@ -9047,3 +9109,11 @@ Lý do:
 - Reason: the first owner-approved EXEC2 submission reached the authenticated RPC once and PostgreSQL rejected the post-mutation path with `cannot pass more than 100 arguments to a function`; syntax-aware source evidence shows the post-mutation audit builder had `108` arguments and the final success-result builder had `152`.
 - Safety contract: migration 0029 must preserve the exact RPC signature, `SECURITY DEFINER`, owner `postgres`, fixed search path, grants, owner/profile/permission/hash/idempotency gates, dry-run branch, mutation scope, rollback/audit ordering, graph/post-state validation, durable success-result persistence and completed replay behavior.
 - Boundary: migration 0029 is prepared but not applied in TX4; no RPC retry, no second submission, no family data mutation, no runtime route change, no deploy.
+
+# 2026-08-03 - A-16 import workflow is current-session explicit
+
+- Decision: `/admin/exports/import` must be driven by an explicit current staging session in the URL, starting from the upload response and continuing through manifest review, validation, warning review, dry-run, duplicate review, mapping preview, owner approval and server-side readiness.
+- Reason: A-16I could create a new staging manifest while A-16G/A-16R still looked at old state or the historical A-16R audit session. That made the workflow contradictory and unsafe for owner-gated official import.
+- Safety contract: no latest-session fallback, no new hardcoded session UUID, no copied approvals or duplicate decisions between sessions, warning acknowledgements are bound to manifest/staging version, and approval/import markers are dynamically derived from the current session.
+- Official import contract: source readiness can be assembled, but the official import button remains disabled in A-16R2 and no transaction executor, RPC, production mutation, migration, push, deploy or commit is allowed.
+- Boundary: the historical A-16R session remains audit evidence only; the next possible execution phase must be a separate `A-16R3_OWNER_GATED_OFFICIAL_IMPORT_EXECUTION` phase with owner approval and production evidence.

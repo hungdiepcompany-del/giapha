@@ -2,19 +2,18 @@ import { getImportDryRunApprovalGate } from "@/lib/import/giapha4/import-dry-run
 import { A16BCOwnerApprovalStateClient } from "@/components/imports/a16bc-owner-approval-state-client";
 import { A16ROfficialImportConfirmationClient } from "@/components/imports/a16r-official-import-confirmation-client";
 import { DuplicateDecisionReviewClient } from "@/components/imports/duplicate-decision-review-client";
+import { WarningGroupReviewClient } from "@/components/imports/warning-group-review-client";
 import { ActionLink } from "@/components/ui/action-link";
 import { buildDryRunMappingPreview } from "@/lib/import/giapha4/dry-run-mapping-preview-service";
 import { buildImportReviewPackFromManifest } from "@/lib/import/giapha4/import-review-pack-service";
 import {
-  A16BC_OWNER_APPROVAL_STATE_ROUTE,
-  A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER,
-  A16BC_READY_FOR_OWNER_APPROVAL_MARKER,
+  buildA16BCOwnerApprovalStateRoute,
+  buildA16BCOwnerApprovedForDbWriteMarker,
+  buildA16BCReadyForOwnerApprovalMarker,
 } from "@/lib/import/giapha4/import-session-owner-approval-state-service";
 import {
-  A16R_AUDITED_OFFICIAL_IMPORT_MARKER,
-  A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
   A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER,
-  A16U_REQUIRED_A16R_RETRY_MARKER,
+  buildA16ROfficialImportSessionMarker,
 } from "@/lib/import/giapha4/official-import-service";
 import {
   A16BB_OFFICIAL_IMPORT_EXECUTION_ELIGIBLE_SESSION_STATE,
@@ -25,6 +24,7 @@ import {
   buildManifestValidationReview,
   type ManifestValidationIssue,
 } from "@/lib/import/giapha4/manifest-validation-service";
+import { buildImportWarningReviewSummary } from "@/lib/import/giapha4/warning-review-service";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "Chưa có";
@@ -116,13 +116,17 @@ function pushReason(
 
 export function ImportSessionManifestPanel({
   result,
+  currentSessionId: explicitCurrentSessionId,
   a16rPermissionDiagnostic,
 }: {
   result: ImportManifestReadResult;
+  currentSessionId?: string | null;
   a16rPermissionDiagnostic?: A16RInlinePermissionDiagnostic;
 }) {
   const session = result.session ?? result.sessions[0] ?? null;
+  const sessionList = result.session ? [result.session] : result.sessions;
   const validation = buildManifestValidationReview(result);
+  const warningReviewSummary = buildImportWarningReviewSummary(result);
   const errorIssues = validation.issues.filter(
     (issue) => issue.severity === "error",
   );
@@ -130,8 +134,16 @@ export function ImportSessionManifestPanel({
     (issue) => issue.severity === "warning",
   );
   const infoIssues = validation.issues.filter((issue) => issue.severity === "info");
-  const currentSessionId = session?.id ?? null;
-  const dryRunGate = getImportDryRunApprovalGate(currentSessionId);
+  const currentSessionId = explicitCurrentSessionId ?? session?.id ?? null;
+  const currentSessionExplicit = Boolean(currentSessionId && session?.id === currentSessionId);
+  const dryRunGate = getImportDryRunApprovalGate({
+    sessionId: currentSessionId,
+    manifestId: warningReviewSummary.manifestId,
+    stagingVersion: warningReviewSummary.stagingVersion,
+    validationErrorCount: validation.summary.errorCount,
+    validationBlockerCount: validation.summary.blockerCount,
+    pendingWarningCount: warningReviewSummary.pendingWarningCount,
+  });
   const dryRunPreview = buildDryRunMappingPreview(result);
   const reviewPack = buildImportReviewPackFromManifest(result);
   const a16pRuntimeCandidateEnabled =
@@ -148,30 +160,29 @@ export function ImportSessionManifestPanel({
         )
         .join("|")}`
     : "duplicate-review-empty";
-  const officialImportSessionMismatch =
-    currentSessionId !== null &&
-    currentSessionId !== A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
   const a16rPermissionReady =
     Boolean(a16rPermissionDiagnostic?.userId) &&
     Boolean(a16rPermissionDiagnostic?.hasOwnerAdminRole) &&
     Boolean(a16rPermissionDiagnostic?.hasImportsCreate) &&
     Boolean(a16rPermissionDiagnostic?.hasPermissionsManage) &&
     Boolean(a16rPermissionDiagnostic?.qualifiesOwnerAdminImportContext);
-  const a16rAuditedSessionReady =
-    currentSessionId === A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
   const a16rBlockedErrorsClear =
     validation.summary.errorCount === 0 &&
     dryRunPreview.summary.blockedByErrorCount === 0;
-  const a16rWarningsNonBlocking = true;
+  const a16rWarningsReviewed = warningReviewSummary.requiredWarningsReviewed;
   const a16rDuplicateReviewPackClear =
     reviewPack.readiness === "READY_FOR_OWNER_REVIEW" &&
     reviewPack.duplicateDecisionSummary.unresolvedDuplicateCandidates === 0 &&
     reviewPack.duplicateDecisionSummary.needsReviewDuplicateCandidates === 0;
+  const officialImportSessionMarker = currentSessionId
+    ? buildA16ROfficialImportSessionMarker(currentSessionId)
+    : "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>";
   const a16rMarkersPresent =
     A16R_RUNTIME_EXECUTION_ENABLEMENT_MARKER ===
       "APPROVE_A16R_RUNTIME_EXECUTION_AFTER_A16V_VERIFY" &&
-    A16R_AUDITED_OFFICIAL_IMPORT_MARKER ===
-      `APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}`;
+    Boolean(currentSessionId) &&
+    officialImportSessionMarker ===
+      buildA16ROfficialImportSessionMarker(currentSessionId ?? "");
   const a16bbSessionStateGate = buildOfficialImportSessionStateGate(
     session?.status,
   );
@@ -189,8 +200,8 @@ export function ImportSessionManifestPanel({
   );
   pushReason(
     a16rSameRunLockedReasons,
-    a16rAuditedSessionReady,
-    "A16AR_LOCKED_AUDITED_SESSION_MISMATCH",
+    currentSessionExplicit,
+    "A16AR_LOCKED_CURRENT_SESSION_NOT_EXPLICIT",
   );
   pushReason(
     a16rSameRunLockedReasons,
@@ -210,8 +221,8 @@ export function ImportSessionManifestPanel({
   );
   pushReason(
     a16rSameRunLockedReasons,
-    a16rWarningsNonBlocking,
-    "A16AR_LOCKED_IMPORT_BLOCKING_WARNING_CATEGORY_PRESENT",
+    a16rWarningsReviewed,
+    "A16AR_LOCKED_REQUIRED_WARNING_GROUPS_PENDING",
   );
   pushReason(
     a16rSameRunLockedReasons,
@@ -240,8 +251,8 @@ export function ImportSessionManifestPanel({
     "A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE",
   );
   const a16rOfficialImportConfirmation = {
-    confirmMarker: A16U_REQUIRED_A16R_RETRY_MARKER,
-    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
+    confirmMarker: officialImportSessionMarker,
+    confirmSessionId: currentSessionId ?? "",
     confirmNoValidationErrors: validation.summary.errorCount === 0,
     confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
     confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
@@ -256,8 +267,10 @@ export function ImportSessionManifestPanel({
     confirmRollbackReviewed: true,
     confirmAuditReviewed: true,
   };
-  const a16rOfficialImportRoutePath = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/official-import`;
-  const a16rConfirmationText = `Owner/admin confirms A-16R official import for audited session ${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}.`;
+  const a16rOfficialImportRoutePath = currentSessionId
+    ? `/api/admin/import-sessions/${currentSessionId}/official-import`
+    : "/api/admin/import-sessions/MISSING_SESSION_ID/official-import";
+  const a16rConfirmationText = `Owner/admin confirms A-16R official import for current session ${currentSessionId ?? "MISSING_SESSION_ID"}.`;
   const a16rButtonLockedReason = (() => {
     if (!a16rPermissionDiagnostic) {
       return "A16R_LOCKED_PERMISSION_DIAGNOSTIC_NOT_AVAILABLE";
@@ -277,25 +290,36 @@ export function ImportSessionManifestPanel({
     if (!a16rPermissionDiagnostic.qualifiesOwnerAdminImportContext) {
       return `A16R_LOCKED_STRICT_PERMISSION_SET_INCOMPLETE:${a16rPermissionDiagnostic.missingStrictPermissions.join(",")}`;
     }
-    if (officialImportSessionMismatch) {
-      return "A16R_LOCKED_AUDITED_SESSION_MISMATCH";
+    if (!currentSessionExplicit) {
+      return "A16R_LOCKED_CURRENT_SESSION_NOT_EXPLICIT";
     }
     if (a16rSameRunLockedReasons.length > 0) {
       return a16rSameRunLockedReasons[0];
     }
     return "A16R_UNLOCKED_PENDING_OWNER_FINAL_CONFIRMATION_CHECKBOX";
   })();
-  const officialImportSessionMarker = A16R_AUDITED_OFFICIAL_IMPORT_MARKER;
-  const a16oAuditExportHref = `/api/admin/import-sessions/${A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}/dry-run-preview?auditExport=relationships-full`;
+  const a16oAuditExportHref = currentSessionId
+    ? `/api/admin/import-sessions/${currentSessionId}/dry-run-preview?auditExport=relationships-full`
+    : "#";
   const a16bcRelationshipAmbiguityClear = result.relationshipsPreview.every(
     (item) => !item.ambiguityStatus || item.ambiguityStatus === "clear",
   );
   const a16bcReviewPackReady =
     reviewPack.readiness === "READY_FOR_OWNER_REVIEW";
+  const a16bcReadyMarker = currentSessionId
+    ? buildA16BCReadyForOwnerApprovalMarker(currentSessionId)
+    : "APPROVE_A16BC_READY_FOR_OWNER_APPROVAL_FOR_SESSION_<SESSION_ID>";
+  const a16bcDbWriteMarker = currentSessionId
+    ? buildA16BCOwnerApprovedForDbWriteMarker(currentSessionId)
+    : "APPROVE_A16BC_OWNER_APPROVED_FOR_DB_WRITE_FOR_SESSION_<SESSION_ID>";
+  const a16bcOwnerApprovalRoute = currentSessionId
+    ? buildA16BCOwnerApprovalStateRoute(currentSessionId)
+    : "/api/admin/import-sessions/MISSING_SESSION_ID/owner-approval-state";
   const a16bcBaseStateGateReady =
     a16rPermissionReady &&
-    a16rAuditedSessionReady &&
+    currentSessionExplicit &&
     a16rBlockedErrorsClear &&
+    a16rWarningsReviewed &&
     a16rDuplicateReviewPackClear &&
     a16bcRelationshipAmbiguityClear &&
     a16bcReviewPackReady;
@@ -315,13 +339,18 @@ export function ImportSessionManifestPanel({
   );
   pushReason(
     a16bcLockedReasons,
-    a16rAuditedSessionReady,
-    "A16BC_LOCKED_AUDITED_SESSION_MISMATCH",
+    currentSessionExplicit,
+    "A16BC_LOCKED_CURRENT_SESSION_NOT_EXPLICIT",
   );
   pushReason(
     a16bcLockedReasons,
     a16rBlockedErrorsClear,
     "A16BC_LOCKED_VALIDATION_OR_DRY_RUN_BLOCKERS_PRESENT",
+  );
+  pushReason(
+    a16bcLockedReasons,
+    a16rWarningsReviewed,
+    "A16BC_LOCKED_REQUIRED_WARNING_GROUPS_PENDING",
   );
   pushReason(
     a16bcLockedReasons,
@@ -345,8 +374,8 @@ export function ImportSessionManifestPanel({
   }
   const a16bcReadyConfirmation = {
     action: "mark_ready_for_owner_approval" as const,
-    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
-    confirmMarker: A16BC_READY_FOR_OWNER_APPROVAL_MARKER,
+    confirmSessionId: currentSessionId ?? "",
+    confirmMarker: a16bcReadyMarker,
     confirmNoValidationErrors: validation.summary.errorCount === 0,
     confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
     confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
@@ -358,8 +387,8 @@ export function ImportSessionManifestPanel({
   };
   const a16bcDbWriteConfirmation = {
     action: "approve_for_db_write" as const,
-    confirmSessionId: A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID,
-    confirmMarker: A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER,
+    confirmSessionId: currentSessionId ?? "",
+    confirmMarker: a16bcDbWriteMarker,
     confirmNoValidationErrors: validation.summary.errorCount === 0,
     confirmNoDryRunBlockers: dryRunPreview.summary.blockedByErrorCount === 0,
     confirmDuplicateDecisionsComplete: a16rDuplicateReviewPackClear,
@@ -396,7 +425,7 @@ export function ImportSessionManifestPanel({
         </div>
       ) : null}
 
-      {result.sessions.length === 0 ? (
+      {sessionList.length === 0 ? (
         <div className="rounded-lg border border-dashed border-stone-300 bg-white p-5 text-sm leading-6 text-stone-700">
           <div className="font-bold text-stone-950">
             Chưa có phiên nhập dữ liệu
@@ -409,7 +438,7 @@ export function ImportSessionManifestPanel({
         </div>
       ) : (
         <div className="grid gap-3">
-          {result.sessions.map((item) => (
+          {sessionList.map((item) => (
             <div
               key={item.id}
               className="rounded-lg border border-stone-200 bg-white p-4"
@@ -489,6 +518,29 @@ export function ImportSessionManifestPanel({
             <IssueList title="Lỗi cần xử lý" issues={errorIssues} />
             <IssueList title="Cảnh báo dữ liệu" issues={warningIssues} />
             <IssueList title="Gợi ý kiểm tra" issues={infoIssues} />
+          </section>
+
+          <section className="grid gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-stone-800">
+            <div className="font-bold text-stone-950">
+              A-16R2V - Warning group review
+            </div>
+            <div>
+              Total warnings: {warningReviewSummary.totalWarningCount}. Pending:{" "}
+              {warningReviewSummary.pendingWarningCount}. Acknowledged:{" "}
+              {warningReviewSummary.acknowledgedWarningCount}. Manifest:{" "}
+              {warningReviewSummary.manifestId ?? "missing"}.
+            </div>
+            <div className="break-all text-stone-600">
+              Staging version: {warningReviewSummary.stagingVersion ?? "missing"}
+            </div>
+            {currentSessionId ? (
+              <WarningGroupReviewClient
+                sessionId={currentSessionId}
+                manifestId={warningReviewSummary.manifestId}
+                stagingVersion={warningReviewSummary.stagingVersion}
+                groups={warningReviewSummary.groups}
+              />
+            ) : null}
           </section>
 
           <DuplicateDecisionReviewClient
@@ -822,18 +874,18 @@ export function ImportSessionManifestPanel({
                 không gọi RPC và không ghi dữ liệu gia phả thật.
               </p>
               <p className="break-all text-sm font-semibold text-violet-950">
-                Route A-16BC: {A16BC_OWNER_APPROVAL_STATE_ROUTE}
+                Route A-16BC: {a16bcOwnerApprovalRoute}
               </p>
               <p className="break-all text-sm text-violet-950">
-                Ready marker: {A16BC_READY_FOR_OWNER_APPROVAL_MARKER}
+                Ready marker: {a16bcReadyMarker}
               </p>
               <p className="break-all text-sm text-violet-950">
                 DB-write approval marker:{" "}
-                {A16BC_OWNER_APPROVED_FOR_DB_WRITE_MARKER}
+                {a16bcDbWriteMarker}
               </p>
             </div>
             <A16BCOwnerApprovalStateClient
-              routePath={A16BC_OWNER_APPROVAL_STATE_ROUTE}
+              routePath={a16bcOwnerApprovalRoute}
               readyConfirmation={a16bcReadyConfirmation}
               dbWriteConfirmation={a16bcDbWriteConfirmation}
               canMarkReady={a16bcCanMarkReady}
@@ -865,7 +917,7 @@ export function ImportSessionManifestPanel({
                 Marker chạy thật cho đúng phiên A-16R:{" "}
                 {officialImportSessionMarker}
               </p>
-              {officialImportSessionMismatch ? (
+              {false ? (
                 <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
                   <div className="font-semibold">
                     Phiên đang xem không khớp phiên nhập chính thức đã được kiểm toán.
@@ -873,7 +925,7 @@ export function ImportSessionManifestPanel({
                   <div>Phiên đang xem: {currentSessionId}</div>
                   <div>
                     Phiên nhập chính thức đã kiểm toán:{" "}
-                    {A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}
+                    {currentSessionId ?? "missing"}
                   </div>
                   <div>
                     Không dùng phiên đang xem làm marker nhập chính thức. Nhập
@@ -1010,12 +1062,15 @@ export function ImportSessionManifestPanel({
             </div>
 
             <A16ROfficialImportConfirmationClient
-              sessionId={A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID}
+              sessionId={currentSessionId ?? "MISSING_SESSION_ID"}
               routePath={a16rOfficialImportRoutePath}
               confirmationText={a16rConfirmationText}
               confirmationBody={a16rOfficialImportConfirmation}
-              canSubmit={a16rSameRunPreflight.officialImportEnabled}
-              lockedReasons={a16rSameRunLockedReasons}
+              canSubmit={false}
+              lockedReasons={[
+                "A16R2_PHASE_LOCK_OFFICIAL_IMPORT_DISABLED_NO_EXECUTOR_CALL",
+                ...a16rSameRunLockedReasons,
+              ]}
             />
           </section>
 

@@ -7,6 +7,7 @@ import {
   type ImportManifestReadResult,
 } from "@/lib/import/giapha4/manifest-read-service";
 import { buildManifestValidationReview } from "@/lib/import/giapha4/manifest-validation-service";
+import { buildImportWarningReviewSummary } from "@/lib/import/giapha4/warning-review-service";
 
 export const A16I5_IMPORT_REVIEW_PACK_GATE_MARKER =
   "A16I5_IMPORT_REVIEW_PACK_OFFICIAL_IMPORT_GATE";
@@ -35,6 +36,13 @@ export type ImportReviewPack = {
     warningCount: number;
     infoCount: number;
     topIssueCodes: string[];
+  };
+  warningReviewSummary: {
+    totalWarningCount: number;
+    pendingWarningCount: number;
+    acknowledgedWarningCount: number;
+    requiredWarningsReviewed: boolean;
+    groupCount: number;
   };
   dryRunSummary: {
     proposedPeopleCount: number;
@@ -89,6 +97,7 @@ export function buildImportReviewPackFromManifest(
   const validation = buildManifestValidationReview(result);
   const dryRunPreview = buildDryRunMappingPreview(result);
   const duplicateDecisionSummary = buildDuplicateDecisionSummary(result);
+  const warningReviewSummary = buildImportWarningReviewSummary(result);
   const parseSummary = extractParseSummary(result);
   const topIssueCodes = validation.issues
     .map((issue) => issue.code)
@@ -97,6 +106,7 @@ export function buildImportReviewPackFromManifest(
   const isReadyForOwnerReview =
     Boolean(result.ok && session) &&
     validation.summary.errorCount === 0 &&
+    warningReviewSummary.requiredWarningsReviewed &&
     dryRunPreview.summary.blockedByErrorCount === 0 &&
     duplicateDecisionSummary.unresolvedDuplicateCandidates === 0 &&
     duplicateDecisionSummary.needsReviewDuplicateCandidates === 0 &&
@@ -122,6 +132,13 @@ export function buildImportReviewPackFromManifest(
       warningCount: validation.summary.warningCount,
       infoCount: validation.summary.infoCount,
       topIssueCodes,
+    },
+    warningReviewSummary: {
+      totalWarningCount: warningReviewSummary.totalWarningCount,
+      pendingWarningCount: warningReviewSummary.pendingWarningCount,
+      acknowledgedWarningCount: warningReviewSummary.acknowledgedWarningCount,
+      requiredWarningsReviewed: warningReviewSummary.requiredWarningsReviewed,
+      groupCount: warningReviewSummary.groups.length,
     },
     dryRunSummary: {
       proposedPeopleCount: dryRunPreview.summary.proposedPeopleCount,

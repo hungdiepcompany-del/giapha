@@ -39,6 +39,13 @@ export type GiaPha4ManifestUploadResult = {
   httpStatus: 200 | 400 | 401 | 403 | 413 | 503;
   marker: typeof A16I_UPLOAD_PARSE_MANIFEST_STAGING_MARKER;
   parserMarker: typeof A16I_GIAPHA4_STAGING_PARSER_MARKER;
+  sessionId: string | null;
+  manifestId: string | null;
+  status: GiaPha4ManifestUploadSummary["status"];
+  stagingRowCount: number;
+  stagingPeopleCount: number;
+  stagingRelationshipCount: number;
+  stagingWarningCount: number;
   stagingOnly: true;
   canImport: false;
   dbWrite: false;
@@ -106,11 +113,18 @@ function emptySummary(
 function result(
   overrides: Partial<GiaPha4ManifestUploadResult>,
 ): GiaPha4ManifestUploadResult {
-  return {
+  const base: GiaPha4ManifestUploadResult = {
     ok: false,
     httpStatus: 503,
     marker: A16I_UPLOAD_PARSE_MANIFEST_STAGING_MARKER,
     parserMarker: A16I_GIAPHA4_STAGING_PARSER_MARKER,
+    sessionId: null,
+    manifestId: null,
+    status: "failed" as const,
+    stagingRowCount: 0,
+    stagingPeopleCount: 0,
+    stagingRelationshipCount: 0,
+    stagingWarningCount: 0,
     stagingOnly: true,
     canImport: false,
     dbWrite: false,
@@ -121,7 +135,21 @@ function result(
     message: "Không đọc được file Gia Phả 4.",
     summary: emptySummary(),
     warnings: [],
+  };
+  const merged: GiaPha4ManifestUploadResult = {
+    ...base,
     ...overrides,
+  };
+
+  return {
+    ...merged,
+    sessionId: merged.summary.sessionId,
+    manifestId: merged.summary.previewManifestHash,
+    status: merged.summary.status,
+    stagingRowCount: merged.summary.rowCount,
+    stagingPeopleCount: merged.summary.personCandidateCount,
+    stagingRelationshipCount: merged.summary.relationshipCandidateCount,
+    stagingWarningCount: merged.summary.warningCount,
   };
 }
 

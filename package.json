@@ -351,6 +351,7 @@
     "check:a16bt-secure-public-genealogy-read-boundary": "node scripts/check-a16bt-secure-public-genealogy-read-boundary.cjs",
     "check:a16bu-official-import-is-living-null-contract-fix": "node scripts/check-a16bu-official-import-is-living-null-contract-fix.cjs",
     "check:a16bu-post-apply-read-only-verification": "node scripts/check-a16bu-post-apply-read-only-verification.cjs",
+    "check:a16r2-to-r2e-current-session-import-workflow-completion-loop": "node scripts/check-a16r2-to-r2e-current-session-import-workflow-completion-loop.cjs",
     "check:a16r-import-completed-post-import-verification": "node scripts/check-a16r-import-completed-post-import-verification.cjs",
     "check:a17a-tree-baseline-evidence": "node scripts/check-a17a-tree-baseline-evidence.cjs",
     "check:a17b-canonical-family-unit-design": "node scripts/check-a17b-canonical-family-unit-design.cjs",

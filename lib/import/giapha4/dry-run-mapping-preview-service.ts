@@ -5,9 +5,7 @@ import {
   type A17OGroupedImportPlanCounts,
 } from "@/lib/import/giapha4/canonical-family-grouping";
 import {
-  A16K_AUDITED_DRY_RUN_SESSION_ID,
   A16K_IMPORT_DRY_RUN_REQUIRED_MARKER,
-  getImportDryRunApprovalGate,
 } from "@/lib/import/giapha4/import-dry-run-approval-gate";
 import {
   getImportManifest,
@@ -298,23 +296,6 @@ export async function getDryRunMappingPreview(
 ): Promise<DryRunMappingPreviewResult> {
   const fullRelationshipAuditExport =
     options.auditExport === "relationships-full";
-  if (fullRelationshipAuditExport) {
-    const dryRunGate = getImportDryRunApprovalGate(sessionId);
-    const sessionMatchesAudited = sessionId === A16K_AUDITED_DRY_RUN_SESSION_ID;
-
-    if (!sessionMatchesAudited || !dryRunGate.dryRunGate.canRunDryRun) {
-      const manifest = await getImportManifest(sessionId);
-      return {
-        ...buildDryRunMappingPreview(manifest, options),
-        ok: false,
-        status: manifest.status === "ready" ? "forbidden" : manifest.status,
-        httpStatus: 403,
-        message:
-          "Full relationship audit export is locked to the A-16K audited dry-run session.",
-      };
-    }
-  }
-
   const manifest = await getImportManifest(sessionId, {
     fullAuditExport: fullRelationshipAuditExport,
   });

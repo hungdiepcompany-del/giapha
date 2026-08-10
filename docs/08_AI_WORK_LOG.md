@@ -1,5 +1,79 @@
 # AI Work Log
 
+## 2026-08-10 - A-16R2H1R2W production Worker target correction
+
+- `PHASE=A-16R2H1R2W_RESTORE_PRODUCTION_TARGET_AND_PRESERVE_PR_PREVIEW_BUILD`.
+- Owner approval: `OWNER_APPROVED_A16R2H1R2W_RESTORE_WEB_GIA_PHA_AND_EXPLICIT_GIAPHA_PREVIEW`.
+- `CANONICAL_PRODUCTION_WORKER=web-gia-pha` and `PR_PREVIEW_WORKER=giapha`.
+- Production-worker identity audit corrected the earlier A-16R2H1R2R conclusion:
+  `wrangler.toml` targets `web-gia-pha` for production, including the manual
+  GitHub Actions deploy path. Cloudflare non-production Workers Builds overrides
+  the upload target to `giapha` with `npx opennextjs-cloudflare upload --name giapha`.
+- `PREVIEW_BUILD_REMEDIATION=PASS`.
+- `PRODUCTION_TARGET_CORRECTION_REQUIRED_AND_APPLIED`.
+- This correction does not deploy production, promote a version, change traffic,
+  run SQL or migrations, call official import, or mutate production data.
+
+## 2026-08-07 - A-16R2H1R2R Cloudflare PR preview build configuration fix
+
+- `PHASE=A-16R2H1R2R_EVIDENCE_BASED_CLOUDFLARE_REMEDIATION_AND_PR_RETRY`.
+- Owner approval: `OWNER_APPROVED_A16R2H1R2R_PR_PREVIEW_BUILD_CONFIG_FIX`.
+- Evidence from failed PR build `6d539c44-70f9-44cf-9329-5aaf6f9ac108` showed that
+  Cloudflare installed dependencies, then ran the default preview command
+  `npx wrangler versions upload` without an OpenNext build step.
+- The connected Cloudflare Workers Builds Worker is `giapha`. The original
+  conclusion that `wrangler.toml` should target it was corrected after the
+  production-worker identity audit: `wrangler.toml` targets `web-gia-pha` for
+  production, while the non-production Dashboard upload command explicitly
+  overrides the preview target to `giapha`.
+- Approved Dashboard configuration to apply before the PR retry:
+  - Build command: `npx opennextjs-cloudflare build`.
+  - Deploy command: `npx opennextjs-cloudflare deploy -- --keep-vars`.
+  - Non-production branch deploy command: `npx opennextjs-cloudflare upload`.
+- This phase does not run an application deploy, SQL, migration, official
+  import or production data mutation. The PR build is non-production and must
+  be observed after the source commit is pushed.
+
+## 2026-08-03 - A-16R2 to R2E current-session import workflow completion loop
+
+- `PHASE=A-16R2_TO_R2E_CURRENT_SESSION_IMPORT_WORKFLOW_COMPLETION_LOOP`.
+- `STATUS=SOURCE_WORKFLOW_IMPLEMENTED_OFFICIAL_IMPORT_LOCKED`.
+- Preserved inherited dirty Auth/OAuth, A17/A17P tree print, Supabase, permission, `_guard`, `.next_locked_*`, temp logs and artifact files.
+- Current-session continuity:
+  - Upload staging response now exposes top-level `sessionId`, `manifestId`, `status`, staging row/person/relationship counts and warning count.
+  - Upload success navigates to `/admin/exports/import?sessionId=<UUID>`.
+  - The import page reads only an explicit valid `sessionId` from the URL; missing URL session shows a no-session state and invalid UUIDs fail closed.
+  - No latest-session fallback was added.
+- A-16G/readiness workflow:
+  - Manifest panel is now passed the current explicit session and derives workflow gates from that session.
+  - Historical A-16R session `2af4bfb6-a20e-453e-9804-1b8c0afbdd68` remains audit evidence only.
+  - Legacy Excel/family JSON tools are separated from the primary workflow area.
+- Validation/warning review:
+  - Validation summaries expose `sessionId`, `manifestId`, `stagingVersion` and separated blocker count.
+  - Added warning review grouping and acknowledgement source bound to session, manifest, staging version/hash, warning group, actor and policy marker.
+  - The warning acknowledgement route was not executed by Codex.
+- Dry-run/approval/readiness:
+  - Dry-run approval no longer compares current work against the historical A-16R session.
+  - Owner approval markers/routes are dynamically derived from the current session.
+  - Official import confirmation markers are dynamically derived from the current session, but the UI remains disabled in this phase.
+- Safety evidence:
+  - `TRANSACTION_EXECUTOR_CALL_COUNT=0`.
+  - `OFFICIAL_IMPORT_EXECUTED=NO`.
+  - `RUNTIME_GENEALOGY_MUTATION=NONE`.
+  - `PRODUCTION_MUTATION=NONE`.
+  - `MIGRATIONS_CREATED=NO`.
+  - `MIGRATIONS_APPLIED=NO`.
+  - `PUSH_RUN=NO`.
+  - `DEPLOY_RUN=NO`.
+- Validation completed so far:
+  - `npm.cmd run typecheck` PASS.
+  - `npm.cmd run lint` PASS.
+  - `npm.cmd run build` PASS.
+  - `npm.cmd run check:a16r2-to-r2e-current-session-import-workflow-completion-loop` PASS.
+  - `git diff --check` PASS with inherited line-ending warnings only.
+- Existing legacy A-16 checkers `check:a16i-upload-parse-giapha4-manifest-staging`, `check:a16g-import-session-read-manifest-runtime`, `check:a16j-manifest-staging-review-validation-warnings`, `check:a16l-dry-run-mapping-preview` and `check:a16i5-import-review-pack-official-import-gate` FAIL only on frozen single-phase allowlists: inherited A17/Auth/guard/artifact dirt and the intentional new warning acknowledgement route are outside those old scopes. Do not revert unrelated files to satisfy those obsolete scope checks.
+- `NEXT_ALLOWED_PHASE=A-16R3_OWNER_GATED_OFFICIAL_IMPORT_EXECUTION`.
+
 ## 2026-07-14 - A-17Q closeout deployed page smoke pass, API POST smoke blocked
 
 - `A17Q_CLOSEOUT_STATUS=BLOCKED_PRODUCTION_API_SMOKE_BROWSER_POST_POLICY`.
