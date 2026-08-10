@@ -1,5 +1,35 @@
 # Next AI Handoff
 
+## 2026-08-10 A-16R2H1R2W production target restoration and preview isolation
+
+Status:
+`A16R2H1R2W_STATUS=PASS_WITH_BLOCKER_OWNER_MAIN_MERGE_AND_PRODUCTION_DEPLOY_APPROVAL_REQUIRED`
+
+Current Worker contract:
+
+- `CANONICAL_PRODUCTION_WORKER=web-gia-pha`.
+- `PR_PREVIEW_WORKER=giapha`.
+- `wrangler.toml` targets `web-gia-pha` for production, including the manual
+  GitHub Actions deploy path.
+- Cloudflare non-production Workers Builds overrides the upload target to
+  `giapha` with `npx opennextjs-cloudflare upload --name giapha`.
+- The repository `upload` script remains generic, and the production deploy
+  command remains `npx opennextjs-cloudflare deploy -- --keep-vars`.
+
+Correction record:
+
+- `PREVIEW_BUILD_REMEDIATION=PASS`.
+- `PRODUCTION_TARGET_CORRECTION_REQUIRED_AND_APPLIED`.
+- The earlier A-16R2H1R2R inference that the connected preview Worker should be
+  the `wrangler.toml` target was corrected after the production-worker identity
+  audit. Do not revert `wrangler.toml` to `giapha`.
+
+Next allowed action:
+
+- `A-16R2H1R3_OWNER_MAIN_MERGE_AND_PRODUCTION_DEPLOY_APPROVAL` only after
+  separate owner approval. Merging into `main` triggers the production deploy
+  command targeting `web-gia-pha`.
+
 ## 2026-08-07 A-16R2H1R2R Cloudflare PR preview build configuration fix
 
 Status:
@@ -10,10 +40,11 @@ Root-cause evidence and constrained repair:
 - Failed non-production build `6d539c44-70f9-44cf-9329-5aaf6f9ac108` for commit
   `dc30e607a5ba3d495fa16e01b72719e36a8781c5` installed dependencies but used
   default `npx wrangler versions upload` with no OpenNext build command.
-- Cloudflare Dashboard identifies the connected Worker as `giapha`, while the
-  repository configuration previously named `web-gia-pha`.
-- `wrangler.toml` now targets `giapha`; the OpenNext wiring checker locks that
-  target and the established build-plus-upload/deploy scripts.
+- Cloudflare Dashboard identifies the connected preview Worker as `giapha`,
+  while the canonical production Worker is `web-gia-pha`.
+- The A-16R2H1R2W correction restores `wrangler.toml` to `web-gia-pha` for
+  production; Cloudflare non-production Workers Builds explicitly uses
+  `npx opennextjs-cloudflare upload --name giapha` for preview uploads.
 - Apply the approved Workers Builds settings before retrying the PR:
   `npx opennextjs-cloudflare build`, then
   `npx opennextjs-cloudflare upload` for non-production branches; production

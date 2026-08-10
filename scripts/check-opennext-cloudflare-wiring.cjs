@@ -69,8 +69,8 @@ if (!wranglerConfig.includes(".open-next/worker.js")) {
   failures.push("wrangler config missing .open-next/worker.js");
 }
 
-if (!/^name\s*=\s*"giapha"\s*$/m.test(wranglerConfig)) {
-  failures.push("wrangler config must target the giapha Worker");
+if (!/^name\s*=\s*"web-gia-pha"\s*$/m.test(wranglerConfig)) {
+  failures.push("wrangler config must target the web-gia-pha production Worker");
 }
 
 if (!wranglerConfig.includes(".open-next/assets")) {

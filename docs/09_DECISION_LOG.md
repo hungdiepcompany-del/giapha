@@ -1,27 +1,62 @@
 # Decision Log
 
+## Decision 367 - Separate the production Worker from the PR preview Worker
+
+Date: 2026-08-10
+
+Decision:
+
+`web-gia-pha` is the canonical production Worker. `wrangler.toml` therefore
+targets `web-gia-pha` for production and for the manual GitHub Actions deploy
+path. `giapha` is the dedicated Cloudflare Workers Builds PR preview Worker.
+Cloudflare non-production Workers Builds must use
+`npx opennextjs-cloudflare upload --name giapha` to override the upload target
+without changing the repository production target.
+
+Rationale:
+
+The A-16R2H1R2R preview-build remediation was valid for the missing OpenNext
+build step, but its inference that the connected Worker should become the
+production target was incorrect. The production-worker identity audit confirmed
+that public production traffic belongs to `web-gia-pha`; assigning
+`wrangler.toml` to `giapha` would make a manual production deploy unsafe.
+`PREVIEW_BUILD_REMEDIATION=PASS` and
+`PRODUCTION_TARGET_CORRECTION_REQUIRED_AND_APPLIED`.
+
+Boundary:
+
+- Preserve the generic repository upload script without a Worker name.
+- Do not change the Cloudflare production deploy command, traffic, secrets,
+  production branch, database, or official-import boundary.
+- Do not merge the PR or run a production deploy without separate owner approval.
+
 ## Decision 366 - Cloudflare PR builds use OpenNext commands and the connected Worker name
 
 Date: 2026-08-07
 
 Decision:
 
-For the connected Cloudflare Worker `giapha`, Workers Builds must run
+For the connected Cloudflare Workers Builds Worker `giapha`, Workers Builds must run
 `npx opennextjs-cloudflare build` and then use OpenNext upload/deploy commands,
-not the default direct Wrangler version upload/deploy commands. The repository
-`wrangler.toml` names the same Worker. Non-production branches upload an
-unpromoted version; `main` retains the deploy command with `--keep-vars`.
+not the default direct Wrangler version upload/deploy commands. A later
+production-worker identity audit corrected the original same-Worker assumption:
+the repository `wrangler.toml` names `web-gia-pha` for production and
+non-production builds explicitly upload to `giapha`. Non-production branches
+upload an unpromoted version; `main` retains the deploy command with `--keep-vars`.
 
 Rationale:
 
 The failed PR build installed dependencies successfully but had no OpenNext
 build command before `npx wrangler versions upload`, leaving the expected
-`.open-next` output unavailable. The prior `web-gia-pha` name also diverged
-from the Worker connected in the Dashboard.
+`.open-next` output unavailable. The prior `web-gia-pha` name was initially
+and incorrectly treated as divergent from the Worker connected in the Dashboard.
+It is the canonical production Worker, while `giapha` is the connected preview
+Worker.
 
 Boundary:
 
-- Applies only to the connected Worker `giapha` and its Workers Builds setup.
+- Applies to the connected preview Worker `giapha` and its Workers Builds setup;
+  `wrangler.toml` remains the `web-gia-pha` production contract.
 - Does not promote a version, deploy production traffic, change secrets, or
   alter database/import behavior.
 - Keep the existing local `deploy` and `upload` scripts as the regression

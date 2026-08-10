@@ -1,5 +1,19 @@
 # AI Work Log
 
+## 2026-08-10 - A-16R2H1R2W production Worker target correction
+
+- `PHASE=A-16R2H1R2W_RESTORE_PRODUCTION_TARGET_AND_PRESERVE_PR_PREVIEW_BUILD`.
+- Owner approval: `OWNER_APPROVED_A16R2H1R2W_RESTORE_WEB_GIA_PHA_AND_EXPLICIT_GIAPHA_PREVIEW`.
+- `CANONICAL_PRODUCTION_WORKER=web-gia-pha` and `PR_PREVIEW_WORKER=giapha`.
+- Production-worker identity audit corrected the earlier A-16R2H1R2R conclusion:
+  `wrangler.toml` targets `web-gia-pha` for production, including the manual
+  GitHub Actions deploy path. Cloudflare non-production Workers Builds overrides
+  the upload target to `giapha` with `npx opennextjs-cloudflare upload --name giapha`.
+- `PREVIEW_BUILD_REMEDIATION=PASS`.
+- `PRODUCTION_TARGET_CORRECTION_REQUIRED_AND_APPLIED`.
+- This correction does not deploy production, promote a version, change traffic,
+  run SQL or migrations, call official import, or mutate production data.
+
 ## 2026-08-07 - A-16R2H1R2R Cloudflare PR preview build configuration fix
 
 - `PHASE=A-16R2H1R2R_EVIDENCE_BASED_CLOUDFLARE_REMEDIATION_AND_PR_RETRY`.
@@ -7,9 +21,11 @@
 - Evidence from failed PR build `6d539c44-70f9-44cf-9329-5aaf6f9ac108` showed that
   Cloudflare installed dependencies, then ran the default preview command
   `npx wrangler versions upload` without an OpenNext build step.
-- The connected Cloudflare Worker is `giapha`; `wrangler.toml` now targets that
-  Worker and the OpenNext wiring checker rejects a future target-name or
-  OpenNext upload/deploy-script drift.
+- The connected Cloudflare Workers Builds Worker is `giapha`. The original
+  conclusion that `wrangler.toml` should target it was corrected after the
+  production-worker identity audit: `wrangler.toml` targets `web-gia-pha` for
+  production, while the non-production Dashboard upload command explicitly
+  overrides the preview target to `giapha`.
 - Approved Dashboard configuration to apply before the PR retry:
   - Build command: `npx opennextjs-cloudflare build`.
   - Deploy command: `npx opennextjs-cloudflare deploy -- --keep-vars`.
