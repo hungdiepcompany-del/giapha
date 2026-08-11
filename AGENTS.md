@@ -1,105 +1,19 @@
-# AGENTS.md - Quy tắc cho AI coding
+# GIA PHẢ AI Operating Law
 
-## Vai trò
+## Startup authority order
 
-- ChatGPT 5.5: kiến trúc sư, PM, reviewer, người viết prompt.
-- Codex: lập trình viên triển khai code.
+Before work, read: `AGENTS.md`; `docs/AI_WORKFLOW.md`; `docs/AI_EXECUTION_ROUTING.md`; exactly one real active contract under `docs/exec-plans/active/`; current repository/runtime/Git evidence; then the relevant architecture/domain documents, handoff, work log, decision log, and history. The active contract may be stricter but cannot weaken this law.
 
-## Quy tắc đọc tài liệu
+## Responsibilities and execution
 
-Trước khi làm task nhỏ:
+Owner + ChatGPT own WHAT, business intent, GO/NO-GO, and final model approval. GPT Work prepares repository-grounded plans. Codex Primary owns HOW and phase orchestration. There is exactly one application-source writer, with a verified ACTIVE lease; Primary may write only governance/orchestration/documentation authorized by policy and contract. Non-writers use isolated snapshots and never the writable main worktree.
 
-- README.md
-- AGENTS.md
-- docs/00_INDEX.md
-- Phần mới nhất của docs/99_NEXT_AI_HANDOFF.md
-- File docs liên quan task
+## Boundaries
 
-Không đọc toàn bộ docs nếu task nhỏ.
+Preserve unrelated dirty work. Do not broad-stage, reset, stash, clean, checkout, restore, or commit/push without explicit authorization. Privileged production, database, official-import, deployment, security/OAuth, destructive data/layout, and rollback actions require a fresh explicit Owner gate. Do not change stack, weaken RLS, expose secrets, hardcode credentials, delete genealogy data, mix genealogy data with tree-layout data, or bypass required JSON/GEDCOM/ZIP portability.
 
-Nếu task liên quan database:
+Read `docs/RUNTIME_WORKER_GUARDRAIL.md` for Worker/OpenNext/Wrangler/runtime/deploy/dependency/service-boundary tasks and `docs/SERVICE_BOUNDARY_ROADMAP.md` additionally for export/import/media/backup/GEDCOM/large validation/new service planning. Read the corresponding database, privacy, tree, export, architecture, or decision document for the affected domain.
 
-- docs/03_DATABASE_MODEL.md
+## Evidence and closeout
 
-Nếu task liên quan quyền/riêng tư:
-
-- docs/04_PERMISSION_PRIVACY_MODEL.md
-
-Nếu task liên quan cây gia phả:
-
-- docs/05_TREE_UI_MODEL.md
-
-Nếu task liên quan export/backup:
-
-- docs/06_EXPORT_BACKUP_MODEL.md
-
-Nếu task liên quan kiến trúc:
-
-- docs/02_ARCHITECTURE.md
-- docs/09_DECISION_LOG.md
-
-
-## Quy tắc đọc Runtime Worker và Service Boundary
-
-Không bắt AI đọc toàn bộ guardrail kiến trúc trong mọi task.
-
-Luôn đọc `docs/RUNTIME_WORKER_GUARDRAIL.md` khi task chạm tới:
-
-- Cloudflare Worker.
-- OpenNext.
-- Wrangler.
-- Runtime code.
-- Deploy/deployment config.
-- Dependency/package changes.
-- Bundle size/startup size.
-- Service boundary decisions.
-
-Đọc thêm `docs/SERVICE_BOUNDARY_ROADMAP.md` khi task chạm tới:
-
-- Export.
-- Import.
-- Media/document attachment.
-- Backup/restore.
-- GEDCOM/ZIP generation.
-- Large validation.
-- Data quality scan.
-- New service Worker planning.
-
-Với phase thuần docs/domain không chạm runtime, migration, deploy, dependency, export/import/media/backup thì 2 file này là optional trừ khi prompt yêu cầu.
-
-## Điều cấm
-
-- Không làm mock che lỗi.
-- Không tự ý đổi stack.
-- Không bỏ RLS.
-- Không đưa service role key ra client.
-- Không hardcode secret.
-- Không xóa cứng dữ liệu gia phả.
-- Không trộn dữ liệu gia phả với dữ liệu layout cây.
-- Không bỏ JSON/GEDCOM/ZIP export.
-- Không sửa ngoài scope phase được giao.
-- Không làm main Cloudflare/OpenNext Worker phình to bằng tác vụ nặng.
-- Không đưa ZIP/export lớn/import lớn/media/backup/GEDCOM lớn vào main Worker nếu chưa có boundary/approval.
-- Không commit/push nếu chưa được yêu cầu.
-
-## Sau khi làm xong
-
-Phải báo cáo:
-
-- File đã sửa.
-- Migration đã tạo nếu có.
-- Package đã thêm nếu có.
-- Lệnh kiểm thử đã chạy.
-- Kết quả PASS/FAIL.
-- Lỗi còn lại.
-- Việc tiếp theo đề xuất.
-
-Phải cập nhật:
-
-- docs/08_AI_WORK_LOG.md
-- docs/99_NEXT_AI_HANDOFF.md
-
-Nếu có quyết định kiến trúc mới:
-
-- docs/09_DECISION_LOG.md
-
+Report only PASS, FAIL, BLOCKED, NOT_PROVEN, or NOT_RUN according to evidence. PASS does not authorize commit, push, deploy, production mutation, or checkpoint. Update `docs/08_AI_WORK_LOG.md` and `docs/99_NEXT_AI_HANDOFF.md` after a completed phase; record durable governance/architecture decisions in `docs/09_DECISION_LOG.md`. A verified Git checkpoint needs the active contract, required independent evidence, protected-path audit, and explicit Owner decision.

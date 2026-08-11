@@ -1,5 +1,91 @@
 # Decision Log
 
+## Decision 368 - Remote production source is the R4 governance transplant base
+
+Date: 2026-08-11
+
+Decision:
+
+The exact remote `main` commit `8e842c67e8696cdeb62afa17a164e8c5c6538ba2` is the only R4 governance-transplant base. Sanitized R2R2 evidence proves `PROVEN_CURRENT_SOURCE_EQUALS_REMOTE_MAIN` for production Worker `web-gia-pha`, version `3e24489c-7302-4e44-b759-56f04ec61a45`, at 100 percent traffic.
+
+Rationale:
+
+The inherited local preservation chain is not the integration base. A clean branch rooted at the verified remote tree protects the remote production authority while retaining the separate local chain unchanged.
+
+Boundary:
+
+- This decision records governance and source authority only; it does not push, deploy, alter traffic, call A16 or official import, or mutate production/database state.
+- `A16_NEXT_PHASE=A16R3`, but `A16_EXECUTION_ALLOWED=false` and `OFFICIAL_IMPORT_ALLOWED=false` until a fresh owner authorization and substantive current-session staging/smoke prerequisite.
+- R2R2 Reviewer PASS and Verifier PASS are evidence, not permission for an additional execution.
+
+## Decision 369 - Governed snapshots use the complete immutable R4 21-path candidate set
+
+Date: 2026-08-11
+
+Decision:
+
+The governed non-writer snapshot request uses one deterministic 21-path R4 candidate set, including the completed GOV-GP1 contract as an explicit untracked overlay. The active-contract path remains dynamically validated only after the sole active contract is proven.
+
+Rationale:
+
+The former fixed list retained `docs/exec-plans/completed/README.md` but omitted `docs/exec-plans/completed/GOV-GP1_GIA_PHA_AI_GOVERNANCE_BOOTSTRAP.md` after GOV-GP1 moved from active to completed. This caused the prior R4 Reviewer snapshot to materialize 20 paths despite the retained candidate containing 21.
+
+Boundary:
+
+- This is a candidate-list synchronization and persistent-harness decision only; it does not alter the completed GOV-GP1 content, untracked-copy mechanics, protected-path filtering, the remote base, A16/A17, deployment, production, database, import, commit, or push authority.
+- The prior R4 Reviewer outcome remains `BLOCKED_REVIEW_P1`; fresh independent review and verification remain required before any checkpoint gate.
+
+## Decision 370 - Sparse snapshot fixtures distinguish canonical request from materialization
+
+Date: 2026-08-11
+
+Decision:
+
+The governed snapshot harness must assert the full canonical and manifest candidate sets independently from its disposable fixture materialization. The real R4 candidate requires 21 requested, manifest, and materialized paths; the deliberate sparse fixture requires 21 requested and manifest paths but exactly four approved materialized paths: `AGENTS.md`, the sole active contract, `scripts/ai/New-AiNonWriterSnapshot.ps1`, and the completed GOV-GP1 contract.
+
+Rationale:
+
+Applying the production materialized-count invariant to the sparse fixture produced a false local failure despite the runtime helper correctly requesting all 21 canonical paths. Exact membership and byte identity of the fixture's four overlays retain meaningful regression coverage without creating placeholder governance files.
+
+Boundary:
+
+- This corrects only the persistent disposable harness assertion. The runtime helper's canonical 21-path list, protected-path filtering, remote base, prior R4/R4R1 evidence, and A16/A17/production/import/deploy boundaries remain unchanged.
+- Fresh independent review and verification remain required before the separately authorized local checkpoint; this decision does not itself authorize push, deployment, production/database mutation, official import, or A16 execution.
+
+## Decision 371 - Main push runs the build gate, while production deployment remains manual
+
+Date: 2026-08-11
+
+Decision:
+
+The executable GitHub Actions configuration is authoritative: a push to `main` runs the OpenNext Cloudflare build gate only. Production deployment of `web-gia-pha` requires a separate manual Cloudflare Deploy `workflow_dispatch`, which contains the production `npm run deploy` command.
+
+Rationale:
+
+The prior unpushed integration commit `8c2314b41a8a452b5ae661547e921c56903a17b0` contained an assertion that `main` updates trigger production deployment. The workflow definitions prove that assertion false: the build gate ends with `npx opennextjs-cloudflare build`, while the deploy command exists only in the manually dispatched Cloudflare Deploy workflow.
+
+Boundary:
+
+- `AUTO_DEPLOY_ON_MAIN_PUSH=NO` and `MAIN_PUSH_SIDE_EFFECT=CI_BUILD_GATE_ONLY`.
+- The unpushed commit is superseded before publication; the correction does not push, dispatch deployment, execute A16, import, or mutate production/database state.
+- This is a factual governance correction only and does not change either workflow, package configuration, or runtime source.
+
+## Decision 372 - Allow one exact protected-suffix literal correction for the inherited false deploy assertion
+
+Date: 2026-08-11
+
+Decision:
+
+`R5R2` was internally contradictory: it required correcting a known false inherited statement while requiring the whole inherited suffix to remain byte-identical. `R5R2A` ended the failed writer lease only. `R5R2B` permits exactly one deterministic old-false-literal to corrected-literal replacement in the remote handoff suffix, alongside the approved governance-block insertion.
+
+Rationale:
+
+The exact remote handoff blob is `e150eaac979fbe555c8ca1e59f3bb156e28d3341`. The inherited literal falsely said that updating or merging `main` triggers the production deploy command. The executable workflows instead prove a main push runs the OpenNext Cloudflare build gate and production deployment requires a separate manual Cloudflare Deploy `workflow_dispatch`.
+
+Boundary:
+
+- Forward and reverse raw-byte transforms must prove the candidate differs from the remote blob only by the approved governance insertion and this one replacement; there is no second suffix exception.
+- The correction neither changes workflows/runtime nor authorizes push, deployment, A16 execution, official import, or production/database mutation.
 ## Decision 367 - Separate the production Worker from the PR preview Worker
 
 Date: 2026-08-10

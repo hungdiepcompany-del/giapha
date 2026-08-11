@@ -1,5 +1,10 @@
 # Bản đồ tài liệu
 
+## AI governance and execution controls
+
+- `AI_WORKFLOW.md`, `AI_EXECUTION_ROUTING.md`, and `AGENTS.md` establish the permanent one-writer, isolated-non-writer, evidence-first governance law.
+- `exec-plans/active/GOV-GP4_REPOSITORY_GIT_AND_A16_AUTHORITY_RECONCILIATION.md` is the sole current authority. GOV-GP1 is completed; GOV-GP4R4 records remote-base governance transplant authority only.
+- R2R2 production authority is recorded as `PROVEN_CURRENT_SOURCE_EQUALS_REMOTE_MAIN` for remote source `8e842c67e8696cdeb62afa17a164e8c5c6538ba2`, Worker `web-gia-pha`, version `3e24489c-7302-4e44-b759-56f04ec61a45`, and 100 percent traffic. A16 execution and official import remain frozen pending A16R3 authorization.
 ## A-16 import workflow
 
 - `PLAN_A16R2_TO_R2E_CURRENT_SESSION_IMPORT_WORKFLOW_COMPLETION_LOOP.md`: `A16R2_TO_R2E_STATUS=SOURCE_WORKFLOW_IMPLEMENTED_OFFICIAL_IMPORT_LOCKED`; unifies `/admin/exports/import` around an explicit current staging session, binds upload result to `?sessionId=<UUID>`, removes latest-session and historical A-16R runtime gates, adds warning review bound to manifest/staging version, dynamic owner approval/readiness markers, and keeps official import disabled. No official import, transaction executor, production mutation, migration, commit, push or deploy is performed in this phase.

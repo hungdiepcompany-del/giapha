@@ -1,5 +1,32 @@
 # AI Work Log
 
+## 2026-08-11 - GOV-GP4R4 remote-base governance checkpoint transplant
+
+- `PHASE=GOV-GP4R4_REMOTE_BASE_GOVERNANCE_CHECKPOINT_TRANSPLANT`.
+- The exact remote/production base is `8e842c67e8696cdeb62afa17a164e8c5c6538ba2`; its tree is `c1858eccf978dbbbcd447d52f8fcd5fa8f7759b8`.
+- R2R2 production authority evidence is durable and sanitized: `PRODUCTION_SOURCE=8e842c67e8696cdeb62afa17a164e8c5c6538ba2`, `PRODUCTION_WORKER=web-gia-pha`, `PRODUCTION_VERSION=3e24489c-7302-4e44-b759-56f04ec61a45`, `PRODUCTION_TRAFFIC_PERCENT=100`, `PRODUCTION_SOURCE_DECISION=PROVEN_CURRENT_SOURCE_EQUALS_REMOTE_MAIN`; R2R2 Reviewer and Verifier both passed.
+- This governance-only candidate does not run A16, official import, deployment, production/database mutation, or push. `A16_NEXT_PHASE=A16R3`, `A16_EXECUTION_ALLOWED=false`, and `OFFICIAL_IMPORT_ALLOWED=false`.
+
+## 2026-08-11 - GOV-GP4R4R1 snapshot candidate-list remediation
+
+- `PHASE=GOV-GP4R4R1_REVIEWER_SNAPSHOT_21_PATH_MATERIALIZATION_REMEDIATION` repairs only the stale fixed snapshot-request list that caused the prior R4 Reviewer `P1`.
+- The canonical governed set is exactly 21 paths and includes the explicit untracked overlay `docs/exec-plans/completed/GOV-GP1_GIA_PHA_AI_GOVERNANCE_BOOTSTRAP.md`; the untracked-copy and protected-path behavior remain unchanged.
+- Persistent snapshot-harness coverage now proves requested, manifest, materialized, and content-identity fidelity for completed GOV-GP1 while unrelated untracked content remains excluded. The R4 candidate is retained; it is not replayed or reconstructed.
+
+## 2026-08-11 - GOV-GP4R4R1C sparse-fixture harness correction and R4 resume
+
+- `PHASE=GOV-GP4R4R1C_SPARSE_FIXTURE_HARNESS_CORRECTION_AND_R4_RESUME`.
+- Root cause is proven: the prior harness applied the real-candidate materialized count of 21 to an intentionally sparse four-file disposable fixture. The retained runtime helper remains the correct 21-path canonical request, including completed GOV-GP1.
+- The bounded correction requires canonical and manifest counts of 21 while requiring exactly four fixture materialized paths with exact membership and content identity. No runtime helper, remote base, A16/A17, deployment, import, production, database, push, or fetch action is authorized.
+
+## 2026-08-11 - GOV-GP4R5R2 false auto-deploy assertion correction
+
+- `PHASE=GOV-GP4R5R2_FALSE_AUTO_DEPLOY_ASSERTION_CORRECTION_AND_INTEGRATION_COMMIT_REPLACEMENT`.
+- `R5=BLOCKED_FALSE_AUTO_DEPLOY_ASSERTION`; `R5R1=PASS`. The unpushed integration commit `8c2314b41a8a452b5ae661547e921c56903a17b0` is superseded before publication.
+- Executable workflow evidence proves `AUTO_DEPLOY_ON_MAIN_PUSH=NO` and `MAIN_PUSH_SIDE_EFFECT=CI_BUILD_GATE_ONLY`. Production deployment remains the separate manual Cloudflare Deploy `workflow_dispatch`, which runs the production deploy command.
+- `PUSH_ALLOWED=false`; no deploy, A16 execution, official import, production mutation, or database mutation is authorized.
+- `R5R2=BLOCKED_ACCEPTANCE_CONFLICT` because its correction requirement and whole-protected-suffix byte rule could not both be true. `R5R2A=PASS_LEASE_TERMINAL_RECOVERY_ONLY` safely ended the retained lease without claiming task success.
+- `R5R2B` authorizes one exact inherited false-literal replacement only. The candidate must round-trip to remote blob `e150eaac979fbe555c8ca1e59f3bb156e28d3341` after removing this governance block and restoring that literal; all other inherited bytes remain protected.
 ## 2026-08-10 - A-16R2H1R2W production Worker target correction
 
 - `PHASE=A-16R2H1R2W_RESTORE_PRODUCTION_TARGET_AND_PRESERVE_PR_PREVIEW_BUILD`.

@@ -1,0 +1,11 @@
+# Repository governance metadata. Codex runtime settings remain user/environment owned.
+[governance]
+default_cost_policy = "CHEAPEST_CAPABLE"
+active_contract_directory = "docs/exec-plans/active"
+one_writer_required = true
+non_writer_isolation_required = true
+
+[governance.authority]
+owner_chatgpt = "WHAT"
+gpt_work = "LOCAL_REPOSITORY_PLANNER_INSPECTOR"
+codex_primary = "EXECUTION_ORCHESTRATOR"

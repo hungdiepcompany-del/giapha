@@ -1,5 +1,65 @@
 # Next AI Handoff
 
+## 2026-08-11 GOV-GP4R4 remote-base governance checkpoint transplant
+
+Status:
+`GOV_GP4R4_STATUS=CANDIDATE_GOVERNANCE_TRANSPLANT_PENDING_INDEPENDENT_REVIEW_AND_VERIFICATION`
+
+Current authority:
+
+- The candidate is rooted only at remote `main` `8e842c67e8696cdeb62afa17a164e8c5c6538ba2` (tree `c1858eccf978dbbbcd447d52f8fcd5fa8f7759b8`).
+- Sanitized R2R2 evidence: `PRODUCTION_SOURCE=8e842c67e8696cdeb62afa17a164e8c5c6538ba2`; `PRODUCTION_WORKER=web-gia-pha`; `PRODUCTION_VERSION=3e24489c-7302-4e44-b759-56f04ec61a45`; `PRODUCTION_TRAFFIC_PERCENT=100`; `PRODUCTION_SOURCE_DECISION=PROVEN_CURRENT_SOURCE_EQUALS_REMOTE_MAIN`; Reviewer PASS and Verifier PASS.
+- GOV-GP1 is completed. GOV-GP4 is the sole active contract. The local preservation chain is deliberately not replayed into this candidate.
+
+Next allowed action:
+
+- `A16_NEXT_PHASE=A16R3` is planning/authorization naming only. Do not upload, create a session, call import, deploy, push, or mutate production/database state without a fresh explicit Owner gate and substantive current-session staging/smoke evidence.
+
+## 2026-08-11 GOV-GP4R4R1 snapshot remediation
+
+Status:
+`GOV_GP4R4R1_STATUS=CANONICAL_21_PATH_SNAPSHOT_REMEDIATION_PENDING_FRESH_REVIEW_AND_VERIFICATION`
+
+Current authority:
+
+- The retained R4 remote-base candidate remains intact. The prior Reviewer result remains `BLOCKED_REVIEW_P1` because the stale caller list requested only 20 paths.
+- The canonical request is now exactly 21 paths, including `docs/exec-plans/completed/GOV-GP1_GIA_PHA_AI_GOVERNANCE_BOOTSTRAP.md`; persistent harness coverage proves its untracked overlay, manifest membership, materialization, content identity, and unrelated-untracked exclusion.
+
+Next allowed action:
+
+- Create a fresh isolated Reviewer snapshot and require 21 requested, manifest, and materialized paths before review. Do not stage, commit, push, deploy, run A16, or mutate production/database/import state unless each later owner-gated condition passes.
+
+## 2026-08-11 GOV-GP4R4R1C sparse-fixture harness correction and R4 resume
+
+Status:
+`GOV_GP4R4R1C_STATUS=LOCAL_HARNESS_CORRECTION_PENDING_FRESH_GATES`
+
+Current authority:
+
+- The runtime helper remains correct: its canonical request is 21 paths, including completed GOV-GP1. Only the sparse disposable harness count is corrected: canonical and manifest counts remain 21, while its exact approved materialized set is four paths.
+- Prior rounds remain truthful: `R4=BLOCKED_REVIEW_P1`, `R4R1=BLOCKED_LOCAL_CHECK`, and `R4R1B=PASS_LEASE_TERMINAL_RECOVERY_ONLY`.
+
+Next allowed action:
+
+- After local checks pass and the fresh Coder lease is completed and released, create a fresh real-candidate Reviewer snapshot requiring 21 requested, manifest, and materialized paths. Do not fetch, push, deploy, execute A16, import, or mutate production/database state.
+
+## 2026-08-11 GOV-GP4R5R2 false auto-deploy assertion correction
+
+Status:
+`GOV_GP4R5R2B_STATUS=ONE_PROTECTED_SUFFIX_FALSE_LITERAL_EXCEPTION_PENDING_FRESH_REVIEW_AND_VERIFICATION`
+
+Current authority:
+
+- `R5=BLOCKED_FALSE_AUTO_DEPLOY_ASSERTION`; `R5R1=PASS`. The unpushed integration commit `8c2314b41a8a452b5ae661547e921c56903a17b0` is superseded before publication.
+- `R5R2=BLOCKED_ACCEPTANCE_CONFLICT`; `R5R2A=PASS_LEASE_TERMINAL_RECOVERY_ONLY`. R5R2B supersedes the internally contradictory whole-suffix rule solely for one proven false inherited literal.
+- `AUTO_DEPLOY_ON_MAIN_PUSH=NO`. Updating or pushing `main` triggers the OpenNext Cloudflare build gate only.
+- Production deployment of `web-gia-pha` is separate and manual through the Cloudflare Deploy `workflow_dispatch`, which runs the production deploy command.
+- The exact remote handoff blob must be reproducible by removing this governance block and restoring the one authorized old false literal; no other inherited suffix byte may differ.
+- `PUSH_ALLOWED=false`; A16 execution, official import, deployment, production mutation, and database mutation remain unauthorized.
+
+Next allowed action:
+
+- Require fresh independent review and verification of the corrected 21-path candidate before the single owner-authorized amend. Do not push or dispatch production deployment.
 ## 2026-08-10 A-16R2H1R2W production target restoration and preview isolation
 
 Status:
@@ -27,8 +87,10 @@ Correction record:
 Next allowed action:
 
 - `A-16R2H1R3_OWNER_MAIN_MERGE_AND_PRODUCTION_DEPLOY_APPROVAL` only after
-  separate owner approval. Merging into `main` triggers the production deploy
-  command targeting `web-gia-pha`.
+  separate owner approval. Updating or pushing `main` triggers the OpenNext
+  Cloudflare build gate only; production deployment of `web-gia-pha` remains a
+  separate manual Cloudflare Deploy `workflow_dispatch` that runs the
+  production deploy command.
 
 ## 2026-08-07 A-16R2H1R2R Cloudflare PR preview build configuration fix
 
