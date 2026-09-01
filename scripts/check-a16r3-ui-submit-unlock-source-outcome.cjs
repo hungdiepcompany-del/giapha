@@ -97,9 +97,18 @@ for (const [content, token, label] of [
   [route, "if (!A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED)", "server A16P gate"],
   [route, "if (!A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED)", "server A16AH gate"],
   [route, "missingConfirmationReasons(sessionId, confirmation)", "server confirmation gate"],
+  [client, "importedRelationshipCount?: unknown;", "canonical relationship-count response field"],
+  [client, "typeof result.importedRelationshipCount === \"number\"", "canonical relationship-count normalizer"],
+  [client, "Imported relationships count: {result.importedRelationshipCount}", "canonical relationship-count display"],
 ]) {
   requireIncludes(content, token, label);
 }
+
+rejectIncludes(
+  client,
+  "importedRelationshipsCount",
+  "non-canonical plural relationship-count field",
+);
 
 const postPaths =
   client.match(/fetch\s*\(\s*routePath[\s\S]{0,320}method:\s*"POST"/g) ?? [];

@@ -24,7 +24,7 @@ type SubmitResult = {
   message?: unknown;
   canRunOfficialImport?: unknown;
   importedPeopleCount?: unknown;
-  importedRelationshipsCount?: unknown;
+  importedRelationshipCount?: unknown;
   warningsCount?: unknown;
   blockedReasons?: unknown;
 };
@@ -45,9 +45,9 @@ function summarizeResult(result: SubmitResult) {
       typeof result.importedPeopleCount === "number"
         ? result.importedPeopleCount
         : null,
-    importedRelationshipsCount:
-      typeof result.importedRelationshipsCount === "number"
-        ? result.importedRelationshipsCount
+    importedRelationshipCount:
+      typeof result.importedRelationshipCount === "number"
+        ? result.importedRelationshipCount
         : null,
     warningsCount:
       typeof result.warningsCount === "number" ? result.warningsCount : null,
@@ -190,9 +190,9 @@ export function A16ROfficialImportConfirmationClient({
           {result.importedPeopleCount !== null ? (
             <div>Imported people count: {result.importedPeopleCount}</div>
           ) : null}
-          {result.importedRelationshipsCount !== null ? (
+          {result.importedRelationshipCount !== null ? (
             <div>
-              Imported relationships count: {result.importedRelationshipsCount}
+              Imported relationships count: {result.importedRelationshipCount}
             </div>
           ) : null}
           {result.warningsCount !== null ? (
