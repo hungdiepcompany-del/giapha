@@ -174,6 +174,9 @@ export function ImportSessionManifestPanel({
     reviewPack.readiness === "READY_FOR_OWNER_REVIEW" &&
     reviewPack.duplicateDecisionSummary.unresolvedDuplicateCandidates === 0 &&
     reviewPack.duplicateDecisionSummary.needsReviewDuplicateCandidates === 0;
+  const a16rRelationshipAmbiguityClear = result.relationshipsPreview.every(
+    (item) => !item.ambiguityStatus || item.ambiguityStatus === "clear",
+  );
   const officialImportSessionMarker = currentSessionId
     ? buildA16ROfficialImportSessionMarker(currentSessionId)
     : "APPROVE_A16R_RUN_OFFICIAL_IMPORT_FOR_SESSION_<SESSION_ID>";
@@ -221,6 +224,11 @@ export function ImportSessionManifestPanel({
   );
   pushReason(
     a16rSameRunLockedReasons,
+    a16rRelationshipAmbiguityClear,
+    "A16AR_LOCKED_RELATIONSHIP_AMBIGUITY_PRESENT",
+  );
+  pushReason(
+    a16rSameRunLockedReasons,
     a16rWarningsReviewed,
     "A16AR_LOCKED_REQUIRED_WARNING_GROUPS_PENDING",
   );
@@ -250,6 +258,10 @@ export function ImportSessionManifestPanel({
       a16rSameRunPreflight.officialImportEnabled,
     "A16AR_LOCKED_SAME_RUN_PREFLIGHT_FALSE",
   );
+  const a16rSameRunGatePassed =
+    a16rSameRunPreflight.canOpenOfficialImport &&
+    a16rSameRunPreflight.officialImportEnabled &&
+    a16rSameRunLockedReasons.length === 0;
   const a16rOfficialImportConfirmation = {
     confirmMarker: officialImportSessionMarker,
     confirmSessionId: currentSessionId ?? "",
@@ -301,9 +313,7 @@ export function ImportSessionManifestPanel({
   const a16oAuditExportHref = currentSessionId
     ? `/api/admin/import-sessions/${currentSessionId}/dry-run-preview?auditExport=relationships-full`
     : "#";
-  const a16bcRelationshipAmbiguityClear = result.relationshipsPreview.every(
-    (item) => !item.ambiguityStatus || item.ambiguityStatus === "clear",
-  );
+  const a16bcRelationshipAmbiguityClear = a16rRelationshipAmbiguityClear;
   const a16bcReviewPackReady =
     reviewPack.readiness === "READY_FOR_OWNER_REVIEW";
   const a16bcReadyMarker = currentSessionId
@@ -408,15 +418,17 @@ export function ImportSessionManifestPanel({
           Phiên nhập dữ liệu
         </h2>
         <p className="text-sm leading-6 text-stone-700">
-          Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả.
-          Chưa mở bước xác nhận nhập chính thức.
+          {a16rSameRunGatePassed
+            ? "Dữ liệu staging bên dưới đã đủ cổng cùng lượt. Cổng A-16R ở cuối trang đang chờ owner xác nhận lần cuối trước giao dịch thật."
+            : "Dữ liệu bên dưới chỉ là bản xem trước, chưa được nhập vào cây gia phả. Chưa mở bước xác nhận nhập chính thức."}
         </p>
       </div>
 
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-        <strong>Chế độ an toàn:</strong> màn hình này chỉ đọc phiên nhập và
-        manifest dữ liệu. Không tạo thành viên, không tạo quan hệ, không ghi
-        layout cây và không ghi revision.
+        <strong>Chế độ an toàn:</strong>{" "}
+        {a16rSameRunGatePassed
+          ? "Các phần staging vẫn chỉ đọc. Chỉ cổng A-16R ở cuối trang có thể gửi đúng một yêu cầu giao dịch sau khi owner tích xác nhận cuối."
+          : "Màn hình này chỉ đọc phiên nhập và manifest dữ liệu. Không tạo thành viên, không tạo quan hệ, không ghi layout cây và không ghi revision."}
       </div>
 
       {!result.ok ? (
@@ -900,18 +912,19 @@ export function ImportSessionManifestPanel({
                 Cổng nhập chính thức A-16R
               </div>
               <h3 className="text-base font-bold text-stone-950">
-                Trạng thái hiện tại: nhập chính thức vẫn khóa
+                Trạng thái hiện tại: {a16rSameRunGatePassed
+                  ? "đã đủ cổng, chờ owner xác nhận cuối"
+                  : "nhập chính thức vẫn khóa"}
               </h3>
               <p className="text-sm leading-6 text-stone-700">
-                Cổng A-16R là cổng chạy thật. Nút nhập chính thức vẫn bị khóa cho
-                đến khi chứng minh được phiên owner/admin trên production, đúng
-                phiên nhập và đủ phê duyệt runtime. Chưa có dữ liệu gia phả thật
-                nào được ghi từ màn hình này.
+                {a16rSameRunGatePassed
+                  ? "Cổng A-16R là cổng chạy thật. Mọi điều kiện cùng lượt đã đạt; owner vẫn phải tích checkbox xác nhận cuối trước khi nút gửi được mở."
+                  : "Cổng A-16R là cổng chạy thật. Nút nhập chính thức vẫn bị khóa cho đến khi chứng minh được phiên owner/admin trên production, đúng phiên nhập và đủ phê duyệt runtime. Chưa có dữ liệu gia phả thật nào được ghi từ màn hình này."}
               </p>
               <p className="text-sm leading-6 text-stone-700">
-                Lý do: chưa có phê duyệt chạy thật cho đúng phiên nhập và chưa
-                chứng minh xong phiên admin/owner trên production. A-16K dry-run
-                không thay thế cho cổng thực thi A-16R.
+                {a16rSameRunGatePassed
+                  ? "A-16K dry-run không thay thế cho xác nhận cuối A-16R. Yêu cầu chỉ được gửi cho đúng session đang hiển thị."
+                  : "Chưa đủ phê duyệt chạy thật cho đúng phiên nhập hoặc chưa chứng minh xong phiên admin/owner trên production. A-16K dry-run không thay thế cho cổng thực thi A-16R."}
               </p>
               <p className="text-sm font-semibold text-rose-900">
                 Marker chạy thật cho đúng phiên A-16R:{" "}
@@ -1066,11 +1079,8 @@ export function ImportSessionManifestPanel({
               routePath={a16rOfficialImportRoutePath}
               confirmationText={a16rConfirmationText}
               confirmationBody={a16rOfficialImportConfirmation}
-              canSubmit={false}
-              lockedReasons={[
-                "A16R2_PHASE_LOCK_OFFICIAL_IMPORT_DISABLED_NO_EXECUTOR_CALL",
-                ...a16rSameRunLockedReasons,
-              ]}
+              canSubmit={a16rSameRunGatePassed}
+              lockedReasons={a16rSameRunLockedReasons}
             />
           </section>
 
