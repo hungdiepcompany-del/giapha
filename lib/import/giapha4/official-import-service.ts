@@ -430,6 +430,69 @@ function validateConfirmation(
   return reasons;
 }
 
+type A17ODatabaseApprovalMarkerResult =
+  | {
+      ok: true;
+      marker: string;
+    }
+  | {
+      ok: false;
+      blockedReasons: string[];
+    };
+
+function deriveA17ODatabaseApprovalMarker(
+  manifest: ImportManifestReadResult,
+): A17ODatabaseApprovalMarkerResult {
+  const sessionMarker = manifest.session?.approvalMarker;
+  const eligibleWriteManifests = manifest.writeManifests.filter(
+    (writeManifest) =>
+      writeManifest.status === "owner_approved" ||
+      writeManifest.status === "ready_for_apply",
+  );
+
+  if (typeof sessionMarker !== "string" || sessionMarker.trim().length === 0) {
+    return {
+      ok: false,
+      blockedReasons: [
+        "A17O_R_BLOCKED_SESSION_APPROVAL_MARKER_MISSING_OR_BLANK",
+      ],
+    };
+  }
+
+  if (eligibleWriteManifests.length !== 1) {
+    return {
+      ok: false,
+      blockedReasons: [
+        "A17O_R_BLOCKED_EXACTLY_ONE_ELIGIBLE_WRITE_MANIFEST_REQUIRED",
+      ],
+    };
+  }
+
+  const writeManifestMarker = eligibleWriteManifests[0]?.approvalMarker;
+  if (
+    typeof writeManifestMarker !== "string" ||
+    writeManifestMarker.trim().length === 0
+  ) {
+    return {
+      ok: false,
+      blockedReasons: [
+        "A17O_R_BLOCKED_WRITE_MANIFEST_APPROVAL_MARKER_MISSING_OR_BLANK",
+      ],
+    };
+  }
+
+  if (writeManifestMarker !== sessionMarker) {
+    return {
+      ok: false,
+      blockedReasons: [
+        "A17O_R_BLOCKED_SESSION_AND_WRITE_MANIFEST_APPROVAL_MARKER_MISMATCH",
+      ],
+    };
+  }
+
+  return { ok: true, marker: writeManifestMarker };
+}
+
 function hasStrictOfficialImportPermission(context: PermissionContext) {
   return (
     context.permissions.includes("imports.create") &&
@@ -885,14 +948,48 @@ export async function executeOfficialImportRuntimeCandidate(params: {
     };
   }
 
-  const confirmMarker =
-    typeof params.confirmation.confirmMarker === "string"
-      ? params.confirmation.confirmMarker
-      : "";
+  const a17oDatabaseApproval = deriveA17ODatabaseApprovalMarker(
+    params.manifest,
+  );
+  if (!a17oDatabaseApproval.ok) {
+    return {
+      ...candidate,
+      ok: false,
+      status: "BLOCKED",
+      blockedReasons: [
+        ...candidate.blockedReasons,
+        ...a17oDatabaseApproval.blockedReasons,
+      ],
+      rollbackManifestPreview: {
+        ...candidate.rollbackManifestPreview,
+        status: "BLOCKED",
+        reason: "A17O_R_DATABASE_APPROVAL_MARKER_PROVENANCE_BLOCKED_BEFORE_RPC",
+      },
+      auditManifestPreview: {
+        ...candidate.auditManifestPreview,
+        status: "BLOCKED",
+        reason: "A17O_R_DATABASE_APPROVAL_MARKER_PROVENANCE_BLOCKED_BEFORE_RPC",
+      },
+      transactionStatus: "A16V_OWNER_VERIFIED_RUNTIME_STILL_DISABLED",
+      runtimeExecutionBranch: {
+        ...candidate.runtimeExecutionBranch,
+        enabled: true,
+        sameRunGatePassed: false,
+        executorCallCount: 0,
+        status: "GATE_BLOCKED_NOT_EXECUTED",
+        blocker:
+          "A17O_R_DATABASE_APPROVAL_MARKER_PROVENANCE_BLOCKED_BEFORE_RPC",
+      },
+      rpcInvocationIdentityPrecheck,
+      message:
+        "A-17O database approval marker provenance failed closed before the grouped plan and official import transaction RPC.",
+    };
+  }
+
   const groupedPlanResult = buildA17OGroupedOfficialImportPlan({
     manifest: params.manifest,
     sessionId: candidate.sessionId,
-    approvalMarker: confirmMarker,
+    approvalMarker: a17oDatabaseApproval.marker,
     actorProfileId: params.actor.profile?.id ?? "",
   });
 
@@ -941,7 +1038,7 @@ export async function executeOfficialImportRuntimeCandidate(params: {
   const executor = params.executor ?? executeOfficialImportTransactionWithSupabase;
   const executionResult = await executor({
     sessionId: candidate.sessionId,
-    confirmMarker,
+    confirmMarker: a17oDatabaseApproval.marker,
     manifestHash: params.manifest.session?.previewManifestHash ?? null,
     reviewPackHash: null,
     groupedPlan: groupedPlanResult.groupedPlan,
