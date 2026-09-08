@@ -150,6 +150,7 @@ export type ImportManifestReadResult = {
 
 export type ImportManifestReadOptions = {
   fullAuditExport?: boolean;
+  officialImportExecution?: boolean;
 };
 
 type ImportSessionRow = {
@@ -527,7 +528,8 @@ export async function getImportManifest(
 
   const access = await ensureReadAccess();
   if (!access.ok) return access.result;
-  const previewLimit = options.fullAuditExport ? 1000 : 100;
+  const previewLimit =
+    options.fullAuditExport || options.officialImportExecution ? 1000 : 100;
 
   const [warningsResult, duplicatesResult, relationshipsResult, writeManifestsResult] =
     await Promise.all([
