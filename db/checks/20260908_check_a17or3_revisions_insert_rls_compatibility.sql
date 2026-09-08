@@ -28,7 +28,7 @@ a17or3_policy as (
 insert_policy_contract as (
   select
     count(*) as policy_count,
-    array_agg(polname order by polname) as policy_names,
+    array_agg(polname order by polname)::text[] as policy_names,
     bool_and(
       polpermissive
       and polroles = array['authenticated'::pg_catalog.regrole::oid]
@@ -59,7 +59,7 @@ select
       'a17n_tx1_revisions_insert_admin_canonical_family_write',
       'a17or3_revisions_insert_grouped_official_import',
       'a17q_tx1_revisions_insert_legacy_family_reconciliation'
-    ]
+    ]::text[]
     and all_permissive_authenticated_only
   from insert_policy_contract) as exact_permissive_authenticated_insert_policy_allowlist,
   (select policy_names from insert_policy_contract)
