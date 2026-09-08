@@ -11,6 +11,7 @@ const paths = {
   grouping: "lib/import/giapha4/canonical-family-grouping.ts",
   adapter: "lib/import/giapha4/grouped-official-import-executor-adapter.ts",
   service: "lib/import/giapha4/official-import-service.ts",
+  manifestRead: "lib/import/giapha4/manifest-read-service.ts",
   route: "app/api/admin/import-sessions/[sessionId]/official-import/route.ts",
   dryRun: "lib/import/giapha4/dry-run-mapping-preview-service.ts",
   reviewPack: "lib/import/giapha4/import-review-pack-service.ts",
@@ -33,6 +34,17 @@ function stableJson(value) {
 function requireIncludes(content, token, label = token) { if (!content.includes(token)) failures.push(`missing ${label}`); }
 function rejectPattern(content, pattern, label) { if (pattern.test(content)) failures.push(`forbidden ${label}`); }
 function assertCase(label, condition) { if (!condition) failures.push(`fixture failed: ${label}`); }
+
+function hasCompleteExecutionManifest(manifest) {
+  const session = manifest?.session;
+  return Boolean(
+    session &&
+      manifest.peoplePreview.length === session.personCandidateCount &&
+      manifest.relationshipsPreview.length === session.relationshipCandidateCount &&
+      manifest.warnings.length === session.warningCount &&
+      manifest.duplicateCandidates.length === session.duplicateCandidateCount,
+  );
+}
 
 function groupKey(parents) {
   const parentFingerprints = Array.from(new Set(parents)).sort();
@@ -79,8 +91,34 @@ function markerContractFailures(source) {
   return missing;
 }
 
+function completeManifestContractFailures(source) {
+  const missing = [];
+  for (const token of [
+    "params.manifest.peoplePreview.length !==",
+    "params.manifest.session.personCandidateCount",
+    "params.manifest.relationshipsPreview.length !==",
+    "params.manifest.session.relationshipCandidateCount",
+    "params.manifest.warnings.length !== params.manifest.session.warningCount",
+    "params.manifest.duplicateCandidates.length !==",
+    "params.manifest.session.duplicateCandidateCount",
+    "reasons.push(A17O_R_COMPLETE_EXECUTION_MANIFEST_REQUIRED_BLOCKER)",
+  ]) if (!source.includes(token)) missing.push(token);
+  const completenessAt = source.indexOf(
+    "reasons.push(A17O_R_COMPLETE_EXECUTION_MANIFEST_REQUIRED_BLOCKER)",
+  );
+  const clientAt = source.indexOf("const sameRunRpcClient =");
+  const rpcAt = source.indexOf("const executionResult = await executor(");
+  if (!(completenessAt >= 0 && completenessAt < clientAt && clientAt < rpcAt)) {
+    missing.push("complete manifest fail-closed ordering before RPC");
+  }
+  return missing;
+}
+
 const source = Object.fromEntries(Object.entries(paths).map(([key, value]) => [key, read(value)]));
 for (const failure of markerContractFailures(source.service)) failures.push(`marker contract: ${failure}`);
+for (const failure of completeManifestContractFailures(source.service)) {
+  failures.push(`complete manifest contract: ${failure}`);
+}
 for (const [label, from, to] of [
   ["route marker validation", "confirmation.confirmMarker !== expectedSessionMarker", "false"],
   ["exactly-one manifest guard", "eligibleWriteManifests.length !== 1", "eligibleWriteManifests.length < 1"],
@@ -89,6 +127,15 @@ for (const [label, from, to] of [
   ["plan marker provenance", "approvalMarker: a17oDatabaseApproval.marker", "approvalMarker: params.confirmation.confirmMarker as string"],
   ["RPC marker provenance", "confirmMarker: a17oDatabaseApproval.marker", "confirmMarker: params.confirmation.confirmMarker as string"],
 ]) assertCase(`negative ${label}`, markerContractFailures(source.service.replace(from, to)).length > 0);
+for (const [label, from, to] of [
+  ["people cardinality", "params.manifest.peoplePreview.length !==", "false &&"],
+  ["relationship cardinality", "params.manifest.relationshipsPreview.length !==", "false &&"],
+  ["warning cardinality", "params.manifest.warnings.length !==", "false &&"],
+  ["duplicate cardinality", "params.manifest.duplicateCandidates.length !==", "false &&"],
+]) assertCase(
+  `negative ${label}`,
+  completeManifestContractFailures(source.service.replace(from, to)).length > 0,
+);
 
 const marker = "APPROVE_A16BC_OWNER_APPROVED_FOR_DB_WRITE";
 const manifest = (sessionMarker, writeManifests) => ({ session: { approvalMarker: sessionMarker }, writeManifests });
@@ -106,6 +153,51 @@ const siblings = groupedFixture(8);
 assertCase("eight siblings form one canonical family", siblings.plan.familyGroups.length === 1 && siblings.plan.familyGroups[0].children.length === 8);
 assertCase("input ordering is stable", siblings.hash === groupedFixture(8, true).hash);
 assertCase("duplicate source rows are stable", siblings.hash === groupedFixture(8, false, true).hash);
+const completeOverHundredManifest = {
+  session: {
+    personCandidateCount: 102,
+    relationshipCandidateCount: 134,
+    warningCount: 46,
+    duplicateCandidateCount: 8,
+  },
+  peoplePreview: Array.from({ length: 102 }, (_, index) => ({ index })),
+  relationshipsPreview: Array.from({ length: 134 }, (_, index) => ({ index })),
+  warnings: Array.from({ length: 46 }, (_, index) => ({ index })),
+  duplicateCandidates: Array.from({ length: 8 }, (_, index) => ({ index })),
+};
+assertCase(
+  "complete execution manifest above preview limit passes",
+  hasCompleteExecutionManifest(completeOverHundredManifest),
+);
+assertCase(
+  "100-person preview truncation blocks before RPC",
+  !hasCompleteExecutionManifest({
+    ...completeOverHundredManifest,
+    peoplePreview: completeOverHundredManifest.peoplePreview.slice(0, 100),
+  }),
+);
+assertCase(
+  "100-relationship preview truncation blocks before RPC",
+  !hasCompleteExecutionManifest({
+    ...completeOverHundredManifest,
+    relationshipsPreview:
+      completeOverHundredManifest.relationshipsPreview.slice(0, 100),
+  }),
+);
+assertCase(
+  "warning truncation blocks before RPC",
+  !hasCompleteExecutionManifest({
+    ...completeOverHundredManifest,
+    warnings: completeOverHundredManifest.warnings.slice(0, 45),
+  }),
+);
+assertCase(
+  "duplicate-candidate truncation blocks before RPC",
+  !hasCompleteExecutionManifest({
+    ...completeOverHundredManifest,
+    duplicateCandidates: completeOverHundredManifest.duplicateCandidates.slice(0, 7),
+  }),
+);
 
 for (const [content, token, label] of [
   [source.grouping, "A17O_IMPORTER_CANONICAL_GROUPING_RUNTIME_ACTIVE = true", "grouping runtime active"],
@@ -114,6 +206,9 @@ for (const [content, token, label] of [
   [source.adapter, "a17o_tx_execute_grouped_giapha4_official_import", "grouped executor adapter"],
   [source.adapter, "p_confirm_marker", "adapter confirmation marker"], [source.adapter, "p_dry_run_only", "adapter dry-run argument"],
   [source.service, "A17O_R_GROUPED_PLAN_BLOCKED_BEFORE_RPC", "plan fail-closed branch"], [source.service, "runRpcInvocationIdentityPrecheck", "identity precheck"],
+  [source.service, "A17O_R_BLOCKED_COMPLETE_EXECUTION_MANIFEST_REQUIRED", "complete execution manifest blocker"],
+  [source.service, "officialImportExecution: true", "official execution read mode"],
+  [source.manifestRead, "options.fullAuditExport || options.officialImportExecution", "bounded execution read limit"],
   [source.route, "confirmation.confirmMarker", "route confirmation marker"], [source.dryRun, "groupedExecutorMutationCall: false", "dry-run no mutation"],
   [source.reviewPack, "canonicalFamilyGroupCount", "review-pack grouped count"],
 ]) requireIncludes(content, token, label);
@@ -132,4 +227,8 @@ console.log("PACKAGE_METADATA=NOT_REQUIRED");
 console.log("TYPESCRIPT_TRANSPILATION=NOT_REQUIRED");
 console.log("SQL_EXECUTED=NO");
 console.log("RPC_CALLED=NO");
-module.exports = { derivePersistedDatabaseApprovalMarker, markerContractFailures };
+module.exports = {
+  completeManifestContractFailures,
+  derivePersistedDatabaseApprovalMarker,
+  markerContractFailures,
+};

@@ -110,6 +110,9 @@ export const A16BF_RPC_VISIBLE_PROFILE_FUNCTION_NAME =
 export const A16BF_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED_BLOCKER =
   "A16BF_BLOCKED_RPC_INVOCATION_IDENTITY_PRECHECK_FAILED";
 
+export const A17O_R_COMPLETE_EXECUTION_MANIFEST_REQUIRED_BLOCKER =
+  "A17O_R_BLOCKED_COMPLETE_EXECUTION_MANIFEST_REQUIRED";
+
 export const A16U_REQUIRED_SESSION_ID = A16R_AUDITED_OFFICIAL_IMPORT_SESSION_ID;
 
 export const A16U_REQUIRED_A16R_RETRY_MARKER =
@@ -533,6 +536,18 @@ function buildNoGoReasons(params: {
   }
   if (!params.manifest.ok || !params.manifest.session) {
     reasons.push("KhÃ´ng Ä‘á»c Ä‘Æ°á»£c import manifest staging há»£p lá»‡.");
+  }
+  if (
+    params.manifest.session &&
+    (params.manifest.peoplePreview.length !==
+      params.manifest.session.personCandidateCount ||
+      params.manifest.relationshipsPreview.length !==
+        params.manifest.session.relationshipCandidateCount ||
+      params.manifest.warnings.length !== params.manifest.session.warningCount ||
+      params.manifest.duplicateCandidates.length !==
+        params.manifest.session.duplicateCandidateCount)
+  ) {
+    reasons.push(A17O_R_COMPLETE_EXECUTION_MANIFEST_REQUIRED_BLOCKER);
   }
   const sessionStateGate = buildOfficialImportSessionStateGate(
     params.manifest.session?.status,
@@ -1116,7 +1131,9 @@ export async function getOfficialImportRuntimeCandidate(params: {
   executionBranchEnabled?: boolean;
   executor?: OfficialImportTransactionExecutor;
 }) {
-  const manifest = await getImportManifest(params.sessionId);
+  const manifest = await getImportManifest(params.sessionId, {
+    officialImportExecution: true,
+  });
 
   return executeOfficialImportRuntimeCandidate({
     manifest,
