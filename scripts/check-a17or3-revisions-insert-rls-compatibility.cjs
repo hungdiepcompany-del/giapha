@@ -186,6 +186,8 @@ function validateVerifier(sql, failures) {
     "'a17or3_revisions_insert_grouped_official_import'",
     "'a17q_tx1_revisions_insert_legacy_family_reconciliation'",
   ]) requireToken(sql, token, "post-apply verifier", failures);
+  requireToken(sql, "array_agg(polname order by polname)::text[] as policy_names", "post-apply verifier name-array type alignment", failures);
+  requireExactCount(sql, "::text[]", 2, "post-apply verifier explicit name-array casts", failures);
   reject(sql, /a17or3_entity_action_alignment|a17or3_exact_provenance_shape_and_actor_contract|a17or3_target_family_existence_and_create_actor_contract/i, "overclaimed verifier result name", failures);
   reject(sql, /action\s+IN\s*\(\s*''create''\s*,\s*''update''\s*\)/i, "brittle action-IN deparser assertion", failures);
   reject(sql, /action\s*=\s*''update''\s+OR\s+target_family\.created_by/i, "brittle target-family deparser assertion", failures);
@@ -227,12 +229,13 @@ function main() {
   assertRejected("verifier insert-policy allowlist weakening", verifier, (value) => value.replace("policy_count = 4", "policy_count = 3"), validateVerifier);
   assertRejected("verifier brittle action-IN deparser assertion", verifier, (value) => `${value}\n-- action IN (''create'', ''update'')\n`, validateVerifier);
   assertRejected("verifier brittle permission function-call assertion", verifier, (value) => `${value}\n-- has_permission(''imports.create'')\n`, validateVerifier);
+  assertRejected("verifier name-array cast removal", verifier, (value) => value.replace("array_agg(polname order by polname)::text[] as policy_names", "array_agg(polname order by polname) as policy_names"), validateVerifier);
 
   if (failures.length) throw new Error(failures.join("\n"));
   console.log(`A17OR3_0031_SHA256=${sha(source0031)}`);
   console.log(`A17OR3_0032_SHA256=${sha(dbMigration)}`);
   console.log(`A17OR3_VERIFIER_SHA256=${sha(verifier)}`);
-  console.log("NEGATIVE_CONTROL_COUNT=13");
+  console.log("NEGATIVE_CONTROL_COUNT=14");
   console.log("SQL_EXECUTED=NO");
   console.log("RPC_CALLED=NO");
   console.log("A17OR3_REVISIONS_INSERT_RLS_COMPATIBILITY=PASS");
