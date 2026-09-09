@@ -45,6 +45,8 @@ function MetricCard({ label, value }: { label: string; value: number }) {
   );
 }
 
+const A16R_RENDERED_MANIFEST_DETAIL_LIMIT = 20;
+
 function IssueList({
   title,
   issues,
@@ -1117,7 +1119,7 @@ export function ImportSessionManifestPanel({
                     Thành viên staging
                   </h3>
                   <div className="mt-3 grid gap-2">
-                    {result.peoplePreview.slice(0, 20).map((person) => (
+                    {result.peoplePreview.slice(0, A16R_RENDERED_MANIFEST_DETAIL_LIMIT).map((person) => (
                       <div
                         key={`${person.fingerprint}-${person.sourceRowIndex}`}
                         className="rounded-md border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800"
@@ -1142,7 +1144,7 @@ export function ImportSessionManifestPanel({
                     Quan hệ staging
                   </h3>
                   <div className="mt-3 grid gap-2">
-                    {result.relationshipsPreview.slice(0, 20).map((relationship) => (
+                    {result.relationshipsPreview.slice(0, A16R_RENDERED_MANIFEST_DETAIL_LIMIT).map((relationship) => (
                       <div
                         key={relationship.id}
                         className="rounded-md border border-stone-200 bg-stone-50 p-3 text-sm leading-6 text-stone-800"
@@ -1161,7 +1163,7 @@ export function ImportSessionManifestPanel({
                 </section>
               ) : null}
 
-              {result.warnings.map((warning) => (
+              {result.warnings.slice(0, A16R_RENDERED_MANIFEST_DETAIL_LIMIT).map((warning) => (
                 <div
                   key={warning.id}
                   className="rounded-lg border border-amber-200 bg-white p-4 text-sm leading-6 text-stone-800"
