@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 type AdminShellProps = {
   children: ReactNode;
@@ -110,6 +110,7 @@ export function AdminShell({
   permissions = [],
 }: AdminShellProps) {
   const pathname = usePathname();
+  const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#f5eddf] text-stone-900 lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
@@ -136,7 +137,22 @@ export function AdminShell({
             </p>
           </div>
 
-          <nav className="grid max-h-[52vh] gap-5 overflow-y-auto pr-1 text-sm lg:max-h-none lg:overflow-visible lg:pr-0" aria-label="Điều hướng quản trị">
+          <button
+            type="button"
+            aria-controls="admin-navigation"
+            aria-expanded={mobileNavigationOpen}
+            onClick={() => setMobileNavigationOpen((open) => !open)}
+            className="flex min-h-11 items-center justify-between rounded-lg border border-[#d8c8ad] bg-white px-3 py-2 text-sm font-bold text-stone-800 lg:hidden"
+          >
+            <span>Menu quản trị</span>
+            <span aria-hidden="true">{mobileNavigationOpen ? "Thu gọn" : "Mở"}</span>
+          </button>
+
+          <nav
+            id="admin-navigation"
+            className={`${mobileNavigationOpen ? "grid" : "hidden"} max-h-[52vh] gap-5 overflow-y-auto pr-1 text-sm lg:grid lg:max-h-none lg:overflow-visible lg:pr-0`}
+            aria-label="Điều hướng quản trị"
+          >
             {navGroups.map((group) => (
               <div key={group.title}>
                 <div className="mb-2 text-xs font-bold uppercase tracking-normal text-stone-500">
@@ -180,7 +196,7 @@ export function AdminShell({
 
           <Link
             href="/"
-            className="mt-auto inline-flex min-h-11 items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 transition hover:border-[#245744] hover:text-[#245744]"
+            className={`${mobileNavigationOpen ? "inline-flex" : "hidden"} mt-auto min-h-11 items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 transition hover:border-[#245744] hover:text-[#245744] lg:inline-flex`}
           >
             Trang công khai
           </Link>
