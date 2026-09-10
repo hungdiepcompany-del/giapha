@@ -60,6 +60,8 @@ export type TreeRelationshipEdge = {
   kind: TreeEdgeKind;
   source: string;
   target: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
   label: string | null;
   sourceEntityId: string;
 };
@@ -113,6 +115,7 @@ export type TreeCoupleRelationshipInput = Pick<
   | "relationship_status"
   | "visibility"
   | "deleted_at"
+  | "family_id"
 >;
 
 export type TreeBuilderInput = {

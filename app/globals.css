@@ -49,3 +49,161 @@ textarea:focus-visible {
   background: #ccfbf1;
   color: #0f172a;
 }
+
+.tree-print-print-root {
+  display: none;
+}
+
+.tree-print-print-sheet {
+  background: #fffaf0;
+  color: #1c1917;
+  overflow: hidden;
+  position: relative;
+}
+
+.tree-print-print-svg {
+  display: block;
+  height: var(--tree-print-paper-height);
+  width: var(--tree-print-paper-width);
+}
+
+.tree-print-print-header,
+.tree-print-print-footer,
+.tree-print-print-legend {
+  position: absolute;
+  z-index: 2;
+}
+
+.tree-print-print-header {
+  left: var(--tree-print-selected-margin);
+  right: var(--tree-print-selected-margin);
+  top: 4mm;
+}
+
+.tree-print-print-title {
+  color: #1c1917;
+  font-size: 12pt;
+  font-weight: 800;
+}
+
+.tree-print-print-meta {
+  color: #57534e;
+  font-size: 8pt;
+  font-weight: 700;
+}
+
+.tree-print-print-legend {
+  bottom: 12mm;
+  left: var(--tree-print-selected-margin);
+  right: var(--tree-print-selected-margin);
+}
+
+.tree-print-print-legend > div {
+  border: 1px solid #d8c8ad;
+  padding: 2mm 3mm;
+}
+
+.tree-print-print-footer {
+  align-items: center;
+  bottom: 4mm;
+  color: #57534e;
+  display: flex;
+  font-size: 8pt;
+  font-weight: 700;
+  justify-content: space-between;
+  left: var(--tree-print-selected-margin);
+  right: var(--tree-print-selected-margin);
+}
+
+@media screen {
+  [data-tree-print-root],
+  [data-tree-print-screen-preview],
+  .tree-print-screen-grid,
+  .tree-print-preview-viewport {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .tree-print-preview-viewport {
+    contain: layout paint;
+    overscroll-behavior: contain;
+  }
+
+  .tree-print-preview-svg {
+    max-width: none;
+  }
+
+  [data-tree-print-document-root],
+  [data-tree-print-document] {
+    display: none;
+  }
+}
+
+@media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #fffaf0;
+  }
+
+  body:has([data-tree-print-page]) aside,
+  body:has([data-tree-print-page]) header:not(.tree-print-print-header),
+  body:has([data-tree-print-page]) [data-tree-print-screen-preview] {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .tree-print-print-root,
+  .tree-print-print-root * {
+    visibility: visible;
+  }
+
+  [data-tree-print-screen-preview] {
+    display: none !important;
+  }
+
+  [data-tree-print-page] {
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  [data-tree-print-route-content] {
+    margin-top: 0 !important;
+  }
+
+  .tree-print-workspace {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .tree-print-print-root {
+    display: block;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    position: static;
+  }
+
+  .tree-print-print-sheet {
+    box-shadow: none;
+    break-after: auto;
+    break-before: auto;
+    break-inside: avoid;
+    height: var(--tree-print-paper-height);
+    margin: 0;
+    page-break-after: auto;
+    page-break-before: auto;
+    page-break-inside: avoid;
+    width: var(--tree-print-paper-width);
+  }
+}

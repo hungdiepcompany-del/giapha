@@ -35,11 +35,16 @@ export default async function AdminTreePage() {
           title="Phả đồ gia đình"
           description="Màn hình xem chỉ đọc dữ liệu quan hệ thật. Dùng tìm kiếm, căn giữa, phóng to và thu nhỏ để xem nhanh toàn bộ cây."
           actions={
-            canEditLayout ? (
-              <ActionLink href="/admin/tree/edit" variant="primary">
-                Mở công cụ chỉnh sửa
+            <>
+              <ActionLink href="/admin/tree/print" variant="secondary">
+                Xem bản in toàn cây
               </ActionLink>
-            ) : null
+              {canEditLayout ? (
+                <ActionLink href="/admin/tree/edit" variant="primary">
+                  Mở công cụ chỉnh sửa
+                </ActionLink>
+              ) : null}
+            </>
           }
         />
 

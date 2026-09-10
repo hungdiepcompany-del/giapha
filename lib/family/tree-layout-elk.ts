@@ -4,8 +4,8 @@ import type { FamilyTreeGraph, TreeGraphNode } from "@/lib/family/tree-types";
 
 const PERSON_WIDTH = 220;
 const PERSON_HEIGHT = 132;
-const FAMILY_WIDTH = 120;
-const FAMILY_HEIGHT = 56;
+const FAMILY_WIDTH = 24;
+const FAMILY_HEIGHT = 24;
 
 function sizeFor(node: TreeGraphNode) {
   return node.kind === "family"
