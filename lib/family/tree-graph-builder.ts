@@ -65,6 +65,31 @@ function visibleCouple(
   return !row.deleted_at && canShowVisibility(row.visibility, mode);
 }
 
+function formatEdgeLabel(label: string | null): string | null {
+  if (!label) return null;
+  const hiddenLabels = new Set([
+    "father",
+    "mother",
+    "parent",
+    "biological",
+    "married",
+    "partner",
+  ]);
+  if (hiddenLabels.has(label)) return null;
+
+  const mapping: Record<string, string> = {
+    adoptive: "Con nuôi",
+    step: "Con riêng",
+    foster: "Con nuôi",
+    guardian: "Người giám hộ",
+    divorced: "Ly hôn",
+    separated: "Ly thân",
+    widowed: "Góa",
+    engaged: "Đính hôn",
+  };
+  return mapping[label] ?? "Quan hệ khác";
+}
+
 function toPersonNode(
   person: TreePersonInput,
   lineage?: {
@@ -205,7 +230,9 @@ export function buildFamilyTreeGraph(
       kind: "family_unit",
       source: `person:${parent.person_id}`,
       target: `family:${parent.family_id}`,
-      label: parent.parent_role,
+      sourceHandle: "lineage-bottom",
+      targetHandle: "parent-top",
+      label: formatEdgeLabel(parent.parent_role),
       sourceEntityId: parent.id,
     });
   }
@@ -220,18 +247,26 @@ export function buildFamilyTreeGraph(
       kind: "parent_child",
       source: `family:${child.family_id}`,
       target: `person:${child.person_id}`,
-      label: child.child_relationship_type,
+      sourceHandle: "children-bottom",
+      targetHandle: "lineage-top",
+      label: formatEdgeLabel(child.child_relationship_type),
       sourceEntityId: child.id,
     });
   }
 
   for (const couple of coupleRelationships) {
+    if (couple.family_id && familyNodeIds.has(couple.family_id)) {
+      continue;
+    }
+
     edges.push({
       id: `couple:${couple.id}`,
       kind: "couple",
       source: `person:${couple.person1_id}`,
       target: `person:${couple.person2_id}`,
-      label: couple.relationship_status,
+      sourceHandle: "union-right",
+      targetHandle: "union-left",
+      label: formatEdgeLabel(couple.relationship_status),
       sourceEntityId: couple.id,
     });
   }

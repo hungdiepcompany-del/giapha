@@ -19,11 +19,16 @@ import {
 import { FamilyTreeEmptyState } from "@/components/tree/family-tree-empty-state";
 import { FamilyTreeToolbar } from "@/components/tree/family-tree-toolbar";
 import { layoutFamilyTreeGraph } from "@/lib/family/tree-layout-elk";
+import { FamilyRelationshipEdge } from "@/components/tree/family-relationship-edge";
+import {
+  treeEdgeToReactFlowEdge,
+  toReactFlowNodes,
+  hasValidSavedPositions,
+} from "@/lib/family/tree-react-flow-adapter";
 import type {
   FamilyTreeGraph,
   TreeGraphNode,
   TreePersonNode,
-  TreeRelationshipEdge,
 } from "@/lib/family/tree-types";
 
 type FamilyTreeViewerProps = {
@@ -35,33 +40,9 @@ const nodeTypes = {
   family: FamilyNodeCard,
 };
 
-function edgeStyle(edge: TreeRelationshipEdge): Edge {
-  const isCouple = edge.kind === "couple";
-
-  return {
-    id: edge.id,
-    source: edge.source,
-    target: edge.target,
-    label: edge.label ?? undefined,
-    type: isCouple ? "straight" : "smoothstep",
-    animated: false,
-    style: {
-      stroke: isCouple ? "#7c6f5f" : "#245744",
-      strokeWidth: isCouple ? 1.5 : 2,
-      strokeDasharray: isCouple ? "6 4" : undefined,
-    },
-  };
-}
-
-function toReactFlowNodes(graph: FamilyTreeGraph): FamilyTreeReactNode[] {
-  return graph.nodes.map((node) => ({
-    id: node.id,
-    type: node.kind,
-    position: node.position,
-    data: node,
-    draggable: false,
-  }));
-}
+const edgeTypes = {
+  "custom-edge": FamilyRelationshipEdge,
+};
 
 function personName(person: TreePersonNode) {
   return person.displayName || person.fullName;
@@ -176,14 +157,23 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
   useEffect(() => {
     let active = true;
 
-    layoutFamilyTreeGraph(graph).then((nextGraph) => {
-      if (!active) {
-        return;
-      }
+    if (hasValidSavedPositions(graph)) {
+      Promise.resolve().then(() => {
+        if (active) {
+          setLayoutedGraph(graph);
+          fitCurrentView();
+        }
+      });
+    } else {
+      layoutFamilyTreeGraph(graph).then((nextGraph) => {
+        if (!active) {
+          return;
+        }
 
-      setLayoutedGraph(nextGraph);
-      fitCurrentView();
-    });
+        setLayoutedGraph(nextGraph);
+        fitCurrentView();
+      });
+    }
 
     return () => {
       active = false;
@@ -192,7 +182,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
 
   const nodes = useMemo(() => toReactFlowNodes(layoutedGraph), [layoutedGraph]);
   const edges = useMemo(
-    () => layoutedGraph.edges.map(edgeStyle),
+    () => layoutedGraph.edges.map((edge) => treeEdgeToReactFlowEdge(edge, "viewer")),
     [layoutedGraph.edges],
   );
 
@@ -275,6 +265,7 @@ export function FamilyTreeViewer({ graph }: FamilyTreeViewerProps) {
               nodes={nodes}
               edges={edges}
               nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
               fitView
               minZoom={0.2}
               maxZoom={1.8}

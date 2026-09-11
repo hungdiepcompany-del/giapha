@@ -36,7 +36,10 @@ function PersonCard({
           : "border-stone-200 hover:border-[#245744]/50 hover:shadow-md"
       }`}
     >
-      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Handle type="target" position={Position.Top} id="lineage-top" className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} id="lineage-bottom" className="opacity-0" />
+      <Handle type="target" position={Position.Left} id="union-left" className="opacity-0" />
+      <Handle type="source" position={Position.Right} id="union-right" className="opacity-0" />
       {selected ? (
         <div className="mb-2 inline-flex rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-900">
           Đang chọn
@@ -70,7 +73,6 @@ function PersonCard({
       <div className="mt-2 inline-flex rounded-full border border-stone-200 bg-stone-50 px-2 py-1 text-xs font-semibold text-stone-700">
         {data.isLiving ? "Còn sống" : "Đã mất"}
       </div>
-      <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
   );
 }
@@ -81,15 +83,13 @@ function FamilyUnitCard({
   data: Extract<TreeGraphNode, { kind: "family" }>;
 }) {
   return (
-      <div className="w-[108px] max-w-[50vw] rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-center shadow-sm">
-      <Handle type="target" position={Position.Top} className="opacity-0" />
-      <div className="truncate text-xs font-bold text-sky-900">
-        {data.label}
-      </div>
-      <div className="mt-1 text-[11px] font-semibold text-sky-700">
-        Người liên quan
-      </div>
-      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+      <div
+      className="flex size-6 items-center justify-center rounded-full border-2 border-[#245744]/20 bg-[#245744]/5 shadow-sm"
+      title={data.label}
+      aria-label={data.label}
+    >
+      <Handle type="target" position={Position.Top} id="parent-top" className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} id="children-bottom" className="opacity-0" />
     </div>
   );
 }

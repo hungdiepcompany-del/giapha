@@ -23,8 +23,14 @@ import { layoutFamilyTreeGraph } from "@/lib/family/tree-layout-elk";
 import type {
   FamilyTreeGraph,
   TreeGraphNode,
-  TreeRelationshipEdge,
 } from "@/lib/family/tree-types";
+import { FamilyRelationshipEdge } from "@/components/tree/family-relationship-edge";
+import {
+  treeEdgeToReactFlowEdge,
+  toReactFlowNodes,
+  hasValidSavedPositions,
+  graphWithNodePositions,
+} from "@/lib/family/tree-react-flow-adapter";
 
 type FamilyTreeEditorProps = {
   graph: FamilyTreeGraph;
@@ -43,32 +49,9 @@ const nodeTypes = {
   family: FamilyNodeCard,
 };
 
-function edgeStyle(edge: TreeRelationshipEdge): Edge {
-  const isCouple = edge.kind === "couple";
-
-  return {
-    id: edge.id,
-    source: edge.source,
-    target: edge.target,
-    label: edge.label ?? undefined,
-    type: isCouple ? "straight" : "smoothstep",
-    style: {
-      stroke: isCouple ? "#64748b" : "#0f766e",
-      strokeWidth: isCouple ? 1.5 : 2,
-      strokeDasharray: isCouple ? "6 4" : undefined,
-    },
-  };
-}
-
-function toReactFlowNodes(graph: FamilyTreeGraph): FamilyTreeReactNode[] {
-  return graph.nodes.map((node) => ({
-    id: node.id,
-    type: node.kind,
-    position: node.position,
-    data: node,
-    draggable: true,
-  }));
-}
+const edgeTypes = {
+  "custom-edge": FamilyRelationshipEdge,
+};
 
 function toPositionInput(nodes: FamilyTreeReactNode[]) {
   return nodes.map((node) => ({
@@ -81,20 +64,7 @@ function toPositionInput(nodes: FamilyTreeReactNode[]) {
   }));
 }
 
-function graphWithNodePositions(
-  graph: FamilyTreeGraph,
-  nodes: FamilyTreeReactNode[],
-): FamilyTreeGraph {
-  const positions = new Map(nodes.map((node) => [node.id, node.position]));
 
-  return {
-    ...graph,
-    nodes: graph.nodes.map((node) => ({
-      ...node,
-      position: positions.get(node.id) ?? node.position,
-    })),
-  };
-}
 
 export function FamilyTreeEditor({
   graph,
@@ -110,7 +80,9 @@ export function FamilyTreeEditor({
   const [nodes, setNodes, onNodesChange] = useNodesState<FamilyTreeReactNode>(
     toReactFlowNodes(graph),
   );
-  const [edges] = useEdgesState(graph.edges.map(edgeStyle));
+  const [edges] = useEdgesState(
+    graph.edges.map((edge) => treeEdgeToReactFlowEdge(edge, "editor")),
+  );
   const [flow, setFlow] =
     useState<ReactFlowInstance<FamilyTreeReactNode, Edge> | null>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -139,14 +111,23 @@ export function FamilyTreeEditor({
   useEffect(() => {
     let active = true;
 
-    layoutFamilyTreeGraph(graph).then((nextGraph) => {
-      if (!active) {
-        return;
-      }
+    if (hasValidSavedPositions(graph)) {
+      Promise.resolve().then(() => {
+        if (active) {
+          setNodes(toReactFlowNodes(graph));
+          fitCurrentView();
+        }
+      });
+    } else {
+      layoutFamilyTreeGraph(graph).then((nextGraph) => {
+        if (!active) {
+          return;
+        }
 
-      setNodes(toReactFlowNodes(nextGraph));
-      fitCurrentView();
-    });
+        setNodes(toReactFlowNodes(nextGraph));
+        fitCurrentView();
+      });
+    }
 
     return () => {
       active = false;
@@ -185,6 +166,7 @@ export function FamilyTreeEditor({
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             onNodesChange={onNodesChange}
             onNodeClick={handleNodeClick}
             onPaneClick={() => setSelectedNodeId(null)}
