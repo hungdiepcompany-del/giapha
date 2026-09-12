@@ -20,28 +20,28 @@ export async function layoutFamilyTreeGraph(
     return graph;
   }
 
-  const elk = new ELK();
-  const elkGraph = {
-    id: "family-tree",
-    layoutOptions: {
-      "elk.algorithm": "layered",
-      "elk.direction": "DOWN",
-      "elk.spacing.nodeNode": "80",
-      "elk.layered.spacing.nodeNodeBetweenLayers": "110",
-      "elk.edgeRouting": "ORTHOGONAL",
-    },
-    children: graph.nodes.map((node) => ({
-      id: node.id,
-      ...sizeFor(node),
-    })),
-    edges: graph.edges.map((edge) => ({
-      id: edge.id,
-      sources: [edge.source],
-      targets: [edge.target],
-    })),
-  };
-
   try {
+    const elk = new ELK();
+    const elkGraph = {
+      id: "family-tree",
+      layoutOptions: {
+        "elk.algorithm": "layered",
+        "elk.direction": "DOWN",
+        "elk.spacing.nodeNode": "80",
+        "elk.layered.spacing.nodeNodeBetweenLayers": "110",
+        "elk.edgeRouting": "ORTHOGONAL",
+      },
+      children: graph.nodes.map((node) => ({
+        id: node.id,
+        ...sizeFor(node),
+      })),
+      edges: graph.edges.map((edge) => ({
+        id: edge.id,
+        sources: [edge.source],
+        targets: [edge.target],
+      })),
+    };
+
     const layouted = await elk.layout(elkGraph);
     const positions = new Map(
       (layouted.children ?? []).map((node) => [
