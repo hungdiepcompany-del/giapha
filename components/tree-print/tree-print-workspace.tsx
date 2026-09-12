@@ -7,6 +7,7 @@ import { TreePrintDiagnosticsPanel } from "@/components/tree-print/tree-print-di
 import { TreePrintLegend } from "@/components/tree-print/tree-print-legend";
 import { TreePrintSvg } from "@/components/tree-print/tree-print-svg";
 import { TreePrintToolbar } from "@/components/tree-print/tree-print-toolbar";
+import { StatusCallout } from "@/components/ui/status-callout";
 import {
   scopeTreePrintDocument,
   searchTreePrintPeople,
@@ -68,6 +69,7 @@ import type {
   TreePrintViewportAction,
 } from "@/lib/family/print/tree-print-toolbar-state";
 import { nextTreePrintViewMode } from "@/lib/family/print/tree-print-toolbar-state";
+import { layoutFamilyTreeGraph } from "@/lib/family/tree-layout-elk";
 import type { FamilyTreeGraph } from "@/lib/family/tree-types";
 
 type TreePrintWorkspaceProps = {
@@ -76,6 +78,19 @@ type TreePrintWorkspaceProps = {
 
 function clampScale(value: number) {
   return Math.min(4, Math.max(0.005, value));
+}
+
+function hasUsableTreeLayout(graph: FamilyTreeGraph) {
+  if (graph.nodes.length === 0) return false;
+  if (!graph.nodes.every((node) => Number.isFinite(node.position.x) && Number.isFinite(node.position.y))) {
+    return false;
+  }
+  if (graph.nodes.length === 1) return true;
+
+  const distinctCoordinates = new Set(
+    graph.nodes.map((node) => `${node.position.x}:${node.position.y}`),
+  );
+  return distinctCoordinates.size > 1;
 }
 
 export function TreePrintWorkspace({ graph }: TreePrintWorkspaceProps) {
@@ -119,13 +134,42 @@ export function TreePrintWorkspace({ graph }: TreePrintWorkspaceProps) {
   const [lastAction, setLastAction] = useState<TreePrintViewportAction>(null);
   const [lastExportStatus, setLastExportStatus] = useState<string | null>(null);
   const [pdfCapability] = useState<TreePrintPdfCapability>("unknown");
+  const [layoutResult, setLayoutResult] = useState<{
+    source: FamilyTreeGraph;
+    graph: FamilyTreeGraph;
+  } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+
+    void layoutFamilyTreeGraph(graph)
+      .then((nextGraph) => {
+        if (cancelled) return;
+        setLayoutResult({ source: graph, graph: nextGraph });
+      })
+      .catch(() => {
+        if (!cancelled) setLayoutResult({ source: graph, graph });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [graph]);
+  const layoutedGraph = layoutResult?.source === graph && hasUsableTreeLayout(layoutResult.graph)
+    ? layoutResult.graph
+    : null;
+  const layoutStatus = layoutResult?.source !== graph
+    ? "pending"
+    : layoutedGraph
+      ? "ready"
+      : "unavailable";
+  const renderedGraph = layoutedGraph ?? graph;
   const isLargeFormatMode = productionMode !== "ONE_PAGE_OVERVIEW";
   const isBranchMode = productionMode === "LARGE_FORMAT_BRANCH";
   const effectiveSizingStrategy = isBranchMode ? branchSizingStrategy : fullTreeSizingStrategy;
   const effectiveTargetFontSizePt = isBranchMode ? branchTargetFontSizePt : fullTreeTargetFontSizePt;
   const document = useMemo(
-    () => createTreePrintDocument(graph, { density }),
-    [density, graph],
+    () => createTreePrintDocument(renderedGraph, { density }),
+    [density, renderedGraph],
   );
   const branchCandidates = useMemo(
     () => searchTreePrintPeople(document, branchQuery),
@@ -361,6 +405,18 @@ export function TreePrintWorkspace({ graph }: TreePrintWorkspaceProps) {
     setLastExportStatus("Đã mở hộp thoại in");
     window.print();
   }, [exportEligibility.canPrintPdf, exportEligibility.pdfBlockers]);
+
+  if (layoutStatus !== "ready" || !layoutedGraph) {
+    return (
+      <div data-tree-print-layout-state={layoutStatus}>
+        <StatusCallout tone={layoutStatus === "unavailable" ? "danger" : "info"}>
+          {layoutStatus === "unavailable"
+            ? "Chưa thể chuẩn bị bố cục cây gia phả; bản xem trước và xuất file đang tạm khóa."
+            : "Đang chuẩn bị bố cục cây gia phả; bản xem trước và xuất file sẽ mở khi bố cục sẵn sàng."}
+        </StatusCallout>
+      </div>
+    );
+  }
 
   return (
     <div data-tree-print-root="true" className="tree-print-workspace min-w-0 max-w-full overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm">

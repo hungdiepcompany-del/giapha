@@ -4,7 +4,6 @@ import { ActionLink } from "@/components/ui/action-link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusCallout } from "@/components/ui/status-callout";
 import { getAdminFamilyTreeGraph } from "@/lib/family/tree-service";
-import { layoutFamilyTreeGraph } from "@/lib/family/tree-layout-elk";
 import { getPermissionContext } from "@/lib/permissions/permission-service";
 
 export const dynamic = "force-dynamic";
@@ -30,10 +29,6 @@ export default async function AdminTreePrintPage() {
         ok: false as const,
         reason: context.reason ?? "missing_tree.view",
       };
-  const layoutedGraph = graphResult.ok
-    ? await layoutFamilyTreeGraph(graphResult.data)
-    : null;
-
   return (
     <AdminShell
       userEmail={context.user?.email}
@@ -59,8 +54,8 @@ export default async function AdminTreePrintPage() {
             <StatusCallout tone="danger">
               {safePrintError(graphResult.reason)}
             </StatusCallout>
-          ) : layoutedGraph && layoutedGraph.nodes.length > 0 ? (
-            <TreePrintWorkspace graph={layoutedGraph} />
+          ) : graphResult.data.nodes.length > 0 ? (
+            <TreePrintWorkspace graph={graphResult.data} />
           ) : (
             <StatusCallout tone="info">
               Chưa có dữ liệu gia phả để hiển thị.

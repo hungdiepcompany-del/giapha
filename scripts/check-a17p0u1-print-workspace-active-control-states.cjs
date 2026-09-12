@@ -107,28 +107,36 @@ for (const token of [
   if (!toolbar.includes(token)) fail(`toolbar missing active style token ${token}`);
 }
 
-const u1Runtime = `${toolbar}\n${workspace}\n${state}`;
-const bannedU1RuntimeTokens = [
+const u1ControlRuntime = `${toolbar}\n${workspace}\n${state}`;
+const bannedU1ControlRuntimeTokens = [
   "toDataURL",
   "html2canvas",
   "jspdf",
   "pdf-lib",
   "canvas",
   "png",
-  "layoutFamilyTreeGraph",
-  "tree-layout-elk",
   "ReactFlow",
   "generation lane",
   "subtree",
 ];
 if (!a17p1Enabled) {
-  bannedU1RuntimeTokens.push("window.print");
+  bannedU1ControlRuntimeTokens.push("window.print");
 }
 
-for (const banned of bannedU1RuntimeTokens) {
-  if (u1Runtime.toLowerCase().includes(banned.toLowerCase())) {
+for (const banned of bannedU1ControlRuntimeTokens) {
+  if (u1ControlRuntime.toLowerCase().includes(banned.toLowerCase())) {
     fail(`A17P0U1 must not introduce out-of-scope runtime token: ${banned}`);
   }
+}
+
+for (const [label, source] of [["toolbar", toolbar], ["toolbar state", state]]) {
+  if (source.includes("layoutFamilyTreeGraph") || source.includes("tree-layout-elk")) {
+    fail(`A17P0U1 ${label} must not own ELK layout execution`);
+  }
+}
+
+if (!workspace.includes('"use client"') || !workspace.includes("layoutFamilyTreeGraph(graph)")) {
+  fail("A17P0U1 must prove ELK layout stays in the client workspace boundary");
 }
 
 if (hasError) process.exit(1);

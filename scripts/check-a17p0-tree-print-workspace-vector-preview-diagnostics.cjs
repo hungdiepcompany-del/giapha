@@ -44,6 +44,7 @@ const a17p1Enabled =
   packageJson.includes('"check:a17p1"') &&
   fs.existsSync(path.join(root, "docs/PLAN_A17P1_VECTOR_PRINT_PDF_EXPORT_AND_PAPER_PRESETS.md"));
 const route = read("app/(admin)/admin/tree/print/page.tsx");
+const layoutHelper = read("lib/family/tree-layout-elk.ts");
 const svg = read("components/tree-print/tree-print-svg.tsx");
 const workspace = read("components/tree-print/tree-print-workspace.tsx");
 const diagnostics = read("lib/family/print/tree-print-diagnostics.ts");
@@ -55,8 +56,17 @@ const editor = read("components/tree/family-tree-editor.tsx");
 if (!packageJson.includes('"check:a17p0"')) fail("package.json missing check:a17p0 script");
 if (!packageJson.includes('"test:a17p0:print"')) fail("package.json missing test:a17p0:print script");
 if (!route.includes('permissions.includes("tree.view")')) fail("print route must guard with tree.view");
-if (!route.includes("layoutFamilyTreeGraph")) fail("print route must reuse baseline layout snapshot");
+if (route.includes("layoutFamilyTreeGraph") || route.includes("tree-layout-elk")) {
+  fail("print route must not execute ELK during server rendering");
+}
 if (!route.includes("TreePrintWorkspace")) fail("print route must render TreePrintWorkspace");
+if (!workspace.includes('import { layoutFamilyTreeGraph }')) fail("workspace must own the initial client layout");
+if (!workspace.includes("layoutFamilyTreeGraph(graph)")) fail("workspace must run the proven layout helper on the client");
+if (!workspace.includes("data-tree-print-layout-state")) fail("workspace must expose layout readiness state");
+if (!workspace.includes('layoutStatus !== "ready"')) fail("workspace must gate preview/export until layout is ready");
+if (!workspace.includes("graph.nodes.length === 1")) fail("singleton finite layout must be accepted at origin");
+if (!workspace.includes("distinctCoordinates.size > 1")) fail("multi-node layout must reject unchanged all-zero coordinates");
+if (!layoutHelper.includes("try {\n    const elk = new ELK();")) fail("ELK constructor must be inside the guarded fallback");
 if (!adminTreePage.includes('/admin/tree/print')) fail("admin tree page must link to print route");
 
 for (const token of ["<svg", "<g", "<rect", "<path", "<circle", "<text"]) {
