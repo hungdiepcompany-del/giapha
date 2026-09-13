@@ -49,6 +49,7 @@ function scanForSecretPatterns(relativePath, content) {
 
 const source = readFile("services/backup-service/src/index.ts");
 const wrangler = readFile("services/backup-service/wrangler.jsonc");
+const wranglerJson = readJson("services/backup-service/wrangler.jsonc");
 const readme = readFile("services/backup-service/README.md");
 const doc = readFile("docs/39_BACKUP_SERVICE_WORKER_SCAFFOLD.md");
 const packageJson = readJson("package.json");
@@ -108,7 +109,6 @@ for (const token of [
 for (const forbidden of [
   "routes",
   "route",
-  "BACKUP_SERVICE_INTERNAL_TOKEN",
   "CLOUDFLARE_API_TOKEN",
   "SUPABASE_SERVICE_ROLE_KEY",
   "workers.dev",
@@ -118,6 +118,13 @@ for (const forbidden of [
 
 requireIncludes(readme, "Not deployed.", "README deployment note");
 requireIncludes(readme, "No production route.", "README route note");
+
+if (wranglerJson) {
+  if (wranglerJson.r2_buckets) failures.push("top-level scaffold must not declare R2");
+  if (wranglerJson.vars?.BACKUP_SERVICE_MODE !== "scaffold") failures.push("top-level scaffold mode must remain scaffold");
+  const fixtureBinding = wranglerJson.env?.["fixture-local"]?.r2_buckets?.find((item) => item.binding === "BACKUP_BUCKET");
+  if (!fixtureBinding || fixtureBinding.remote !== false) failures.push("fixture-local R2 binding must remain local-development only");
+}
 
 if (packageJson) {
   const scripts = packageJson.scripts || {};

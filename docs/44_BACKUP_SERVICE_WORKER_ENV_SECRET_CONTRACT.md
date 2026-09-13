@@ -27,21 +27,31 @@ The goal is to make future deploy or binding work explicit before any runtime se
 
 ## Required Secrets
 
-Future required runtime secret:
+Future required runtime secrets:
 
 ```txt
 BACKUP_SERVICE_INTERNAL_TOKEN
+BACKUP_ENCRYPTION_KEY_B64
 ```
 
 Rules:
 
-- This is a future runtime secret.
+- These are future runtime secret names.
 - Do not put the real value in docs.
 - Do not put the real value in `wrangler.jsonc` vars.
 - Do not commit it to `.env.local`.
 - Do not commit it to `.dev.vars`.
 - Do not print it in logs.
 - Do not expose it to client code.
+
+`BACKUP_ENCRYPTION_KEY_B64` is reserved for the fixture-only AES-256-GCM
+recoverability path. Its value must encode exactly 32 key bytes. It is never
+stored in `vars`, docs, test output, or a local secret file.
+
+The top-level scaffold declares only `BACKUP_SERVICE_INTERNAL_TOKEN`. Because
+Wrangler bindings, vars, and secrets are non-inheritable, named `fixture-local`
+declares both `BACKUP_SERVICE_INTERNAL_TOKEN` and `BACKUP_ENCRYPTION_KEY_B64`
+again with its fixture-only R2 binding. The top-level scaffold has no R2 binding.
 
 ## Optional Vars
 
@@ -62,6 +72,7 @@ Before a future approved deploy:
 
 - Confirm the repository owner approves backup service deploy.
 - Confirm the exact runtime environment that needs `BACKUP_SERVICE_INTERNAL_TOKEN`.
+- Confirm the exact runtime environment that needs `BACKUP_ENCRYPTION_KEY_B64`.
 - Generate a long random token outside the repository.
 - Store the token only in the approved secret manager.
 - Confirm the token is not present in docs, git diff, shell logs, or CI output.
@@ -124,6 +135,7 @@ Logs must not include:
 Expected future failure modes:
 
 - missing `BACKUP_SERVICE_INTERNAL_TOKEN`
+- missing or invalid `BACKUP_ENCRYPTION_KEY_B64`
 - invalid bearer token
 - missing smoke base URL
 - storage provider not configured
@@ -151,6 +163,11 @@ Docs must not contain real token/key/secret values, JWT-looking strings, API key
 - No production backup.
 - No real storage.
 - No restore.
+- No remote R2 binding or bucket creation. `BACKUP_BUCKET` exists only in named
+  `fixture-local` with `remote: false`, which controls local development only.
+  It does not authorize or make safe `wrangler deploy --env fixture-local`; that
+  command remains forbidden and Owner-gated, and no resource provisioning path is
+  described here.
 
 ## Next Phase
 

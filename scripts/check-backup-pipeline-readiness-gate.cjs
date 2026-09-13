@@ -76,6 +76,8 @@ for (const token of [
   "backup:fixture:generate",
   "backup:fixture:verify",
   "restore:dry-run",
+  "test:m2a-private-r2-recoverability-fixture",
+  "check:m2a-private-r2-recoverability",
   "Do not hardcode secret/token/key values",
 ]) {
   requireIncludes(doc, token);
@@ -87,6 +89,8 @@ for (const token of [
   "backup:fixture:generate",
   "backup:fixture:verify",
   "restore:dry-run",
+  "test:m2a-private-r2-recoverability-fixture",
+  "check:m2a-private-r2-recoverability",
   "Result: PASS",
 ]) {
   requireIncludes(pipelineScript, token, `pipeline script ${token}`);
@@ -118,6 +122,12 @@ if (packageJson) {
   }
   if (scripts["backup:pipeline:readiness"] !== "node scripts/backup-pipeline-readiness.cjs") {
     failures.push("package.json missing backup:pipeline:readiness script");
+  }
+  if (scripts["test:m2a-private-r2-recoverability-fixture"] !== "node --experimental-strip-types --experimental-loader ./scripts/m2a-node-ts-extension-loader.mjs scripts/test-m2a-private-r2-recoverability-fixture.mjs") {
+    failures.push("package.json missing M2A fixture test script");
+  }
+  if (scripts["check:m2a-private-r2-recoverability"] !== "node scripts/check-m2a-private-r2-recoverability.cjs") {
+    failures.push("package.json missing M2A checker script");
   }
 }
 

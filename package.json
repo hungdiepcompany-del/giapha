@@ -44,6 +44,8 @@
     "restore:dry-run": "node scripts/restore-dry-run-validate.cjs",
     "check:backup-pipeline-readiness-gate": "node scripts/check-backup-pipeline-readiness-gate.cjs",
     "backup:pipeline:readiness": "node scripts/backup-pipeline-readiness.cjs",
+    "test:m2a-private-r2-recoverability-fixture": "node --experimental-strip-types --experimental-loader ./scripts/m2a-node-ts-extension-loader.mjs scripts/test-m2a-private-r2-recoverability-fixture.mjs",
+    "check:m2a-private-r2-recoverability": "node scripts/check-m2a-private-r2-recoverability.cjs",
     "check:backup-ci-gate-integration": "node scripts/check-backup-ci-gate-integration.cjs",
     "check:local-sandbox-backup-storage-simulation": "node scripts/check-local-sandbox-backup-storage-simulation.cjs",
     "backup:storage:sandbox": "node scripts/backup-storage-sandbox-simulate.cjs",

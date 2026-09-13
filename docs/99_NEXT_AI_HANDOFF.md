@@ -1,5 +1,14 @@
 # Next AI Handoff
 
+## Current handoff — 2026-09-13 M2A Private R2 recoverability complete; checkpoint Owner-gated
+
+- M2A Private R2 recoverability source/local fixture PASS after Owner-approved REVIEW FIX-1. Canonical branch/head is `codex/g3-canonical-reconciliation-20260830@e972db2e62990cf49bd0ad9306133d458f300d3e`; remote `main` is `2c124b5073ba7abaf0b9f7c0d650dc5adbe2c0a3`. Inherited dirt preserved, stage=0, one worktree, writer later zero.
+- Existing backup-service only: top-level scaffold has no R2. Non-inherited `env.fixture-local` has R2 `remote:false` and both required secret names; this affects local dev only, and named-environment deploy remains forbidden/Owner-gated.
+- AES-256-GCM/12-byte random IV, stable manifest AAD, plaintext/ciphertext/artifact SHA256, exact allowlist `CD811B...`, bounded request/object, unique artifact-hash key, put/get only, hashes/counts only. Shared-bucket, auth/scaffold, fixture, oversize, wrong-key/tamper/flags tests and all M2A/pipeline/17 legacy/types/typecheck/lint/diff checks PASS.
+- Initial Reviewer FAIL P1/P2; fresh Owner GO; FIX-1; final `Terra/high` Reviewer PASS and `Luna/medium` Verifier PASS. Coder `Terra/high`, Explorer `Luna/medium` (cheapest-capable); initial corrections=2, FIX-1 corrections=1, fresh Coder executions=2 total. No main Worker/dependency/workflow mutation; backup service Wrangler changed only; no bucket/remote/deploy/prod/SQL/import/Auth-RLS/stage/commit/push. Temporary latest-types folder was cleaned by Controller.
+- `CURRENT_STAGE_RESULT=PASS`; `M2A_STATUS=COMPLETE`; `REVIEWER=PASS`; `VERIFIER=PASS`; `CHECKPOINT_STATUS=PENDING_OWNER_DECISION`; `CHECKPOINT_DECISION_REQUIRED=true`.
+- Next direction: one separate Owner gate for a clean main-based local checkpoint containing exactly 16 M2A implementation paths plus these 3 closeout docs, only the verified candidate, preserving inherited dirt. Exact hashes are not yet claimed; no push/deploy/bucket/production.
+
 ## 2026-08-11 GOV-GP4R4 remote-base governance checkpoint transplant
 
 Status:
