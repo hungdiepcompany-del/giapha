@@ -90,6 +90,8 @@ for (const token of [
 }
 
 for (const token of [
+  "uses: actions/checkout@v5",
+  "uses: actions/setup-node@v5",
   "pull_request:",
   "workflow_dispatch:",
   "npm run backup:pipeline:readiness",

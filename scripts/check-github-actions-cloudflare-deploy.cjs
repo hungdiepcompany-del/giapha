@@ -20,8 +20,8 @@ if (!fs.existsSync(absoluteWorkflowPath)) {
 
   requireIncludes(workflow, "workflow_dispatch:");
   requireIncludes(workflow, "runs-on: ubuntu-latest");
-  requireIncludes(workflow, "uses: actions/checkout@v4");
-  requireIncludes(workflow, "uses: actions/setup-node@v4");
+  requireIncludes(workflow, "uses: actions/checkout@v5");
+  requireIncludes(workflow, "uses: actions/setup-node@v5");
   requireIncludes(workflow, "node-version: '24'", "node-version 24");
   requireIncludes(workflow, "run: npm ci", "npm ci");
   requireIncludes(workflow, "secrets.CLOUDFLARE_API_TOKEN");

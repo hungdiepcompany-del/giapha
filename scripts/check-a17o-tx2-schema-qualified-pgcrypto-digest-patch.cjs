@@ -131,7 +131,7 @@ function assertExactPackageDelta(source, label) {
   let parsed;
   try {
     parsed = JSON.parse(source);
-  } catch (error) {
+  } catch {
     failures.push(label + " package JSON is invalid");
     return;
   }
