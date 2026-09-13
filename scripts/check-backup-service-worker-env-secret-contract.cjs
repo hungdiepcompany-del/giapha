@@ -33,6 +33,7 @@ function rejectIncludes(content, token, label = token) {
 }
 
 const doc = readFile("docs/44_BACKUP_SERVICE_WORKER_ENV_SECRET_CONTRACT.md");
+const wrangler = readJson("services/backup-service/wrangler.jsonc");
 const packageJson = readJson("package.json");
 
 for (const section of [
@@ -56,6 +57,7 @@ for (const section of [
 
 for (const token of [
   "BACKUP_SERVICE_INTERNAL_TOKEN",
+  "BACKUP_ENCRYPTION_KEY_B64",
   "BACKUP_STORAGE_PROVIDER",
   "BACKUP_STORAGE_DRY_RUN",
   "BACKUP_STORAGE_PREFIX",
@@ -97,6 +99,27 @@ if (packageJson) {
   const scripts = packageJson.scripts || {};
   if (scripts["check:backup-service-worker-env-secret-contract"] !== "node scripts/check-backup-service-worker-env-secret-contract.cjs") {
     failures.push("package.json missing check:backup-service-worker-env-secret-contract script");
+  }
+}
+
+if (wrangler) {
+  const topLevelSecrets = wrangler.secrets?.required || [];
+  if (topLevelSecrets.length !== 1 || topLevelSecrets[0] !== "BACKUP_SERVICE_INTERNAL_TOKEN") {
+    failures.push("wrangler top level must require only BACKUP_SERVICE_INTERNAL_TOKEN");
+  }
+  if (wrangler.r2_buckets) failures.push("wrangler top level must not declare BACKUP_BUCKET");
+  const fixtureEnv = wrangler.env?.["fixture-local"];
+  const fixtureSecrets = fixtureEnv?.secrets?.required || [];
+  for (const name of ["BACKUP_SERVICE_INTERNAL_TOKEN", "BACKUP_ENCRYPTION_KEY_B64"]) {
+    if (!fixtureSecrets.includes(name)) failures.push(`fixture-local missing required secret name ${name}`);
+  }
+  if (fixtureEnv?.vars?.BACKUP_SERVICE_MODE !== "fixture-local") {
+    failures.push("fixture-local must declare its non-inheritable mode");
+  }
+  const binding = fixtureEnv?.r2_buckets?.find((item) => item.binding === "BACKUP_BUCKET");
+  if (!binding || binding.remote !== false) failures.push("fixture-local local-development R2 binding missing");
+  if (Object.values(wrangler.vars || {}).some((value) => String(value).includes("BACKUP_ENCRYPTION_KEY_B64"))) {
+    failures.push("wrangler vars must not contain BACKUP_ENCRYPTION_KEY_B64");
   }
 }
 

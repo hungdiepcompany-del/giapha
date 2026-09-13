@@ -7,6 +7,8 @@ const steps = [
   "backup:fixture:generate",
   "backup:fixture:verify",
   "restore:dry-run",
+  "test:m2a-private-r2-recoverability-fixture",
+  "check:m2a-private-r2-recoverability",
 ];
 
 function runStep(scriptName) {

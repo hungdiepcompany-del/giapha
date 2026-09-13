@@ -1,5 +1,19 @@
 # Decision Log
 
+## Decision 371 - Accept fixture-local Private R2 source contract for M2A recoverability
+
+Date: 2026-09-13
+
+Status: `ACCEPTED`
+
+Decision:
+
+- Keep Private R2 recoverability in the existing backup service only; the top-level scaffold has no R2. The non-inherited `env.fixture-local` contract names the R2 binding with `remote:false` and both required secret names. This is local-development configuration only; named-environment deploy remains forbidden and separately Owner-gated.
+- Use unique artifact-derived object keys, app-layer AES-256-GCM encryption with random 12-byte IV and stable manifest AAD, plus plaintext/ciphertext/artifact SHA256 checksums. Permit fixture-only bounded put/get, exact allowlist `CD811B...`, and hashes/counts-only responses.
+- Preserve shared-bucket concurrency and fail-closed auth/scaffold/oversize/wrong-key/tamper/flag controls. This decision authorizes no bucket creation, remote binding, deploy, production, SQL, import, Auth/RLS, stage, commit or push.
+
+Rationale: M2A source and local fixture validation PASSed after Owner-approved REVIEW FIX-1, with final Terra/high Reviewer PASS and Luna/medium Verifier PASS. The contract delivers recoverability evidence without expanding the service boundary or production authority.
+
 ## Decision 368 - Remote production source is the R4 governance transplant base
 
 Date: 2026-08-11

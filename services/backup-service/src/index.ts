@@ -1,7 +1,12 @@
-type BackupServiceEnv = {
-  BACKUP_SERVICE_INTERNAL_TOKEN?: string;
-  BACKUP_SERVICE_MODE?: string;
-};
+import { fixtureRoundTrip } from "./recoverability";
+
+type BackupServiceEnv = Env;
+
+declare global {
+  interface SubtleCrypto {
+    timingSafeEqual(first: BufferSource, second: BufferSource): boolean;
+  }
+}
 
 type JsonEnvelope = {
   ok: boolean;
@@ -12,6 +17,7 @@ type JsonEnvelope = {
 };
 
 const INTERNAL_DRY_RUN_MARKER = "BACKUP_SERVICE_DRY_RUN_ONLY";
+const MAX_FIXTURE_REQUEST_BYTES = 8 * 1024;
 
 function jsonResponse(envelope: JsonEnvelope, status = 200): Response {
   return new Response(JSON.stringify(envelope, null, 2), {
@@ -37,7 +43,7 @@ function requestId(): string {
   return crypto.randomUUID();
 }
 
-function hasValidInternalAuth(request: Request, env: BackupServiceEnv): boolean {
+async function hasValidInternalAuth(request: Request, env: BackupServiceEnv): Promise<boolean> {
   const configuredToken = env.BACKUP_SERVICE_INTERNAL_TOKEN;
   if (!configuredToken) {
     return false;
@@ -49,11 +55,23 @@ function hasValidInternalAuth(request: Request, env: BackupServiceEnv): boolean 
   }
 
   const suppliedToken = authorization.slice("Bearer ".length).trim();
-  return suppliedToken.length > 0 && suppliedToken === configuredToken;
+  if (!suppliedToken) {
+    return false;
+  }
+
+  try {
+    const [expectedHash, suppliedHash] = await Promise.all([
+      crypto.subtle.digest("SHA-256", new TextEncoder().encode(configuredToken)),
+      crypto.subtle.digest("SHA-256", new TextEncoder().encode(suppliedToken)),
+    ]);
+    return crypto.subtle.timingSafeEqual(expectedHash, suppliedHash);
+  } catch {
+    return false;
+  }
 }
 
-function requireInternalAuth(request: Request, env: BackupServiceEnv, id: string): Response | null {
-  if (hasValidInternalAuth(request, env)) {
+async function requireInternalAuth(request: Request, env: BackupServiceEnv, id: string): Promise<Response | null> {
+  if (await hasValidInternalAuth(request, env)) {
     return null;
   }
 
@@ -96,6 +114,56 @@ function handleFixtureVerify(id: string): Response {
   );
 }
 
+async function readBoundedFixtureRequest(request: Request): Promise<string> {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_FIXTURE_REQUEST_BYTES)) {
+    throw new Error("RECOVERABILITY_REQUEST_OVERSIZE");
+  }
+  const reader = request.body?.getReader();
+  if (!reader) throw new Error("RECOVERABILITY_REQUEST_BODY_REQUIRED");
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > MAX_FIXTURE_REQUEST_BYTES) throw new Error("RECOVERABILITY_REQUEST_OVERSIZE");
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+async function handleFixtureRoundTrip(request: Request, id: string, env: BackupServiceEnv): Promise<Response> {
+  if (String(env.BACKUP_SERVICE_MODE) !== "fixture-local") {
+    return jsonResponse(
+      envelope(false, "FIXTURE_LOCAL_MODE_REQUIRED", "Fixture-local mode is required.", null, id),
+      403,
+    );
+  }
+
+  try {
+    const result = await fixtureRoundTrip(
+      env.BACKUP_BUCKET,
+      env.BACKUP_ENCRYPTION_KEY_B64,
+      await readBoundedFixtureRequest(request),
+    );
+    return jsonResponse(
+      envelope(true, "BACKUP_SERVICE_FIXTURE_ROUNDTRIP_OK", "Fixture roundtrip completed.", result, id),
+    );
+  } catch {
+    return jsonResponse(
+      envelope(false, "BACKUP_SERVICE_FIXTURE_ROUNDTRIP_FAILED", "Fixture roundtrip failed.", null, id),
+      422,
+    );
+  }
+}
+
 const backupServiceWorker = {
   async fetch(request: Request, env: BackupServiceEnv): Promise<Response> {
     const id = requestId();
@@ -112,7 +180,7 @@ const backupServiceWorker = {
       if (request.method !== "POST") {
         return jsonResponse(envelope(false, "METHOD_NOT_ALLOWED", "Method not allowed.", null, id), 405);
       }
-      const authFailure = requireInternalAuth(request, env, id);
+      const authFailure = await requireInternalAuth(request, env, id);
       if (authFailure) {
         return authFailure;
       }
@@ -123,15 +191,26 @@ const backupServiceWorker = {
       if (request.method !== "POST") {
         return jsonResponse(envelope(false, "METHOD_NOT_ALLOWED", "Method not allowed.", null, id), 405);
       }
-      const authFailure = requireInternalAuth(request, env, id);
+      const authFailure = await requireInternalAuth(request, env, id);
       if (authFailure) {
         return authFailure;
       }
       return handleFixtureVerify(id);
     }
 
+    if (url.pathname === "/internal/backup/fixture-roundtrip") {
+      if (request.method !== "POST") {
+        return jsonResponse(envelope(false, "METHOD_NOT_ALLOWED", "Method not allowed.", null, id), 405);
+      }
+      const authFailure = await requireInternalAuth(request, env, id);
+      if (authFailure) {
+        return authFailure;
+      }
+      return handleFixtureRoundTrip(request, id, env);
+    }
+
     return jsonResponse(envelope(false, "NOT_FOUND", "Route not found.", null, id), 404);
   },
-};
+} satisfies ExportedHandler<BackupServiceEnv>;
 
 export default backupServiceWorker;
