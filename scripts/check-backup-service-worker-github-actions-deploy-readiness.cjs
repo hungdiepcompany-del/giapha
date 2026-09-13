@@ -68,6 +68,8 @@ for (const token of [
 }
 
 requireIncludes(workflow, "name: Backup Service Deploy");
+requireIncludes(workflow, "uses: actions/checkout@v5");
+requireIncludes(workflow, "uses: actions/setup-node@v5");
 requireIncludes(workflow, "workflow_dispatch:");
 requireIncludes(workflow, "Manual only");
 requireIncludes(workflow, "secrets.CLOUDFLARE_API_TOKEN");
