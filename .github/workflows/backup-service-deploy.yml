@@ -1,6 +1,6 @@
-name: Backup Service Deploy
+name: Backup Service Version Upload
 
-# Manual only. Do not add push, pull_request, or schedule triggers.
+# Manual upload-only creation of a zero-traffic production version. Deployment is deliberately absent.
 on:
   workflow_dispatch:
 
@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  backup-service-deploy:
-    name: Backup service deploy
+  backup-service-production-version-upload:
+    name: Backup service zero-traffic version upload
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -34,31 +34,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify deploy environment
+      - name: Check source-only production contract
+        run: node scripts/check-m2d-production-backup-preflight.cjs
+
+      - name: Upload secret-bearing production version
+        working-directory: services/backup-service
+        env:
+          BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}
+          BACKUP_DATA_KEY_V1_B64: ${{ secrets.BACKUP_DATA_KEY_V1_B64 }}
+          BACKUP_OBJECT_KEY_HMAC_V1_B64: ${{ secrets.BACKUP_OBJECT_KEY_HMAC_V1_B64 }}
         shell: bash
         run: |
+          set -euo pipefail
           test -n "${CLOUDFLARE_API_TOKEN}" || (echo "CLOUDFLARE_API_TOKEN is missing" && exit 1)
           test -n "${CLOUDFLARE_ACCOUNT_ID}" || (echo "CLOUDFLARE_ACCOUNT_ID is missing" && exit 1)
-          echo "Required backup service deploy environment is configured."
-
-      - name: Check backup service deploy readiness
-        run: npm run check:backup-service-worker-deploy-readiness
-
-      - name: Check backup service env secret contract
-        run: npm run check:backup-service-worker-env-secret-contract
-
-      - name: Check backup service post-deploy smoke plan
-        run: npm run check:backup-service-worker-post-deploy-smoke-plan
-
-      - name: Check backup service main app binding contract
-        run: npm run check:backup-service-worker-main-app-binding-contract
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Deploy backup service worker
-        working-directory: services/backup-service
-        run: npx wrangler deploy
+          test -n "${BACKUP_SERVICE_INTERNAL_TOKEN}" || (echo "BACKUP_SERVICE_INTERNAL_TOKEN is missing" && exit 1)
+          test -n "${BACKUP_DATA_KEY_V1_B64}" || (echo "BACKUP_DATA_KEY_V1_B64 is missing" && exit 1)
+          test -n "${BACKUP_OBJECT_KEY_HMAC_V1_B64}" || (echo "BACKUP_OBJECT_KEY_HMAC_V1_B64 is missing" && exit 1)
+          umask 077
+          SECRETS_FILE="${RUNNER_TEMP}/backup-service-production-secrets.json"
+          trap 'rm -f "$SECRETS_FILE"' EXIT
+          export SECRETS_FILE
+          node -e 'const fs = require("node:fs"); fs.writeFileSync(process.env.SECRETS_FILE, JSON.stringify({ BACKUP_SERVICE_INTERNAL_TOKEN: process.env.BACKUP_SERVICE_INTERNAL_TOKEN, BACKUP_DATA_KEY_V1_B64: process.env.BACKUP_DATA_KEY_V1_B64, BACKUP_OBJECT_KEY_HMAC_V1_B64: process.env.BACKUP_OBJECT_KEY_HMAC_V1_B64 }), { mode: 0o600 });'
+          chmod 600 "$SECRETS_FILE"
+          npx wrangler versions upload --env production --secrets-file "$SECRETS_FILE"

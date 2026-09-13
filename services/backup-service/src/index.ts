@@ -1,6 +1,11 @@
 import { fixtureRoundTrip } from "./recoverability";
+import {
+  PRODUCTION_PREFLIGHT_SUCCESS_CODE,
+  validateProductionPreflight,
+  type ProductionPreflightEnv,
+} from "./production-preflight";
 
-type BackupServiceEnv = Env;
+type BackupServiceEnv = Env & ProductionPreflightEnv;
 
 declare global {
   interface SubtleCrypto {
@@ -114,6 +119,25 @@ function handleFixtureVerify(id: string): Response {
   );
 }
 
+function handleProductionPreflight(id: string, env: BackupServiceEnv): Response {
+  try {
+    return jsonResponse(
+      envelope(
+        true,
+        PRODUCTION_PREFLIGHT_SUCCESS_CODE,
+        "Production backup configuration preflight completed.",
+        validateProductionPreflight(env),
+        id,
+      ),
+    );
+  } catch {
+    return jsonResponse(
+      envelope(false, "BACKUP_SERVICE_PRODUCTION_PREFLIGHT_FAILED", "Production backup configuration preflight failed.", null, id),
+      422,
+    );
+  }
+}
+
 async function readBoundedFixtureRequest(request: Request): Promise<string> {
   const contentLength = request.headers.get("content-length");
   if (contentLength && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_FIXTURE_REQUEST_BYTES)) {
@@ -207,6 +231,17 @@ const backupServiceWorker = {
         return authFailure;
       }
       return handleFixtureRoundTrip(request, id, env);
+    }
+
+    if (url.pathname === "/internal/backup/production-preflight") {
+      if (request.method !== "POST") {
+        return jsonResponse(envelope(false, "METHOD_NOT_ALLOWED", "Method not allowed.", null, id), 405);
+      }
+      const authFailure = await requireInternalAuth(request, env, id);
+      if (authFailure) {
+        return authFailure;
+      }
+      return handleProductionPreflight(id, env);
     }
 
     return jsonResponse(envelope(false, "NOT_FOUND", "Route not found.", null, id), 404);

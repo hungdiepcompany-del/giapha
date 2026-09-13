@@ -3,6 +3,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-09-13",
   "workers_dev": false,
+  "preview_urls": false,
   "vars": {
     "BACKUP_SERVICE_MODE": "scaffold"
   },
@@ -28,6 +29,27 @@
         "required": [
           "BACKUP_SERVICE_INTERNAL_TOKEN",
           "BACKUP_ENCRYPTION_KEY_B64"
+        ]
+      }
+    },
+    "production": {
+      "workers_dev": false,
+      "vars": {
+        "BACKUP_SERVICE_MODE": "production",
+        "BACKUP_ACTIVE_KEY_VERSION": "v1"
+      },
+      "preview_urls": false,
+      "r2_buckets": [
+        {
+          "binding": "BACKUP_BUCKET",
+          "bucket_name": "gia-pha-prod-backups-apac-v1"
+        }
+      ],
+      "secrets": {
+        "required": [
+          "BACKUP_SERVICE_INTERNAL_TOKEN",
+          "BACKUP_DATA_KEY_V1_B64",
+          "BACKUP_OBJECT_KEY_HMAC_V1_B64"
         ]
       }
     }

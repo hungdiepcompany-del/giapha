@@ -42,6 +42,7 @@ const packageJson = parseJson("package.json");
 
 if (config) {
   if (config.workers_dev !== false) failures.push("workers_dev must remain false");
+  if (config.preview_urls !== false) failures.push("preview URLs must remain false");
   if (Object.hasOwn(config, "route") || Object.hasOwn(config, "routes")) failures.push("routes are not allowed");
   if (config.vars?.BACKUP_SERVICE_MODE !== "scaffold") failures.push("default mode must be scaffold");
   if (config.compatibility_date !== "2026-09-13") failures.push("compatibility date mismatch");
@@ -57,6 +58,17 @@ if (config) {
   const requiredSecrets = fixtureEnv?.secrets?.required || [];
   for (const name of ["BACKUP_SERVICE_INTERNAL_TOKEN", "BACKUP_ENCRYPTION_KEY_B64"]) {
     if (!requiredSecrets.includes(name)) failures.push(`missing required secret name ${name}`);
+  }
+  const productionEnv = config.env?.production;
+  if (!productionEnv || productionEnv.vars?.BACKUP_SERVICE_MODE !== "production") failures.push("production mode missing");
+  if (productionEnv?.vars?.BACKUP_ACTIVE_KEY_VERSION !== "v1") failures.push("production active key version missing");
+  if (productionEnv?.workers_dev !== false || productionEnv?.preview_urls !== false) failures.push("production workers.dev and preview URLs must remain false");
+  const productionBinding = productionEnv?.r2_buckets?.find((item) => item.binding === "BACKUP_BUCKET");
+  if (!productionBinding || productionBinding.bucket_name !== "gia-pha-prod-backups-apac-v1") failures.push("production BACKUP_BUCKET binding missing");
+  const productionSecrets = productionEnv?.secrets?.required || [];
+  const expectedProductionSecrets = ["BACKUP_SERVICE_INTERNAL_TOKEN", "BACKUP_DATA_KEY_V1_B64", "BACKUP_OBJECT_KEY_HMAC_V1_B64"];
+  if (productionSecrets.length !== expectedProductionSecrets.length || expectedProductionSecrets.some((name) => !productionSecrets.includes(name))) {
+    failures.push("production required secret names mismatch");
   }
 }
 
