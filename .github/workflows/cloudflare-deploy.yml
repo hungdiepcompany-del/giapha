@@ -1,21 +1,32 @@
-name: Cloudflare Deploy
-
+name: Main Worker Release Control
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: cloudflare-deploy-${{ github.ref }}
-  cancel-in-progress: false
-
+    inputs:
+      release_action: { required: true, type: choice, options: [upload, promote, rollback] }
+      expected_source_sha: { required: true, type: string }
+      release_tag: { required: false, type: string }
+      target_version_id: { required: false, type: string }
+      expected_current_deployment_id: { required: false, type: string }
+      expected_current_version_id: { required: false, type: string }
+permissions: { contents: read }
+# Deliberately identical to backup release control; never derive the lock from a ref.
+concurrency: { group: m2f-private-backup-release-control, cancel-in-progress: false }
 jobs:
-  cloudflare-deploy:
-    name: Cloudflare deploy
+  validate-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: "${{ inputs.expected_source_sha }}"
+      - name: Require exact main source identity
+        env:
+          EXPECTED_SOURCE_SHA: "${{ inputs.expected_source_sha }}"
+        run: node scripts/m2f-release-evidence-guard.cjs source "$EXPECTED_SOURCE_SHA" "$GITHUB_REF" "$GITHUB_SHA"
+  upload:
+    needs: validate-source
+    if: inputs.release_action == 'upload'
+    runs-on: ubuntu-latest
+    environment: backup-production
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -23,67 +34,70 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}
       A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED: ${{ vars.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED || 'false' }}
       A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED: ${{ vars.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED || 'false' }}
-
+      RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: actions/checkout@v5
         with:
-          node-version: '24'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Verify deploy environment
+          ref: "${{ inputs.expected_source_sha }}"
+      - uses: actions/setup-node@v5
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: Run source release checks
+        run: |
+          npm run check:env:safe
+          npm run check:migrations
+          npm run check:deploy-readiness
+          npm run check:opennext-cloudflare
+          npm run check:service-boundary
+          npm run check:github-actions-opennext
+          npm run check:github-actions-deploy
+          npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring
+          npm run typecheck
+          npm run lint
+      - name: Upload exact main version without traffic change
         shell: bash
         run: |
-          test -n "${CLOUDFLARE_API_TOKEN}" || (echo "CLOUDFLARE_API_TOKEN is missing" && exit 1)
-          test -n "${CLOUDFLARE_ACCOUNT_ID}" || (echo "CLOUDFLARE_ACCOUNT_ID is missing" && exit 1)
-          test -n "${NEXT_PUBLIC_SUPABASE_URL}" || (echo "NEXT_PUBLIC_SUPABASE_URL is missing" && exit 1)
-          test -n "${NEXT_PUBLIC_SUPABASE_ANON_KEY}" || (echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is missing" && exit 1)
-          test -n "${NEXT_PUBLIC_APP_URL}" || (echo "NEXT_PUBLIC_APP_URL is missing" && exit 1)
-          test -n "${SUPABASE_SERVICE_ROLE_KEY}" || (echo "SUPABASE_SERVICE_ROLE_KEY is missing" && exit 1)
-          test -n "${A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED}" || (echo "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED default is missing" && exit 1)
-          test -n "${A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED}" || (echo "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED default is missing" && exit 1)
-          echo "Required deploy environment is configured."
-
-      - name: Check environment safety
-        run: npm run check:env:safe
-
-      - name: Check migrations order
-        run: npm run check:migrations
-
-      - name: Check deploy readiness
-        run: npm run check:deploy-readiness
-
-      - name: Check OpenNext Cloudflare wiring
-        run: npm run check:opennext-cloudflare
-
-      - name: Check service boundary
-        run: npm run check:service-boundary
-
-      - name: Check GitHub Actions build gate
-        run: npm run check:github-actions-opennext
-
-      - name: Check GitHub Actions deploy workflow
-        run: npm run check:github-actions-deploy
-
-      - name: Check A-16 runtime var preservation
-        run: npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Next build
-        run: npm run build
-
-      - name: Deploy to Cloudflare
-        run: npm run deploy
+          set -euo pipefail; test -n "$RELEASE_TAG"
+          npx wrangler deployments list --name web-gia-pha --json > routing-before.json
+          npx opennextjs-cloudflare build
+          umask 077; SECRETS_FILE="$(mktemp)"; export SECRETS_FILE; trap 'rm -f "$SECRETS_FILE"' EXIT; chmod 600 "$SECRETS_FILE"
+          node -e 'require("node:fs").writeFileSync(process.env.SECRETS_FILE,JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN}),{mode:0o600})'
+          npx wrangler versions upload --name web-gia-pha --keep-vars --secrets-file "$SECRETS_FILE" --tag "$RELEASE_TAG" --message "M2F zero-traffic main upload"
+          npx wrangler deployments list --name web-gia-pha --json > routing-after.json
+          node scripts/m2f-release-evidence-guard.cjs routing routing-before.json routing-after.json
+          npx wrangler versions list --name web-gia-pha --json > versions-after.json
+          MAIN_VERSION_ID="$(node -e "const x=require('./versions-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(v=>v.annotations?.['workers/tag']===process.argv[1]);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].version_id)" "$RELEASE_TAG")"
+          node scripts/m2f-release-evidence-guard.cjs version versions-after.json "$MAIN_VERSION_ID" "$RELEASE_TAG"
+  promote-or-rollback:
+    needs: validate-source
+    if: inputs.release_action == 'promote' || inputs.release_action == 'rollback'
+    runs-on: ubuntu-latest
+    environment: backup-production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TARGET_VERSION_ID: ${{ inputs.target_version_id }}
+      EXPECTED_CURRENT_DEPLOYMENT_ID: ${{ inputs.expected_current_deployment_id }}
+      EXPECTED_CURRENT_VERSION_ID: ${{ inputs.expected_current_version_id }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: "${{ inputs.expected_source_sha }}"
+      - uses: actions/setup-node@v5
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: Guard and route exact main version
+        shell: bash
+        run: |
+          set -euo pipefail; test -n "$TARGET_VERSION_ID"; test -n "$EXPECTED_CURRENT_DEPLOYMENT_ID"; test -n "$EXPECTED_CURRENT_VERSION_ID"
+          npx wrangler deployments list --name web-gia-pha --json > before.json
+          node scripts/m2f-release-evidence-guard.cjs deployment before.json "$EXPECTED_CURRENT_DEPLOYMENT_ID" "$EXPECTED_CURRENT_VERSION_ID"
+          npx wrangler versions list --name web-gia-pha --json > target-versions.json
+          node scripts/m2f-release-evidence-guard.cjs target-version target-versions.json "$TARGET_VERSION_ID"
+          npx wrangler versions deploy "${TARGET_VERSION_ID}@100%" --name web-gia-pha --yes
+          npx wrangler deployments list --name web-gia-pha --json > after.json
+          DEPLOYMENT_ID="$(node -e "const x=require('./after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.find(d=>d.versions?.length===1&&(d.versions[0].version_id||d.versions[0].id)===process.argv[1]&&d.versions[0].percentage===100);if(!m)process.exit(1);process.stdout.write(m.id||m.deployment_id)" "$TARGET_VERSION_ID")"
+          node scripts/m2f-release-evidence-guard.cjs deployment after.json "$DEPLOYMENT_ID" "$TARGET_VERSION_ID"
