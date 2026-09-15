@@ -1,60 +1,155 @@
-name: Backup Service Version Upload
-
-# Manual upload-only creation of a zero-traffic production version. Deployment is deliberately absent.
+name: Backup Service Release Control
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: backup-service-deploy-${{ github.ref }}
-  cancel-in-progress: false
-
+    inputs:
+      release_action: { required: true, type: choice, options: [bootstrap, upload, promote, rollback] }
+      expected_source_sha: { required: true, type: string }
+      release_tag: { required: false, type: string }
+      target_version_id: { required: false, type: string }
+      expected_current_deployment_id: { required: false, type: string }
+      expected_current_version_id: { required: false, type: string }
+      main_rollback_100_verified: { required: false, type: string }
+permissions: { contents: read }
+# One fixed global release lock shared with the main workflow; never ref-derived.
+concurrency: { group: m2f-private-backup-release-control, cancel-in-progress: false }
 jobs:
-  backup-service-production-version-upload:
-    name: Backup service zero-traffic version upload
+  validate-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: "${{ inputs.expected_source_sha }}"
+      - name: Require exact main source identity
+        env:
+          EXPECTED_SOURCE_SHA: "${{ inputs.expected_source_sha }}"
+        run: node scripts/m2f-release-evidence-guard.cjs source "$EXPECTED_SOURCE_SHA" "$GITHUB_REF" "$GITHUB_SHA"
+  bootstrap:
+    needs: validate-source
+    if: inputs.release_action == 'bootstrap'
+    runs-on: ubuntu-latest
+    environment: backup-production
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
+      BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}
+      BACKUP_DATA_KEY_V1_B64: ${{ secrets.BACKUP_DATA_KEY_V1_B64 }}
+      BACKUP_OBJECT_KEY_HMAC_V1_B64: ${{ secrets.BACKUP_OBJECT_KEY_HMAC_V1_B64 }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: actions/checkout@v5
         with:
-          node-version: '24'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check source-only production contract
-        run: node scripts/check-m2d-production-backup-preflight.cjs
-
-      - name: Upload secret-bearing production version
+          ref: "${{ inputs.expected_source_sha }}"
+      - uses: actions/setup-node@v5
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: Validate private config and exact R2 bucket
+        run: |
+          set -euo pipefail; test -n "$RELEASE_TAG"; test -n "$CLOUDFLARE_API_TOKEN"; test -n "$CLOUDFLARE_ACCOUNT_ID"; test -n "$BACKUP_SERVICE_INTERNAL_TOKEN"; test -n "$BACKUP_DATA_KEY_V1_B64"; test -n "$BACKUP_OBJECT_KEY_HMAC_V1_B64"
+          node scripts/m2f-release-evidence-guard.cjs config services/backup-service/wrangler.jsonc
+          npx wrangler r2 bucket info gia-pha-prod-backups-apac-v1 --json > bucket-info.json
+          node scripts/m2f-release-evidence-guard.cjs bucket bucket-info.json
+      - name: Require exact absent Worker response
         working-directory: services/backup-service
-        env:
-          BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}
-          BACKUP_DATA_KEY_V1_B64: ${{ secrets.BACKUP_DATA_KEY_V1_B64 }}
-          BACKUP_OBJECT_KEY_HMAC_V1_B64: ${{ secrets.BACKUP_OBJECT_KEY_HMAC_V1_B64 }}
+        shell: bash
+        run: |
+          set -euo pipefail; set +e
+          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > absent-stdout.json 2> absent-error.json; status=$?
+          set -e; test "$status" -ne 0
+          node ../../scripts/m2f-release-evidence-guard.cjs absence absent-error.json
+      - name: Record main deployment version and bindings prestate
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${CLOUDFLARE_API_TOKEN}" || (echo "CLOUDFLARE_API_TOKEN is missing" && exit 1)
-          test -n "${CLOUDFLARE_ACCOUNT_ID}" || (echo "CLOUDFLARE_ACCOUNT_ID is missing" && exit 1)
-          test -n "${BACKUP_SERVICE_INTERNAL_TOKEN}" || (echo "BACKUP_SERVICE_INTERNAL_TOKEN is missing" && exit 1)
-          test -n "${BACKUP_DATA_KEY_V1_B64}" || (echo "BACKUP_DATA_KEY_V1_B64 is missing" && exit 1)
-          test -n "${BACKUP_OBJECT_KEY_HMAC_V1_B64}" || (echo "BACKUP_OBJECT_KEY_HMAC_V1_B64 is missing" && exit 1)
-          umask 077
-          SECRETS_FILE="${RUNNER_TEMP}/backup-service-production-secrets.json"
-          trap 'rm -f "$SECRETS_FILE"' EXIT
-          export SECRETS_FILE
-          node -e 'const fs = require("node:fs"); fs.writeFileSync(process.env.SECRETS_FILE, JSON.stringify({ BACKUP_SERVICE_INTERNAL_TOKEN: process.env.BACKUP_SERVICE_INTERNAL_TOKEN, BACKUP_DATA_KEY_V1_B64: process.env.BACKUP_DATA_KEY_V1_B64, BACKUP_OBJECT_KEY_HMAC_V1_B64: process.env.BACKUP_OBJECT_KEY_HMAC_V1_B64 }), { mode: 0o600 });'
-          chmod 600 "$SECRETS_FILE"
-          npx wrangler versions upload --env production --secrets-file "$SECRETS_FILE"
+          npx wrangler deployments list --name web-gia-pha --json > main-deployments-before.json
+          npx wrangler versions list --name web-gia-pha --json > main-versions-before.json
+          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-before.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].deployment_id)")"
+          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-before.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);const v=m[0].versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
+          npx wrangler versions view "$MAIN_VERSION_ID" --name web-gia-pha --json > main-version-before.json
+          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p));fs.writeFileSync('main-before.json',JSON.stringify({deployments:r('main-deployments-before.json'),versions:r('main-versions-before.json'),activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-before.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
+      - name: Bootstrap once with strict private secrets file
+        working-directory: services/backup-service
+        shell: bash
+        run: |
+          set -euo pipefail; umask 077; SECRETS_FILE="$(mktemp)"; export SECRETS_FILE; trap 'rm -f "$SECRETS_FILE"' EXIT; chmod 600 "$SECRETS_FILE"
+          node -e 'require("node:fs").writeFileSync(process.env.SECRETS_FILE,JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN,BACKUP_DATA_KEY_V1_B64:process.env.BACKUP_DATA_KEY_V1_B64,BACKUP_OBJECT_KEY_HMAC_V1_B64:process.env.BACKUP_OBJECT_KEY_HMAC_V1_B64}),{mode:0o600})'
+          npx wrangler deploy --strict --env production --secrets-file "$SECRETS_FILE" --tag "$RELEASE_TAG" --message "M2F private bootstrap"
+      - name: Prove created version and deployment are exact
+        working-directory: services/backup-service
+        shell: bash
+        run: |
+          set -euo pipefail; npx wrangler versions list --name web-gia-pha-backup-service-production --json > versions-after.json; npx wrangler deployments list --name web-gia-pha-backup-service-production --json > deployments-after.json
+          BACKUP_VERSION_ID="$(node -e "const x=require('./versions-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(v=>v.annotations?.['workers/tag']===process.argv[1]);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].version_id)" "$RELEASE_TAG")"
+          node ../../scripts/m2f-release-evidence-guard.cjs version versions-after.json "$BACKUP_VERSION_ID" "$RELEASE_TAG"
+          BACKUP_DEPLOYMENT_ID="$(node -e "const x=require('./deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.find(d=>d.versions?.length===1&&(d.versions[0].version_id||d.versions[0].id)===process.argv[1]&&d.versions[0].percentage===100);if(!m)process.exit(1);process.stdout.write(m.id||m.deployment_id)" "$BACKUP_VERSION_ID")"
+          node ../../scripts/m2f-release-evidence-guard.cjs deployment deployments-after.json "$BACKUP_DEPLOYMENT_ID" "$BACKUP_VERSION_ID"
+      - name: Prove main Worker unchanged after bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail; npx wrangler deployments list --name web-gia-pha --json > main-deployments-after.json; npx wrangler versions list --name web-gia-pha --json > main-versions-after.json
+          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].deployment_id)")"
+          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);const v=m[0].versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
+          npx wrangler versions view "$MAIN_VERSION_ID" --name web-gia-pha --json > main-version-after.json
+          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p));fs.writeFileSync('main-after.json',JSON.stringify({deployments:r('main-deployments-after.json'),versions:r('main-versions-after.json'),activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-after.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
+          node scripts/m2f-release-evidence-guard.cjs main main-before.json main-after.json
+  upload:
+    needs: validate-source
+    if: inputs.release_action == 'upload'
+    runs-on: ubuntu-latest
+    environment: backup-production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}
+      BACKUP_DATA_KEY_V1_B64: ${{ secrets.BACKUP_DATA_KEY_V1_B64 }}
+      BACKUP_OBJECT_KEY_HMAC_V1_B64: ${{ secrets.BACKUP_OBJECT_KEY_HMAC_V1_B64 }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: "${{ inputs.expected_source_sha }}"
+      - uses: actions/setup-node@v5
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: Upload exact version without traffic change
+        working-directory: services/backup-service
+        shell: bash
+        run: |
+          set -euo pipefail; test -n "$RELEASE_TAG"; npx wrangler deployments list --name web-gia-pha-backup-service-production --json > routing-before.json
+          umask 077; SECRETS_FILE="$(mktemp)"; export SECRETS_FILE; trap 'rm -f "$SECRETS_FILE"' EXIT; chmod 600 "$SECRETS_FILE"
+          node -e 'require("node:fs").writeFileSync(process.env.SECRETS_FILE,JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN,BACKUP_DATA_KEY_V1_B64:process.env.BACKUP_DATA_KEY_V1_B64,BACKUP_OBJECT_KEY_HMAC_V1_B64:process.env.BACKUP_OBJECT_KEY_HMAC_V1_B64}),{mode:0o600})'
+          npx wrangler versions upload --env production --secrets-file "$SECRETS_FILE" --tag "$RELEASE_TAG" --message "M2F zero-traffic upload"
+          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > routing-after.json; node ../../scripts/m2f-release-evidence-guard.cjs routing routing-before.json routing-after.json
+          npx wrangler versions list --name web-gia-pha-backup-service-production --json > versions-after.json
+          BACKUP_VERSION_ID="$(node -e "const x=require('./versions-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(v=>v.annotations?.['workers/tag']===process.argv[1]);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].version_id)" "$RELEASE_TAG")"
+          node ../../scripts/m2f-release-evidence-guard.cjs version versions-after.json "$BACKUP_VERSION_ID" "$RELEASE_TAG"
+  promote-or-rollback:
+    needs: validate-source
+    if: inputs.release_action == 'promote' || inputs.release_action == 'rollback'
+    runs-on: ubuntu-latest
+    environment: backup-production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TARGET_VERSION_ID: ${{ inputs.target_version_id }}
+      EXPECTED_CURRENT_DEPLOYMENT_ID: ${{ inputs.expected_current_deployment_id }}
+      EXPECTED_CURRENT_VERSION_ID: ${{ inputs.expected_current_version_id }}
+      MAIN_ROLLBACK_100_VERIFIED: ${{ inputs.main_rollback_100_verified }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: "${{ inputs.expected_source_sha }}"
+      - uses: actions/setup-node@v5
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: Guard and route an exact backup version
+        working-directory: services/backup-service
+        shell: bash
+        run: |
+          set -euo pipefail; test -n "$TARGET_VERSION_ID"; test -n "$EXPECTED_CURRENT_DEPLOYMENT_ID"; test -n "$EXPECTED_CURRENT_VERSION_ID"
+          if [ "${{ inputs.release_action }}" = rollback ]; then test "$MAIN_ROLLBACK_100_VERIFIED" = MAIN_ROLLBACK_100_VERIFIED; fi
+          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > before.json; node ../../scripts/m2f-release-evidence-guard.cjs deployment before.json "$EXPECTED_CURRENT_DEPLOYMENT_ID" "$EXPECTED_CURRENT_VERSION_ID"
+          npx wrangler versions list --name web-gia-pha-backup-service-production --json > target-versions.json; node ../../scripts/m2f-release-evidence-guard.cjs target-version target-versions.json "$TARGET_VERSION_ID"
+          npx wrangler versions deploy "${TARGET_VERSION_ID}@100%" --name web-gia-pha-backup-service-production --env production --yes
+          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > after.json
+          DEPLOYMENT_ID="$(node -e "const x=require('./after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.find(d=>d.versions?.length===1&&(d.versions[0].version_id||d.versions[0].id)===process.argv[1]&&d.versions[0].percentage===100);if(!m)process.exit(1);process.stdout.write(m.id||m.deployment_id)" "$TARGET_VERSION_ID")"
+          node ../../scripts/m2f-release-evidence-guard.cjs deployment after.json "$DEPLOYMENT_ID" "$TARGET_VERSION_ID"
