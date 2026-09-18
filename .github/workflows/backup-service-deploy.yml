@@ -60,12 +60,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npx wrangler deployments list --name web-gia-pha --json > main-deployments-before.json
+          npx wrangler deployments status --name web-gia-pha --json > main-deployments-before.json
           npx wrangler versions list --name web-gia-pha --json > main-versions-before.json
-          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-before.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].deployment_id)")"
-          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-before.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);const v=m[0].versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
+          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-before.json'),d=x.result||x;if(!d.versions||d.versions.length!==1||d.versions[0].percentage!==100)process.exit(1);process.stdout.write(d.id||d.deployment_id)")"
+          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-before.json'),d=x.result||x;if(!d.versions||d.versions.length!==1||d.versions[0].percentage!==100)process.exit(1);const v=d.versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
           npx wrangler versions view "$MAIN_VERSION_ID" --name web-gia-pha --json > main-version-before.json
-          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p));fs.writeFileSync('main-before.json',JSON.stringify({deployments:r('main-deployments-before.json'),versions:r('main-versions-before.json'),activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-before.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
+          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p)),vs=value=>Array.isArray(value)?value:(value.items||value.result||[]);const current=vs(r('main-versions-before.json')).filter(v=>(v.id||v.version_id)===process.argv[2]);if(current.length!==1)process.exit(1);fs.writeFileSync('main-before.json',JSON.stringify({currentDeployment:r('main-deployments-before.json'),currentVersion:current[0],activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-before.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
       - name: Bootstrap once with strict private secrets file
         working-directory: services/backup-service
         shell: bash
@@ -77,19 +77,19 @@ jobs:
         working-directory: services/backup-service
         shell: bash
         run: |
-          set -euo pipefail; npx wrangler versions list --name web-gia-pha-backup-service-production --json > versions-after.json; npx wrangler deployments list --name web-gia-pha-backup-service-production --json > deployments-after.json
+          set -euo pipefail; npx wrangler versions list --name web-gia-pha-backup-service-production --json > versions-after.json; npx wrangler deployments status --name web-gia-pha-backup-service-production --json > deployments-after.json
           BACKUP_VERSION_ID="$(node -e "const x=require('./versions-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(v=>v.annotations?.['workers/tag']===process.argv[1]);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].version_id)" "$RELEASE_TAG")"
           node ../../scripts/m2f-release-evidence-guard.cjs version versions-after.json "$BACKUP_VERSION_ID" "$RELEASE_TAG"
-          BACKUP_DEPLOYMENT_ID="$(node -e "const x=require('./deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.find(d=>d.versions?.length===1&&(d.versions[0].version_id||d.versions[0].id)===process.argv[1]&&d.versions[0].percentage===100);if(!m)process.exit(1);process.stdout.write(m.id||m.deployment_id)" "$BACKUP_VERSION_ID")"
-          node ../../scripts/m2f-release-evidence-guard.cjs deployment deployments-after.json "$BACKUP_DEPLOYMENT_ID" "$BACKUP_VERSION_ID"
+          BACKUP_DEPLOYMENT_ID="$(node -e "const x=require('./deployments-after.json'),d=x.result||x;if(!d.versions||d.versions.length!==1||d.versions[0].percentage!==100||(d.versions[0].version_id||d.versions[0].id)!==process.argv[1])process.exit(1);process.stdout.write(d.id||d.deployment_id)" "$BACKUP_VERSION_ID")"
+          node ../../scripts/m2f-release-evidence-guard.cjs current-deployment deployments-after.json "$BACKUP_DEPLOYMENT_ID" "$BACKUP_VERSION_ID"
       - name: Prove main Worker unchanged after bootstrap
         shell: bash
         run: |
-          set -euo pipefail; npx wrangler deployments list --name web-gia-pha --json > main-deployments-after.json; npx wrangler versions list --name web-gia-pha --json > main-versions-after.json
-          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].deployment_id)")"
-          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(d=>d.versions?.length===1&&d.versions[0].percentage===100);if(m.length!==1)process.exit(1);const v=m[0].versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
+          set -euo pipefail; npx wrangler deployments status --name web-gia-pha --json > main-deployments-after.json; npx wrangler versions list --name web-gia-pha --json > main-versions-after.json
+          MAIN_DEPLOYMENT_ID="$(node -e "const x=require('./main-deployments-after.json'),d=x.result||x;if(!d.versions||d.versions.length!==1||d.versions[0].percentage!==100)process.exit(1);process.stdout.write(d.id||d.deployment_id)")"
+          MAIN_VERSION_ID="$(node -e "const x=require('./main-deployments-after.json'),d=x.result||x;if(!d.versions||d.versions.length!==1||d.versions[0].percentage!==100)process.exit(1);const v=d.versions[0];process.stdout.write(v.version_id||v.id||v.version?.id)")"
           npx wrangler versions view "$MAIN_VERSION_ID" --name web-gia-pha --json > main-version-after.json
-          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p));fs.writeFileSync('main-after.json',JSON.stringify({deployments:r('main-deployments-after.json'),versions:r('main-versions-after.json'),activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-after.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
+          node -e "const fs=require('node:fs'),r=p=>JSON.parse(fs.readFileSync(p)),vs=value=>Array.isArray(value)?value:(value.items||value.result||[]);const current=vs(r('main-versions-after.json')).filter(v=>(v.id||v.version_id)===process.argv[2]);if(current.length!==1)process.exit(1);fs.writeFileSync('main-after.json',JSON.stringify({currentDeployment:r('main-deployments-after.json'),currentVersion:current[0],activeDeploymentId:process.argv[1],activeVersionId:process.argv[2],versionView:r('main-version-after.json')}));" "$MAIN_DEPLOYMENT_ID" "$MAIN_VERSION_ID"
           node scripts/m2f-release-evidence-guard.cjs main main-before.json main-after.json
   upload:
     needs: validate-source
@@ -114,11 +114,11 @@ jobs:
         working-directory: services/backup-service
         shell: bash
         run: |
-          set -euo pipefail; test -n "$RELEASE_TAG"; npx wrangler deployments list --name web-gia-pha-backup-service-production --json > routing-before.json
+          set -euo pipefail; test -n "$RELEASE_TAG"; npx wrangler deployments status --name web-gia-pha-backup-service-production --json > routing-before.json
           umask 077; SECRETS_FILE="$(mktemp)"; export SECRETS_FILE; trap 'rm -f "$SECRETS_FILE"' EXIT; chmod 600 "$SECRETS_FILE"
           node -e 'require("node:fs").writeFileSync(process.env.SECRETS_FILE,JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN,BACKUP_DATA_KEY_V1_B64:process.env.BACKUP_DATA_KEY_V1_B64,BACKUP_OBJECT_KEY_HMAC_V1_B64:process.env.BACKUP_OBJECT_KEY_HMAC_V1_B64}),{mode:0o600})'
           npx wrangler versions upload --env production --secrets-file "$SECRETS_FILE" --tag "$RELEASE_TAG" --message "M2F zero-traffic upload"
-          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > routing-after.json; node ../../scripts/m2f-release-evidence-guard.cjs routing routing-before.json routing-after.json
+          npx wrangler deployments status --name web-gia-pha-backup-service-production --json > routing-after.json; node ../../scripts/m2f-release-evidence-guard.cjs routing routing-before.json routing-after.json
           npx wrangler versions list --name web-gia-pha-backup-service-production --json > versions-after.json
           BACKUP_VERSION_ID="$(node -e "const x=require('./versions-after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.filter(v=>v.annotations?.['workers/tag']===process.argv[1]);if(m.length!==1)process.exit(1);process.stdout.write(m[0].id||m[0].version_id)" "$RELEASE_TAG")"
           node ../../scripts/m2f-release-evidence-guard.cjs version versions-after.json "$BACKUP_VERSION_ID" "$RELEASE_TAG"
@@ -147,9 +147,8 @@ jobs:
         run: |
           set -euo pipefail; test -n "$TARGET_VERSION_ID"; test -n "$EXPECTED_CURRENT_DEPLOYMENT_ID"; test -n "$EXPECTED_CURRENT_VERSION_ID"
           if [ "${{ inputs.release_action }}" = rollback ]; then test "$MAIN_ROLLBACK_100_VERIFIED" = MAIN_ROLLBACK_100_VERIFIED; fi
-          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > before.json; node ../../scripts/m2f-release-evidence-guard.cjs deployment before.json "$EXPECTED_CURRENT_DEPLOYMENT_ID" "$EXPECTED_CURRENT_VERSION_ID"
+          npx wrangler deployments status --name web-gia-pha-backup-service-production --json > before.json; node ../../scripts/m2f-release-evidence-guard.cjs current-deployment before.json "$EXPECTED_CURRENT_DEPLOYMENT_ID" "$EXPECTED_CURRENT_VERSION_ID"
           npx wrangler versions list --name web-gia-pha-backup-service-production --json > target-versions.json; node ../../scripts/m2f-release-evidence-guard.cjs target-version target-versions.json "$TARGET_VERSION_ID"
           npx wrangler versions deploy "${TARGET_VERSION_ID}@100%" --name web-gia-pha-backup-service-production --env production --yes
-          npx wrangler deployments list --name web-gia-pha-backup-service-production --json > after.json
-          DEPLOYMENT_ID="$(node -e "const x=require('./after.json'),a=Array.isArray(x)?x:(x.items||x.result||[]),m=a.find(d=>d.versions?.length===1&&(d.versions[0].version_id||d.versions[0].id)===process.argv[1]&&d.versions[0].percentage===100);if(!m)process.exit(1);process.stdout.write(m.id||m.deployment_id)" "$TARGET_VERSION_ID")"
-          node ../../scripts/m2f-release-evidence-guard.cjs deployment after.json "$DEPLOYMENT_ID" "$TARGET_VERSION_ID"
+          npx wrangler deployments status --name web-gia-pha-backup-service-production --json > after.json
+          node ../../scripts/m2f-release-evidence-guard.cjs current-deployment after.json "$(node -e "const x=require('./after.json'),d=x.result||x;process.stdout.write(d.id||d.deployment_id)")" "$TARGET_VERSION_ID"

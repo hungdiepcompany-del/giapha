@@ -22,14 +22,14 @@ The standard deploy script is now:
 
 `A16AX_DEPLOY_SCRIPT=opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars`
 
-The manual Cloudflare Deploy workflow still uses:
+The M2F manual main release workflow uses a zero-traffic upload rather than the retired standard deploy command:
 
-`A16AX_WORKFLOW_DEPLOY_STEP=run: npm run deploy`
+`A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --secrets-file`
 
-Because the workflow calls the standard deploy script, the owner-approved manual
-deploy path now preserves dashboard-managed Cloudflare Worker runtime variables.
+The upload preserves dashboard-managed Cloudflare Worker runtime variables with
+`--keep-vars`; later exact-version promotion is a separately guarded M2F action.
 
-The workflow also runs the scoped A-16AX checker before deploy:
+The workflow also runs the scoped A-16AX checker before the zero-traffic upload:
 
 `A16AX_WORKFLOW_CHECK_STEP=npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring`
 
