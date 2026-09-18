@@ -74,35 +74,65 @@ function assertTargetVersion(value, id) {
   if (matches.length !== 1) fail("exact target version missing");
 }
 
-function assertDeployment(value, id, version) {
-  const deployment = list(value, "deployments").find((entry) => deploymentId(entry) === id);
-  const routes = deployment?.versions;
-  if (!deployment || !Array.isArray(routes) || routes.length !== 1 || routes[0].percentage !== 100 || routedVersionId(routes[0]) !== version) {
-    fail("exact 100 percent deployment missing");
+function currentDeployment(value, label = "current deployment") {
+  const parsed = json(value, label);
+  const deployment = parsed?.result || parsed;
+  if (Array.isArray(deployment) || !deployment || typeof deployment !== "object") fail(`${label} must be one current deployment object`);
+  return deployment;
+}
+
+function validatedRouting(value) {
+  const deployment = currentDeployment(value);
+  const id = deploymentId(deployment);
+  if (typeof id !== "string" || id.trim() === "") fail("current deployment id must be a nonblank string");
+  const routes = deployment.versions;
+  if (!Array.isArray(routes) || routes.length === 0) fail("current deployment must contain a nonempty route array");
+  const seen = new Set();
+  let total = 0;
+  const normalized = routes.map((route) => {
+    if (!route || typeof route !== "object" || Array.isArray(route)) fail("current deployment route must be an object");
+    const id = routedVersionId(route);
+    if (typeof id !== "string" || id.trim() === "") fail("current route version id must be a nonblank string");
+    if (seen.has(id)) fail("current deployment route version ids must be unique");
+    seen.add(id);
+    const percentage = route.percentage;
+    if (typeof percentage !== "number" || !Number.isFinite(percentage) || percentage < 0 || percentage > 100) {
+      fail("current route percentage must be a finite number between 0 and 100");
+    }
+    total += percentage;
+    return { id, percentage };
+  });
+  if (Math.abs(total - 100) > 1e-9) fail("current deployment route percentages must total 100");
+  return { id, versions: normalized.sort((a, b) => a.id.localeCompare(b.id)) };
+}
+
+function assertCurrentDeployment(value, id, version) {
+  const routing = validatedRouting(value);
+  if (routing.id !== id || routing.versions.length !== 1 || routing.versions[0].percentage !== 100 || routing.versions[0].id !== version) {
+    fail("exact current 100 percent deployment missing");
   }
 }
 
-const routing = (value) => list(value, "deployments").map((deployment) => ({
-  id: deploymentId(deployment),
-  versions: (deployment.versions || []).map((route) => ({ id: routedVersionId(route), percentage: route.percentage })).sort((a, b) => String(a.id).localeCompare(String(b.id))),
-})).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+const currentRouting = (value) => {
+  return validatedRouting(value);
+};
 
 function assertRoutingEqual(before, after) {
-  if (JSON.stringify(routing(before)) !== JSON.stringify(routing(after))) fail("routing drift");
+  if (JSON.stringify(currentRouting(before)) !== JSON.stringify(currentRouting(after))) fail("current routing drift");
 }
 
 function normalizeMainSnapshot(value) {
   const snapshot = json(value, "main snapshot");
-  for (const key of ["deployments", "versions", "activeDeploymentId", "activeVersionId", "versionView"]) {
+  for (const key of ["currentDeployment", "currentVersion", "activeDeploymentId", "activeVersionId", "versionView"]) {
     if (!(key in snapshot)) fail("main snapshot incomplete");
   }
-  assertDeployment(snapshot.deployments, snapshot.activeDeploymentId, snapshot.activeVersionId);
-  assertTargetVersion(snapshot.versions, snapshot.activeVersionId);
+  assertCurrentDeployment(snapshot.currentDeployment, snapshot.activeDeploymentId, snapshot.activeVersionId);
+  if (versionId(snapshot.currentVersion) !== snapshot.activeVersionId) fail("main current version identity drift");
   const versionView = json(snapshot.versionView, "main active version view");
   if (versionId(versionView) && versionId(versionView) !== snapshot.activeVersionId) fail("main active version view identity drift");
   return JSON.stringify({
-    routing: routing(snapshot.deployments),
-    versions: list(snapshot.versions, "versions").map((version) => [versionId(version), workerTag(version)]).sort(),
+    routing: currentRouting(snapshot.currentDeployment),
+    currentVersion: [versionId(snapshot.currentVersion), workerTag(snapshot.currentVersion)],
     activeDeploymentId: snapshot.activeDeploymentId,
     activeVersionId: snapshot.activeVersionId,
     versionView,
@@ -120,7 +150,7 @@ function run([command, ...args]) {
   else if (command === "absence") { if (!isExact10007(fs.readFileSync(args[0], "utf8"))) fail("only exact 10007 absence accepted"); }
   else if (command === "version") assertVersion(fs.readFileSync(args[0], "utf8"), args[1], args[2]);
   else if (command === "target-version") assertTargetVersion(fs.readFileSync(args[0], "utf8"), args[1]);
-  else if (command === "deployment") assertDeployment(fs.readFileSync(args[0], "utf8"), args[1], args[2]);
+  else if (command === "current-deployment") assertCurrentDeployment(fs.readFileSync(args[0], "utf8"), args[1], args[2]);
   else if (command === "routing") assertRoutingEqual(fs.readFileSync(args[0], "utf8"), fs.readFileSync(args[1], "utf8"));
   else if (command === "main") assertMainUnchanged(fs.readFileSync(args[0], "utf8"), fs.readFileSync(args[1], "utf8"));
   else fail("unknown command");
@@ -132,4 +162,4 @@ if (require.main === module) {
   catch (error) { console.error(`M2F evidence FAIL: ${error.message}`); process.exit(1); }
 }
 
-module.exports = { assertSourceIdentity, assertPrivateConfig, assertBucket, isExact10007, assertVersion, assertTargetVersion, assertDeployment, assertRoutingEqual, assertMainUnchanged };
+module.exports = { assertSourceIdentity, assertPrivateConfig, assertBucket, isExact10007, assertVersion, assertTargetVersion, assertCurrentDeployment, assertRoutingEqual, assertMainUnchanged };

@@ -79,7 +79,7 @@ for (const token of [
   "A16AX_PREVIOUS_BLOCKER=A16AR_LOCKED_RUNTIME_CANDIDATE_ENV_DISABLED",
   "A16AX_PREVIOUS_BLOCKER_2=A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED",
   `A16AX_DEPLOY_SCRIPT=${expectedDeployScript}`,
-  "A16AX_WORKFLOW_DEPLOY_STEP=run: npm run deploy",
+  "A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --secrets-file",
   "A16AX_WORKFLOW_CHECK_STEP=npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring",
   "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true",
   "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true",
@@ -117,7 +117,7 @@ if (
 for (const [content, token, label] of [
   [workflow, "workflow_dispatch:", "manual-only workflow_dispatch"],
   [workflow, "npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring", "A-16AX workflow checker"],
-  [workflow, "run: npm run deploy", "workflow deploy step uses package deploy script"],
+  [workflow, "npx wrangler versions upload --name web-gia-pha --keep-vars --secrets-file", "M2F zero-traffic upload preserves runtime vars"],
   [route, "process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === \"true\"", "route A16P strict gate"],
   [route, "process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === \"true\"", "route A16AH strict gate"],
   [panel, "process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === \"true\"", "panel A16P strict gate"],
@@ -138,12 +138,12 @@ rejectPattern(doc + checker, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)
 rejectPattern(wrangler, /A16AX|A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED|A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED/i, "wrangler config must not contain A-16 runtime vars");
 rejectPattern(layout, /A16AX|official-import/i, "app layout must not change");
 
-const deployIndex = workflow.indexOf("npm run deploy");
+const deployIndex = workflow.indexOf("npx wrangler versions upload --name web-gia-pha --keep-vars --secrets-file");
 const checkerIndex = workflow.indexOf(
   "npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring",
 );
 if (checkerIndex < 0 || deployIndex < 0 || checkerIndex > deployIndex) {
-  failures.push("A-16AX checker must run before workflow deploy step");
+  failures.push("A-16AX checker must run before M2F zero-traffic upload");
 }
 
 const changedFiles = git(["status", "--porcelain", "--untracked-files=all"])

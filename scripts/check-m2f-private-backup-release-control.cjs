@@ -38,11 +38,13 @@ for (const token of [
   "bootstrap",
   "wrangler deploy --strict --env production --secrets-file",
   "absence absent-error.json",
+  "wrangler deployments status --name web-gia-pha --json",
   "wrangler versions view \"$MAIN_VERSION_ID\" --name web-gia-pha --json",
   "main main-before.json main-after.json",
   "BACKUP_VERSION_ID=\"$(node -e \"const x=require('./versions-after.json')",
   "annotations?.['workers/tag']",
   "wrangler versions upload --env production --secrets-file",
+  "current-deployment before.json \"$EXPECTED_CURRENT_DEPLOYMENT_ID\" \"$EXPECTED_CURRENT_VERSION_ID\"",
   "target-version target-versions.json \"$TARGET_VERSION_ID\"",
   "wrangler versions deploy \"${TARGET_VERSION_ID}@100%\"",
   "MAIN_ROLLBACK_100_VERIFIED",
@@ -59,6 +61,7 @@ requireCount(backup, "m2f-release-evidence-guard.cjs version versions-after.json
 
 for (const token of [
   "BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}",
+  "wrangler deployments status --name web-gia-pha --json",
   "--keep-vars --secrets-file \"$SECRETS_FILE\"",
   "JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN})",
   "annotations?.['workers/tag']",
@@ -87,7 +90,7 @@ for (const token of [
   "isExact10007",
   "assertVersion",
   "assertTargetVersion",
-  "assertDeployment",
+  "assertCurrentDeployment",
   "assertRoutingEqual",
   "assertMainUnchanged",
   "refs/heads/main",
@@ -95,6 +98,9 @@ for (const token of [
   "codes.length === 1",
   "versionView",
 ]) requireText(guard, token);
+rejectText(main, "npx wrangler deployments list --name web-gia-pha --json");
+rejectText(backup, "npx wrangler deployments list --name web-gia-pha --json");
+rejectText(backup, "npx wrangler deployments list --name web-gia-pha-backup-service-production --json > before.json");
 
 if (packageJson.scripts?.["check:m2f-release-control"] !== "node scripts/check-m2f-private-backup-release-control.cjs") failures.push("package script missing");
 if (packageJson.scripts?.["test:m2f-release-evidence"] !== "node scripts/test-m2f-release-evidence-guard.cjs") failures.push("test script missing");
