@@ -121,11 +121,11 @@ for (const [content, token, label] of [
   [previewService, "summary.exportCapped = false", "service export capped false"],
   [previewService, "summary.proposedPeopleExportCount", "service people export count"],
   [previewService, "summary.proposedRelationshipExportCount", "service relationship export count"],
-  [previewService, "getImportDryRunApprovalGate(sessionId)", "service A-16K gate"],
-  [previewService, "A16K_AUDITED_DRY_RUN_SESSION_ID", "service audited session const"],
-  [manifestRead, "fullAuditExport?: boolean", "manifest full audit option"],
-  [manifestRead, "const previewLimit = options.fullAuditExport ? 1000 : 100", "default cap preserved"],
-  [manifestRead, ".limit(previewLimit)", "manifest query limit option"],
+  [manifestRead, "fullAuditExport?: boolean", "manifest option compatibility"],
+  [manifestRead, "A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS = 1000", "complete-scope ceiling"],
+  [manifestRead, "_options: ImportManifestReadOptions = {}", "legacy option shape compatibility"],
+  [manifestRead, "void _options;", "complete-scope option retirement"],
+  [manifestRead, ".limit(A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS)", "complete-scope query limit"],
   [auditScript, "A16N_FULL_RELATIONSHIP_AUDIT_JSON_ACCEPTED", "audit script accepted marker"],
   [auditScript, "A16N_CAPPED_PREVIEW_JSON_REJECTED_FOR_FULL_AUDIT", "audit script capped reject marker"],
   [auditScript, "--partial", "audit script partial mode"],
@@ -137,6 +137,11 @@ rejectPattern(route, /export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/, "d
 rejectPattern(previewService, /canProceedToOfficialImport:\s*true|officialImportOpen:\s*true|canRunOfficialImport:\s*true/, "official import gate true");
 rejectPattern(previewService + route, /\.rpc\s*\(/, "direct RPC call");
 rejectPattern(previewService + route, /\bofficial-import\b/i, "official import path in export implementation");
+rejectPattern(
+  manifestRead,
+  /options\.fullAuditExport\s*\?\s*1000\s*:\s*100/,
+  "retired 100-row manifest default",
+);
 rejectIncludes(wrangler, "A16O_FULL_DRY_RUN_RELATIONSHIP_AUDIT_EXPORT_READ_ONLY", "wrangler changed for A-16O");
 rejectIncludes(layout, "crxlauncher", "layout must not add crxlauncher");
 rejectPattern(layout, /suppressHydrationWarning\s*=\s*{?\s*true/i, "global hydration suppression");
@@ -146,6 +151,12 @@ if (
   "node scripts/check-a16o-uncap-dry-run-relationship-audit-export-read-only.cjs"
 ) {
   failures.push("missing package script check:a16o-uncap-dry-run-relationship-audit-export-read-only");
+}
+if (
+  packageJson?.scripts?.["check:a16r-dry-run-full-scope-parity"] !==
+  "node scripts/check-a16r-dry-run-full-scope-parity.cjs"
+) {
+  failures.push("missing package script check:a16r-dry-run-full-scope-parity");
 }
 if (
   packageJson?.scripts?.["audit:a16n-full-dry-run-relationships"] !==
@@ -190,8 +201,11 @@ const allowedChangedFiles = new Set([
   "scripts/check-a16k-owner-dry-run-gate-approval-after-a16r-fix.cjs",
   "scripts/check-a16k-owner-approval-gate-dry-run-import.cjs",
   "scripts/check-a16r-fix-official-import-session-selection-mismatch.cjs",
+  "scripts/check-a16r-dry-run-full-scope-parity.cjs",
   "scripts/check-a16r-ui-copy-refresh-official-import-gate.cjs",
   "scripts/check-a16r-production-ui-gate-state-reconciliation.cjs",
+  "scripts/check-a17o-r-grouped-importer-runtime-integration.cjs",
+  "components/imports/import-session-manifest-panel.tsx",
   "scripts/check-a16t-apply-verify.cjs",
   "scripts/check-a16u-locked-runtime-wiring.cjs",
 ]);
