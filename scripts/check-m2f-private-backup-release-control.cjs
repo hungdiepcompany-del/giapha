@@ -25,7 +25,6 @@ for (const workflow of [backup, main]) {
     "workflow_dispatch:",
     "expected_source_sha",
     "m2f-private-backup-release-control",
-    "environment: backup-production",
     "actions/checkout@v5",
     "ref: \"${{ inputs.expected_source_sha }}\"",
     "node scripts/m2f-release-evidence-guard.cjs source",
@@ -33,6 +32,9 @@ for (const workflow of [backup, main]) {
   ]) requireText(workflow, token);
   for (const token of ["push:", "pull_request:", "schedule:", "github.ref }}"]) rejectText(workflow, token);
 }
+
+requireText(backup, "environment: backup-production");
+requireCount(main, "environment: core-production", 2, "main protected core environment coverage");
 
 for (const token of [
   "bootstrap",
@@ -60,14 +62,18 @@ requireCount(backup, "annotations?.['workers/tag']", 2, "backup bootstrap/upload
 requireCount(backup, "m2f-release-evidence-guard.cjs version versions-after.json", 2, "backup bootstrap/upload version proof coverage");
 
 for (const token of [
-  "BACKUP_SERVICE_INTERNAL_TOKEN: ${{ secrets.BACKUP_SERVICE_INTERNAL_TOKEN }}",
   "wrangler deployments status --name web-gia-pha --json",
-  "--keep-vars --secrets-file \"$SECRETS_FILE\"",
-  "JSON.stringify({BACKUP_SERVICE_INTERNAL_TOKEN:process.env.BACKUP_SERVICE_INTERNAL_TOKEN})",
+  "wrangler versions upload --name web-gia-pha --keep-vars --tag \"$RELEASE_TAG\"",
   "annotations?.['workers/tag']",
   "target-version target-versions.json \"$TARGET_VERSION_ID\"",
-  "umask 077; SECRETS_FILE=\"$(mktemp)\"; export SECRETS_FILE",
 ]) requireText(main, token);
+for (const token of [
+  "environment: backup-production",
+  "BACKUP_SERVICE_INTERNAL_TOKEN",
+  "BACKUP_SERVICE_PRODUCTION",
+  "--secrets-file",
+  "SECRETS_FILE",
+]) rejectText(main, token);
 requireCount(main, "actions/setup-node@v5", 2, "main setup-node coverage");
 requireCount(main, "- run: npm ci", 2, "main npm ci coverage");
 requireCount(main, "CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}", 2, "main account identity coverage");
@@ -82,6 +88,7 @@ for (const token of [
   "No R2/data operation",
   "workers/tag",
   "remote active version view",
+  "free core",
 ]) requireText(contract, token);
 
 for (const token of [

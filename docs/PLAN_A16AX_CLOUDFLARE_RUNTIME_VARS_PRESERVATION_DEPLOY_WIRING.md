@@ -24,10 +24,14 @@ The standard deploy script is now:
 
 The M2F manual main release workflow uses a zero-traffic upload rather than the retired standard deploy command:
 
-`A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --secrets-file`
+`A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --tag`
 
 The upload preserves dashboard-managed Cloudflare Worker runtime variables with
 `--keep-vars`; later exact-version promotion is a separately guarded M2F action.
+The free core upload does not pass a backup secrets file: dormant backup infrastructure
+is not a prerequisite for the main application, and Wrangler preserves existing secrets.
+Both upload and later promotion/rollback remain behind the separate protected
+`core-production` GitHub environment with an Owner required-reviewer rule.
 
 The workflow also runs the scoped A-16AX checker before the zero-traffic upload:
 
