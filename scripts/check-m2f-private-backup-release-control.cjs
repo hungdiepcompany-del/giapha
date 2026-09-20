@@ -14,6 +14,52 @@ const requireCount = (text, token, count, label) => {
   if (actual !== count) failures.push(`${label} expected ${count}, found ${actual}`);
 };
 
+const approvedMainRuntimeVarKeys = new Set([
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED",
+  "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED",
+]);
+
+function requireExactMainRuntimeVarOverrides(content) {
+  const lines = content.split(/\r?\n/);
+  const start = lines.findIndex(
+    (line) =>
+      /npx\s+wrangler\s+versions\s+upload\b/.test(line) &&
+      /--name(?:=|\s+)["']?web-gia-pha\b/.test(line),
+  );
+  if (start < 0) {
+    failures.push("missing main wrangler versions upload command");
+    return;
+  }
+
+  let command = lines[start].trim();
+  let index = start;
+  while (/\\\s*$/.test(command) && index + 1 < lines.length) {
+    command = `${command.replace(/\\\s*$/, "")} ${lines[++index].trim()}`;
+  }
+
+  const keys = [];
+  const pattern = /(?:^|\s)--var(?:=|\s+)(?:"([^"]*)"|'([^']*)'|([^\s\\]+))/g;
+  for (const match of command.matchAll(pattern)) {
+    const spec = match[1] ?? match[2] ?? match[3] ?? "";
+    const separator = spec.indexOf(":");
+    if (separator <= 0) {
+      failures.push(`malformed main runtime override ${spec}`);
+      continue;
+    }
+    keys.push(spec.slice(0, separator));
+  }
+
+  for (const key of approvedMainRuntimeVarKeys) {
+    const count = keys.filter((candidate) => candidate === key).length;
+    if (count !== 1) failures.push(`main runtime override ${key} expected 1, found ${count}`);
+  }
+  for (const key of keys) {
+    if (!approvedMainRuntimeVarKeys.has(key)) failures.push(`unexpected main runtime override ${key}`);
+  }
+}
+
 const backup = read(".github/workflows/backup-service-deploy.yml");
 const main = read(".github/workflows/cloudflare-deploy.yml");
 const contract = read("docs/M2F_PRIVATE_BACKUP_RELEASE_CONTROL_CONTRACT.md");
@@ -64,15 +110,22 @@ requireCount(backup, "m2f-release-evidence-guard.cjs version versions-after.json
 for (const token of [
   "wrangler deployments status --name web-gia-pha --json",
   "wrangler versions upload --name web-gia-pha --keep-vars --tag \"$RELEASE_TAG\"",
+  '--var "NEXT_PUBLIC_SUPABASE_URL:$NEXT_PUBLIC_SUPABASE_URL"',
+  '--var "NEXT_PUBLIC_SUPABASE_ANON_KEY:$NEXT_PUBLIC_SUPABASE_ANON_KEY"',
+  '--var "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED:$A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED"',
+  '--var "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED:$A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED"',
   "annotations?.['workers/tag']",
   "target-version target-versions.json \"$TARGET_VERSION_ID\"",
 ]) requireText(main, token);
+requireExactMainRuntimeVarOverrides(main);
 for (const token of [
   "environment: backup-production",
   "BACKUP_SERVICE_INTERNAL_TOKEN",
   "BACKUP_SERVICE_PRODUCTION",
   "--secrets-file",
   "SECRETS_FILE",
+  '--var "NEXT_PUBLIC_APP_URL:',
+  '--var "SUPABASE_SERVICE_ROLE_KEY:',
 ]) rejectText(main, token);
 requireCount(main, "actions/setup-node@v5", 2, "main setup-node coverage");
 requireCount(main, "- run: npm ci", 2, "main npm ci coverage");
