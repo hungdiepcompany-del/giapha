@@ -16,8 +16,8 @@ type BackupServiceProductionFetcher = {
 
 declare global {
   interface CloudflareEnv {
-    BACKUP_SERVICE_PRODUCTION: BackupServiceProductionFetcher;
-    BACKUP_SERVICE_INTERNAL_TOKEN: string;
+    BACKUP_SERVICE_PRODUCTION?: BackupServiceProductionFetcher;
+    BACKUP_SERVICE_INTERNAL_TOKEN?: string;
   }
 }
 

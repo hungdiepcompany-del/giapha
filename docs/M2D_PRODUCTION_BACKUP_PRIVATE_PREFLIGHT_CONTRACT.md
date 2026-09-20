@@ -25,8 +25,9 @@ There is no production backup and no restore in this source-only outcome.
   `gia-pha-prod-backups-apac-v1`; this source declaration neither creates nor accesses it.
 - Required production secret names are `BACKUP_SERVICE_INTERNAL_TOKEN`,
   `BACKUP_DATA_KEY_V1_B64`, and `BACKUP_OBJECT_KEY_HMAC_V1_B64`. The active key version is `v1`.
-- The top-level main Worker declares only the main Worker required secret name
-  `BACKUP_SERVICE_INTERNAL_TOKEN` under `[secrets]`; no value is committed.
+- The free core main Worker declares neither `BACKUP_SERVICE_INTERNAL_TOKEN` nor
+  `BACKUP_SERVICE_PRODUCTION`. Those optional backup bindings belong only to a
+  future separately provisioned backup activation and must not block core releases.
 
 ## Marker-only preflight
 
@@ -45,17 +46,25 @@ Production input is constrained to one sequential encrypted 8MiB chunk; larger p
 non-zero/multi-chunk index fail closed. HMAC-derived opaque object keys are pure crypto only and
 do not create, access, or list objects.
 
-## Main app boundary
+## Free core main app boundary
 
-The top-level main Worker has the exact private `BACKUP_SERVICE_PRODUCTION` service binding.
-The server-only client obtains it with `getCloudflareContext`, constructs a fixed new request to
+The top-level main Worker has no mandatory backup secret or service binding while backup
+infrastructure is dormant. The server-only client models both optional bindings explicitly,
+obtains the runtime environment with `getCloudflareContext`, and fails closed before any call
+when either binding is unavailable. If a later separately approved activation provides them,
+the client constructs a fixed new request to
 the synthetic internal path, and sends only fixed method/path, content-type, accept, bearer,
 x-request-id, and marker body. It never accepts or forwards inbound request URL, headers,
 cookies, authorization, or body. It calls only the service binding and rejects any response that
 does not exactly match the safe marker schema.
 
+Core upload and traffic changes remain independently gated by the protected
+`core-production` GitHub environment; this gate carries no R2 or backup dependency.
+
 The admin preflight route reuses the existing `backup.operator.dry_run` or `permissions.manage`
-permission shape. It reports safe status only; it exposes neither secret values nor raw service errors.
+permission shape. It reports safe status only; without the optional runtime it returns the fixed
+`service_preflight_unavailable` response with HTTP 503. It exposes neither secret values nor raw
+service errors and never creates a backup, storage upload, or restore.
 
 ## Manual workflow design
 

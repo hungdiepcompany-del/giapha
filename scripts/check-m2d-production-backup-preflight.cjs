@@ -92,11 +92,11 @@ for (const token of [
 ]) requireText(preflight, token, `preflight ${token}`);
 for (const forbidden of [".put(", ".get(", ".list(", ".delete(", "encrypt", "fetch("]) rejectText(preflight, forbidden, `preflight ${forbidden}`);
 
-for (const token of ["[secrets]", "required = [\"BACKUP_SERVICE_INTERNAL_TOKEN\"]", "[[services]]", "binding = \"BACKUP_SERVICE_PRODUCTION\"", "service = \"web-gia-pha-backup-service-production\""]) requireText(mainWrangler, token, `main Wrangler ${token}`);
+for (const token of ["[secrets]", "BACKUP_SERVICE_INTERNAL_TOKEN", "[[services]]", "BACKUP_SERVICE_PRODUCTION", "web-gia-pha-backup-service-production"]) rejectText(mainWrangler, token, `main Wrangler ${token}`);
 for (const token of [
   "import { getCloudflareContext } from \"@opennextjs/cloudflare\"",
-  "BACKUP_SERVICE_PRODUCTION",
-  "BACKUP_SERVICE_INTERNAL_TOKEN",
+  "BACKUP_SERVICE_PRODUCTION?: BackupServiceProductionFetcher",
+  "BACKUP_SERVICE_INTERNAL_TOKEN?: string",
   "new Request(`http://backup-service.internal${BACKUP_SERVICE_PRODUCTION_PREFLIGHT_PATH}`",
   "method: \"POST\"",
   "authorization: `Bearer ${token}`",
@@ -129,7 +129,7 @@ for (const token of ["workflow_dispatch", "expected_source_sha", "m2f-private-ba
 for (const forbidden of ["schedule:", "push:", "pull_request:", "actions/upload-artifact", "echo \"${BACKUP_SERVICE"]) rejectText(workflow, forbidden, `workflow ${forbidden}`);
 
 for (const token of ["M2D production preflight", "zero R2/data", "fresh IV", "fixture isolation", "Result: PASS"]) requireText(test, token, `test ${token}`);
-for (const token of ["source-only", "no public route", "no production backup", "no restore", "separate Owner gate", "BACKUP_DATA_KEY_V1_B64", "BACKUP_OBJECT_KEY_HMAC_V1_B64", "main Worker required secret name", "BACKUP_SERVICE_INTERNAL_TOKEN", "no executable exact-version deployment branch", "protected GitHub environment", "known-good prior version", "private marker-only smoke path", "routing-drift proof", "rollback ordering"]) requireText(doc, token, `doc ${token}`);
+for (const token of ["source-only", "no public route", "no production backup", "no restore", "separate Owner gate", "BACKUP_DATA_KEY_V1_B64", "BACKUP_OBJECT_KEY_HMAC_V1_B64", "free core", "BACKUP_SERVICE_INTERNAL_TOKEN", "fail closed", "no executable exact-version deployment branch", "protected GitHub environment", "known-good prior version", "private marker-only smoke path", "routing-drift proof", "rollback ordering"]) requireText(doc, token, `doc ${token}`);
 
 if (failures.length) {
   console.error("M2D production backup preflight check failed:");
