@@ -26,8 +26,14 @@ The M2F manual main release workflow uses a zero-traffic upload rather than the 
 
 `A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --tag`
 
+`A16AX_WORKFLOW_RUNTIME_OVERRIDE_VARS=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED,A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED`
+
 The upload preserves dashboard-managed Cloudflare Worker runtime variables with
-`--keep-vars`; later exact-version promotion is a separately guarded M2F action.
+`--keep-vars`, while the four approved non-secret release variables are passed
+explicitly with `--var` so an intentional GitHub-variable update overrides the
+prior Worker version. `NEXT_PUBLIC_APP_URL` remains build-only and the backend
+service-role value remains an encrypted secret; neither is downgraded to a plain
+runtime variable. Later exact-version promotion is a separately guarded M2F action.
 The free core upload does not pass a backup secrets file: dormant backup infrastructure
 is not a prerequisite for the main application, and Wrangler preserves existing secrets.
 Both upload and later promotion/rollback remain behind the separate protected

@@ -59,6 +59,52 @@ function rejectPattern(content, pattern, label = String(pattern)) {
   if (pattern.test(content)) failures.push(`forbidden ${label}`);
 }
 
+const approvedMainRuntimeVarKeys = new Set([
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED",
+  "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED",
+]);
+
+function requireExactMainRuntimeVarOverrides(content) {
+  const lines = content.split(/\r?\n/);
+  const start = lines.findIndex(
+    (line) =>
+      /npx\s+wrangler\s+versions\s+upload\b/.test(line) &&
+      /--name(?:=|\s+)["']?web-gia-pha\b/.test(line),
+  );
+  if (start < 0) {
+    failures.push("missing main wrangler versions upload command");
+    return;
+  }
+
+  let command = lines[start].trim();
+  let index = start;
+  while (/\\\s*$/.test(command) && index + 1 < lines.length) {
+    command = `${command.replace(/\\\s*$/, "")} ${lines[++index].trim()}`;
+  }
+
+  const keys = [];
+  const pattern = /(?:^|\s)--var(?:=|\s+)(?:"([^"]*)"|'([^']*)'|([^\s\\]+))/g;
+  for (const match of command.matchAll(pattern)) {
+    const spec = match[1] ?? match[2] ?? match[3] ?? "";
+    const separator = spec.indexOf(":");
+    if (separator <= 0) {
+      failures.push(`malformed main runtime override ${spec}`);
+      continue;
+    }
+    keys.push(spec.slice(0, separator));
+  }
+
+  for (const key of approvedMainRuntimeVarKeys) {
+    const count = keys.filter((candidate) => candidate === key).length;
+    if (count !== 1) failures.push(`main runtime override ${key} expected 1, found ${count}`);
+  }
+  for (const key of keys) {
+    if (!approvedMainRuntimeVarKeys.has(key)) failures.push(`unexpected main runtime override ${key}`);
+  }
+}
+
 const doc = read(docPath);
 const checker = read(checkerPath);
 const workflow = read(workflowPath);
@@ -80,6 +126,7 @@ for (const token of [
   "A16AX_PREVIOUS_BLOCKER_2=A16AR_LOCKED_EXECUTION_BRANCH_ENV_DISABLED",
   `A16AX_DEPLOY_SCRIPT=${expectedDeployScript}`,
   "A16AX_WORKFLOW_DEPLOY_STEP=wrangler versions upload --name web-gia-pha --keep-vars --tag",
+  "A16AX_WORKFLOW_RUNTIME_OVERRIDE_VARS=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED,A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED",
   "A16AX_WORKFLOW_CHECK_STEP=npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring",
   "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED=true",
   "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED=true",
@@ -119,6 +166,10 @@ for (const [content, token, label] of [
   [workflow, "environment: core-production", "protected core production environment"],
   [workflow, "npm run check:a16ax-cloudflare-runtime-vars-preservation-deploy-wiring", "A-16AX workflow checker"],
   [workflow, "npx wrangler versions upload --name web-gia-pha --keep-vars --tag", "free-core zero-traffic upload preserves runtime vars"],
+  [workflow, '--var "NEXT_PUBLIC_SUPABASE_URL:$NEXT_PUBLIC_SUPABASE_URL"', "Supabase URL runtime override"],
+  [workflow, '--var "NEXT_PUBLIC_SUPABASE_ANON_KEY:$NEXT_PUBLIC_SUPABASE_ANON_KEY"', "Supabase public-key runtime override"],
+  [workflow, '--var "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED:$A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED"', "A16P runtime override"],
+  [workflow, '--var "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED:$A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED"', "A16AH runtime override"],
   [route, "process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === \"true\"", "route A16P strict gate"],
   [route, "process.env.A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED === \"true\"", "route A16AH strict gate"],
   [panel, "process.env.A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED === \"true\"", "panel A16P strict gate"],
@@ -138,6 +189,9 @@ rejectPattern(doc + checker, /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i, "private 
 rejectPattern(doc + checker, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[a-zA-Z0-9_-]+)/i, "secret-like token");
 rejectPattern(wrangler, /A16AX|A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED|A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED/i, "wrangler config must not contain A-16 runtime vars");
 rejectPattern(workflow, /BACKUP_SERVICE_INTERNAL_TOKEN|BACKUP_SERVICE_PRODUCTION|environment:\s*backup-production|--secrets-file/i, "main release must not depend on dormant backup runtime");
+rejectPattern(workflow, /--var\s+["']?(?:NEXT_PUBLIC_APP_URL|SUPABASE_SERVICE_ROLE_KEY):/i, "build-only app URL and backend secret must not become plain runtime overrides");
+rejectPattern(workflow, /(?:eyJ[a-zA-Z0-9_-]{20,}|sb_(?:secret|publishable)_[a-zA-Z0-9_-]+)/i, "workflow must not contain literal API keys");
+requireExactMainRuntimeVarOverrides(workflow);
 if (workflow.split("environment: core-production").length - 1 !== 2) {
   failures.push("core-production must gate both main upload and promote/rollback jobs");
 }

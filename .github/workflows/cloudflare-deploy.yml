@@ -60,9 +60,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail; test -n "$RELEASE_TAG"
+          test -n "$NEXT_PUBLIC_SUPABASE_URL"; test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          test -n "$A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED"; test -n "$A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED"
           npx wrangler deployments status --name web-gia-pha --json > routing-before.json
           npx opennextjs-cloudflare build
-          npx wrangler versions upload --name web-gia-pha --keep-vars --tag "$RELEASE_TAG" --message "Free-core zero-traffic main upload"
+          npx wrangler versions upload --name web-gia-pha --keep-vars --tag "$RELEASE_TAG" --message "Free-core zero-traffic main upload" --var "NEXT_PUBLIC_SUPABASE_URL:$NEXT_PUBLIC_SUPABASE_URL" --var "NEXT_PUBLIC_SUPABASE_ANON_KEY:$NEXT_PUBLIC_SUPABASE_ANON_KEY" --var "A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED:$A16P_OFFICIAL_IMPORT_RUNTIME_CANDIDATE_ENABLED" --var "A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED:$A16AH_OFFICIAL_IMPORT_EXECUTION_BRANCH_ENABLED"
           npx wrangler deployments status --name web-gia-pha --json > routing-after.json
           node scripts/m2f-release-evidence-guard.cjs routing routing-before.json routing-after.json
           npx wrangler versions list --name web-gia-pha --json > versions-after.json
