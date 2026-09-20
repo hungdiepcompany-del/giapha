@@ -54,10 +54,10 @@ export default async function AdminImportPage({
     context.reason === "missing_admin_config";
   const canPreview = configMissing || context.permissions.includes("imports.create");
   const message = configMissing
-    ? "Chua cau hinh Supabase. Trang van cho kiem tra cau truc JSON, nhung khong kiem tra xung dot DB."
+    ? "Chưa cấu hình Supabase. Trang vẫn cho kiểm tra cấu trúc JSON, nhưng không kiểm tra xung đột DB."
     : !context.user
-      ? "Ban can dang nhap de kiem tra nhap du lieu."
-      : "Ban chua co quyen imports.create.";
+      ? "Bạn cần đăng nhập để kiểm tra nhập dữ liệu."
+      : "Bạn chưa có quyền imports.create.";
   const importManifestResult =
     canPreview && selectedSession.sessionId
       ? await getImportManifest(selectedSession.sessionId)
@@ -98,10 +98,10 @@ export default async function AdminImportPage({
     >
       <section className="mx-auto w-full max-w-6xl px-6 py-10">
         <PageHeader
-          eyebrow="Nhap du lieu an toan"
-          title="Kiem tra va staging du lieu nhap"
-          description="Tai len Gia Pha 4 theo session staging ro rang. Xac nhan nhap chinh thuc van khoa trong phase nay."
-          actions={<ActionLink href="/admin/exports">Quay lai Sao luu / Xuat du lieu</ActionLink>}
+          eyebrow="Nhập dữ liệu an toàn"
+          title="Kiểm tra và staging dữ liệu nhập"
+          description="Tải lên Gia Phả 4 theo session staging rõ ràng. Xác nhận nhập chính thức vẫn khóa trong phase này."
+          actions={<ActionLink href="/admin/exports">Quay lại Sao lưu / Xuất dữ liệu</ActionLink>}
         />
 
         {!canPreview ? (
@@ -113,21 +113,21 @@ export default async function AdminImportPage({
             <StatusCallout tone={configMissing ? "warning" : "info"} className="mb-6">
               {configMissing
                 ? message
-                : "Preview chi doc staging/import metadata, không ghi dữ liệu. Khong tao thanh vien, quan he, layout cay, revision hoac official import."}
+                : "Preview chỉ đọc staging/import metadata. Không tạo thành viên, quan hệ, layout cây, revision hoặc official import."}
             </StatusCallout>
 
             {selectedSession.invalid ? (
               <StatusCallout tone="warning" className="mb-6">
-                Session ID trong URL khong hop le. Trang khong tu chon phien moi
-                nhat va khong doc session lich su thay the.
+                Session ID trong URL không hợp lệ. Trang không tự chọn phiên mới
+                nhất và không đọc session lịch sử thay thế.
               </StatusCallout>
             ) : null}
 
             {!selectedSession.sessionId && !selectedSession.invalid ? (
               <StatusCallout tone="info" className="mb-6">
-                Chua chon phien nhap. Sau khi upload staging thanh cong, trang se
-                chuyen sang URL co sessionId cu the. Refresh, tab moi va
-                back/forward deu dua tren session trong URL.
+                Chưa chọn phiên nhập. Sau khi upload staging thành công, trang sẽ
+                chuyển sang URL có sessionId cụ thể. Refresh, tab mới và
+                back/forward đều dựa trên session trong URL.
               </StatusCallout>
             ) : null}
 
@@ -143,13 +143,13 @@ export default async function AdminImportPage({
 
               <details className="rounded-lg border border-stone-200 bg-white p-5">
                 <summary className="cursor-pointer text-sm font-semibold text-stone-950">
-                  Cong cu cu va lich su kiem toan
+                  Công cụ cũ và lịch sử kiểm toán
                 </summary>
                 <div className="mt-4 grid gap-6">
                   <StatusCallout tone="info">
-                    Session A-16R lich su {HISTORICAL_A16R_AUDIT_SESSION_ID} chi
-                    la bang chung kiem toan. Workflow runtime hien tai khong dung
-                    session nay lam gate.
+                    Session A-16R lịch sử {HISTORICAL_A16R_AUDIT_SESSION_ID} chỉ
+                    là bằng chứng kiểm toán. Workflow runtime hiện tại không dùng
+                    session này làm gate.
                   </StatusCallout>
                   <GiaPha4ImportPreviewForm />
                   <JsonImportPreviewForm />

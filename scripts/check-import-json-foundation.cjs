@@ -72,11 +72,16 @@ const importPage = fs.readFileSync(
 for (const token of [
   "imports.create",
   "JsonImportPreviewForm",
-  "không ghi dữ liệu",
+  "Preview chỉ đọc staging/import metadata.",
+  "Không tạo thành viên, quan hệ, layout cây, revision hoặc official import.",
 ]) {
   if (!importPage.includes(token)) {
     missing.push(`import page ${token}`);
   }
+}
+
+if (importPage.includes("không ghi dữ liệu")) {
+  missing.push("import page stale write-claim copy");
 }
 
 const importAction = fs.readFileSync(
