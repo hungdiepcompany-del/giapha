@@ -6,6 +6,11 @@ import { maybeCreateServerSupabaseClient } from "@/lib/supabase/server";
 export const A16G_IMPORT_MANIFEST_READ_MARKER =
   "A16G_IMPORT_SESSION_READ_MANIFEST_RUNTIME";
 
+// Owner approval, validation, and grouped dry-run must inspect one complete
+// manifest scope. Stored session counts are authoritative for the Worker
+// ceiling and prove the fetched scope is complete.
+export const A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS = 1000;
+
 export type ImportManifestReadStatus =
   | "ready"
   | "empty"
@@ -521,55 +526,76 @@ export async function getImportSession(
 
 export async function getImportManifest(
   sessionId: string,
-  options: ImportManifestReadOptions = {},
+  _options: ImportManifestReadOptions = {},
 ): Promise<ImportManifestReadResult> {
+  void _options;
   const sessionResult = await getImportSession(sessionId);
   if (!sessionResult.ok || !sessionResult.session) return sessionResult;
 
   const access = await ensureReadAccess();
   if (!access.ok) return access.result;
-  const previewLimit =
-    options.fullAuditExport || options.officialImportExecution ? 1000 : 100;
+  if (
+    sessionResult.session.personCandidateCount >
+      A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS ||
+    sessionResult.session.relationshipCandidateCount >
+      A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS ||
+    sessionResult.session.warningCount >
+      A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS ||
+    sessionResult.session.duplicateCandidateCount >
+      A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS
+  ) {
+    return baseResult({
+      status: "unavailable",
+      httpStatus: 503,
+      session: sessionResult.session,
+      message:
+        "Manifest vượt giới hạn 1000 dòng cho kiểm tra đầy đủ trên Worker chính. Hệ thống dừng an toàn, không dùng dữ liệu bị cắt để duyệt hoặc dry-run.",
+    });
+  }
 
-  const [warningsResult, duplicatesResult, relationshipsResult, writeManifestsResult] =
-    await Promise.all([
-      access.supabase
-        .from("import_session_warnings")
-        .select(
-          "id, warning_code, severity, row_index, column_key, message_vi, review_status, created_at",
-        )
-        .eq("import_session_id", sessionId)
-        .order("created_at", { ascending: true })
-        .limit(previewLimit)
-        .returns<ImportSessionWarningRow[]>(),
-      access.supabase
-        .from("import_duplicate_candidates")
-        .select(
-          "id, source_row_index, source_person_fingerprint, existing_person_id, match_strength, match_reason_codes, owner_decision, decided_by, decided_at, decision_note, created_at",
-        )
-        .eq("import_session_id", sessionId)
-        .order("source_row_index", { ascending: true })
-        .limit(previewLimit)
-        .returns<ImportDuplicateCandidateRow[]>(),
-      access.supabase
-        .from("import_relationship_candidates")
-        .select(
-          "id, relationship_type, source_row_index, source_person_fingerprint, related_row_index, related_person_fingerprint, target_existing_person_id, relationship_label_vi, confidence, ambiguity_status, owner_decision, decision_note, created_at",
-        )
-        .eq("import_session_id", sessionId)
-        .order("source_row_index", { ascending: true })
-        .limit(previewLimit)
-        .returns<ImportRelationshipCandidateRow[]>(),
-      access.supabase
-        .from("import_write_manifests")
-        .select(
-          "id, manifest_hash, approval_marker, status, approved_scope, planned_counts, held_rows_summary, rollback_plan, created_record_ids, created_at",
-        )
-        .eq("import_session_id", sessionId)
-        .order("created_at", { ascending: false })
-        .limit(20)
-        .returns<ImportWriteManifestRow[]>(),
-    ]);
+  const [
+    warningsResult,
+    duplicatesResult,
+    relationshipsResult,
+    writeManifestsResult,
+  ] = await Promise.all([
+    access.supabase
+      .from("import_session_warnings")
+      .select(
+        "id, warning_code, severity, row_index, column_key, message_vi, review_status, created_at",
+      )
+      .eq("import_session_id", sessionId)
+      .order("created_at", { ascending: true })
+      .limit(A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS)
+      .returns<ImportSessionWarningRow[]>(),
+    access.supabase
+      .from("import_duplicate_candidates")
+      .select(
+        "id, source_row_index, source_person_fingerprint, existing_person_id, match_strength, match_reason_codes, owner_decision, decided_by, decided_at, decision_note, created_at",
+      )
+      .eq("import_session_id", sessionId)
+      .order("source_row_index", { ascending: true })
+      .limit(A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS)
+      .returns<ImportDuplicateCandidateRow[]>(),
+    access.supabase
+      .from("import_relationship_candidates")
+      .select(
+        "id, relationship_type, source_row_index, source_person_fingerprint, related_row_index, related_person_fingerprint, target_existing_person_id, relationship_label_vi, confidence, ambiguity_status, owner_decision, decision_note, created_at",
+      )
+      .eq("import_session_id", sessionId)
+      .order("source_row_index", { ascending: true })
+      .limit(A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS)
+      .returns<ImportRelationshipCandidateRow[]>(),
+    access.supabase
+      .from("import_write_manifests")
+      .select(
+        "id, manifest_hash, approval_marker, status, approved_scope, planned_counts, held_rows_summary, rollback_plan, created_record_ids, created_at",
+      )
+      .eq("import_session_id", sessionId)
+      .order("created_at", { ascending: false })
+      .limit(2)
+      .returns<ImportWriteManifestRow[]>(),
+  ]);
 
   const firstError =
     warningsResult.error ??
@@ -637,7 +663,61 @@ export async function getImportManifest(
     createdRecordIds: row.created_record_ids ?? {},
     createdAt: row.created_at,
   }));
-  const peoplePreview = extractPeoplePreview(writeManifests, previewLimit);
+  const hasApprovalCriticalContent =
+    sessionResult.session.personCandidateCount > 0 ||
+    sessionResult.session.relationshipCandidateCount > 0 ||
+    sessionResult.session.warningCount > 0 ||
+    sessionResult.session.duplicateCandidateCount > 0;
+  const requiresSingleWriteManifest =
+    hasApprovalCriticalContent || writeManifests.length > 0;
+
+  if (requiresSingleWriteManifest && writeManifests.length !== 1) {
+    return baseResult({
+      status: "unavailable",
+      httpStatus: 503,
+      session: sessionResult.session,
+      message:
+        "Không chứng minh được một write manifest duy nhất cho phiên. Hệ thống dừng an toàn, không gộp manifest cũ hoặc không đủ điều kiện để duyệt hoặc dry-run.",
+    });
+  }
+
+  const singleWriteManifest = writeManifests[0] ?? null;
+  if (
+    sessionResult.session.approvalMarker?.trim() &&
+    (!singleWriteManifest ||
+      singleWriteManifest.approvalMarker !== sessionResult.session.approvalMarker)
+  ) {
+    return baseResult({
+      status: "unavailable",
+      httpStatus: 503,
+      session: sessionResult.session,
+      message:
+        "Marker phê duyệt của phiên không khớp write manifest duy nhất. Hệ thống dừng an toàn, không dùng manifest không đúng marker để duyệt hoặc dry-run.",
+    });
+  }
+
+  const peoplePreview = singleWriteManifest
+    ? extractPeoplePreview(
+        [singleWriteManifest],
+        A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS,
+      )
+    : [];
+
+  if (
+    warnings.length !== sessionResult.session.warningCount ||
+    duplicateCandidates.length !== sessionResult.session.duplicateCandidateCount ||
+    relationshipsPreview.length !==
+      sessionResult.session.relationshipCandidateCount ||
+    peoplePreview.length !== sessionResult.session.personCandidateCount
+  ) {
+    return baseResult({
+      status: "unavailable",
+      httpStatus: 503,
+      session: sessionResult.session,
+      message:
+        "Không chứng minh được manifest đầy đủ theo số lượng đã lưu của phiên. Hệ thống dừng an toàn, không dùng dữ liệu thiếu hoặc bị cắt để duyệt hoặc dry-run.",
+    });
+  }
 
   const hasManifestRows =
     warnings.length > 0 ||

@@ -208,10 +208,16 @@ for (const [content, token, label] of [
   [source.service, "A17O_R_GROUPED_PLAN_BLOCKED_BEFORE_RPC", "plan fail-closed branch"], [source.service, "runRpcInvocationIdentityPrecheck", "identity precheck"],
   [source.service, "A17O_R_BLOCKED_COMPLETE_EXECUTION_MANIFEST_REQUIRED", "complete execution manifest blocker"],
   [source.service, "officialImportExecution: true", "official execution read mode"],
-  [source.manifestRead, "options.fullAuditExport || options.officialImportExecution", "bounded execution read limit"],
+  [source.manifestRead, "A16R_APPROVAL_CRITICAL_MANIFEST_MAX_ROWS", "bounded complete-scope read limit"],
   [source.route, "confirmation.confirmMarker", "route confirmation marker"], [source.dryRun, "groupedExecutorMutationCall: false", "dry-run no mutation"],
   [source.reviewPack, "canonicalFamilyGroupCount", "review-pack grouped count"],
 ]) requireIncludes(content, token, label);
+assertCase(
+  "shared manifest reader uses the complete-scope ceiling",
+  source.manifestRead.includes("_options: ImportManifestReadOptions = {}") &&
+    source.manifestRead.includes("void _options;") &&
+    !/options\.fullAuditExport\s*\|\|\s*options\.officialImportExecution\s*\?\s*1000\s*:\s*100/.test(source.manifestRead),
+);
 for (const [content, label] of [[source.adapter, paths.adapter], [source.service, paths.service], [source.route, paths.route], [source.grouping, paths.grouping]]) {
   rejectPattern(content, /SUPABASE_SERVICE_ROLE_KEY|service[_-]?role/i, `${label} service role`);
   rejectPattern(content, /fetch\([\s\S]{0,200}official-import/i, `${label} production endpoint call`);
