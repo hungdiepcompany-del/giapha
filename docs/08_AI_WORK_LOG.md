@@ -1,5 +1,16 @@
 # AI Work Log
 
+## 2026-09-21 - Governance 2.1.1 clean-main eight-document candidate
+
+- Owner authorized a governance-only candidate rooted at `origin/main@cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`, with no stage, commit, push or deploy.
+- The exact candidate contains eight documents: `AGENTS.md`, `docs/AI_WORKFLOW.md`, `docs/AI_EXECUTION_ROUTING.md`, `docs/00_INDEX.md`, this work log, `docs/09_DECISION_LOG.md`, `docs/99_NEXT_AI_HANDOFF.md`, and the sole active GOV-GP4 contract.
+- Workflow 2.1.1 establishes milestone-first execution, defect-cluster diagnosis, autonomous continuation inside approved envelopes, dynamic cheapest-capable routing under the Terra/Chuyên sâu ceiling, and `SOL_ALLOWED=false`.
+- Main-based index, decision and active-contract records are corrected without importing the stale local M2D document, the two unreviewed snapshot-script variants, or the multi-thousand-line local history overlay. The prior local forms remain recoverable from the verified workspace preservation package.
+- Primary validation PASS: exact eight-path diff against `origin/main`, governance invariant PASS with one active contract, unique Decision identifiers PASS, Workflow/model markers consistent across all three control documents, diff check PASS, staging zero, and excluded snapshot scripts byte-identical to the preservation package.
+- Independent Reviewer (`GPT-5.6 Terra/Cao`) PASS with `P0=P1=P2=P3=0`: authority order, historical-provenance boundary, writer/Git/privileged gates, dynamic routing and exact eight-path scope are consistent. Independent Verifier (`GPT-5.6 Luna/Vừa`) PASS with `P0=P1=P2=P3=0`: base identity, exact paths, diff check, invariant, decision identifiers, policy markers, staging, writer and worktree state all pass.
+- Owner then authorized one exact-path local checkpoint. The isolated checkpoint uses branch `codex/gov-211-workflow-2-1-1-20260921`, direct parent `cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`, and exactly the eight reviewed governance paths; the inherited checkout index remains untouched.
+- `CURRENT_STAGE_RESULT=PASS`; `PRIMARY_VALIDATION=PASS`; `REVIEWER=PASS`; `VERIFIER=PASS`; `CHECKPOINT_STATUS=COMMITTED_LOCAL`; `CHECKPOINT_DECISION_REQUIRED=false`; `CHECKPOINT_PATH_COUNT=8`; `STAGE_COMMIT_COUNT=1`; `PUSH_DEPLOY_PRODUCTION_SQL_IMPORT_COUNT=0`. Push and all later boundaries require fresh separate Owner gates.
+
 ## 2026-09-13 - M2A Private R2 recoverability source/local fixture PASS; terminal closeout
 
 - M2A Private R2 recoverability source/local fixture PASS after Owner-approved REVIEW FIX-1. Canonical branch/head is `codex/g3-canonical-reconciliation-20260830@e972db2e62990cf49bd0ad9306133d458f300d3e`; remote `main` is `2c124b5073ba7abaf0b9f7c0d650dc5adbe2c0a3`. Inherited dirt was preserved, stage=0, one worktree; writer later zero.

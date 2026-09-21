@@ -1,5 +1,46 @@
 # GOV-GP4 Repository Git and A16 Authority Reconciliation
 
+## Current authority — 2026-09-21 Governance 2.1.1 clean-main candidate
+
+TASK_ID=GOV_211_CLEAN_MAIN_8DOC_CANDIDATE_20260921
+RISK_CLASS=MEDIUM
+OWNER_GATE=OWNER_GO_GOVERNANCE_211_CLEAN_MAIN_8DOC_CANDIDATE_NO_STAGE_COMMIT_PUSH_DEPLOY
+AUTHORIZED_BASE=`origin/main@cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`
+EXECUTION_MODE=ONE_WRITER_GOVERNANCE_DOCUMENT_CANDIDATE_AND_LOCAL_VALIDATION_ONLY
+AUTHORIZED_PATH_COUNT=8
+AUTHORIZED_PATHS=`AGENTS.md; docs/AI_WORKFLOW.md; docs/AI_EXECUTION_ROUTING.md; docs/00_INDEX.md; docs/08_AI_WORK_LOG.md; docs/09_DECISION_LOG.md; docs/99_NEXT_AI_HANDOFF.md; this active contract`
+EXCLUDED_PATHS=`docs/M2D_PRODUCTION_BACKUP_PRIVATE_PREFLIGHT_CONTRACT.md; scripts/ai/New-AiNonWriterSnapshot.ps1; scripts/ai/Test-AiNonWriterSnapshot.ps1; all application source and generated output`
+
+GOAL=`materialize a minimal main-based Workflow 2.1.1 authority set without importing stale or unreviewed local governance drift`
+PRODUCT_BASELINE=`A17 G0-G9 complete; mandatory open product defect count 0; main cf6d660; production changes not required`
+MANDATORY_INVARIANTS=`preserve inherited dirt; exactly one writer; staging stays empty; exactly one active contract; no Sol routing; no secret values; no product-source change`
+PRIMARY_ACCEPTANCE=`exact eight-path diff against origin/main; governance invariant PASS; diff check PASS; policy markers consistent; unique new decision identifiers; excluded paths absent from candidate`
+
+COMMIT_ALLOWED=false
+PUSH_ALLOWED=false
+DEPLOY_ALLOWED=false
+PRODUCTION_ACCESS_ALLOWED=false
+PRODUCTION_MUTATION_ALLOWED=false
+DATABASE_MUTATION_ALLOWED=false
+AUTH_RLS_MUTATION_ALLOWED=false
+OFFICIAL_IMPORT_ALLOWED=false
+DESTRUCTIVE_CLEANUP_ALLOWED=false
+
+CURRENT_STAGE_RESULT=PASS
+PRIMARY_VALIDATION=`PASS exact eight-path origin/main diff; governance invariant; one active contract; unique Decision identifiers; policy markers; diff check; staging zero`
+REVIEWER=`PASS Terra/Cao; P0=0 P1=0 P2=0 P3=0; semantic authority and scope consistent`
+VERIFIER=`PASS Luna/Vừa; P0=0 P1=0 P2=0 P3=0; exact base/paths/checks/state verified`
+CHECKPOINT_STATUS=COMMITTED_LOCAL
+CHECKPOINT_DECISION_REQUIRED=false
+OWNER_DECISION=`GO exact eight-path local checkpoint only`
+CHECKPOINT_BRANCH=`codex/gov-211-workflow-2-1-1-20260921`
+CHECKPOINT_PARENT=`cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`
+CHECKPOINT_PATH_COUNT=8
+NEXT_GATE=`fresh Owner approval for one exact non-force push of the checkpoint branch; no deploy/production`
+STATUS=TERMINAL_CANDIDATE_REVIEWED_VERIFIED_COMMITTED_LOCAL
+
+The historical GOV-GP4 sections below remain provenance only. They do not reactivate any completed source, Git, production, database, Auth/RLS, import or deployment authority.
+
 TASK_ID=GOV-GP4_REPOSITORY_GIT_AND_A16_AUTHORITY_RECONCILIATION
 RISK_CLASS=HIGH
 OWNER_GATE=OWNER_APPROVED_GOV_GP4_READ_ONLY_RECONCILIATION_ONLY

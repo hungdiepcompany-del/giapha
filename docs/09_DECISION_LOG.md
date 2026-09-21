@@ -1,6 +1,40 @@
 # Decision Log
 
-## Decision 371 - Accept fixture-local Private R2 source contract for M2A recoverability
+## Decision 375 - Route models and reasoning dynamically inside Owner ceilings
+
+Date: 2026-09-21
+
+Status: `OWNER_APPROVED_CLEAN_MAIN_CANDIDATE_PREPARED`
+
+Decision:
+
+- Roles and authority boundaries remain fixed, while model and reasoning choices are dynamic execution decisions.
+- GPT Work selects the cheapest-capable route from fresh evidence within `MODEL_CEILING=GPT-5.6 Terra` and `REASONING_CEILING=Chuyên sâu`; GPT-5.6 Sol is not allowed.
+- Codex Primary may route agents inside the approved envelope and ceilings. Escalation must be evidence-driven, and mechanical work must downgrade when a lighter route is sufficient.
+- Meaningful closeouts report actual routing, the reason it was cheapest-capable, and evidence-based escalation/downgrade conditions.
+
+Rationale: fixed role-to-model mappings waste quota and can under-route high-consequence Auth, privacy or data-integrity work. Dynamic routing preserves authority while matching cost and reasoning to current risk.
+
+Boundary: this decision grants no source mutation outside the exact governance candidate, no agent dispatch by itself, and no stage, commit, push, deploy, production, SQL, Auth/RLS or official-import action.
+
+## Decision 374 - Adopt Workflow 2.1.1 milestone-first autonomous continuation
+
+Date: 2026-09-21
+
+Status: `OWNER_APPROVED_CLEAN_MAIN_CANDIDATE_PREPARED`
+
+Decision:
+
+- Product milestones and mandatory safety invariants outrank orchestration machinery.
+- GPT Work diagnoses coupled defect clusters before patching, defines a bounded execution envelope, and continues autonomously inside it until terminal result or a genuine Owner hard gate.
+- Ordinary transport, parser, fixture, startup, wait/resume and handoff corrections stay inside the same outcome and bounded correction budget.
+- Every Owner return contains current evidence plus the next repository-grounded direction. Verified source outcomes surface checkpoint state; commit and push remain separate explicit gates.
+
+Rationale: this removes repetitive GO relays and recovery-phase proliferation without weakening repository, writer, Git or privileged-operation safety.
+
+Boundary: the workflow does not pre-authorize commits, pushes, deploys, production/database changes, Auth/RLS changes, destructive genealogy operations or official imports.
+
+## Decision 373 - Accept fixture-local Private R2 source contract for M2A recoverability
 
 Date: 2026-09-13
 
