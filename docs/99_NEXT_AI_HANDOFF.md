@@ -1,5 +1,14 @@
 # Next AI Handoff
 
+## Current handoff — 2026-09-21 Governance 2.1.1 candidate reviewed and verified PASS
+
+- Owner authorized construction of one clean-main, governance-only eight-document candidate on `origin/main@cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`; no stage, commit, push or deploy is authorized.
+- Candidate scope is exactly the three Workflow 2.1.1 control documents, the index, work log, decision log, this handoff, and the sole active GOV-GP4 contract. The stale local M2D document and both unreviewed snapshot-script variants are excluded.
+- Primary validation PASS: exact eight-path main diff, one active contract, governance invariant, unique Decision identifiers, Workflow/model marker consistency, diff check and staging zero. Excluded snapshot scripts remain byte-identical to the preservation package; the stale local M2D document remains outside candidate scope.
+- Independent Reviewer (`GPT-5.6 Terra/Cao`) and Verifier (`GPT-5.6 Luna/Vừa`) both PASS with no P0-P3 findings. Reviewer confirmed semantic authority consistency; Verifier confirmed exact base/path count, diff/invariant/Decision/model markers and clean staging/writer/worktree controls.
+- Owner authorized and the controller created one isolated local checkpoint on `codex/gov-211-workflow-2-1-1-20260921`, directly based on `main@cf6d6601392ba6e37c989088a44a6aff2c9c2d2e`, containing exactly the eight reviewed governance paths. The inherited checkout index remains empty.
+- `CURRENT_STAGE_RESULT=PASS`; `PRIMARY_VALIDATION=PASS`; `REVIEWER=PASS`; `VERIFIER=PASS`; `CHECKPOINT_STATUS=COMMITTED_LOCAL`; `CHECKPOINT_DECISION_REQUIRED=false`; `CHECKPOINT_PATH_COUNT=8`. Next gate is a fresh Owner decision for push only; deploy/production remain separately unauthorized.
+
 ## Current handoff — 2026-09-13 M2A Private R2 recoverability complete; checkpoint Owner-gated
 
 - M2A Private R2 recoverability source/local fixture PASS after Owner-approved REVIEW FIX-1. Canonical branch/head is `codex/g3-canonical-reconciliation-20260830@e972db2e62990cf49bd0ad9306133d458f300d3e`; remote `main` is `2c124b5073ba7abaf0b9f7c0d650dc5adbe2c0a3`. Inherited dirt preserved, stage=0, one worktree, writer later zero.
